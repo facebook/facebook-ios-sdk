@@ -296,7 +296,7 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
 
   // MARK: - NSCoding
 
-  public static var supportsSecureCoding: Bool = true
+  public static var supportsSecureCoding = true
 
   public init?(coder: NSCoder) {
     let operatorValue = coder.decodeInteger(forKey: Keys.operator)

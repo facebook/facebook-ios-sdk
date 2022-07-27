@@ -28,7 +28,7 @@ final class AEMUtilityTests: XCTestCase {
       "Should not expect to get the matched invocation without matched business ID"
     )
   }
-  
+
   func testGetMatchedInvocationWithNullBusinessID() {
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
     let invocations = [invocation, SampleAEMInvocations.createInvocationWithBusinessID()]

@@ -32,7 +32,7 @@ public final class FBLoginTooltipView: FBTooltipView {
    if set to YES, the view will always be displayed and the delegate's
    `loginTooltipView:shouldAppear:` will NOT be called.
    */
-  @objc public var forceDisplay: Bool = false
+  @objc public var forceDisplay = false
 
   /**
    if set to YES, the view will always be displayed and the delegate's

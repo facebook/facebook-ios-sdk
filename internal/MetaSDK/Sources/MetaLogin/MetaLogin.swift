@@ -6,12 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import Foundation
+
 // TODO: Define login results with custom type
 /// Login Result Block
 public typealias LoginCompletion = (Result<String, Error>) -> Void
 
 /// Provides methods for logging the user in and out.
+@available(iOS 13.0, *)
 public struct MetaLogin {
+
+    var configuredDependencies: InstanceDependencies?
+    var defaultDependencies: InstanceDependencies? {
+        .init(
+            urlOpener: AuthWebView()
+        )
+    }
+    static let redirectURI: String = "fbconnect://success"
 
     public init() {}
 
@@ -22,10 +33,59 @@ public struct MetaLogin {
      - Parameter param: completion the login completion handler.
      */
     public func logIn(
-        configuration: LoginConfiguration? = LoginConfiguration(),
+        configuration: LoginConfiguration,
         completion: @escaping LoginCompletion
     ) {
-        // TODO: Call URL Opener
+        guard let dependencies = try? getDependencies() else { return }
+
+        let parameters = makeLoginParameters(configuration: configuration)
+        guard let url = getUniversalLoginURL(parameters: parameters) else { return }
+
+        dependencies.urlOpener.openURL(
+            url: url,
+            callbackURLScheme: "fbconnect") { _ in
+                // TO DO: update state
+                print("openURL completed")
+            }
         completion(.success("This is a dummy result"))
     }
+
+    func makeLoginParameters(
+        configuration: LoginConfiguration
+    ) -> [String: String] {
+        let cbtInMilliseconds = round(1000 * Date().timeIntervalSince1970)
+        var parameters: [String: String] = [
+            "app_id": configuration.facebookAppID,
+            "display": "touch",
+            "sdk": "meta_sdk_ios",
+            "return_scopes": "true",
+            "cbt": String(cbtInMilliseconds),
+            "response_type": "token,graph_domain,signed_request"
+        ]
+
+        let permissions = configuration.permissions
+        parameters["scope"] = permissions.joined(separator: ",")
+        parameters["redirect_uri"] = MetaLogin.redirectURI
+
+        return parameters
+    }
+
+    private func getUniversalLoginURL(parameters: [String: String]) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "figowa.com"
+        components.path = "/oauth/accounts"
+        components.queryItems = parameters.map {
+            URLQueryItem(name: $0, value: $1)
+        }
+
+        return components.url
+    }
+}
+
+@available(iOS 13.0, *)
+extension MetaLogin: DependentAsInstance {
+    struct InstanceDependencies {
+      var urlOpener: AuthenticationSessionWebView
+  }
 }

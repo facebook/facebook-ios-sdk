@@ -106,7 +106,7 @@ final class AuthWebViewTests: XCTestCase {
         XCTAssertTrue(authSession.startWasCalled, "Authentication session starts when openURL is called")
         XCTAssertEqual(localStorage.authenticationSessionState,
             .performingLogin,
-            "Session state should be set to .performinglogin after successfully starting session"
+            "Session state should be set to .performinglogin after successfully starting authentication session"
         )
     }
 

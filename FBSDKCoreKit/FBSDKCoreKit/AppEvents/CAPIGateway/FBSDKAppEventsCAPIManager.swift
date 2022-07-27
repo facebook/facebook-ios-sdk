@@ -24,7 +24,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
 
   public static let shared = FBSDKAppEventsCAPIManager()
 
-  internal var isEnabled: Bool = false
+  internal var isEnabled = false
   internal var factory: GraphRequestFactoryProtocol?
   internal var settings: SettingsProtocol?
 

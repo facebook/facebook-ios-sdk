@@ -129,8 +129,8 @@ open class FBTooltipView: UIView {
   private var leftWidth: CGFloat = .zero
   private var rightWidth: CGFloat = .zero
   private var arrowMidpoint: CGFloat = .zero
-  private var pointingUp: Bool = false
-  private var isFadingOut: Bool = false
+  private var pointingUp = false
+  private var isFadingOut = false
 
   // Style
   private var innerStrokeColor: UIColor = .clear

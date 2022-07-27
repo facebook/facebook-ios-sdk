@@ -12,7 +12,7 @@ import Foundation
 typealias AuthWebViewCompletion = (Result<URL, Error>) -> Void
 
 @available(iOS 13.0, *)
-struct AuthWebView {
+struct AuthWebView: AuthenticationSessionWebView {
     var configuredDependencies: InstanceDependencies?
     var defaultDependencies: InstanceDependencies? {
         .init(

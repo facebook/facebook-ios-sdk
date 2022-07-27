@@ -39,10 +39,9 @@ public struct LoginConfiguration {
     ) {
         // TODO: Fetch App ID defaults from plist
 
-        guard let facebookAppID = facebookAppID else {
-            return nil
-        }
-        guard let metaAppID = metaAppID else {
+        guard let facebookAppID = facebookAppID,
+              let metaAppID = metaAppID
+        else {
             return nil
         }
 
