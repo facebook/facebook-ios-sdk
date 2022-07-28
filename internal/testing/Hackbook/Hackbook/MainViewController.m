@@ -46,6 +46,8 @@ static NSString *kGamingLoginKey = @"should_use_gaming_login";
 static NSString *kCurrentSelectedApp = @"current_selected_app";
 static const NSInteger kFacebookDomainRowIndex = 3;
 static const NSInteger kGraphAPIRowIndex = 4;
+static const CGFloat marginXForBanner = 15;
+static const CGFloat marginYForBanner = 0;
 
 @interface MainViewController () <PermissionsViewControllerDelegate, FBSDKLoginButtonDelegate, UITextFieldDelegate, FBSDKGamingPayloadDelegate>
 @property (nonatomic, strong) FBSDKGamingPayloadObserver *payloadObserver;
@@ -59,6 +61,7 @@ static const NSInteger kGraphAPIRowIndex = 4;
   __weak IBOutlet UITextField *_domainEditorTextField;
   __weak IBOutlet UITextField *_graphAPIVersionEditorTextField;
   FBSDKLoginManager *_loginManager;
+  UIView *_tableFooter;
 }
 
 #pragma mark - View Management
@@ -70,8 +73,10 @@ static const NSInteger kGraphAPIRowIndex = 4;
   UIView *tableHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 80)];
   loginButton = [[FBSDKLoginButton alloc] initWithFrame:CGRectMake(0, 0, 220, 30)];
   [tableHeader addSubview:loginButton];
+
   loginButton.center = CGPointMake(tableHeader.frame.size.width / 2, tableHeader.frame.size.height / 2);
   loginButton.delegate = self;
+  
   self.tableView.tableHeaderView = tableHeader;
   self.title = [[NSUserDefaults standardUserDefaults] stringForKey:kCurrentSelectedApp];
 
@@ -102,7 +107,9 @@ static const NSInteger kGraphAPIRowIndex = 4;
   self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[FBSDKProfilePictureView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)]];
 
   self.payloadObserver = [[FBSDKGamingPayloadObserver alloc] initWithDelegate:self];
-
+  
+  [self createUniversalLinkBanner];
+  
   if (![[NSUserDefaults standardUserDefaults] stringForKey:kCurrentSelectedApp]) {
     [[NSUserDefaults standardUserDefaults] setValue:@"Hackbook Default" forKey:kCurrentSelectedApp];
   } else {
@@ -164,9 +171,7 @@ static const NSInteger kGraphAPIRowIndex = 4;
   if (!cell) {
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
   }
-
   cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
   UILabel *centerLabel = [cell.contentView viewWithTag:100];
   if (!centerLabel) {
     centerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 36)];
@@ -342,6 +347,12 @@ static const NSInteger kGraphAPIRowIndex = 4;
   return [self cellTitles].count;
 }
 
+- (void)viewDidLayoutSubviews
+{
+  [super viewDidLayoutSubviews];
+  deepLinkURLLabel.frame  = CGRectInset(_tableFooter.bounds, marginXForBanner, marginYForBanner);
+}
+
 #pragma mark - Actions
 
 - (void)reauthorizeDataAccess
@@ -509,6 +520,30 @@ static const NSInteger kGraphAPIRowIndex = 4;
     [permissions addObject:permission.lowercaseString];
   }
   return permissions;
+}
+
+#pragma mark - Universal links
+
+- (void)createUniversalLinkBanner
+{
+  _tableFooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 80)];
+  deepLinkURLLabel = [[UILabel alloc] init];
+  deepLinkURLLabel.translatesAutoresizingMaskIntoConstraints = YES;
+  deepLinkURLLabel.layer.borderWidth = 0.5;
+  deepLinkURLLabel.layer.borderColor = UIColor.lightGrayColor.CGColor;
+  deepLinkURLLabel.font = [UIFont systemFontOfSize:15];
+  deepLinkURLLabel.textColor = [UIColor blackColor];
+  deepLinkURLLabel.textAlignment = NSTextAlignmentCenter;
+  deepLinkURLLabel.numberOfLines = 0;
+  
+  [_tableFooter addSubview:deepLinkURLLabel];
+
+  self.tableView.tableFooterView = _tableFooter;
+}
+
+- (void)updateDeepLinkLabel:(NSURL *)url
+{
+  deepLinkURLLabel.text = url.absoluteString;
 }
 
 #pragma mark - FBSDKLoginButtonDelegate

@@ -8,8 +8,10 @@
 {
   UIBarButtonItem *versionButton;
   FBSDKLoginButton *loginButton;
+  UILabel *deepLinkURLLabel;
 }
 
 - (IBAction)selectVersion:(id)sender;
+- (void)updateDeepLinkLabel:(NSURL *)url;
 
 @end

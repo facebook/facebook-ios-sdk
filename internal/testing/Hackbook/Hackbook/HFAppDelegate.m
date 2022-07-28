@@ -41,9 +41,14 @@
 // Deep linking using universal links
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler
 {
-  if (userActivity.activityType == NSUserActivityTypeBrowsingWeb) {
+  if ([userActivity.activityType isEqualToString: NSUserActivityTypeBrowsingWeb]) {
     NSURL *url = userActivity.webpageURL;
     ConsoleLog(@"Incoming URL: %@", url);
+    
+    UINavigationController *navigationController = (UINavigationController *)_window.rootViewController;
+    MainViewController *mainViewController = (MainViewController *)navigationController.topViewController;
+    [mainViewController updateDeepLinkLabel:url];
+    
     [AEMTestUtils setCampaignFromUrl:url];
     [AEMTestUtils setLoggingBehaviorsForNetworkRuquest];
     [[FBSDKApplicationDelegate sharedInstance] application:application
