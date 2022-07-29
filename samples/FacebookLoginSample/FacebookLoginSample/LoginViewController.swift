@@ -10,7 +10,7 @@ import UIKit
 import FacebookCore
 
 /// A base class to avoid polluting the UIViewController namespace
-final class LoginViewController: UIViewController {
+class LoginViewController: UIViewController {
 
     var isLoggedIn: Bool {
         return AccessToken.current != nil || AuthenticationToken.current != nil
