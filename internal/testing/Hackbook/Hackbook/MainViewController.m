@@ -108,7 +108,7 @@ static const CGFloat marginYForBanner = 0;
 
   self.payloadObserver = [[FBSDKGamingPayloadObserver alloc] initWithDelegate:self];
   
-  [self createUniversalLinkBanner];
+  [self createDeepLinkBanner];
   
   if (![[NSUserDefaults standardUserDefaults] stringForKey:kCurrentSelectedApp]) {
     [[NSUserDefaults standardUserDefaults] setValue:@"Hackbook Default" forKey:kCurrentSelectedApp];
@@ -522,12 +522,14 @@ static const CGFloat marginYForBanner = 0;
   return permissions;
 }
 
-#pragma mark - Universal links
+#pragma mark - Deep links
 
-- (void)createUniversalLinkBanner
+- (void)createDeepLinkBanner
 {
   _tableFooter = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 80)];
+  _tableFooter.accessibilityIdentifier = @"deeplink_banner";
   deepLinkURLLabel = [[UILabel alloc] init];
+  deepLinkURLLabel.accessibilityIdentifier = @"deeplink_link";
   deepLinkURLLabel.translatesAutoresizingMaskIntoConstraints = YES;
   deepLinkURLLabel.layer.borderWidth = 0.5;
   deepLinkURLLabel.layer.borderColor = UIColor.lightGrayColor.CGColor;
