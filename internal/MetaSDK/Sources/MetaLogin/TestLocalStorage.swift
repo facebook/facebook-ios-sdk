@@ -8,10 +8,39 @@
 
 import Foundation
 
-final class TestLocalStorage: AuthenticationSessionStatePersisting {
+final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting {
     var authenticationSessionState: AuthenticationSessionState
+    var stubbedUserSession: UserSession
+    var capturedUserSessionInSave: UserSession?
+    var isDeleteUserSessionCalled = false
+    var isGetUserSessionCalled = false
 
     init() {
         authenticationSessionState = .none
+        let sampleToken = AccessToken(
+            tokenString: "testToken",
+            expirationDate: Date().addingTimeInterval(100),
+            dataAccessExpirationDate: Date().addingTimeInterval(100)
+        )!
+        stubbedUserSession = UserSession(
+            userId: UInt(111),
+            graphDomain: GraphDomain.faceBook,
+            accessToken: sampleToken,
+            requestedPermissions: [],
+            declinedPermissions: []
+        )
+    }
+
+    func saveUserSession(userSession: UserSession) throws {
+        capturedUserSessionInSave = userSession
+    }
+
+    func deleteUserSession() throws {
+        isDeleteUserSessionCalled = true
+    }
+
+    func getUserSession() throws -> UserSession {
+        isGetUserSessionCalled = true
+        return stubbedUserSession
     }
 }

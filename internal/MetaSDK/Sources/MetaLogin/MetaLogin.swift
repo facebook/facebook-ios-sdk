@@ -19,7 +19,8 @@ public struct MetaLogin {
     var configuredDependencies: InstanceDependencies?
     var defaultDependencies: InstanceDependencies? {
         .init(
-            urlOpener: AuthWebView()
+            urlOpener: AuthWebView(),
+            localStorage: LocalStorage()
         )
     }
     static let redirectURI: String = "fbconnect://success"
@@ -48,6 +49,25 @@ public struct MetaLogin {
                 print("openURL completed")
             }
         completion(.success("This is a dummy result"))
+    }
+
+    /**
+     Logs the user out
+
+     This deletes the `UserSession` instance.
+
+     @note This is only a client side logout. It will not log the user out of their Facebook/Meta account.
+     */
+    public func logOut() {
+        guard var dependencies = try? getDependencies() else { return }
+
+        do {
+            try dependencies.localStorage.deleteUserSession()
+            dependencies.localStorage.authenticationSessionState = .none
+        } catch {
+            // TODO: error logging
+            print("Failed to logout with \(error)")
+        }
     }
 
     func makeLoginParameters(
@@ -86,6 +106,7 @@ public struct MetaLogin {
 @available(iOS 13.0, *)
 extension MetaLogin: DependentAsInstance {
     struct InstanceDependencies {
-      var urlOpener: AuthenticationSessionWebView
+        var urlOpener: AuthenticationSessionWebView
+        var localStorage: UserSessionPersisting & AuthenticationSessionStatePersisting
   }
 }

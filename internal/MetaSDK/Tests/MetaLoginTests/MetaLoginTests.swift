@@ -13,15 +13,18 @@ import XCTest
 final class MetaLoginTests: XCTestCase {
     var authWebView: TestAuthWebView!
     var metaLogin: MetaLogin!
+    var localStorage: TestLocalStorage!
 
     override func setUp() {
         super.setUp()
 
+        localStorage = TestLocalStorage()
         metaLogin = MetaLogin()
         authWebView = TestAuthWebView()
         metaLogin.setDependencies(
             .init(
-                urlOpener: authWebView
+                urlOpener: authWebView,
+                localStorage: localStorage
             )
         )
     }
@@ -29,6 +32,7 @@ final class MetaLoginTests: XCTestCase {
     override func tearDown() {
         metaLogin = nil
         authWebView = nil
+        localStorage = nil
 
         super.tearDown()
     }
@@ -41,6 +45,10 @@ final class MetaLoginTests: XCTestCase {
             dependencies.urlOpener is AuthWebView,
             "A login manager uses a provided authentication web view"
         )
+        XCTAssertTrue(
+            dependencies.localStorage is LocalStorage,
+            "A login manager uses a provided LocalStorage"
+        )
     }
 
     func testCustomDependencies() throws {
@@ -49,6 +57,10 @@ final class MetaLoginTests: XCTestCase {
         XCTAssertTrue(
             dependencies.urlOpener is TestAuthWebView,
             "Should be set to a custom authentication web view"
+        )
+        XCTAssertTrue(
+            dependencies.localStorage is TestLocalStorage,
+            "A login manager uses a custom LocalStorage"
         )
     }
 
@@ -73,5 +85,19 @@ final class MetaLoginTests: XCTestCase {
         }
 
         XCTAssertTrue(wasCalled, "Completion handler should be called synchronously")
+    }
+
+    func testLogout() throws {
+        localStorage.authenticationSessionState = .performingLogin
+        metaLogin.logOut()
+        XCTAssertEqual(
+            localStorage.authenticationSessionState,
+            .none,
+            "AuthenticationSessionState should be set as none after user logs out"
+        )
+        XCTAssertTrue(
+            localStorage.isDeleteUserSessionCalled,
+            "Should delete the stored user session when a user logs out"
+        )
     }
 }
