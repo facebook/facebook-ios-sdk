@@ -34,3 +34,12 @@ targets:
       PRODUCT_NAME: MetaSDKSample
       PRODUCT_BUNDLE_IDENTIFIER: com.meta.MetaSDKSample.localDevelopment
       PROVISIONING_PROFILE_SPECIFIER: "MetaSDK Sample Local Development"
+
+schemes:
+  MetaSDKSample:
+    build:
+      targets:
+        MetaSDKSample: all
+    test:
+      targets:
+        - package: MetaLogin/MetaLoginTests
