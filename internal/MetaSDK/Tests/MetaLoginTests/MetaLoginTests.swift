@@ -9,7 +9,6 @@
 @testable import MetaLogin
 import XCTest
 
-@available(iOS 13.0, *)
 final class MetaLoginTests: XCTestCase {
     var authWebView: TestAuthWebView!
     var metaLogin: MetaLogin!

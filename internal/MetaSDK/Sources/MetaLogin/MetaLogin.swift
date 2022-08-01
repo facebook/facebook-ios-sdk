@@ -13,7 +13,6 @@ import Foundation
 public typealias LoginCompletion = (Result<String, Error>) -> Void
 
 /// Provides methods for logging the user in and out.
-@available(iOS 13.0, *)
 public struct MetaLogin {
 
     var configuredDependencies: InstanceDependencies?
@@ -103,7 +102,6 @@ public struct MetaLogin {
     }
 }
 
-@available(iOS 13.0, *)
 extension MetaLogin: DependentAsInstance {
     struct InstanceDependencies {
         var urlOpener: AuthenticationSessionWebView

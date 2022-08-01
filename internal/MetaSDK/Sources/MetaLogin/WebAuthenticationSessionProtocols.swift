@@ -18,7 +18,6 @@ protocol WebAuthenticationSessionCreating {
 }
 
 protocol WebAuthenticationSession {
-    @available(iOS 13.0, *)
     var presentationContextProvider: ASWebAuthenticationPresentationContextProviding? {get set}
 
     @discardableResult

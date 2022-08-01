@@ -10,7 +10,6 @@
 import AuthenticationServices
 import XCTest
 
-@available(iOS 13.0, *)
 final class AuthWebViewTests: XCTestCase {
     var authWebView: AuthWebView!
     var webAuthSessionFactory: TestWebAuthenticationSessionFactory!
