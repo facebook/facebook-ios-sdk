@@ -9,6 +9,8 @@ SWIFTLINT_PATH=../../tools/swiftlint
 SWIFTFORMAT_PATH=../../tools/swiftformat
 
 if [ -n "$SWIFTLINT_PATH" ]; then
+  $SWIFTLINT_PATH lint --autocorrect
+  $SWIFTLINT_PATH lint --autocorrect ../../MetaSDK
   $SWIFTLINT_PATH lint
   $SWIFTLINT_PATH lint ../../MetaSDK
 else
