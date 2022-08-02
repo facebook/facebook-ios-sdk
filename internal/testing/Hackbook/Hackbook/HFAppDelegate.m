@@ -28,6 +28,7 @@
             options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
   ConsoleLog(@"Incoming URL: %@", url);
+  [self updateDeepLinkLabel:url];
   [AEMTestUtils setCampaignFromUrl:url];
   [AEMTestUtils setLoggingBehaviorsForNetworkRuquest];
 
@@ -44,11 +45,7 @@
   if ([userActivity.activityType isEqualToString: NSUserActivityTypeBrowsingWeb]) {
     NSURL *url = userActivity.webpageURL;
     ConsoleLog(@"Incoming URL: %@", url);
-    
-    UINavigationController *navigationController = (UINavigationController *)_window.rootViewController;
-    MainViewController *mainViewController = (MainViewController *)navigationController.topViewController;
-    [mainViewController updateDeepLinkLabel:url];
-    
+    [self updateDeepLinkLabel:url];
     [AEMTestUtils setCampaignFromUrl:url];
     [AEMTestUtils setLoggingBehaviorsForNetworkRuquest];
     [[FBSDKApplicationDelegate sharedInstance] application:application
@@ -114,6 +111,13 @@
       ConsoleLog(@"%@: %@", key, obj);
     }];
   }
+}
+
+- (void)updateDeepLinkLabel:(NSURL *)url
+{
+  UINavigationController *navigationController = (UINavigationController *)_window.rootViewController;
+  MainViewController *mainViewController = (MainViewController *)navigationController.topViewController;
+  [mainViewController updateDeepLinkLabel:url];
 }
 
 @end
