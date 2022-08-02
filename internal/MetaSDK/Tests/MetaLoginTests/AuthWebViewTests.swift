@@ -16,7 +16,7 @@ final class AuthWebViewTests: XCTestCase {
     var authSession: TestWebAuthenticationSession!
     var presentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider!
     var localStorage: TestLocalStorage!
-    let sampleURL = SampleURLs.valid
+    let sampleURL = SampleURLs.example
     let sampleCallbackURLScheme = "metalogin"
 
     override func setUp() {
@@ -92,7 +92,7 @@ final class AuthWebViewTests: XCTestCase {
             "Should pass sample callback url scheme to the authentication session"
         )
 
-        let url = SampleURLs.valid(path: "foo")
+        let url = SampleURLs.loginRedirect(path: "#foo")
         webAuthSessionFactory.capturedCompletionHandler?(.success(url))
         XCTAssertNotNil(capturedResult, "Should capture result at completion")
         XCTAssertEqual(try capturedResult?.get(), url, "Should invoke the completion handler with the expected result")

@@ -9,16 +9,20 @@
 import Foundation
 
 public enum SampleURLs {
-  // swiftlint:next force_unwrapping
-  public static let valid = URL(string: "https://www.example.com")!
+    public static let example = URL(string: "https://www.example.com")!
+    public static let loginRedirect = URL(string: "fbconnect://success")!
 
-  public static func valid(path: String) -> URL {
-    valid.appendingPathComponent(path)
-  }
+    public static func example(path: String) -> URL {
+        example.appendingPathComponent(path)
+    }
 
-  public static func valid(queryItems: [URLQueryItem]) -> URL {
-    var components = URLComponents(url: valid, resolvingAgainstBaseURL: false)!
-    components.queryItems = queryItems
-    return components.url!
-  }
+    public static func example(queryItems: [URLQueryItem]) -> URL {
+        var components = URLComponents(url: example, resolvingAgainstBaseURL: false)!
+        components.queryItems = queryItems
+        return components.url!
+    }
+
+    public static func loginRedirect(path: String) -> URL {
+        loginRedirect.appendingPathComponent(path)
+    }
 }

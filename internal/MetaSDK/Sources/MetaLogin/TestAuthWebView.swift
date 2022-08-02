@@ -10,6 +10,9 @@ import Foundation
 
 final class TestAuthWebView: AuthenticationSessionWebView {
     var openURLWasCalled = false
+    var capturedURL: URL?
+    var capturedCallbackURLScheme: String?
+    var capturedCompletion: AuthWebViewCompletion?
 
     func openURL(
         url: URL,
@@ -17,5 +20,8 @@ final class TestAuthWebView: AuthenticationSessionWebView {
         completion: @escaping AuthWebViewCompletion
     ) {
         openURLWasCalled = true
+        capturedURL = url
+        capturedCallbackURLScheme = callbackURLScheme
+        capturedCompletion = completion
     }
 }

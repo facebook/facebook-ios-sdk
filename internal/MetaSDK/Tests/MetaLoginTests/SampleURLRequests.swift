@@ -9,5 +9,5 @@
 import Foundation
 
 public enum SampleURLRequest {
-  public static let valid = URLRequest(url: SampleURLs.valid)
+  public static let valid = URLRequest(url: SampleURLs.example)
 }

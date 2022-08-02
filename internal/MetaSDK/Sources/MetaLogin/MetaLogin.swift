@@ -12,6 +12,10 @@ import Foundation
 /// Login Result Block
 public typealias LoginCompletion = (Result<String, Error>) -> Void
 
+enum LoginError: Error {
+    case invalidIncomingURL
+}
+
 /// Provides methods for logging the user in and out.
 public struct MetaLogin {
 
@@ -43,11 +47,17 @@ public struct MetaLogin {
 
         dependencies.urlOpener.openURL(
             url: url,
-            callbackURLScheme: "fbconnect") { _ in
-                // TO DO: update state
-                print("openURL completed")
+            callbackURLScheme: "fbconnect") { result in
+                switch result {
+                case .success(let url):
+                    guard isValidAuthenticationURL(url: url) else {
+                        return completion(.failure(LoginError.invalidIncomingURL))
+                    }
+                    return completion(.success("Is Valid Authentication URL"))
+                case .failure(let error):
+                    return completion(.failure(error))
+                }
             }
-        completion(.success("This is a dummy result"))
     }
 
     /**
@@ -99,6 +109,16 @@ public struct MetaLogin {
         }
 
         return components.url
+    }
+
+    func isValidAuthenticationURL(url: URL) -> Bool {
+        guard
+          let scheme = url.scheme,
+          let host = url.host,
+          let redirectURL = URL(string: MetaLogin.redirectURI)
+        else { return false }
+
+        return scheme == redirectURL.scheme && host == redirectURL.host
     }
 }
 

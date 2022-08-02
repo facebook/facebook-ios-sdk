@@ -83,6 +83,7 @@ final class MetaLoginTests: XCTestCase {
             wasCalled = true
         }
 
+        authWebView.capturedCompletion?(.success(SampleURLs.loginRedirect))
         XCTAssertTrue(wasCalled, "Completion handler should be called synchronously")
     }
 
@@ -98,5 +99,56 @@ final class MetaLoginTests: XCTestCase {
             localStorage.isDeleteUserSessionCalled,
             "Should delete the stored user session when a user logs out"
         )
+    }
+
+    func testLoginWithInvalidIncomingAuthenticationURL() throws {
+        let loginConfiguration = try XCTUnwrap(
+            LoginConfiguration(
+                permissions: ["public_profile"],
+                facebookAppID: "facebook_app_id",
+                metaAppID: "some_meta_app_id"
+            )
+        )
+        var capturedError: Error?
+
+        metaLogin.logIn(configuration: loginConfiguration) { result in
+            if case let .failure(error) = result {
+                capturedError = error
+            }
+        }
+
+        let url = SampleURLs.example(path: "foo")
+        authWebView.capturedCompletion?(.success(url))
+        XCTAssertNotNil(
+            capturedError,
+            "Should return URL error if the incoming URL does not begin with the Meta Login redirect uri"
+        )
+    }
+
+    func testIsValidAuthenticationURLWithValidURL() throws {
+        let sampleURL = SampleURLs.loginRedirect(path: "#granted_scopes=openid")
+        let isValid = metaLogin.isValidAuthenticationURL(url: sampleURL)
+
+        XCTAssertTrue(isValid, "Should return true when URL begins with the Meta login redirect uri")
+    }
+
+    func testIsValidAuthenticationURLWithValidHostAndInvalidScheme() throws {
+        let sampleURL = URL(string: "fbconnect://failure")!
+        let isValid = metaLogin.isValidAuthenticationURL(url: sampleURL)
+
+        XCTAssertFalse(isValid, "Should return false when URL does not begin with the Meta login redirect uri")
+    }
+
+    func testIsValidAuthenticationURLWithInvalidURLAndValidScheme() throws {
+        let sampleURL = URL(string: "example://success")!
+        let isValid = metaLogin.isValidAuthenticationURL(url: sampleURL)
+
+        XCTAssertFalse(isValid, "Should return false when URL does not begin with the Meta login redirect uri")
+    }
+
+    func testIsValidAuthenticationURLWithInvalidHostAndInvalidScheme() throws {
+        let isValid = metaLogin.isValidAuthenticationURL(url: SampleURLs.example)
+
+        XCTAssertFalse(isValid, "Should return false when URL does not begin with the Meta login redirect uri")
     }
 }
