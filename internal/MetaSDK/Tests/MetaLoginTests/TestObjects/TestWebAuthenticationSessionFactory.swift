@@ -7,6 +7,7 @@
  */
 
 import Foundation
+@testable import MetaLogin
 
 final class TestWebAuthenticationSessionFactory: WebAuthenticationSessionCreating {
     let stubbedSession: TestWebAuthenticationSession

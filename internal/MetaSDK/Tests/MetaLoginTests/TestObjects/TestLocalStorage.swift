@@ -7,6 +7,7 @@
  */
 
 import Foundation
+@testable import MetaLogin
 
 final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting {
     var authenticationSessionState: AuthenticationSessionState

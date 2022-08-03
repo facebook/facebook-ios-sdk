@@ -8,6 +8,7 @@
 
 import Foundation
 import AuthenticationServices
+@testable import MetaLogin
 
 final class TestWebAuthenticationSession: WebAuthenticationSession {
     var presentationContextProvider: ASWebAuthenticationPresentationContextProviding?

@@ -7,6 +7,7 @@
  */
 
 import Foundation
+@testable import MetaLogin
 
 final class TestKeychainStorage: KeychainPersisting {
 
