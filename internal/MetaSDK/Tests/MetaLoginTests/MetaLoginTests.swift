@@ -151,4 +151,28 @@ final class MetaLoginTests: XCTestCase {
 
         XCTAssertFalse(isValid, "Should return false when URL does not begin with the Meta login redirect uri")
     }
+
+    func testGetUserSession() throws {
+        XCTAssertEqual(
+            localStorage.stubbedUserSession,
+            metaLogin.userSession,
+            "The userSession variable should be consistent with cached data"
+        )
+    }
+
+    func testGetUserSessionWithItemNotFoundError() throws {
+        localStorage.stubbedError = LocalStorageError.itemNotFound
+        XCTAssertNil(
+            metaLogin.userSession,
+            "The userSession should be nil when error occurs in localStorage get method "
+        )
+    }
+
+    func testGetUserSessionWithUnhandledError() throws {
+        localStorage.stubbedError = LocalStorageError.unhandledError(status: errSecBadReq)
+        XCTAssertNil(
+            metaLogin.userSession,
+            "The userSession should be nil when error occurs in localStorage get method "
+        )
+    }
 }

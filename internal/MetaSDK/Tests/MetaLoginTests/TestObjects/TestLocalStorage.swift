@@ -15,6 +15,7 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
     var capturedUserSessionInSave: UserSession?
     var isDeleteUserSessionCalled = false
     var isGetUserSessionCalled = false
+    var stubbedError: LocalStorageError?
 
     init() {
         authenticationSessionState = .none
@@ -42,6 +43,9 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
 
     func getUserSession() throws -> UserSession {
         isGetUserSessionCalled = true
+        if let error = stubbedError {
+            throw error
+        }
         return stubbedUserSession
     }
 }

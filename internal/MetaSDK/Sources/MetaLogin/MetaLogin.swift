@@ -28,6 +28,21 @@ public struct MetaLogin {
     }
     static let redirectURI: String = "fbconnect://success"
 
+    /// represents login information including both user and authentication data
+    public var userSession: UserSession? {
+        guard let dependencies = try? getDependencies() else { return nil }
+
+        do {
+            return try dependencies.localStorage.getUserSession()
+        } catch LocalStorageError.itemNotFound {
+            return nil
+        } catch {
+            // TODO: error logging
+            print("Failed to get UserSession with \(error)")
+            return nil
+        }
+    }
+
     public init() {}
 
     /**
