@@ -1,6 +1,6 @@
 #!/usr/bin/env dotslash
 
-// Current Xcodegen version: 2.25.0
+// Current Xcodegen version: 2.29.0
 //
 // Updating instructions:
 // `brew upgrade xcodegen`
@@ -18,18 +18,18 @@
   "platforms": {
     "linux": {
       "scheme": "everstore",
-      "handle": "GDDzew-sc3OYMzgCAF2XUEtECWAgbsIXAAAz",
+      "handle": "GP3TuhH-nWH5lxQCAANbF7c-wThubsIXAAAz",
       "extract": {
         "decompress": "tar.gz",
-        "path": "xcodegen/2.25.0/bin/xcodegen",
+        "path": "xcodegen/2.29.0/bin/xcodegen",
       },
     },
     "macos": {
       "scheme": "everstore",
-      "handle": "GDDzew-sc3OYMzgCAF2XUEtECWAgbsIXAAAz",
+      "handle": "GP3TuhH-nWH5lxQCAANbF7c-wThubsIXAAAz",
       "extract": {
         "decompress": "tar.gz",
-        "path": "xcodegen/2.25.0/bin/xcodegen",
+        "path": "xcodegen/2.29.0/bin/xcodegen",
       },
     },
   },
