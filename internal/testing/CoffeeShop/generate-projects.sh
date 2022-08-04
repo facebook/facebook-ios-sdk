@@ -1,7 +1,7 @@
 #!/bin/sh
 # (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-EXPECTED_XCODEGEN_VERSION="2.25.0"
+EXPECTED_XCODEGEN_VERSION="2.29.0"
 
 RESET='\033[0m'
 YELLOW='\033[1;33m'
