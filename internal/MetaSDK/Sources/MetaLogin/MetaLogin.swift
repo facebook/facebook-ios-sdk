@@ -65,10 +65,12 @@ public struct MetaLogin {
             callbackURLScheme: "fbconnect") { result in
                 switch result {
                 case .success(let url):
-                    guard isValidAuthenticationURL(url: url) else {
+                    if isValidAuthenticationURL(url: url) {
+                        _ = LoginResponseURLParser().parseURL(url: url)
+                        return completion(.success("Login response parser was called"))
+                    } else {
                         return completion(.failure(LoginError.invalidIncomingURL))
                     }
-                    return completion(.success("Is Valid Authentication URL"))
                 case .failure(let error):
                     return completion(.failure(error))
                 }

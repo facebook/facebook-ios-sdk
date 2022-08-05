@@ -126,7 +126,7 @@ final class MetaLoginTests: XCTestCase {
     }
 
     func testIsValidAuthenticationURLWithValidURL() throws {
-        let sampleURL = SampleURLs.loginRedirect(path: "#granted_scopes=openid")
+        let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
         let isValid = metaLogin.isValidAuthenticationURL(url: sampleURL)
 
         XCTAssertTrue(isValid, "Should return true when URL begins with the Meta login redirect uri")
