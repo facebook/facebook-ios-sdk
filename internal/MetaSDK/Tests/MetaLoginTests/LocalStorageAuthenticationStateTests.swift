@@ -27,7 +27,7 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
             dataAccessExpirationDate: Date().addingTimeInterval(100)
         )!
         userSession = UserSession(
-            userId: UInt(111),
+            userID: UInt(111),
             graphDomain: GraphDomain.meta,
             accessToken: token,
             requestedPermissions: [],

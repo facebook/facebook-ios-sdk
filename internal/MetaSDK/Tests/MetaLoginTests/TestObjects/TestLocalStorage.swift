@@ -25,7 +25,7 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
             dataAccessExpirationDate: Date().addingTimeInterval(100)
         )!
         stubbedUserSession = UserSession(
-            userId: UInt(111),
+            userID: UInt(111),
             graphDomain: GraphDomain.faceBook,
             accessToken: sampleToken,
             requestedPermissions: [],

@@ -40,7 +40,9 @@ struct LoginResponseURLParser {
             tokenString: queryItemsDictionary[Keys.accessToken] ?? "",
             expirationDate: expirationDateFrom(parameters: queryItemsDictionary),
             dataAccessExpirationDate: dataAccessExpirationDateFrom(parameters: queryItemsDictionary)
-        ) else {
+        ),
+              let userID = UserIDExtractor().getUserID(from: queryItemsDictionary[Keys.signedRequest] ?? "")
+        else {
             return nil
         }
 
@@ -57,7 +59,7 @@ struct LoginResponseURLParser {
         }
 
         let userSession = UserSession(
-            userId: 123,
+            userID: userID,
             graphDomain: GraphDomain(rawValue: queryItemsDictionary[Keys.graphDomain] ?? "") ?? .faceBook,
             accessToken: token,
             requestedPermissions: permissions,

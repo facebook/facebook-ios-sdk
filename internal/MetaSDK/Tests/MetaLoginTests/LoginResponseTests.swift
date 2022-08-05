@@ -37,6 +37,11 @@ final class LoginResponseURLParserTests: XCTestCase {
             "Should set token expiration date from incoming URL"
         )
         XCTAssertEqual(
+            userSession.userID,
+            RawLoginParameters.userID,
+            "User ID should be derived from the signed request"
+        )
+        XCTAssertEqual(
             userSession.graphDomain,
             GraphDomain.faceBook,
             "Should set graph domain from incoming URL"
@@ -141,6 +146,22 @@ final class LoginResponseURLParserTests: XCTestCase {
         XCTAssertNil(
             LoginResponseURLParser().parseURL(url: sampleURL),
             "Should return nil if the access token parameter does not exist"
+        )
+    }
+
+    func testInitWithNoUserID() throws {
+        let sampleURL = SampleURLs.LoginResponses.withNoSignedRequestParameter
+        XCTAssertNil(
+            LoginResponseURLParser().parseURL(url: sampleURL),
+            "Should return null if the signed request is not provided"
+        )
+    }
+
+    func testInitWithInvalidUserID() throws {
+        let sampleURL = SampleURLs.LoginResponses.withInvalidSignedRequestParameter
+        XCTAssertNil(
+            LoginResponseURLParser().parseURL(url: sampleURL),
+            "Should return null with invalid signed request"
         )
     }
 }

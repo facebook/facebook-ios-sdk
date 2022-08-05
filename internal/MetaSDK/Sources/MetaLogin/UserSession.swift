@@ -12,7 +12,7 @@ import Foundation
 public final class UserSession: Codable {
 
     /// The id of the user
-    public let userId: UInt
+    public let userID: UInt
     /// It represents login account type (Facebook/Meta)
     public let graphDomain: GraphDomain
     /// Access token for using Meta SDK APIs
@@ -23,7 +23,7 @@ public final class UserSession: Codable {
     public internal(set) var declinedPermissions: [String]
 
     internal init(
-        userId: UInt,
+        userID: UInt,
         graphDomain: GraphDomain,
         accessToken: AccessToken,
         requestedPermissions: [String],
@@ -32,7 +32,7 @@ public final class UserSession: Codable {
         self.accessToken = accessToken
         self.graphDomain = graphDomain
         self.requestedPermissions = requestedPermissions
-        self.userId = userId
+        self.userID = userID
         self.declinedPermissions = declinedPermissions
     }
 }

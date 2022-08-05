@@ -54,6 +54,12 @@ public enum SampleURLs {
         public static let withNoAccessToken = loginRedirect(
             queryItems: RawLoginParameters.withNoAccessToken.queryItems
         )
+        public static let withNoSignedRequestParameter = loginRedirect(
+            queryItems: RawLoginParameters.withNoSignedRequestParameter.queryItems
+        )
+        public static let withInvalidSignedRequestParameter = loginRedirect(
+            queryItems: RawLoginParameters.withInvalidSignedRequestParameter.queryItems
+        )
     }
 }
 

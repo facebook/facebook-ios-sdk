@@ -27,7 +27,7 @@ extension UserSession: Equatable {
       rhs: UserSession
     ) -> Bool {
         lhs.accessToken == rhs.accessToken &&
-        lhs.userId == rhs.userId &&
+        lhs.userID == rhs.userID &&
         lhs.graphDomain == rhs.graphDomain &&
         lhs.requestedPermissions == rhs.requestedPermissions &&
         lhs.declinedPermissions == rhs.declinedPermissions
@@ -40,7 +40,7 @@ final class UserSessionTest: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        let userId = UInt(111)
+        let userID = UInt(111)
         let tokenString = "testToken"
         let graphDomain = GraphDomain.meta
         let token = AccessToken(
@@ -49,7 +49,7 @@ final class UserSessionTest: XCTestCase {
             dataAccessExpirationDate: Date().addingTimeInterval(100)
         )!
         userSession = UserSession(
-            userId: userId,
+            userID: userID,
             graphDomain: graphDomain,
             accessToken: token,
             requestedPermissions: [],
