@@ -34,6 +34,11 @@
             "determinator": true,
           },
           {
+            "name": "build coffeeshop for simulator",
+            "shell": "python3 ci/build_coffeeshop_simulator_ipa.py",
+            "determinator": true,
+          },
+          {
             "name": "run unit tests",
             "shell": "python3 ci/unit_tests.py",
             "determinator": true,
