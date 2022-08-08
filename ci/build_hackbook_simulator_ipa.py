@@ -29,14 +29,15 @@ my_job = [
                     ],
                     "shell": """
                         cd internal/testing/Hackbook
-                        .generate-projects.sh
+                        ./generate-projects.sh || exit 1
 
                         # Build the project
                         xcodebuild build -project Hackbook.xcodeproj \
                             -scheme Hackbook \
                             -derivedDataPath build \
                             -sdk iphonesimulator \
-                            -configuration Release
+                            -configuration Release \
+                        || exit 1
 
                         # Make it looks like an ipa so idb will install it onto a simulator
                         mkdir -p build/Hackbook/Payload
