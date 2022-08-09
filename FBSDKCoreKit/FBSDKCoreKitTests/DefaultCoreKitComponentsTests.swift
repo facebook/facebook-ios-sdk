@@ -699,7 +699,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testWebViewProvider() {
     XCTAssertTrue(
-      components.webViewProvider is WebViewFactory,
+      components.webViewProvider is _WebViewFactory,
       "The default components should use an instance of WebViewFactory as its web view provider"
     )
   }

@@ -112,6 +112,9 @@
  #import <FBSDKCoreKit/FBSDKURLOpening.h>
  #import <FBSDKCoreKit/FBSDKWebDialogDelegate.h>
  #import <FBSDKCoreKit/FBSDKWebDialogView.h>
+ #import <FBSDKCoreKit/FBSDKWebView.h>
  #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
+ #import <FBSDKCoreKit/FBSDKWebViewProviding.h>
  #import <FBSDKCoreKit/_FBSDKWindowFinding.h>
+ #import <FBSDKCoreKit/WKWebView+WebViewProtocol.h>
 #endif

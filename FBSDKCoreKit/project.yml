@@ -197,7 +197,10 @@ targets:
           - FBSDKURLHosting*
           - FBSDKURLOpen*
           - FBSDKWebDialog*
+          - FBSDKWebView.*
           - FBSDKWebViewAppLinkResolver*
+          - FBSDKWebViewProviding.*
+          - WKWebView+WebViewProtocol.*
           - FBSDKWindowFinding*
           - FBSDKInternalUtility+URLHosting*
       - path: FBSDKCoreKit/Info.plist
@@ -304,7 +307,10 @@ targets:
           - FBSDKURLHosting*
           - FBSDKURLOpen*
           - FBSDKWebDialog*
+          - FBSDKWebView.*
           - FBSDKWebViewAppLinkResolver*
+          - FBSDKWebViewProviding.*
+          - WKWebView+WebViewProtocol.*
           - FBSDKWindowFinding*
           - Info.plist
           - FBSDKInternalUtility+URLHosting*

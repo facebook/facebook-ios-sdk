@@ -25,13 +25,6 @@ NS_SWIFT_NAME(WebView)
 
 @end
 
-NS_SWIFT_NAME(WebViewProviding)
-@protocol FBSDKWebViewProviding
-
-- (id<FBSDKWebView>)createWebViewWithFrame:(CGRect)frame;
-
-@end
-
 NS_ASSUME_NONNULL_END
 
 #endif
