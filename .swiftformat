@@ -1,5 +1,5 @@
 # SwiftFormat Config
-# Version: 0.49.0
+# Version: 0.49.14
 # Rules: https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md
 
 # NOTE: Caveat with using both SwiftFormat and SwiftLint:
@@ -13,8 +13,11 @@
 
 
 # Excluded files and dirs
---exclude samples,testing,ads,internal # dirs
---exclude Package.swift # files
+--exclude samples,testing,ads
+--exclude internal/scripts
+--exclude internal/testing
+--exclude internal/tools
+--exclude Package.swift
 
 # Enabled rules
 --rules andOperator
