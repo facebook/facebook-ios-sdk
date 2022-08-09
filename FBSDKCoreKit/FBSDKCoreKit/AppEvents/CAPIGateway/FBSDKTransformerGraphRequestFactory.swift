@@ -9,6 +9,7 @@
 import FBSDKCoreKit_Basics
 
 @objcMembers
+// swiftlint:disable:next prefer_final_classes
 public class FBSDKTransformerGraphRequestFactory: NSObject {
   let contentType = "application/json"
   let timeoutInterval = 60
@@ -64,7 +65,11 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
         let requestDictionary = self.capiGatewayRequestDictionary(with: processedEvents)
         let jsonData = try JSONSerialization.data(withJSONObject: requestDictionary, options: [])
 
-        var request = URLRequest(url: url, cachePolicy: NSURLRequest.CachePolicy.useProtocolCachePolicy, timeoutInterval: TimeInterval(self.timeoutInterval))
+        var request = URLRequest(
+          url: url,
+          cachePolicy: .useProtocolCachePolicy,
+          timeoutInterval: TimeInterval(self.timeoutInterval)
+        )
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue(self.contentType, forHTTPHeaderField: "Content-Type")
         request.httpShouldHandleCookies = false
@@ -79,7 +84,8 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
               return
             }
           }
-        }.resume()
+        }
+        .resume()
       } catch {
         return
       }
