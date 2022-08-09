@@ -1,6 +1,6 @@
 #!/usr/bin/env dotslash
 
-// SwiftFormat Version: 0.49.10
+// SwiftFormat Version: 0.49.14
 // https://github.com/nicklockwood/SwiftFormat
 //
 // How to update:
@@ -18,7 +18,7 @@
     "macos": {
       "scheme": "manifold",
 	    "bucket": "ios-sdk-tools",
-	    "path": "tree/swiftformat",
+	    "path": "tree/swiftformat-0.49.14",
       "api_key": "ios-sdk-tools-key",
     }
   }
