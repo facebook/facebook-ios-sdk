@@ -27,7 +27,7 @@ public final class _AEMUtility: NSObject {
   public func getMatchedInvocation(_ invocations: [_AEMInvocation], businessID: String?) -> _AEMInvocation? {
     guard let businessID = businessID else {
       for invocation in invocations.reversed() {
-        if nil == invocation.businessID {
+        if invocation.businessID == nil {
           return invocation
         }
       }

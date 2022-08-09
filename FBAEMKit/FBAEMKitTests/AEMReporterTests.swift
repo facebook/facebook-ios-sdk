@@ -458,7 +458,7 @@ final class AEMReporterTests: XCTestCase {
       "fb_content_data": content,
     ]
     XCTAssertEqual(
-      parameters as? [String: String] ,
+      parameters as? [String: String],
       expected,
       "Rule match request parameter is not expected"
     )

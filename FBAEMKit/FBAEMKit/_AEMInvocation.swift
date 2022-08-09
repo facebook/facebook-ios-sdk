@@ -198,7 +198,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
       // Check advertiser rule matching
       processedParameters = getProcessedParameters(from: parameters)
       if let matchingRule = configuration.matchingRule,
-          !matchingRule.isMatchedEventParameters(processedParameters) {
+         !matchingRule.isMatchedEventParameters(processedParameters) {
         return false
       }
     }

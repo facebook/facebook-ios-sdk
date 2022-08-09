@@ -10,7 +10,7 @@
 
 import FBSDKCoreKit
 
- typealias AuthenticationTokenBlock = (AuthenticationToken?) -> Void
+typealias AuthenticationTokenBlock = (AuthenticationToken?) -> Void
 
 protocol AuthenticationTokenCreating {
   func createToken(

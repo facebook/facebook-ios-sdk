@@ -49,7 +49,7 @@ struct LoginURLCompleter: LoginCompleting {
       (hasEitherNonceOrIdToken && !hasBothNonceAndIdToken) {
       setParameters(values: urlParameters, appID: appID)
     } else if urlParameters["error"] as? String != nil ||
-              urlParameters["error_message"] as? String != nil {
+      urlParameters["error_message"] as? String != nil {
       parameters.error = error(from: urlParameters)
     } else if hasBothCodeAndIdToken,
               let errorFactory = try? Self.getDependencies().errorFactory {
@@ -274,7 +274,7 @@ struct LoginURLCompleter: LoginCompleting {
       flags: [.doNotInvalidateTokenOnError, .disableErrorRecovery]
     )
 
-    request.start { [self]  _, result, graphRequestError in
+    request.start { [self] _, result, graphRequestError in
       parameters.code = nil
 
       guard
