@@ -10,8 +10,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKWebDialog.h>
-
 @class FBSDKWebDialog;
 
 NS_ASSUME_NONNULL_BEGIN

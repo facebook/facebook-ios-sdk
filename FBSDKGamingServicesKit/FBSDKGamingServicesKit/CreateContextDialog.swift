@@ -65,13 +65,13 @@ public final class CreateContextDialog: ContextWebDialog {
       windowFinder: windowFinder
     )
 
-    currentWebDialog = WebDialog.createAndShow(
+    currentWebDialog = _WebDialog(
       name: Keys.methodName,
-      parameters: parameters,
-      frame: frame,
-      delegate: self,
-      windowFinder: windowFinder
+      parameters: parameters as? [String: String],
+      webViewFrame: frame
     )
+    currentWebDialog?.delegate = self
+    currentWebDialog?.show()
 
     InternalUtility.shared.registerTransientObject(self)
     return true

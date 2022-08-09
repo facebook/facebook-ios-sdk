@@ -24,7 +24,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
 
   public var delegate: ContextDialogDelegate?
   public var dialogContent: ValidatableProtocol?
-  public var currentWebDialog: WebDialog?
+  public var currentWebDialog: _WebDialog?
 
   init(delegate: ContextDialogDelegate?, dialogContent: ValidatableProtocol?) {
     super.init()
@@ -40,7 +40,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
 
   // MARK: - WebDialogDelegate
 
-  public func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
+  public func webDialog(_ webDialog: _WebDialog, didCompleteWithResults results: [String: Any]) {
     if currentWebDialog != webDialog {
       return
     }
@@ -48,7 +48,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     InternalUtility.shared.unregisterTransientObject(self)
   }
 
-  public func webDialog(_ webDialog: WebDialog, didFailWithError error: Error) {
+  public func webDialog(_ webDialog: _WebDialog, didFailWithError error: Error) {
     guard let delegate = delegate, currentWebDialog == webDialog else {
       return
     }
@@ -56,7 +56,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     InternalUtility.shared.unregisterTransientObject(self)
   }
 
-  public func webDialogDidCancel(_ webDialog: WebDialog) {
+  public func webDialogDidCancel(_ webDialog: _WebDialog) {
     guard let delegate = delegate, currentWebDialog == webDialog else {
       return
     }

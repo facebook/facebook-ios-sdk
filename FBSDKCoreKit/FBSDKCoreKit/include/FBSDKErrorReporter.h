@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKErrorReporting.h"
+#import <FBSDKCoreKit/FBSDKErrorReporting.h>
 
 @protocol FBSDKGraphRequestFactory;
 @protocol FBSDKFileManaging;
@@ -17,6 +17,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 NS_SWIFT_NAME(ErrorReporter)
 @interface FBSDKErrorReporter : NSObject <FBSDKErrorReporting>
 
