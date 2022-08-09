@@ -259,16 +259,16 @@ extension _ShareUtility: ShareUtilityProtocol {
           parameters: ["file": image],
           httpMethod: .post
         )
-          .start { _, result, _ in
-            defer { dispatchGroup.leave() }
+        .start { _, result, _ in
+          defer { dispatchGroup.leave() }
 
-            guard
-              let values = result as? [String: Any],
-              let uri = values["uri"] as? String
-            else { return }
+          guard
+            let values = result as? [String: Any],
+            let uri = values["uri"] as? String
+          else { return }
 
-            stagedURIs.append(uri)
-          }
+          stagedURIs.append(uri)
+        }
       }
 
     dispatchGroup.notify(queue: .main) {

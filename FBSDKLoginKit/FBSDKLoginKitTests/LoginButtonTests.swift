@@ -893,7 +893,7 @@ final class LoginButtonTests: XCTestCase {
     XCTAssertNotNil(loginProvider.capturedConfiguration)
     let completion = try XCTUnwrap(loginProvider.capturedCompletion)
     let granted = Set(SampleAccessTokens.validToken.permissions.map(\.name))
-    let declined = Set(SampleAccessTokens.validToken.declinedPermissions.map(\.name ))
+    let declined = Set(SampleAccessTokens.validToken.declinedPermissions.map(\.name))
     let result = LoginManagerLoginResult(
       token: SampleAccessTokens.validToken,
       authenticationToken: nil,

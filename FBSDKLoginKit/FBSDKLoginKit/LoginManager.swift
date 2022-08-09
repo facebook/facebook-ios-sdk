@@ -181,6 +181,7 @@ public final class LoginManager: NSObject {
 
       Logger.singleShotLogEntry(.developerErrors, logEntry: failureMessage)
 
+      // swiftformat:disable:next redundantSelf
       let error = self.errorFactory?.error(
         code: CoreError.errorInvalidArgument.rawValue,
         message: failureMessage,
@@ -422,6 +423,7 @@ public final class LoginManager: NSObject {
         result = getSuccessResult(from: parameters)
 
         if result?.token != nil,
+           // swiftformat:disable:next redundantSelf
            let accessToken = self.accessTokenWallet?.current {
           // In a reauthentication, short circuit and let the login handler be called when the validation finishes.
           return validateReauthentication(accessToken: accessToken, loginResult: result)
@@ -482,10 +484,10 @@ public final class LoginManager: NSObject {
       handler = nil
     } else {
       let message = """
-          ** WARNING: You are requesting permissions inside the completion block of an existing login. \
-          This is unsupported behavior. You should request additional permissions only when they are needed, such as \
-          requesting for publish_actions when the user performs a sharing action.
-          """
+        ** WARNING: You are requesting permissions inside the completion block of an existing login. \
+        This is unsupported behavior. You should request additional permissions only when they are needed, such as \
+        requesting for publish_actions when the user performs a sharing action.
+        """
       Logger.singleShotLogEntry(.developerErrors, logEntry: message)
     }
   }
@@ -623,6 +625,7 @@ public final class LoginManager: NSObject {
   private func performBrowserLogIn(handler browserLoginHandler: BrowserLoginSuccessBlock?) {
     guard let dependencies = try? getDependencies() else { return }
 
+    // swiftformat:disable:next redundantSelf
     let urlScheme = "fb\(self.settings?.appID ?? "")\(self.settings?.appURLSchemeSuffix ?? "")"
     logger?.willAttemptAppSwitchingBehavior(urlScheme: urlScheme)
     let serverConfigurationProvider = ServerConfigurationProvider()
@@ -682,6 +685,7 @@ public final class LoginManager: NSObject {
 
   private func getCancelledResult(from parameters: _LoginCompletionParameters) -> LoginManagerLoginResult {
     var declinedPermissions = Set<String>()
+    // swiftformat:disable:next redundantSelf
     if self.accessTokenWallet?.current != nil {
       // Always include the list of declined permissions from this login request
       // if an access token is already cached by the SDK
@@ -743,6 +747,7 @@ public final class LoginManager: NSObject {
 
   func getRecentlyGrantedPermissions(from grantedPermissions: Set<FBPermission>) -> Set<FBPermission> {
     guard
+      // swiftformat:disable:next redundantSelf
       let previous = self.accessTokenWallet?.current?.permissions,
       !previous.isEmpty,
       let requested = requestedPermissions,
@@ -763,6 +768,7 @@ public final class LoginManager: NSObject {
   // MARK: - Keychain Storage
 
   private func storeExpectedChallenge(_ challenge: String?) {
+    // swiftformat:disable:next redundantSelf
     guard let keychainStore = self.keychainStore else { return }
 
     let accessibility = DynamicFrameworkLoaderProxy
@@ -777,6 +783,7 @@ public final class LoginManager: NSObject {
   }
 
   private func loadExpectedChallenge() -> String? {
+    // swiftformat:disable:next redundantSelf
     self.keychainStore?.string(forKey: Keys.expectedChallenge)
   }
 
@@ -785,6 +792,7 @@ public final class LoginManager: NSObject {
       .loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly()
       .takeRetainedValue()
 
+    // swiftformat:disable:next redundantSelf
     self.keychainStore?.setString(
       nonce,
       forKey: Keys.expectedNonce,
@@ -793,6 +801,7 @@ public final class LoginManager: NSObject {
   }
 
   private func loadExpectedNonce() -> String? {
+    // swiftformat:disable:next redundantSelf
     self.keychainStore?.string(forKey: Keys.expectedNonce)
   }
 
@@ -801,6 +810,7 @@ public final class LoginManager: NSObject {
       .loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly()
       .takeRetainedValue()
 
+    // swiftformat:disable:next redundantSelf
     self.keychainStore?.setString(
       codeVerifier?.value,
       forKey: Keys.expectedCodeVerifier,
@@ -809,6 +819,7 @@ public final class LoginManager: NSObject {
   }
 
   private func loadExpectedCodeVerifier() -> String? {
+    // swiftformat:disable:next redundantSelf
     self.keychainStore?.string(forKey: Keys.expectedCodeVerifier)
   }
 }
@@ -879,6 +890,7 @@ extension LoginManager: URLOpening {
       let host = url.host
     else { return false }
 
+    // swiftformat:disable:next redundantSelf
     return scheme.hasPrefix("fb\(self.settings?.appID ?? "")")
       && host == "authorize"
   }
@@ -899,6 +911,7 @@ extension LoginManager: URLOpening {
       let host = url.host
     else { return false }
 
+    // swiftformat:disable:next redundantSelf
     return scheme.hasPrefix("fb\(self.settings?.appID ?? "")")
       && host == "no-op"
   }

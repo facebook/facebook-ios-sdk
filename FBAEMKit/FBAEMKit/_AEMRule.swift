@@ -149,7 +149,7 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   }
 
   public override func isEqual(_ object: Any?) -> Bool {
-    guard let rule = object as?_AEMRule else {
+    guard let rule = object as? _AEMRule else {
       return false
     }
 
@@ -158,8 +158,8 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
     }
 
     return conversionValue == rule.conversionValue
-    && priority == rule.priority
-    && events == rule.events
+      && priority == rule.priority
+      && events == rule.events
   }
 }
 

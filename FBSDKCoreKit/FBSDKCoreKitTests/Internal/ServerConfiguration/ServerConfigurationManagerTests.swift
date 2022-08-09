@@ -157,9 +157,9 @@ final class ServerConfigurationManagerTests: XCTestCase {
       dialogConfigurationMapBuilder.capturedRawConfigurations ?? [],
       expectedRawConfigurations
     )
-      .forEach { actual, expected in
-        assertEqualRawDialogConfigurations(actual, expected)
-      }
+    .forEach { actual, expected in
+      assertEqualRawDialogConfigurations(actual, expected)
+    }
   }
 
   func testParsingResponses() {

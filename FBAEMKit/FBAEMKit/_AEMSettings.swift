@@ -18,6 +18,7 @@
 @objc(FBAEMSettings)
 public final class _AEMSettings: NSObject {
   public static func appID() -> String? {
+    // swiftformat:disable:next redundantSelf
     self.bundle?.object(forInfoDictionaryKey: "FacebookAppID") as? String
   }
 }
