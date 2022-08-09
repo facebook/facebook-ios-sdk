@@ -12,7 +12,7 @@ import FBSDKCoreKit
 // exercised correctly by the wrapper class
 protocol SwitchContextDialogProtocol: WebDialogDelegate, DialogProtocol {
 
-  var currentWebDialog: WebDialog? { get set }
+  var currentWebDialog: _WebDialog? { get set }
 
   func createWebDialogFrame(
     withWidth: CGFloat,

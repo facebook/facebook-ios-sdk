@@ -58,7 +58,7 @@ public class ShareDialog: NSObject, SharingDialog { // swiftlint:disable:this pr
    */
   public var shouldFailOnDataError = false
 
-  var webDialog: WebDialog?
+  var webDialog: _WebDialog?
   private var temporaryFiles = [URL]()
 
   /**
@@ -535,13 +535,13 @@ extension ShareDialog {
     }
 
     let parameters = dependencies.shareUtility.feedShareDictionary(for: content)
-    webDialog = WebDialog.createAndShow(
+
+    webDialog = _WebDialog(
       name: Self.feedMethodName,
-      parameters: parameters,
-      frame: .zero,
-      delegate: self,
-      windowFinder: dependencies.windowFinder
+      parameters: parameters as? [String: String]
     )
+    webDialog?.delegate = self
+    webDialog?.show()
   }
 
   private func showNative() throws {
@@ -691,13 +691,12 @@ extension ShareDialog {
 
     let components = dependencies.shareUtility.buildWebShareBridgeComponents(for: content)
 
-    webDialog = WebDialog.createAndShow(
+    webDialog = _WebDialog(
       name: components.methodName,
-      parameters: components.parameters,
-      frame: .zero,
-      delegate: self,
-      windowFinder: dependencies.windowFinder
+      parameters: components.parameters as? [String: String]
     )
+    webDialog?.delegate = self
+    webDialog?.show()
   }
 
   private var shouldUseNativeDialog: Bool {
@@ -1116,7 +1115,7 @@ extension ShareDialog {
 
 extension ShareDialog: WebDialogDelegate {
   public func webDialog(
-    _ webDialog: WebDialog,
+    _ webDialog: _WebDialog,
     didCompleteWithResults results: [String: Any]
   ) {
     guard
@@ -1146,7 +1145,7 @@ extension ShareDialog: WebDialogDelegate {
     dependencies.internalUtility.unregisterTransientObject(self)
   }
 
-  public func webDialog(_ webDialog: WebDialog, didFailWithError error: Error) {
+  public func webDialog(_ webDialog: _WebDialog, didFailWithError error: Error) {
     guard self.webDialog === webDialog else { return }
 
     self.webDialog = nil
@@ -1155,7 +1154,7 @@ extension ShareDialog: WebDialogDelegate {
     Self.internalUtility?.unregisterTransientObject(self)
   }
 
-  public func webDialogDidCancel(_ webDialog: WebDialog) {
+  public func webDialogDidCancel(_ webDialog: _WebDialog) {
     guard self.webDialog === webDialog else { return }
 
     self.webDialog = nil

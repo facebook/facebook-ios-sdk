@@ -26,7 +26,7 @@ final class TestSwitchContextDialog: SwitchContextDialogProtocol {
 
   var delegate: ContextDialogDelegate?
   var dialogContent: ValidatableProtocol?
-  var currentWebDialog: WebDialog?
+  var currentWebDialog: _WebDialog?
 
   func createWebDialogFrame(
     withWidth: CGFloat,
@@ -38,15 +38,15 @@ final class TestSwitchContextDialog: SwitchContextDialogProtocol {
     return .zero
   }
 
-  func webDialogDidCancel(_ webDialog: WebDialog) {
+  func webDialogDidCancel(_ webDialog: _WebDialog) {
     wasDidCancelCalled = true
   }
 
-  func webDialog(_ webDialog: WebDialog, didFailWithError error: Error) {
+  func webDialog(_ webDialog: _WebDialog, didFailWithError error: Error) {
     wasDidFailWithErrorCalled = true
   }
 
-  func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
+  func webDialog(_ webDialog: _WebDialog, didCompleteWithResults results: [String: Any]) {
     wasDidCompleteWithResultsCalled = true
   }
 

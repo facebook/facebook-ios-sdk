@@ -26,8 +26,6 @@ NS_SWIFT_NAME(configure(defaultReporter:));
 + (void)resetClassDependencies;
 #endif
 
-- (instancetype)initWithReporter:(id<FBSDKErrorReporting>)reporter;
-
 @end
 
 NS_ASSUME_NONNULL_END

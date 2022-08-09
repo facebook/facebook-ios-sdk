@@ -35,6 +35,8 @@
 #import <FBSDKCoreKit/FBSDKDynamicSocialFrameworkLoader.h>
 #import <FBSDKCoreKit/FBSDKErrorCreating.h>
 #import <FBSDKCoreKit/FBSDKErrorFactory.h>
+#import <FBSDKCoreKit/FBSDKErrorReporter.h>
+#import <FBSDKCoreKit/FBSDKErrorReporting.h>
 #import <FBSDKCoreKit/FBSDKErrorRecoveryAttempting.h>
 #import <FBSDKCoreKit/FBSDKEventLogging.h>
 #import <FBSDKCoreKit/FBSDKImpressionLoggerFactoryProtocol.h>
@@ -108,7 +110,6 @@
  #import <FBSDKCoreKit/FBSDKURLHosting.h>
  #import <FBSDKCoreKit/FBSDKURLOpener.h>
  #import <FBSDKCoreKit/FBSDKURLOpening.h>
- #import <FBSDKCoreKit/FBSDKWebDialog.h>
  #import <FBSDKCoreKit/FBSDKWebDialogDelegate.h>
  #import <FBSDKCoreKit/FBSDKWebDialogView.h>
  #import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
