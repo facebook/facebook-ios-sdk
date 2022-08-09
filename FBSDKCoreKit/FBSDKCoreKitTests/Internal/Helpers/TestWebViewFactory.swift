@@ -10,7 +10,7 @@ final class TestWebViewFactory: WebViewProviding {
   var capturedFrame: CGRect?
   let webView = TestWebView()
 
-  func createWebView(withFrame frame: CGRect) -> WebView {
+  func createWebView(frame: CGRect) -> WebView {
     capturedFrame = frame
     return webView
   }

@@ -181,7 +181,6 @@
 #import "FBSDKViewHierarchy+Testing.h"
 #import "FBSDKViewHierarchyMacros.h"
 #import "FBSDKWebDialogView+Testing.h"
-#import "FBSDKWebViewFactory.h"
 #import "FeatureManager+Testing.h"
 #import "ImageDownloader+Testing.h"
 #import "NSNotificationCenter+NotificationPosting.h"

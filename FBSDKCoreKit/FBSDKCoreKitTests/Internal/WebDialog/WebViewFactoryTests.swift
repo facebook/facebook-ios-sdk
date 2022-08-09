@@ -10,11 +10,24 @@
 
 final class WebViewFactoryTests: XCTestCase {
 
-  let factory = WebViewFactory()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var factory: _WebViewFactory!
+  // swiftlint:enable implicitly_unwrapped_optional
   let frame = CGRect(origin: .zero, size: .init(width: 5, height: 5))
 
+  override func setUp() {
+    super.setUp()
+    factory = _WebViewFactory()
+  }
+
+  override func tearDown() {
+    factory = nil
+
+    super.tearDown()
+  }
+
   func testCreatingWebView() {
-    guard let webView = factory.createWebView(withFrame: frame) as? WKWebView else {
+    guard let webView = factory.createWebView(frame: frame) as? WKWebView else {
       return XCTFail("Should create a webview of the expected concrete type")
     }
 
