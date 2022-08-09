@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
+final class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
 
   enum Keys {
     static let eventName = "event_name"
