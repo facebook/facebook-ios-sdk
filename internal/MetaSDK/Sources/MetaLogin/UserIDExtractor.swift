@@ -9,28 +9,28 @@
 import Foundation
 
 struct UserIDExtractor {
-    func getUserID(from signedRequest: String) -> UInt? {
-        let signatureAndPayload = signedRequest.components(separatedBy: ".")
-        var userID = ""
+  func getUserID(from signedRequest: String) -> UInt? {
+    let signatureAndPayload = signedRequest.components(separatedBy: ".")
+    var userID = ""
 
-        if signatureAndPayload.count == 2 {
-            var payload = signatureAndPayload[1] as String
-            let remainder = payload.count % 4
-            payload = payload.padding(
-                toLength: payload.count + 4 - remainder,
-                withPad: "=",
-                startingAt: 0
-            )
+    if signatureAndPayload.count == 2 {
+      var payload = signatureAndPayload[1] as String
+      let remainder = payload.count % 4
+      payload = payload.padding(
+        toLength: payload.count + 4 - remainder,
+        withPad: "=",
+        startingAt: 0
+      )
 
-            if let data = Data(base64Encoded: payload, options: .ignoreUnknownCharacters),
-               let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                userID = dictionary["user_id"] as? String ?? ""
-            }
-        }
-
-        if userID.isEmpty {
-            return nil
-        }
-        return UInt(userID)
+      if let data = Data(base64Encoded: payload, options: .ignoreUnknownCharacters),
+         let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+        userID = dictionary["user_id"] as? String ?? ""
+      }
     }
+
+    if userID.isEmpty {
+      return nil
+    }
+    return UInt(userID)
+  }
 }

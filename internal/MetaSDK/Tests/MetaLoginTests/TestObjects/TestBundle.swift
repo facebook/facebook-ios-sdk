@@ -9,8 +9,8 @@
 import Foundation
 
 final class TestBundle: Bundle {
-    var stubbedBundleIdentifier: String?
-    public override var bundleIdentifier: String? {
-        return stubbedBundleIdentifier
-    }
+  var stubbedBundleIdentifier: String?
+  public override var bundleIdentifier: String? {
+    return stubbedBundleIdentifier
+  }
 }

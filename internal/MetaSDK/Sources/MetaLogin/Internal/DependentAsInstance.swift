@@ -8,50 +8,50 @@
 
 @dynamicMemberLookup
 protocol DependentAsInstance {
-    associatedtype InstanceDependencies
+  associatedtype InstanceDependencies
 
-    var configuredDependencies: InstanceDependencies? { get set }
-    var defaultDependencies: InstanceDependencies? { get }
+  var configuredDependencies: InstanceDependencies? { get set }
+  var defaultDependencies: InstanceDependencies? { get }
 
-    mutating func setDependencies(_ dependencies: InstanceDependencies)
+  mutating func setDependencies(_ dependencies: InstanceDependencies)
 
-    #if DEBUG
-    mutating func resetDependencies()
-    #endif
+  #if DEBUG
+  mutating func resetDependencies()
+  #endif
 }
 
 extension DependentAsInstance {
-    mutating func setDependencies(_ dependencies: InstanceDependencies) {
-        configuredDependencies = dependencies
+  mutating func setDependencies(_ dependencies: InstanceDependencies) {
+    configuredDependencies = dependencies
+  }
+
+  #if DEBUG
+  mutating func resetDependencies() {
+    configuredDependencies = nil
+  }
+  #endif
+
+  func getDependencies() throws -> InstanceDependencies {
+    guard let dependencies = configuredDependencies ?? defaultDependencies else {
+      throw MissingInstanceDependenciesError(for: Self.self)
     }
 
-    #if DEBUG
-    mutating func resetDependencies() {
-        configuredDependencies = nil
-    }
-    #endif
+    return dependencies
+  }
 
-    func getDependencies() throws -> InstanceDependencies {
-        guard let dependencies = configuredDependencies ?? defaultDependencies else {
-            throw MissingInstanceDependenciesError(for: Self.self)
-        }
-
-        return dependencies
-    }
-
-    subscript<Dependency>(dynamicMember keyPath: KeyPath<InstanceDependencies, Dependency>) -> Dependency? {
-        try? getDependencies()[keyPath: keyPath]
-    }
+  subscript<Dependency>(dynamicMember keyPath: KeyPath<InstanceDependencies, Dependency>) -> Dependency? {
+    try? getDependencies()[keyPath: keyPath]
+  }
 }
 
 struct MissingInstanceDependenciesError<Dependent: DependentAsInstance>: Error, CustomStringConvertible {
-    private let dependentType: Dependent.Type
+  private let dependentType: Dependent.Type
 
-    fileprivate init(for dependentType: Dependent.Type) {
-        self.dependentType = dependentType
-    }
+  fileprivate init(for dependentType: Dependent.Type) {
+    self.dependentType = dependentType
+  }
 
-    var description: String {
-        "The dependencies for the instance of '\(dependentType)' have not been set"
-    }
+  var description: String {
+    "The dependencies for the instance of '\(dependentType)' have not been set"
+  }
 }

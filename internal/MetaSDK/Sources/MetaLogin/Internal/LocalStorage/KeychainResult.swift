@@ -9,6 +9,6 @@
 import Foundation
 
 struct KeychainResult {
-    let status: OSStatus
-    let data: Data?
+  let status: OSStatus
+  let data: Data?
 }

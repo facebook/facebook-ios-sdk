@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
 import AuthenticationServices
+import Foundation
 
 // swiftlint:disable:next type_name line_length
 final class TestWebAuthenticationSessionPresentationContextProvider: NSObject, ASWebAuthenticationPresentationContextProviding {
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return ASPresentationAnchor()
-    }
+  func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+    return ASPresentationAnchor()
+  }
 }

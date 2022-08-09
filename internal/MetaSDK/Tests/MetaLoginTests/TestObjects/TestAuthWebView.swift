@@ -6,23 +6,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
 @testable import MetaLogin
+import Foundation
 
 final class TestAuthWebView: AuthenticationSessionWebView {
-    var openURLWasCalled = false
-    var capturedURL: URL?
-    var capturedCallbackURLScheme: String?
-    var capturedCompletion: AuthWebViewCompletion?
+  var openURLWasCalled = false
+  var capturedURL: URL?
+  var capturedCallbackURLScheme: String?
+  var capturedCompletion: AuthWebViewCompletion?
 
-    func openURL(
-        url: URL,
-        callbackURLScheme: String,
-        completion: @escaping AuthWebViewCompletion
-    ) {
-        openURLWasCalled = true
-        capturedURL = url
-        capturedCallbackURLScheme = callbackURLScheme
-        capturedCompletion = completion
-    }
+  func openURL(
+    url: URL,
+    callbackURLScheme: String,
+    completion: @escaping AuthWebViewCompletion
+  ) {
+    openURLWasCalled = true
+    capturedURL = url
+    capturedCallbackURLScheme = callbackURLScheme
+    capturedCompletion = completion
+  }
 }

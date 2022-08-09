@@ -6,21 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
-import AuthenticationServices
 @testable import MetaLogin
+import AuthenticationServices
+import Foundation
 
 final class TestWebAuthenticationSession: WebAuthenticationSession {
-    var presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
+  var presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
 
-    init(stubbedPresentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider) {
-        self.presentationContextProvider = stubbedPresentationContextProvider
-    }
+  init(stubbedPresentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider) {
+    presentationContextProvider = stubbedPresentationContextProvider
+  }
 
-    var startWasCalled = false
+  var startWasCalled = false
 
-    func start() -> Bool {
-        startWasCalled = true
-        return true
-    }
+  func start() -> Bool {
+    startWasCalled = true
+    return true
+  }
 }

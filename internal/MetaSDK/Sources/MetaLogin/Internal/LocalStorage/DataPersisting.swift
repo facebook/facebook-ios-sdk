@@ -9,9 +9,9 @@
 import Foundation
 
 protocol DataPersisting {
-    func integer(forKey defaultName: String) -> Int
-    func set(_ value: Int, forKey defaultName: String)
-    func removeObject(forKey: String)
+  func integer(forKey defaultName: String) -> Int
+  func set(_ value: Int, forKey defaultName: String)
+  func removeObject(forKey: String)
 }
 
 extension UserDefaults: DataPersisting {}

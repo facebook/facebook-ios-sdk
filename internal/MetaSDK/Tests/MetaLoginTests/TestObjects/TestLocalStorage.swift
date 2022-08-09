@@ -6,46 +6,46 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
 @testable import MetaLogin
+import Foundation
 
 final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting {
-    var authenticationSessionState: AuthenticationSessionState
-    var stubbedUserSession: UserSession
-    var capturedUserSessionInSave: UserSession?
-    var isDeleteUserSessionCalled = false
-    var isGetUserSessionCalled = false
-    var stubbedError: LocalStorageError?
+  var authenticationSessionState: AuthenticationSessionState
+  var stubbedUserSession: UserSession
+  var capturedUserSessionInSave: UserSession?
+  var isDeleteUserSessionCalled = false
+  var isGetUserSessionCalled = false
+  var stubbedError: LocalStorageError?
 
-    init() {
-        authenticationSessionState = .none
-        let sampleToken = AccessToken(
-            tokenString: "testToken",
-            expirationDate: Date().addingTimeInterval(100),
-            dataAccessExpirationDate: Date().addingTimeInterval(100)
-        )!
-        stubbedUserSession = UserSession(
-            userID: UInt(111),
-            graphDomain: GraphDomain.faceBook,
-            accessToken: sampleToken,
-            requestedPermissions: [],
-            declinedPermissions: []
-        )
-    }
+  init() {
+    authenticationSessionState = .none
+    let sampleToken = AccessToken(
+      tokenString: "testToken",
+      expirationDate: Date().addingTimeInterval(100),
+      dataAccessExpirationDate: Date().addingTimeInterval(100)
+    )!
+    stubbedUserSession = UserSession(
+      userID: UInt(111),
+      graphDomain: GraphDomain.faceBook,
+      accessToken: sampleToken,
+      requestedPermissions: [],
+      declinedPermissions: []
+    )
+  }
 
-    func saveUserSession(userSession: UserSession) throws {
-        capturedUserSessionInSave = userSession
-    }
+  func saveUserSession(userSession: UserSession) throws {
+    capturedUserSessionInSave = userSession
+  }
 
-    func deleteUserSession() throws {
-        isDeleteUserSessionCalled = true
-    }
+  func deleteUserSession() throws {
+    isDeleteUserSessionCalled = true
+  }
 
-    func getUserSession() throws -> UserSession {
-        isGetUserSessionCalled = true
-        if let error = stubbedError {
-            throw error
-        }
-        return stubbedUserSession
+  func getUserSession() throws -> UserSession {
+    isGetUserSessionCalled = true
+    if let error = stubbedError {
+      throw error
     }
+    return stubbedUserSession
+  }
 }

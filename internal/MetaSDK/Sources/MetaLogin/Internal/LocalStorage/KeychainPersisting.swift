@@ -9,7 +9,7 @@
 import Foundation
 
 protocol KeychainPersisting {
-    func save(data: Data) -> OSStatus
-    func read() -> KeychainResult
-    func delete() -> OSStatus
+  func save(data: Data) -> OSStatus
+  func read() -> KeychainResult
+  func delete() -> OSStatus
 }

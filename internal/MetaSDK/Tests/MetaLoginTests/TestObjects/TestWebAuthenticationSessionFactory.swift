@@ -6,28 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
 @testable import MetaLogin
+import Foundation
 
 final class TestWebAuthenticationSessionFactory: WebAuthenticationSessionCreating {
-    let stubbedSession: TestWebAuthenticationSession
+  let stubbedSession: TestWebAuthenticationSession
 
-    init(stubbedSession: TestWebAuthenticationSession) {
-        self.stubbedSession = stubbedSession
-    }
+  init(stubbedSession: TestWebAuthenticationSession) {
+    self.stubbedSession = stubbedSession
+  }
 
-    var capturedURL: URL?
-    var capturedCallbackURLScheme: String?
-    var capturedCompletionHandler: AuthWebViewCompletion?
+  var capturedURL: URL?
+  var capturedCallbackURLScheme: String?
+  var capturedCompletionHandler: AuthWebViewCompletion?
 
-    func createWebAuthenticationSession(
-        url: URL,
-        callbackURLScheme: String?,
-        completionHandler: @escaping AuthWebViewCompletion
-    ) -> WebAuthenticationSession {
-        capturedURL = url
-        capturedCallbackURLScheme = callbackURLScheme
-        capturedCompletionHandler = completionHandler
-        return stubbedSession
-    }
+  func createWebAuthenticationSession(
+    url: URL,
+    callbackURLScheme: String?,
+    completionHandler: @escaping AuthWebViewCompletion
+  ) -> WebAuthenticationSession {
+    capturedURL = url
+    capturedCallbackURLScheme = callbackURLScheme
+    capturedCompletionHandler = completionHandler
+    return stubbedSession
+  }
 }

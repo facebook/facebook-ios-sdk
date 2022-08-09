@@ -6,27 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
 @testable import MetaLogin
+import Foundation
 
 final class TestDataStorage: DataPersisting {
-    var capturedIntegerForKeyName: String?
-    var stubbedIntegerForKey = 0
-    var capturedSetIntegerForKeyName: String?
-    var capturedRemoveStringForKeyName: String?
-    var capturedSetIntValue: Int?
+  var capturedIntegerForKeyName: String?
+  var stubbedIntegerForKey = 0
+  var capturedSetIntegerForKeyName: String?
+  var capturedRemoveStringForKeyName: String?
+  var capturedSetIntValue: Int?
 
-    func integer(forKey defaultName: String) -> Int {
-        capturedIntegerForKeyName = defaultName
-        return stubbedIntegerForKey
-    }
+  func integer(forKey defaultName: String) -> Int {
+    capturedIntegerForKeyName = defaultName
+    return stubbedIntegerForKey
+  }
 
-    func set(_ value: Int, forKey defaultName: String) {
-        capturedSetIntegerForKeyName = defaultName
-        capturedSetIntValue = value
-    }
+  func set(_ value: Int, forKey defaultName: String) {
+    capturedSetIntegerForKeyName = defaultName
+    capturedSetIntValue = value
+  }
 
-    func removeObject(forKey: String) {
-        capturedRemoveStringForKeyName = forKey
-    }
+  func removeObject(forKey: String) {
+    capturedRemoveStringForKeyName = forKey
+  }
 }

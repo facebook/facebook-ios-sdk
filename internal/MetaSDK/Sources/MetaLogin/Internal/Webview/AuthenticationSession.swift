@@ -9,8 +9,8 @@
 import Foundation
 
 protocol AuthenticationSession {
-    init(url: NSURL, completion: (Bool) -> Void)
+  init(url: NSURL, completion: (Bool) -> Void)
 
-    func start() -> Bool
-    func cancel() -> Bool
+  func start() -> Bool
+  func cancel() -> Bool
 }

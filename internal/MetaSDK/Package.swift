@@ -11,21 +11,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "MetaSDK",
-    platforms: [
-        .iOS(.v13),
-    ],
-    products: [
-        .library(
-            name: "MetaLogin",
-            targets: ["MetaLogin"]),
-    ],
-    targets: [
-        .target(
-            name: "MetaLogin",
-            dependencies: []),
-        .testTarget(
-            name: "MetaLoginTests",
-            dependencies: ["MetaLogin"]),
-    ]
+  name: "MetaSDK",
+  platforms: [
+    .iOS(.v13),
+  ],
+  products: [
+    .library(
+      name: "MetaLogin",
+      targets: ["MetaLogin"]
+    ),
+  ],
+  targets: [
+    .target(
+      name: "MetaLogin",
+      dependencies: []
+    ),
+    .testTarget(
+      name: "MetaLoginTests",
+      dependencies: ["MetaLogin"]
+    ),
+  ]
 )

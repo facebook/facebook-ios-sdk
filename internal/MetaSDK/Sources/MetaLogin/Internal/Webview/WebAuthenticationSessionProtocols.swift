@@ -6,30 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
 import AuthenticationServices
+import Foundation
 
 protocol WebAuthenticationSessionCreating {
-    func createWebAuthenticationSession(
-        url: URL,
-        callbackURLScheme: String?,
-        completionHandler: @escaping AuthWebViewCompletion
-    ) -> WebAuthenticationSession
+  func createWebAuthenticationSession(
+    url: URL,
+    callbackURLScheme: String?,
+    completionHandler: @escaping AuthWebViewCompletion
+  ) -> WebAuthenticationSession
 }
 
 protocol WebAuthenticationSession {
-    var presentationContextProvider: ASWebAuthenticationPresentationContextProviding? {get set}
+  var presentationContextProvider: ASWebAuthenticationPresentationContextProviding? { get set }
 
-    @discardableResult
-    func start() -> Bool
+  @discardableResult
+  func start() -> Bool
 }
 
 protocol AuthenticationSessionStatePersisting {
-    var authenticationSessionState: AuthenticationSessionState {get set}
+  var authenticationSessionState: AuthenticationSessionState { get set }
 }
 
 protocol AuthenticationSessionWebView {
-    func openURL(url: URL, callbackURLScheme: String, completion: @escaping AuthWebViewCompletion)
+  func openURL(url: URL, callbackURLScheme: String, completion: @escaping AuthWebViewCompletion)
 }
 
 extension ASWebAuthenticationSession: WebAuthenticationSession {}
