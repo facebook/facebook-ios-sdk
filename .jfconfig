@@ -92,6 +92,11 @@
             "name": "Lint Meta SDK",
             "shell": "python3 ci/swiftlint_check.py",
             "determinator": true,
+          },
+          {
+            "name": "Format Swift files",
+            "shell": "python3 ci/swiftformat_check.py",
+            "determinator": true,
           }
         ],
       },
