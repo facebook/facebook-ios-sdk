@@ -18,16 +18,16 @@ public final class UserSession: Codable {
   /// Access token for using Meta SDK APIs
   public internal(set) var accessToken: AccessToken
   /// The permissions that were requested when the token was obtained
-  public internal(set) var requestedPermissions: [String]
+  public internal(set) var requestedPermissions: Set<Permission>
   /// The permissions that were declined when the token was obtained
-  public internal(set) var declinedPermissions: [String]
+  public internal(set) var declinedPermissions: Set<Permission>
 
-  internal init(
+  init(
     userID: UInt,
     graphDomain: GraphDomain,
     accessToken: AccessToken,
-    requestedPermissions: [String],
-    declinedPermissions: [String]
+    requestedPermissions: Set<Permission>,
+    declinedPermissions: Set<Permission>
   ) {
     self.accessToken = accessToken
     self.graphDomain = graphDomain

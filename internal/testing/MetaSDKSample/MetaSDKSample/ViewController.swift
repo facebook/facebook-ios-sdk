@@ -9,7 +9,7 @@ class ViewController: UIViewController {
 
     @IBAction func onLoginClicked(_ sender: Any) {
         guard let configuration = LoginConfiguration(
-            permissions: ["public_profile"],
+            permissions: [.publicProfile],
             facebookAppID: "184484190795",
             metaAppID: "some_meta_app_id"
         ) else {

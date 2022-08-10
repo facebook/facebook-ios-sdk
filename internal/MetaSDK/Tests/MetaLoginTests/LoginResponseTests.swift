@@ -47,12 +47,12 @@ final class LoginResponseURLParserTests: XCTestCase {
       "Should set graph domain from incoming URL"
     )
     XCTAssertEqual(
-      userSession.requestedPermissions,
+      Set(userSession.requestedPermissions.map(\.rawValue)),
       RawLoginParameters.requestedPermissions,
       "Should set requested permissions from granted scopes in incoming URL"
     )
     XCTAssertEqual(
-      userSession.declinedPermissions,
+      Set(userSession.declinedPermissions.map(\.rawValue)),
       RawLoginParameters.declinedPermissions,
       "Should set declined permissions from denied scopes in incoming URL"
     )

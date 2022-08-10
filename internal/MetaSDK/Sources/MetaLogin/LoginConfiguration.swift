@@ -10,7 +10,7 @@
 public struct LoginConfiguration {
 
   /// The requested permissions for the login attempt. Defaults to an empty set.
-  public let permissions: [String]
+  public let permissions: Set<Permission>
 
   /// The Facebook App ID used by the SDK.
   /// If not explicitly set, the default will be read from the application's plist (FacebookAppID).
@@ -25,15 +25,14 @@ public struct LoginConfiguration {
   /**
    Attempts to initialize a new configuration with the expected parameters.
 
-   - Parameter permissions: The requested permissions for a login attempt. Permissions must be an array of strings
-   that do not contain whitespace.
+   - Parameter permissions: The requested permissions for a login attempt.
    - Parameter facebookAppID: the Facebook App ID used by the SDK. If not explicitly set, the default will be read
    from the application's plist (FacebookAppID)
    - Parameter metaAppID: the Meta App ID used by the SDK. If not explicitly set, the default will be read from the
    application's plist (MetaAppID)
    */
   public init?(
-    permissions: [String] = [],
+    permissions: Set<Permission> = [],
     facebookAppID: String? = nil,
     metaAppID: String? = nil
   ) {

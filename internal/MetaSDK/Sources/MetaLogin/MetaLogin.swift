@@ -112,7 +112,7 @@ public struct MetaLogin {
     ]
 
     let permissions = configuration.permissions
-    parameters["scope"] = permissions.joined(separator: ",")
+    parameters["scope"] = permissions.map(\.rawValue).joined(separator: ",")
     parameters["redirect_uri"] = MetaLogin.redirectURI
 
     return parameters

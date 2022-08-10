@@ -67,7 +67,7 @@ final class MetaLoginTests: XCTestCase {
     var wasCalled = false
     let loginConfiguration = try XCTUnwrap(
       LoginConfiguration(
-        permissions: ["public_profile"],
+        permissions: [.publicProfile],
         facebookAppID: "facebook_app_id",
         metaAppID: "some_meta_app_id"
       )
@@ -104,7 +104,7 @@ final class MetaLoginTests: XCTestCase {
   func testLoginWithInvalidIncomingAuthenticationURL() throws {
     let loginConfiguration = try XCTUnwrap(
       LoginConfiguration(
-        permissions: ["public_profile"],
+        permissions: [.publicProfile],
         facebookAppID: "facebook_app_id",
         metaAppID: "some_meta_app_id"
       )

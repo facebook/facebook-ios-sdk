@@ -12,7 +12,7 @@ import XCTest
 final class LoginConfigurationTests: XCTestCase {
   func testCreatingWithNoAppID() {
     let configuration = LoginConfiguration(
-      permissions: ["public_profile"]
+      permissions: [.publicProfile]
     )
 
     XCTAssertNil(configuration, "Should not be able to create configuration with no App ID")
@@ -20,7 +20,7 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithNoFacebookAppID() {
     let configuration = LoginConfiguration(
-      permissions: ["public_profile"],
+      permissions: [.publicProfile],
       metaAppID: "some_meta_app_id"
     )
 
@@ -29,7 +29,7 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithNoMetaAppID() {
     let configuration = LoginConfiguration(
-      permissions: ["public_profile"],
+      permissions: [.publicProfile],
       facebookAppID: "some_fb_app_id"
     )
 
@@ -52,7 +52,7 @@ final class LoginConfigurationTests: XCTestCase {
   func testCreatingWithPermissionsAndAppIDs() throws {
     let configuration = try XCTUnwrap(
       LoginConfiguration(
-        permissions: ["public_profile"],
+        permissions: [.publicProfile],
         facebookAppID: "some_fb_app_id",
         metaAppID: "some_meta_app_id"
       ),
@@ -61,7 +61,7 @@ final class LoginConfigurationTests: XCTestCase {
 
     XCTAssertEqual(
       configuration.permissions,
-      ["public_profile"],
+      [.publicProfile],
       "A configuration should be created with provided permissions"
     )
   }

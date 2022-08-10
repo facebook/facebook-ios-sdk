@@ -47,23 +47,31 @@ struct LoginResponseURLParser {
       return nil
     }
 
-    var permissions: [String] = []
+    var grantedPermissions = Set<Permission>()
     if let grantedScopes = queryItemsDictionary[Keys.grantedScopes],
        !grantedScopes.isEmpty {
-      permissions = grantedScopes.components(separatedBy: ",")
+      grantedPermissions = Set(
+        grantedScopes
+          .components(separatedBy: ",")
+          .compactMap(Permission.init(rawValue:))
+      )
     }
 
-    var declinedPermissions: [String] = []
+    var declinedPermissions = Set<Permission>()
     if let deniedScopes = queryItemsDictionary[Keys.deniedScopes],
        !deniedScopes.isEmpty {
-      declinedPermissions = deniedScopes.components(separatedBy: ",")
+      declinedPermissions = Set(
+        deniedScopes
+          .components(separatedBy: ",")
+          .compactMap(Permission.init(rawValue:))
+      )
     }
 
     let userSession = UserSession(
       userID: userID,
       graphDomain: GraphDomain(rawValue: queryItemsDictionary[Keys.graphDomain] ?? "") ?? .faceBook,
       accessToken: token,
-      requestedPermissions: permissions,
+      requestedPermissions: grantedPermissions,
       declinedPermissions: declinedPermissions
     )
 
