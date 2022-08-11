@@ -33,7 +33,7 @@ extension DependentAsInstance {
 
   func getDependencies() throws -> InstanceDependencies {
     guard let dependencies = configuredDependencies ?? defaultDependencies else {
-      throw MissingInstanceDependenciesError(for: Self.self)
+      throw MissingDependenciesError(for: Self.self)
     }
 
     return dependencies
@@ -41,17 +41,5 @@ extension DependentAsInstance {
 
   subscript<Dependency>(dynamicMember keyPath: KeyPath<InstanceDependencies, Dependency>) -> Dependency? {
     try? getDependencies()[keyPath: keyPath]
-  }
-}
-
-struct MissingInstanceDependenciesError<Dependent: DependentAsInstance>: Error, CustomStringConvertible {
-  private let dependentType: Dependent.Type
-
-  fileprivate init(for dependentType: Dependent.Type) {
-    self.dependentType = dependentType
-  }
-
-  var description: String {
-    "The dependencies for the instance of '\(dependentType)' have not been set"
   }
 }
