@@ -89,7 +89,7 @@
             "determinator": true,
           },
           {
-            "name": "Lint Meta SDK",
+            "name": "Lint Swift files",
             "shell": "python3 ci/swiftlint_check.py",
             "determinator": true,
           },

@@ -8,19 +8,19 @@ ONCALL = 'platform_sdks'
 
 my_job = [
     {
-        "alias": "meta-sdk-swiftlint-check",
+        "alias": "ios-sdk-swiftlint-check",
         "capabilities": ios_sdk_capabilities(),
         "command": "SandcastleUniversalCommand",
         "description": "Runs swiftlint on the Meta SDK",
         "oncall": ONCALL,
         "priority": 0,
-        "tags": ["meta-ios-sdk"],
+        "tags": ["facebook-ios-sdk"],
         "args": {
             "oncall": ONCALL,
             "steps": [
                 {
                     "name": "Lint",
-                    "shell": "cd internal/MetaSDK && ../tools/swiftlint --strict",
+                    "shell": "internal/tools/swiftlint --strict",
                 },
             ],
         },
