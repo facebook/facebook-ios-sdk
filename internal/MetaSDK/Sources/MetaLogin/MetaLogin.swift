@@ -20,12 +20,10 @@ enum LoginError: Error {
 public struct MetaLogin {
 
   var configuredDependencies: InstanceDependencies?
-  var defaultDependencies: InstanceDependencies? {
-    .init(
-      urlOpener: AuthWebView(),
-      localStorage: LocalStorage()
-    )
-  }
+  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+    urlOpener: AuthWebView(),
+    localStorage: LocalStorage()
+  )
 
   static let redirectURI: String = "fbconnect://success"
 

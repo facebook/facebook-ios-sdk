@@ -22,12 +22,10 @@ struct LocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting
   static let userSessionSavedFlag = 1
 
   var configuredDependencies: InstanceDependencies?
-  var defaultDependencies: InstanceDependencies? {
-    .init(
-      dataStorage: UserDefaults.standard,
-      keychainStorage: KeychainStorage()
-    )
-  }
+  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+    dataStorage: UserDefaults.standard,
+    keychainStorage: KeychainStorage()
+  )
 
   var authenticationSessionState: AuthenticationSessionState {
     get {

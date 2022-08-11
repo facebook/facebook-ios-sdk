@@ -13,13 +13,11 @@ typealias AuthWebViewCompletion = (Result<URL, Error>) -> Void
 
 struct AuthWebView: AuthenticationSessionWebView {
   var configuredDependencies: InstanceDependencies?
-  var defaultDependencies: InstanceDependencies? {
-    .init(
-      webAuthenticationSessionFactory: WebAuthenticationSessionFactory(),
-      presentationContextProvider: WebAuthenticationSessionPresentationContextProvider(),
-      localStorage: LocalStorage()
-    )
-  }
+  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+    webAuthenticationSessionFactory: WebAuthenticationSessionFactory(),
+    presentationContextProvider: WebAuthenticationSessionPresentationContextProvider(),
+    localStorage: LocalStorage()
+  )
 
   func openURL(
     url: URL,
