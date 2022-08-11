@@ -19,6 +19,7 @@ public enum _AEMAdvertiserRuleOperator: Int {
   case unknown = 0
   // Multi Entry Rule Operator
   case and
+  // swiftlint:disable:next identifier_name
   case or
   case not
   // Single Entry Rule Operator

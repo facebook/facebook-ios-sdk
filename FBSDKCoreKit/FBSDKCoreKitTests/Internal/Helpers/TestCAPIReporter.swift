@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import Foundation
 
-class TestCAPIReporter: CAPIReporter {
+final class TestCAPIReporter: CAPIReporter {
 
   var enabledWasCalled = false
   var capturedFactory: GraphRequestFactoryProtocol?

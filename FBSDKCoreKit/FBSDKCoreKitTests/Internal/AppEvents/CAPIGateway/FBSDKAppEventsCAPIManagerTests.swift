@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class FBSDKAppEventsCAPIManagerTests: XCTestCase {
+final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
 
   enum Values {
     static let datasetID = "id123"

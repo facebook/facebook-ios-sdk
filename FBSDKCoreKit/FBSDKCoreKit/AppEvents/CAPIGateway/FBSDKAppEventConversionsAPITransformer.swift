@@ -204,7 +204,8 @@ enum AppEventsConversionsAPITransformer {
     .eventName: .init(section: nil, field: .eventName),
     .valueToSum: .init(section: .customData, field: .valueToSum),
     .contentIds: .init(section: .customData, field: .contentIds), // string to array conversion required
-    .contents: .init(section: .customData, field: .contents), // string to array conversion required, contents has an extra field: price
+    // string to array conversion required, contents has an extra field: price
+    .contents: .init(section: .customData, field: .contents),
     .contentType: .init(section: .customData, field: .contentType),
     .currency: .init(section: .customData, field: .currency),
     .description: .init(section: .customData, field: .description),
@@ -474,6 +475,7 @@ enum AppEventsConversionsAPITransformer {
     return transformedEvents
   }
 
+  // swiftlint:disable:next function_parameter_count
   static func combineAllTransformedData(
     eventType: AppEventType,
     userData: [String: Any],

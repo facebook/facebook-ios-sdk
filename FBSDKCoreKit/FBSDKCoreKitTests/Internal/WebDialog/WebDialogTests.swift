@@ -48,7 +48,7 @@ final class WebDialogTests: XCTestCase, WebDialogDelegate {
     let dependencies = try _WebDialog.getDependencies()
 
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorCreating,
+      dependencies.errorFactory is ErrorFactory,
       .defaultDependency("the error factory", for: "creating errors")
     )
 
