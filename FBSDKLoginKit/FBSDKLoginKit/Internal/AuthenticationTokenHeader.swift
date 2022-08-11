@@ -13,12 +13,12 @@ import FBSDKCoreKit_Basics
 final class AuthenticationTokenHeader {
 
   /// Key identifier used in identifying the key to be used to verify the signature.
-  public let kid: String
+  let kid: String
 
   /// Returns a new instance, when one can be created from the parameters given, otherwise `nil`.
   /// - Parameter encodedHeader: Base64-encoded string of the header.
   /// - Returns: An FBAuthenticationTokenHeader object.
-  public init?(fromEncodedString encodedHeader: String) {
+  init?(fromEncodedString encodedHeader: String) {
     guard
       let headerData = Base64.decode(asData: Base64.base64(fromBase64Url: encodedHeader)),
       let header = try? JSONSerialization.jsonObject(with: headerData, options: .mutableContainers) as? [String: Any],
