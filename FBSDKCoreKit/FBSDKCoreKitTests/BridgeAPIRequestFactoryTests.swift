@@ -11,7 +11,7 @@
 import XCTest
 
 final class BridgeAPIRequestFactoryTests: XCTestCase {
-  let factory = BridgeAPIRequestFactory()
+  let factory = _BridgeAPIRequestFactory()
 
   func testFactoryMakesRequests() {
     XCTAssertNotNil(

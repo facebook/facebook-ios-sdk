@@ -74,7 +74,6 @@
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2+Testing.h"
 #import "FBSDKBridgeAPIRequest+Testing.h"
-#import "FBSDKBridgeAPIRequestFactory.h"
 #import "FBSDKBridgeAPIResponseCreating.h"
 #import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKButton+Internal.h"
