@@ -43,7 +43,7 @@ final class LoginResponseURLParserTests: XCTestCase {
     )
     XCTAssertEqual(
       userSession.graphDomain,
-      GraphDomain.faceBook,
+      GraphDomain.facebook,
       "Should set graph domain from incoming URL"
     )
     XCTAssertEqual(

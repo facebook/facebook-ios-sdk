@@ -6,12 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
-
-/// It represents login account type (Facebook/Meta)
+/// Values epresenting login account domains
 public enum GraphDomain: String, Codable {
-  /// Login with Facebook account
-  case faceBook = "FaceBook"
-  /// Login with Meta account
+  /// For logins using a Facebook account.
+  case facebook = "Facebook"
+  /// For logins using a Meta account.
   case meta = "Meta"
 }

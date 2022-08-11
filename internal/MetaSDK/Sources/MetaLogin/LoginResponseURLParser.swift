@@ -69,7 +69,7 @@ struct LoginResponseURLParser {
 
     let userSession = UserSession(
       userID: userID,
-      graphDomain: GraphDomain(rawValue: queryItemsDictionary[Keys.graphDomain] ?? "") ?? .faceBook,
+      graphDomain: GraphDomain(rawValue: queryItemsDictionary[Keys.graphDomain] ?? "") ?? .facebook,
       accessToken: token,
       requestedPermissions: grantedPermissions,
       declinedPermissions: declinedPermissions

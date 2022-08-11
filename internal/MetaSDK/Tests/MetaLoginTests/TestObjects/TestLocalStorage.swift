@@ -26,7 +26,7 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
     )!
     stubbedUserSession = UserSession(
       userID: UInt(111),
-      graphDomain: GraphDomain.faceBook,
+      graphDomain: .facebook,
       accessToken: sampleToken,
       requestedPermissions: [],
       declinedPermissions: []
