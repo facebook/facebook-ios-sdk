@@ -9,10 +9,10 @@
 import Foundation
 
 @objcMembers
-final class TestGateKeeperManager: NSObject, GateKeeperManaging {
+final class TestGateKeeperManager: NSObject, _GateKeeperManaging {
   static var gateKeepers = [String?: Bool]()
   static var loadGateKeepersWasCalled = false
-  static var capturedLoadGateKeepersCompletion: GKManagerBlock?
+  static var capturedLoadGateKeepersCompletion: _GKManagerBlock?
   static var capturedBoolForGateKeeperKeys = [String]()
 
   static func setGateKeeperValue(key: String, value: Bool) {
@@ -28,7 +28,7 @@ final class TestGateKeeperManager: NSObject, GateKeeperManaging {
     }
   }
 
-  static func loadGateKeepers(_ completionBlock: @escaping GKManagerBlock) {
+  static func loadGateKeepers(_ completionBlock: @escaping _GKManagerBlock) {
     loadGateKeepersWasCalled = true
     capturedLoadGateKeepersCompletion = completionBlock
   }

@@ -16,12 +16,12 @@ final class TestPaymentProductRequestorFactory: PaymentProductRequestorCreating 
   }
 
   // Dummy class to avoid polluting the shared test gatekeeper manager
-  final class PaymentGateKeeperManager: GateKeeperManaging {
+  final class PaymentGateKeeperManager: _GateKeeperManaging {
     static func bool(forKey key: String, defaultValue: Bool) -> Bool {
       false
     }
 
-    static func loadGateKeepers(_ completionBlock: @escaping GKManagerBlock) {
+    static func loadGateKeepers(_ completionBlock: @escaping _GKManagerBlock) {
       // noop
     }
   }

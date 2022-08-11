@@ -210,14 +210,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testFeatureChecker() {
     XCTAssertTrue(
-      components.featureChecker === FeatureManager.shared,
+      components.featureChecker === _FeatureManager.shared,
       "The default components should use the shared FeatureManager as its feature checker"
     )
   }
 
   func testGateKeeperManager() {
     XCTAssertTrue(
-      components.gateKeeperManager === GateKeeperManager.self,
+      components.gateKeeperManager === _GateKeeperManager.self,
       "The default components should use the GateKeeperManager type as its gate keeper manager"
     )
   }

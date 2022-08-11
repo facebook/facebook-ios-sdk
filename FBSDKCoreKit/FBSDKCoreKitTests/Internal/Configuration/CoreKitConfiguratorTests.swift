@@ -47,8 +47,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AuthenticationToken.resetTokenCache()
     FBButton.resetClassDependencies()
     ErrorFactory.resetClassDependencies()
-    FeatureManager.shared.resetDependencies()
-    GateKeeperManager.reset()
+    _GateKeeperManager.reset()
     GraphRequest.resetClassDependencies()
     GraphRequestConnection.resetClassDependencies()
     GraphRequestConnection.resetCanMakeRequests()
@@ -504,75 +503,45 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertIdentical(
       ErrorFactory.defaultReporter,
       components.errorReporter,
-      "FeatureManager should be configured with the error reporter"
-    )
-  }
-
-  func testConfiguringFeatureManager() {
-    XCTAssertNil(
-      FeatureManager.shared.gateKeeperManager,
-      "FeatureManager should not have a gatekeeper manager by default"
-    )
-    XCTAssertNil(
-      FeatureManager.shared.settings,
-      "FeatureManager should not have settings by default"
-    )
-    XCTAssertNil(
-      FeatureManager.shared.store,
-      "FeatureManager should not have a data store by default"
-    )
-
-    configurator.performConfiguration()
-
-    XCTAssertTrue(
-      FeatureManager.shared.gateKeeperManager === components.gateKeeperManager,
-      "FeatureManager should be configured with the gatekeeper manager"
-    )
-    XCTAssertTrue(
-      FeatureManager.shared.settings === components.settings,
-      "FeatureManager should be configured with the settings"
-    )
-    XCTAssertTrue(
-      FeatureManager.shared.store === components.defaultDataStore,
-      "FeatureManager should be configured with the default data store"
+      "ErrorFactory should be configured with the error reporter"
     )
   }
 
   func testConfiguringGateKeeperManager() {
     XCTAssertNil(
-      GateKeeperManager.settings,
-      "GateKeeperManager should not have settings by default"
+      _GateKeeperManager.settings,
+      "_GateKeeperManager should not have settings by default"
     )
     XCTAssertNil(
-      GateKeeperManager.graphRequestFactory,
-      "GateKeeperManager should not have a graph request factory by default"
+      _GateKeeperManager.graphRequestFactory,
+      "_GateKeeperManager should not have a graph request factory by default"
     )
     XCTAssertNil(
-      GateKeeperManager.graphRequestConnectionFactory,
-      "GateKeeperManager should not have a graph request connection factory by default"
+      _GateKeeperManager.graphRequestConnectionFactory,
+      "_GateKeeperManager should not have a graph request connection factory by default"
     )
     XCTAssertNil(
-      GateKeeperManager.store,
-      "GateKeeperManager should not have a data store by default"
+      _GateKeeperManager.store,
+      "_GateKeeperManager should not have a data store by default"
     )
 
     configurator.performConfiguration()
 
     XCTAssertTrue(
-      GateKeeperManager.settings === components.settings,
-      "GateKeeperManager should be configured with the settings"
+      _GateKeeperManager.settings === components.settings,
+      "_GateKeeperManager should be configured with the settings"
     )
     XCTAssertTrue(
-      GateKeeperManager.graphRequestFactory === components.graphRequestFactory,
-      "GateKeeperManager should be configured with the graph request factory"
+      _GateKeeperManager.graphRequestFactory === components.graphRequestFactory,
+      "_GateKeeperManager should be configured with the graph request factory"
     )
     XCTAssertTrue(
-      GateKeeperManager.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
-      "GateKeeperManager should be configured with the graph request connection factory"
+      _GateKeeperManager.graphRequestConnectionFactory === components.graphRequestConnectionFactory,
+      "_GateKeeperManager should be configured with the graph request connection factory"
     )
     XCTAssertTrue(
-      GateKeeperManager.store === components.defaultDataStore,
-      "GateKeeperManager should be configured with the data store"
+      _GateKeeperManager.store === components.defaultDataStore,
+      "_GateKeeperManager should be configured with the data store"
     )
   }
 

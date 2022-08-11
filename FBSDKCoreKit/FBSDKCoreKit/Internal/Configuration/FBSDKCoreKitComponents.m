@@ -32,7 +32,6 @@
 #import "FBSDKErrorReporter.h"
 #import "FBSDKEventDeactivationManager.h"
 #import "FBSDKFeatureExtractor.h"
-#import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKImpressionLoggerFactory.h"

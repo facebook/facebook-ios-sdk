@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^FBSDKGKManagerBlock)(NSError *_Nullable error);
 
-NS_SWIFT_NAME(GateKeeperManaging)
+NS_SWIFT_NAME(_GateKeeperManaging)
 @protocol FBSDKGateKeeperManaging
 
 /// Returns the bool value of a GateKeeper.

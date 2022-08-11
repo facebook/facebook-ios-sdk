@@ -25,7 +25,6 @@
 #import "FBSDKCrashShield+Internal.h"
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKFeatureExtractor.h"
-#import "FBSDKFeatureManager.h"
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
@@ -69,7 +68,6 @@ NS_ASSUME_NONNULL_BEGIN
   [self configureAuthenticationToken];
   [self configureButton];
   [self configureErrorFactory];
-  [self configureFeatureManager];
   [self configureGatekeeperManager];
   [self configureGraphRequest];
   [self configureGraphRequestConnection];
@@ -176,13 +174,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configureErrorFactory
 {
   [FBSDKErrorFactory configureWithDefaultReporter:self.components.errorReporter];
-}
-
-- (void)configureFeatureManager
-{
-  [FBSDKFeatureManager.shared configureWithGateKeeperManager:self.components.gateKeeperManager
-                                                    settings:self.components.settings
-                                                       store:self.components.defaultDataStore];
 }
 
 - (void)configureGatekeeperManager
