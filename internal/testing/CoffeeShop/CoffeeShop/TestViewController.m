@@ -60,13 +60,6 @@ typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);
 
 @end
 
-@interface FBSDKFeatureManager : NSObject
-
-+ (void)checkFeature:(FBSDKFeature)feature
-     completionBlock:(FBSDKFeatureManagerBlock)completionBlock;
-
-@end
-
 @interface TestViewController ()
 
 @end
@@ -348,7 +341,7 @@ typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);
                if (!version) {
                  [FBSDKRestrictiveDataFilterManager generateCrashForTest];
                } else {
-                 [FBSDKFeatureManager checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
+                 [[FBSDKFeatureManager shared] checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
                    if (enabled) {
                      [FBSDKRestrictiveDataFilterManager generateCrashForTest];
                    } else {

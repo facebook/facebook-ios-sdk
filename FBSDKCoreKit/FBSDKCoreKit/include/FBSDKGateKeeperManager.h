@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKGateKeeperManaging.h"
+#import <FBSDKCoreKit/FBSDKGateKeeperManaging.h>
 
 #define FBSDK_GATEKEEPER_MANAGER_CACHE_TIMEOUT (60 * 60)
 
@@ -19,11 +19,23 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKGraphRequestConnectionFactory;
 @protocol FBSDKDataPersisting;
 
-typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(GateKeeperManager.GateKeeperKey);
-typedef void (^ FBSDKGKManagerBlock)(NSError *_Nullable error)
-NS_SWIFT_NAME(GKManagerBlock);
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
 
-NS_SWIFT_NAME(GateKeeperManager)
+ @warning INTERNAL - DO NOT USE
+ */
+typedef NSString *const FBSDKGateKeeperKey NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(_GateKeeperManager.GateKeeperKey);
+typedef void (^ FBSDKGKManagerBlock)(NSError *_Nullable error)
+NS_SWIFT_NAME(_GKManagerBlock);
+
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_GateKeeperManager)
 @interface FBSDKGateKeeperManager : NSObject <FBSDKGateKeeperManaging>
 
 - (instancetype)init NS_UNAVAILABLE;

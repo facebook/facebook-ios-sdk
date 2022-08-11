@@ -41,6 +41,9 @@
 #import <FBSDKCoreKit/FBSDKEventLogging.h>
 #import <FBSDKCoreKit/FBSDKImpressionLoggerFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKFeatureChecking.h>
+#import <FBSDKCoreKit/FBSDKFeatureDisabling.h>
+#import <FBSDKCoreKit/FBSDKGateKeeperManager.h>
+#import <FBSDKCoreKit/FBSDKGateKeeperManaging.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
