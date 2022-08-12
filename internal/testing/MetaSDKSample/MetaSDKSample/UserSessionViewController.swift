@@ -11,24 +11,28 @@ import MetaLogin
 
 class UserSessionViewController: UITableViewController {
 
-    @IBOutlet weak var userIdLabel: UILabel!
-    @IBOutlet weak var requestedPermissionsLabel: UILabel!
-    @IBOutlet weak var graphDomainLabel: UILabel!
-    @IBOutlet weak var declinedPermissionsLabel: UILabel!
+  @IBOutlet weak var userIdLabel: UILabel!
+  @IBOutlet weak var requestedPermissionsLabel: UILabel!
+  @IBOutlet weak var graphDomainLabel: UILabel!
+  @IBOutlet weak var declinedPermissionsLabel: UILabel!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+  override func viewDidLoad() {
+    super.viewDidLoad()
 
-        updateUserSession()
+    updateUserSession()
+  }
+
+  func updateUserSession() {
+    if let userSession = MetaLogin().userSession {
+      userIdLabel.text = String(userSession.userID)
+      requestedPermissionsLabel.text = userSession.requestedPermissions
+        .map {$0.rawValue}
+        .joined(separator: ", ")
+      graphDomainLabel.text = userSession.graphDomain.rawValue
+      declinedPermissionsLabel.text = userSession.declinedPermissions
+        .map {$0.rawValue}
+        .joined(separator: ", ")
     }
-
-    func updateUserSession() {
-        if let userSession = MetaLogin().userSession {
-            userIdLabel.text = String(userSession.userID)
-            requestedPermissionsLabel.text = userSession.requestedPermissions.joined(separator: ", ")
-            graphDomainLabel.text = userSession.graphDomain.rawValue
-            declinedPermissionsLabel.text = userSession.declinedPermissions.joined(separator: ", ")
-        }
-    }
+  }
 
 }

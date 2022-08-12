@@ -11,34 +11,34 @@ import MetaLogin
 
 class AccessTokenViewController: UITableViewController {
 
-    @IBOutlet weak var dataAccessExpirationDateLabel: UILabel!
-    @IBOutlet weak var expirationDateLabel: UILabel!
-    @IBOutlet weak var tokenStringLabel: UILabel!
-    @IBOutlet weak var copyButton: UIButton!
+  @IBOutlet weak var dataAccessExpirationDateLabel: UILabel!
+  @IBOutlet weak var expirationDateLabel: UILabel!
+  @IBOutlet weak var tokenStringLabel: UILabel!
+  @IBOutlet weak var copyButton: UIButton!
 
-    @IBAction func onClickAction(_ sender: Any) {
-        UIPasteboard.general.string = tokenStringLabel.text
+  @IBAction func onClickAction(_ sender: Any) {
+    UIPasteboard.general.string = tokenStringLabel.text
+  }
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+
+    updateAccessToken()
+  }
+
+  func updateAccessToken() {
+    if let accessToken = MetaLogin().userSession?.accessToken {
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "yyyy-MM-dd 'at' HH:mm"
+      tokenStringLabel.text = accessToken.tokenString
+      expirationDateLabel.text = """
+        \(accessToken.isExpired ? "Expired" :
+        dateFormatter.string(from: accessToken.expirationDate))
+        """
+      dataAccessExpirationDateLabel.text = """
+        \(accessToken.isDataAccessExpired ? "Expired":
+        dateFormatter.string(from: accessToken.dataAccessExpirationDate))
+        """
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        updateAccessToken()
-    }
-
-    func updateAccessToken() {
-        if let accessToken = MetaLogin().userSession?.accessToken {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd 'at' HH:mm"
-            tokenStringLabel.text = accessToken.tokenString
-            expirationDateLabel.text = """
-                \(accessToken.isExpired ? "Expired" :
-                dateFormatter.string(from: accessToken.expirationDate))
-                """
-            dataAccessExpirationDateLabel.text = """
-                \(accessToken.isDataAccessExpired ? "Expired":
-                dateFormatter.string(from: accessToken.dataAccessExpirationDate))
-                """
-        }
-    }
+  }
 }

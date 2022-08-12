@@ -8,8 +8,8 @@
 
 import UIKit
 
-class LoginDetailCell: UITableViewCell {
+class HomeCell: UITableViewCell {
 
-    @IBOutlet weak var cellValue: UILabel!
+  @IBOutlet weak var cellTitleLabel: UILabel!
 
 }

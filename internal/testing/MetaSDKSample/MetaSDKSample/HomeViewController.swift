@@ -11,57 +11,89 @@ import MetaLogin
 
 class HomeViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var appTitle: UINavigationItem!
+  @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var loginButton: UIButton!
+  @IBOutlet weak var appTitle: UINavigationItem!
 
-    var cellTitles: [String] = ["User Session"]
-    let metaLogin = MetaLogin()
+  let metaLogin = MetaLogin()
+  let loginButtonLabel = "Login"
+  let logoutButtonLabel = "Logout"
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+  var isLoggedIn: Bool {
+    return metaLogin.userSession != nil
+  }
 
-    }
+  var cellConfigs: [LoginCellConfig] {[
+    LoginCellConfig(
+      cellTitle: "User Session",
+      cellSelectionStyle: .blue,
+      cellAccessoryType: .disclosureIndicator,
+      activity: {
+        self.performSegue(withIdentifier: "showUserSession", sender: self)
+      }
+    )
+  ]}
 
-    @IBAction func onLoginClicked(_ sender: Any) {
-        guard let configuration = LoginConfiguration(
-            permissions: ["public_profile"],
-            facebookAppID: "184484190795",
-            metaAppID: "some_meta_app_id"
-        ) else {
-            return
+  override func viewDidLoad() {
+    super.viewDidLoad()
+
+    updateLoginButtonLabel()
+  }
+
+  @IBAction func loginButtonTapped(_ sender: Any) {
+    if isLoggedIn {
+      metaLogin.logOut()
+      self.updateLoginButtonLabel()
+    } else {
+      guard let configuration = LoginConfiguration(
+        permissions: [.publicProfile],
+        facebookAppID: "184484190795",
+        metaAppID: "some_meta_app_id"
+      ) else {
+        return
+      }
+
+      metaLogin.logIn(configuration: configuration) { result in
+        switch result {
+        case .success:
+          self.updateLoginButtonLabel()
+        case .failure(let error):
+          print("Failed to login with \(error)")
         }
-
-        metaLogin.logIn(configuration: configuration) { result in
-            switch result {
-            case .success:
-                print("Successful login")
-            case .failure(let error):
-                print("Failed to login with \(error)")
-            }
-        }
+      }
     }
+  }
+
+  private func updateLoginButtonLabel() {
+    if isLoggedIn {
+      loginButton.setTitle(logoutButtonLabel, for: .normal)
+    } else {
+      loginButton.setTitle(loginButtonLabel, for: .normal)
+    }
+  }
 }
 
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cellTitles.count
-    }
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return cellConfigs.count
+  }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // swiftlint:disable:next force_cast
-        let cell = tableView.dequeueReusableCell(withIdentifier: "loginDetailCell", for: indexPath) as! LoginDetailCell
-        cell.textLabel?.text = cellTitles[indexPath.row]
-        if indexPath.row == 0 {
-            cell.selectionStyle = .blue
-            cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
-        }
-        return cell
-    }
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    // swiftlint:disable:next force_cast
+    let cell = tableView.dequeueReusableCell(withIdentifier: "loginDetailCell", for: indexPath) as! HomeCell
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.row == 0 {
-            performSegue(withIdentifier: "showUserSession", sender: self)
-        }
+    let cellConfig = self.cellConfigs[indexPath.row]
+    cell.cellTitleLabel.text = cellConfig.cellTitle
+    cell.accessoryType = cellConfig.cellAccessoryType
+    cell.selectionStyle = cellConfig.cellSelectionStyle
+    return cell
+  }
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    let cellConfig = self.cellConfigs[indexPath.row]
+    if let activity = cellConfig.activity {
+      activity()
     }
+  }
 }
