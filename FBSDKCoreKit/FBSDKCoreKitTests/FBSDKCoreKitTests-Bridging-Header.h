@@ -26,7 +26,6 @@
 #import "FBSDKATEPublisherFactory.h"
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessToken+Testing.h"
-#import "FBSDKAccessTokenExpirer+Testing.h"
 #import "FBSDKAccessTokenProtocols.h"
 #import "FBSDKAdvertisingTrackingStatus.h"
 #import "FBSDKAppEventName+Internal.h"
