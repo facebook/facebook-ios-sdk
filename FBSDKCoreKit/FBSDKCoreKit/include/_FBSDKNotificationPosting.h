@@ -10,9 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 /// An internal protocol used to describe a type that can post a notification
-NS_SWIFT_NAME(NotificationPosting)
-@protocol FBSDKNotificationPosting
+NS_SWIFT_NAME(_NotificationPosting)
+@protocol _FBSDKNotificationPosting
 
 // UNCRUSTIFY_FORMAT_OFF
 - (void)fb_postNotificationName:(NSNotificationName)name

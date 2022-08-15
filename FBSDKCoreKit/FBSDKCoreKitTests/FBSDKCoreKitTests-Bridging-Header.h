@@ -139,7 +139,6 @@
 #import "FBSDKMetadataIndexing.h"
 #import "FBSDKModelManager+Testing.h"
 #import "FBSDKModelUtility.h"
-#import "FBSDKNotificationPosting.h"
 #import "FBSDKPasteboard.h"
 #import "FBSDKPaymentObserving.h"
 #import "FBSDKPaymentProductRequestor.h"
