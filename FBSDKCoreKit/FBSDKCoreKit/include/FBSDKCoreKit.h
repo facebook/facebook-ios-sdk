@@ -82,6 +82,7 @@
 #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
 #import <FBSDKCoreKit/FBSDKUtility.h>
 #import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
+#import <FBSDKCoreKit/_FBSDKNotificationPosting.h>
 
 #import <UIKit/UIKit.h>
 

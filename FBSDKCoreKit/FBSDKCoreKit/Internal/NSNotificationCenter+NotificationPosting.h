@@ -6,15 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/_FBSDKNotificationPosting.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKNotificationPosting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 FB_LINK_CATEGORY_INTERFACE(NSNotificationCenter, NotificationPosting)
-@interface NSNotificationCenter (NotificationPosting) <FBSDKNotificationPosting>
+@interface NSNotificationCenter (NotificationPosting) <_FBSDKNotificationPosting>
 
 @end
 

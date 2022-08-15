@@ -10,7 +10,7 @@ import Foundation
 
 import FBSDKCoreKit_Basics
 
-extension TestNotificationCenter: NotificationPosting {
+extension TestNotificationCenter: _NotificationPosting {
 
   // MARK: Posting
 

@@ -12,12 +12,12 @@
 
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <FBSDKCoreKit/_FBSDKNotificationPosting.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKLocation.h"
 #import "FBSDKMath.h"
-#import "FBSDKNotificationPosting.h"
 #import "FBSDKProfileCodingKey.h"
 #import "FBSDKURLHosting.h"
 #import "FBSDKUnarchiverProvider.h"
@@ -44,7 +44,7 @@ static NSDateFormatter *_dateFormatter;
 @implementation FBSDKProfile
 
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider = nil;
-static id<FBSDKNotificationPosting, FBSDKNotificationDelivering> _notificationCenter = nil;
+static id<_FBSDKNotificationPosting, FBSDKNotificationDelivering> _notificationCenter = nil;
 static id<FBSDKDataPersisting> _dataStore;
 static id<FBSDKSettings> _settings;
 static id<FBSDKURLHosting> _urlHoster;
@@ -79,12 +79,12 @@ static id<FBSDKURLHosting> _urlHoster;
   _settings = settings;
 }
 
-+ (nullable id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
++ (nullable id<_FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
 {
   return _notificationCenter;
 }
 
-+ (void)setNotificationCenter:(nullable id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
++ (void)setNotificationCenter:(nullable id<_FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
 {
   _notificationCenter = notificationCenter;
 }
@@ -505,7 +505,7 @@ static id<FBSDKURLHosting> _urlHoster;
 
 + (void)configureWithDataStore:(id<FBSDKDataPersisting>)dataStore
            accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-            notificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
+            notificationCenter:(id<_FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
                       settings:(id<FBSDKSettings>)settings
                      urlHoster:(id<FBSDKURLHosting>)urlHoster
 {

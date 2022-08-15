@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKAccessTokenExpirer (Testing)
 
-@property (nonnull, nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationDelivering> notificationCenter;
+@property (nonnull, nonatomic, readonly) id<_FBSDKNotificationPosting, FBSDKNotificationDelivering> notificationCenter;
 
 - (void)_timerDidFire;
 - (void)_checkAccessTokenExpirationDate;

@@ -8,22 +8,22 @@
 
 #import "FBSDKAccessTokenExpirer.h"
 
+#import <FBSDKCoreKit/_FBSDKNotificationPosting.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKNotificationPosting.h"
 
 @interface FBSDKAccessTokenExpirer ()
 
-@property (nonnull, nonatomic, readonly) id<FBSDKNotificationPosting, FBSDKNotificationDelivering> notificationCenter;
+@property (nonnull, nonatomic, readonly) id<_FBSDKNotificationPosting, FBSDKNotificationDelivering> notificationCenter;
 @property (nonatomic) NSTimer *timer;
 
 @end
 
 @implementation FBSDKAccessTokenExpirer
 
-- (instancetype)initWithNotificationCenter:(id<FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
+- (instancetype)initWithNotificationCenter:(id<_FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
 {
   if ((self = [super init])) {
     _notificationCenter = notificationCenter;
