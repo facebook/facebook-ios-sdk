@@ -23,21 +23,24 @@ struct LocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting
 
   var configuredDependencies: InstanceDependencies?
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
-    dataStorage: UserDefaults.standard,
+    userSessionStore: UserDefaultsStore(),
     keychainStorage: KeychainStorage()
   )
 
   var authenticationSessionState: AuthenticationSessionState {
     get {
       guard let dependencies = try? getDependencies() else { return .none }
-      let rawValue = dependencies.dataStorage.integer(forKey: Self.authenticationStateKey)
 
-      return AuthenticationSessionState(rawValue: rawValue) ?? .none
+      if let rawValue = dependencies.userSessionStore.getIntegerValue(for: Self.authenticationStateKey) {
+        return AuthenticationSessionState(rawValue: rawValue) ?? .none
+      } else {
+        return .none
+      }
     }
     set {
       guard let dependencies = try? getDependencies() else { return }
 
-      dependencies.dataStorage.set(newValue.rawValue, forKey: Self.authenticationStateKey)
+      dependencies.userSessionStore.set(newValue.rawValue, for: Self.authenticationStateKey)
     }
   }
 
@@ -45,7 +48,8 @@ struct LocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting
     guard let dependencies = try? getDependencies() else { throw LocalStorageError.dependencyError }
 
     // if there is no userSessionKey in user defaults, it means the app was uninstalled or never logged in.
-    guard dependencies.dataStorage.integer(forKey: Self.userSessionSavedFlagKey) == Self.userSessionSavedFlag else {
+    guard dependencies.userSessionStore.getIntegerValue(
+      for: Self.userSessionSavedFlagKey) == Self.userSessionSavedFlag else {
       // When user uninstalled the app and then installs the app again,
       // keychian may contain stale/invalid UserSession
       // and it need to call deleteUserSession() to remove stale data.
@@ -90,16 +94,13 @@ struct LocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting
       throw LocalStorageError.unhandledError(status: status)
     }
 
-    dependencies.dataStorage.set(
-      Self.userSessionSavedFlag,
-      forKey: Self.userSessionSavedFlagKey
-    )
+    dependencies.userSessionStore.set(Self.userSessionSavedFlag, for: Self.userSessionSavedFlagKey)
   }
 
   func deleteUserSession() throws {
     guard let dependencies = try? getDependencies() else { throw LocalStorageError.dependencyError }
     let status = dependencies.keychainStorage.delete()
-    dependencies.dataStorage.removeObject(forKey: Self.userSessionSavedFlagKey)
+    dependencies.userSessionStore.remove(for: Self.userSessionSavedFlagKey)
 
     // Throw an error if an unexpected status was returned.
     guard status == noErr || status == errSecItemNotFound else {
@@ -110,7 +111,7 @@ struct LocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting
 
 extension LocalStorage: DependentAsInstance {
   struct InstanceDependencies {
-    var dataStorage: DataPersisting
+    var userSessionStore: KeyedValueMapping
     var keychainStorage: KeychainPersisting
   }
 }

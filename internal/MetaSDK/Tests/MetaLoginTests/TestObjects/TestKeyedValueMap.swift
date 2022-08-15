@@ -9,24 +9,24 @@
 @testable import MetaLogin
 import Foundation
 
-final class TestDataStorage: DataPersisting {
-  var capturedIntegerForKeyName: String?
+final class TestKeyedValueMap: KeyedValueMapping {
+  var capturedIntegerKey: String?
   var stubbedIntegerForKey = 0
   var capturedSetIntegerForKeyName: String?
   var capturedRemoveStringForKeyName: String?
   var capturedSetIntValue: Int?
 
-  func integer(forKey defaultName: String) -> Int {
-    capturedIntegerForKeyName = defaultName
+  func getIntegerValue(for key: String) -> Int? {
+    capturedIntegerKey = key
     return stubbedIntegerForKey
   }
 
-  func set(_ value: Int, forKey defaultName: String) {
-    capturedSetIntegerForKeyName = defaultName
+  func set(_ value: Int, for key: String) {
+    capturedSetIntegerForKeyName = key
     capturedSetIntValue = value
   }
 
-  func removeObject(forKey: String) {
-    capturedRemoveStringForKeyName = forKey
+  func remove(for key: String) {
+    capturedRemoveStringForKeyName = key
   }
 }

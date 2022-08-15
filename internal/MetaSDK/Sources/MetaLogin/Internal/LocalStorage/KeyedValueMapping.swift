@@ -8,10 +8,8 @@
 
 import Foundation
 
-protocol DataPersisting {
-  func integer(forKey defaultName: String) -> Int
-  func set(_ value: Int, forKey defaultName: String)
-  func removeObject(forKey: String)
+protocol KeyedValueMapping {
+  func getIntegerValue(for key: String) -> Int?
+  func set(_ value: Int, for key: String)
+  func remove(for key: String)
 }
-
-extension UserDefaults: DataPersisting {}

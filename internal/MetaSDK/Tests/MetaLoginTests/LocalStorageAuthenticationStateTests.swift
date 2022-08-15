@@ -11,7 +11,7 @@ import XCTest
 
 final class LocalStorageAuthenticationStateTests: XCTestCase {
   var localStorage: LocalStorage!
-  var dataStorage: TestDataStorage!
+  var authenticationStateStore: TestKeyedValueMap!
   var userSession: UserSession!
   var keychainStorage: TestKeychainStorage!
 
@@ -19,7 +19,7 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
     super.setUp()
 
     localStorage = LocalStorage()
-    dataStorage = TestDataStorage()
+    authenticationStateStore = TestKeyedValueMap()
     keychainStorage = TestKeychainStorage()
     let token = AccessToken(
       tokenString: "testToken",
@@ -35,7 +35,7 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
     )
     localStorage.setDependencies(
       .init(
-        dataStorage: dataStorage,
+        userSessionStore: authenticationStateStore,
         keychainStorage: keychainStorage
       )
     )
@@ -43,30 +43,19 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
 
   override func tearDown() {
     localStorage = nil
-    dataStorage = nil
+    authenticationStateStore = nil
     keychainStorage = nil
     userSession = nil
 
     super.tearDown()
   }
 
-  func testDefaultDependencies() throws {
-    localStorage.resetDependencies()
-    let dependencies = try localStorage.getDependencies()
-
-    XCTAssertEqual(
-      dependencies.dataStorage as? UserDefaults,
-      UserDefaults.standard,
-      "Local storage uses the shared user defaults object"
-    )
-  }
-
   func testCustomDependencies() throws {
     let dependencies = try localStorage.getDependencies()
 
     XCTAssertIdentical(
-      dependencies.dataStorage as AnyObject,
-      dataStorage,
+      dependencies.userSessionStore as AnyObject,
+      authenticationStateStore,
       "Should be set to custom data storage."
     )
   }
@@ -74,12 +63,12 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
   func testSettingAuthenticationSessionState() throws {
     localStorage.authenticationSessionState = .performingLogin
     XCTAssertEqual(
-      dataStorage.capturedSetIntegerForKeyName,
+      authenticationStateStore.capturedSetIntegerForKeyName,
       LocalStorage.authenticationStateKey,
       "The persistence key should be passed to data storage"
     )
     XCTAssertEqual(
-      dataStorage.capturedSetIntValue,
+      authenticationStateStore.capturedSetIntValue,
       AuthenticationSessionState.performingLogin.rawValue,
       "The session state should be set to the assigned value"
     )
@@ -87,12 +76,12 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
 
   func testGettingAuthenticationSessionState() throws {
     let sessionState = localStorage.authenticationSessionState
-    XCTAssertEqual(dataStorage.capturedIntegerForKeyName, LocalStorage.authenticationStateKey)
+    XCTAssertEqual(authenticationStateStore.capturedIntegerKey, LocalStorage.authenticationStateKey)
     XCTAssertEqual(sessionState, .none, "Session state should be none when no session state is stored")
   }
 
   func testGettingAuthenticationSessionStateWithStoredValue() throws {
-    dataStorage.stubbedIntegerForKey = 1
+    authenticationStateStore.stubbedIntegerForKey = 1
     let sessionState = localStorage.authenticationSessionState
     XCTAssertEqual(
       sessionState,
@@ -102,7 +91,7 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
   }
 
   func testGettingAuthenticationSessionStateWithInvalidValue() throws {
-    dataStorage.stubbedIntegerForKey = 3
+    authenticationStateStore.stubbedIntegerForKey = 3
     let sessionState = localStorage.authenticationSessionState
     XCTAssertEqual(
       sessionState,

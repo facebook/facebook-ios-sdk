@@ -17,7 +17,7 @@ extension LocalStorageError: Equatable {
 
 final class LocalStorageUserSessionTests: XCTestCase {
   var localStorage: LocalStorage!
-  var dataStorage: TestDataStorage!
+  var userSessionStore: TestKeyedValueMap!
   var userSession: UserSession!
   var keychainStorage: TestKeychainStorage!
 
@@ -25,7 +25,7 @@ final class LocalStorageUserSessionTests: XCTestCase {
     super.setUp()
 
     localStorage = LocalStorage()
-    dataStorage = TestDataStorage()
+    userSessionStore = TestKeyedValueMap()
     keychainStorage = TestKeychainStorage()
     let sampleAccessToken = AccessToken(
       tokenString: "testToken",
@@ -41,7 +41,7 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
     localStorage.setDependencies(
       .init(
-        dataStorage: dataStorage,
+        userSessionStore: userSessionStore,
         keychainStorage: keychainStorage
       )
     )
@@ -49,35 +49,24 @@ final class LocalStorageUserSessionTests: XCTestCase {
 
   override func tearDown() {
     localStorage = nil
-    dataStorage = nil
+    userSessionStore = nil
     keychainStorage = nil
     userSession = nil
 
     super.tearDown()
   }
 
-  func testDefaultDependencies() throws {
-    localStorage.resetDependencies()
-    let dependencies = try localStorage.getDependencies()
-
-    XCTAssertEqual(
-      dependencies.dataStorage as? UserDefaults,
-      UserDefaults.standard,
-      "Local storage uses the shared user defaults object"
-    )
-  }
-
   func testCustomDependencies() throws {
     let dependencies = try localStorage.getDependencies()
     XCTAssertIdentical(
-      dependencies.dataStorage as AnyObject,
-      dataStorage,
+      dependencies.userSessionStore as AnyObject,
+      userSessionStore,
       "Dependency should be set to custom data storage."
     )
   }
 
   func testReadUserSessionSuccessfully() throws {
-    dataStorage.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionStore.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
     keychainStorage.stubbedUserSessionData = try JSONEncoder().encode(userSession)
     keychainStorage.stubbedReadOSStatus = noErr
     let result = try localStorage.getUserSession()
@@ -94,7 +83,7 @@ final class LocalStorageUserSessionTests: XCTestCase {
 
   func testReadUserSessionNotFound() throws {
     // Data does not exist in keychain
-    dataStorage.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionStore.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
     keychainStorage.stubbedReadOSStatus = errSecItemNotFound
     XCTAssertThrowsError(
       try localStorage.getUserSession(),
@@ -110,7 +99,7 @@ final class LocalStorageUserSessionTests: XCTestCase {
 
   func testReadUserSessionWithDecodingError() throws {
     // Failure in Decoding
-    dataStorage.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionStore.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
     keychainStorage.stubbedReadOSStatus = noErr
     keychainStorage.stubbedUserSessionData = Data()
     XCTAssertThrowsError(
@@ -128,7 +117,7 @@ final class LocalStorageUserSessionTests: XCTestCase {
 
   func testReadUserSessionWithKeychainError() throws {
     // Failure in keychain read operation
-    dataStorage.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionStore.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
     keychainStorage.stubbedReadOSStatus = errSecBadReq
     XCTAssertThrowsError(
       try localStorage.getUserSession(),
@@ -167,15 +156,15 @@ final class LocalStorageUserSessionTests: XCTestCase {
       "keychainStorage.save() should be called"
     )
     XCTAssertEqual(
-      dataStorage.capturedSetIntegerForKeyName,
+      userSessionStore.capturedSetIntegerForKeyName,
       LocalStorage.userSessionSavedFlagKey,
-      "dataStorage.set should be called with defaultKey"
+      "userSessionStore.set should be called with defaultKey"
     )
   }
 
   func testSaveUserSessionWithKeychainError() throws {
     // Failure in keychain add operation
-    dataStorage.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionStore.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
     keychainStorage.stubbedSaveOSStatus = errSecBadReq
     XCTAssertThrowsError(
       try localStorage.saveUserSession(userSession: userSession),
@@ -194,9 +183,9 @@ final class LocalStorageUserSessionTests: XCTestCase {
     keychainStorage.stubbedDeleteOSStatus = noErr
     try localStorage.deleteUserSession()
     XCTAssertEqual(
-      dataStorage.capturedRemoveStringForKeyName,
+      userSessionStore.capturedRemoveStringForKeyName,
       LocalStorage.userSessionSavedFlagKey,
-      "dataStorage.removeObject should be called with defaultKey"
+      "userSessionStore.remove() should be called with defaultKey"
     )
     XCTAssertTrue(
       keychainStorage.isDeleteCalled,
@@ -214,9 +203,9 @@ final class LocalStorageUserSessionTests: XCTestCase {
       XCTAssertEqual(error as? LocalStorageError, LocalStorageError.unhandledError(status: errSecBadReq))
     }
     XCTAssertEqual(
-      dataStorage.capturedRemoveStringForKeyName,
+      userSessionStore.capturedRemoveStringForKeyName,
       LocalStorage.userSessionSavedFlagKey,
-      "dataStorage.removeObject should be called with defaultKey"
+      "userSessionStore.remove() should be called with defaultKey"
     )
   }
 
@@ -225,9 +214,9 @@ final class LocalStorageUserSessionTests: XCTestCase {
     keychainStorage.stubbedDeleteOSStatus = errSecItemNotFound
     try localStorage.deleteUserSession()
     XCTAssertEqual(
-      dataStorage.capturedRemoveStringForKeyName,
+      userSessionStore.capturedRemoveStringForKeyName,
       LocalStorage.userSessionSavedFlagKey,
-      "dataStorage.removeObject should be called with defaultKey"
+      "userSessionStore.remove() should be called with defaultKey"
     )
     XCTAssertTrue(
       keychainStorage.isDeleteCalled,
