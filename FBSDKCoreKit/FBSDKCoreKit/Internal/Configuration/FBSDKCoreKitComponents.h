@@ -18,7 +18,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKATEPublisherCreating.h"
-#import "FBSDKAccessTokenExpiring.h"
 #import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventDropDetermining.h"
 #import "FBSDKAppEventParametersExtracting.h"
@@ -68,6 +67,7 @@
 #import "__FBSDKLoggerCreating.h"
 
 @protocol FBSDKCAPIReporter;
+@protocol _FBSDKAccessTokenExpiring;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -77,7 +77,7 @@ NS_SWIFT_NAME(CoreKitComponents)
 @property (class, nonatomic, readonly) FBSDKCoreKitComponents *defaultComponents
 NS_SWIFT_NAME(default);
 
-@property (nonatomic, readonly) id<FBSDKAccessTokenExpiring> accessTokenExpirer;
+@property (nonatomic, readonly) id<_FBSDKAccessTokenExpiring> accessTokenExpirer;
 @property (nonatomic, readonly) Class<FBSDKAccessTokenProviding, FBSDKTokenStringProviding> accessTokenWallet;
 @property (nonatomic, readonly) id<FBSDKAdvertiserIDProviding> advertiserIDProvider;
 @property (nonatomic, readonly) id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging> appEvents;
@@ -155,7 +155,7 @@ NS_SWIFT_NAME(default);
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithAccessTokenExpirer:(id<FBSDKAccessTokenExpiring>)accessTokenExpirer
+- (instancetype)initWithAccessTokenExpirer:(id<_FBSDKAccessTokenExpiring>)accessTokenExpirer
                          accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKTokenStringProviding>)accessTokenWallet
                       advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                                  appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents

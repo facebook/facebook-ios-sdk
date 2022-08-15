@@ -17,7 +17,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAccessTokenExpirer() throws {
     let expirer = try XCTUnwrap(
-      components.accessTokenExpirer as? AccessTokenExpirer,
+      components.accessTokenExpirer as? _AccessTokenExpirer,
       "The default components should use an instance of AccessTokenExpirer as its access token expirer"
     )
     XCTAssertTrue(

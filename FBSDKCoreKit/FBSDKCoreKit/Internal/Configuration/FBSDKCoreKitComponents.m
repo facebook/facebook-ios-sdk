@@ -13,7 +13,6 @@
 
 #import "FBSDKAEMNetworker.h"
 #import "FBSDKATEPublisherFactory.h"
-#import "FBSDKAccessTokenExpirer.h"
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKAppEventsConfigurationManager.h"
 #import "FBSDKAppEventsDeviceInfo.h"
@@ -60,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKCoreKitComponents
 
-- (instancetype)initWithAccessTokenExpirer:(id<FBSDKAccessTokenExpiring>)accessTokenExpirer
+- (instancetype)initWithAccessTokenExpirer:(id<_FBSDKAccessTokenExpiring>)accessTokenExpirer
                          accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKTokenStringProviding>)accessTokenWallet
                       advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
                                  appEvents:(id<FBSDKSourceApplicationTracking, FBSDKAppEventsConfiguring, FBSDKApplicationLifecycleObserving, FBSDKApplicationActivating, FBSDKApplicationStateSetting, FBSDKEventLogging>)appEvents
@@ -284,7 +283,7 @@ static FBSDKCoreKitComponents *_default;
     #endif
 
       _default = [FBSDKCoreKitComponents alloc];
-      _default = [_default initWithAccessTokenExpirer:[[FBSDKAccessTokenExpirer alloc] initWithNotificationCenter:NSNotificationCenter.defaultCenter]
+      _default = [_default initWithAccessTokenExpirer:[[_FBSDKAccessTokenExpirer alloc] initWithNotificationCenter:NSNotificationCenter.defaultCenter]
                                     accessTokenWallet:FBSDKAccessToken.class
                                  advertiserIDProvider:FBSDKAppEventsUtility.shared
                                             appEvents:FBSDKAppEvents.shared
