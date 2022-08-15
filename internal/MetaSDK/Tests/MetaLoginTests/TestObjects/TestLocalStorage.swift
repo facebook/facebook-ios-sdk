@@ -37,7 +37,7 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
     capturedUserSessionInSave = userSession
   }
 
-  func deleteUserSession() throws {
+  func deleteUserSession() {
     isDeleteUserSessionCalled = true
   }
 

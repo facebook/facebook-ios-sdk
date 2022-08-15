@@ -9,20 +9,20 @@
 @testable import MetaLogin
 import XCTest
 
-final class KeychainStorageTests: XCTestCase {
+final class KeychainStoreTests: XCTestCase {
   var bundle: TestBundle!
-  var keychainStorage: KeychainStorage!
+  var keychainStore: KeychainStore!
 
   override func setUp() {
     super.setUp()
 
     bundle = TestBundle()
-    keychainStorage = KeychainStorage(bundle: bundle)
+    keychainStore = KeychainStore(bundle: bundle)
   }
 
   override func tearDown() {
     bundle = nil
-    keychainStorage = nil
+    keychainStore = nil
 
     super.tearDown()
   }
@@ -31,14 +31,14 @@ final class KeychainStorageTests: XCTestCase {
     bundle.stubbedBundleIdentifier = "test"
     XCTAssertEqual(
       bundle.stubbedBundleIdentifier,
-      keychainStorage.keychainAccount,
+      keychainStore.keychainAccount,
       "The keychain account should be set the the bundle identifier"
     )
 
     bundle.stubbedBundleIdentifier = nil
     XCTAssertEqual(
       "unknown",
-      keychainStorage.keychainAccount,
+      keychainStore.keychainAccount,
       "The keychain account should have a default value of 'unknown' when the bundle identifier is nil"
     )
   }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct KeychainStorage: KeychainPersisting {
+final class KeychainStore: DataPersisting {
   let keychainService = "com.metasdk.usersessioncache"
   var bundle: Bundle
   var keychainAccount: String {
@@ -19,7 +19,7 @@ struct KeychainStorage: KeychainPersisting {
     self.bundle = bundle
   }
 
-  func save(data: Data) -> OSStatus {
+  func save(_ data: Data) throws {
     let addQuery = [
       kSecAttrService: keychainService,
       kSecAttrAccount: keychainAccount,
@@ -27,7 +27,7 @@ struct KeychainStorage: KeychainPersisting {
       kSecClass: kSecClassGenericPassword,
       kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
     ] as CFDictionary
-    let status = SecItemAdd(addQuery as CFDictionary, nil)
+    var status = SecItemAdd(addQuery as CFDictionary, nil)
 
     if status == errSecDuplicateItem {
       let updateQuery = [
@@ -36,12 +36,15 @@ struct KeychainStorage: KeychainPersisting {
         kSecClass: kSecClassGenericPassword,
       ] as CFDictionary
       let attributesToUpdate = [kSecValueData: data] as CFDictionary
-      return SecItemUpdate(updateQuery, attributesToUpdate)
+      status = SecItemUpdate(updateQuery, attributesToUpdate)
     }
-    return status
+
+    guard status == errSecSuccess else {
+      throw LocalStorageError.unhandledError(status: SecCopyErrorMessageString(status, nil) as? String)
+    }
   }
 
-  func read() -> KeychainResult {
+  func read() throws -> Data {
     let readQuery = [
       kSecAttrService: keychainService,
       kSecAttrAccount: keychainAccount,
@@ -51,15 +54,28 @@ struct KeychainStorage: KeychainPersisting {
 
     var queryResult: AnyObject?
     let status = SecItemCopyMatching(readQuery, &queryResult)
-    return KeychainResult(status: status, data: queryResult as? Data)
+    let queryData = queryResult as? Data
+
+    if let data = queryData,
+       status == errSecSuccess {
+      return data
+    } else if status == errSecItemNotFound {
+      throw LocalStorageError.itemNotFound
+    } else {
+      throw LocalStorageError.unhandledError(status: SecCopyErrorMessageString(status, nil) as? String)
+    }
   }
 
-  func delete() -> OSStatus {
+  func delete() throws {
     let deleteQuery = [
       kSecAttrService: keychainService,
       kSecAttrAccount: keychainAccount,
       kSecClass: kSecClassGenericPassword,
     ] as CFDictionary
-    return SecItemDelete(deleteQuery)
+    let status = SecItemDelete(deleteQuery)
+
+    guard status == errSecSuccess || status == errSecItemNotFound else {
+      throw LocalStorageError.unhandledError(status: SecCopyErrorMessageString(status, nil) as? String)
+    }
   }
 }

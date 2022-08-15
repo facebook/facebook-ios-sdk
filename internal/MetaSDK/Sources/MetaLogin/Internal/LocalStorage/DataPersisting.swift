@@ -8,8 +8,8 @@
 
 import Foundation
 
-protocol KeychainPersisting {
-  func save(data: Data) -> OSStatus
-  func read() -> KeychainResult
-  func delete() -> OSStatus
+protocol DataPersisting {
+  func save(_ data: Data) throws
+  func read() throws -> Data
+  func delete() throws
 }

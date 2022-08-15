@@ -169,7 +169,8 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testGetUserSessionWithUnhandledError() throws {
-    localStorage.stubbedError = LocalStorageError.unhandledError(status: errSecBadReq)
+    localStorage.stubbedError = LocalStorageError.unhandledError(
+      status: SecCopyErrorMessageString(errSecBadReq, nil) as? String)
     XCTAssertNil(
       metaLogin.userSession,
       "The userSession should be nil when error occurs in localStorage get method "
