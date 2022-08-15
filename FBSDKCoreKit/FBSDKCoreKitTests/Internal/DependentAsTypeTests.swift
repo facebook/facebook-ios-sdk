@@ -40,7 +40,7 @@ final class DependentAsTypeTests: XCTestCase {
     ) { error in
       XCTAssertEqual(
         String(describing: error),
-        "The dependencies for the type 'DefaultImplementationDependent' have not been set",
+        "The dependencies for the type 'DefaultImplementationDependent' or an instance of it have not been set",
         .missingDependencies
       )
     }
