@@ -19,10 +19,10 @@ class HomeViewController: UIViewController {
   let loginButtonLabel = "Login"
   let logoutButtonLabel = "Logout"
 
+  var selectedPermissions: Set<Permission> = [.publicProfile]
   var isLoggedIn: Bool {
     return metaLogin.userSession != nil
   }
-
   var cellConfigs: [LoginCellConfig] {[
     LoginCellConfig(
       cellTitle: "User Session",
@@ -30,6 +30,14 @@ class HomeViewController: UIViewController {
       cellAccessoryType: .disclosureIndicator,
       activity: {
         self.performSegue(withIdentifier: "showUserSession", sender: self)
+      }
+    ),
+    LoginCellConfig(
+      cellTitle: "Permission Setting",
+      cellSelectionStyle: .blue,
+      cellAccessoryType: .disclosureIndicator,
+      activity: {
+        self.performSegue(withIdentifier: "showPermissionSetting", sender: self)
       }
     )
   ]}
@@ -46,7 +54,7 @@ class HomeViewController: UIViewController {
       self.updateLoginButtonLabel()
     } else {
       guard let configuration = LoginConfiguration(
-        permissions: [.publicProfile],
+        permissions: selectedPermissions,
         facebookAppID: "184484190795",
         metaAppID: "some_meta_app_id"
       ) else {
@@ -94,6 +102,14 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     let cellConfig = self.cellConfigs[indexPath.row]
     if let activity = cellConfig.activity {
       activity()
+    }
+  }
+
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == "showPermissionSetting" {
+      if let destination = segue.destination as? PermissionViewController {
+        destination.selectedPermissions = selectedPermissions
+      }
     }
   }
 }

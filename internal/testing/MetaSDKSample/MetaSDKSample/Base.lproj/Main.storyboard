@@ -84,6 +84,7 @@
                         <outlet property="loginButton" destination="7KB-hh-3Xo" id="GCN-AH-GgH"/>
                         <outlet property="tableView" destination="1cb-y9-N1j" id="6qH-c1-J11"/>
                         <segue destination="Xf9-I4-teC" kind="show" identifier="showUserSession" id="Qie-NH-S0T"/>
+                        <segue destination="XEX-xf-q1M" kind="show" identifier="showPermissionSetting" id="zmq-rZ-gNz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -426,6 +427,51 @@ QWNjZXNzIBBUb2tlbg
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fNr-0J-2hh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-26.086956521739133" y="128.57142857142856"/>
+        </scene>
+        <!--Permission Setting-->
+        <scene sceneID="WUO-ax-n3C">
+            <objects>
+                <tableViewController id="XEX-xf-q1M" customClass="PermissionViewController" customModule="MetaSDKSample" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="jtb-sf-sPk">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="permissionCell" id="Nhm-vM-n1X" customClass="PermissionCell" customModule="MetaSDKSample" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="44.5" width="414" height="73.5"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Nhm-vM-n1X" id="9uo-NO-WXt">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="73.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ez6-at-nj7">
+                                            <rect key="frame" x="35" y="26" width="42" height="21.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="ez6-at-nj7" secondAttribute="bottom" constant="15" id="18v-BV-FlT"/>
+                                        <constraint firstItem="ez6-at-nj7" firstAttribute="top" secondItem="9uo-NO-WXt" secondAttribute="topMargin" constant="15" id="DDP-Ll-AVk"/>
+                                        <constraint firstItem="ez6-at-nj7" firstAttribute="leading" secondItem="9uo-NO-WXt" secondAttribute="leadingMargin" constant="15" id="WZ9-vp-Mwf"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="titleLable" destination="ez6-at-nj7" id="6pV-8p-VgI"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="XEX-xf-q1M" id="Fxz-40-EC7"/>
+                            <outlet property="delegate" destination="XEX-xf-q1M" id="9vv-FI-4gr"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Permission Setting" id="eIQ-Vx-NjZ"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3BZ-NH-M0D" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1641" y="860"/>
         </scene>
     </scenes>
     <resources>
