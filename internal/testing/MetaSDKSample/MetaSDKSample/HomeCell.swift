@@ -11,5 +11,6 @@ import UIKit
 class HomeCell: UITableViewCell {
 
   @IBOutlet weak var cellTitleLabel: UILabel!
+  @IBOutlet weak var cellValueLabel: UILabel!
 
 }

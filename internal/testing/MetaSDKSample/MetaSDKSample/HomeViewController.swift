@@ -18,6 +18,7 @@ class HomeViewController: UIViewController {
   let metaLogin = MetaLogin()
   let loginButtonLabel = "Login"
   let logoutButtonLabel = "Logout"
+  let appId = "184484190795"
 
   var selectedPermissions: Set<Permission> = [.publicProfile]
   var isLoggedIn: Bool {
@@ -25,7 +26,15 @@ class HomeViewController: UIViewController {
   }
   var cellConfigs: [LoginCellConfig] {[
     LoginCellConfig(
+      cellTitle: "App ID:",
+      cellValue: appId,
+      cellSelectionStyle: .none,
+      cellAccessoryType: .none,
+      activity: {}
+    ),
+    LoginCellConfig(
       cellTitle: "User Session",
+      cellValue: nil,
       cellSelectionStyle: .blue,
       cellAccessoryType: .disclosureIndicator,
       activity: {
@@ -34,6 +43,7 @@ class HomeViewController: UIViewController {
     ),
     LoginCellConfig(
       cellTitle: "Permission Setting",
+      cellValue: nil,
       cellSelectionStyle: .blue,
       cellAccessoryType: .disclosureIndicator,
       activity: {
@@ -55,7 +65,7 @@ class HomeViewController: UIViewController {
     } else {
       guard let configuration = LoginConfiguration(
         permissions: selectedPermissions,
-        facebookAppID: "184484190795",
+        facebookAppID: appId,
         metaAppID: "some_meta_app_id"
       ) else {
         return
@@ -94,6 +104,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     cell.cellTitleLabel.text = cellConfig.cellTitle
     cell.accessoryType = cellConfig.cellAccessoryType
     cell.selectionStyle = cellConfig.cellSelectionStyle
+    cell.cellValueLabel.text = cellConfig.cellValue
     return cell
   }
 

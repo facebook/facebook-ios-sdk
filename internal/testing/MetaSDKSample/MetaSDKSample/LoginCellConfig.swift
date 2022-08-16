@@ -10,6 +10,7 @@ import UIKit
 
 struct LoginCellConfig {
   let cellTitle: String
+  let cellValue: String?
   let cellSelectionStyle: UITableViewCell.SelectionStyle
   let cellAccessoryType: UITableViewCell.AccessoryType
   let activity: (() -> Void)?
