@@ -10,88 +10,12 @@
 
 #import "FBSDKProfilePictureView.h"
 #import "FBSDKProfilePictureView+Internal.h"
-
+#import "FBSDKProfilePictureViewState.h"
 #import "FBSDKAccessToken.h"
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMath.h"
 #import "FBSDKProfile+Internal.h"
-
-@interface FBSDKProfilePictureViewState : NSObject
-
-- (instancetype)initWithProfileID:(NSString *)profileID
-                             size:(CGSize)size
-                            scale:(CGFloat)scale
-                      pictureMode:(FBSDKProfilePictureMode)pictureMode
-                   imageShouldFit:(BOOL)imageShouldFit;
-
-@property (nonatomic, readonly, assign) BOOL imageShouldFit;
-@property (nonatomic, readonly, assign) FBSDKProfilePictureMode pictureMode;
-@property (nonatomic, readonly, copy) NSString *profileID;
-@property (nonatomic, readonly, assign) CGFloat scale;
-@property (nonatomic, readonly, assign) CGSize size;
-
-- (BOOL)isEqualToState:(FBSDKProfilePictureViewState *)other;
-- (BOOL)isValidForState:(FBSDKProfilePictureViewState *)other;
-
-@end
-
-@implementation FBSDKProfilePictureViewState
-
-- (instancetype)initWithProfileID:(NSString *)profileID
-                             size:(CGSize)size
-                            scale:(CGFloat)scale
-                      pictureMode:(FBSDKProfilePictureMode)pictureMode
-                   imageShouldFit:(BOOL)imageShouldFit
-{
-  if ((self = [super init])) {
-    _profileID = [profileID copy];
-    _size = size;
-    _scale = scale;
-    _pictureMode = pictureMode;
-    _imageShouldFit = imageShouldFit;
-  }
-  return self;
-}
-
-- (NSUInteger)hash
-{
-  NSUInteger subhashes[] = {
-    (NSUInteger)_imageShouldFit,
-    (NSUInteger)_size.width,
-    (NSUInteger)_size.height,
-    (NSUInteger)_scale,
-    (NSUInteger)_pictureMode,
-    _profileID.hash,
-  };
-  return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
-}
-
-- (BOOL)isEqual:(id)object
-{
-  if (![object isKindOfClass:FBSDKProfilePictureViewState.class]) {
-    return NO;
-  }
-  FBSDKProfilePictureViewState *other = (FBSDKProfilePictureViewState *)object;
-  return [self isEqualToState:other];
-}
-
-- (BOOL)isEqualToState:(FBSDKProfilePictureViewState *)other
-{
-  return ([self isValidForState:other]
-    && CGSizeEqualToSize(_size, other->_size)
-    && (_scale == other->_scale));
-}
-
-- (BOOL)isValidForState:(FBSDKProfilePictureViewState *)other
-{
-  return (other != nil
-    && (_imageShouldFit == other->_imageShouldFit)
-    && (_pictureMode == other->_pictureMode)
-    && [FBSDKInternalUtility.sharedUtility object:_profileID isEqualToObject:other->_profileID]);
-}
-
-@end
 
 @interface FBSDKProfilePictureView ()
 
