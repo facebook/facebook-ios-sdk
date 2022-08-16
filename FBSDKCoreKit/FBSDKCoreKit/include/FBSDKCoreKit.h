@@ -107,6 +107,7 @@
  #import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
  #import <FBSDKCoreKit/FBSDKMutableCopying.h>
  #import <FBSDKCoreKit/FBSDKProfile.h>
+ #import <FBSDKCoreKit/FBSDKProfilePictureMode.h>
  #import <FBSDKCoreKit/FBSDKProfilePictureView.h>
  #import <FBSDKCoreKit/FBSDKProfileProtocols.h>
  #import <FBSDKCoreKit/FBSDKShareDialogConfiguration.h>
