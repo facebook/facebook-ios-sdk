@@ -55,7 +55,55 @@ final class LoginResponseURLParserTests: XCTestCase {
     )
   }
 
-  func testParseWithNoParameters() throws {
+  func testInitWithAllQueryItems() throws {
+    let sampleURL = SampleURLs.LoginResponses.withDefaultParametersWithQuery
+    let userSession = try XCTUnwrap(
+      LoginResponseURLParser().parse(url: sampleURL),
+      "Should return user session instance with all valid default parameters as query items"
+    )
+    let accessToken = try XCTUnwrap(
+      userSession.accessToken,
+      "User session should have an access token instance"
+    )
+
+    XCTAssertEqual(
+      accessToken.tokenString,
+      SampleRawLoginResponse.accessToken,
+      "Should set access token from incoming URL"
+    )
+    XCTAssertEqual(
+      accessToken.dataAccessExpirationDate,
+      SampleRawLoginResponse.dataAccessExpirationDate,
+      "Should set token data expiration date from incoming URL"
+    )
+    XCTAssertEqual(
+      accessToken.expirationDate,
+      SampleRawLoginResponse.expiresDate,
+      "Should set token expiration date from incoming URL"
+    )
+    XCTAssertEqual(
+      userSession.userID,
+      SampleRawLoginResponse.userID,
+      "User ID should be derived from the signed request"
+    )
+    XCTAssertEqual(
+      userSession.graphDomain,
+      GraphDomain.facebook,
+      "Should set graph domain from incoming URL"
+    )
+    XCTAssertEqual(
+      userSession.requestedPermissions,
+      SampleRawLoginResponse.requestedPermissions,
+      "Should set requested permissions from granted scopes in incoming URL"
+    )
+    XCTAssertEqual(
+      userSession.declinedPermissions,
+      SampleRawLoginResponse.declinedPermissions,
+      "Should set declined permissions from denied scopes in incoming URL"
+    )
+  }
+
+  func testInitWithNoParameters() throws {
     let sampleURL = SampleURLs.loginRedirect
     XCTAssertThrowsError(
       _ = try LoginResponseURLParser().parse(url: sampleURL)
