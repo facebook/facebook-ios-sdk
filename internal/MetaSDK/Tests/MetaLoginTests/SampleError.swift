@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import AuthenticationServices
+
 public struct SampleError: Error {
+  public static let WebAuthSessionCancelledError = ASWebAuthenticationSessionError(.canceledLogin, userInfo: [:])
+
   public init() {}
 }

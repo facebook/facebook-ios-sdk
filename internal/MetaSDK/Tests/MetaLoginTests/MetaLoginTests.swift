@@ -13,10 +13,16 @@ final class MetaLoginTests: XCTestCase {
   var authWebView: TestAuthWebView!
   var metaLogin: MetaLogin!
   var localStorage: TestLocalStorage!
+  var loginConfiguration: LoginConfiguration!
 
   override func setUp() {
     super.setUp()
 
+    loginConfiguration = LoginConfiguration(
+      permissions: [.publicProfile],
+      facebookAppID: "facebook_app_id",
+      metaAppID: "some_meta_app_id"
+    )
     localStorage = TestLocalStorage()
     metaLogin = MetaLogin()
     authWebView = TestAuthWebView()
@@ -29,6 +35,7 @@ final class MetaLoginTests: XCTestCase {
   }
 
   override func tearDown() {
+    loginConfiguration = nil
     metaLogin = nil
     authWebView = nil
     localStorage = nil
@@ -63,28 +70,101 @@ final class MetaLoginTests: XCTestCase {
     )
   }
 
-  func testLogin() throws {
-    var wasCalled = false
-    let loginConfiguration = try XCTUnwrap(
-      LoginConfiguration(
-        permissions: [.publicProfile],
-        facebookAppID: "facebook_app_id",
-        metaAppID: "some_meta_app_id"
-      )
-    )
-
+  func testSuccessfulLogin() throws {
+    var capturedUserSession: UserSession?
     metaLogin.logIn(configuration: loginConfiguration) { result in
-      switch result {
-      case let .success(result):
-        XCTAssertNotNil(result, "Should receive a success result from login")
-      case .failure:
-        XCTFail("Should not receive a failure result for login")
+      if case let .success(result) = result {
+        capturedUserSession = result
+      } else {
+        XCTFail("Should not fail with successful login")
       }
-      wasCalled = true
     }
 
-    authWebView.capturedCompletion?(.success(SampleURLs.loginRedirect))
-    XCTAssertTrue(wasCalled, "Completion handler should be called synchronously")
+    let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
+    authWebView.capturedCompletion?(.success(sampleURL))
+
+    XCTAssertNotNil(capturedUserSession, "Should capture user session after successful login")
+    XCTAssertTrue(localStorage.isSaveUserSessionCalled, "Should save user session upon successful login")
+    XCTAssertTrue(authWebView.openURLWasCalled, "Login should call open URL")
+    XCTAssertEqual(
+      authWebView.capturedCallbackURLScheme,
+      MetaLogin.callbackURLScheme,
+      "Should capture set callback URL scheme"
+    )
+  }
+
+  func testLoginWithLoginResponseError() throws {
+    var capturedError: Error?
+    metaLogin.logIn(configuration: loginConfiguration) { result in
+      if case let .failure(error) = result {
+        capturedError = error
+      }
+    }
+
+    authWebView.capturedCompletion?(.success(SampleURLs.example))
+
+    XCTAssertEqual(
+      capturedError as? LoginError,
+      LoginError.invalidIncomingURL,
+      "Authentication session error should be set to assigned value"
+    )
+  }
+
+  func testLoginWithOpenURLError() throws {
+    var capturedError: Error?
+    metaLogin.logIn(configuration: loginConfiguration) { result in
+      if case let .failure(error) = result {
+        capturedError = error
+      }
+    }
+
+    let sampleError = SampleError.WebAuthSessionCancelledError
+    authWebView.capturedCompletion?(.failure(sampleError))
+    XCTAssertIdentical(
+      capturedError as AnyObject,
+      sampleError as AnyObject,
+      "Authentication session error should be set to assigned value"
+    )
+  }
+
+  func testMakeLoginParameters() throws {
+    let parameters = metaLogin.makeLoginParameters(configuration: loginConfiguration)
+
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.appID],
+      loginConfiguration.facebookAppID,
+      "Should set app ID from login configuration"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.display],
+      SampleMetaLoginParameters.display,
+      "Should set default display from parameters"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.sdk],
+      SampleMetaLoginParameters.sdk,
+      "Should set default sdk from parameters"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.returnScopes],
+      SampleMetaLoginParameters.returnScopes,
+      "Should set default return scopes from parameters"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.responseType],
+      SampleMetaLoginParameters.responseType,
+      "Should set default response type from parameters"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.scope],
+      SampleMetaLoginParameters.scope,
+      "Should set default scope from parameters"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.redirectURI],
+      SampleMetaLoginParameters.redirectURI,
+      "Should set default redirect URI from parameters"
+    )
   }
 
   func testLogout() throws {
@@ -123,33 +203,6 @@ final class MetaLoginTests: XCTestCase {
       capturedError,
       "Should return URL error if the incoming URL does not begin with the Meta Login redirect uri"
     )
-  }
-
-  func testIsValidAuthenticationURLWithValidURL() throws {
-    let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
-    let isValid = metaLogin.isValidAuthenticationURL(url: sampleURL)
-
-    XCTAssertTrue(isValid, "Should return true when URL begins with the Meta login redirect uri")
-  }
-
-  func testIsValidAuthenticationURLWithValidHostAndInvalidScheme() throws {
-    let sampleURL = URL(string: "fbconnect://failure")!
-    let isValid = metaLogin.isValidAuthenticationURL(url: sampleURL)
-
-    XCTAssertFalse(isValid, "Should return false when URL does not begin with the Meta login redirect uri")
-  }
-
-  func testIsValidAuthenticationURLWithInvalidURLAndValidScheme() throws {
-    let sampleURL = URL(string: "example://success")!
-    let isValid = metaLogin.isValidAuthenticationURL(url: sampleURL)
-
-    XCTAssertFalse(isValid, "Should return false when URL does not begin with the Meta login redirect uri")
-  }
-
-  func testIsValidAuthenticationURLWithInvalidHostAndInvalidScheme() throws {
-    let isValid = metaLogin.isValidAuthenticationURL(url: SampleURLs.example)
-
-    XCTAssertFalse(isValid, "Should return false when URL does not begin with the Meta login redirect uri")
   }
 
   func testGetUserSession() throws {

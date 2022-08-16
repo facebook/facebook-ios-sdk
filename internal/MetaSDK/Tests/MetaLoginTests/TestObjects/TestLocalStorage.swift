@@ -13,8 +13,10 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
   var authenticationSessionState: AuthenticationSessionState
   var stubbedUserSession: UserSession
   var capturedUserSessionInSave: UserSession?
+  var isSaveUserSessionCalled = false
   var isDeleteUserSessionCalled = false
   var isGetUserSessionCalled = false
+  var throwSaveUserSessionError = false
   var stubbedError: LocalStorageError?
 
   init() {
@@ -34,6 +36,7 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
   }
 
   func saveUserSession(userSession: UserSession) throws {
+    isSaveUserSessionCalled = true
     capturedUserSessionInSave = userSession
   }
 

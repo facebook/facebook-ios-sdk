@@ -37,28 +37,28 @@ public enum SampleURLs {
 
   public enum LoginResponses {
     public static let withDefaultParameters = loginRedirect(
-      queryItems: RawLoginParameters.withDefaultParameters.queryItems
+      queryItems: SampleRawLoginResponse.withDefaultParameters.queryItems
     )
     public static let withNoExpirationParameters = loginRedirect(
-      queryItems: RawLoginParameters.withNoExpirationParameters.queryItems
+      queryItems: SampleRawLoginResponse.withNoExpirationParameters.queryItems
     )
     public static let withNoExpiresParameter = loginRedirect(
-      queryItems: RawLoginParameters.withNoExpiresParameter.queryItems
+      queryItems: SampleRawLoginResponse.withNoExpiresParameter.queryItems
     )
     public static let withNoExpiresAndExpiresAtParameters = loginRedirect(
-      queryItems: RawLoginParameters.withNoExpiresAndExpiresAtParameters.queryItems
+      queryItems: SampleRawLoginResponse.withNoExpiresAndExpiresAtParameters.queryItems
     )
     public static let withEmptyPermissions = loginRedirect(
-      queryItems: RawLoginParameters.withEmptyPermissions.queryItems
+      queryItems: SampleRawLoginResponse.withEmptyPermissions.queryItems
     )
     public static let withNoAccessToken = loginRedirect(
-      queryItems: RawLoginParameters.withNoAccessToken.queryItems
+      queryItems: SampleRawLoginResponse.withNoAccessToken.queryItems
     )
     public static let withNoSignedRequestParameter = loginRedirect(
-      queryItems: RawLoginParameters.withNoSignedRequestParameter.queryItems
+      queryItems: SampleRawLoginResponse.withNoSignedRequestParameter.queryItems
     )
     public static let withInvalidSignedRequestParameter = loginRedirect(
-      queryItems: RawLoginParameters.withInvalidSignedRequestParameter.queryItems
+      queryItems: SampleRawLoginResponse.withInvalidSignedRequestParameter.queryItems
     )
   }
 }

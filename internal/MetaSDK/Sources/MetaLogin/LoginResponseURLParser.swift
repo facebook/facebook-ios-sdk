@@ -8,6 +8,10 @@
 
 import Foundation
 
+enum LoginError: Error {
+  case invalidIncomingURL
+}
+
 struct LoginResponseURLParser {
   enum Keys {
     static let accessToken = "access_token"
@@ -21,7 +25,7 @@ struct LoginResponseURLParser {
     static let graphDomain = "graph_domain"
   }
 
-  func parseURL(url: URL) -> UserSession? {
+  func parse(url: URL) throws -> UserSession {
     var urlString = url.absoluteString
     // Changes url with fragments to url with query items to enable URLComponents parsing
     urlString = urlString.replacingOccurrences(of: "#", with: "?")
@@ -30,7 +34,7 @@ struct LoginResponseURLParser {
       let components = URLComponents(string: urlString),
       let queryItems = components.queryItems
     else {
-      return nil
+      throw LoginError.invalidIncomingURL
     }
 
     let queryItemsDictionary = queryItems.reduce(into: [String: String]()) { result, item in
@@ -44,7 +48,7 @@ struct LoginResponseURLParser {
     ),
       let userID = UserIDExtractor().getUserID(from: queryItemsDictionary[Keys.signedRequest] ?? "")
     else {
-      return nil
+      throw LoginError.invalidIncomingURL
     }
 
     var grantedPermissions = Set<Permission>()
@@ -78,6 +82,17 @@ struct LoginResponseURLParser {
     return userSession
   }
 
+  func isCancellationURL(_ url: URL) -> Bool {
+    var urlString = url.absoluteString
+    // Changes url with fragments to url with query items to enable URLComponents parsing
+    urlString = urlString.replacingOccurrences(of: "#", with: "?")
+
+    guard let components = URLComponents(string: urlString)
+    else { return false }
+
+    return components.queryItems == nil
+  }
+
   func dataAccessExpirationDateFrom(parameters: [String: String]) -> Date {
     if let dataAccessExpirationDate = Double(parameters[Keys.dataAccessExpirationTime] ?? ""),
        dataAccessExpirationDate > 0 {
@@ -102,5 +117,15 @@ struct LoginResponseURLParser {
     } else {
       return .distantFuture
     }
+  }
+
+  func isValidAuthenticationURL(_ url: URL) -> Bool {
+    guard
+      let scheme = url.scheme,
+      let host = url.host,
+      let redirectURL = URL(string: MetaLogin.redirectURI)
+    else { return false }
+
+    return scheme == redirectURL.scheme && host == redirectURL.host
   }
 }

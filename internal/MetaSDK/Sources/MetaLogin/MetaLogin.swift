@@ -8,13 +8,13 @@
 
 import Foundation
 
-// TODO: Define login results with custom type
-/// Login Result Block
-public typealias LoginCompletion = (Result<String, Error>) -> Void
-
-enum LoginError: Error {
-  case invalidIncomingURL
+public enum LoginResult {
+  case cancel
+  case success(UserSession)
+  case failure(Error)
 }
+
+public typealias LoginCompletion = (LoginResult) -> Void
 
 /// Provides methods for logging the user in and out.
 public struct MetaLogin {
@@ -26,6 +26,25 @@ public struct MetaLogin {
   )
 
   static let redirectURI: String = "fbconnect://success"
+  static let callbackURLScheme: String = "fbconnect"
+
+  private enum ParameterKeys {
+    static let appID = "app_id"
+    static let display = "display"
+    static let sdk = "sdk"
+    static let returnScopes = "return_scopes"
+    static let cbt = "cbt"
+    static let responseType = "response_type"
+    static let scope = "scope"
+    static let redirectURI = "redirect_uri"
+  }
+
+  private enum ParameterValues {
+    static let display = "touch"
+    static let sdk = "meta_sdk_ios"
+    static let returnScopes = "true"
+    static let responseType = "token,graph_domain,signed_request"
+  }
 
   /// represents login information including both user and authentication data
   public var userSession: UserSession? {
@@ -65,12 +84,7 @@ public struct MetaLogin {
     ) { result in
       switch result {
       case let .success(url):
-        if isValidAuthenticationURL(url: url) {
-          _ = LoginResponseURLParser().parseURL(url: url)
-          return completion(.success("Login response parser was called"))
-        } else {
-          return completion(.failure(LoginError.invalidIncomingURL))
-        }
+        completeLogin(url: url, completion: completion)
       case let .failure(error):
         return completion(.failure(error))
       }
@@ -101,17 +115,17 @@ public struct MetaLogin {
   ) -> [String: String] {
     let cbtInMilliseconds = round(1000 * Date().timeIntervalSince1970)
     var parameters: [String: String] = [
-      "app_id": configuration.facebookAppID,
-      "display": "touch",
-      "sdk": "meta_sdk_ios",
-      "return_scopes": "true",
-      "cbt": String(cbtInMilliseconds),
-      "response_type": "token,graph_domain,signed_request",
+      ParameterKeys.appID: configuration.facebookAppID,
+      ParameterKeys.display: ParameterValues.display,
+      ParameterKeys.sdk: ParameterValues.sdk,
+      ParameterKeys.returnScopes: ParameterValues.returnScopes,
+      ParameterKeys.cbt: String(cbtInMilliseconds),
+      ParameterKeys.responseType: ParameterValues.responseType,
     ]
 
     let permissions = configuration.permissions
-    parameters["scope"] = permissions.map(\.rawValue).joined(separator: ",")
-    parameters["redirect_uri"] = MetaLogin.redirectURI
+    parameters[ParameterKeys.scope] = permissions.map(\.rawValue).joined(separator: ",")
+    parameters[ParameterKeys.redirectURI] = MetaLogin.redirectURI
 
     return parameters
   }
@@ -128,14 +142,21 @@ public struct MetaLogin {
     return components.url
   }
 
-  func isValidAuthenticationURL(url: URL) -> Bool {
-    guard
-      let scheme = url.scheme,
-      let host = url.host,
-      let redirectURL = URL(string: MetaLogin.redirectURI)
-    else { return false }
+  func completeLogin(url: URL, completion: @escaping LoginCompletion) {
+    guard let dependencies = try? getDependencies() else { return }
 
-    return scheme == redirectURL.scheme && host == redirectURL.host
+    let parser = LoginResponseURLParser()
+    guard parser.isValidAuthenticationURL(url) else { return completion(.failure(LoginError.invalidIncomingURL)) }
+    guard !parser.isCancellationURL(url) else { return completion(.cancel) }
+
+    do {
+      let userSession = try LoginResponseURLParser().parse(url: url)
+      try dependencies.localStorage.saveUserSession(userSession: userSession)
+      return completion(.success(userSession))
+
+    } catch {
+      return completion(.failure(error))
+    }
   }
 }
 
