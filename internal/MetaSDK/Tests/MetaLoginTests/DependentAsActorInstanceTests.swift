@@ -36,7 +36,7 @@ final class DependentAsActorInstanceTests: XCTestCase {
     } catch {
       XCTAssertEqual(
         String(describing: error),
-        "The dependencies for the instance of 'Dependent' have not been set",
+        "The dependencies for the type 'Dependent' or an instance of it have not been set",
         .missingDependencies
       )
     }
