@@ -21,7 +21,7 @@
 
 @property (nonatomic) BOOL hasProfileImage;
 @property (nonatomic) UIImageView *imageView;
-@property (nonatomic) FBSDKProfilePictureViewState *lastState;
+@property (nonatomic, nullable) FBSDKProfilePictureViewState *lastState;
 @property (nonatomic) BOOL needsImageUpdate;
 @property (nonatomic) BOOL placeholderImageIsValid;
 
@@ -354,13 +354,6 @@
     _placeholderImageIsValid = NO;
     [self setNeedsImageUpdate];
   }
-}
-
-#pragma mark - Test Helpers
-
-- (FBSDKProfilePictureViewState *)lastState
-{
-  return _lastState;
 }
 
 @end

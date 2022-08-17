@@ -144,6 +144,7 @@
 #import "FBSDKProductRequestFactory.h"
 #import "FBSDKProfile+Testing.h"
 #import "FBSDKProfileCodingKey.h"
+#import "FBSDKProfilePictureViewState.h"
 #import "FBSDKProfilePictureView+Testing.h"
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveData.h"
@@ -191,10 +192,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Categories needed to expose private methods to Swift
-
-NS_SWIFT_NAME(FBProfilePictureViewState)
-@interface FBSDKProfilePictureViewState
-@end
 
 // Needed to expose this private method to AppLinkResolverRequestBuilderTests
 @interface FBSDKAppLinkResolverRequestBuilder (FBSDKAppLinkResolverTests)
