@@ -75,8 +75,9 @@ public struct MetaLogin {
   ) {
     guard let dependencies = try? getDependencies() else { return }
 
-    let parameters = makeLoginParameters(configuration: configuration)
-    guard let url = getUniversalLoginURL(parameters: parameters) else { return }
+    guard let parameters = makeLoginParameters(configuration: configuration),
+          let url = getUniversalLoginURL(parameters: parameters)
+    else { return completion(.failure(LoginError.invalidURLCreation)) }
 
     dependencies.urlOpener.openURL(
       url: url,
@@ -112,10 +113,13 @@ public struct MetaLogin {
 
   func makeLoginParameters(
     configuration: LoginConfiguration
-  ) -> [String: String] {
+  ) -> [String: String]? {
     let cbtInMilliseconds = round(1000 * Date().timeIntervalSince1970)
+    guard let appID = configuration.facebookAppID
+    else { return nil }
+
     var parameters: [String: String] = [
-      ParameterKeys.appID: configuration.facebookAppID,
+      ParameterKeys.appID: appID,
       ParameterKeys.display: ParameterValues.display,
       ParameterKeys.sdk: ParameterValues.sdk,
       ParameterKeys.returnScopes: ParameterValues.returnScopes,

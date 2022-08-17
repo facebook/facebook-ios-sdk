@@ -128,7 +128,11 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testMakeLoginParameters() throws {
-    let parameters = metaLogin.makeLoginParameters(configuration: loginConfiguration)
+    guard let parameters = metaLogin.makeLoginParameters(configuration: loginConfiguration)
+    else {
+      XCTFail("Should return dictionary of parameters with valid login configuration")
+      return
+    }
 
     XCTAssertEqual(
       parameters[SampleMetaLoginParameters.Keys.appID],
@@ -182,12 +186,10 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testLoginWithInvalidIncomingAuthenticationURL() throws {
-    let loginConfiguration = try XCTUnwrap(
-      LoginConfiguration(
-        permissions: [.publicProfile],
-        facebookAppID: "facebook_app_id",
-        metaAppID: "some_meta_app_id"
-      )
+    let loginConfiguration = LoginConfiguration(
+      permissions: [.publicProfile],
+      facebookAppID: "facebook_app_id",
+      metaAppID: "some_meta_app_id"
     )
     var capturedError: Error?
 
@@ -227,6 +229,28 @@ final class MetaLoginTests: XCTestCase {
     XCTAssertNil(
       metaLogin.userSession,
       "The userSession should be nil when error occurs in localStorage get method "
+    )
+  }
+
+  func testLoginWithInvalidLoginURLCreation() throws {
+    var loginConfiguration = LoginConfiguration(permissions: [.publicProfile])
+    let appConfigurationInquirer = TestAppConfigurationInquirer()
+    appConfigurationInquirer.metaAppID = nil
+    appConfigurationInquirer.facebookAppID = nil
+    loginConfiguration.setDependencies(
+      .init(appConfigurationInquirer: appConfigurationInquirer)
+    )
+
+    var capturedError: Error?
+    metaLogin.logIn(configuration: loginConfiguration) { result in
+      if case let .failure(error) = result {
+        capturedError = error
+      }
+    }
+    XCTAssertEqual(
+      capturedError as? LoginError,
+      LoginError.invalidURLCreation,
+      "Should return error if login parameters cannot be retrieved"
     )
   }
 }

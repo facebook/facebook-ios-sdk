@@ -8,13 +8,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var resultLabel: UILabel!
 
     @IBAction func onLoginClicked(_ sender: Any) {
-        guard let configuration = LoginConfiguration(
+        let configuration = LoginConfiguration(
             permissions: [.publicProfile],
             facebookAppID: "184484190795",
             metaAppID: "some_meta_app_id"
-        ) else {
-          return
-        }
+        )
 
         MetaLogin().logIn(configuration: configuration) { result in
             switch result {

@@ -63,13 +63,11 @@ class HomeViewController: UIViewController {
       metaLogin.logOut()
       self.updateLoginButtonLabel()
     } else {
-      guard let configuration = LoginConfiguration(
+      let configuration = LoginConfiguration(
         permissions: selectedPermissions,
         facebookAppID: appId,
         metaAppID: "some_meta_app_id"
-      ) else {
-        return
-      }
+      )
 
       metaLogin.logIn(configuration: configuration) { result in
         switch result {
