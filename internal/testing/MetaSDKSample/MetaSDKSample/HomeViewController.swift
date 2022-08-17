@@ -77,7 +77,10 @@ class HomeViewController: UIViewController {
           self.updateLoginButtonLabel()
         case .failure(let error):
           print("Failed to login with \(error)")
+        case .cancel:
+          print("Login cancelled")
         }
+
       }
     }
   }

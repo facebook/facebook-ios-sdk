@@ -20,11 +20,11 @@ struct WebAuthenticationSessionFactory: WebAuthenticationSessionCreating {
     let handler: (URL?, Error?) -> Void = { potentialURL, potentialError in
       if let error = potentialError {
         completionHandler(.failure(error))
-      }
-      if let url = potentialURL {
+      } else if let url = potentialURL {
         completionHandler(.success(url))
+      } else {
+        completionHandler(.failure(UnknownAuthenticationSessionError()))
       }
-      completionHandler(.failure(UnknownAuthenticationSessionError()))
     }
     return ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme, completionHandler: handler)
   }
