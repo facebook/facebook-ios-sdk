@@ -14,6 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKProfilePictureView (Testing)
 
+@property (nonatomic) BOOL hasProfileImage;
+@property (nonatomic) UIImageView *imageView;
+@property (nonatomic, nullable) FBSDKProfilePictureViewState *lastState;
+@property (nonatomic) BOOL needsImageUpdate;
+@property (nonatomic) BOOL placeholderImageIsValid;
+
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification;
 - (void)_profileDidChangeNotification:(NSNotification *)notification;
 - (void)_updateImageWithProfile;
@@ -21,7 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)_updateImage;
 - (void)_fetchAndSetImageWithURL:(NSURL *)imageURL state:(FBSDKProfilePictureViewState *)state;
 - (nullable FBSDKProfilePictureViewState *)lastState;
-
+- (void)_setPlaceholderImage;
+- (void)_updateImageWithData:(NSData *)data state:(FBSDKProfilePictureViewState *)state;
 @end
 
 NS_ASSUME_NONNULL_END

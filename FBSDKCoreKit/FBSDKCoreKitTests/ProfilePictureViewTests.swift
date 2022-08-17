@@ -8,227 +8,234 @@
 
 @testable import FBSDKCoreKit
 
-import TestTools
 import XCTest
 
 final class ProfilePictureViewTests: XCTestCase {
+  // swiftlint:disable implicitly_unwrapped_optional
+  var profilePictureView: FBProfilePictureView!
+  var testProfile: Profile! = SampleUserProfiles.createValid()
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
     Profile.setCurrent(nil, shouldPostNotification: false)
+    testProfile = SampleUserProfiles.createValid()
+    profilePictureView = FBProfilePictureView(frame: .zero)
   }
 
-  // MARK: - Update Image
+  override func tearDown() {
+    profilePictureView = nil
+    testProfile = nil
 
-  func testImageUpdateWithoutAccessTokenWithProfile() {
-    let view = TestProfilePictureView()
-    AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
-
-    view._updateImage()
-
-    XCTAssertEqual(
-      view.updateImageWithProfileCount,
-      1,
-      "Should use the profile when there is no access token"
-    )
-    XCTAssertEqual(
-      view.updateImageWithAccessTokenCount,
-      0,
-      "Should not use the access token when there is no access token"
-    )
+    super.tearDown()
   }
 
-  func testImageUpdateWithAccessTokenWithProfile() {
-    let view = TestProfilePictureView()
-    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
+  // MARK: - Initialization
 
-    view._updateImage()
+  func testInitializationWithoutProfileWithFrame() {
+    let profilePictureFrame = CGRect(x: 0, y: 0, width: 100, height: 100)
+    profilePictureView = FBProfilePictureView(frame: profilePictureFrame)
 
     XCTAssertEqual(
-      view.updateImageWithProfileCount,
-      0,
-      "Should not use the profile when there is an access token"
+      profilePictureView.backgroundColor,
+      .white,
+      .setsBackgroundColor
     )
     XCTAssertEqual(
-      view.updateImageWithAccessTokenCount,
-      1,
-      "Should use the access token when there is one available"
+      profilePictureView.contentMode,
+      .scaleAspectFit,
+      .setsContentMode
     )
+    XCTAssertEqual(
+      profilePictureView.frame,
+      profilePictureFrame,
+      .setsCustomFrame
+    )
+    XCTAssertEqual(
+      profilePictureView.profileID,
+      "me",
+      .setsProfileID
+    )
+    XCTAssertTrue(profilePictureView.subviews.first is UIImageView, .addsImageView)
+    XCTAssertFalse(profilePictureView.isUserInteractionEnabled, .disablesUserInteraction)
   }
 
-  func testImageUpdateWithoutAccessTokenWithoutProfile() {
-    let view = TestProfilePictureView()
-    AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(nil, shouldPostNotification: false)
-
-    view._updateImage()
-
+  func testInitializationWithProfileWithoutFrame() {
+    profilePictureView = FBProfilePictureView(profile: testProfile)
+    initialConfigurationSetupWithProfile()
     XCTAssertEqual(
-      view.updateImageWithProfileCount,
-      0,
-      "Should not use the profile when there is no access token or current profile"
+      profilePictureView.frame,
+      .zero,
+      .setsDefaultFrame
     )
     XCTAssertEqual(
-      view.updateImageWithAccessTokenCount,
-      0,
-      "Should not use the access token when there is no access token or current profile"
+      profilePictureView.profileID,
+      "123",
+      .setsCustomProfile
     )
   }
 
-  func testImageUpdateWithoutAccessTokenWithProfileNoImageURL() {
-    let view = TestProfilePictureView()
-    AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(SampleUserProfiles.missingImageURL, shouldPostNotification: false)
-
-    view._updateImage()
-
+  func testInitializationWithProfileWithFrame() {
+    let profilePictureFrame = CGRect(x: 0, y: 0, width: 100, height: 100)
+    profilePictureView = FBProfilePictureView(frame: profilePictureFrame, profile: testProfile)
+    initialConfigurationSetupWithProfile()
     XCTAssertEqual(
-      view.updateImageWithProfileCount,
-      0,
-      "Should not use the profile when there is no image url available"
+      profilePictureView.frame,
+      profilePictureFrame,
+      .setsCustomFrame
     )
     XCTAssertEqual(
-      view.updateImageWithAccessTokenCount,
-      0,
-      "Should not use the access token when there is no access token"
+      profilePictureView.profileID,
+      "123",
+      .setsCustomProfile
     )
   }
 
-  // MARK: - Token Notifications
+  // MARK: - Image Update
 
-  func testReceivingAccessTokenNotificationWithDidChangeUserIDKey() {
-    let view = TestProfilePictureView()
+  func testPlaceholderImage() throws {
+    let profilePictureFrame = CGRect(x: 0, y: 0, width: 100, height: 100)
+    profilePictureView = FBProfilePictureView(frame: profilePictureFrame)
+    profilePictureView._setPlaceholderImage()
+
+    let expecation = expectation(description: "placeholder image expectation")
+    expecation.isInverted = true
+    waitForExpectations(timeout: 2)
+
+    XCTAssertNotNil(profilePictureView.imageView.image, .setsPlaceholderImage)
+  }
+
+  func testUpdateImageWithDataAndSameState() throws {
+    let state = FBSDKProfilePictureViewState(
+      profileID: "123",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: false
+    )
+    profilePictureView.lastState = state
+    profilePictureView.imageView.image = nil
+
+    let updateImagePredicate = NSPredicate { _, _ in
+      self.profilePictureView.imageView.image != nil
+    }
+
+    _ = expectation(for: updateImagePredicate, evaluatedWith: nil)
+    DispatchQueue.global(qos: .userInitiated).async {
+      self.profilePictureView._updateImage(with: Data.redIconImage, state: state)
+    }
+
+    waitForExpectations(timeout: 2)
+    XCTAssertNotNil(profilePictureView.imageView.image, .updatesImageIfSameState)
+  }
+
+  func testUpdateImageWithDataAndDifferentState() throws {
+    profilePictureView = FBProfilePictureView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+
+    let oldState = FBSDKProfilePictureViewState(
+      profileID: "123",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: false
+    )
+    profilePictureView.lastState = oldState
+
+    let newState = FBSDKProfilePictureViewState(
+      profileID: "test12345",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: true
+    )
+    profilePictureView._updateImage(with: Data.redIconImage, state: newState)
+
+    XCTAssertNil(
+      profilePictureView.imageView.image,
+      .doesNotUpdateImageIfDifferentState
+    )
+  }
+
+  func testAccessTokenDidChangeNotificationWithUserInfoKey() {
     let notification = Notification(
       name: .AccessTokenDidChange,
       object: nil,
-      userInfo: [AccessTokenDidChangeUserIDKey: "foo"]
+      userInfo: [AccessTokenDidChangeUserIDKey: true]
     )
-
-    view._accessTokenDidChange(notification)
-
-    XCTAssertEqual(
-      view.updateImageWithAccessTokenCount,
-      1,
-      "An access token notification with a changed user id key should trigger an image update"
-    )
+    Profile.setCurrent(testProfile, shouldPostNotification: false)
+    profilePictureView._updateImageWithProfile()
+    XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
+    profilePictureView._accessTokenDidChange(notification)
+    XCTAssertNil(profilePictureView.lastState, .hasResetLastStateOnAccessTokenChange)
   }
 
-  func testReceivingAccessTokenNotificationWithoutRelevantUserInfo() {
-    let view = TestProfilePictureView()
-    let notification = Notification(
-      name: .AccessTokenDidChange,
-      object: nil,
-      userInfo: nil
+  // MARK: - Helpers
+
+  func initialConfigurationSetupWithProfile() {
+    XCTAssertNotEqual(
+      profilePictureView.backgroundColor,
+      .white,
+      .setsBackgroundColor
     )
-
-    view._accessTokenDidChange(notification)
-
-    XCTAssertEqual(
-      view.updateImageWithAccessTokenCount,
-      0,
-      "An access token notification without relevant user info should not trigger an image update"
+    XCTAssertNotEqual(
+      profilePictureView.contentMode,
+      .scaleAspectFit,
+      .setsContentMode
     )
-  }
-
-  func testReceivingProfileNotification() {
-    let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
-    let notification = Notification(
-      name: .ProfileDidChange,
-      object: nil,
-      userInfo: nil
+    XCTAssertTrue(
+      profilePictureView.subviews.isEmpty,
+      .doesNotAddImageView
     )
-
-    view._profileDidChange(notification)
-
-    XCTAssertEqual(
-      view.updateImageWithProfileCount,
-      1,
-      "An profile change should trigger an image update"
-    )
-  }
-
-  // MARK: - Updating Content
-
-  func testUpdatinImageWithProfileWithImageURL() {
-    let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfiles.createValid(), shouldPostNotification: false)
-
-    view._updateImageWithProfile()
-
-    XCTAssertEqual(
-      view.fetchAndSetImageCount,
-      1,
-      "Should try to fetch image for a profile that have an imageURL"
-    )
-    XCTAssertNotNil(view.lastState(), "Should update state when profile has an imageURL")
-  }
-
-  func testUpdatinImageWithProfileWithoutImageURL() {
-    let view = TestProfilePictureView()
-    Profile.setCurrent(SampleUserProfiles.missingImageURL, shouldPostNotification: false)
-
-    view._updateImageWithProfile()
-
-    XCTAssertEqual(
-      view.fetchAndSetImageCount,
-      0,
-      "Should try to fetch image for a profile that does not have an imageURL"
-    )
-    XCTAssertNil(view.lastState(), "Should not update state when profile does not have an imageURL")
-  }
-
-  func testUpdatingImageWithValidAccessToken() {
-    let view = TestProfilePictureView()
-    AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
-
-    view._updateImageWithAccessToken()
-
-    XCTAssertEqual(
-      view.fetchAndSetImageCount,
-      1,
-      "Should try to fetch image for a valid access token"
-    )
-    XCTAssertNotNil(view.lastState(), "Should update state when access token is valid")
-  }
-
-  func testUpdatingImageWithInvalidAccessToken() {
-    let view = TestProfilePictureView()
-    AccessToken.setCurrent(SampleAccessTokens.expiredToken, shouldDispatchNotif: false)
-
-    view._updateImageWithAccessToken()
-
-    XCTAssertEqual(
-      view.fetchAndSetImageCount,
-      0,
-      "Should not try to fetch image for an invalid access token"
-    )
-    XCTAssertNil(view.lastState(), "Should not update state when access token is not valid")
+    XCTAssertTrue(profilePictureView.isUserInteractionEnabled, .enablesUserInteraction)
   }
 }
 
-private final class TestProfilePictureView: FBProfilePictureView {
-  var updateImageWithAccessTokenCount = 0
-  var updateImageWithProfileCount = 0
-  var fetchAndSetImageCount = 0
+// MARK: - Assumptions
 
-  override func _updateImageWithAccessToken() {
-    updateImageWithAccessTokenCount += 1
+fileprivate extension String {
+  static let setsCustomProfile = "We are able to set a custom profile during initialization"
+  static let hasProfileImage = "A profile picture view has a profile image"
+  static let setsBackgroundColor = "Profile picture view background color is set to a color during initialization"
+  static let setsContentMode = "Profile picture view content mode is set to aspect fit during initialization"
+  static let setsCustomFrame = "Profile picture view can be passed a custom frame during initialization"
+  static let setsProfileID = "Profile picture view sets a default profile ID during initialization"
+  static let addsImageView = "Profile picture view adds an image view to its view hierarchy during initialization"
+  static let disablesUserInteraction = """
+      Profile picture view user interaction is disabled when initiating without a profile
+    """
+  static let setsDefaultFrame = """
+      If no custom frame is passed during initialization default profile picture view frame should be zero
+    """
+  static let setsPlaceholderImage = "Profile picture view can set a place holder image when a there is no user image"
+  static let hasLastState = "Profile picture view has a last state available"
+  static let updatesImageIfSameState = "Profile picture view image is updated when state has not changed"
+  static let doesNotUpdateImageIfDifferentState = """
+      Profile picture view image image should not be updated when having different state than the last one
+    """
+  static let hasResetLastStateOnAccessTokenChange = """
+       State should reset when we receive an access token notification, we have a profile id equals "me", \
+       and we have a user id value.
+    """
+  static let doesNotAddImageView = """
+       No image view is added to the profile picture view hierarchy when initiating with a profile
+    """
+  static let enablesUserInteraction = """
+       Profile picture view user interaction is enabled when initiating with a profile
+    """
+}
 
-    super._updateImageWithAccessToken()
-  }
+// MARK: - Test Values
 
-  override func _updateImageWithProfile() {
-    updateImageWithProfileCount += 1
+fileprivate extension UIImage {
+  static let redIcon = UIImage(
+    named: "redSilhouette.png",
+    in: Bundle(for: ProfilePictureViewTests.self),
+    compatibleWith: nil
+  )
+}
 
-    super._updateImageWithProfile()
-  }
-
-  override func _fetchAndSetImage(with url: URL?, state: FBProfilePictureViewState) {
-    fetchAndSetImageCount += 1
-  }
+fileprivate extension Data {
+  static let redIconImage = UIImage.redIcon!.pngData()! // swiftlint:disable:this force_unwrapping
 }
