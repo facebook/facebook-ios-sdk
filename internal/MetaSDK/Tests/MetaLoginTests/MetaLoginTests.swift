@@ -10,7 +10,7 @@
 import XCTest
 
 final class MetaLoginTests: XCTestCase {
-  var authWebView: TestAuthWebView!
+  var presenter: TestAuthenticationDialogPresenter!
   var metaLogin: MetaLogin!
   var localStorage: TestLocalStorage!
   var loginConfiguration: LoginConfiguration!
@@ -25,10 +25,10 @@ final class MetaLoginTests: XCTestCase {
     )
     localStorage = TestLocalStorage()
     metaLogin = MetaLogin()
-    authWebView = TestAuthWebView()
+    presenter = TestAuthenticationDialogPresenter()
     metaLogin.setDependencies(
       .init(
-        urlOpener: authWebView,
+        authenticationDialogPresenter: presenter,
         localStorage: localStorage
       )
     )
@@ -37,7 +37,7 @@ final class MetaLoginTests: XCTestCase {
   override func tearDown() {
     loginConfiguration = nil
     metaLogin = nil
-    authWebView = nil
+    presenter = nil
     localStorage = nil
 
     super.tearDown()
@@ -48,7 +48,7 @@ final class MetaLoginTests: XCTestCase {
     let dependencies = try metaLogin.getDependencies()
 
     XCTAssertTrue(
-      dependencies.urlOpener is AuthWebView,
+      dependencies.authenticationDialogPresenter is AuthenticationDialogPresenter,
       "A login manager uses a provided authentication web view"
     )
     XCTAssertTrue(
@@ -61,7 +61,7 @@ final class MetaLoginTests: XCTestCase {
     let dependencies = try metaLogin.getDependencies()
 
     XCTAssertTrue(
-      dependencies.urlOpener is TestAuthWebView,
+      dependencies.authenticationDialogPresenter is TestAuthenticationDialogPresenter,
       "Should be set to a custom authentication web view"
     )
     XCTAssertTrue(
@@ -81,13 +81,13 @@ final class MetaLoginTests: XCTestCase {
     }
 
     let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
-    authWebView.capturedCompletion?(.success(sampleURL))
+    presenter.capturedCompletion?(.success(sampleURL))
 
     XCTAssertNotNil(capturedUserSession, "Should capture user session after successful login")
     XCTAssertTrue(localStorage.isSaveUserSessionCalled, "Should save user session upon successful login")
-    XCTAssertTrue(authWebView.openURLWasCalled, "Login should call open URL")
+    XCTAssertTrue(presenter.wasPresentAuthenticationDialogCalled, "Login should call open URL")
     XCTAssertEqual(
-      authWebView.capturedCallbackURLScheme,
+      presenter.capturedCallbackURLScheme,
       MetaLogin.callbackURLScheme,
       "Should capture set callback URL scheme"
     )
@@ -100,8 +100,9 @@ final class MetaLoginTests: XCTestCase {
         capturedError = error
       }
     }
+    presenter.capturedCompletion?(.success(SampleURLs.loginRedirect))
 
-    authWebView.capturedCompletion?(.success(SampleURLs.example))
+    presenter.capturedCompletion?(.success(SampleURLs.example))
 
     XCTAssertEqual(
       capturedError as? LoginError,
@@ -119,7 +120,7 @@ final class MetaLoginTests: XCTestCase {
     }
 
     let sampleError = SampleError.WebAuthSessionCancelledError
-    authWebView.capturedCompletion?(.failure(sampleError))
+    presenter.capturedCompletion?(.failure(sampleError))
     XCTAssertIdentical(
       capturedError as AnyObject,
       sampleError as AnyObject,
@@ -200,7 +201,7 @@ final class MetaLoginTests: XCTestCase {
     }
 
     let url = SampleURLs.example(path: "foo")
-    authWebView.capturedCompletion?(.success(url))
+    presenter.capturedCompletion?(.success(url))
     XCTAssertNotNil(
       capturedError,
       "Should return URL error if the incoming URL does not begin with the Meta Login redirect uri"

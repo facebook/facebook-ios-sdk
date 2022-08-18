@@ -21,7 +21,7 @@ public struct MetaLogin {
 
   var configuredDependencies: InstanceDependencies?
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
-    urlOpener: AuthWebView(),
+    authenticationDialogPresenter: AuthenticationDialogPresenter(),
     localStorage: LocalStorage()
   )
 
@@ -79,7 +79,7 @@ public struct MetaLogin {
           let url = getUniversalLoginURL(parameters: parameters)
     else { return completion(.failure(LoginError.invalidURLCreation)) }
 
-    dependencies.urlOpener.openURL(
+    dependencies.authenticationDialogPresenter.presentAuthenticationDialog(
       url: url,
       callbackURLScheme: "fbconnect"
     ) { result in
@@ -166,7 +166,7 @@ public struct MetaLogin {
 
 extension MetaLogin: DependentAsInstance {
   struct InstanceDependencies {
-    var urlOpener: AuthenticationSessionWebView
+    var authenticationDialogPresenter: AuthenticationDialogPresenting
     var localStorage: UserSessionPersisting & AuthenticationSessionStatePersisting
   }
 }

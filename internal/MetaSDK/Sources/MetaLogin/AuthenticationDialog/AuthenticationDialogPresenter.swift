@@ -9,9 +9,7 @@
 import AuthenticationServices
 import Foundation
 
-typealias AuthWebViewCompletion = (Result<URL, Error>) -> Void
-
-struct AuthWebView: AuthenticationSessionWebView {
+final class AuthenticationDialogPresenter: AuthenticationDialogPresenting {
   var configuredDependencies: InstanceDependencies?
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
     webAuthenticationSessionFactory: WebAuthenticationSessionFactory(),
@@ -19,14 +17,14 @@ struct AuthWebView: AuthenticationSessionWebView {
     localStorage: LocalStorage()
   )
 
-  func openURL(
+  func presentAuthenticationDialog(
     url: URL,
     callbackURLScheme: String,
-    completion: @escaping AuthWebViewCompletion
+    completion: @escaping CompletionHandler
   ) {
     guard var dependencies = try? getDependencies() else { return }
 
-    let wrappedCompletion: AuthWebViewCompletion = { result in
+    let wrappedCompletion: CompletionHandler = { result in
       switch result {
       case .success:
         break
@@ -53,7 +51,7 @@ struct AuthWebView: AuthenticationSessionWebView {
   }
 }
 
-extension AuthWebView: DependentAsInstance {
+extension AuthenticationDialogPresenter: DependentAsInstance {
   struct InstanceDependencies {
     var webAuthenticationSessionFactory: WebAuthenticationSessionCreating
     var presentationContextProvider: ASWebAuthenticationPresentationContextProviding

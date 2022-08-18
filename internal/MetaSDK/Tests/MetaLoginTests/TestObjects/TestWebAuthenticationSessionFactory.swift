@@ -18,12 +18,12 @@ final class TestWebAuthenticationSessionFactory: WebAuthenticationSessionCreatin
 
   var capturedURL: URL?
   var capturedCallbackURLScheme: String?
-  var capturedCompletionHandler: AuthWebViewCompletion?
+  var capturedCompletionHandler: AuthenticationDialogPresenting.CompletionHandler?
 
   func createWebAuthenticationSession(
     url: URL,
     callbackURLScheme: String?,
-    completionHandler: @escaping AuthWebViewCompletion
+    completionHandler: @escaping AuthenticationDialogPresenting.CompletionHandler
   ) -> WebAuthenticationSession {
     capturedURL = url
     capturedCallbackURLScheme = callbackURLScheme

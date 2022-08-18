@@ -10,8 +10,8 @@
 import AuthenticationServices
 import XCTest
 
-final class AuthWebViewTests: XCTestCase {
-  var authWebView: AuthWebView!
+final class AuthenticationDialogPresenterTests: XCTestCase {
+  var presenter: AuthenticationDialogPresenter!
   var webAuthSessionFactory: TestWebAuthenticationSessionFactory!
   var authSession: TestWebAuthenticationSession!
   var presentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider!
@@ -22,12 +22,12 @@ final class AuthWebViewTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    authWebView = AuthWebView()
+    presenter = AuthenticationDialogPresenter()
     presentationContextProvider = TestWebAuthenticationSessionPresentationContextProvider()
     localStorage = TestLocalStorage()
     authSession = TestWebAuthenticationSession(stubbedPresentationContextProvider: presentationContextProvider)
     webAuthSessionFactory = TestWebAuthenticationSessionFactory(stubbedSession: authSession)
-    authWebView.setDependencies(
+    presenter.setDependencies(
       .init(
         webAuthenticationSessionFactory: webAuthSessionFactory,
         presentationContextProvider: presentationContextProvider,
@@ -37,7 +37,7 @@ final class AuthWebViewTests: XCTestCase {
   }
 
   override func tearDown() {
-    authWebView = nil
+    presenter = nil
     authSession = nil
     webAuthSessionFactory = nil
     presentationContextProvider = nil
@@ -46,8 +46,8 @@ final class AuthWebViewTests: XCTestCase {
   }
 
   func testDefaultDependencies() throws {
-    authWebView.resetDependencies()
-    let dependencies = try authWebView.getDependencies()
+    presenter.resetDependencies()
+    let dependencies = try presenter.getDependencies()
 
     XCTAssertTrue(
       dependencies.webAuthenticationSessionFactory is WebAuthenticationSessionFactory,
@@ -60,7 +60,7 @@ final class AuthWebViewTests: XCTestCase {
   }
 
   func testCustomDependencies() throws {
-    let dependencies = try authWebView.getDependencies()
+    let dependencies = try presenter.getDependencies()
 
     XCTAssertTrue(
       dependencies.webAuthenticationSessionFactory is TestWebAuthenticationSessionFactory,
@@ -74,7 +74,7 @@ final class AuthWebViewTests: XCTestCase {
 
   func testOpenURLWithSessionSuccess() throws {
     var capturedResult: Result<URL, Error>?
-    authWebView.openURL(
+    presenter.presentAuthenticationDialog(
       url: sampleURL,
       callbackURLScheme: sampleCallbackURLScheme
     ) { result in
@@ -113,7 +113,7 @@ final class AuthWebViewTests: XCTestCase {
   func testOpenURLWithCanceledSession() throws {
     var capturedResult: Result<URL, Error>?
     var capturedError: Error?
-    authWebView.openURL(
+    presenter.presentAuthenticationDialog(
       url: sampleURL,
       callbackURLScheme: sampleCallbackURLScheme
     ) { result in
@@ -143,7 +143,7 @@ final class AuthWebViewTests: XCTestCase {
   func testOpenURLWithPresentationContextNotProvided() throws {
     var capturedResult: Result<URL, Error>?
     var capturedError: Error?
-    authWebView.openURL(
+    presenter.presentAuthenticationDialog(
       url: sampleURL,
       callbackURLScheme: sampleCallbackURLScheme
     ) { result in
@@ -173,7 +173,7 @@ final class AuthWebViewTests: XCTestCase {
   func testOpenURLWithPresentationContextInvalid() throws {
     var capturedResult: Result<URL, Error>?
     var capturedError: Error?
-    authWebView.openURL(
+    presenter.presentAuthenticationDialog(
       url: sampleURL,
       callbackURLScheme: sampleCallbackURLScheme
     ) { result in

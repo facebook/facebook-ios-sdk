@@ -15,7 +15,7 @@ struct WebAuthenticationSessionFactory: WebAuthenticationSessionCreating {
   func createWebAuthenticationSession(
     url: URL,
     callbackURLScheme: String?,
-    completionHandler: @escaping AuthWebViewCompletion
+    completionHandler: @escaping AuthenticationDialogPresenting.CompletionHandler
   ) -> WebAuthenticationSession {
     let handler: (URL?, Error?) -> Void = { potentialURL, potentialError in
       if let error = potentialError {

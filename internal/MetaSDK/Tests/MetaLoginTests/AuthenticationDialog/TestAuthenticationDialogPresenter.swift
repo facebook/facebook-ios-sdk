@@ -9,18 +9,18 @@
 @testable import MetaLogin
 import Foundation
 
-final class TestAuthWebView: AuthenticationSessionWebView {
-  var openURLWasCalled = false
+final class TestAuthenticationDialogPresenter: AuthenticationDialogPresenting {
+  var wasPresentAuthenticationDialogCalled = false
   var capturedURL: URL?
   var capturedCallbackURLScheme: String?
-  var capturedCompletion: AuthWebViewCompletion?
+  var capturedCompletion: AuthenticationDialogPresenting.CompletionHandler?
 
-  func openURL(
+  func presentAuthenticationDialog(
     url: URL,
     callbackURLScheme: String,
-    completion: @escaping AuthWebViewCompletion
+    completion: @escaping AuthenticationDialogPresenting.CompletionHandler
   ) {
-    openURLWasCalled = true
+    wasPresentAuthenticationDialogCalled = true
     capturedURL = url
     capturedCallbackURLScheme = callbackURLScheme
     capturedCompletion = completion

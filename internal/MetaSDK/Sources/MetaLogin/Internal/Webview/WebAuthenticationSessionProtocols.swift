@@ -13,7 +13,7 @@ protocol WebAuthenticationSessionCreating {
   func createWebAuthenticationSession(
     url: URL,
     callbackURLScheme: String?,
-    completionHandler: @escaping AuthWebViewCompletion
+    completionHandler: @escaping AuthenticationDialogPresenting.CompletionHandler
   ) -> WebAuthenticationSession
 }
 
@@ -26,10 +26,6 @@ protocol WebAuthenticationSession {
 
 protocol AuthenticationSessionStatePersisting {
   var authenticationSessionState: AuthenticationSessionState { get set }
-}
-
-protocol AuthenticationSessionWebView {
-  func openURL(url: URL, callbackURLScheme: String, completion: @escaping AuthWebViewCompletion)
 }
 
 extension ASWebAuthenticationSession: WebAuthenticationSession {}
