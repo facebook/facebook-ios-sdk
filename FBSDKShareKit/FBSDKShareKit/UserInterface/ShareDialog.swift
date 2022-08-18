@@ -837,19 +837,13 @@ extension ShareDialog {
     }
 
     if flags.containsVideos {
-      guard AccessToken.current != nil else {
-        throw dependencies.errorFactory.invalidArgumentError(
-          domain: ShareErrorDomain,
-          name: "shareContent",
-          value: content,
-          message: "The web share dialog needs a valid access token to stage videos.",
-          underlyingError: nil
-        )
-      }
-
-      if let video = content as? ShareVideoContent {
-        try video.validate(options: bridgeOptions)
-      }
+      throw dependencies.errorFactory.invalidArgumentError(
+        domain: ShareErrorDomain,
+        name: "shareContent",
+        value: content,
+        message: "video sharing through the browser is not supported.",
+        underlyingError: nil
+      )
     }
 
     if flags.containsMedia,
