@@ -18,7 +18,7 @@ class HomeViewController: UIViewController {
   let metaLogin = MetaLogin()
   let loginButtonLabel = "Login"
   let logoutButtonLabel = "Logout"
-  let appId = "184484190795"
+  let appId = "421415891237674"
 
   var selectedPermissions: Set<Permission> = [.publicProfile]
   var isLoggedIn: Bool {

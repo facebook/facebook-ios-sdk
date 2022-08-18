@@ -137,8 +137,8 @@ public struct MetaLogin {
   private func getUniversalLoginURL(parameters: [String: String]) -> URL? {
     var components = URLComponents()
     components.scheme = "https"
-    components.host = "figowa.com"
-    components.path = "/oauth/accounts"
+    components.host = "facebook.com"
+    components.path = "/oauth/universal_login"
     components.queryItems = parameters.map {
       URLQueryItem(name: $0, value: $1)
     }
