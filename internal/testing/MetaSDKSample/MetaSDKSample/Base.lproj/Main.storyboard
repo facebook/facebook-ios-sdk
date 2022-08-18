@@ -131,14 +131,29 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gw7-AZ-hGr">
+                                                    <rect key="frame" x="300" y="30" width="101" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="orR-Od-Daw"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                    <state key="normal" title="Copy to clipboard"/>
+                                                    <connections>
+                                                        <action selector="onClickAction:" destination="qtZ-iO-NMK" eventType="touchUpInside" id="V09-aY-Fxk"/>
+                                                        <action selector="onCopy:" destination="Xf9-I4-teC" eventType="touchDown" id="npa-Ib-dZC"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="gw7-AZ-hGr" secondAttribute="bottom" id="3nF-gU-TPu"/>
                                                 <constraint firstAttribute="bottom" secondItem="Hua-Kj-ESe" secondAttribute="bottom" constant="15" id="6Aq-7e-DpH"/>
                                                 <constraint firstAttribute="trailing" secondItem="Yhp-fq-C7A" secondAttribute="trailing" constant="20" symbolic="YES" id="8MD-91-Sp0"/>
                                                 <constraint firstItem="Hua-Kj-ESe" firstAttribute="leading" secondItem="kd2-jd-DA2" secondAttribute="leading" constant="20" symbolic="YES" id="8ej-YT-baM"/>
                                                 <constraint firstAttribute="bottom" secondItem="Yhp-fq-C7A" secondAttribute="bottom" constant="15" id="Hxc-fh-gE0"/>
                                                 <constraint firstItem="Hua-Kj-ESe" firstAttribute="top" secondItem="kd2-jd-DA2" secondAttribute="top" constant="15" id="TL1-Bg-tmg"/>
                                                 <constraint firstItem="Yhp-fq-C7A" firstAttribute="top" secondItem="kd2-jd-DA2" secondAttribute="top" constant="15" id="izi-Mi-cS7"/>
+                                                <constraint firstAttribute="trailing" secondItem="gw7-AZ-hGr" secondAttribute="trailing" constant="20" symbolic="YES" id="ulZ-AB-Gl1"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -272,6 +287,7 @@
                         <outlet property="declinedPermissionsLabel" destination="vSe-6w-EPJ" id="49k-Fx-iBZ"/>
                         <outlet property="graphDomainLabel" destination="p9D-I8-bU3" id="9qE-3b-91U"/>
                         <outlet property="requestedPermissionsLabel" destination="e5Q-YH-161" id="fQa-iU-3dL"/>
+                        <outlet property="userIDCopyButton" destination="gw7-AZ-hGr" id="5lv-2T-wRI"/>
                         <outlet property="userIdLabel" destination="Yhp-fq-C7A" id="TTt-pX-kOa"/>
                     </connections>
                 </tableViewController>

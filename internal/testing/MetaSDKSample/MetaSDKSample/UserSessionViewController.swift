@@ -15,6 +15,11 @@ class UserSessionViewController: UITableViewController {
   @IBOutlet weak var requestedPermissionsLabel: UILabel!
   @IBOutlet weak var graphDomainLabel: UILabel!
   @IBOutlet weak var declinedPermissionsLabel: UILabel!
+  @IBOutlet weak var userIDCopyButton: UIButton!
+
+  @IBAction func onCopy(_ sender: Any) {
+    UIPasteboard.general.string = userIdLabel.text
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
