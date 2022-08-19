@@ -11,17 +11,9 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
+#import <FBSDKCoreKit/FBSDKAppLinksBlock.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
-/**
- Describes the callback for appLinkFromURLInBackground.
- @param appLinks the FBSDKAppLinks representing the deferred App Links
- @param error the error during the request, if any
- */
-typedef void (^ FBSDKAppLinksBlock)(NSDictionary<NSURL *, FBSDKAppLink *> *appLinks,
-  NSError *_Nullable error)
-NS_SWIFT_NAME(AppLinksBlock);
 
 /**
  Provides an implementation of the FBSDKAppLinkResolving protocol that uses the Facebook App Link
