@@ -158,7 +158,30 @@ final class ProfilePictureViewTests: XCTestCase {
     )
   }
 
-  func testAccessTokenDidChangeNotificationWithUserInfoKey() {
+  func testSetNeedsImageUpdateWithNoViewBounds() {
+    XCTAssertNil(profilePictureView.imageView.image, .doesNotAddImage)
+  }
+
+  func testSetNeedsImageUpdateWithNoProfileImage() {
+    let profilePictureFrame = CGRect(x: 0, y: 0, width: 100, height: 100)
+    profilePictureView = FBProfilePictureView(frame: profilePictureFrame)
+
+    let updateImagePredicate = NSPredicate { _, _ in
+      self.profilePictureView.imageView.image != nil
+    }
+
+    _ = expectation(for: updateImagePredicate, evaluatedWith: nil)
+    DispatchQueue.global(qos: .userInitiated).async {
+      self.profilePictureView.setNeedsImageUpdate()
+    }
+
+    waitForExpectations(timeout: 2)
+    XCTAssertNotNil(profilePictureView.imageView.image, .setsPlaceholderImage)
+  }
+
+  // MARK: - Notifications
+
+  func testAccessTokenDidChangeNotificationWithUserInfoKeyAndMeProfileID() {
     let notification = Notification(
       name: .AccessTokenDidChange,
       object: nil,
@@ -169,6 +192,116 @@ final class ProfilePictureViewTests: XCTestCase {
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
     profilePictureView._accessTokenDidChange(notification)
     XCTAssertNil(profilePictureView.lastState, .hasResetLastStateOnAccessTokenChange)
+  }
+
+  func testAccessTokenDidChangeNotificationWithoutUserInfoKeyAndMeProfileID() {
+    let notification = Notification(
+      name: .AccessTokenDidChange,
+      object: nil,
+      userInfo: nil
+    )
+    let state = FBSDKProfilePictureViewState(
+      profileID: "123",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: false
+    )
+    profilePictureView.lastState = state
+    profilePictureView._accessTokenDidChange(notification)
+    XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
+  }
+
+  func testAccessTokenDidChangeNotificationWithUserInfoKeyAndWithoutMeProfileID() {
+    let notification = Notification(
+      name: .AccessTokenDidChange,
+      object: nil,
+      userInfo: [AccessTokenDidChangeUserIDKey: true]
+    )
+
+    let state = FBSDKProfilePictureViewState(
+      profileID: "123",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: false
+    )
+    profilePictureView.lastState = state
+
+    profilePictureView.profileID = "123"
+    profilePictureView._accessTokenDidChange(notification)
+    XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
+  }
+
+  func testAccessTokenDidChangeNotificationWithFalseUserInfoKeyAndWithoutMeProfileID() {
+    let notification = Notification(
+      name: .AccessTokenDidChange,
+      object: nil,
+      userInfo: [AccessTokenDidChangeUserIDKey: false]
+    )
+
+    let state = FBSDKProfilePictureViewState(
+      profileID: "123",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: false
+    )
+    profilePictureView.lastState = state
+
+    profilePictureView.profileID = "123"
+    profilePictureView._accessTokenDidChange(notification)
+    XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
+  }
+
+  func testAccessTokenDidChangeNotificationWithoutUserInfoKeyAndWithMeProfileID() {
+    let notification = Notification(
+      name: .AccessTokenDidChange,
+      object: nil,
+      userInfo: [AccessTokenDidChangeUserIDKey: false]
+    )
+
+    let state = FBSDKProfilePictureViewState(
+      profileID: "123",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: false
+    )
+    profilePictureView.lastState = state
+
+    profilePictureView._accessTokenDidChange(notification)
+    XCTAssertNil(profilePictureView.lastState, .hasResetLastStateOnAccessTokenChange)
+  }
+
+  func testProfileDidChangeNotificationWithMeProfileIDAndMeStateProfileID() {
+    let notification = Notification(
+      name: .ProfileDidChange,
+      object: nil,
+      userInfo: nil
+    )
+    Profile.setCurrent(testProfile, shouldPostNotification: false)
+    profilePictureView._profileDidChange(notification)
+    XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
+  }
+
+  func testProfileDidChangeNotificationWithoutMeProfileID() {
+    let notification = Notification(
+      name: .ProfileDidChange,
+      object: nil,
+      userInfo: nil
+    )
+    let state = FBSDKProfilePictureViewState(
+      profileID: "123",
+      size: .zero,
+      scale: 0,
+      pictureMode: .normal,
+      imageShouldFit: false
+    )
+    profilePictureView.lastState = state
+    profilePictureView.profileID = "123"
+    profilePictureView._profileDidChange(notification)
+    XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
   }
 
   // MARK: - Helpers
@@ -223,6 +356,10 @@ fileprivate extension String {
     """
   static let enablesUserInteraction = """
        Profile picture view user interaction is enabled when initiating with a profile
+    """
+  static let doesNotAddImage = """
+       No image is added to the profile picture view when no image view is available or \
+       when profile picture view bounds are zero
     """
 }
 
