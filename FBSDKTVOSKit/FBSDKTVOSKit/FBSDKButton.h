@@ -10,7 +10,7 @@
 
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
-#import <FBSDKTVOSKit/FBSDKImpressionLoggingButton.h>
+#import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 
 @class FBSDKIcon;
 
