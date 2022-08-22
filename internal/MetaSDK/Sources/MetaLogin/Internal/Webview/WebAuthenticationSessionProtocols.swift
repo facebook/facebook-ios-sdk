@@ -25,7 +25,7 @@ protocol WebAuthenticationSession {
 }
 
 protocol AuthenticationSessionStatePersisting {
-  var authenticationSessionState: AuthenticationSessionState { get set }
+  var authenticationSessionState: AuthenticationSessionState? { get set }
 }
 
 extension ASWebAuthenticationSession: WebAuthenticationSession {}

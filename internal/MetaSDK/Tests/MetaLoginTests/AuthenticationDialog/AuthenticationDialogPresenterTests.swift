@@ -15,7 +15,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
   var webAuthSessionFactory: TestWebAuthenticationSessionFactory!
   var authSession: TestWebAuthenticationSession!
   var presentationContextProvider: TestWebAuthenticationSessionPresentationContextProvider!
-  var localStorage: TestLocalStorage!
+  var authenticationSessionStateStore: TestAuthenticationSessionStateStore!
   let sampleURL = SampleURLs.example
   let sampleCallbackURLScheme = "metalogin"
 
@@ -24,14 +24,14 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
 
     presenter = AuthenticationDialogPresenter()
     presentationContextProvider = TestWebAuthenticationSessionPresentationContextProvider()
-    localStorage = TestLocalStorage()
+    authenticationSessionStateStore = TestAuthenticationSessionStateStore()
     authSession = TestWebAuthenticationSession(stubbedPresentationContextProvider: presentationContextProvider)
     webAuthSessionFactory = TestWebAuthenticationSessionFactory(stubbedSession: authSession)
     presenter.setDependencies(
       .init(
         webAuthenticationSessionFactory: webAuthSessionFactory,
         presentationContextProvider: presentationContextProvider,
-        localStorage: localStorage
+        authenticationSessionStateStore: authenticationSessionStateStore
       )
     )
   }
@@ -41,6 +41,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
     authSession = nil
     webAuthSessionFactory = nil
     presentationContextProvider = nil
+    authenticationSessionStateStore = nil
 
     super.tearDown()
   }
@@ -104,7 +105,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
     )
     XCTAssertTrue(authSession.startWasCalled, "Authentication session starts when openURL is called")
     XCTAssertEqual(
-      localStorage.authenticationSessionState,
+      authenticationSessionStateStore.authenticationSessionState,
       .performingLogin,
       "Session state should be set to .performinglogin after successfully starting authentication session"
     )
@@ -134,7 +135,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
       "Authentication session error should be set to assigned value"
     )
     XCTAssertEqual(
-      localStorage.authenticationSessionState,
+      authenticationSessionStateStore.authenticationSessionState,
       .canceled,
       "Session state should be set to .canceled when the canceled login error is returned"
     )
@@ -164,7 +165,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
       "Authentication session error should be set to assigned value"
     )
     XCTAssertEqual(
-      localStorage.authenticationSessionState,
+      authenticationSessionStateStore.authenticationSessionState,
       .canceled,
       "Session state should be set to .canceled when the presentation context is not provided"
     )
@@ -194,7 +195,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
       "Authentication session error should be set to assigned value"
     )
     XCTAssertEqual(
-      localStorage.authenticationSessionState,
+      authenticationSessionStateStore.authenticationSessionState,
       .canceled,
       "Session state should be set to .canceled when there is an invalid presentation context"
     )

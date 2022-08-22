@@ -23,11 +23,14 @@ class AccessTokenViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    updateAccessToken()
+    Task {
+      await updateAccessToken()
+    }
   }
 
-  func updateAccessToken() {
-    if let accessToken = MetaLogin().userSession?.accessToken {
+  func updateAccessToken() async {
+    if let accessToken =  await MetaLogin().userSession?.accessToken {
+      print(accessToken.dataAccessExpirationDate)
       let dateFormatter = DateFormatter()
       dateFormatter.dateFormat = "yyyy-MM-dd 'at' HH:mm"
       tokenStringLabel.text = accessToken.tokenString

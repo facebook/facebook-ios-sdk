@@ -24,11 +24,13 @@ class UserSessionViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    updateUserSession()
+    Task {
+      await updateUserSession()
+    }
   }
 
-  func updateUserSession() {
-    if let userSession = MetaLogin().userSession {
+  func updateUserSession() async {
+    if let userSession = await MetaLogin().userSession {
       userIdLabel.text = String(userSession.userID)
       requestedPermissionsLabel.text = userSession.requestedPermissions
         .map {$0.rawValue}

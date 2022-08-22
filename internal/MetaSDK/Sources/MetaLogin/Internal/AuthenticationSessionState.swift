@@ -9,10 +9,8 @@
 import Foundation
 
 enum AuthenticationSessionState: Int {
-  /// no login session has started
-  case none
   /// login session has started and user is performing login
-  case performingLogin
+  case performingLogin = 1
   /// login session was canceled
-  case canceled
+  case canceled = 2
 }

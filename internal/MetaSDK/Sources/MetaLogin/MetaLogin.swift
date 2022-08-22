@@ -22,7 +22,8 @@ public struct MetaLogin {
   var configuredDependencies: InstanceDependencies?
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
     authenticationDialogPresenter: AuthenticationDialogPresenter(),
-    localStorage: LocalStorage()
+    userSessionStore: UserSessionStore(),
+    authenticationSessionStateStore: AuthenticationSessionStateStore()
   )
 
   static let redirectURI: String = "fbconnect://success"
@@ -48,16 +49,18 @@ public struct MetaLogin {
 
   /// represents login information including both user and authentication data
   public var userSession: UserSession? {
-    guard let dependencies = try? getDependencies() else { return nil }
+    get async {
+      guard let dependencies = try? getDependencies() else { return nil }
 
-    do {
-      return try dependencies.localStorage.getUserSession()
-    } catch LocalStorageError.itemNotFound {
-      return nil
-    } catch {
-      // TODO: error logging
-      print("Failed to get UserSession with \(error)")
-      return nil
+      do {
+        return try await dependencies.userSessionStore.getUserSession()
+      } catch LocalStorageError.itemNotFound {
+        return nil
+      } catch {
+        // TODO: error logging
+        print("Failed to get UserSession with \(error)")
+        return nil
+      }
     }
   }
 
@@ -99,12 +102,12 @@ public struct MetaLogin {
 
    @note This is only a client side logout. It will not log the user out of their Facebook/Meta account.
    */
-  public func logOut() {
+  public func logOut() async {
     guard var dependencies = try? getDependencies() else { return }
 
     do {
-      try dependencies.localStorage.deleteUserSession()
-      dependencies.localStorage.authenticationSessionState = .none
+      try await dependencies.userSessionStore.deleteUserSession()
+      dependencies.authenticationSessionStateStore.authenticationSessionState = nil
     } catch {
       // TODO: error logging
       print("Failed to logout with \(error)")
@@ -152,10 +155,12 @@ public struct MetaLogin {
     let parser = LoginResponseURLParser()
     guard parser.isValidAuthenticationURL(url) else { return completion(.failure(LoginError.invalidIncomingURL)) }
     guard !parser.isCancellationURL(url) else { return completion(.cancel) }
-
     do {
       let userSession = try LoginResponseURLParser().parse(url: url)
-      try dependencies.localStorage.saveUserSession(userSession: userSession)
+      // TODO: convert completion handler into async function
+      Task {
+        try await dependencies.userSessionStore.saveUserSession(userSession)
+      }
       return completion(.success(userSession))
 
     } catch {
@@ -167,6 +172,7 @@ public struct MetaLogin {
 extension MetaLogin: DependentAsInstance {
   struct InstanceDependencies {
     var authenticationDialogPresenter: AuthenticationDialogPresenting
-    var localStorage: UserSessionPersisting & AuthenticationSessionStatePersisting
+    var userSessionStore: UserSessionPersisting
+    var authenticationSessionStateStore: AuthenticationSessionStatePersisting
   }
 }

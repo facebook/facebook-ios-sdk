@@ -9,18 +9,14 @@
 @testable import MetaLogin
 import Foundation
 
-final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionPersisting {
-  var authenticationSessionState: AuthenticationSessionState
+final class TestUserSessionStore: UserSessionPersisting {
   var stubbedUserSession: UserSession
   var capturedUserSessionInSave: UserSession?
-  var isSaveUserSessionCalled = false
   var isDeleteUserSessionCalled = false
   var isGetUserSessionCalled = false
-  var throwSaveUserSessionError = false
   var stubbedError: LocalStorageError?
 
   init() {
-    authenticationSessionState = .none
     let sampleToken = AccessToken(
       tokenString: "testToken",
       expirationDate: Date().addingTimeInterval(100),
@@ -35,16 +31,15 @@ final class TestLocalStorage: AuthenticationSessionStatePersisting, UserSessionP
     )
   }
 
-  func saveUserSession(userSession: UserSession) throws {
-    isSaveUserSessionCalled = true
+  func saveUserSession(_ userSession: UserSession) async throws {
     capturedUserSessionInSave = userSession
   }
 
-  func deleteUserSession() {
+  func deleteUserSession() async {
     isDeleteUserSessionCalled = true
   }
 
-  func getUserSession() throws -> UserSession {
+  func getUserSession() async throws -> UserSession {
     isGetUserSessionCalled = true
     if let error = stubbedError {
       throw error

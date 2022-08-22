@@ -9,62 +9,43 @@
 @testable import MetaLogin
 import XCTest
 
-final class LocalStorageAuthenticationStateTests: XCTestCase {
-  var localStorage: LocalStorage!
+final class AuthenticationSessionStateStoreTests: XCTestCase {
   var authenticationStateMap: TestKeyedValueMap!
-  var userSession: UserSession!
-  var keychainStore: TestDataStore!
-
+  var authenticationSessionStateStore: AuthenticationSessionStateStore!
   override func setUp() {
     super.setUp()
 
-    localStorage = LocalStorage()
+    authenticationSessionStateStore = AuthenticationSessionStateStore()
     authenticationStateMap = TestKeyedValueMap()
-    keychainStore = TestDataStore()
-    let token = AccessToken(
-      tokenString: "testToken",
-      expirationDate: Date().addingTimeInterval(100),
-      dataAccessExpirationDate: Date().addingTimeInterval(100)
-    )!
-    userSession = UserSession(
-      userID: UInt(111),
-      graphDomain: GraphDomain.meta,
-      accessToken: token,
-      requestedPermissions: [],
-      declinedPermissions: []
-    )
-    localStorage.setDependencies(
+    authenticationSessionStateStore.setDependencies(
       .init(
-        userSessionMap: authenticationStateMap,
-        userSessionStore: keychainStore
+        authenticationSessionStateMap: authenticationStateMap
       )
     )
   }
 
   override func tearDown() {
-    localStorage = nil
     authenticationStateMap = nil
-    keychainStore = nil
-    userSession = nil
+    authenticationSessionStateStore = nil
 
     super.tearDown()
   }
 
   func testCustomDependencies() throws {
-    let dependencies = try localStorage.getDependencies()
+    let dependencies = try authenticationSessionStateStore.getDependencies()
 
     XCTAssertIdentical(
-      dependencies.userSessionMap as AnyObject,
+      dependencies.authenticationSessionStateMap as AnyObject,
       authenticationStateMap,
       "Should be set to custom data storage."
     )
   }
 
   func testSettingAuthenticationSessionState() throws {
-    localStorage.authenticationSessionState = .performingLogin
+    authenticationSessionStateStore.authenticationSessionState = .performingLogin
     XCTAssertEqual(
       authenticationStateMap.capturedSetIntegerForKeyName,
-      LocalStorage.authenticationStateKey,
+      AuthenticationSessionStateStore.authenticationStateKey,
       "The persistence key should be passed to data storage"
     )
     XCTAssertEqual(
@@ -75,14 +56,14 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
   }
 
   func testGettingAuthenticationSessionState() throws {
-    let sessionState = localStorage.authenticationSessionState
-    XCTAssertEqual(authenticationStateMap.capturedIntegerKey, LocalStorage.authenticationStateKey)
-    XCTAssertEqual(sessionState, .none, "Session state should be none when no session state is stored")
+    let sessionState = authenticationSessionStateStore.authenticationSessionState
+    XCTAssertEqual(authenticationStateMap.capturedIntegerKey, AuthenticationSessionStateStore.authenticationStateKey)
+    XCTAssertNil(sessionState, "Session state should be none when no session state is stored")
   }
 
   func testGettingAuthenticationSessionStateWithStoredValue() throws {
     authenticationStateMap.stubbedIntegerForKey = 1
-    let sessionState = localStorage.authenticationSessionState
+    let sessionState = authenticationSessionStateStore.authenticationSessionState
     XCTAssertEqual(
       sessionState,
       .performingLogin,
@@ -92,10 +73,9 @@ final class LocalStorageAuthenticationStateTests: XCTestCase {
 
   func testGettingAuthenticationSessionStateWithInvalidValue() throws {
     authenticationStateMap.stubbedIntegerForKey = 3
-    let sessionState = localStorage.authenticationSessionState
-    XCTAssertEqual(
+    let sessionState = authenticationSessionStateStore.authenticationSessionState
+    XCTAssertNil(
       sessionState,
-      .none,
       "Session state should be none for a value that doesn't match a session state"
     )
   }

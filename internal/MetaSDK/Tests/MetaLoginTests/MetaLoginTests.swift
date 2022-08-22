@@ -12,8 +12,9 @@ import XCTest
 final class MetaLoginTests: XCTestCase {
   var presenter: TestAuthenticationDialogPresenter!
   var metaLogin: MetaLogin!
-  var localStorage: TestLocalStorage!
   var loginConfiguration: LoginConfiguration!
+  var userSessionStore: TestUserSessionStore!
+  var authenticationSessionStateStore: TestAuthenticationSessionStateStore!
 
   override func setUp() {
     super.setUp()
@@ -23,13 +24,15 @@ final class MetaLoginTests: XCTestCase {
       facebookAppID: "facebook_app_id",
       metaAppID: "some_meta_app_id"
     )
-    localStorage = TestLocalStorage()
+    userSessionStore = TestUserSessionStore()
+    authenticationSessionStateStore = TestAuthenticationSessionStateStore()
     metaLogin = MetaLogin()
     presenter = TestAuthenticationDialogPresenter()
     metaLogin.setDependencies(
       .init(
         authenticationDialogPresenter: presenter,
-        localStorage: localStorage
+        userSessionStore: userSessionStore,
+        authenticationSessionStateStore: authenticationSessionStateStore
       )
     )
   }
@@ -38,7 +41,8 @@ final class MetaLoginTests: XCTestCase {
     loginConfiguration = nil
     metaLogin = nil
     presenter = nil
-    localStorage = nil
+    userSessionStore = nil
+    authenticationSessionStateStore = nil
 
     super.tearDown()
   }
@@ -52,7 +56,7 @@ final class MetaLoginTests: XCTestCase {
       "A login manager uses a provided authentication web view"
     )
     XCTAssertTrue(
-      dependencies.localStorage is LocalStorage,
+      dependencies.userSessionStore is UserSessionStore,
       "A login manager uses a provided LocalStorage"
     )
   }
@@ -65,7 +69,7 @@ final class MetaLoginTests: XCTestCase {
       "Should be set to a custom authentication web view"
     )
     XCTAssertTrue(
-      dependencies.localStorage is TestLocalStorage,
+      dependencies.userSessionStore is TestUserSessionStore,
       "A login manager uses a custom LocalStorage"
     )
   }
@@ -84,7 +88,11 @@ final class MetaLoginTests: XCTestCase {
     presenter.capturedCompletion?(.success(sampleURL))
 
     XCTAssertNotNil(capturedUserSession, "Should capture user session after successful login")
-    XCTAssertTrue(localStorage.isSaveUserSessionCalled, "Should save user session upon successful login")
+    XCTAssertEqual(
+      capturedUserSession,
+      userSessionStore.capturedUserSessionInSave,
+      "Should save user session upon successful login"
+    )
     XCTAssertTrue(presenter.wasPresentAuthenticationDialogCalled, "Login should call open URL")
     XCTAssertEqual(
       presenter.capturedCallbackURLScheme,
@@ -172,16 +180,15 @@ final class MetaLoginTests: XCTestCase {
     )
   }
 
-  func testLogout() throws {
-    localStorage.authenticationSessionState = .performingLogin
-    metaLogin.logOut()
-    XCTAssertEqual(
-      localStorage.authenticationSessionState,
-      .none,
+  func testLogout() async throws {
+    authenticationSessionStateStore.authenticationSessionState = .performingLogin
+    await metaLogin.logOut()
+    XCTAssertNil(
+      authenticationSessionStateStore.authenticationSessionState,
       "AuthenticationSessionState should be set as none after user logs out"
     )
     XCTAssertTrue(
-      localStorage.isDeleteUserSessionCalled,
+      userSessionStore.isDeleteUserSessionCalled,
       "Should delete the stored user session when a user logs out"
     )
   }
@@ -208,28 +215,31 @@ final class MetaLoginTests: XCTestCase {
     )
   }
 
-  func testGetUserSession() throws {
+  func testGetUserSession() async throws {
+    let userSessionResult = await metaLogin.userSession
     XCTAssertEqual(
-      localStorage.stubbedUserSession,
-      metaLogin.userSession,
+      userSessionStore.stubbedUserSession,
+      userSessionResult,
       "The userSession variable should be consistent with cached data"
     )
   }
 
-  func testGetUserSessionWithItemNotFoundError() throws {
-    localStorage.stubbedError = LocalStorageError.itemNotFound
+  func testGetUserSessionWithItemNotFoundError() async throws {
+    userSessionStore.stubbedError = LocalStorageError.itemNotFound
+    let userSessionResult = await metaLogin.userSession
     XCTAssertNil(
-      metaLogin.userSession,
-      "The userSession should be nil when error occurs in localStorage get method "
+      userSessionResult,
+      "The userSession should be nil when error occurs in userSessionStore get method "
     )
   }
 
-  func testGetUserSessionWithUnhandledError() throws {
-    localStorage.stubbedError = LocalStorageError.unhandledError(
+  func testGetUserSessionWithUnhandledError() async throws {
+    userSessionStore.stubbedError = LocalStorageError.unhandledError(
       status: SecCopyErrorMessageString(errSecBadReq, nil) as? String)
+    let userSessionResult = await metaLogin.userSession
     XCTAssertNil(
-      metaLogin.userSession,
-      "The userSession should be nil when error occurs in localStorage get method "
+      userSessionResult,
+      "The userSession should be nil when error occurs in userSessionStore get method "
     )
   }
 

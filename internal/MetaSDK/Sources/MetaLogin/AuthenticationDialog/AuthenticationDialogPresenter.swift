@@ -14,7 +14,7 @@ final class AuthenticationDialogPresenter: AuthenticationDialogPresenting {
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
     webAuthenticationSessionFactory: WebAuthenticationSessionFactory(),
     presentationContextProvider: WebAuthenticationSessionPresentationContextProvider(),
-    localStorage: LocalStorage()
+    authenticationSessionStateStore: AuthenticationSessionStateStore()
   )
 
   func presentAuthenticationDialog(
@@ -29,7 +29,7 @@ final class AuthenticationDialogPresenter: AuthenticationDialogPresenting {
       case .success:
         break
       case .failure:
-        dependencies.localStorage.authenticationSessionState = .canceled
+        dependencies.authenticationSessionStateStore.authenticationSessionState = .canceled
       }
 
       completion(result)
@@ -46,7 +46,7 @@ final class AuthenticationDialogPresenter: AuthenticationDialogPresenting {
     let sessionStarted = session.start()
 
     if sessionStarted {
-      dependencies.localStorage.authenticationSessionState = .performingLogin
+      dependencies.authenticationSessionStateStore.authenticationSessionState = .performingLogin
     }
   }
 }
@@ -55,6 +55,6 @@ extension AuthenticationDialogPresenter: DependentAsInstance {
   struct InstanceDependencies {
     var webAuthenticationSessionFactory: WebAuthenticationSessionCreating
     var presentationContextProvider: ASWebAuthenticationPresentationContextProviding
-    var localStorage: AuthenticationSessionStatePersisting
+    var authenticationSessionStateStore: AuthenticationSessionStatePersisting
   }
 }

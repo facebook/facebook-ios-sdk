@@ -22,8 +22,11 @@ class HomeViewController: UIViewController {
 
   var selectedPermissions: Set<Permission> = [.publicProfile]
   var isLoggedIn: Bool {
-    return metaLogin.userSession != nil
+    get async {
+      return await metaLogin.userSession != nil
+    }
   }
+
   var cellConfigs: [LoginCellConfig] {[
     LoginCellConfig(
       cellTitle: "App ID:",
@@ -55,36 +58,41 @@ class HomeViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    updateLoginButtonLabel()
+    Task {
+      await updateLoginButtonLabel()
+    }
   }
 
   @IBAction func loginButtonTapped(_ sender: Any) {
-    if isLoggedIn {
-      metaLogin.logOut()
-      self.updateLoginButtonLabel()
-    } else {
-      let configuration = LoginConfiguration(
-        permissions: selectedPermissions,
-        facebookAppID: appId,
-        metaAppID: "some_meta_app_id"
-      )
+    Task {
+      if await isLoggedIn {
+        await metaLogin.logOut()
+        await self.updateLoginButtonLabel()
+      } else {
+        let configuration = LoginConfiguration(
+          permissions: selectedPermissions,
+          facebookAppID: appId,
+          metaAppID: "some_meta_app_id"
+        )
 
-      metaLogin.logIn(configuration: configuration) { result in
-        switch result {
-        case .success:
-          self.updateLoginButtonLabel()
-        case .failure(let error):
-          print("Failed to login with \(error)")
-        case .cancel:
-          print("Login cancelled")
+        metaLogin.logIn(configuration: configuration) { result in
+          switch result {
+          case .success:
+            Task {
+              await self.updateLoginButtonLabel()
+            }
+          case .failure(let error):
+            print("Failed to login with \(error)")
+          case .cancel:
+            print("Login cancelled")
+          }
         }
-
       }
     }
   }
 
-  private func updateLoginButtonLabel() {
-    if isLoggedIn {
+  private func updateLoginButtonLabel() async {
+    if await isLoggedIn {
       loginButton.setTitle(logoutButtonLabel, for: .normal)
     } else {
       loginButton.setTitle(loginButtonLabel, for: .normal)

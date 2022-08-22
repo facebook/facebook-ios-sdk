@@ -15,16 +15,16 @@ extension LocalStorageError: Equatable {
   }
 }
 
-final class LocalStorageUserSessionTests: XCTestCase {
-  var localStorage: LocalStorage!
+final class UserSessionStoreTests: XCTestCase {
+  var userSessionStore: UserSessionStore!
   var userSessionMap: TestKeyedValueMap!
   var userSession: UserSession!
   var keychainStore: TestDataStore!
 
-  override func setUp() {
-    super.setUp()
+  override func setUp() async throws {
+    try await super.setUp()
 
-    localStorage = LocalStorage()
+    userSessionStore = UserSessionStore()
     userSessionMap = TestKeyedValueMap()
     keychainStore = TestDataStore()
     let sampleAccessToken = AccessToken(
@@ -39,16 +39,16 @@ final class LocalStorageUserSessionTests: XCTestCase {
       requestedPermissions: [],
       declinedPermissions: []
     )
-    localStorage.setDependencies(
+    await userSessionStore.setDependencies(
       .init(
         userSessionMap: userSessionMap,
-        userSessionStore: keychainStore
+        userSessionStorage: keychainStore
       )
     )
   }
 
   override func tearDown() {
-    localStorage = nil
+    userSessionStore = nil
     userSessionMap = nil
     keychainStore = nil
     userSession = nil
@@ -56,8 +56,8 @@ final class LocalStorageUserSessionTests: XCTestCase {
     super.tearDown()
   }
 
-  func testCustomDependencies() throws {
-    let dependencies = try localStorage.getDependencies()
+  func testCustomDependencies() async throws {
+    let dependencies = try await userSessionStore.getDependencies()
     XCTAssertIdentical(
       dependencies.userSessionMap as AnyObject,
       userSessionMap,
@@ -65,10 +65,10 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testReadUserSessionSuccessfully() throws {
-    userSessionMap.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+  func testReadUserSessionSuccessfully() async throws {
+    userSessionMap.stubbedIntegerForKey = UserSessionStore.userSessionSavedFlag
     keychainStore.stubbedUserSessionData = try JSONEncoder().encode(userSession)
-    let result = try localStorage.getUserSession()
+    let result = try await userSessionStore.getUserSession()
     XCTAssertEqual(
       result,
       userSession,
@@ -80,14 +80,14 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testReadUserSessionNotFound() throws {
+  func testReadUserSessionNotFound() async throws {
     // Data does not exist in keychain
-    userSessionMap.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionMap.stubbedIntegerForKey = UserSessionStore.userSessionSavedFlag
     keychainStore.stubbedError = LocalStorageError.itemNotFound
-    XCTAssertThrowsError(
-      try localStorage.getUserSession(),
-      "An itemNotFound error should be thrown when item is not found in keychain"
-    ) { error in
+    do {
+      _ = try await userSessionStore.getUserSession()
+      XCTFail("An itemNotFound error should be thrown when item is not found in keychain")
+    } catch {
       XCTAssertEqual(error as? LocalStorageError, LocalStorageError.itemNotFound)
     }
     XCTAssertTrue(
@@ -96,13 +96,14 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testReadUserSessionWithDecodingError() throws {
+  func testReadUserSessionWithDecodingError() async throws {
     // Failure in Decoding
-    userSessionMap.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionMap.stubbedIntegerForKey = UserSessionStore.userSessionSavedFlag
     keychainStore.stubbedUserSessionData = Data()
-    XCTAssertThrowsError(
-      try localStorage.getUserSession()
-    ) { error in
+    do {
+      _ = try await userSessionStore.getUserSession()
+      XCTFail("A decodingError should been thrown due to failed decoding")
+    } catch {
       guard case DecodingError.dataCorrupted = error else {
         return XCTFail("A decodingError should been thrown due to failed decoding")
       }
@@ -113,15 +114,15 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testReadUserSessionWithUnhandlledError() throws {
+  func testReadUserSessionWithUnhandlledError() async throws {
     // Failure in keychain read operation
-    userSessionMap.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionMap.stubbedIntegerForKey = UserSessionStore.userSessionSavedFlag
     keychainStore.stubbedError = LocalStorageError.unhandledError(
       status: SecCopyErrorMessageString(errSecBadReq, nil) as? String)
-    XCTAssertThrowsError(
-      try localStorage.getUserSession(),
-      "An unhandled error should been thrown when error occurs in keychain API"
-    ) { error in
+    do {
+      _ = try await userSessionStore.getUserSession()
+      XCTFail("An unhandled error should been thrown when error occurs in keychain API")
+    } catch {
       XCTAssertEqual(error as? LocalStorageError, keychainStore.stubbedError)
     }
     XCTAssertTrue(
@@ -130,12 +131,12 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testReadUserSessionWithEmptyUserDefaults() throws {
+  func testReadUserSessionWithEmptyUserDefaults() async throws {
     keychainStore.stubbedUserSessionData = try JSONEncoder().encode(userSession)
-    XCTAssertThrowsError(
-      try localStorage.getUserSession(),
-      "An itemNotFound error should been thrown when userDefault is empty"
-    ) { error in
+    do {
+      _ = try await userSessionStore.getUserSession()
+      XCTFail("An itemNotFound error should been thrown when userDefault is empty")
+    } catch {
       XCTAssertEqual(error as? LocalStorageError, LocalStorageError.itemNotFound)
     }
     XCTAssertFalse(
@@ -144,9 +145,9 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testSaveUserSessionWithSuccess() throws {
+  func testSaveUserSessionWithSuccess() async throws {
     let encodedUserSession = try JSONEncoder().encode(userSession)
-    try localStorage.saveUserSession(userSession: userSession)
+    try await userSessionStore.saveUserSession(userSession)
     XCTAssertEqual(
       encodedUserSession,
       keychainStore.capturedDataInAdd,
@@ -158,20 +159,20 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
     XCTAssertEqual(
       userSessionMap.capturedSetIntegerForKeyName,
-      LocalStorage.userSessionSavedFlagKey,
+      UserSessionStore.userSessionSavedFlagKey,
       "userSessionMap.set should be called with defaultKey"
     )
   }
 
-  func testSaveUserSessionWithKeychainError() throws {
+  func testSaveUserSessionWithKeychainError() async throws {
     // Failure in keychain add operation
-    userSessionMap.stubbedIntegerForKey = LocalStorage.userSessionSavedFlag
+    userSessionMap.stubbedIntegerForKey = UserSessionStore.userSessionSavedFlag
     keychainStore.stubbedError = LocalStorageError.unhandledError(
       status: SecCopyErrorMessageString(errSecBadReq, nil) as? String)
-    XCTAssertThrowsError(
-      try localStorage.saveUserSession(userSession: userSession),
-      "An unhandledError error should been thrown when failed to add value in keychain"
-    ) { error in
+    do {
+      _ = try await userSessionStore.saveUserSession(userSession)
+      XCTFail("An unhandledError error should been thrown when failed to add value in keychain")
+    } catch {
       XCTAssertEqual(error as? LocalStorageError, keychainStore.stubbedError)
     }
     XCTAssertTrue(
@@ -180,12 +181,12 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testDeleteUserSessionWithSuccess() throws {
+  func testDeleteUserSessionWithSuccess() async throws {
     // Successful deletion
-    try localStorage.deleteUserSession()
+    try await userSessionStore.deleteUserSession()
     XCTAssertEqual(
       userSessionMap.capturedRemoveStringForKeyName,
-      LocalStorage.userSessionSavedFlagKey,
+      UserSessionStore.userSessionSavedFlagKey,
       "userSessionMap.removeObject should be called with defaultKey"
     )
     XCTAssertTrue(
@@ -194,14 +195,14 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testDeleteUserSessionWithKeychainError() throws {
+  func testDeleteUserSessionWithKeychainError() async throws {
     // Failed deletion due to bad keychain request
     keychainStore.stubbedError = LocalStorageError.unhandledError(
       status: SecCopyErrorMessageString(errSecBadReq, nil) as? String)
-    XCTAssertThrowsError(
-      try localStorage.deleteUserSession(),
-      "An unhandledError error should been thrown when it fails to delete value in keychain"
-    ) { error in
+    do {
+      _ = try await userSessionStore.deleteUserSession()
+      XCTFail("An unhandledError error should been thrown when it fails to delete value in keychain")
+    } catch {
       XCTAssertEqual(error as? LocalStorageError, keychainStore.stubbedError)
     }
     XCTAssertEqual(
@@ -211,12 +212,12 @@ final class LocalStorageUserSessionTests: XCTestCase {
     )
   }
 
-  func testDeleteNonexistentItem() throws {
+  func testDeleteNonexistentItem() async throws {
     // Delete nonexistent item
-    try localStorage.deleteUserSession()
+    try await userSessionStore.deleteUserSession()
     XCTAssertEqual(
       userSessionMap.capturedRemoveStringForKeyName,
-      LocalStorage.userSessionSavedFlagKey,
+      UserSessionStore.userSessionSavedFlagKey,
       "userSessionMap.removeObject should be called with defaultKey"
     )
     XCTAssertTrue(

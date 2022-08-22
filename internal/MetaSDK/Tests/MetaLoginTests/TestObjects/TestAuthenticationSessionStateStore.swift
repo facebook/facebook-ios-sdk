@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import MetaLogin
 import Foundation
 
-protocol UserSessionPersisting {
-  func saveUserSession(_ userSession: UserSession) async throws
-  func deleteUserSession() async throws
-  func getUserSession() async throws -> UserSession
+final class TestAuthenticationSessionStateStore: AuthenticationSessionStatePersisting {
+  var authenticationSessionState: AuthenticationSessionState?
 }
