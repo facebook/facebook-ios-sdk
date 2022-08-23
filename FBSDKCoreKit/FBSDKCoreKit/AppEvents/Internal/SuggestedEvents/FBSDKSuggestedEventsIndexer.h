@@ -8,17 +8,10 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-
 #import "FBSDKEventLogging.h"
-#import "FBSDKEventProcessing.h"
-#import "FBSDKFeatureExtracting.h"
-#import "FBSDKServerConfigurationProviding.h"
-#import "FBSDKSuggestedEventsIndexerProtocol.h"
-#import "FBSDKSwizzling.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

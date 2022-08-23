@@ -8,9 +8,10 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIRequest.h"
-#import "FBSDKInternalURLOpener.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
 

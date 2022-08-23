@@ -82,7 +82,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
     try XCTSkipIf(true)
 
     var didInvokeCompletion = false
-    var configuration: ServerConfiguration?
+    var configuration: _ServerConfiguration?
     var error: Error?
     ServerConfigurationManager.shared.loadServerConfiguration { potentialConfiguration, potentialError in
       didInvokeCompletion = true

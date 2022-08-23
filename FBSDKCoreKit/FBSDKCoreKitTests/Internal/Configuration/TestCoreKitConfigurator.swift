@@ -8,10 +8,10 @@
 
 import FBSDKCoreKit
 
-final class TestCoreKitConfigurator: CoreKitConfiguring {
-  let components: CoreKitComponents
+final class TestCoreKitConfigurator: _CoreKitConfiguring {
+  let components: _CoreKitComponents
 
-  init(components: CoreKitComponents) {
+  init(components: _CoreKitComponents) {
     self.components = components
   }
 

@@ -8,21 +8,11 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKFeatureChecking.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKEventProcessing.h"
-#import "FBSDKFeatureExtracting.h"
-#import "FBSDKGateKeeperManaging.h"
-#import "FBSDKIntegrityParametersProcessorProvider.h"
 #import "FBSDKIntegrityProcessing.h"
-#import "FBSDKRulesFromKeyProvider.h"
-#import "FBSDKSuggestedEventsIndexerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

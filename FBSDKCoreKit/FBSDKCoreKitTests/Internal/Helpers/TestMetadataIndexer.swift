@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestMetadataIndexer: NSObject, MetadataIndexing {
+final class TestMetadataIndexer: NSObject, _MetadataIndexing {
   var enableWasCalled = false
 
   func enable() {

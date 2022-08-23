@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestDialogConfigurationMapBuilder: DialogConfigurationMapBuilding {
+final class TestDialogConfigurationMapBuilder: _DialogConfigurationMapBuilding {
 
   var capturedRawConfigurations: [[String: Any]]?
 
   func buildDialogConfigurationMap(
     from rawConfigurations: [[String: Any]]
-  ) -> [String: DialogConfiguration] {
+  ) -> [String: _DialogConfiguration] {
     capturedRawConfigurations = rawConfigurations
     return [:]
   }

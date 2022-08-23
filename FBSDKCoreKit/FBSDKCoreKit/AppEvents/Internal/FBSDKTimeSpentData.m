@@ -8,6 +8,7 @@
 
 #import "FBSDKTimeSpentData.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventName+Internal.h"
@@ -17,7 +18,6 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationProviding.h"
 
 // Filename and keys for session length
 NSString *const FBSDKTimeSpentFilename = @"com-facebook-sdk-AppEventsTimeSpent.json";

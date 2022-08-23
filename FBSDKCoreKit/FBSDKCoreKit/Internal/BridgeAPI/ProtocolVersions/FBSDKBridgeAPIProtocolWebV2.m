@@ -13,12 +13,10 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
-#import "FBSDKDialogConfiguration.h"
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKServerConfigurationManager.h"
-#import "FBSDKServerConfigurationProviding.h"
 
 @implementation FBSDKBridgeAPIProtocolWebV2
 

@@ -8,7 +8,8 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLinkEventPosting.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKMeasurementEvent.h"
 
 NS_ASSUME_NONNULL_BEGIN

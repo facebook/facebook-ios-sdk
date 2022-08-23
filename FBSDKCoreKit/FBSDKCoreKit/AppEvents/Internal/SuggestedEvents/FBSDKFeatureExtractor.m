@@ -10,10 +10,10 @@
 
 #import "FBSDKFeatureExtractor.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKModelManager.h"
-#import "FBSDKRulesFromKeyProvider.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"
 

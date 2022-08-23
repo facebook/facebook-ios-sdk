@@ -14,7 +14,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ImpressionLoggerFactoryProtocol)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ImpressionLoggerFactoryProtocol)
 @protocol FBSDKImpressionLoggerFactory
 
 - (id<FBSDKImpressionLogging>)makeImpressionLoggerWithEventName:(FBSDKAppEventName)eventName;

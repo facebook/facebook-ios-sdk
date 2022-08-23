@@ -12,12 +12,12 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
-#import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
@@ -28,10 +28,8 @@
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
-#import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKSwizzling.h"
 #import "FBSDKUnarchiverProvider.h"
 #import "FBSDKUtility.h"
 #import "FBSDKViewHierarchy.h"

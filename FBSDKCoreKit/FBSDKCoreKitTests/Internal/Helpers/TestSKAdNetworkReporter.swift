@@ -8,7 +8,7 @@
 
 import TestTools
 
-extension TestSKAdNetworkReporter: AppEventsReporter {
+extension TestSKAdNetworkReporter: _AppEventsReporter {
   public func enable() {}
 
   public func recordAndUpdate(

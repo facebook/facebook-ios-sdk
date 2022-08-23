@@ -11,15 +11,15 @@ import Foundation
 @objcMembers
 final class ServerConfigurationFixtures: NSObject {
   /// A default configuration with valid inputs. This is the same default configuration used in production code
-  static var defaultConfiguration: ServerConfiguration {
-    ServerConfiguration.defaultServerConfiguration(forAppID: "1.0")
+  static var defaultConfiguration: _ServerConfiguration {
+    _ServerConfiguration.defaultServerConfiguration(forAppID: "1.0")
   }
 
   /// A default configuration with custom values passed by dictionary.
   /// To use: Include a dictionary with the keys and values you want to override on the default configuration
   class func configuration( // swiftlint:disable:this cyclomatic_complexity
     withDictionary dict: [String: Any]
-  ) -> ServerConfiguration {
+  ) -> _ServerConfiguration {
     var loginTooltipEnabled = defaultConfiguration.isLoginTooltipEnabled
     if dict["loginTooltipEnabled"] != nil {
       loginTooltipEnabled = dict["loginTooltipEnabled"] as? Int != 0
@@ -67,7 +67,7 @@ final class ServerConfigurationFixtures: NSObject {
       ?? (dict["dialogConfigurations"] as? [String: Any])
     let dialogFlows = dict["dialogFlows"] as? [String: Any] ?? defaultConfiguration.dialogFlows()
     let timestamp = dict["timestamp"] as? Date ?? defaultConfiguration.timestamp
-    let errorConfiguration = dict["errorConfiguration"] as? ErrorConfiguration
+    let errorConfiguration = dict["errorConfiguration"] as? _ErrorConfiguration
       ?? defaultConfiguration.errorConfiguration
 
     var sessionTimeoutInterval = defaultConfiguration.sessionTimoutInterval
@@ -88,7 +88,7 @@ final class ServerConfigurationFixtures: NSObject {
     // swiftlint:disable:next line_length
     let suggestedEventsSetting = dict["suggestedEventsSetting"] as? [String: Any] ?? defaultConfiguration.suggestedEventsSetting
 
-    return ServerConfiguration(
+    return _ServerConfiguration(
       appID: appID,
       appName: appName,
       loginTooltipEnabled: loginTooltipEnabled,

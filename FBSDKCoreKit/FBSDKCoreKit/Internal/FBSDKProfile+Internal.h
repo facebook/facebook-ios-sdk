@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>

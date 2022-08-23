@@ -10,7 +10,7 @@
 
 #import <StoreKit/StoreKit.h>
 
-#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventName+Internal.h"
@@ -18,7 +18,6 @@
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 

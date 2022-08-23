@@ -14,7 +14,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppEventsReporter.h"
 #import "FBSDKConversionValueUpdating.h"
 
 NS_ASSUME_NONNULL_BEGIN

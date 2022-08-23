@@ -13,8 +13,6 @@
 #import "FBSDKBridgeAPI.h"
 #import "FBSDKBridgeAPIResponseCreating.h"
 #import "FBSDKDynamicFrameworkResolving.h"
-#import "FBSDKInternalURLOpener.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

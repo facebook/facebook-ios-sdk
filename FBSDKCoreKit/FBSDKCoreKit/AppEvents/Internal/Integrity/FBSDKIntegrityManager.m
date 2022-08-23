@@ -10,9 +10,9 @@
 
 #import "FBSDKIntegrityManager.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKIntegrityProcessing.h"
 
 @interface FBSDKIntegrityManager ()

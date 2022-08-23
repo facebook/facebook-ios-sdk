@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
 #import "FBSDKATEPublishing.h"
-#import "FBSDKDeviceInformationProviding.h"
 
 @protocol FBSDKDataPersisting;
 @protocol FBSDKGraphRequestFactory;

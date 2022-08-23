@@ -10,13 +10,8 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKAdvertiserIDProviding.h"
-#import "FBSDKAppEventDropDetermining.h"
-#import "FBSDKAppEventParametersExtracting.h"
-#import "FBSDKAppEventsConfigurationProviding.h"
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import "FBSDKAppEventsUtilityProtocol.h"
-#import "FBSDKDeviceInformationProviding.h"
 #import "FBSDKLoggingNotifying.h"
 
 NS_ASSUME_NONNULL_BEGIN

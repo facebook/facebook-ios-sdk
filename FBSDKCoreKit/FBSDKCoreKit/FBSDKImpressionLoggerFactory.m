@@ -10,7 +10,7 @@
 
 #import <FBSDKCoreKit_Basics/FBSDKNotificationDelivering.h>
 
-#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFactory.h>
 
 #import "FBSDKEventLogging.h"

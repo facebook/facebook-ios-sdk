@@ -8,15 +8,10 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestMetadata.h"
-#import "FBSDKGraphRequestPiggybackManaging.h"
-#import "FBSDKMacCatalystDetermining.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
-#import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKURLSessionProxying.h"
 
 NS_ASSUME_NONNULL_BEGIN

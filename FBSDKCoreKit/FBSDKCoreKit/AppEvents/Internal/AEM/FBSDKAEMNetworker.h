@@ -8,9 +8,8 @@
 
 #if !TARGET_OS_TV
 
+#import <FBAEMKit/FBAEMNetworking.h>
 #import <Foundation/Foundation.h>
-
-#import <FBAEMKit/FBAEMKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(_AEMNetworker)
+NS_SWIFT_NAME(__AEMNetworker)
 @interface FBSDKAEMNetworker : NSObject <FBAEMNetworking>
 
 - (void)startGraphRequestWithGraphPath:(NSString *)graphPath

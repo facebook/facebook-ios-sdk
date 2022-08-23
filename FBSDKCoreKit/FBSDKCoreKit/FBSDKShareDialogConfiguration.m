@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !TARGET_OS_TV
+
 #import "FBSDKShareDialogConfiguration.h"
 
 #import "FBSDKServerConfiguration.h"
@@ -50,3 +52,5 @@
 }
 
 @end
+
+#endif

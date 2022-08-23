@@ -10,10 +10,10 @@
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventsConfigurationProtocol.h"
-#import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKCoreKitVersions.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"

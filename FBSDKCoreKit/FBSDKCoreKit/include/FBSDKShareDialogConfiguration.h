@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if !TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// Constant used to describe the 'Message' dialog
@@ -31,3 +33,5 @@ NS_SWIFT_NAME(ShareDialogConfiguration)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

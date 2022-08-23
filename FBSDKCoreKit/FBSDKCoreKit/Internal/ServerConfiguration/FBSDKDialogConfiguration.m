@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKDialogConfiguration.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #define FBSDK_DIALOG_CONFIGURATION_APP_VERSIONS_KEY @"appVersions"
 #define FBSDK_DIALOG_CONFIGURATION_NAME_KEY @"name"

@@ -25,7 +25,7 @@ final class ApplicationDelegateTests: XCTestCase {
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
   var paymentObserver: TestPaymentObserver!
   var profile: Profile!
-  var components: CoreKitComponents!
+  var components: _CoreKitComponents!
   var configurator: TestCoreKitConfigurator!
   var delegate: ApplicationDelegate! // swiftlint:disable:this weak_delegate
   // swiftlint:enable implicitly_unwrapped_optional
@@ -92,9 +92,9 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func makeDelegate(usesTestConfigurator: Bool = true) {
-    let configurator: CoreKitConfiguring = usesTestConfigurator
+    let configurator: _CoreKitConfiguring = usesTestConfigurator
       ? configurator
-      : CoreKitConfigurator(components: components)
+      : _CoreKitConfigurator(components: components)
 
     delegate = ApplicationDelegate(
       components: components,
@@ -115,17 +115,17 @@ final class ApplicationDelegateTests: XCTestCase {
 
     XCTAssertIdentical(
       delegate.components,
-      CoreKitComponents.default,
+      _CoreKitComponents.default,
       "An application delegate should be created with the default components by default"
     )
 
     let configurator = try XCTUnwrap(
-      delegate.configurator as? CoreKitConfigurator,
+      delegate.configurator as? _CoreKitConfigurator,
       "An application delegate should be created with a concrete configurator by default"
     )
     XCTAssertIdentical(
       configurator.components,
-      CoreKitComponents.default,
+      _CoreKitComponents.default,
       "The configurator should be created with the default components by default"
     )
 

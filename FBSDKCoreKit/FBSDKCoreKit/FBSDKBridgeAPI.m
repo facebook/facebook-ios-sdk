@@ -24,7 +24,6 @@
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKURLScheme.h"
 #import "NSProcessInfo+OperatingSystemVersionComparing.h"
 #import "UIApplication+URLOpener.h"

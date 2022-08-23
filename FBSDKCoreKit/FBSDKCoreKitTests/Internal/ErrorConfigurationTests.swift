@@ -28,7 +28,7 @@ final class ErrorConfigurationTests: XCTestCase {
   ]
 
   func testErrorConfigurationDefaults() {
-    let configuration = ErrorConfiguration(dictionary: nil)
+    let configuration = _ErrorConfiguration(dictionary: nil)
 
     XCTAssertEqual(
       .transient,
@@ -103,13 +103,13 @@ final class ErrorConfigurationTests: XCTestCase {
   }
 
   func testErrorConfigurationAdditonalArray() throws {
-    let intermediaryConfiguration = ErrorConfiguration(dictionary: nil)
+    let intermediaryConfiguration = _ErrorConfiguration(dictionary: nil)
     intermediaryConfiguration.update(with: rawErrorCodeConfiguration)
     let data = NSKeyedArchiver.archivedData(
       withRootObject: intermediaryConfiguration)
 
     let configuration = try NSKeyedUnarchiver.unarchivedObject(
-      ofClass: ErrorConfiguration.self, from: data
+      ofClass: _ErrorConfiguration.self, from: data
     )! // swiftlint:disable:this force_unwrapping
     XCTAssertEqual(
       .transient,
@@ -182,7 +182,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "recovery_options": ["Yes", "No thanks"],
         ],
       ]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }
@@ -201,7 +201,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "recovery_options": ["Yes", "No thanks"],
         ],
       ]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }
@@ -220,7 +220,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "recovery_options": ["Yes", "No thanks"],
         ],
       ]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }
@@ -239,7 +239,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "recovery_options": ["Yes", "No thanks"],
         ],
       ]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }
@@ -258,7 +258,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "recovery_options": [Fuzzer.random, Fuzzer.random],
         ],
       ]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }
@@ -277,7 +277,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "recovery_options": Fuzzer.random,
         ],
       ]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }
@@ -296,7 +296,7 @@ final class ErrorConfigurationTests: XCTestCase {
           "recovery_options": ["Yes", "No thanks"],
         ],
       ]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }
@@ -305,7 +305,7 @@ final class ErrorConfigurationTests: XCTestCase {
     for _ in 0 ..< 100 {
       // swiftlint:disable:next force_cast
       let array = Fuzzer.randomize(json: rawErrorCodeConfiguration) as! [[String: Any]]
-      let configuration = ErrorConfiguration(dictionary: nil)
+      let configuration = _ErrorConfiguration(dictionary: nil)
       configuration.update(with: array)
     }
   }

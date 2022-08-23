@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
 #import "FBSDKSwizzler.h"
-#import "FBSDKSwizzling.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

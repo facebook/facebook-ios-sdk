@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppEventsConfigurationProviding.h"
+#import <FBSDKCoreKit/FBSDKAppEventsConfigurationProviding.h>
 
 typedef void (^FBSDKAppEventsConfigurationManagerBlock)(void);
 @protocol FBSDKDataPersisting;

@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestAppEventsStateStore: NSObject, AppEventsStatePersisting {
+final class TestAppEventsStateStore: NSObject, _AppEventsStatePersisting {
   var capturedPersistedState: [Any] = []
   var retrievePersistedAppEventStatesWasCalled = false
   var clearPersistedAppEventsWasCalled = false
