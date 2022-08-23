@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <TargetConditionals.h>
+
+#if !TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKURLOpening;
@@ -34,3 +38,5 @@ NS_SWIFT_NAME(openURLWithSafariViewController(url:sender:from:handler:));
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

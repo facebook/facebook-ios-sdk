@@ -305,7 +305,7 @@ final class ServerConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithErrorConfiguration() {
-    let errorConfiguration = ErrorConfiguration(dictionary: nil)
+    let errorConfiguration = _ErrorConfiguration(dictionary: nil)
     configuration = Fixtures.configuration(withDictionary: ["errorConfiguration": errorConfiguration])
 
     XCTAssertEqual(
@@ -416,7 +416,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutDialogFlows() {
     // Need to recreate with a new appID to invalidate cache of default configuration
-    configuration = ServerConfiguration.defaultServerConfiguration(forAppID: name)
+    configuration = _ServerConfiguration.defaultServerConfiguration(forAppID: name)
 
     let expectedDefaultDialogFlows = [
       FBSDKDialogConfigurationNameDefault: [
@@ -513,7 +513,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testEncoding() {
     let coder = TestCoder()
-    let errorConfiguration = ErrorConfiguration(dictionary: nil)
+    let errorConfiguration = _ErrorConfiguration(dictionary: nil)
 
     configuration = Fixtures.configuration(withDictionary: [
       "appID": "appID",
@@ -559,7 +559,7 @@ final class ServerConfigurationTests: XCTestCase {
     XCTAssertEqual(coder.encodedObject["trackAppUninstallEnabled"] as? Bool, configuration.isUninstallTrackingEnabled)
     XCTAssertEqualDicts(coder.encodedObject["dialogFlows"] as? [String: Any], configuration.dialogFlows())
     XCTAssertEqual(coder.encodedObject["timestamp"] as? Date, configuration.timestamp)
-    XCTAssertEqual(coder.encodedObject["errorConfigs"] as? ErrorConfiguration, configuration.errorConfiguration)
+    XCTAssertEqual(coder.encodedObject["errorConfigs"] as? _ErrorConfiguration, configuration.errorConfiguration)
     XCTAssertEqual(coder.encodedObject["sessionTimeoutInterval"] as? TimeInterval, configuration.sessionTimoutInterval)
     XCTAssertNil(
       coder.encodedObject["defaults"],
@@ -584,7 +584,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testDecoding() throws {
     let decoder = TestCoder()
-    configuration = try XCTUnwrap(ServerConfiguration(coder: decoder))
+    configuration = try XCTUnwrap(_ServerConfiguration(coder: decoder))
 
     let dialogFlowsClasses = NSSet(array: [
       NSDictionary.self,
@@ -636,7 +636,7 @@ final class ServerConfigurationTests: XCTestCase {
     )
     XCTAssertEqual(decoder.decodedObject["dialogFlows"] as? NSSet, dialogFlowsClasses)
     XCTAssertTrue(decoder.decodedObject["timestamp"] is NSDate.Type)
-    XCTAssertTrue(decoder.decodedObject["errorConfigs"] is ErrorConfiguration.Type)
+    XCTAssertTrue(decoder.decodedObject["errorConfigs"] is _ErrorConfiguration.Type)
     XCTAssertEqual(
       decoder.decodedObject["sessionTimeoutInterval"] as? String,
       "decodeDoubleForKey",
@@ -676,7 +676,7 @@ final class ServerConfigurationTests: XCTestCase {
   }
 
   func testRetrievingValidDialogConfigurationForDialogName() {
-    let fooConfiguration = DialogConfiguration(
+    let fooConfiguration = _DialogConfiguration(
       name: "foo",
       url: exampleURL,
       appVersions: ["1", "2"]

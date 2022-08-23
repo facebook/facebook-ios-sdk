@@ -8,8 +8,6 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKProfileProtocols.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKProfile;

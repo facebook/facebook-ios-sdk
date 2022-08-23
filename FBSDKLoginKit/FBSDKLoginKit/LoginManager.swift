@@ -921,8 +921,8 @@ extension LoginManager: LoginProviding {}
 
 extension LoginManager: DependentAsInstance {
   struct InstanceDependencies {
-    var accessTokenWallet: AccessTokenProviding.Type
-    var authenticationTokenWallet: AuthenticationTokenProviding.Type
+    var accessTokenWallet: _AccessTokenProviding.Type
+    var authenticationTokenWallet: _AuthenticationTokenProviding.Type
     var errorFactory: ErrorCreating
     var graphRequestFactory: GraphRequestFactoryProtocol
     var internalUtility: URLHosting & AppURLSchemeProviding & AppAvailabilityChecker

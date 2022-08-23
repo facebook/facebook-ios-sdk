@@ -6,13 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import <FBSDKCoreKit/FBSDKErrorCreating.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
-#import "FBSDKGraphRequestPiggybackManaging.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

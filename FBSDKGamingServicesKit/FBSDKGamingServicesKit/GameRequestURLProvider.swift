@@ -75,8 +75,8 @@ public final class GameRequestURLProvider: NSObject {
 
 extension GameRequestURLProvider: DependentAsType {
   struct TypeDependencies {
-    var accessTokenWallet: AccessTokenProviding.Type
-    var authenticationTokenWallet: AuthenticationTokenProviding.Type
+    var accessTokenWallet: _AccessTokenProviding.Type
+    var authenticationTokenWallet: _AuthenticationTokenProviding.Type
     var appAvailabilityChecker: AppAvailabilityChecker
   }
 

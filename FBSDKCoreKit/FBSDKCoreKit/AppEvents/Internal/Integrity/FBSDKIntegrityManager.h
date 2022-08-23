@@ -8,9 +8,8 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKAppEventsParameterProcessing.h"
 
 @protocol FBSDKGateKeeperManaging;
 @protocol FBSDKIntegrityProcessing;

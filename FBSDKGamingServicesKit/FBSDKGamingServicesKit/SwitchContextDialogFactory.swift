@@ -10,9 +10,9 @@ import FBSDKCoreKit
 
 struct SwitchContextDialogFactory: SwitchContextDialogMaking {
 
-  let tokenProvider: AccessTokenProviding.Type
+  let tokenProvider: _AccessTokenProviding.Type
 
-  init(tokenProvider: AccessTokenProviding.Type) {
+  init(tokenProvider: _AccessTokenProviding.Type) {
     self.tokenProvider = tokenProvider
   }
 

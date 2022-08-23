@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKURLSessionProxyProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

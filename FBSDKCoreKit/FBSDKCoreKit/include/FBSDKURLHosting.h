@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if !TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(URLHosting)
@@ -38,3 +40,5 @@ NS_SWIFT_NAME(URLHosting)
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

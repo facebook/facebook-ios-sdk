@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestProcessInfo: OperatingSystemVersionComparing {
+final class TestProcessInfo: _OperatingSystemVersionComparing {
   var stubbedOperatingSystemCheckResult: Bool
 
   init(stubbedOperatingSystemCheckResult: Bool = true) {

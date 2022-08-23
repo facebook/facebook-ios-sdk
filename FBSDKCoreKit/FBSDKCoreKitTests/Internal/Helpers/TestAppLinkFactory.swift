@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestAppLinkFactory: AppLinkCreating {
+final class TestAppLinkFactory: _AppLinkCreating {
   func createAppLink(
     sourceURL: URL?,
     targets: [AppLinkTargetProtocol],
     webURL: URL?,
     isBackToReferrer: Bool
-  ) -> AppLinkProtocol {
+  ) -> _AppLinkProtocol {
     TestAppLink()
   }
 }

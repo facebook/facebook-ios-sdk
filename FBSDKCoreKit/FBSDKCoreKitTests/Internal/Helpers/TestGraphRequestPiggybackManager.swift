@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestGraphRequestPiggybackManager: NSObject, GraphRequestPiggybackManaging {
+final class TestGraphRequestPiggybackManager: NSObject, _GraphRequestPiggybackManaging {
 
   var capturedConnection: GraphRequestConnecting?
   var addRefreshPiggybackWasCalled = false

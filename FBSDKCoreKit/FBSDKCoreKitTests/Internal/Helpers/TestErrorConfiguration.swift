@@ -10,17 +10,17 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestErrorConfiguration: NSObject, ErrorConfigurationProtocol {
+final class TestErrorConfiguration: NSObject, _ErrorConfigurationProtocol {
   var capturedRecoveryConfigurationCode: String?
   var capturedRecoveryConfigurationSubcode: String?
   var capturedGraphRequest: GraphRequestProtocol?
-  var stubbedRecoveryConfiguration: ErrorRecoveryConfiguration?
+  var stubbedRecoveryConfiguration: _ErrorRecoveryConfiguration?
 
   func recoveryConfiguration(
     forCode code: String?,
     subcode: String?,
     request: GraphRequestProtocol
-  ) -> ErrorRecoveryConfiguration? {
+  ) -> _ErrorRecoveryConfiguration? {
     capturedRecoveryConfigurationCode = code
     capturedRecoveryConfigurationSubcode = subcode
     capturedGraphRequest = request

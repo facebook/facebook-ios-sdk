@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
 
 @class FBSDKAuthenticationTokenClaims;
 @protocol FBSDKTokenCaching;

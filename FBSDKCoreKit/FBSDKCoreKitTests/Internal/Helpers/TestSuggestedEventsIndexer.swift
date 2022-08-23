@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestSuggestedEventsIndexer: SuggestedEventsIndexerProtocol {
+final class TestSuggestedEventsIndexer: _SuggestedEventsIndexerProtocol {
 
   var wasEnableCalled = false
 

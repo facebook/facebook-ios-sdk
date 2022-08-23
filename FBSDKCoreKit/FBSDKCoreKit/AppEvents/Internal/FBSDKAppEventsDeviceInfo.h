@@ -6,11 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-
-#import "FBSDKDeviceInformationProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

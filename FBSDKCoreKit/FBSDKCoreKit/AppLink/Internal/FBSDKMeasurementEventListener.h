@@ -8,10 +8,10 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
 #import "FBSDKEventLogging.h"
-#import "FBSDKSourceApplicationTracking.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

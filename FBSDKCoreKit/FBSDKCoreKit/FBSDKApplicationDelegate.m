@@ -8,13 +8,12 @@
 
 #import "FBSDKApplicationDelegate.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
 #import "FBSDKAuthenticationStatusUtility.h"
 #import "FBSDKBridgeAPI+Internal.h"
-#import "FBSDKCoreKitComponents.h"
-#import "FBSDKCoreKitConfigurator.h"
 #import "FBSDKInstrumentManager.h"
 #import "FBSDKMeasurementEventListener.h"
 

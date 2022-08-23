@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
-
-#import "FBSDKPaymentObserving.h"
 
 @protocol FBSDKPaymentProductRequestorCreating;
 

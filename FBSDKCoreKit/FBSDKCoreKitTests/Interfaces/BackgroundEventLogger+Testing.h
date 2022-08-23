@@ -7,7 +7,6 @@
  */
 
 #import "FBSDKBackgroundEventLogger.h"
-#import "FBSDKBackgroundEventLogging.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

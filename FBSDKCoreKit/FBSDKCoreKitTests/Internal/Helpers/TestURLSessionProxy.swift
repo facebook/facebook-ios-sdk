@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestURLSessionProxy: NSObject, URLSessionProxying {
+final class TestURLSessionProxy: NSObject, _URLSessionProxying {
   var delegateQueue: OperationQueue?
   /// The most recent captured completion
   var capturedCompletion: UrlSessionTaskBlock?

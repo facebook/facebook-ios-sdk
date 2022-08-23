@@ -31,7 +31,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var bridge: BridgeAPIProtocolWebV2!
-  var serverConfigurationProvider: ServerConfigurationProviding!
+  var serverConfigurationProvider: _ServerConfigurationProviding!
   var nativeBridge: TestBridgeAPIProtocol!
   var errorFactory: ErrorCreating!
   var internalUtility: TestInternalUtility!
@@ -319,7 +319,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     internalUtility.stubbedFacebookURL = facebookURL
 
     let url = try XCTUnwrap(URL(string: "/"))
-    let configuration = DialogConfiguration(name: UUID().uuidString, url: url, appVersions: [])
+    let configuration = _DialogConfiguration(name: UUID().uuidString, url: url, appVersions: [])
     let requestURL = try? bridge._requestURL(for: configuration)
 
     let message = """
@@ -334,7 +334,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRequestURLForDialogConfigurationWithScheme() {
-    let configuration = DialogConfiguration(
+    let configuration = _DialogConfiguration(
       name: name,
       url: SampleURLs.valid(path: name),
       appVersions: []
@@ -381,7 +381,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     named name: String,
     url: URL = SampleURLs.valid
   ) {
-    let dialogConfiguration = DialogConfiguration(
+    let dialogConfiguration = _DialogConfiguration(
       name: name,
       url: url,
       appVersions: []

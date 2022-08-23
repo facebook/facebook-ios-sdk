@@ -10,12 +10,12 @@
 
 #import "FBSDKBridgeAPIResponse.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKConstants.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
 #import "NSProcessInfo+OperatingSystemVersionComparing.h"
 
 @interface FBSDKBridgeAPIResponse ()

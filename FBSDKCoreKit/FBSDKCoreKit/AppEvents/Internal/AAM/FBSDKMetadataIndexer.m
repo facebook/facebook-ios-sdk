@@ -12,6 +12,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKTypeUtility.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
@@ -20,8 +21,6 @@
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKServerConfigurationManager.h"
-#import "FBSDKSwizzling.h"
-#import "FBSDKUserDataPersisting.h"
 #import "FBSDKUtility.h"
 #import "FBSDKViewHierarchy.h"
 

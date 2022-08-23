@@ -8,9 +8,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKGraphRequestPiggybackManaging.h"
-#import "FBSDKServerConfigurationProviding.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(GraphRequestPiggybackManager)

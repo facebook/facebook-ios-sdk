@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKCoreKitConfigurator.h"
+#import <FBSDKCoreKit/FBSDKCoreKitConfigurator.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 

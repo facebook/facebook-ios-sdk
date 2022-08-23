@@ -10,26 +10,26 @@ import Foundation
 import TestTools
 
 @objcMembers
-final class TestServerConfigurationProvider: NSObject, ServerConfigurationProviding {
+final class TestServerConfigurationProvider: NSObject, _ServerConfigurationProviding {
 
-  var capturedCompletionBlock: ServerConfigurationBlock?
-  var secondCapturedCompletionBlock: ServerConfigurationBlock?
+  var capturedCompletionBlock: _ServerConfigurationBlock?
+  var secondCapturedCompletionBlock: _ServerConfigurationBlock?
   var loadServerConfigurationWasCalled = false
   var stubbedRequestToLoadServerConfiguration: GraphRequest?
-  var stubbedServerConfiguration: ServerConfiguration
+  var stubbedServerConfiguration: _ServerConfiguration
   var requestToLoadConfigurationCallWasCalled = false
   var didRetrieveCachedServerConfiguration = false
 
-  init(configuration: ServerConfiguration = ServerConfigurationFixtures.defaultConfiguration) {
+  init(configuration: _ServerConfiguration = ServerConfigurationFixtures.defaultConfiguration) {
     stubbedServerConfiguration = configuration
   }
 
-  func cachedServerConfiguration() -> ServerConfiguration {
+  func cachedServerConfiguration() -> _ServerConfiguration {
     didRetrieveCachedServerConfiguration = true
     return stubbedServerConfiguration
   }
 
-  func loadServerConfiguration(completionBlock: ServerConfigurationBlock?) {
+  func loadServerConfiguration(completionBlock: _ServerConfigurationBlock?) {
     loadServerConfigurationWasCalled = true
     guard capturedCompletionBlock == nil else {
       secondCapturedCompletionBlock = completionBlock

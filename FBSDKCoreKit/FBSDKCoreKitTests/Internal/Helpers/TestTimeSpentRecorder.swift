@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestTimeSpentRecorder: NSObject, SourceApplicationTracking, TimeSpentRecording {
+final class TestTimeSpentRecorder: NSObject, _SourceApplicationTracking, _TimeSpentRecording {
 
   var restoreWasCalled = false
   var suspendWasCalled = false

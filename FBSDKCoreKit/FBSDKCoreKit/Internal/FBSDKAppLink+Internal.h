@@ -8,8 +8,9 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKAppLink.h"
-#import "FBSDKAppLinkProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

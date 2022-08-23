@@ -8,10 +8,10 @@
 
 #import "FBSDKRestrictiveDataFilterManager.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKServerConfigurationManager.h"
-#import "FBSDKServerConfigurationProviding.h"
 
 @interface FBSDKRestrictiveEventFilter : NSObject
 

@@ -8,7 +8,7 @@
 
 #import "FBSDKErrorRecoveryAttempter.h"
 
-#import "FBSDKErrorRecoveryConfiguration.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @interface FBSDKTemporaryErrorRecoveryAttempter : FBSDKErrorRecoveryAttempter
 @end

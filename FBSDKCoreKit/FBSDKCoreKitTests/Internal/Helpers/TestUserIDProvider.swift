@@ -9,6 +9,6 @@
 import Foundation
 
 @objcMembers
-final class TestUserIDProvider: NSObject, UserIDProviding {
+final class TestUserIDProvider: NSObject, _UserIDProviding {
   var userID: String?
 }

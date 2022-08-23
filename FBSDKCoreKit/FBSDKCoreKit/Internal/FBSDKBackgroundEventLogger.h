@@ -8,10 +8,9 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
-#import "FBSDKBackgroundEventLogging.h"
 
 @protocol FBSDKInfoDictionaryProviding;
 @protocol FBSDKEventLogging;

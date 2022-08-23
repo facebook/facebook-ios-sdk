@@ -8,11 +8,10 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
 #import "FBSDKAppLinkUtility.h"
-#import "FBSDKUserDataPersisting.h"
-#import "FBSDKUserIDProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

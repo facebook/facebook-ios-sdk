@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
 #import "FBSDKAppEvents.h"
-#import "FBSDKUserDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -10,22 +10,9 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKAEMReporterProtocol.h"
-#import "FBSDKAppEventDropDetermining.h"
-#import "FBSDKAppEventParametersExtracting.h"
-#import "FBSDKAppEventsConfiguring.h"
 #import "FBSDKAppEventsUtilityProtocol.h"
-#import "FBSDKApplicationActivating.h"
-#import "FBSDKApplicationLifecycleObserving.h"
-#import "FBSDKApplicationStateSetting.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKEventsProcessing.h"
-#import "FBSDKIntegrityParametersProcessorProvider.h"
 #import "FBSDKLoggingNotifying.h"
-#import "FBSDKMetadataIndexing.h"
-#import "FBSDKSourceApplicationTracking.h"
-#import "FBSDKTimeSpentRecording.h"
-#import "FBSDKUserIDProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

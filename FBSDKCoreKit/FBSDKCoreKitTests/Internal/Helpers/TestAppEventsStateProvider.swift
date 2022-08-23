@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestAppEventsStateProvider: NSObject, AppEventsStateProviding {
+final class TestAppEventsStateProvider: NSObject, _AppEventsStateProviding {
   var state: TestAppEventsState?
   var capturedTokenString: String?
   var capturedAppID: String?

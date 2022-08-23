@@ -8,13 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKPaymentProductRequestorCreating.h"
 #import "FBSDKProductsRequestProtocols.h"
 

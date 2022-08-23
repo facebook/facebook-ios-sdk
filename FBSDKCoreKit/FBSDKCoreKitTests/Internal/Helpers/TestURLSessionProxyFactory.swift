@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
+final class TestURLSessionProxyFactory: NSObject, _URLSessionProxyProviding {
   private var stubbedSessions: [TestURLSessionProxy]
 
   init(sessions: [TestURLSessionProxy] = []) {
@@ -33,7 +33,7 @@ final class TestURLSessionProxyFactory: NSObject, URLSessionProxyProviding {
 
   // MARK: - URLSessionProxyProviding
 
-  func createSessionProxy(with delegate: URLSessionDataDelegate?, queue: OperationQueue?) -> URLSessionProxying {
+  func createSessionProxy(with delegate: URLSessionDataDelegate?, queue: OperationQueue?) -> _URLSessionProxying {
     stubbedSessions.count > 1 ? stubbedSessions.removeFirst() : stubbedSessions[0]
   }
 }

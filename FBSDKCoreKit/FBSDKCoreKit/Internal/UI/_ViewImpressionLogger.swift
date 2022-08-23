@@ -85,7 +85,7 @@ extension _ViewImpressionLogger: DependentAsType {
     var graphRequestFactory: GraphRequestFactoryProtocol
     var eventLogger: EventLogging
     var notificationDeliverer: NotificationDelivering
-    var tokenWallet: AccessTokenProviding.Type
+    var tokenWallet: _AccessTokenProviding.Type
   }
 
   static var configuredDependencies: TypeDependencies?

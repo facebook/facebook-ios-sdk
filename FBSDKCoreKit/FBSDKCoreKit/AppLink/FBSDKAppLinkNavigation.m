@@ -10,10 +10,10 @@
 
 #import "FBSDKAppLinkNavigation+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppLink+Internal.h"
-#import "FBSDKAppLinkEventPosting.h"
 #import "FBSDKMeasurementEventNames.h"
 #import "FBSDKWebViewAppLinkResolver.h"
 
@@ -349,7 +349,11 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
 
 + (FBSDKAppLinkNavigationType)navigationTypeForLink:(FBSDKAppLink *)link
 {
-  return [[self navigationWithAppLink:link extras:@{} appLinkData:@{} settings:self.settings] navigationType];
+  FBSDKAppLinkNavigation *instance = [self navigationWithAppLink:link
+                                                          extras:@{}
+                                                     appLinkData:@{}
+                                                        settings:self.settings];
+  return instance.navigationType;
 }
 
 - (FBSDKAppLinkNavigationType)navigationType

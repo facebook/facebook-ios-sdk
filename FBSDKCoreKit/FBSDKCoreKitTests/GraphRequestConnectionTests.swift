@@ -25,7 +25,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   var sessionFactory: TestURLSessionProxyFactory!
   var errorConfiguration: TestErrorConfiguration!
   var errorConfigurationProvider: TestErrorConfigurationProvider!
-  var errorRecoveryConfiguration: ErrorRecoveryConfiguration!
+  var errorRecoveryConfiguration: _ErrorRecoveryConfiguration!
   var settings: TestSettings!
   var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
   var eventLogger: TestEventLogger!
@@ -1647,8 +1647,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     ]
   }
 
-  func makeTransientErrorRecoveryConfiguration() -> ErrorRecoveryConfiguration {
-    ErrorRecoveryConfiguration(
+  func makeTransientErrorRecoveryConfiguration() -> _ErrorRecoveryConfiguration {
+    _ErrorRecoveryConfiguration(
       recoveryDescription: "Recovery Description",
       optionDescriptions: ["Option1", "Option2"],
       category: .transient,
@@ -1656,8 +1656,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     )
   }
 
-  func makeNonTransientErrorRecoveryConfiguration() -> ErrorRecoveryConfiguration {
-    ErrorRecoveryConfiguration(
+  func makeNonTransientErrorRecoveryConfiguration() -> _ErrorRecoveryConfiguration {
+    _ErrorRecoveryConfiguration(
       recoveryDescription: "Recovery Description",
       optionDescriptions: ["Option1", "Option2"],
       category: .other,

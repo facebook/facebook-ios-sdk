@@ -42,7 +42,7 @@ final class LoginRecoveryAttempter: ErrorRecoveryAttempting {
 extension LoginRecoveryAttempter: DependentAsType {
   struct TypeDependencies {
     var loginProvider: LoginProviding
-    var accessTokenProvider: AccessTokenProviding.Type
+    var accessTokenProvider: _AccessTokenProviding.Type
   }
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(

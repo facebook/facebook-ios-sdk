@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestAppEventsReporter: NSObject, AppEventsReporter {
+final class TestAppEventsReporter: NSObject, _AppEventsReporter {
   var enableWasCalled = false
   var capturedEvent: String?
   var capturedCurrency: String?

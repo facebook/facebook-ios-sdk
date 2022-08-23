@@ -97,7 +97,7 @@ extension GameRequestFrictionlessRecipientCache: DependentAsInstance {
   struct InstanceDependencies {
     var graphRequestFactory: GraphRequestFactoryProtocol
     var notificationCenter: NotificationDelivering
-    var accessTokenWallet: AccessTokenProviding.Type
+    var accessTokenWallet: _AccessTokenProviding.Type
   }
 }
 

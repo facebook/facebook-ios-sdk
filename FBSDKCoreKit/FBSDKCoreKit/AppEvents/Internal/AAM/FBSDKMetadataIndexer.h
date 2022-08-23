@@ -8,11 +8,8 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKMetadataIndexing.h"
-#import "FBSDKSwizzling.h"
-#import "FBSDKUserDataPersisting.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

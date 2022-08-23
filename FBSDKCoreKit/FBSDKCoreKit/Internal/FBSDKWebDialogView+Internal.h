@@ -10,7 +10,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKInternalURLOpener.h"
 #import "FBSDKWebViewProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -9,14 +9,14 @@
 import Foundation
 
 @objcMembers
-final class TestErrorConfigurationProvider: NSObject, ErrorConfigurationProviding {
-  var configuration: ErrorConfigurationProtocol?
+final class TestErrorConfigurationProvider: NSObject, _ErrorConfigurationProviding {
+  var configuration: _ErrorConfigurationProtocol?
 
-  init(configuration: ErrorConfigurationProtocol? = nil) {
+  init(configuration: _ErrorConfigurationProtocol? = nil) {
     self.configuration = configuration
   }
 
-  func errorConfiguration() -> ErrorConfigurationProtocol? {
+  func errorConfiguration() -> _ErrorConfigurationProtocol? {
     configuration
   }
 }

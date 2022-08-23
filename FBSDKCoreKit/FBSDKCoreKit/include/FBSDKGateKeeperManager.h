@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <Foundation/Foundation.h>
-
 #import <FBSDKCoreKit/FBSDKGateKeeperManaging.h>
+
+#import <Foundation/Foundation.h>
 
 #define FBSDK_GATEKEEPER_MANAGER_CACHE_TIMEOUT (60 * 60)
 

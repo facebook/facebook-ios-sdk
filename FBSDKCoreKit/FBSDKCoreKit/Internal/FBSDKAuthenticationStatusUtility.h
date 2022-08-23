@@ -12,8 +12,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
-#import <FBSDKCoreKit/FBSDKAuthenticationTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
+#import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKProfileProtocols.h"

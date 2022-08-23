@@ -336,7 +336,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
 
 extension MessageDialog: DependentAsType {
   struct TypeDependencies {
-    var accessTokenWallet: AccessTokenProviding.Type
+    var accessTokenWallet: _AccessTokenProviding.Type
     var bridgeAPIRequestFactory: BridgeAPIRequestCreating
     var bridgeAPIRequestOpener: BridgeAPIRequestOpening
     var errorFactory: ErrorCreating

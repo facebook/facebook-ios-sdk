@@ -8,12 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
-#import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-
-#import "FBSDKAppLinkEventPosting.h"
-#import "FBSDKInternalURLOpener.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
