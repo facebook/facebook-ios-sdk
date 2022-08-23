@@ -14,13 +14,19 @@
 
 #import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
+#import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKProfileProtocols.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AuthenticationStatusUtility)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AuthenticationStatusUtility)
 @interface FBSDKAuthenticationStatusUtility : NSObject
 
 @property (class, nullable, nonatomic) Class<FBSDKProfileProviding> profileSetter;

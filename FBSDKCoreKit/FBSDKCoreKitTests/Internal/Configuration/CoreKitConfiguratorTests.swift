@@ -52,7 +52,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     GraphRequestConnection.resetClassDependencies()
     GraphRequestConnection.resetCanMakeRequests()
     ImpressionLoggingButton.resetClassDependencies()
-    InstrumentManager.reset()
+    _InstrumentManager.reset()
     InternalUtility.reset()
     ServerConfigurationManager.shared.reset()
     Settings.shared.reset()
@@ -62,7 +62,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     AppLinkNavigation.reset()
     AppLinkURL.reset()
     AppLinkUtility.reset()
-    AuthenticationStatusUtility.resetClassDependencies()
+    _AuthenticationStatusUtility.resetClassDependencies()
     BridgeAPIRequest.resetClassDependencies()
     CodelessIndexer.reset()
     CrashShield.reset()
@@ -695,47 +695,47 @@ final class CoreKitConfiguratorTests: XCTestCase {
 
   func testConfiguringInstrumentManager() {
     XCTAssertNil(
-      InstrumentManager.shared.crashObserver,
-      "InstrumentManager should not have a crash observer by default"
+      _InstrumentManager.shared.crashObserver,
+      "_InstrumentManager should not have a crash observer by default"
     )
     XCTAssertNil(
-      InstrumentManager.shared.featureChecker,
-      "InstrumentManager should not have a feature checker by default"
+      _InstrumentManager.shared.featureChecker,
+      "_InstrumentManager should not have a feature checker by default"
     )
     XCTAssertNil(
-      InstrumentManager.shared.settings,
-      "InstrumentManager should not have settings by default"
+      _InstrumentManager.shared.settings,
+      "_InstrumentManager should not have settings by default"
     )
     XCTAssertNil(
-      InstrumentManager.shared.errorReporter,
-      "InstrumentManager should not have an error reporter by default"
+      _InstrumentManager.shared.errorReporter,
+      "_InstrumentManager should not have an error reporter by default"
     )
     XCTAssertNil(
-      InstrumentManager.shared.crashHandler,
-      "InstrumentManager should not have a crash handler by default"
+      _InstrumentManager.shared.crashHandler,
+      "_InstrumentManager should not have a crash handler by default"
     )
 
     configurator.performConfiguration()
 
     XCTAssertTrue(
-      InstrumentManager.shared.crashObserver === components.crashObserver,
-      "InstrumentManager should be configured with the crash observer"
+      _InstrumentManager.shared.crashObserver === components.crashObserver,
+      "_InstrumentManager should be configured with the crash observer"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.featureChecker === components.featureChecker,
-      "InstrumentManager should be configured with the feature checker"
+      _InstrumentManager.shared.featureChecker === components.featureChecker,
+      "_InstrumentManager should be configured with the feature checker"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.settings === components.settings,
-      "InstrumentManager should be configured with the settings"
+      _InstrumentManager.shared.settings === components.settings,
+      "_InstrumentManager should be configured with the settings"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.errorReporter === components.errorReporter,
-      "InstrumentManager should be configured with the error reporter"
+      _InstrumentManager.shared.errorReporter === components.errorReporter,
+      "_InstrumentManager should be configured with the error reporter"
     )
     XCTAssertTrue(
-      InstrumentManager.shared.crashHandler === components.crashHandler,
-      "InstrumentManager should be configured with the crash handler"
+      _InstrumentManager.shared.crashHandler === components.crashHandler,
+      "_InstrumentManager should be configured with the crash handler"
     )
   }
 
@@ -1037,39 +1037,39 @@ final class CoreKitConfiguratorTests: XCTestCase {
 
   func testConfiguringAuthenticationStatusUtility() {
     XCTAssertNil(
-      AuthenticationStatusUtility.profileSetter,
-      "AuthenticationStatusUtility should not have a profile setter by default"
+      _AuthenticationStatusUtility.profileSetter,
+      "_AuthenticationStatusUtility should not have a profile setter by default"
     )
     XCTAssertNil(
-      AuthenticationStatusUtility.sessionDataTaskProvider,
-      "AuthenticationStatusUtility should not have a session data task provider by default"
+      _AuthenticationStatusUtility.sessionDataTaskProvider,
+      "_AuthenticationStatusUtility should not have a session data task provider by default"
     )
     XCTAssertNil(
-      AuthenticationStatusUtility.accessTokenWallet,
-      "AuthenticationStatusUtility should not have an access token by default"
+      _AuthenticationStatusUtility.accessTokenWallet,
+      "_AuthenticationStatusUtility should not have an access token by default"
     )
     XCTAssertNil(
-      AuthenticationStatusUtility.authenticationTokenWallet,
-      "AuthenticationStatusUtility should not have an authentication token by default"
+      _AuthenticationStatusUtility.authenticationTokenWallet,
+      "_AuthenticationStatusUtility should not have an authentication token by default"
     )
 
     configurator.performConfiguration()
 
     XCTAssertTrue(
-      AuthenticationStatusUtility.profileSetter === components.profileSetter,
-      "AuthenticationStatusUtility should be configured with the profile setter"
+      _AuthenticationStatusUtility.profileSetter === components.profileSetter,
+      "_AuthenticationStatusUtility should be configured with the profile setter"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.sessionDataTaskProvider === components.sessionDataTaskProvider,
-      "AuthenticationStatusUtility should be configured with the session data task provider"
+      _AuthenticationStatusUtility.sessionDataTaskProvider === components.sessionDataTaskProvider,
+      "_AuthenticationStatusUtility should be configured with the session data task provider"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.accessTokenWallet === components.accessTokenWallet,
-      "AuthenticationStatusUtility should be configured with the access token"
+      _AuthenticationStatusUtility.accessTokenWallet === components.accessTokenWallet,
+      "_AuthenticationStatusUtility should be configured with the access token"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.authenticationTokenWallet === components.authenticationTokenWallet,
-      "AuthenticationStatusUtility should be configured with the authentication token"
+      _AuthenticationStatusUtility.authenticationTokenWallet === components.authenticationTokenWallet,
+      "_AuthenticationStatusUtility should be configured with the authentication token"
     )
   }
 

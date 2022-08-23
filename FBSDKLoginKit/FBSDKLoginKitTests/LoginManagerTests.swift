@@ -282,7 +282,7 @@ final class LoginManagerTests: XCTestCase {
     )
     XCTAssertIdentical(
       dependencies.urlOpener,
-      BridgeAPI.shared,
+      _BridgeAPI.shared,
       .Dependencies.defaultDependency("the shared BridgeAPI", for: "URL opener")
     )
   }

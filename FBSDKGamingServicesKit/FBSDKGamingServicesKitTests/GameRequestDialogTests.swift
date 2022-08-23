@@ -85,7 +85,7 @@ final class GameRequestDialogTests: XCTestCase {
 
     XCTAssertIdentical(
       dependencies.bridgeAPIRequestOpener,
-      BridgeAPI.shared,
+      _BridgeAPI.shared,
       .Dependencies.defaultDependency("the shared BridgeAPI", for: "bridge API request opener")
     )
     XCTAssertTrue(

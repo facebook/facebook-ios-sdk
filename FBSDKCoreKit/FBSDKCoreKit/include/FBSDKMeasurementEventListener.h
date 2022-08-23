@@ -8,14 +8,19 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKEventLogging.h>
+#import <FBSDKCoreKit/FBSDKSourceApplicationTracking.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKEventLogging.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(MeasurementEventListener)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_MeasurementEventListener)
 @interface FBSDKMeasurementEventListener : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;

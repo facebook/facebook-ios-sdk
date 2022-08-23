@@ -348,7 +348,7 @@ extension MessageDialog: DependentAsType {
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
     accessTokenWallet: AccessToken.self,
     bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
-    bridgeAPIRequestOpener: BridgeAPI.shared,
+    bridgeAPIRequestOpener: _BridgeAPI.shared,
     errorFactory: ErrorFactory(),
     eventLogger: AppEvents.shared,
     internalUtility: InternalUtility.shared,

@@ -92,7 +92,7 @@ final class MessageDialogTests: XCTestCase {
     )
     XCTAssertIdentical(
       dependencies.bridgeAPIRequestOpener,
-      BridgeAPI.shared,
+      _BridgeAPI.shared,
       .defaultDependency("the shared BridgeAPI", for: "bridge API request opening")
     )
     XCTAssertTrue(

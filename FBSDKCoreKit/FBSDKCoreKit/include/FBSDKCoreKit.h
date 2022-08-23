@@ -52,6 +52,7 @@
 #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
 #import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKATEPublisherCreating.h>
+#import <FBSDKCoreKit/FBSDKAuthenticationStatusUtility.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
@@ -116,6 +117,7 @@
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
+#import <FBSDKCoreKit/FBSDKInstrumentManager.h>
 #import <FBSDKCoreKit/FBSDKKeychainStore.h>
 #import <FBSDKCoreKit/FBSDKKeychainStoreFactory.h>
 #import <FBSDKCoreKit/FBSDKKeychainStoreProtocol.h>
@@ -128,6 +130,7 @@
 #import <FBSDKCoreKit/FBSDKMacCatalystDetermining.h>
 #import <FBSDKCoreKit/FBSDKMath.h>
 #import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
+#import <FBSDKCoreKit/FBSDKMeasurementEventListener.h>
 #import <FBSDKCoreKit/FBSDKMetadataIndexing.h>
 #import <FBSDKCoreKit/FBSDKMutableCopying.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>

@@ -20,7 +20,7 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
   let frameworkLoader = TestDylibResolver()
   let appURLSchemeProvider = TestInternalUtility()
   let logger = TestLogger(loggingBehavior: .developerErrors)
-  lazy var api = BridgeAPI(
+  lazy var api = _BridgeAPI(
     processInfo: TestProcessInfo(),
     logger: logger,
     urlOpener: urlOpener,
@@ -55,7 +55,7 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       "Should try and load the safari view controller class"
     )
     XCTAssertEqual(
-      api.safariViewController?.delegate as? BridgeAPI,
+      api.safariViewController?.delegate as? _BridgeAPI,
       api,
       "Should create a safari controller with the bridge as its delegate"
     )

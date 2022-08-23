@@ -24,7 +24,7 @@ final class GamingServiceController: NSObject {
     self.init(
       serviceType: serviceType,
       pendingResult: pendingResult,
-      urlOpener: BridgeAPI.shared,
+      urlOpener: _BridgeAPI.shared,
       settings: Settings.shared,
       completionHandler: completion
     )
