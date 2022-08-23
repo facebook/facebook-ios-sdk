@@ -57,7 +57,7 @@ public final class ChooseContextDialog: ContextWebDialog, URLOpening {
       return false
     }
 
-    BridgeAPI.shared.open(
+    _BridgeAPI.shared.open(
       dialogURL,
       sender: self
     ) { [weak self] success, bridgeError in

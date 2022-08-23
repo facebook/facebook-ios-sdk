@@ -22,7 +22,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   let sampleUrl = SampleURLs.valid
   let errorFactory = TestErrorFactory()
 
-  lazy var api = BridgeAPI(
+  lazy var api = _BridgeAPI(
     processInfo: TestProcessInfo(),
     logger: logger,
     urlOpener: urlOpener,
@@ -182,7 +182,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should set the correct modal presentation style"
     )
     XCTAssertEqual(
-      safariVc?.delegate as? BridgeAPI,
+      safariVc?.delegate as? _BridgeAPI,
       api,
       "Should set the safari view controller delegate to the bridge api"
     )
@@ -252,7 +252,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should set the correct modal presentation style"
     )
     XCTAssertEqual(
-      safariVc?.delegate as? BridgeAPI,
+      safariVc?.delegate as? _BridgeAPI,
       api,
       "Should set the safari view controller delegate to the bridge api"
     )

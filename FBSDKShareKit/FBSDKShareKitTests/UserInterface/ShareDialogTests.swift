@@ -122,7 +122,7 @@ final class ShareDialogTests: XCTestCase {
     )
     XCTAssertIdentical(
       dependencies.bridgeAPIRequestOpener,
-      BridgeAPI.shared,
+      _BridgeAPI.shared,
       .DefaultDependencies.usesBridgeAPIByDefault
     )
     XCTAssertTrue(

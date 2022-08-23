@@ -90,7 +90,7 @@ public final class LoginManager: NSObject {
       loginCompleterFactory: LoginCompleterFactory(),
       profileProvider: Profile.self,
       settings: Settings.shared,
-      urlOpener: BridgeAPI.shared
+      urlOpener: _BridgeAPI.shared
     )
   }()
 

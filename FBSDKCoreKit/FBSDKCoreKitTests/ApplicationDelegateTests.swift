@@ -164,7 +164,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      delegate.applicationObservers.contains(BridgeAPI.shared),
+      delegate.applicationObservers.contains(_BridgeAPI.shared),
       "Should add the shared bridge api instance to the application observers"
     )
   }

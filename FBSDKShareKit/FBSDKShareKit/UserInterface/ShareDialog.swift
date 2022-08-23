@@ -145,7 +145,7 @@ extension ShareDialog: DependentAsType {
     settings: Settings.shared,
     shareUtility: _ShareUtility.self,
     bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
-    bridgeAPIRequestOpener: BridgeAPI.shared,
+    bridgeAPIRequestOpener: _BridgeAPI.shared,
     socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
     windowFinder: InternalUtility.shared,
     errorFactory: ErrorFactory(),

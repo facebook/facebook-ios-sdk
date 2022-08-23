@@ -27,7 +27,7 @@ final class BridgeAPITests: XCTestCase {
   var frameworkLoader: TestDylibResolver!
   var appURLSchemeProvider: TestInternalUtility!
   var errorFactory: TestErrorFactory!
-  var api: BridgeAPI!
+  var api: _BridgeAPI!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -45,7 +45,7 @@ final class BridgeAPITests: XCTestCase {
 
     configureSDK()
 
-    api = BridgeAPI(
+    api = _BridgeAPI(
       processInfo: processInfo,
       logger: logger,
       urlOpener: urlOpener,
@@ -94,34 +94,34 @@ final class BridgeAPITests: XCTestCase {
 
   func testDefaultDependencies() throws {
     XCTAssertTrue(
-      BridgeAPI.shared.processInfo is ProcessInfo,
+      _BridgeAPI.shared.processInfo is ProcessInfo,
       "The shared bridge API should use the system provided process info by default"
     )
     XCTAssertTrue(
-      BridgeAPI.shared.logger is Logger,
+      _BridgeAPI.shared.logger is Logger,
       "The shared bridge API should use the expected logger type by default"
     )
     XCTAssertEqual(
-      BridgeAPI.shared.urlOpener as? UIApplication,
+      _BridgeAPI.shared.urlOpener as? UIApplication,
       UIApplication.shared,
       "Should use the expected concrete url opener by default"
     )
     XCTAssertTrue(
-      BridgeAPI.shared.bridgeAPIResponseFactory is BridgeAPIResponseFactory,
+      _BridgeAPI.shared.bridgeAPIResponseFactory is BridgeAPIResponseFactory,
       "Should use and instance of the expected concrete response factory type by default"
     )
     XCTAssertEqual(
-      BridgeAPI.shared.frameworkLoader as? DynamicFrameworkLoader,
+      _BridgeAPI.shared.frameworkLoader as? DynamicFrameworkLoader,
       DynamicFrameworkLoader.shared(),
       "Should use the expected instance of dynamic framework loader"
     )
     XCTAssertTrue(
-      BridgeAPI.shared.appURLSchemeProvider is InternalUtility,
+      _BridgeAPI.shared.appURLSchemeProvider is InternalUtility,
       "Should use the expected internal utility type by default"
     )
 
     let factory = try XCTUnwrap(
-      BridgeAPI.shared.errorFactory as? ErrorFactory,
+      _BridgeAPI.shared.errorFactory as? ErrorFactory,
       "Should create an error factory"
     )
     XCTAssertTrue(
