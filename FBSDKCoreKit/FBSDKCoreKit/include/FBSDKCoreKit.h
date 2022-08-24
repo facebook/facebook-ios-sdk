@@ -141,7 +141,6 @@
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>
 #import <FBSDKCoreKit/FBSDKProfilePictureMode.h>
-#import <FBSDKCoreKit/FBSDKProfilePictureView.h>
 #import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 #import <FBSDKCoreKit/FBSDKRandom.h>
 #import <FBSDKCoreKit/FBSDKRulesFromKeyProvider.h>

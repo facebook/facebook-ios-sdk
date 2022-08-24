@@ -98,7 +98,7 @@ final class ProfilePictureViewTests: XCTestCase {
   func testPlaceholderImage() throws {
     let profilePictureFrame = CGRect(x: 0, y: 0, width: 100, height: 100)
     profilePictureView = FBProfilePictureView(frame: profilePictureFrame)
-    profilePictureView._setPlaceholderImage()
+    profilePictureView.setPlaceholderImage()
 
     let expecation = expectation(description: "placeholder image expectation")
     expecation.isInverted = true
@@ -108,7 +108,7 @@ final class ProfilePictureViewTests: XCTestCase {
   }
 
   func testUpdateImageWithDataAndSameState() throws {
-    let state = FBSDKProfilePictureViewState(
+    let state = ProfilePictureViewState(
       profileID: "123",
       size: .zero,
       scale: 0,
@@ -124,7 +124,7 @@ final class ProfilePictureViewTests: XCTestCase {
 
     _ = expectation(for: updateImagePredicate, evaluatedWith: nil)
     DispatchQueue.global(qos: .userInitiated).async {
-      self.profilePictureView._updateImage(with: Data.redIconImage, state: state)
+      self.profilePictureView.updateImage(data: Data.redIconImage, state: state)
     }
 
     waitForExpectations(timeout: 2)
@@ -134,7 +134,7 @@ final class ProfilePictureViewTests: XCTestCase {
   func testUpdateImageWithDataAndDifferentState() throws {
     profilePictureView = FBProfilePictureView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 
-    let oldState = FBSDKProfilePictureViewState(
+    let oldState = ProfilePictureViewState(
       profileID: "123",
       size: .zero,
       scale: 0,
@@ -143,14 +143,14 @@ final class ProfilePictureViewTests: XCTestCase {
     )
     profilePictureView.lastState = oldState
 
-    let newState = FBSDKProfilePictureViewState(
+    let newState = ProfilePictureViewState(
       profileID: "test12345",
       size: .zero,
       scale: 0,
       pictureMode: .normal,
       imageShouldFit: true
     )
-    profilePictureView._updateImage(with: Data.redIconImage, state: newState)
+    profilePictureView.updateImage(data: Data.redIconImage, state: newState)
 
     XCTAssertNil(
       profilePictureView.imageView.image,
@@ -188,9 +188,9 @@ final class ProfilePictureViewTests: XCTestCase {
       userInfo: [AccessTokenDidChangeUserIDKey: true]
     )
     Profile.setCurrent(testProfile, shouldPostNotification: false)
-    profilePictureView._updateImageWithProfile()
+    profilePictureView.updateImageWithProfile()
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
-    profilePictureView._accessTokenDidChange(notification)
+    profilePictureView.accessTokenDidChange(notification)
     XCTAssertNil(profilePictureView.lastState, .hasResetLastStateOnAccessTokenChange)
   }
 
@@ -200,7 +200,7 @@ final class ProfilePictureViewTests: XCTestCase {
       object: nil,
       userInfo: nil
     )
-    let state = FBSDKProfilePictureViewState(
+    let state = ProfilePictureViewState(
       profileID: "123",
       size: .zero,
       scale: 0,
@@ -208,7 +208,7 @@ final class ProfilePictureViewTests: XCTestCase {
       imageShouldFit: false
     )
     profilePictureView.lastState = state
-    profilePictureView._accessTokenDidChange(notification)
+    profilePictureView.accessTokenDidChange(notification)
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
   }
 
@@ -219,7 +219,7 @@ final class ProfilePictureViewTests: XCTestCase {
       userInfo: [AccessTokenDidChangeUserIDKey: true]
     )
 
-    let state = FBSDKProfilePictureViewState(
+    let state = ProfilePictureViewState(
       profileID: "123",
       size: .zero,
       scale: 0,
@@ -229,7 +229,7 @@ final class ProfilePictureViewTests: XCTestCase {
     profilePictureView.lastState = state
 
     profilePictureView.profileID = "123"
-    profilePictureView._accessTokenDidChange(notification)
+    profilePictureView.accessTokenDidChange(notification)
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
   }
 
@@ -240,7 +240,7 @@ final class ProfilePictureViewTests: XCTestCase {
       userInfo: [AccessTokenDidChangeUserIDKey: false]
     )
 
-    let state = FBSDKProfilePictureViewState(
+    let state = ProfilePictureViewState(
       profileID: "123",
       size: .zero,
       scale: 0,
@@ -250,7 +250,7 @@ final class ProfilePictureViewTests: XCTestCase {
     profilePictureView.lastState = state
 
     profilePictureView.profileID = "123"
-    profilePictureView._accessTokenDidChange(notification)
+    profilePictureView.accessTokenDidChange(notification)
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
   }
 
@@ -261,7 +261,7 @@ final class ProfilePictureViewTests: XCTestCase {
       userInfo: [AccessTokenDidChangeUserIDKey: false]
     )
 
-    let state = FBSDKProfilePictureViewState(
+    let state = ProfilePictureViewState(
       profileID: "123",
       size: .zero,
       scale: 0,
@@ -270,7 +270,7 @@ final class ProfilePictureViewTests: XCTestCase {
     )
     profilePictureView.lastState = state
 
-    profilePictureView._accessTokenDidChange(notification)
+    profilePictureView.accessTokenDidChange(notification)
     XCTAssertNil(profilePictureView.lastState, .hasResetLastStateOnAccessTokenChange)
   }
 
@@ -281,7 +281,7 @@ final class ProfilePictureViewTests: XCTestCase {
       userInfo: nil
     )
     Profile.setCurrent(testProfile, shouldPostNotification: false)
-    profilePictureView._profileDidChange(notification)
+    profilePictureView.profileDidChange(notification)
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
   }
 
@@ -291,7 +291,7 @@ final class ProfilePictureViewTests: XCTestCase {
       object: nil,
       userInfo: nil
     )
-    let state = FBSDKProfilePictureViewState(
+    let state = ProfilePictureViewState(
       profileID: "123",
       size: .zero,
       scale: 0,
@@ -300,7 +300,7 @@ final class ProfilePictureViewTests: XCTestCase {
     )
     profilePictureView.lastState = state
     profilePictureView.profileID = "123"
-    profilePictureView._profileDidChange(notification)
+    profilePictureView.profileDidChange(notification)
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
   }
 
