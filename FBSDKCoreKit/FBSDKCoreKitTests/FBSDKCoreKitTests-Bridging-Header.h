@@ -123,8 +123,6 @@
 #import "FBSDKProductRequestFactory.h"
 #import "FBSDKProfile+Testing.h"
 #import "FBSDKProfileCodingKey.h"
-#import "FBSDKProfilePictureViewState.h"
-#import "FBSDKProfilePictureView+Testing.h"
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveData.h"
 #import "FBSDKRestrictiveDataFilterManager.h"

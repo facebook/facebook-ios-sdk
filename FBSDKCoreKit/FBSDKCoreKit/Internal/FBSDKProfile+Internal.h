@@ -27,10 +27,6 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 + (void)cacheProfile:(nullable FBSDKProfile *)profile;
 + (nullable FBSDKProfile *)fetchCachedProfile NS_SWIFT_NAME(fetchCachedProfile());
 
-+ (NSURL *)imageURLForProfileID:(NSString *)profileId
-                    pictureMode:(FBSDKProfilePictureMode)mode
-                           size:(CGSize)size;
-
 + (void)loadProfileWithToken:(FBSDKAccessToken *)token
                 graphRequest:(id<FBSDKGraphRequest>)request
                   completion:(FBSDKProfileBlock)completion

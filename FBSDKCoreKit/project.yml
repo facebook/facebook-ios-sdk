@@ -120,6 +120,8 @@ targets:
           - include
           - FBSDKCoreKit.modulemap
           - Info.plist
+          - FBProfilePictureView.swift
+          - Internal/ProfilePictureViewState.swift
       - path: FBSDKCoreKit/include
         headerVisibility: public
       - path: FBSDKCoreKit/Info.plist
@@ -151,6 +153,8 @@ targets:
           - include
           - FBSDKCoreKit.modulemap
           - Info.plist
+          - FBProfilePictureView.swift
+          - Internal/ProfilePictureViewState.swift
       - path: FBSDKCoreKit/include
         headerVisibility: public
       - path: FBSDKCoreKit/Info.plist
