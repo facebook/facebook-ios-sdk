@@ -124,7 +124,6 @@
 #import "FBSDKProfile+Testing.h"
 #import "FBSDKProfileCodingKey.h"
 #import "FBSDKProfileProtocols.h"
-#import "FBSDKRestrictiveData.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKRestrictiveDataFilterManager+Testing.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
