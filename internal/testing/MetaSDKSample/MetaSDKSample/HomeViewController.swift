@@ -9,7 +9,7 @@
 import UIKit
 import MetaLogin
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleDataProviding {
 
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var loginButton: UIButton!
@@ -63,12 +63,18 @@ class HomeViewController: UIViewController {
     }
   }
 
+  func permissionWasSelected(_ selectedPermission: Set<Permission>) {
+    self.selectedPermissions = selectedPermission
+  }
+
   @IBAction func loginButtonTapped(_ sender: Any) {
     Task {
       if await isLoggedIn {
         await metaLogin.logOut()
         await self.updateLoginButtonLabel()
+        self.consoleDataManager.addMessage(message: "User logged out")
       } else {
+        self.consoleDataManager.addMessage(message: "Started login request")
         let configuration = LoginConfiguration(
           permissions: selectedPermissions,
           facebookAppID: appId,
@@ -80,11 +86,12 @@ class HomeViewController: UIViewController {
           case .success:
             Task {
               await self.updateLoginButtonLabel()
+              self.consoleDataManager.addMessage(message: "Login request completed")
             }
           case .failure(let error):
-            print("Failed to login with \(error)")
+            self.consoleDataManager.addMessage(message: "Failed to login with \(error)")
           case .cancel:
-            print("Login cancelled")
+            self.consoleDataManager.addMessage(message: "Login cancelled")
           }
         }
       }
@@ -128,6 +135,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "showPermissionSetting" {
       if let destination = segue.destination as? PermissionViewController {
+        destination.delegate = self
         destination.selectedPermissions = selectedPermissions
       }
     }

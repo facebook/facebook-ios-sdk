@@ -9,21 +9,29 @@
 import UIKit
 import MetaLogin
 
-class PermissionViewController: UITableViewController, UINavigationControllerDelegate {
+class PermissionViewController: UITableViewController {
 
   let permissionViewItems: [PermissionViewItem] = [
     PermissionViewItem(permission: Permission.userAvatar),
     PermissionViewItem(permission: Permission.publicProfile)
   ]
 
+  weak var delegate: PermissionSelectedDelegate?
   var selectedPermissions = Set<Permission>()
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    navigationController?.delegate = self
     updatePermissionViewItems()
     tableView.allowsMultipleSelection = true
+  }
+
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+
+    if self.isMovingFromParent {
+      delegate?.permissionWasSelected(selectedPermissions)
+    }
   }
 
   private func updatePermissionViewItems() {
@@ -60,13 +68,5 @@ class PermissionViewController: UITableViewController, UINavigationControllerDel
   override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
     permissionViewItems[indexPath.row].isSelected = false
     selectedPermissions.remove(permissionViewItems[indexPath.row].permission)
-  }
-
-  func navigationController(
-    _ navigationController: UINavigationController,
-    willShow viewController: UIViewController,
-    animated: Bool
-  ) {
-    (viewController as? HomeViewController)?.selectedPermissions = selectedPermissions
   }
 }
