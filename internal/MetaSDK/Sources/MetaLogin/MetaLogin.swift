@@ -38,6 +38,7 @@ public struct MetaLogin {
     static let responseType = "response_type"
     static let scope = "scope"
     static let redirectURI = "redirect_uri"
+    static let authType = "auth_type"
   }
 
   private enum ParameterValues {
@@ -45,6 +46,7 @@ public struct MetaLogin {
     static let sdk = "meta_sdk_ios"
     static let returnScopes = "true"
     static let responseType = "token,graph_domain,signed_request"
+    static let rerequest = "rerequest"
   }
 
   /// represents login information including both user and authentication data
@@ -130,6 +132,7 @@ public struct MetaLogin {
       ParameterKeys.returnScopes: ParameterValues.returnScopes,
       ParameterKeys.cbt: String(cbtInMilliseconds),
       ParameterKeys.responseType: ParameterValues.responseType,
+      ParameterKeys.authType: ParameterValues.rerequest,
     ]
 
     let permissions = configuration.permissions
