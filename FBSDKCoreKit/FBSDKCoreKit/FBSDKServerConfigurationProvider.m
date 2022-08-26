@@ -8,7 +8,7 @@
 
 #import "FBSDKServerConfigurationProvider.h"
 
-#import "FBSDKServerConfigurationManager.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation FBSDKServerConfigurationProvider
 

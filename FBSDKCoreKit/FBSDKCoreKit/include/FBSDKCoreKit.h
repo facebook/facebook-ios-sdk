@@ -21,16 +21,21 @@
 #import <FBSDKCoreKit/FBSDKAppEventParameterProduct.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterValue.h>
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#import <FBSDKCoreKit/FBSDKAppEventsConfigurationManager.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfigurationProviding.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfiguring.h>
+#import <FBSDKCoreKit/FBSDKAppEventsDeviceInfo.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import <FBSDKCoreKit/FBSDKAppEventsNotificationName.h>
 #import <FBSDKCoreKit/FBSDKAppEventsParameterProcessing.h>
 #import <FBSDKCoreKit/FBSDKAppEventsReporter.h>
+#import <FBSDKCoreKit/FBSDKAppEventsState.h>
 #import <FBSDKCoreKit/FBSDKAppEventsStatePersisting.h>
 #import <FBSDKCoreKit/FBSDKAppEventsStateProviding.h>
 #import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
+#import <FBSDKCoreKit/FBSDKAppEventsUtility.h>
+#import <FBSDKCoreKit/FBSDKAppEventsUtilityProtocol.h>
 #import <FBSDKCoreKit/FBSDKApplicationActivating.h>
 #import <FBSDKCoreKit/FBSDKApplicationLifecycleNotifications.h>
 #import <FBSDKCoreKit/FBSDKApplicationLifecycleObserving.h>
@@ -66,11 +71,14 @@
 #import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
 #import <FBSDKCoreKit/FBSDKButton.h>
 #import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
+#import <FBSDKCoreKit/FBSDKCodelessIndexer.h>
 #import <FBSDKCoreKit/FBSDKCodelessIndexing.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit/FBSDKCoreKitComponents.h>
 #import <FBSDKCoreKit/FBSDKCoreKitConfigurator.h>
+#import <FBSDKCoreKit/FBSDKCoreKitConfiguring.h>
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
+#import <FBSDKCoreKit/FBSDKCrashShield.h>
 #import <FBSDKCoreKit/FBSDKDeviceDialogView.h>
 #import <FBSDKCoreKit/FBSDKDeviceInformationProviding.h>
 #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
@@ -93,6 +101,7 @@
 #import <FBSDKCoreKit/FBSDKFeatureChecking.h>
 #import <FBSDKCoreKit/FBSDKFeatureDisabling.h>
 #import <FBSDKCoreKit/FBSDKFeatureExtracting.h>
+#import <FBSDKCoreKit/FBSDKFeatureExtractor.h>
 #import <FBSDKCoreKit/FBSDKGateKeeperManager.h>
 #import <FBSDKCoreKit/FBSDKGateKeeperManaging.h>
 #import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
@@ -112,6 +121,7 @@
 #import <FBSDKCoreKit/FBSDKImpressionLogging.h>
 #import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 #import <FBSDKCoreKit/FBSDKIntegrityParametersProcessorProvider.h>
+#import <FBSDKCoreKit/FBSDKIntegrityProcessing.h>
 #import <FBSDKCoreKit/FBSDKInternalURLOpener.h>
 #import <FBSDKCoreKit/FBSDKInternalUtility.h>
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
@@ -124,6 +134,7 @@
 #import <FBSDKCoreKit/FBSDKLocation.h>
 #import <FBSDKCoreKit/FBSDKLogger.h>
 #import <FBSDKCoreKit/FBSDKLogging.h>
+#import <FBSDKCoreKit/FBSDKLoggingNotifying.h>
 #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
 #import <FBSDKCoreKit/FBSDKLoginTooltip.h>
 #import <FBSDKCoreKit/FBSDKMacCatalystDetermining.h>
@@ -131,6 +142,7 @@
 #import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
 #import <FBSDKCoreKit/FBSDKMeasurementEventListener.h>
 #import <FBSDKCoreKit/FBSDKMetadataIndexing.h>
+#import <FBSDKCoreKit/FBSDKModelManager.h>
 #import <FBSDKCoreKit/FBSDKMutableCopying.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
@@ -144,6 +156,7 @@
 #import <FBSDKCoreKit/FBSDKRandom.h>
 #import <FBSDKCoreKit/FBSDKRulesFromKeyProvider.h>
 #import <FBSDKCoreKit/FBSDKServerConfiguration.h>
+#import <FBSDKCoreKit/FBSDKServerConfigurationManager.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationProvider.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationProviding.h>
 #import <FBSDKCoreKit/FBSDKSettings.h>

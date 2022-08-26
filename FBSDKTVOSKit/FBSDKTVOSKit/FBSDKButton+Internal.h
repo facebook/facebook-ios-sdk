@@ -27,10 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)resetClassDependencies;
 #endif
 
-+ (void)configureWithApplicationActivationNotifier:(id)applicationActivationNotifier
-                                       eventLogger:(id<FBSDKEventLogging>)eventLogger
-                               accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
-
 - (void)configureButton;
 - (void) configureWithIcon:(FBSDKIcon *)icon
                      title:(NSString *)title

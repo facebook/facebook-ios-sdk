@@ -29,14 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
 
-// UNCRUSTIFY_FORMAT_OFF
-- (void)      configureWithStore:(id<FBSDKDataPersisting>)store
-  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
-          infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                     eventLogger:(id<FBSDKEventLogging>)eventLogger
-NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
-// UNCRUSTIFY_FORMAT_ON
-
 + (nullable NSObject<FBSDKTokenCaching> *)tokenCache;
 
 + (void)setTokenCache:(nullable NSObject<FBSDKTokenCaching> *)tokenCache;

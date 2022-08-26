@@ -8,11 +8,9 @@
 
 #import "FBSDKAppEventsATEPublisher.h"
 
-#import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"

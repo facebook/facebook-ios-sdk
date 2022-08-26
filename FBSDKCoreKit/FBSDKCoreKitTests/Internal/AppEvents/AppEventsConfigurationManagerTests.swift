@@ -13,7 +13,7 @@ import TestTools
 final class AppEventsConfigurationManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var manager: AppEventsConfigurationManager!
+  var manager: _AppEventsConfigurationManager!
   var store: UserDefaultsSpy!
   var settings: TestSettings!
   var graphRequestFactory: TestGraphRequestFactory!
@@ -32,7 +32,7 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
     connection = TestGraphRequestConnection()
     graphRequestConnectionFactory = TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
 
-    manager = AppEventsConfigurationManager()
+    manager = _AppEventsConfigurationManager()
     manager.configure(
       store: store,
       settings: settings,

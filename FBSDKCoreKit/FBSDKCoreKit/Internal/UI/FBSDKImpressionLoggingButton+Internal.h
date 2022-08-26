@@ -15,9 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKImpressionLoggerFactory> impressionLoggerFactory;
 
-+ (void)configureWithImpressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
-NS_SWIFT_NAME(configure(impressionLoggerFactory:));
-
 #if DEBUG
 + (void)resetClassDependencies;
 #endif

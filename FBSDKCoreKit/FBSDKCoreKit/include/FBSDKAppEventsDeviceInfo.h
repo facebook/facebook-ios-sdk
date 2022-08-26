@@ -6,12 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKDeviceInformationProviding.h>
+#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsDeviceInfo)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AppEventsDeviceInfo)
 @interface FBSDKAppEventsDeviceInfo : NSObject <FBSDKDeviceInformationProviding>
 
 @property (class, nonnull, nonatomic, readonly) FBSDKAppEventsDeviceInfo *shared;
@@ -23,7 +30,8 @@ NS_SWIFT_NAME(AppEventsDeviceInfo)
 + (instancetype)new NS_UNAVAILABLE;
 #endif
 
-- (void)configureWithSettings:(id<FBSDKSettings>)settings;
+- (void)configureWithSettings:(id<FBSDKSettings>)settings
+NS_SWIFT_NAME(configure(settings:));
 
 #if DEBUG
 - (void)resetDependencies;

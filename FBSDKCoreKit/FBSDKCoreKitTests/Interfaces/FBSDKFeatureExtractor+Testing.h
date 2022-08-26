@@ -11,8 +11,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
-#import "FBSDKFeatureExtractor.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKFeatureExtractor (Testing)

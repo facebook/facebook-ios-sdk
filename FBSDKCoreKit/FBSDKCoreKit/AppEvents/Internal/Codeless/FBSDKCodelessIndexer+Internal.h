@@ -13,7 +13,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKCodelessIndexer.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKSettingsProtocol.h"
@@ -21,17 +20,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKCodelessIndexer (Internal) <FBSDKCodelessIndexing>
-
-// UNCRUSTIFY_FORMAT_OFF
-+ (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
-             serverConfigurationProvider:(id<FBSDKServerConfigurationProviding>)serverConfigurationProvider
-                               dataStore:(id<FBSDKDataPersisting>)dataStore
-           graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-                                swizzler:(Class<FBSDKSwizzling>)swizzler
-                                settings:(id<FBSDKSettings>)settings
-                    advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertisingIDProvider
-NS_SWIFT_NAME(configure(graphRequestFactory:serverConfigurationProvider:dataStore:graphRequestConnectionFactory:swizzler:settings:advertiserIDProvider:));
-// UNCRUSTIFY_FORMAT_ON
 
 @end
 

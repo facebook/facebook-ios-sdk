@@ -8,8 +8,6 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKFeatureExtractor.h"
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 

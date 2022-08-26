@@ -307,7 +307,7 @@ final class GameRequestDialogTests: XCTestCase {
       "Should use the expected method name"
     )
     let downcastRequest = try XCTUnwrap(
-      capturedRequest as? BridgeAPIRequest,
+      capturedRequest as? _BridgeAPIRequest,
       "The request should be the expected type"
     )
     let parameters = try XCTUnwrap(

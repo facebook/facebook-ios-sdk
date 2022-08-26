@@ -35,7 +35,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAdvertiserIDProvider() {
     XCTAssertTrue(
-      components.advertiserIDProvider === AppEventsUtility.shared,
+      components.advertiserIDProvider === _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its advertise ID provider"
     )
   }
@@ -49,7 +49,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppEventsConfigurationProvider() {
     XCTAssertTrue(
-      components.appEventsConfigurationProvider === AppEventsConfigurationManager.shared,
+      components.appEventsConfigurationProvider === _AppEventsConfigurationManager.shared,
       """
       The default components should use the shared \
       AppEventsConfigurationManager as its app events configuration provider
@@ -73,7 +73,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppEventsUtility() {
     XCTAssertTrue(
-      components.appEventsUtility === AppEventsUtility.shared,
+      components.appEventsUtility === _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its app events utility"
     )
   }
@@ -154,7 +154,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testDeviceInformationProvider() {
     XCTAssertTrue(
-      components.deviceInformationProvider === AppEventsDeviceInfo.shared,
+      components.deviceInformationProvider === _AppEventsDeviceInfo.shared,
       "The default components should use the shared AppEventsDeviceInfo as its device information provider"
     )
   }
@@ -401,7 +401,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testServerConfigurationProvider() {
     XCTAssertTrue(
-      components.serverConfigurationProvider === ServerConfigurationManager.shared,
+      components.serverConfigurationProvider === _ServerConfigurationManager.shared,
       "The default components should use the shared ServerConfigurationManager as its server configuration provider"
     )
   }
@@ -481,14 +481,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppEventParametersExtractor() {
     XCTAssertTrue(
-      components.appEventParametersExtractor === AppEventsUtility.shared,
+      components.appEventParametersExtractor === _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its app event parameters extractor"
     )
   }
 
   func testAppEventsDropDeterminer() {
     XCTAssertTrue(
-      components.appEventsDropDeterminer === AppEventsUtility.shared,
+      components.appEventsDropDeterminer === _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its app events drop determiner"
     )
   }
@@ -545,7 +545,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testCodelessIndexer() {
     XCTAssertTrue(
-      components.codelessIndexer === CodelessIndexer.self,
+      components.codelessIndexer === _CodelessIndexer.self,
       "The default components should use the CodelessIndexer type as its codeless indexer"
     )
   }
@@ -559,7 +559,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testFeatureExtractor() {
     XCTAssertTrue(
-      components.featureExtractor === FeatureExtractor.self,
+      components.featureExtractor === _FeatureExtractor.self,
       "The default components should use the FeatureExtractor type as its feature extractor"
     )
   }
@@ -595,7 +595,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testModelManager() {
     XCTAssertTrue(
-      components.modelManager === ModelManager.shared,
+      components.modelManager === _ModelManager.shared,
       "The default components should use the shared ModelManager as its model manager"
     )
   }
@@ -609,7 +609,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testRulesFromKeyProvider() {
     XCTAssertTrue(
-      components.rulesFromKeyProvider === ModelManager.shared,
+      components.rulesFromKeyProvider === _ModelManager.shared,
       "The default components should use the shared ModelManager as its rules from key provider"
     )
   }

@@ -6,17 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <Foundation/Foundation.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
+#import <FBSDKCoreKit/FBSDKAppEventParametersExtracting.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
-#import "FBSDKAppEventsUtilityProtocol.h"
-#import "FBSDKLoggingNotifying.h"
+#import <FBSDKCoreKit/FBSDKAppEventsUtilityProtocol.h>
+#import <FBSDKCoreKit/FBSDKLoggingNotifying.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsUtility)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AppEventsUtility)
 @interface FBSDKAppEventsUtility : NSObject <FBSDKAdvertiserIDProviding, FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>
 
 #if !DEBUG

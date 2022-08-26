@@ -12,10 +12,10 @@
 
 #import <StoreKit/StoreKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/message.h>
 
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKConversionValueUpdating.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"

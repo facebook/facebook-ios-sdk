@@ -19,7 +19,13 @@ typedef void (^FBSDKAppEventsConfigurationManagerBlock)(void);
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsConfigurationManager)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AppEventsConfigurationManager)
 @interface FBSDKAppEventsConfigurationManager : NSObject <FBSDKAppEventsConfigurationProviding>
 
 @property (class, nonatomic, readonly) FBSDKAppEventsConfigurationManager *shared;

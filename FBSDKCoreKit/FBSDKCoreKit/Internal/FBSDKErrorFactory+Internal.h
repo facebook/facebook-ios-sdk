@@ -17,11 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKErrorReporting> defaultReporter;
 @property (nullable, nonatomic) id<FBSDKErrorReporting> reporter;
 
-// UNCRUSTIFY_FORMAT_OFF
-+ (void)configureWithDefaultReporter:(id<FBSDKErrorReporting>)defaultReporter
-NS_SWIFT_NAME(configure(defaultReporter:));
-// UNCRUSTIFY_FORMAT_ON
-
 #if DEBUG
 + (void)resetClassDependencies;
 #endif

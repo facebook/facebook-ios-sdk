@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKCodelessIndexer.h"
+#import "FBSDKCodelessIndexer+Internal.h"
 
 #import <UIKit/UIKit.h>
 
@@ -18,7 +18,6 @@
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
@@ -27,7 +26,6 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKObjectDecoding.h"
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKUnarchiverProvider.h"

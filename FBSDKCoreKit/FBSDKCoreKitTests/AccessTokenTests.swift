@@ -31,7 +31,7 @@ final class AccessTokenTests: XCTestCase {
     graphRequestPiggybackManager = TestGraphRequestPiggybackManager()
 
     AccessToken.configure(
-      withTokenCache: tokenCache,
+      tokenCache: tokenCache,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       graphRequestPiggybackManager: graphRequestPiggybackManager,
       errorFactory: TestErrorFactory()

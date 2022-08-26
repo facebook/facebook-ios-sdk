@@ -53,7 +53,7 @@ final class AppEventsPublishATETests: XCTestCase {
     settings.appID = name
 
     appEvents.configure(
-      withGateKeeperManager: TestGateKeeperManager.self,
+      gateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
       serverConfigurationProvider: TestServerConfigurationProvider(),
       graphRequestFactory: TestGraphRequestFactory(),

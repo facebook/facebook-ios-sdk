@@ -19,7 +19,7 @@ final class ShareBridgeAPIRequestFactory: BridgeAPIRequestCreating {
     parameters: [String: Any]?,
     userInfo: [String: Any]?
   ) -> BridgeAPIRequestProtocol? {
-    BridgeAPIRequest(
+    _BridgeAPIRequest(
       protocolType: protocolType,
       scheme: URLScheme(rawValue: scheme),
       methodName: methodName,

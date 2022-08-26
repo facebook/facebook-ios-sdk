@@ -19,7 +19,7 @@ enum TestCoreKitComponents {
     appEventsConfigurationProvider: _AppEventsConfigurationProviding = TestAppEventsConfigurationProvider(),
     appEventsStateProvider: _AppEventsStateProviding = TestAppEventsStateProvider(),
     appEventsStateStore: _AppEventsStatePersisting = TestAppEventsStateStore(),
-    appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying = TestAppEventsUtility(),
+    appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtilityProtocol & _LoggingNotifying = TestAppEventsUtility(),
     atePublisherFactory: _ATEPublisherCreating = TestATEPublisherFactory(),
     authenticationTokenWallet: _AuthenticationTokenProviding.Type = TestAuthenticationTokenWallet.self,
     crashHandler: CrashHandlerProtocol = TestCrashHandler(),

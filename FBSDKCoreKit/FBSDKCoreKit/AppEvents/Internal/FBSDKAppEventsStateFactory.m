@@ -8,9 +8,8 @@
 
 #import "FBSDKAppEventsStateFactory.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKAppEventsState.h"
 
 @implementation FBSDKAppEventsStateFactory
 

@@ -10,6 +10,9 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol FBSDKInfoDictionaryProviding;
+@protocol FBSDKUserIDProviding;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -67,6 +70,26 @@ NS_SWIFT_NAME(AppLinkUtility)
  @return YES if the scheme is defined, otherwise NO.
  */
 + (BOOL)isMatchURLScheme:(NSString *)scheme;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                  infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                                settings:(id<FBSDKSettings>)settings
+          appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)appEventsConfigurationProvider
+                    advertiserIDProvider:(id<FBSDKAdvertiserIDProviding>)advertiserIDProvider
+                 appEventsDropDeterminer:(id<FBSDKAppEventDropDetermining>)appEventsDropDeterminer
+             appEventParametersExtractor:(id<FBSDKAppEventParametersExtracting>)appEventParametersExtractor
+                       appLinkURLFactory:(id<FBSDKAppLinkURLCreating>)appLinkURLFactory
+                          userIDProvider:(id<FBSDKUserIDProviding>)userIDProvider
+                           userDataStore:(id<FBSDKUserDataPersisting>)userDataStore
+NS_SWIFT_NAME(configure(graphRequestFactory:infoDictionaryProvider:settings:appEventsConfigurationProvider:advertiserIDProvider:appEventsDropDeterminer:appEventParametersExtractor:appLinkURLFactory:userIDProvider:userDataStore:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

@@ -10,9 +10,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKAppEventsUtilityProtocol.h"
 #import "FBSDKEventLogging.h"
-#import "FBSDKLoggingNotifying.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +20,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Completed;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 
 @interface FBSDKAppEvents (Internal) <
-  FBSDKAppEventsConfiguring,
   FBSDKApplicationActivating,
   FBSDKApplicationLifecycleObserving,
   FBSDKApplicationStateSetting,

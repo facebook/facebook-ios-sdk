@@ -14,8 +14,9 @@
 
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
-#import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
+#import <FBSDKCoreKit/FBSDKAppEventsConfiguring.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
+#import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
@@ -75,7 +76,7 @@ NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
  + The length of each parameter value can be no more than on the order of 100 characters.
  */
 NS_SWIFT_NAME(AppEvents)
-@interface FBSDKAppEvents : NSObject <FBSDKEventLogging>
+@interface FBSDKAppEvents : NSObject <FBSDKEventLogging, FBSDKAppEventsConfiguring>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

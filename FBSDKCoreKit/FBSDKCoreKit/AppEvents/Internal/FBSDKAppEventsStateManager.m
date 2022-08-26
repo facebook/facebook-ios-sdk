@@ -8,11 +8,10 @@
 
 #import "FBSDKAppEventsStateManager.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKAppEventsState.h"
 #import "FBSDKLogger.h"
 #import "FBSDKUnarchiverProvider.h"
 

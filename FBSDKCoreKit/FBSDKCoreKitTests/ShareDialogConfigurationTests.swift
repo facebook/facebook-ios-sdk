@@ -20,8 +20,8 @@ final class ShareDialogConfigurationTests: XCTestCase {
     let configuration = ShareDialogConfiguration()
 
     XCTAssertEqual(
-      configuration.serverConfigurationProvider as? ServerConfigurationManager,
-      ServerConfigurationManager.shared,
+      configuration.serverConfigurationProvider as? _ServerConfigurationManager,
+      _ServerConfigurationManager.shared,
       "Should use the expected default server configuration provider"
     )
   }

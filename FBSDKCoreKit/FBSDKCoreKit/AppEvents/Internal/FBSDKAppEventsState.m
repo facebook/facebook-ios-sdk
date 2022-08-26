@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsState.h"
+#import <FBSDKCoreKit/FBSDKAppEventsState.h>
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 

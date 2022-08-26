@@ -22,6 +22,17 @@ NS_SWIFT_NAME(ErrorFactory)
  */
 - (instancetype)initWithReporter:(id<FBSDKErrorReporting>)reporter;
 
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithDefaultReporter:(id<FBSDKErrorReporting>)defaultReporter
+NS_SWIFT_NAME(configure(defaultReporter:));
+// UNCRUSTIFY_FORMAT_ON
+
 @end
 
 NS_ASSUME_NONNULL_END

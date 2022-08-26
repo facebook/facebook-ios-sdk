@@ -14,7 +14,7 @@ final class AppEventsStateManagerTests: XCTestCase {
   private let token = "token"
   private let appID = "1234"
   private var manager = AppEventsStateManager()
-  private lazy var state = AppEventsState(token: token, appID: appID)
+  private lazy var state = _AppEventsState(token: token, appID: appID)
 
   override func tearDown() {
     super.tearDown()

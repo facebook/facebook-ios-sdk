@@ -36,15 +36,6 @@ typedef void (^FBSDKParseProfileBlock)(id result, FBSDKProfile *_Nonnull *_Nulla
 
 + (void)observeChangeAccessTokenChange:(NSNotification *)notification;
 
-// UNCRUSTIFY_FORMAT_OFF
-+ (void)configureWithDataStore:(id<FBSDKDataPersisting>)dataStore
-           accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
-            notificationCenter:(id<_FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
-                      settings:(id<FBSDKSettings>)settings
-                     urlHoster:(id<FBSDKURLHosting>)urlHoster
-NS_SWIFT_NAME(configure(dataStore:accessTokenProvider:notificationCenter:settings:urlHoster:));
-// UNCRUSTIFY_FORMAT_ON
-
 @end
 
 NS_ASSUME_NONNULL_END

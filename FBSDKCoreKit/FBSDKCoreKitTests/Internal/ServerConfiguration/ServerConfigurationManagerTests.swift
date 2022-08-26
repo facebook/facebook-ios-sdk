@@ -26,7 +26,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
     requestFactory = TestGraphRequestFactory()
     connectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
     dialogConfigurationMapBuilder = TestDialogConfigurationMapBuilder()
-    ServerConfigurationManager.shared.configure(
+    _ServerConfigurationManager.shared.configure(
       graphRequestFactory: requestFactory,
       graphRequestConnectionFactory: connectionFactory,
       dialogConfigurationMapBuilder: dialogConfigurationMapBuilder
@@ -34,7 +34,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
   }
 
   override func tearDown() {
-    ServerConfigurationManager.shared.reset()
+    _ServerConfigurationManager.shared.reset()
     connection = nil
     requestFactory = nil
     connectionFactory = nil
@@ -44,33 +44,33 @@ final class ServerConfigurationManagerTests: XCTestCase {
   }
 
   func testDefaultDependencies() {
-    ServerConfigurationManager.shared.reset()
+    _ServerConfigurationManager.shared.reset()
 
     XCTAssertNil(
-      ServerConfigurationManager.shared.graphRequestFactory,
+      _ServerConfigurationManager.shared.graphRequestFactory,
       "Should not have a graph request factory by default"
     )
     XCTAssertNil(
-      ServerConfigurationManager.shared.graphRequestConnectionFactory,
+      _ServerConfigurationManager.shared.graphRequestConnectionFactory,
       "Should not have a graph request connection factory by default"
     )
     XCTAssertNil(
-      ServerConfigurationManager.shared.dialogConfigurationMapBuilder,
+      _ServerConfigurationManager.shared.dialogConfigurationMapBuilder,
       "Should not have a dialog configuration map builder by default"
     )
   }
 
   func testConfiguringWithDependencies() {
     XCTAssertTrue(
-      ServerConfigurationManager.shared.graphRequestFactory === requestFactory,
+      _ServerConfigurationManager.shared.graphRequestFactory === requestFactory,
       "Should set the provided graph request factory"
     )
     XCTAssertTrue(
-      ServerConfigurationManager.shared.graphRequestConnectionFactory === connectionFactory,
+      _ServerConfigurationManager.shared.graphRequestConnectionFactory === connectionFactory,
       "Should set the provided graph request connection factory"
     )
     XCTAssertTrue(
-      ServerConfigurationManager.shared.dialogConfigurationMapBuilder === dialogConfigurationMapBuilder,
+      _ServerConfigurationManager.shared.dialogConfigurationMapBuilder === dialogConfigurationMapBuilder,
       "Should set the provided dialog configuration map builder"
     )
   }
@@ -84,7 +84,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
     var didInvokeCompletion = false
     var configuration: _ServerConfiguration?
     var error: Error?
-    ServerConfigurationManager.shared.loadServerConfiguration { potentialConfiguration, potentialError in
+    _ServerConfigurationManager.shared.loadServerConfiguration { potentialConfiguration, potentialError in
       didInvokeCompletion = true
       configuration = potentialConfiguration
       error = potentialError
@@ -109,7 +109,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
   }
 
   func testParsingWithMissingDialogConfigurations() {
-    ServerConfigurationManager.shared.processLoadRequestResponse(
+    _ServerConfigurationManager.shared.processLoadRequestResponse(
       [String: Any](),
       error: nil,
       appID: name
@@ -125,7 +125,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
       RawServerConfigurationResponseFixtures.Keys.dialogConfigurations: [String: Any](),
     ]
 
-    ServerConfigurationManager.shared.processLoadRequestResponse(
+    _ServerConfigurationManager.shared.processLoadRequestResponse(
       response,
       error: nil,
       appID: name
@@ -147,7 +147,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
       ],
     ]
 
-    ServerConfigurationManager.shared.processLoadRequestResponse(
+    _ServerConfigurationManager.shared.processLoadRequestResponse(
       response,
       error: nil,
       appID: name
@@ -164,7 +164,7 @@ final class ServerConfigurationManagerTests: XCTestCase {
 
   func testParsingResponses() {
     for _ in 0 ..< 100 {
-      ServerConfigurationManager.shared.processLoadRequestResponse(
+      _ServerConfigurationManager.shared.processLoadRequestResponse(
         RawServerConfigurationResponseFixtures.random,
         error: nil,
         appID: name

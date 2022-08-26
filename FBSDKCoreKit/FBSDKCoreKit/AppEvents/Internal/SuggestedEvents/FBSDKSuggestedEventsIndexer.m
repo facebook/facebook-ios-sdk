@@ -19,7 +19,6 @@
 #import <sys/utsname.h>
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelUtility.h"

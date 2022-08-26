@@ -16,7 +16,6 @@
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKServerConfigurationManager.h"
 
 @implementation FBSDKBridgeAPIProtocolWebV2
 

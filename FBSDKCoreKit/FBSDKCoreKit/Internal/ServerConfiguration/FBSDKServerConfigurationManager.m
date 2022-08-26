@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKServerConfigurationManager.h"
-
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKLogger.h>
+#import <FBSDKCoreKit/FBSDKServerConfigurationManager.h>
 #import <FBSDKCoreKit/FBSDKSettings.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>

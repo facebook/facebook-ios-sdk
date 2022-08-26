@@ -99,7 +99,7 @@ NS_SWIFT_NAME(default);
 @property (nonatomic, readonly) id<FBSDKAppEventsConfigurationProviding> appEventsConfigurationProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
 @property (nonatomic, readonly) id<FBSDKAppEventsStatePersisting> appEventsStateStore;
-@property (nullable, nonatomic) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
+@property (nonatomic, readonly) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
 @property (nonatomic, readonly) id (^getApplicationActivationNotifier)(void);
 @property (nonatomic, readonly) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nonatomic, readonly) Class<FBSDKAuthenticationTokenProviding> authenticationTokenWallet;

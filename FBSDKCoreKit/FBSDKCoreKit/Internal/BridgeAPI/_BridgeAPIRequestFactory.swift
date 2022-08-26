@@ -26,7 +26,7 @@ public final class _BridgeAPIRequestFactory: NSObject, BridgeAPIRequestCreating 
     parameters: [String: Any]?,
     userInfo: [String: Any]? = nil
   ) -> BridgeAPIRequestProtocol? {
-    BridgeAPIRequest(
+    _BridgeAPIRequest(
       protocolType: protocolType,
       scheme: URLScheme(rawValue: scheme),
       methodName: methodName,

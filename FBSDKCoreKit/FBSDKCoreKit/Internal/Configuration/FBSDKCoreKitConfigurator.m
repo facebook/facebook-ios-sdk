@@ -22,7 +22,6 @@
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKButton+Internal.h"
 #import "FBSDKCodelessIndexer+Internal.h"
-#import "FBSDKCrashShield+Internal.h"
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKFeatureExtractor.h"
 #import "FBSDKGateKeeperManager.h"

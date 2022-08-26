@@ -15,18 +15,18 @@ final class AppEventsStateTests: XCTestCase {
   let appEventsStateMaxEvents = 1000
   let appId = "appid"
   let eventsProcessor = TestAppEventsParameterProcessor()
-  lazy var state = AppEventsState(token: self.name, appID: appId)
-  lazy var partiallyFullState = AppEventsState(
+  lazy var state = _AppEventsState(token: self.name, appID: appId)
+  lazy var partiallyFullState = _AppEventsState(
     token: self.name,
     appID: appId
   )
-  lazy var fullState = AppEventsState(token: self.name, appID: appId)
+  lazy var fullState = _AppEventsState(token: self.name, appID: appId)
 
   override func setUp() {
     super.setUp()
 
     setUpFixtures()
-    AppEventsState.eventProcessors = [eventsProcessor]
+    _AppEventsState.eventProcessors = [eventsProcessor]
   }
 
   func setUpFixtures(
@@ -80,79 +80,79 @@ final class AppEventsStateTests: XCTestCase {
 
   func testCreatingWithNilTokenNilAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: nil, appID: nil),
+      _AppEventsState(token: nil, appID: nil),
       "Should not create app events state with missing token and app id but you can"
     )
   }
 
   func testCreatingWithNilTokenInvalidAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: nil, appID: ""),
+      _AppEventsState(token: nil, appID: ""),
       "Should not create app events state with missing token and empty app id but you can"
     )
     XCTAssertNotNil(
-      AppEventsState(token: nil, appID: "  "),
+      _AppEventsState(token: nil, appID: "  "),
       "Should not create app events state with missing token and whitespace only app id but you can"
     )
   }
 
   func testCreatingWithNilTokenValidAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: nil, appID: appId),
+      _AppEventsState(token: nil, appID: appId),
       "Should not create app events state with missing token and valid app id but you can"
     )
   }
 
   func testCreatingWithInvalidTokenNilAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: "", appID: nil),
+      _AppEventsState(token: "", appID: nil),
       "Should not create app events state with empty token and missing app id but you can"
     )
     XCTAssertNotNil(
-      AppEventsState(token: "  ", appID: nil),
+      _AppEventsState(token: "  ", appID: nil),
       "Should not create app events state with whitespace only token and missing app id but you can"
     )
   }
 
   func testCreatingWithInvalidTokenInvalidAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: "", appID: ""),
+      _AppEventsState(token: "", appID: ""),
       "Should not create app events state with invalid token and invalid app id but you can"
     )
   }
 
   func testCreatingWithInvalidTokenValidAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: "", appID: appId),
+      _AppEventsState(token: "", appID: appId),
       "Should not create app events state with empty token and valid app id but you can"
     )
     XCTAssertNotNil(
-      AppEventsState(token: "   ", appID: appId),
+      _AppEventsState(token: "   ", appID: appId),
       "Should not create app events state with whitespace only token and valid app id but you can"
     )
   }
 
   func testCreatingWithValidTokenNilAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: name, appID: nil),
+      _AppEventsState(token: name, appID: nil),
       "Should not create app events state with valid token and missing app id but you can"
     )
   }
 
   func testCreatingWithValidTokenInvalidAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: name, appID: ""),
+      _AppEventsState(token: name, appID: ""),
       "Should not create app events state with valid token and empty app id but you can"
     )
     XCTAssertNotNil(
-      AppEventsState(token: name, appID: "   "),
+      _AppEventsState(token: name, appID: "   "),
       "Should not create app events state with valid token and whitespace only app id but you can"
     )
   }
 
   func testCreatingWithValidTokenValidAppID() {
     XCTAssertNotNil(
-      AppEventsState(token: name, appID: appId),
+      _AppEventsState(token: name, appID: appId),
       "Should be able to create app events state with valid token and app id"
     )
   }
@@ -286,7 +286,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testAddingEventsFromEmptyStateToEmptyState() {
-    let state2 = AppEventsState(token: name, appID: appId)
+    let state2 = _AppEventsState(token: name, appID: appId)
     state.addEvents(fromAppEventState: state2)
     XCTAssertEqual(
       0,
@@ -315,7 +315,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testAddEventsFromEmptyStateToPartiallyFilledState() {
-    let emptyState = AppEventsState(token: name, appID: appId)
+    let emptyState = _AppEventsState(token: name, appID: appId)
     state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
     state.addEvents(fromAppEventState: emptyState)
 
@@ -374,7 +374,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testAddEventsFromFullStateToFullState() {
-    let otherFullState = AppEventsState(token: name, appID: appId)
+    let otherFullState = _AppEventsState(token: name, appID: appId)
 
     for _ in 0 ..< (appEventsStateMaxEvents * 2) {
       otherFullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
@@ -415,7 +415,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testCompatibilityWithMatchingTokenMatchingAppID() {
-    let state2 = AppEventsState(token: name, appID: appId)
+    let state2 = _AppEventsState(token: name, appID: appId)
     XCTAssertTrue(
       state.is(compatibleWith: state2),
       "States with matching tokens and matching app ids should be compatible"
@@ -423,7 +423,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testMatchingTokenNonMatchingAppID() {
-    let state2 = AppEventsState(token: name, appID: name)
+    let state2 = _AppEventsState(token: name, appID: name)
     XCTAssertFalse(
       state.is(compatibleWith: state2),
       "States with matching tokens and non-matching app ids should not be compatible"
@@ -431,7 +431,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testNonMatchingTokenMatchingAppID() {
-    let state2 = AppEventsState(token: appId, appID: appId)
+    let state2 = _AppEventsState(token: appId, appID: appId)
     XCTAssertFalse(
       state.is(compatibleWith: state2),
       "States with matching non-matching tokens and matching app ids should not be compatible"
@@ -439,7 +439,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testNonMatchingTokenNonMatchingAppID() {
-    let state2 = AppEventsState(token: appId, appID: name)
+    let state2 = _AppEventsState(token: appId, appID: name)
     XCTAssertFalse(
       state.is(compatibleWith: state2),
       "States with matching non-matching tokens and non matching app ids should not be compatible"
@@ -447,8 +447,8 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testNilTokensMatchingAppID() {
-    let state1 = AppEventsState(token: nil, appID: name)
-    let state2 = AppEventsState(token: nil, appID: name)
+    let state1 = _AppEventsState(token: nil, appID: name)
+    let state2 = _AppEventsState(token: nil, appID: name)
     XCTAssertTrue(
       state1.is(compatibleWith: state2),
       "States with nil tokens and matching app ids should be compatible"
@@ -456,8 +456,8 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testNilTokensNonMatchingAppID() {
-    let state1 = AppEventsState(token: nil, appID: appId)
-    let state2 = AppEventsState(token: nil, appID: name)
+    let state1 = _AppEventsState(token: nil, appID: appId)
+    let state2 = _AppEventsState(token: nil, appID: name)
     XCTAssertFalse(
       state1.is(compatibleWith: state2),
       "States with nil tokens and matching app ids should be compatible"

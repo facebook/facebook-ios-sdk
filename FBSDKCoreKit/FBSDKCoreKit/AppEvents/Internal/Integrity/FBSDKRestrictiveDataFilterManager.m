@@ -11,8 +11,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKServerConfigurationManager.h"
-
 @interface FBSDKRestrictiveEventFilter : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;

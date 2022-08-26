@@ -27,7 +27,7 @@ final class BridgeAPIRequestTests: XCTestCase {
     internalUtility = TestInternalUtility()
     settings = TestSettings()
 
-    BridgeAPIRequest.configure(
+    _BridgeAPIRequest.configure(
       internalURLOpener: internalURLOpener,
       internalUtility: internalUtility,
       settings: settings
@@ -35,7 +35,7 @@ final class BridgeAPIRequestTests: XCTestCase {
   }
 
   override func tearDown() {
-    BridgeAPIRequest.resetClassDependencies()
+    _BridgeAPIRequest.resetClassDependencies()
 
     internalURLOpener = nil
     internalUtility = nil
@@ -47,8 +47,8 @@ final class BridgeAPIRequestTests: XCTestCase {
   private func makeRequest(
     protocolType: FBSDKBridgeAPIProtocolType = .web,
     scheme: URLScheme = .https
-  ) -> BridgeAPIRequest? {
-    BridgeAPIRequest(
+  ) -> _BridgeAPIRequest? {
+    _BridgeAPIRequest(
       protocolType: protocolType,
       scheme: scheme,
       methodName: "methodName",
@@ -58,18 +58,18 @@ final class BridgeAPIRequestTests: XCTestCase {
   }
 
   func testDefaultClassDependencies() throws {
-    BridgeAPIRequest.resetClassDependencies()
+    _BridgeAPIRequest.resetClassDependencies()
     _ = makeRequest()
 
-    XCTAssertNil(BridgeAPIRequest.settings, "Should not have a default settings")
-    XCTAssertNil(BridgeAPIRequest.internalUtility, "Should not have a default internal utility")
-    XCTAssertNil(BridgeAPIRequest.internalURLOpener, "Should not have a default internal url opener")
+    XCTAssertNil(_BridgeAPIRequest.settings, "Should not have a default settings")
+    XCTAssertNil(_BridgeAPIRequest.internalUtility, "Should not have a default internal utility")
+    XCTAssertNil(_BridgeAPIRequest.internalURLOpener, "Should not have a default internal url opener")
   }
 
   func testRequestProtocolConformance() {
     XCTAssertTrue(
-      (BridgeAPIRequest.self as Any) is BridgeAPIRequestProtocol.Type,
-      "BridgeAPIRequest should conform to the expected protocol"
+      (_BridgeAPIRequest.self as Any) is BridgeAPIRequestProtocol.Type,
+      "_BridgeAPIRequest should conform to the expected protocol"
     )
   }
 
