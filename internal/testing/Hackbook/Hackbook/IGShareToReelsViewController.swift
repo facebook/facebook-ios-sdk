@@ -8,8 +8,8 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
 
   // This is the url scheme that third party app will call
   private let urlScheme = "instagram-reels://share"
-  // This is the allowlisted appID for this feature
-  private let appID = "830547164036012"
+  // This is the Hackbook Internal appID
+  private let appID = "421415891237674"
 
   override func viewDidLoad() {
     super.viewDidLoad()
