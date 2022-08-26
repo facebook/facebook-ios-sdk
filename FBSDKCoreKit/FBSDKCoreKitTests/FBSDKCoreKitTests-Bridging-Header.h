@@ -16,7 +16,6 @@
 #import "XCTestCase+Extensions.h"
 
 #import "AppEventsATEPublisher+Testing.h"
-#import "ApplicationDelegate+Testing.h"
 #import "BackgroundEventLogger+Testing.h"
 #import "CodelessIndexer+Testing.h"
 #import "FBAEMReporter+Testing.h"
