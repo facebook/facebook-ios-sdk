@@ -30,6 +30,8 @@ final class AuthenticationDialogPresenter: AuthenticationDialogPresenting {
         break
       case .failure:
         dependencies.authenticationSessionStateStore.authenticationSessionState = .canceled
+      case .cancel:
+        dependencies.authenticationSessionStateStore.authenticationSessionState = .canceled
       }
 
       completion(result)

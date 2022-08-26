@@ -8,8 +8,14 @@
 
 import Foundation
 
+enum CompletionLoginResult {
+  case cancel
+  case success(URL)
+  case failure(Error)
+}
+
 protocol AuthenticationDialogPresenting {
-  typealias CompletionHandler = (Result<URL, Error>) -> Void
+  typealias CompletionHandler = (CompletionLoginResult) -> Void
 
   func presentAuthenticationDialog(
     url: URL,

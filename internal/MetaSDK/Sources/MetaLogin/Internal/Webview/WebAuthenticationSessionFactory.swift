@@ -18,8 +18,12 @@ struct WebAuthenticationSessionFactory: WebAuthenticationSessionCreating {
     completionHandler: @escaping AuthenticationDialogPresenting.CompletionHandler
   ) -> WebAuthenticationSession {
     let handler: (URL?, Error?) -> Void = { potentialURL, potentialError in
-      if let error = potentialError {
-        completionHandler(.failure(error))
+      if let error = potentialError as? ASWebAuthenticationSessionError {
+        if error.code == ASWebAuthenticationSessionError.canceledLogin {
+          completionHandler(.cancel)
+        } else {
+          completionHandler(.failure(error))
+        }
       } else if let url = potentialURL {
         completionHandler(.success(url))
       } else {

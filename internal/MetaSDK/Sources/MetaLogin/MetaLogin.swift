@@ -91,6 +91,8 @@ public struct MetaLogin {
         completeLogin(url: url, completion: completion)
       case let .failure(error):
         return completion(.failure(error))
+      case .cancel:
+        return completion(.cancel)
       }
     }
   }

@@ -10,6 +10,22 @@
 import AuthenticationServices
 import XCTest
 
+fileprivate extension CompletionLoginResult {
+  func getURL() -> URL? {
+    if case let .success(url) = self {
+      return url
+    }
+    return nil
+  }
+
+  func isCancellation() -> Bool {
+    if case .cancel = self {
+      return true
+    }
+    return false
+  }
+}
+
 final class AuthenticationDialogPresenterTests: XCTestCase {
   var presenter: AuthenticationDialogPresenter!
   var webAuthSessionFactory: TestWebAuthenticationSessionFactory!
@@ -74,7 +90,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
   }
 
   func testOpenURLWithSessionSuccess() throws {
-    var capturedResult: Result<URL, Error>?
+    var capturedResult: CompletionLoginResult?
     presenter.presentAuthenticationDialog(
       url: sampleURL,
       callbackURLScheme: sampleCallbackURLScheme
@@ -95,8 +111,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
 
     let url = SampleURLs.loginRedirect(path: "#foo")
     webAuthSessionFactory.capturedCompletionHandler?(.success(url))
-    XCTAssertNotNil(capturedResult, "Should capture result at completion")
-    XCTAssertEqual(try capturedResult?.get(), url, "Should invoke the completion handler with the expected result")
+    XCTAssertEqual(capturedResult!.getURL(), url, "Should invoke the completion handler with the expected result")
 
     XCTAssertIdentical(
       authSession.presentationContextProvider,
@@ -112,27 +127,20 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
   }
 
   func testOpenURLWithCanceledSession() throws {
-    var capturedResult: Result<URL, Error>?
-    var capturedError: Error?
+    var capturedResult: CompletionLoginResult?
     presenter.presentAuthenticationDialog(
       url: sampleURL,
       callbackURLScheme: sampleCallbackURLScheme
     ) { result in
-      capturedResult = result
-      if case let .failure(error) = result {
-        capturedError = error
+      if case .cancel = result {
+        capturedResult = result
       }
     }
 
-    let error = ASWebAuthenticationSessionError(.canceledLogin, userInfo: [:])
-    webAuthSessionFactory.capturedCompletionHandler?(.failure(error))
-    XCTAssertNotNil(capturedResult, "Should capture result at completion")
-
-    let unwrappedError = try XCTUnwrap(capturedError, "Should capture error at completion")
-    XCTAssertIdentical(
-      unwrappedError as AnyObject,
-      error as AnyObject,
-      "Authentication session error should be set to assigned value"
+    webAuthSessionFactory.capturedCompletionHandler?(.cancel)
+    XCTAssertTrue(
+      capturedResult!.isCancellation(),
+      "The captured result should indicate a cancellation"
     )
     XCTAssertEqual(
       authenticationSessionStateStore.authenticationSessionState,
@@ -142,7 +150,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
   }
 
   func testOpenURLWithPresentationContextNotProvided() throws {
-    var capturedResult: Result<URL, Error>?
+    var capturedResult: CompletionLoginResult?
     var capturedError: Error?
     presenter.presentAuthenticationDialog(
       url: sampleURL,
@@ -172,7 +180,7 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
   }
 
   func testOpenURLWithPresentationContextInvalid() throws {
-    var capturedResult: Result<URL, Error>?
+    var capturedResult: CompletionLoginResult?
     var capturedError: Error?
     presenter.presentAuthenticationDialog(
       url: sampleURL,

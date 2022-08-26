@@ -119,6 +119,20 @@ final class MetaLoginTests: XCTestCase {
     )
   }
 
+  func testLoginWithCancelledLoginSession() throws {
+    var capturedResult: LoginResult?
+    metaLogin.logIn(configuration: loginConfiguration) { result in
+      if case .cancel = result {
+        capturedResult = result
+      } else {
+        XCTFail("Should return cancel result when login is cancelled")
+      }
+    }
+
+    presenter.capturedCompletion?(.cancel)
+    XCTAssertNotNil(capturedResult, "The captured result should indicate a cancellation")
+  }
+
   func testLoginWithOpenURLError() throws {
     var capturedError: Error?
     metaLogin.logIn(configuration: loginConfiguration) { result in
