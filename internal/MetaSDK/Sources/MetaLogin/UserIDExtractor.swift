@@ -16,12 +16,13 @@ struct UserIDExtractor {
     if signatureAndPayload.count == 2 {
       var payload = signatureAndPayload[1] as String
       let remainder = payload.count % 4
-      payload = payload.padding(
-        toLength: payload.count + 4 - remainder,
-        withPad: "=",
-        startingAt: 0
-      )
-
+      if remainder > 0 {
+        payload = payload.padding(
+          toLength: payload.count + 4 - remainder,
+          withPad: "=",
+          startingAt: 0
+        )
+      }
       if let data = Data(base64Encoded: payload, options: .ignoreUnknownCharacters),
          let dictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
         userID = dictionary["user_id"] as? String ?? ""
