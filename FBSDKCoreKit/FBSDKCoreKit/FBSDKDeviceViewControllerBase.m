@@ -11,8 +11,8 @@
 #import "FBSDKDeviceViewControllerBase+Internal.h"
 
 #import "FBSDKModalFormPresentationController.h"
-#import "FBSDKServerConfigurationProvider.h"
 #import "FBSDKSmartDeviceDialogView.h"
+#import "FBSDKServerConfigurationManager.h"
 
 static const NSTimeInterval kAnimationDurationTimeInterval = .5;
 
@@ -35,8 +35,7 @@ Subclasses should generally:
 - (void)loadView
 {
   CGRect frame = UIScreen.mainScreen.bounds;
-  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
-  NSUInteger cachedSmartLoginOptions = provider.cachedSmartLoginOptions;
+  NSUInteger cachedSmartLoginOptions = FBSDKServerConfigurationManager.shared.cachedServerConfiguration.smartLoginOptions;
   NSUInteger smartLoginEnabledOption = 1 << 0;
   BOOL smartLoginEnabled = cachedSmartLoginOptions & smartLoginEnabledOption;
   FBSDKDeviceDialogView *deviceView =

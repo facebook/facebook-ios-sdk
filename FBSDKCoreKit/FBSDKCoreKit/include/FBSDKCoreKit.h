@@ -155,7 +155,6 @@
 #import <FBSDKCoreKit/FBSDKRulesFromKeyProvider.h>
 #import <FBSDKCoreKit/FBSDKServerConfiguration.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationManager.h>
-#import <FBSDKCoreKit/FBSDKServerConfigurationProvider.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationProviding.h>
 #import <FBSDKCoreKit/FBSDKSettings.h>
 #import <FBSDKCoreKit/FBSDKSettingsLogging.h>

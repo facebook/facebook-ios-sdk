@@ -629,7 +629,9 @@ public final class LoginManager: NSObject {
     let urlScheme = "fb\(self.settings?.appID ?? "")\(self.settings?.appURLSchemeSuffix ?? "")"
     logger?.willAttemptAppSwitchingBehavior(urlScheme: urlScheme)
     let serverConfigurationProvider = ServerConfigurationProvider()
-    let shouldUseSafariViewController = serverConfigurationProvider.useSafariViewController(forDialogName: "login")
+    let shouldUseSafariViewController = serverConfigurationProvider.shouldUseSafariViewController(
+      forDialogName: "login"
+    )
     let authenticationMethod = shouldUseSafariViewController
       ? LoggerAuthenticationMethod.safariViewController
       : LoggerAuthenticationMethod.browser
