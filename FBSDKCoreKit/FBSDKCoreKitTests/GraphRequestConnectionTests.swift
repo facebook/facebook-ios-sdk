@@ -75,7 +75,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     errorFactory = TestErrorFactory()
     piggybackManager = TestGraphRequestPiggybackManager()
     GraphRequestConnection.configure(
-      withURLSessionProxyFactory: sessionFactory,
+      urlSessionProxyFactory: sessionFactory,
       errorConfigurationProvider: errorConfigurationProvider,
       piggybackManager: piggybackManager,
       settings: settings,

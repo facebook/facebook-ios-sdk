@@ -12,10 +12,10 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKSafeCast.h"
 #import "FBSDKUtility.h"

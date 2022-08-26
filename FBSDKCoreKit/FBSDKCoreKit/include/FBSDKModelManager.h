@@ -12,11 +12,15 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
 
-#import "FBSDKIntegrityProcessing.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ModelManager)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ModelManager)
 @interface FBSDKModelManager : NSObject <FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider, FBSDKIntegrityProcessing, FBSDKRulesFromKeyProvider>
 
 @property (class, nonnull, readonly) FBSDKModelManager *shared;
@@ -29,6 +33,7 @@ NS_SWIFT_NAME(ModelManager)
 - (nullable NSArray<NSNumber *> *)getThresholdsForKey:(NSString *)useCase;
 - (BOOL)processIntegrity:(nullable NSString *)param;
 - (NSString *)processSuggestedEvents:(NSString *)textFeature denseData:(nullable float *)denseData;
+
 - (void)configureWithFeatureChecker:(id<FBSDKFeatureChecking>)featureChecker
                 graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
@@ -37,7 +42,8 @@ NS_SWIFT_NAME(ModelManager)
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
              suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
-                   featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor;
+                   featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
+NS_SWIFT_NAME(configure(featureChecker:graphRequestFactory:fileManager:store:settings:dataExtractor:gateKeeperManager:suggestedEventsIndexer:featureExtractor:));
 
 @end
 

@@ -14,6 +14,10 @@
 @class FBSDKLocation;
 @class FBSDKProfile;
 @class FBSDKUserAgeRange;
+@protocol FBSDKDataPersisting;
+@protocol FBSDKNotificationDelivering;
+@protocol FBSDKURLHosting;
+@protocol _FBSDKNotificationPosting;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -294,6 +298,21 @@ NS_SWIFT_NAME(imageURL(forMode:size:));
                     pictureMode:(FBSDKProfilePictureMode)mode
                            size:(CGSize)size
 NS_SWIFT_NAME(imageURL(profileID:pictureMode:size:));
+// UNCRUSTIFY_FORMAT_ON
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithDataStore:(id<FBSDKDataPersisting>)dataStore
+           accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+            notificationCenter:(id<_FBSDKNotificationPosting, FBSDKNotificationDelivering>)notificationCenter
+                      settings:(id<FBSDKSettings>)settings
+                     urlHoster:(id<FBSDKURLHosting>)urlHoster
+NS_SWIFT_NAME(configure(dataStore:accessTokenProvider:notificationCenter:settings:urlHoster:));
 // UNCRUSTIFY_FORMAT_ON
 
 @end

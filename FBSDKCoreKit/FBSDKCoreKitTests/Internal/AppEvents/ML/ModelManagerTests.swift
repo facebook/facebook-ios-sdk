@@ -13,7 +13,7 @@ import XCTest
 
 final class ModelManagerTests: XCTestCase {
 
-  let manager = ModelManager.shared
+  let manager = _ModelManager.shared
   let featureChecker = TestFeatureManager()
   let factory = TestGraphRequestFactory()
   let modelDirectoryPath = "\(NSTemporaryDirectory())models"
@@ -30,7 +30,7 @@ final class ModelManagerTests: XCTestCase {
   override class func setUp() {
     super.setUp()
 
-    ModelManager.reset()
+    _ModelManager.reset()
     TestGateKeeperManager.reset()
   }
 
@@ -52,7 +52,7 @@ final class ModelManagerTests: XCTestCase {
   }
 
   override func tearDown() {
-    ModelManager.reset()
+    _ModelManager.reset()
     TestFileDataExtractor.reset()
     TestGateKeeperManager.reset()
     TestFeatureExtractor.reset()
@@ -195,7 +195,7 @@ final class ModelManagerTests: XCTestCase {
   // MARK: - Getting Rules
 
   func testGettingRulesForKeyWithMissingModelInfo() {
-    ModelManager.directoryPath = "foo"
+    _ModelManager.directoryPath = "foo"
 
     XCTAssertNil(
       manager.getRulesForKey(RawRemoteModelResponse.UseCase.detection),
@@ -204,8 +204,8 @@ final class ModelManagerTests: XCTestCase {
   }
 
   func testGettingRulesForKeyWithMismatchedKey() {
-    ModelManager.directoryPath = "foo"
-    ModelManager.setModelInfo(RemoteModelResponse.valid)
+    _ModelManager.directoryPath = "foo"
+    _ModelManager.setModelInfo(RemoteModelResponse.valid)
 
     XCTAssertNil(
       manager.getRulesForKey(RawRemoteModelResponse.UseCase.missing),
@@ -214,8 +214,8 @@ final class ModelManagerTests: XCTestCase {
   }
 
   func testGettingRulesForKeyWithMatchingKeyWithMissingData() throws {
-    ModelManager.directoryPath = "foo"
-    ModelManager.setModelInfo(RemoteModelResponse.valid)
+    _ModelManager.directoryPath = "foo"
+    _ModelManager.setModelInfo(RemoteModelResponse.valid)
 
     XCTAssertNil(
       manager.getRulesForKey(RawRemoteModelResponse.UseCase.detection),
@@ -224,8 +224,8 @@ final class ModelManagerTests: XCTestCase {
   }
 
   func testGettingRulesForKeyWithMatchingKeyWithInvalidData() throws {
-    ModelManager.directoryPath = "foo"
-    ModelManager.setModelInfo(RemoteModelResponse.valid)
+    _ModelManager.directoryPath = "foo"
+    _ModelManager.setModelInfo(RemoteModelResponse.valid)
 
     TestFileDataExtractor.stubbedData = name.data(using: .utf8)
 
@@ -242,8 +242,8 @@ final class ModelManagerTests: XCTestCase {
   }
 
   func testGettingRulesForKeyWithMatchingKeyWithValidData() throws {
-    ModelManager.directoryPath = "foo"
-    ModelManager.setModelInfo(RemoteModelResponse.valid)
+    _ModelManager.directoryPath = "foo"
+    _ModelManager.setModelInfo(RemoteModelResponse.valid)
 
     TestFileDataExtractor.stubbedData = try JSONSerialization.data(
       withJSONObject: RawRemoteModelResponse.detectionAsset,
@@ -266,14 +266,14 @@ final class ModelManagerTests: XCTestCase {
 
   func testIntegrityMapping() {
     XCTAssertEqual(
-      ModelManager.getIntegrityMapping(),
+      _ModelManager.getIntegrityMapping(),
       ["none", "address", "health"]
     )
   }
 
   func testSuggestedEventsMapping() {
     XCTAssertEqual(
-      ModelManager.getSuggestedEventsMapping(),
+      _ModelManager.getSuggestedEventsMapping(),
       [
         "other",
         "fb_mobile_complete_registration",

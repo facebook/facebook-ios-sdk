@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsDeviceInfo.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
@@ -18,8 +19,6 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility+Internal.h"

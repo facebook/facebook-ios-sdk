@@ -65,7 +65,7 @@ final class InternalUtilityTests: XCTestCase {
 
   func configureInternalUtility() {
     internalUtility.configure(
-      withInfoDictionaryProvider: bundle,
+      infoDictionaryProvider: bundle,
       loggerFactory: loggerFactory,
       settings: settings,
       errorFactory: errorFactory

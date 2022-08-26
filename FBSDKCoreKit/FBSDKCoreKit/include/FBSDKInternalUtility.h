@@ -18,6 +18,11 @@
  #import <FBSDKCoreKit/FBSDKURLHosting.h>
 #endif
 
+@protocol FBSDKErrorCreating;
+@protocol FBSDKInfoDictionaryProviding;
+@protocol FBSDKSettings;
+@protocol __FBSDKLoggerCreating;
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(InternalUtility)
@@ -77,6 +82,18 @@ NS_SWIFT_NAME(InternalUtility)
 @property (nonatomic, readonly, assign) BOOL isMessengerAppInstalled;
 
 - (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
+                                   settings:(id<FBSDKSettings>)settings
+                               errorFactory:(id<FBSDKErrorCreating>)errorFactory
+NS_SWIFT_NAME(configure(infoDictionaryProvider:loggerFactory:settings:errorFactory:));
 
 @end
 

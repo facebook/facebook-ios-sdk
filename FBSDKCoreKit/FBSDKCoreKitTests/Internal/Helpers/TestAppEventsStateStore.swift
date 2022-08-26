@@ -20,7 +20,7 @@ final class TestAppEventsStateStore: NSObject, _AppEventsStatePersisting {
     capturedPersistedState = []
   }
 
-  func persistAppEventsData(_ appEventsState: AppEventsState) {
+  func persistAppEventsData(_ appEventsState: _AppEventsState) {
     capturedPersistedState.append(appEventsState)
   }
 

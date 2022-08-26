@@ -6,13 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKEventsProcessing.h>
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 // this type is not thread safe.
-NS_SWIFT_NAME(AppEventsState)
+NS_SWIFT_NAME(_AppEventsState)
 @interface FBSDKAppEventsState : NSObject <NSCopying, NSSecureCoding>
 
 @property (class, nullable, nonatomic) NSArray<id<FBSDKEventsProcessing>> *eventProcessors;

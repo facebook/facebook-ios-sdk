@@ -147,7 +147,7 @@ final class ApplicationDelegateTests: XCTestCase {
       "An application delegate should be created with the provided components"
     )
     XCTAssertIdentical(
-      delegate.configurator,
+      delegate.configurator as AnyObject,
       configurator,
       "An application delegate should be created with the provided configurator"
     )

@@ -6,15 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <Foundation/Foundation.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AppEventsUtilityProtocol)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AppEventsUtilityProtocol)
 @protocol FBSDKAppEventsUtility
 
 @property (nonatomic, readonly) NSTimeInterval unixTimeNow;

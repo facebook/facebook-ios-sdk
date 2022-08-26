@@ -8,11 +8,11 @@
 
 #import "FBSDKGraphRequestPiggybackManager.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKGraphRequestMetadata.h"
-#import "FBSDKServerConfigurationManager.h"
 
 @implementation FBSDKGraphRequestPiggybackManager
 

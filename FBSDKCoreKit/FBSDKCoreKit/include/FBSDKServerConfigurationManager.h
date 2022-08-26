@@ -9,15 +9,19 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
-#import "FBSDKServerConfiguration.h"
-
 #define FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT (60 * 60)
 
 @protocol FBSDKGraphRequestFactory;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ServerConfigurationManager)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ServerConfigurationManager)
 @interface FBSDKServerConfigurationManager : NSObject <FBSDKServerConfigurationProviding>
 
 @property (class, readonly) FBSDKServerConfigurationManager *shared;

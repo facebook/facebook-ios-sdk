@@ -33,7 +33,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
     sessionDataTaskProvider.stubbedDataTask = sessionDataTask
 
     _AuthenticationStatusUtility.configure(
-      withProfileSetter: TestProfileProvider.self,
+      profileSetter: TestProfileProvider.self,
       sessionDataTaskProvider: sessionDataTaskProvider,
       accessTokenWallet: TestAccessTokenWallet.self,
       authenticationTokenWallet: TestAuthenticationTokenWallet.self

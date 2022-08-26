@@ -94,7 +94,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     bridge = BridgeAPIProtocolWebV2()
 
     XCTAssertTrue(
-      bridge.serverConfigurationProvider is ServerConfigurationManager,
+      bridge.serverConfigurationProvider is _ServerConfigurationManager,
       "Should use the expected default server configuration provider"
     )
     XCTAssertTrue(

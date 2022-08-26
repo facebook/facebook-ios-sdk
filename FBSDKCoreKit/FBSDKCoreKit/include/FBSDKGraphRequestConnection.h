@@ -11,6 +11,18 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
 
+@protocol FBSDKURLSessionProxyProviding;
+@protocol FBSDKErrorConfigurationProviding;
+@protocol FBSDKGraphRequestPiggybackManaging;
+@protocol FBSDKSettings;
+@protocol FBSDKGraphRequestConnectionFactory;
+@protocol FBSDKEventLogging;
+@protocol FBSDKOperatingSystemVersionComparing;
+@protocol FBSDKMacCatalystDetermining;
+@protocol FBSDKAccessTokenProviding;
+@protocol FBSDKErrorCreating;
+@protocol FBSDKAuthenticationTokenProviding;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -167,6 +179,33 @@ NS_SWIFT_NAME(GraphRequestConnection)
  @param version   This is a string in the form @"v2.0" which will be used for the version part of an API path
  */
 - (void)overrideGraphAPIVersion:(NSString *)version;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)setCanMakeRequests;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
+                 errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                           piggybackManager:(nonnull id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
+                                   settings:(nonnull id<FBSDKSettings>)settings
+              graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
+                                eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+             operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                    macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                        accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
+                               errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
+                authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider
+NS_SWIFT_NAME(configure(urlSessionProxyFactory:errorConfigurationProvider:piggybackManager:settings:graphRequestConnectionFactory:eventLogger:operatingSystemVersionComparer:macCatalystDeterminator:accessTokenProvider:errorFactory:authenticationTokenProvider:));
 
 @end
 

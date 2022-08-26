@@ -197,20 +197,20 @@ final class FeatureExtractorTests: XCTestCase {
         with: data as Data
       ) as! [String: Any] // swiftlint:disable:this force_cast
     }
-    FeatureExtractor.configureWithRules(modelManager)
+    _FeatureExtractor.configure(rulesFromKeyProvider: modelManager)
     modelManager.rulesForKey = rules
 
-    FeatureExtractor.loadRules(forKey: "MTML")
+    _FeatureExtractor.loadRules(forKey: "MTML")
   }
 
   override func tearDown() {
     super.tearDown()
 
-    FeatureExtractor.reset()
+    _FeatureExtractor.reset()
   }
 
   func testGetDenseFeature() {
-    let denseFeature = FeatureExtractor.getDenseFeatures(
+    let denseFeature = _FeatureExtractor.getDenseFeatures(
       viewHierarchy
     )! // swiftlint:disable:this force_unwrapping
 
@@ -226,7 +226,7 @@ final class FeatureExtractorTests: XCTestCase {
 
   func testGetDenseFeatureParsing() {
     for _ in 0 ..< 100 {
-      FeatureExtractor.getDenseFeatures(
+      _FeatureExtractor.getDenseFeatures(
         Fuzzer.randomize(json: viewHierarchy) as! [String: Any] // swiftlint:disable:this force_cast
       )
     }
@@ -234,7 +234,7 @@ final class FeatureExtractorTests: XCTestCase {
 
   func testGetTextFeature() {
     XCTAssertEqual(
-      FeatureExtractor.getTextFeature(
+      _FeatureExtractor.getTextFeature(
         "Buy Buy Buy",
         withScreenName: "BuyPage"
       ),
@@ -247,7 +247,7 @@ final class FeatureExtractorTests: XCTestCase {
     let viewTree = viewHierarchy["view"] as! [[String: Any]] // swiftlint:disable:this force_cast
     let siblings: NSMutableArray = []
     let node = (viewTree[0] as NSDictionary).mutableCopy() as! NSMutableDictionary // swiftlint:disable:this force_cast
-    FeatureExtractor.pruneTree(node, siblings: siblings)
+    _FeatureExtractor.pruneTree(node, siblings: siblings)
 
     XCTAssertEqual(self.siblings as NSArray, siblings as NSArray)
   }
@@ -265,7 +265,7 @@ final class FeatureExtractorTests: XCTestCase {
     let interactedNode = (self.interactedNode as NSDictionary).mutableCopy() as! NSMutableDictionary
     let siblings = (self.siblings as NSArray).mutableCopy() as! NSMutableArray // swiftlint:disable:this force_cast
 
-    let nonParseFeature = FeatureExtractor.nonparseFeatures(
+    let nonParseFeature = _FeatureExtractor.nonparseFeatures(
       interactedNode,
       siblings: siblings,
       screenname: viewHierarchy["screenname"] as! String, // swiftlint:disable:this force_cast
@@ -285,7 +285,7 @@ final class FeatureExtractorTests: XCTestCase {
   func testParseFeature() {
     let viewTree = viewHierarchy["view"] as! [[String: Any]] // swiftlint:disable:this force_cast
     let node = (viewTree[0] as NSDictionary).mutableCopy() as! NSMutableDictionary // swiftlint:disable:this force_cast
-    let parseFeature = FeatureExtractor.parseFeatures(node)
+    let parseFeature = _FeatureExtractor.parseFeatures(node)
 
     var parseFeatureArray: [Int] = []
     for idx in 0 ..< 30 {
@@ -305,25 +305,25 @@ final class FeatureExtractorTests: XCTestCase {
       "text": "Coffee 5",
     ]
 
-    XCTAssertTrue(FeatureExtractor.isButton(interactedNode))
-    XCTAssertFalse(FeatureExtractor.isButton(labelNode))
+    XCTAssertTrue(_FeatureExtractor.isButton(interactedNode))
+    XCTAssertFalse(_FeatureExtractor.isButton(labelNode))
   }
 
   func testUpdateTextAndHint() {
     let buttonTextString = NSMutableString()
     let buttonHintString = NSMutableString()
 
-    FeatureExtractor.update(interactedNode, text: buttonTextString, hint: buttonHintString)
+    _FeatureExtractor.update(interactedNode, text: buttonTextString, hint: buttonHintString)
     XCTAssertEqual(buttonTextString, "")
     XCTAssertEqual(buttonHintString, "confirm order ")
   }
 
   func testFoundIndicators() {
-    let test1 = FeatureExtractor.foundIndicators(
+    let test1 = _FeatureExtractor.foundIndicators(
       ["phone", "tel"],
       inValues: ["your phone number", "111-111-1111"]
     )
-    let test2 = FeatureExtractor.foundIndicators(
+    let test2 = _FeatureExtractor.foundIndicators(
       ["phone", "tel"],
       inValues: ["your email", "test@fb.com"]
     )
@@ -333,8 +333,8 @@ final class FeatureExtractorTests: XCTestCase {
   }
 
   func testRegextMatch() {
-    XCTAssertEqual(FeatureExtractor.regextMatch("(?i)(sign in)|login|signIn", text: "click to sign in"), 1.0)
+    XCTAssertEqual(_FeatureExtractor.regextMatch("(?i)(sign in)|login|signIn", text: "click to sign in"), 1.0)
 
-    XCTAssertEqual(FeatureExtractor.regextMatch("(?i)(sign in)|login|signIn", text: "click to sign up"), 0.0)
+    XCTAssertEqual(_FeatureExtractor.regextMatch("(?i)(sign in)|login|signIn", text: "click to sign up"), 0.0)
   }
 }

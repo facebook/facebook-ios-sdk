@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsUtility.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKDynamicFrameworkResolving.h"
 
 NS_ASSUME_NONNULL_BEGIN

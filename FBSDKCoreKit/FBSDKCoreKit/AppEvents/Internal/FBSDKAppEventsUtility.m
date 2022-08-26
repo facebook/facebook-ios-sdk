@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsUtility.h"
-
 #import <AdSupport/AdSupport.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>

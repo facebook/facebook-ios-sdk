@@ -8,7 +8,7 @@
 
 #import "FBSDKErrorConfigurationProvider.h"
 
-#import "FBSDKServerConfigurationManager.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @implementation FBSDKErrorConfigurationProvider
 

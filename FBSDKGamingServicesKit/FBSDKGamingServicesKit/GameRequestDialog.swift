@@ -309,7 +309,7 @@ public final class GameRequestDialog: NSObject {
       return handleCompletion()
     }
 
-    let potentialRequest = BridgeAPIRequest(
+    let potentialRequest = _BridgeAPIRequest(
       protocolType: .web,
       scheme: .https,
       methodName: Self.appRequestMethodName,

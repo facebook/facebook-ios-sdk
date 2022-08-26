@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol FBSDKImpressionLoggerFactory;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -18,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 NS_SWIFT_NAME(ImpressionLoggingButton)
 @interface FBSDKImpressionLoggingButton : UIButton
+
++ (void)configureWithImpressionLoggerFactory:(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
+NS_SWIFT_NAME(configure(impressionLoggerFactory:));
+
 @end
 
 NS_ASSUME_NONNULL_END

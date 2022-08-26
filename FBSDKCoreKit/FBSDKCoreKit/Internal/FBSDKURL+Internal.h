@@ -19,14 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic, readonly) id<FBSDKAppLinkTargetCreating> appLinkTargetFactory;
 @property (class, nullable, nonatomic, readonly) id<FBSDKAppLinkEventPosting> appLinkEventPoster;
 
-// UNCRUSTIFY_FORMAT_OFF
-+ (void)configureWithSettings:(id<FBSDKSettings>)settings
-               appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
-         appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
-           appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
-NS_SWIFT_NAME(configure(settings:appLinkFactory:appLinkTargetFactory:appLinkEventPoster:));
-// UNCRUSTIFY_FORMAT_ON
-
 + (FBSDKURL *)URLForRenderBackToReferrerBarURL:(NSURL *)url;
 
 #if DEBUG

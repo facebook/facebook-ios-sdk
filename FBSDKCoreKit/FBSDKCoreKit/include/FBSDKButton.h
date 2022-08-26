@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
 
 @class FBSDKIcon;
+@protocol FBSDKEventLogging;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -75,6 +76,18 @@ NS_SWIFT_NAME(FBButton)
  */
 - (void)logTapEventWithEventName:(FBSDKAppEventName)eventName
                       parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)configureWithApplicationActivationNotifier:(id)applicationActivationNotifier
+                                       eventLogger:(id<FBSDKEventLogging>)eventLogger
+                               accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider
+NS_SWIFT_NAME(configure(applicationActivationNotifier:eventLogger:accessTokenProvider:));
+
 @end
 
 NS_ASSUME_NONNULL_END

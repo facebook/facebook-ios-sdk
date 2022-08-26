@@ -53,19 +53,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 #endif
 
 + (BOOL)canMakeRequests;
-+ (void)setCanMakeRequests;
-
-+ (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
-                 errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                           piggybackManager:(nonnull id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
-                                   settings:(nonnull id<FBSDKSettings>)settings
-              graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
-                                eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
-             operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                    macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
-                        accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                               errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
-                authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                                   timeout:(NSTimeInterval)timeout;

@@ -704,8 +704,8 @@ extension BridgeAPITests {
     canHandleBridgeApiResponse ? validBridgeResponseURL : sampleURL
   }
 
-  func makeSampleBridgeAPIRequest() -> BridgeAPIRequest {
-    BridgeAPIRequest(
+  func makeSampleBridgeAPIRequest() -> _BridgeAPIRequest {
+    _BridgeAPIRequest(
       protocolType: .web,
       scheme: .https,
       methodName: nil,

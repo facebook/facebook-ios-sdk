@@ -19,11 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKAppLinkEventPosting> appLinkEventPoster;
 @property (class, nullable, nonatomic) id<FBSDKAppLinkResolving> appLinkResolver;
 
-+ (void)configureWithSettings:(id<FBSDKSettings>)settings
-                    urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
-           appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
-              appLinkResolver:(id<FBSDKAppLinkResolving>)appLinkResolver;
-
 @end
 
 NS_ASSUME_NONNULL_END

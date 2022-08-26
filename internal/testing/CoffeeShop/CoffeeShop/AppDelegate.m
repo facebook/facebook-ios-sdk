@@ -12,12 +12,6 @@
 
 @import FBSDKCoreKit;
 
-@interface FBSDKCodelessIndexer
-
-+ (NSString *)currentViewTree;
-
-@end
-
 @implementation AppDelegate
 
 static NSString *lytroDebugMessages;

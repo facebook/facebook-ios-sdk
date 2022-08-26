@@ -22,6 +22,11 @@ NS_SWIFT_NAME(AEMReporter)
 @interface FBAEMReporter : NSObject
 
 /**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+
  Configure networker used for calling Facebook AEM Graph API endpoint
  Facebook App ID and SKAdNetwork reporter
 
@@ -35,9 +40,15 @@ NS_SWIFT_NAME(AEMReporter)
  */
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(nullable NSString *)appID
-                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter;
+                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+NS_SWIFT_NAME(configure(networker:appID:reporter:));
 
 /**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+
  Configure networker used for calling Facebook AEM Graph API endpoint
  Facebook App ID, SKAdNetwork reporter and Analytics App ID
 
@@ -53,7 +64,8 @@ NS_SWIFT_NAME(AEMReporter)
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
-                analyticsAppID:(nullable NSString *)analyticsAppID;
+                analyticsAppID:(nullable NSString *)analyticsAppID
+NS_SWIFT_NAME(configure(networker:appID:reporter:analyticsAppID:));
 
 /**
  Enable AEM reporting

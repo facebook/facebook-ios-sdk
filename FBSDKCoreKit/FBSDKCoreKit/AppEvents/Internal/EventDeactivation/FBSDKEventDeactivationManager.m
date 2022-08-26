@@ -8,9 +8,8 @@
 
 #import "FBSDKEventDeactivationManager.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKServerConfigurationManager.h"
 
 static NSString *const DEPRECATED_PARAM_KEY = @"deprecated_param";
 static NSString *const DEPRECATED_EVENT_KEY = @"is_deprecated_event";

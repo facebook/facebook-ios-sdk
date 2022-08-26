@@ -135,7 +135,7 @@ final class AppEventsTests: XCTestCase {
 
   func configureAppEvents() {
     appEvents.configure(
-      withGateKeeperManager: TestGateKeeperManager.self,
+      gateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       serverConfigurationProvider: serverConfigurationProvider,
       graphRequestFactory: graphRequestFactory,

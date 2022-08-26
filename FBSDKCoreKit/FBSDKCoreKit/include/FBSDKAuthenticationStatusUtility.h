@@ -38,7 +38,8 @@ NS_SWIFT_NAME(_AuthenticationStatusUtility)
 + (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
            sessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
                  accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
-         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationWallet;
+         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationWallet
+NS_SWIFT_NAME(configure(profileSetter:sessionDataTaskProvider:accessTokenWallet:authenticationTokenWallet:));
 
 /**
  Fetches the latest authentication status from server. This will invalidate

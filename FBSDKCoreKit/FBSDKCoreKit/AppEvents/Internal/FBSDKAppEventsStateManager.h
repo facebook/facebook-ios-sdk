@@ -9,8 +9,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
-#import "FBSDKAppEventsState.h"
-
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(AppEventsStateManager)

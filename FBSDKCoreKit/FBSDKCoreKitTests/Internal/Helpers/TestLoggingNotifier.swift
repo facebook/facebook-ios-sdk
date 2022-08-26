@@ -8,7 +8,7 @@
 
 import XCTest
 
-final class TestLoggingNotifier: LoggingNotifying {
+final class TestLoggingNotifier: _LoggingNotifying {
   var capturedMessage: String?
 
   func logAndNotify(_ message: String) {
