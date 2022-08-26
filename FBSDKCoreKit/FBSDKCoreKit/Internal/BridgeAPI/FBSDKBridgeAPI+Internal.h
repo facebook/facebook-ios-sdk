@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKBridgeAPI (Internal) <FBSDKApplicationObserving>
+@interface FBSDKBridgeAPI (Internal)
 
 @property (nonatomic, readonly) FBSDKAuthenticationCompletionHandler sessionCompletionHandler;
 

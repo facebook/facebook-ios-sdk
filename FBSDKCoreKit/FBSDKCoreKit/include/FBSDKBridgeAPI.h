@@ -38,7 +38,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
  @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(_BridgeAPI)
-@interface FBSDKBridgeAPI : NSObject <FBSDKBridgeAPIRequestOpening, FBSDKURLOpener>
+@interface FBSDKBridgeAPI : NSObject <FBSDKBridgeAPIRequestOpening, FBSDKURLOpener, FBSDKApplicationObserving>
 
 @property (class, nonatomic, readonly, strong) FBSDKBridgeAPI *sharedInstance
 NS_SWIFT_NAME(shared);

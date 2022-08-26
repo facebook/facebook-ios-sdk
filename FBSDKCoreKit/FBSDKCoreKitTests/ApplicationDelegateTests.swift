@@ -103,7 +103,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func resetTestDependencies() {
-    ApplicationDelegate.reset()
+    ApplicationDelegate.shared.resetHasInitializeBeenCalled()
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
     TestGateKeeperManager.reset()
@@ -285,7 +285,7 @@ final class ApplicationDelegateTests: XCTestCase {
 
   func testDidFinishLaunchingWithAutoLogEnabled() {
     settings.isAutoLogAppEventsEnabled = true
-    userDataStore.set(1, forKey: bitmaskKey)
+    userDataStore.set(0, forKey: bitmaskKey)
 
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
@@ -381,7 +381,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testSettingApplicationState() {
-    delegate.setApplicationState(.background)
+    delegate.applicationState = .background
     XCTAssertEqual(
       appEvents.capturedApplicationState,
       .background,
@@ -399,9 +399,10 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingSDKLogsAppEvent() {
-    userDataStore.setValue(1, forKey: bitmaskKey)
+    settings.isAutoLogAppEventsEnabled = true
+    userDataStore.setValue(0, forKey: bitmaskKey)
 
-    delegate._logSDKInitialize()
+    delegate.logSDKInitialize()
 
     XCTAssertEqual(
       appEvents.capturedEventName,

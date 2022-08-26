@@ -90,3 +90,13 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameUnlockedAchievement;
 
 /// Log this event when the user has spent app credits.  The valueToSum passed to logEvent should be the number of credits spent.
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSpentCredits;
+
+// MARK: - Internal
+
+/**
+ Internal value exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameInitializeSDK;

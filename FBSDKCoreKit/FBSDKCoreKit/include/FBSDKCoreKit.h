@@ -32,7 +32,6 @@
 #import <FBSDKCoreKit/FBSDKAppEventsStateProviding.h>
 #import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
 #import <FBSDKCoreKit/FBSDKApplicationActivating.h>
-#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
 #import <FBSDKCoreKit/FBSDKApplicationLifecycleNotifications.h>
 #import <FBSDKCoreKit/FBSDKApplicationLifecycleObserving.h>
 #import <FBSDKCoreKit/FBSDKApplicationObserving.h>
