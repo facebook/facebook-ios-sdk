@@ -13,7 +13,7 @@ import XCTest
 final class CoreKitConfiguratorTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var components: _CoreKitComponents!
-  var configurator: _CoreKitConfigurator!
+  var configurator: CoreKitConfigurator!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -22,7 +22,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     Self.resetTargets()
 
     components = TestCoreKitComponents.makeComponents()
-    configurator = _CoreKitConfigurator(components: components)
+    configurator = CoreKitConfigurator(components: components)
   }
 
   override func tearDown() {
