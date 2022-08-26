@@ -75,8 +75,6 @@
 #import <FBSDKCoreKit/FBSDKCodelessIndexing.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit/FBSDKCoreKitComponents.h>
-#import <FBSDKCoreKit/FBSDKCoreKitConfigurator.h>
-#import <FBSDKCoreKit/FBSDKCoreKitConfiguring.h>
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
 #import <FBSDKCoreKit/FBSDKCrashShield.h>
 #import <FBSDKCoreKit/FBSDKDeviceDialogView.h>

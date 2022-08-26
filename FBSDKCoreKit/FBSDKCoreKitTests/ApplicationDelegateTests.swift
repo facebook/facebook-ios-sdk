@@ -92,9 +92,9 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func makeDelegate(usesTestConfigurator: Bool = true) {
-    let configurator: _CoreKitConfiguring = usesTestConfigurator
+    let configurator: CoreKitConfiguring = usesTestConfigurator
       ? configurator
-      : _CoreKitConfigurator(components: components)
+      : CoreKitConfigurator(components: components)
 
     delegate = ApplicationDelegate(
       components: components,
@@ -120,7 +120,7 @@ final class ApplicationDelegateTests: XCTestCase {
     )
 
     let configurator = try XCTUnwrap(
-      delegate.configurator as? _CoreKitConfigurator,
+      delegate.configurator as? CoreKitConfigurator,
       "An application delegate should be created with a concrete configurator by default"
     )
     XCTAssertIdentical(

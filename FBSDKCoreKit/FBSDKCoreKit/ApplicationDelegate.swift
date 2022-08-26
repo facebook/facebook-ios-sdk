@@ -23,7 +23,7 @@ public final class ApplicationDelegate: NSObject {
 
   var applicationObservers = NSHashTable<FBSDKApplicationObserving>(options: .weakMemory)
   let components: _CoreKitComponents
-  let configurator: _CoreKitConfiguring
+  let configurator: CoreKitConfiguring
   var isAppLaunched = false
   private var hasInitializeBeenCalled = false
   var applicationState = UIApplication.State.active {
@@ -40,10 +40,10 @@ public final class ApplicationDelegate: NSObject {
 
   override convenience init() {
     let components = _CoreKitComponents.default
-    self.init(components: components, configurator: _CoreKitConfigurator(components: components))
+    self.init(components: components, configurator: CoreKitConfigurator(components: components))
   }
 
-  init(components: _CoreKitComponents, configurator: _CoreKitConfiguring) {
+  init(components: _CoreKitComponents, configurator: CoreKitConfiguring) {
     self.components = components
     self.configurator = configurator
     super.init()
