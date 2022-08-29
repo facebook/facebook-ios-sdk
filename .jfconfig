@@ -24,6 +24,7 @@
       "scheduleType": "diff",
       "capabilities" : {
         "type": "lego",
+        "unicastle_size": "I1_LARGE|I2_LARGE",
         "vcs": "facebook-ios-sdk-git",
       },
       "args": {
