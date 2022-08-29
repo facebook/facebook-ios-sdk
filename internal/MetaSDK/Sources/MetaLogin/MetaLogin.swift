@@ -107,11 +107,11 @@ public struct MetaLogin {
    @note This is only a client side logout. It will not log the user out of their Facebook/Meta account.
    */
   public func logOut() async {
-    guard var dependencies = try? getDependencies() else { return }
+    guard let dependencies = try? getDependencies() else { return }
 
     do {
       try await dependencies.userSessionStore.deleteUserSession()
-      dependencies.authenticationSessionStateStore.authenticationSessionState = nil
+      await dependencies.authenticationSessionStateStore.setAuthenticationSessionState(nil)
     } catch {
       // TODO: error logging
       print("Failed to logout with \(error)")

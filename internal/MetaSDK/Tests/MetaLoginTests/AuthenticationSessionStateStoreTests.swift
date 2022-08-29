@@ -12,12 +12,13 @@ import XCTest
 final class AuthenticationSessionStateStoreTests: XCTestCase {
   var authenticationStateMap: TestKeyedValueMap!
   var authenticationSessionStateStore: AuthenticationSessionStateStore!
-  override func setUp() {
-    super.setUp()
+
+  override func setUp() async throws {
+    try await super.setUp()
 
     authenticationSessionStateStore = AuthenticationSessionStateStore()
     authenticationStateMap = TestKeyedValueMap()
-    authenticationSessionStateStore.setDependencies(
+    await authenticationSessionStateStore.setDependencies(
       .init(
         authenticationSessionStateMap: authenticationStateMap
       )
@@ -31,8 +32,8 @@ final class AuthenticationSessionStateStoreTests: XCTestCase {
     super.tearDown()
   }
 
-  func testCustomDependencies() throws {
-    let dependencies = try authenticationSessionStateStore.getDependencies()
+  func testCustomDependencies() async throws {
+    let dependencies = try await authenticationSessionStateStore.getDependencies()
 
     XCTAssertIdentical(
       dependencies.authenticationSessionStateMap as AnyObject,
@@ -41,8 +42,8 @@ final class AuthenticationSessionStateStoreTests: XCTestCase {
     )
   }
 
-  func testSettingAuthenticationSessionState() throws {
-    authenticationSessionStateStore.authenticationSessionState = .performingLogin
+  func testSettingAuthenticationSessionState() async throws {
+    await authenticationSessionStateStore.setAuthenticationSessionState(.performingLogin)
     XCTAssertEqual(
       authenticationStateMap.capturedSetIntegerForKeyName,
       AuthenticationSessionStateStore.authenticationStateKey,
@@ -55,15 +56,15 @@ final class AuthenticationSessionStateStoreTests: XCTestCase {
     )
   }
 
-  func testGettingAuthenticationSessionState() throws {
-    let sessionState = authenticationSessionStateStore.authenticationSessionState
+  func testGettingAuthenticationSessionState() async throws {
+    let sessionState = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertEqual(authenticationStateMap.capturedIntegerKey, AuthenticationSessionStateStore.authenticationStateKey)
     XCTAssertNil(sessionState, "Session state should be none when no session state is stored")
   }
 
-  func testGettingAuthenticationSessionStateWithStoredValue() throws {
+  func testGettingAuthenticationSessionStateWithStoredValue() async throws {
     authenticationStateMap.stubbedIntegerForKey = 1
-    let sessionState = authenticationSessionStateStore.authenticationSessionState
+    let sessionState = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertEqual(
       sessionState,
       .performingLogin,
@@ -71,9 +72,9 @@ final class AuthenticationSessionStateStoreTests: XCTestCase {
     )
   }
 
-  func testGettingAuthenticationSessionStateWithInvalidValue() throws {
+  func testGettingAuthenticationSessionStateWithInvalidValue() async throws {
     authenticationStateMap.stubbedIntegerForKey = 3
-    let sessionState = authenticationSessionStateStore.authenticationSessionState
+    let sessionState = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertNil(
       sessionState,
       "Session state should be none for a value that doesn't match a session state"

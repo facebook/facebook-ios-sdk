@@ -22,16 +22,21 @@ final class AuthenticationDialogPresenter: AuthenticationDialogPresenting {
     callbackURLScheme: String,
     completion: @escaping CompletionHandler
   ) {
-    guard var dependencies = try? getDependencies() else { return }
+    guard let dependencies = try? getDependencies() else { return }
 
     let wrappedCompletion: CompletionHandler = { result in
       switch result {
       case .success:
         break
       case .failure:
-        dependencies.authenticationSessionStateStore.authenticationSessionState = .canceled
+        // TODO: replace completion handler to async method
+        Task {
+          await dependencies.authenticationSessionStateStore.setAuthenticationSessionState(.canceled)
+        }
       case .cancel:
-        dependencies.authenticationSessionStateStore.authenticationSessionState = .canceled
+        Task {
+          await dependencies.authenticationSessionStateStore.setAuthenticationSessionState(.canceled)
+        }
       }
 
       completion(result)
@@ -48,7 +53,9 @@ final class AuthenticationDialogPresenter: AuthenticationDialogPresenting {
     let sessionStarted = session.start()
 
     if sessionStarted {
-      dependencies.authenticationSessionStateStore.authenticationSessionState = .performingLogin
+      Task {
+        await dependencies.authenticationSessionStateStore.setAuthenticationSessionState(.performingLogin)
+      }
     }
   }
 }

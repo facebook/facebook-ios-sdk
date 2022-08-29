@@ -25,7 +25,8 @@ protocol WebAuthenticationSession {
 }
 
 protocol AuthenticationSessionStatePersisting {
-  var authenticationSessionState: AuthenticationSessionState? { get set }
+  func getAuthenticationSessionState() async -> AuthenticationSessionState?
+  func setAuthenticationSessionState(_ authenticationSessionState: AuthenticationSessionState?) async
 }
 
 extension ASWebAuthenticationSession: WebAuthenticationSession {}

@@ -8,7 +8,18 @@
 
 @testable import MetaLogin
 import Foundation
+import XCTest
 
 final class TestAuthenticationSessionStateStore: AuthenticationSessionStatePersisting {
-  var authenticationSessionState: AuthenticationSessionState?
+  var stubbedAuthenticationSessionState: AuthenticationSessionState?
+  var expectationForSetter: XCTestExpectation?
+
+  func getAuthenticationSessionState() async -> AuthenticationSessionState? {
+    return stubbedAuthenticationSessionState
+  }
+
+  func setAuthenticationSessionState(_ authenticationSessionState: AuthenticationSessionState?) async {
+    stubbedAuthenticationSessionState = authenticationSessionState
+    expectationForSetter?.fulfill()
+  }
 }

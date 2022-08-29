@@ -75,6 +75,7 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testSuccessfulLogin() throws {
+    let didReceiveResponse = expectation(description: #function)
     var capturedUserSession: UserSession?
     metaLogin.logIn(configuration: loginConfiguration) { result in
       if case let .success(result) = result {
@@ -82,11 +83,12 @@ final class MetaLoginTests: XCTestCase {
       } else {
         XCTFail("Should not fail with successful login")
       }
+      didReceiveResponse.fulfill()
     }
 
     let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
     presenter.capturedCompletion?(.success(sampleURL))
-
+    wait(for: [didReceiveResponse], timeout: 0.5)
     XCTAssertNotNil(capturedUserSession, "Should capture user session after successful login")
     XCTAssertEqual(
       capturedUserSession,
@@ -195,10 +197,11 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testLogout() async throws {
-    authenticationSessionStateStore.authenticationSessionState = .performingLogin
+    authenticationSessionStateStore.stubbedAuthenticationSessionState = .performingLogin
     await metaLogin.logOut()
+    let state = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertNil(
-      authenticationSessionStateStore.authenticationSessionState,
+      state,
       "AuthenticationSessionState should be set as none after user logs out"
     )
     XCTAssertTrue(

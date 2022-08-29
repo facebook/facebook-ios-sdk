@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct AuthenticationSessionStateStore: AuthenticationSessionStatePersisting {
+actor AuthenticationSessionStateStore: AuthenticationSessionStatePersisting {
   static let authenticationStateKey = "com.metasdk.authenticationstate"
 
   var configuredDependencies: InstanceDependencies?
@@ -16,27 +16,37 @@ struct AuthenticationSessionStateStore: AuthenticationSessionStatePersisting {
     authenticationSessionStateMap: UserDefaultsStore()
   )
 
-  var authenticationSessionState: AuthenticationSessionState? {
-    get {
-      try? getDependencies()
-        .authenticationSessionStateMap
-        .getIntegerValue(for: Self.authenticationStateKey)
-        .flatMap(AuthenticationSessionState.init(rawValue:))
-    }
-    set {
-      guard let dependencies = try? getDependencies() else { return }
+  func getAuthenticationSessionState() async -> AuthenticationSessionState? {
+    return try? await getDependencies()
+      .authenticationSessionStateMap
+      .getIntegerValue(for: Self.authenticationStateKey)
+      .flatMap(AuthenticationSessionState.init(rawValue:))
+  }
 
-      if let state = newValue {
-        dependencies.authenticationSessionStateMap.set(state.rawValue, for: Self.authenticationStateKey)
-      } else {
-        dependencies.authenticationSessionStateMap.remove(for: Self.authenticationStateKey)
-      }
+  func setAuthenticationSessionState(_ authenticationSessionState: AuthenticationSessionState?) async {
+    guard let dependencies = try? await getDependencies() else { return }
+
+    if let state = authenticationSessionState {
+      dependencies.authenticationSessionStateMap.set(state.rawValue, for: Self.authenticationStateKey)
+    } else {
+      dependencies.authenticationSessionStateMap.remove(for: Self.authenticationStateKey)
     }
   }
 }
 
-extension AuthenticationSessionStateStore: DependentAsInstance {
+extension AuthenticationSessionStateStore: DependentAsActorInstance {
   struct InstanceDependencies {
     var authenticationSessionStateMap: KeyedValueMapping
+  }
+
+  func setDependencies(_ dependencies: InstanceDependencies) async {
+    configuredDependencies = dependencies
+  }
+
+  func getDependencies() async throws -> InstanceDependencies {
+    guard let dependencies = configuredDependencies ?? defaultDependencies else {
+      throw MissingDependenciesError(for: Self.self)
+    }
+    return dependencies
   }
 }

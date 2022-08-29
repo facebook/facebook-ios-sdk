@@ -89,7 +89,10 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
     )
   }
 
-  func testOpenURLWithSessionSuccess() throws {
+  func testOpenURLWithSessionSuccess() async throws {
+    authenticationSessionStateStore.expectationForSetter = expectation(
+      description: "authenticationSessionStateStore setter "
+    )
     var capturedResult: CompletionLoginResult?
     presenter.presentAuthenticationDialog(
       url: sampleURL,
@@ -97,7 +100,6 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
     ) { result in
       capturedResult = result
     }
-
     XCTAssertEqual(
       webAuthSessionFactory.capturedURL,
       sampleURL,
@@ -119,14 +121,20 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
       "Should pass the presentation context provider to the authentication session"
     )
     XCTAssertTrue(authSession.startWasCalled, "Authentication session starts when openURL is called")
+    await waitForExpectations(timeout: 1, handler: nil)
+    let state = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertEqual(
-      authenticationSessionStateStore.authenticationSessionState,
+      state,
       .performingLogin,
       "Session state should be set to .performinglogin after successfully starting authentication session"
     )
   }
 
-  func testOpenURLWithCanceledSession() throws {
+  func testOpenURLWithCanceledSession() async throws {
+    authenticationSessionStateStore.expectationForSetter = expectation(
+      description: "authenticationSessionStateStore setter "
+    )
+    authenticationSessionStateStore.expectationForSetter?.expectedFulfillmentCount = 2
     var capturedResult: CompletionLoginResult?
     presenter.presentAuthenticationDialog(
       url: sampleURL,
@@ -142,14 +150,20 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
       capturedResult!.isCancellation(),
       "The captured result should indicate a cancellation"
     )
+    await waitForExpectations(timeout: 1, handler: nil)
+    let state = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertEqual(
-      authenticationSessionStateStore.authenticationSessionState,
+      state,
       .canceled,
       "Session state should be set to .canceled when the canceled login error is returned"
     )
   }
 
-  func testOpenURLWithPresentationContextNotProvided() throws {
+  func testOpenURLWithPresentationContextNotProvided() async throws {
+    authenticationSessionStateStore.expectationForSetter = expectation(
+      description: "authenticationSessionStateStore setter "
+    )
+    authenticationSessionStateStore.expectationForSetter?.expectedFulfillmentCount = 2
     var capturedResult: CompletionLoginResult?
     var capturedError: Error?
     presenter.presentAuthenticationDialog(
@@ -172,14 +186,20 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
       error as AnyObject,
       "Authentication session error should be set to assigned value"
     )
+    await waitForExpectations(timeout: 1, handler: nil)
+    let state = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertEqual(
-      authenticationSessionStateStore.authenticationSessionState,
+      state,
       .canceled,
       "Session state should be set to .canceled when the presentation context is not provided"
     )
   }
 
-  func testOpenURLWithPresentationContextInvalid() throws {
+  func testOpenURLWithPresentationContextInvalid() async throws {
+    authenticationSessionStateStore.expectationForSetter = expectation(
+      description: "authenticationSessionStateStore setter "
+    )
+    authenticationSessionStateStore.expectationForSetter?.expectedFulfillmentCount = 2
     var capturedResult: CompletionLoginResult?
     var capturedError: Error?
     presenter.presentAuthenticationDialog(
@@ -202,8 +222,10 @@ final class AuthenticationDialogPresenterTests: XCTestCase {
       error as AnyObject,
       "Authentication session error should be set to assigned value"
     )
+    await waitForExpectations(timeout: 1, handler: nil)
+    let state = await authenticationSessionStateStore.getAuthenticationSessionState()
     XCTAssertEqual(
-      authenticationSessionStateStore.authenticationSessionState,
+      state,
       .canceled,
       "Session state should be set to .canceled when there is an invalid presentation context"
     )
