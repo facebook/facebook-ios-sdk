@@ -13,7 +13,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(PaymentProductRequestorCreating)
+/**
+ Internal Protocol exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_PaymentProductRequestorCreating)
 @protocol FBSDKPaymentProductRequestorCreating
 
 // UNCRUSTIFY_FORMAT_OFF
