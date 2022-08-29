@@ -38,7 +38,6 @@
 #import "FBSDKAppLink+Internal.h"
 #import "FBSDKAppLinkFactory.h"
 #import "FBSDKAppLinkNavigation+Testing.h"
-#import "FBSDKAppLinkResolver+Testing.h"
 #import "FBSDKAppLinkResolverRequestBuilder.h"
 #import "FBSDKAppLinkTarget+Internal.h"
 #import "FBSDKAppLinkTargetFactory.h"

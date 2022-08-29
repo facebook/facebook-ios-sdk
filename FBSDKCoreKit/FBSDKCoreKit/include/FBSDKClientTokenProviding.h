@@ -10,7 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(ClientTokenProviding)
+/**
+ Internal Protocol exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ClientTokenProviding)
 @protocol FBSDKClientTokenProviding
 
 @property (nullable, nonatomic, readonly, copy) NSString *clientToken;

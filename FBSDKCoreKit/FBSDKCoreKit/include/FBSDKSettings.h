@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKClientTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
 #import <FBSDKCoreKit/FBSDKSettingsLogging.h>
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
@@ -20,7 +21,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Settings)
-@interface FBSDKSettings : NSObject <FBSDKSettings, FBSDKSettingsLogging>
+@interface FBSDKSettings : NSObject <FBSDKSettings, FBSDKSettingsLogging, FBSDKClientTokenProviding>
 
 #if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;

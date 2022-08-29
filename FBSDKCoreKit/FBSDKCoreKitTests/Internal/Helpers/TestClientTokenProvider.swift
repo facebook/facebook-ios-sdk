@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestClientTokenProvider: NSObject, ClientTokenProviding {
+final class TestClientTokenProvider: NSObject, _ClientTokenProviding {
   var clientToken: String?
 
   init(clientToken: String? = nil) {

@@ -9,14 +9,14 @@
 final class AppLinkResolverRequestBuilderTests: XCTestCase {
 
   func testAsksForPhoneDataOnPhone() {
-    let builder = AppLinkResolverRequestBuilder(userInterfaceIdiom: .phone)
+    let builder = _AppLinkResolverRequestBuilder(userInterfaceIdiom: .phone)
     let request = builder.request(for: [])
     let askedForPhone = request.graphPath.contains("iphone")
     XCTAssertTrue(askedForPhone)
   }
 
   func testAsksForPadDataOnPad() {
-    let builder = AppLinkResolverRequestBuilder(userInterfaceIdiom: .pad)
+    let builder = _AppLinkResolverRequestBuilder(userInterfaceIdiom: .pad)
     let request = builder.request(for: [])
     let askedForPad = request.graphPath.contains("ipad")
     XCTAssertTrue(askedForPad)

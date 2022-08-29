@@ -8,13 +8,9 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKClientTokenProviding.h"
-
 #define DATA_PROCESSING_OPTIONS         @"data_processing_options"
 #define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
 #define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
-
-#import "FBSDKClientTokenProviding.h"
 
 @protocol FBSDKTokenCaching;
 @protocol FBSDKDataPersisting;
@@ -24,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKSettings (Internal) <FBSDKClientTokenProviding, FBSDKSettingsLogging>
+@interface FBSDKSettings (Internal) <FBSDKSettingsLogging>
 
 @property (class, nullable, nonatomic, readonly, copy) NSString *graphAPIDebugParamValue;
 @property (nonatomic) BOOL shouldUseTokenOptimizations;
