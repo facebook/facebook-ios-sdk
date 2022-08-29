@@ -313,7 +313,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testPaymentObserver() throws {
     let observer = try XCTUnwrap(
-      components.paymentObserver as? PaymentObserver,
+      components.paymentObserver as? _PaymentObserver,
       "The default components should use an instance of PaymentObserver as its payment observer"
     )
     XCTAssertTrue(

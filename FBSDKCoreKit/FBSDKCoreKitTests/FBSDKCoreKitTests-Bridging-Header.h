@@ -147,7 +147,6 @@
 #import "NSNotificationCenter+NotificationPosting.h"
 #import "NSProcessInfo+MacCatalystDetermining.h"
 #import "NSProcessInfo+OperatingSystemVersionComparing.h"
-#import "PaymentObserver+Testing.h"
 #import "PaymentProductRequestor+Testing.h"
 #import "PaymentProductRequestorFactory+Testing.h"
 #import "SuggestedEventsIndexer+Testing.h"

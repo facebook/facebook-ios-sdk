@@ -148,6 +148,8 @@
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
 #import <FBSDKCoreKit/FBSDKOperatingSystemVersionComparing.h>
 #import <FBSDKCoreKit/FBSDKPaymentObserving.h>
+#import <FBSDKCoreKit/FBSDKPaymentProductRequestor.h>
+#import <FBSDKCoreKit/FBSDKPaymentProductRequestorCreating.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>

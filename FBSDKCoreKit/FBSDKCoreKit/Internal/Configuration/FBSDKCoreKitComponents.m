@@ -32,7 +32,6 @@
 #import "FBSDKMeasurementEvent+Internal.h"
 #import "FBSDKMetadataIndexer.h"
 #import "FBSDKModelManager.h"
-#import "FBSDKPaymentObserver.h"
 #import "FBSDKPaymentProductRequestorFactory.h"
 #import "FBSDKProductRequestFactory.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
