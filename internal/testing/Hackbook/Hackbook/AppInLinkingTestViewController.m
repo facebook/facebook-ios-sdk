@@ -7,7 +7,6 @@
 @import FBSDKCoreKit;
 
 #import "Console.h"
-#import "FBSDKCoreKit/FBSDKAppLinkResolver.h"
 
 #define TEST_PROFILE_LINK @"https://www.facebook.com/shawn.wiese.336"
 #define TEST_PAGE_LINK @"https://www.facebook.com/hackbooktesting"
@@ -91,7 +90,7 @@
 
 - (void)ResolveAndOpenUrl:(NSString *)urlString
 {
-  [FBSDKAppLinkNavigation setDefaultResolver:[FBSDKAppLinkResolver resolver]];
+  [FBSDKAppLinkNavigation setDefaultResolver:[FBSDKAppLinkResolver new]];
 
   [FBSDKAppLinkNavigation
    resolveAppLink:[NSURL URLWithString:urlString]

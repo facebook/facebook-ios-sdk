@@ -8,16 +8,20 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilding.h>
 #import <Foundation/Foundation.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import "FBSDKAppLinkResolverRequestBuilding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// Class responsible for generating the appropriate FBSDKGraphRequest for a given set of urls
-NS_SWIFT_NAME(AppLinkResolverRequestBuilder)
+/**
+ Internal Protocol exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ 
+ Class responsible for generating the appropriate FBSDKGraphRequest for a given set of urls
+ */
+NS_SWIFT_NAME(_AppLinkResolverRequestBuilder)
 @interface FBSDKAppLinkResolverRequestBuilder : NSObject <FBSDKAppLinkResolverRequestBuilding>
 
 @end

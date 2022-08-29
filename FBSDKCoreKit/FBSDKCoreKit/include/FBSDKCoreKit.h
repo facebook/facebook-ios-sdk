@@ -45,7 +45,8 @@
 #import <FBSDKCoreKit/FBSDKAppLinkEventPosting.h>
 #import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
 #import <FBSDKCoreKit/FBSDKAppLinkProtocol.h>
-#import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
+#import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
+#import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilding.h>
 #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
 #import <FBSDKCoreKit/FBSDKAppLinksBlock.h>
 #import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
@@ -71,6 +72,7 @@
 #import <FBSDKCoreKit/FBSDKBridgeAPIResponse.h>
 #import <FBSDKCoreKit/FBSDKButton.h>
 #import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
+#import <FBSDKCoreKit/FBSDKClientTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKCodelessIndexer.h>
 #import <FBSDKCoreKit/FBSDKCodelessIndexing.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
