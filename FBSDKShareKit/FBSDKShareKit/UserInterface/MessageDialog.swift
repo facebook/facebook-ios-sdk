@@ -172,7 +172,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
     else { return false }
 
     let shouldUseSafariViewController = shareDialogConfiguration
-      .shouldUseSafariViewController(forDialogName: FBSDKDialogConfigurationNameMessage)
+      .shouldUseSafariViewController(forDialogName: DialogConfigurationName.message)
 
     dependencies.bridgeAPIRequestOpener.open(
       request,
@@ -231,7 +231,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
     guard let internalUtility = Self.internalUtility else { return false }
 
     let shouldUseNativeDialog = shareDialogConfiguration.shouldUseNativeDialog(
-      forDialogName: FBSDKDialogConfigurationNameMessage
+      forDialogName: DialogConfigurationName.message
     )
     return shouldUseNativeDialog && internalUtility.isMessengerAppInstalled
   }

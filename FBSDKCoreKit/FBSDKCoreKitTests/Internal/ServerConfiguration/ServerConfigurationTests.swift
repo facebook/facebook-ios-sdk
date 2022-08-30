@@ -423,7 +423,7 @@ final class ServerConfigurationTests: XCTestCase {
         FBSDKDialogConfigurationFeatureUseNativeFlow: false,
         FBSDKDialogConfigurationFeatureUseSafariViewController: true,
       ],
-      FBSDKDialogConfigurationNameMessage: [
+      DialogConfigurationName.message: [
         FBSDKDialogConfigurationFeatureUseNativeFlow: true,
       ],
     ]

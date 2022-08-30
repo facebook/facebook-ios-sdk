@@ -704,7 +704,7 @@ extension ShareDialog {
       return true
     } else {
       return ShareDialogConfiguration()
-        .shouldUseNativeDialog(forDialogName: FBSDKDialogConfigurationNameShare)
+        .shouldUseNativeDialog(forDialogName: DialogConfigurationName.share)
     }
   }
 
@@ -713,7 +713,7 @@ extension ShareDialog {
       return false
     } else {
       return ShareDialogConfiguration()
-        .shouldUseSafariViewController(forDialogName: FBSDKDialogConfigurationNameShare)
+        .shouldUseSafariViewController(forDialogName: DialogConfigurationName.share)
     }
   }
 
