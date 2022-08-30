@@ -89,3 +89,4 @@ infer-out
 # Swift Package Manager
 internal/scripts/Runner/Package.resolved
 internal/scripts/Runner/.build
+internal/scripts/Runner/.swiftpm
