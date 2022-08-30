@@ -44,7 +44,7 @@ final class SKAdNetworkRuleTests: XCTestCase {
           "values": [
             [
               "currency": "USD",
-              "amount": 100,
+              "amount": 100.0,
             ],
           ],
         ],
@@ -58,7 +58,7 @@ final class SKAdNetworkRuleTests: XCTestCase {
 
     let event = rule.events[0]
     XCTAssertEqual(event.eventName, "fb_mobile_purchase")
-    XCTAssertEqual(event.values, ["USD": 100])
+    XCTAssertEqual(event.values, ["USD": 100.0])
   }
 
   func testInvalidCases() {
@@ -112,7 +112,7 @@ final class SKAdNetworkRuleTests: XCTestCase {
           "values": [
             [
               "currency": "USD",
-              "amount": 100,
+              "amount": 100.0,
             ],
           ],
         ],
@@ -124,7 +124,7 @@ final class SKAdNetworkRuleTests: XCTestCase {
     let unmatchedEventSet: Set = ["fb_mobile_purchase", "fb_skadnetwork_test2"]
 
     XCTAssertTrue(
-      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000]])
+      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000.0]])
     )
     XCTAssertFalse(rule.isMatched(withRecordedEvents: [], recordedValues: [:]))
     XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: [:]))
