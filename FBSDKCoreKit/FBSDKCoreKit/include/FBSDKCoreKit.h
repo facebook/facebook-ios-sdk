@@ -183,7 +183,6 @@
 #import <FBSDKCoreKit/FBSDKSettings.h>
 #import <FBSDKCoreKit/FBSDKSettingsLogging.h>
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-#import <FBSDKCoreKit/FBSDKShareDialogConfiguration.h>
 #import <FBSDKCoreKit/FBSDKSKAdNetworkReporter.h>
 #import <FBSDKCoreKit/FBSDKSourceApplicationTracking.h>
 #import <FBSDKCoreKit/FBSDKSuggestedEventsIndexer.h>

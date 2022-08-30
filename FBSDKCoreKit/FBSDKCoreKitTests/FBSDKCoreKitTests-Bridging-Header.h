@@ -108,7 +108,6 @@
 #import "FBSDKSettings+Testing.h"
 #import "FBSDKSettingsLogging.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKShareDialogConfiguration+Testing.h"
 #import "FBSDKTimeSpentData+Testing.h"
 #import "FBSDKURL+Internal.h"
 #import "FBSDKURLOpener.h"
