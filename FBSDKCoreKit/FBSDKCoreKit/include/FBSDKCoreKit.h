@@ -139,7 +139,7 @@
 #import <FBSDKCoreKit/FBSDKLoginTooltip.h>
 #import <FBSDKCoreKit/FBSDKMacCatalystDetermining.h>
 #import <FBSDKCoreKit/FBSDKMath.h>
-#import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
+#import <FBSDKCoreKit/FBSDKMeasurementEventNames.h>
 #import <FBSDKCoreKit/FBSDKMeasurementEventListener.h>
 #import <FBSDKCoreKit/FBSDKMetadataIndexing.h>
 #import <FBSDKCoreKit/FBSDKModelManager.h>
