@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestWebViewFactory: WebViewProviding {
+final class TestWebViewFactory: _WebViewProviding {
   var capturedFrame: CGRect?
   let webView = TestWebView()
 

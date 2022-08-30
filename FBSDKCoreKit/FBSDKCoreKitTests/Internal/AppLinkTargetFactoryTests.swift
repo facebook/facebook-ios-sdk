@@ -17,7 +17,7 @@ final class AppLinkTargetFactoryTests: XCTestCase {
   let appStoreId = "123"
 
   func testCreatingAppLinkTarget() throws {
-    let factory = AppLinkTargetFactory()
+    let factory = _AppLinkTargetFactory()
     let target = try XCTUnwrap(
       factory.createAppLinkTarget(
         url: url,

@@ -59,7 +59,7 @@ public final class GameRequestDialog: NSObject {
     errorFactory: ErrorFactory(),
     gameRequestURLProvider: GameRequestURLProvider.self,
     internalUtility: InternalUtility.shared,
-    logger: Logger.self,
+    logger: _Logger.self,
     settings: Settings.shared,
     shareValidator: _ShareUtility.self,
     utility: Utility.self

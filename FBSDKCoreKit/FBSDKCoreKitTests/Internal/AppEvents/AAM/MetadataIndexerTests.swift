@@ -18,7 +18,7 @@ final class MetadataIndexerTests: XCTestCase {
   var pwdField = UITextField()
   var pwdView = UITextView()
   var userDataStore = TestUserDataStore()
-  lazy var metadataIndexer = MetadataIndexer(
+  lazy var metadataIndexer = _MetadataIndexer(
     userDataStore: userDataStore,
     swizzler: TestSwizzler.self
   )

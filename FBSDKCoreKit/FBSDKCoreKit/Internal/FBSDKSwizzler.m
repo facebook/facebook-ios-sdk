@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKSwizzler.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <objc/runtime.h>
 
 #define MIN_ARGS 2
@@ -28,7 +27,7 @@
 @property (nonatomic, assign) uint numArgs;
 @property (nonatomic, copy) NSMapTable *blocks;
 
-- (instancetype)initWithBlock:(swizzleBlock)aBlock
+- (instancetype)initWithBlock:(_swizzleBlock)aBlock
                         named:(NSString *)aName
                      forClass:(Class)aClass
                      selector:(SEL)aSelector
@@ -93,7 +92,7 @@ static void fb_swizzledMethod_2(id self, SEL _cmd)
     ((void (*)(id, SEL))swizzle.originalMethod)(self, _cmd);
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
-    swizzleBlock block;
+    _swizzleBlock block;
     while ((block = [blocks nextObject])) {
       block(self, _cmd);
     }
@@ -108,7 +107,7 @@ static void fb_swizzledMethod_3(id self, SEL _cmd, id arg)
     ((void (*)(id, SEL, id))swizzle.originalMethod)(self, _cmd, arg);
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
-    swizzleBlock block;
+    _swizzleBlock block;
     while ((block = [blocks nextObject])) {
       block(self, _cmd, arg);
     }
@@ -123,7 +122,7 @@ static void fb_swizzledMethod_4(id self, SEL _cmd, id arg, id arg2)
     ((void (*)(id, SEL, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2);
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
-    swizzleBlock block;
+    _swizzleBlock block;
     while ((block = [blocks nextObject])) {
       block(self, _cmd, arg, arg2);
     }
@@ -138,7 +137,7 @@ static void fb_swizzledMethod_5(id self, SEL _cmd, id arg, id arg2, id arg3)
     ((void (*)(id, SEL, id, id, id))swizzle.originalMethod)(self, _cmd, arg, arg2, arg3);
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
-    swizzleBlock block;
+    _swizzleBlock block;
     while ((block = [blocks nextObject])) {
       block(self, _cmd, arg, arg2, arg3);
     }
@@ -153,7 +152,7 @@ static void fb_swizzleMethod_4_io(id self, SEL _cmd, NSInteger arg, id arg2)
     ((void (*)(id, SEL, NSInteger, id))swizzle.originalMethod)(self, _cmd, arg, arg2);
 
     NSEnumerator *blocks = [swizzle.blocks objectEnumerator];
-    swizzleBlock block;
+    _swizzleBlock block;
     while ((block = [blocks nextObject])) {
       block(self, _cmd, arg, arg2);
     }
@@ -230,12 +229,12 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
   return isLocal;
 }
 
-+ (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(swizzleBlock)aBlock named:(NSString *)aName
++ (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(_swizzleBlock)aBlock named:(NSString *)aName
 {
   [self swizzleSelector:aSelector onClass:aClass withBlock:aBlock named:aName async:YES];
 }
 
-+ (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(swizzleBlock)aBlock named:(NSString *)aName async:(BOOL)async
++ (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(_swizzleBlock)aBlock named:(NSString *)aName async:(BOOL)async
 {
   [self swizzleSelectorWithBlock:^{
           @try {
@@ -377,7 +376,7 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
   return self;
 }
 
-- (instancetype)initWithBlock:(swizzleBlock)aBlock
+- (instancetype)initWithBlock:(_swizzleBlock)aBlock
                         named:(NSString *)aName
                      forClass:(Class)aClass
                      selector:(SEL)aSelector

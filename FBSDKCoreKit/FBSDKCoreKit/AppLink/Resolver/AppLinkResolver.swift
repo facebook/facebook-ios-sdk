@@ -53,7 +53,7 @@ public final class AppLinkResolver: NSObject, AppLinkResolving {
 
     if dependencies.clientTokenProvider.clientToken == nil,
        dependencies.accessTokenProvider.current == nil {
-      Logger.singleShotLogEntry(
+      _Logger.singleShotLogEntry(
         .developerErrors,
         logEntry: "A user access token or clientToken is required to use AppLinkResolver"
       )

@@ -8,9 +8,22 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKEventProcessing.h>
+#import <FBSDKCoreKit/FBSDKIntegrityParametersProcessorProvider.h>
+#import <FBSDKCoreKit/FBSDKIntegrityProcessing.h>
+#import <FBSDKCoreKit/FBSDKRulesFromKeyProvider.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
+
+@protocol FBSDKFeatureChecking;
+@protocol FBSDKGraphRequestFactory;
+@protocol FBSDKFileManaging;
+@protocol FBSDKDataPersisting;
+@protocol FBSDKSettings;
+@protocol FBSDKFileDataExtracting;
+@protocol FBSDKGateKeeperManaging;
+@protocol FBSDKSuggestedEventsIndexer;
+@protocol FBSDKFeatureExtracting;
 
 NS_ASSUME_NONNULL_BEGIN
 

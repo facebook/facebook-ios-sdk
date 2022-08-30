@@ -65,7 +65,7 @@ public final class _WebDialog: NSObject {
     do {
       let url = try generateURL()
       guard (try? Self.getDependencies().windowFinder.findWindow()) != nil else {
-        Logger.singleShotLogEntry(
+        _Logger.singleShotLogEntry(
           .developerErrors,
           logEntry: "There are no valid windows in which to present this web dialog"
         )
@@ -171,7 +171,7 @@ public final class _WebDialog: NSObject {
   func showWebView() {
     guard let window = try? Self.getDependencies().windowFinder.findWindow() else {
       let message = "There are no valid windows in which to present this web dialog"
-      Logger.singleShotLogEntry(
+      _Logger.singleShotLogEntry(
         LoggingBehavior.developerErrors, logEntry: message
       )
       if let error = try? Self.getDependencies().errorFactory.unknownError(
@@ -192,7 +192,7 @@ public final class _WebDialog: NSObject {
           let backgroundView = backgroundView
     else {
       let message = "dialog or background view has not been created or set"
-      Logger.singleShotLogEntry(
+      _Logger.singleShotLogEntry(
         LoggingBehavior.developerErrors, logEntry: message
       )
       if let error = try? Self.getDependencies().errorFactory.unknownError(

@@ -16,7 +16,7 @@ final class BackgroundEventLoggerTests: XCTestCase {
   let bundleWithIdentifier = TestBundle(infoDictionary: ["BGTaskSchedulerPermittedIdentifiers": ["123"]])
   let bundleWithoutIdentifier = TestBundle()
   let logger = TestEventLogger()
-  lazy var backgroundEventLogger = BackgroundEventLogger(
+  lazy var backgroundEventLogger = _BackgroundEventLogger(
     infoDictionaryProvider: bundleWithIdentifier,
     eventLogger: logger
   )
@@ -70,7 +70,7 @@ final class BackgroundEventLoggerTests: XCTestCase {
   }
 
   func testIsNewBackgroundRefreshWithoutIdentifiers() {
-    backgroundEventLogger = BackgroundEventLogger(
+    backgroundEventLogger = _BackgroundEventLogger(
       infoDictionaryProvider: bundleWithoutIdentifier,
       eventLogger: logger
     )

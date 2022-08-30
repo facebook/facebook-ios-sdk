@@ -14,7 +14,7 @@ import XCTest
 final class AppLinkURLFactoryTests: XCTestCase {
 
   func testCreatingAppLinkURL() {
-    let factory = AppLinkURLFactory()
+    let factory = _AppLinkURLFactory()
     XCTAssertTrue(
       factory.createAppLinkURL(with: SampleURLs.valid) is AppLinkURL,
       "Should create an app link url of the expected concrete type"

@@ -13,6 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKAppLink;
+@protocol FBSDKAppLinkCreating;
 
 /**
  Provides a set of utilities for working with NSURLs, such as parsing of query parameters

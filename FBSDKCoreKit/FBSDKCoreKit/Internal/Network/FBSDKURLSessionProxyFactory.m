@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKURLSessionProxyFactory.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
 #import "FBSDKURLSession+Internal.h"

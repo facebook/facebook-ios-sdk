@@ -178,7 +178,7 @@ extension _ShareUtility: ShareUtilityProtocol {
     guard let hashtag = hashtag else { return nil }
 
     guard hashtag.isValid else {
-      Logger.singleShotLogEntry(
+      _Logger.singleShotLogEntry(
         .developerErrors,
         logEntry: "Invalid hashtag: '\(hashtag.stringRepresentation)'"
       )

@@ -7,9 +7,9 @@
  */
 
 final class RestrictiveDataFilterTests: XCTestCase {
-  var restrictiveDataFilterManager: RestrictiveDataFilterManager = createTestRestrictiveDataFilterManager()
+  var restrictiveDataFilterManager: _RestrictiveDataFilterManager = createTestRestrictiveDataFilterManager()
 
-  private static func createTestRestrictiveDataFilterManager() -> RestrictiveDataFilterManager {
+  private static func createTestRestrictiveDataFilterManager() -> _RestrictiveDataFilterManager {
     let params = [
       "test_event_name": [
         "restrictive_param": [
@@ -27,7 +27,7 @@ final class RestrictiveDataFilterTests: XCTestCase {
       "restrictiveParams": params,
     ])
     let serverConfigProider = TestServerConfigurationProvider(configuration: configuration)
-    let restrictiveDataFilterManager = RestrictiveDataFilterManager(serverConfigurationProvider: serverConfigProider)
+    let restrictiveDataFilterManager = _RestrictiveDataFilterManager(serverConfigurationProvider: serverConfigProider)
     restrictiveDataFilterManager.enable()
     return restrictiveDataFilterManager
   }

@@ -22,7 +22,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
   var collectionView: TestCollectionView!
   var tableView: TestTableView!
   var button: UIButton!
-  var indexer: SuggestedEventsIndexer!
+  var indexer: _SuggestedEventsIndexer!
   // swiftlint:enable implicitly_unwrapped_optional
 
   enum Keys {
@@ -65,7 +65,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
     )
     tableView = TestTableView()
     button = UIButton()
-    indexer = SuggestedEventsIndexer(
+    indexer = _SuggestedEventsIndexer(
       graphRequestFactory: graphRequestFactory,
       serverConfigurationProvider: serverConfigurationProvider,
       swizzler: TestSwizzler.self,
@@ -99,7 +99,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
   static func reset() {
     TestSwizzler.reset()
     TestFeatureExtractor.reset()
-    SuggestedEventsIndexer.reset()
+    _SuggestedEventsIndexer.reset()
   }
 
   // MARK: - Delegate methods
@@ -709,7 +709,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
     line: UInt = #line
   ) {
     XCTAssertEqual(
-      button.allTargets.first as? SuggestedEventsIndexer,
+      button.allTargets.first as? _SuggestedEventsIndexer,
       indexer,
       "Indexer should add itself as a target of the button",
       file: file,

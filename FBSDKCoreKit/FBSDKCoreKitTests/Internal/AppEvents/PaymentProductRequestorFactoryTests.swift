@@ -19,7 +19,7 @@ final class PaymentProductRequestorFactoryTests: XCTestCase {
   let loggerFactory = TestLoggerFactory()
   let graphRequestFactory = TestProductsRequestFactory()
   let receiptProvider = TestAppStoreReceiptProvider()
-  lazy var factory = PaymentProductRequestorFactory(
+  lazy var factory = _PaymentProductRequestorFactory(
     settings: settings,
     eventLogger: eventLogger,
     gateKeeperManager: TestGateKeeperManager.self,

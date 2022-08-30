@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKTimeSpentData.h"
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 

@@ -16,7 +16,6 @@
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKConstants.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "NSProcessInfo+OperatingSystemVersionComparing.h"
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequest>)request

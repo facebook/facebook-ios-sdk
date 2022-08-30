@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <Foundation/Foundation.h>
-
+#import <FBSDKCoreKit/FBSDKLogging.h>
 #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,8 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(Logger)
-@interface FBSDKLogger : NSObject
+NS_SWIFT_NAME(_Logger)
+@interface FBSDKLogger : NSObject <FBSDKLogging>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

@@ -14,7 +14,7 @@ import XCTest
 final class GraphRequestPiggybackManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var manager: GraphRequestPiggybackManager!
+  var manager: _GraphRequestPiggybackManager!
   var settings: SettingsProtocol!
   var graphRequestFactory: TestGraphRequestFactory!
   var serverConfigurationProvider: TestServerConfigurationProvider!
@@ -31,7 +31,7 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     )
     settings = TestSettings()
     settings.appID = "abc123"
-    manager = GraphRequestPiggybackManager(
+    manager = _GraphRequestPiggybackManager(
       tokenWallet: TestAccessTokenWallet.self,
       settings: settings,
       serverConfigurationProvider: serverConfigurationProvider,

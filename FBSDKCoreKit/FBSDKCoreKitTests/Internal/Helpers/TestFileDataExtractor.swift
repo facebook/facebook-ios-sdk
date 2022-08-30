@@ -12,7 +12,7 @@ import XCTest
 
 import Foundation
 
-final class TestFileDataExtractor: FileDataExtracting {
+final class TestFileDataExtractor: _FileDataExtracting {
   static var stubbedData: Data?
   static var capturedFileNames = [String]()
 

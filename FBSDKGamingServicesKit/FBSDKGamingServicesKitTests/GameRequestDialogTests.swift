@@ -104,7 +104,7 @@ final class GameRequestDialogTests: XCTestCase {
     )
     XCTAssertIdentical(
       dependencies.logger as AnyObject,
-      Logger.self,
+      _Logger.self,
       .Dependencies.defaultDependency("Logger", for: "logger")
     )
     XCTAssertIdentical(

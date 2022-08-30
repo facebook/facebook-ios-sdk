@@ -14,7 +14,7 @@ import XCTest
 final class ImpressionLoggerFactoryTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var factory: ImpressionLoggerFactory!
+  var factory: _ImpressionLoggerFactory!
   var graphRequestFactory: TestGraphRequestFactory!
   var eventLogger: TestEventLogger!
   var notificationCenter: TestNotificationCenter!
@@ -29,7 +29,7 @@ final class ImpressionLoggerFactoryTests: XCTestCase {
     notificationCenter = TestNotificationCenter()
     accessTokenWallet = TestAccessTokenWallet.self
 
-    factory = ImpressionLoggerFactory(
+    factory = _ImpressionLoggerFactory(
       graphRequestFactory: graphRequestFactory,
       eventLogger: eventLogger,
       notificationCenter: notificationCenter,

@@ -14,7 +14,7 @@ final class TimeSpentDataTests: XCTestCase {
 
   let applicationName = "someApplication"
   let eventLogger = TestEventLogger()
-  lazy var timeSpentData = TimeSpentData(
+  lazy var timeSpentData = _TimeSpentData(
     eventLogger: eventLogger,
     serverConfigurationProvider: TestServerConfigurationProvider()
   )

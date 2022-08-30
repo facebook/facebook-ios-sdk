@@ -18,7 +18,7 @@ final class CrashObserverTests: XCTestCase {
   let featureChecker = TestFeatureManager()
   let crashHandler = TestCrashHandler()
 
-  lazy var crashObserver = CrashObserver(
+  lazy var crashObserver = _CrashObserver(
     featureChecker: featureChecker,
     graphRequestFactory: graphRequestFactory,
     settings: settings,

@@ -10,12 +10,12 @@
 
 #import "FBSDKEventBinding.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKSwizzler.h"
 #import "FBSDKUtility.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"

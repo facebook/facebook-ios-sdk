@@ -59,14 +59,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppEventsStateProvider() {
     XCTAssertTrue(
-      components.appEventsStateProvider is AppEventsStateFactory,
+      components.appEventsStateProvider is _AppEventsStateFactory,
       "The default components should use an instance of AppEventsStateFactory as its app events state provider"
     )
   }
 
   func testAppEventsStateStore() {
     XCTAssertTrue(
-      components.appEventsStateStore === AppEventsStateManager.shared,
+      components.appEventsStateStore === _AppEventsStateManager.shared,
       "The default components should use the shared AppEventsStateManager as its app events state store"
     )
   }
@@ -87,7 +87,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testATEPublisherFactory() throws {
     let factory = try XCTUnwrap(
-      components.atePublisherFactory as? ATEPublisherFactory,
+      components.atePublisherFactory as? _ATEPublisherFactory,
       "The default components should use an instance of ATEPublisherFactory as its ATE publisher factory"
     )
     XCTAssertTrue(
@@ -124,7 +124,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testCrashObserver() throws {
     let crashObserver = try XCTUnwrap(
-      components.crashObserver as? CrashObserver,
+      components.crashObserver as? _CrashObserver,
       "The default components should use an instance of CrashObserver as its crash observer"
     )
     XCTAssertTrue(
@@ -161,7 +161,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testDialogConfigurationMapBuilder() {
     XCTAssertTrue(
-      components.dialogConfigurationMapBuilder is DialogConfigurationMapBuilder,
+      components.dialogConfigurationMapBuilder is _DialogConfigurationMapBuilder,
       """
       The default components should use an instance of \
       DialogConfigurationMapBuilder as its dialog configuration map builder
@@ -171,7 +171,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testErrorConfigurationProvider() {
     XCTAssertTrue(
-      components.errorConfigurationProvider is ErrorConfigurationProvider,
+      components.errorConfigurationProvider is _ErrorConfigurationProvider,
       "The default components should use an instance of ErrorConfigurationProvider as its error configuration provider"
     )
   }
@@ -196,7 +196,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testEventDeactivationManager() {
     XCTAssertTrue(
-      components.eventDeactivationManager is EventDeactivationManager,
+      components.eventDeactivationManager is _EventDeactivationManager,
       "The default components should use an instance of EventDeactivationManager as its event deactivation manager"
     )
   }
@@ -241,7 +241,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testImpressionLoggerFactory() throws {
     let factory = try XCTUnwrap(
-      components.impressionLoggerFactory as? ImpressionLoggerFactory,
+      components.impressionLoggerFactory as? _ImpressionLoggerFactory,
       "The default components should use an instance of ImpressionLoggerFactory as its impression logger factory"
     )
     XCTAssertTrue(
@@ -278,14 +278,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testLogger() {
     XCTAssertTrue(
-      components.logger === Logger.self,
+      components.logger === _Logger.self,
       "The default components should use the Logger type as its logger"
     )
   }
 
   func testLoggerFactory() {
     XCTAssertTrue(
-      components.loggerFactory is LoggerFactory,
+      components.loggerFactory is _LoggerFactory,
       "The default components should use an instance of LoggerFactory as its logger factory"
     )
   }
@@ -321,7 +321,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       "The observer should use the default SKPaymentQueue as its payment queue"
     )
     let factory = try XCTUnwrap(
-      observer.requestorFactory as? PaymentProductRequestorFactory,
+      observer.requestorFactory as? _PaymentProductRequestorFactory,
       "The observer should use an instance of PaymentProductRequestorFactory as its requestor factory"
     )
     XCTAssertTrue(
@@ -345,7 +345,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       "The factory should use the components' logger factory"
     )
     XCTAssertTrue(
-      factory.productsRequestFactory is ProductRequestFactory,
+      factory.productsRequestFactory is _ProductRequestFactory,
       "The factory should use an instance of ProductRequestFactory for its products request factory"
     )
     XCTAssertTrue(
@@ -356,7 +356,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testPiggybackManager() throws {
     let manager = try XCTUnwrap(
-      components.piggybackManager as? GraphRequestPiggybackManager,
+      components.piggybackManager as? _GraphRequestPiggybackManager,
       """
       The default components should use an instance of GraphRequestPiggybackManager as \
       its graph request piggyback manager
@@ -387,7 +387,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testRestrictiveDataFilterManager() throws {
     let manager = try XCTUnwrap(
-      components.restrictiveDataFilterManager as? RestrictiveDataFilterManager,
+      components.restrictiveDataFilterManager as? _RestrictiveDataFilterManager,
       """
       The default components should use an instance of \
       RestrictiveDataFilterManager as its restrictive data filter manager
@@ -415,7 +415,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testTimeSpentRecorder() throws {
     let recorder = try XCTUnwrap(
-      components.timeSpentRecorder as? TimeSpentData,
+      components.timeSpentRecorder as? _TimeSpentData,
       "The default components should use an instance of TimeSpentData as its time spent recorder"
     )
     XCTAssertTrue(
@@ -430,7 +430,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testTokenCache() throws {
     let cache = try XCTUnwrap(
-      components.tokenCache as? TokenCache,
+      components.tokenCache as? _TokenCache,
       "The default components should use an instance of TokenCache as its token cache"
     )
     XCTAssertTrue(
@@ -457,14 +457,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testURLSessionProxyFactory() {
     XCTAssertTrue(
-      components.urlSessionProxyFactory is URLSessionProxyFactory,
+      components.urlSessionProxyFactory is _URLSessionProxyFactory,
       "The default components should use an instance of URLSessionProxyFactory as its URL session proxy factory"
     )
   }
 
   func testUserDataStore() {
     XCTAssertTrue(
-      components.userDataStore is UserDataStore,
+      components.userDataStore is _UserDataStore,
       "The default components should use an instance of UserDataStore as its user data store"
     )
   }
@@ -502,7 +502,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppLinkFactory() {
     XCTAssertTrue(
-      components.appLinkFactory is AppLinkFactory,
+      components.appLinkFactory is _AppLinkFactory,
       "The default components should use an instance of AppLinkFactory as its app link factory"
     )
   }
@@ -516,21 +516,21 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppLinkTargetFactory() {
     XCTAssertTrue(
-      components.appLinkTargetFactory is AppLinkTargetFactory,
+      components.appLinkTargetFactory is _AppLinkTargetFactory,
       "The default components should use an instance of AppLinkTargetFactory as its app link target factory"
     )
   }
 
   func testAppLinkURLFactory() {
     XCTAssertTrue(
-      components.appLinkURLFactory is AppLinkURLFactory,
+      components.appLinkURLFactory is _AppLinkURLFactory,
       "The default components should use an instance of AppLinkURLFactory as its app link URL factory"
     )
   }
 
   func testBackgroundEventLogger() throws {
     let logger = try XCTUnwrap(
-      components.backgroundEventLogger as? BackgroundEventLogger,
+      components.backgroundEventLogger as? _BackgroundEventLogger,
       "The default components should use an instance of BackgroundEventLogger as its background event logger"
     )
     XCTAssertTrue(
@@ -580,7 +580,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testMetadataIndexer() throws {
     let indexer = try XCTUnwrap(
-      components.metadataIndexer as? MetadataIndexer,
+      components.metadataIndexer as? _MetadataIndexer,
       "The default components should use an instance of MetadataIndexer as its metadata indexer"
     )
     XCTAssertTrue(
@@ -624,7 +624,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   @available(iOS 11.3, *)
   func testSKAdNetworkReporter() throws {
     let reporter = try XCTUnwrap(
-      components.skAdNetworkReporter as? SKAdNetworkReporter,
+      components.skAdNetworkReporter as? _SKAdNetworkReporter,
       "The default components should use an instance of SKAdNetworkReporter as its StoreKit ad network reporter"
     )
     XCTAssertTrue(
@@ -643,7 +643,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testSuggestedEventsIndexer() throws {
     let indexer = try XCTUnwrap(
-      components.suggestedEventsIndexer as? SuggestedEventsIndexer,
+      components.suggestedEventsIndexer as? _SuggestedEventsIndexer,
       "The default components should use an instance of SuggestedEventsIndexer as its suggested events indexer"
     )
     XCTAssertTrue(
@@ -678,7 +678,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testSwizzler() {
     XCTAssertTrue(
-      components.swizzler === Swizzler.self,
+      components.swizzler === _Swizzler.self,
       "The default components should use the Swizzler type as its swizzler"
     )
   }

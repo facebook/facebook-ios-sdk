@@ -24,7 +24,7 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     static let url = URL(string: urlString)! // swiftlint:disable:this force_unwrapping
   }
 
-  let builder = DialogConfigurationMapBuilder()
+  let builder = _DialogConfigurationMapBuilder()
 
   func testBuildingWithEmptyRawConfigurations() {
     XCTAssertTrue(

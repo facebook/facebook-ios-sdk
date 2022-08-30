@@ -10,7 +10,7 @@
 
 final class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
 
-  let factory = URLSessionProxyFactory()
+  let factory = _URLSessionProxyFactory()
 
   func testCreatingSessionProxy() {
     guard let proxy = factory.createSessionProxy(with: self, queue: OperationQueue.main) as? FBSDKURLSession else {

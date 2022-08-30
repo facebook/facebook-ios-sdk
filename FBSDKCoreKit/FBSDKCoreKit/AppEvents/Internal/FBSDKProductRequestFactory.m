@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKProductRequestFactory.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "SKProductsRequest+FBSDKProductsRequest.h"
 

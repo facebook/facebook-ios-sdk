@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKSwizzler.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)swizzleSelector:(SEL)aSelector
                 onClass:(Class)aClass
-              withBlock:(swizzleBlock)aBlock
+              withBlock:(_swizzleBlock)aBlock
                   named:(nullable NSString *)aName
                   async:(BOOL)async;
 

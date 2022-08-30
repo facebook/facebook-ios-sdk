@@ -23,3 +23,7 @@ NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCodeKey = @"com.faceboo
 NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcodeKey = @"com.facebook.sdk:FBSDKGraphRequestErrorGraphErrorSubcodeKey";
 NSErrorUserInfoKey const FBSDKGraphRequestErrorHTTPStatusCodeKey = @"com.facebook.sdk:FBSDKGraphRequestErrorHTTPStatusCodeKey";
 NSErrorUserInfoKey const FBSDKGraphRequestErrorParsedJSONResponseKey = @"com.facebook.sdk:FBSDKGraphRequestErrorParsedJSONResponseKey";
+
+// MARK: - Internal
+
+NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";

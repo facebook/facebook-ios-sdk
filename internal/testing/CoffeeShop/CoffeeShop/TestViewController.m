@@ -44,7 +44,7 @@ typedef NS_ENUM(NSUInteger, FBSDKTestFeature) {
 
 typedef void (^FBSDKFeatureManagerBlock)(BOOL enabled);
 
-@interface FBSDKRestrictiveDataFilterManager : NSObject
+@interface FBSDKRestrictiveDataFilterManager (CrashTest)
 
 + (NSString *)generateCrashForTest;
 

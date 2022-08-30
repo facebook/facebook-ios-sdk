@@ -19,7 +19,7 @@ final class AppLinkFactoryTests: XCTestCase {
   let isBackToReferrer = Bool.random()
 
   func testCreatingAppLink() {
-    let factory = AppLinkFactory()
+    let factory = _AppLinkFactory()
     guard let appLink = factory.createAppLink(
       sourceURL: sourceURL,
       targets: [target],

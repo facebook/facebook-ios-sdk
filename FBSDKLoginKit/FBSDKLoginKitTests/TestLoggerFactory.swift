@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestLoggerFactory: NSObject, LoggerCreating {
+final class TestLoggerFactory: NSObject, _LoggerCreating {
 
   func createLogger(withLoggingBehavior loggingBehavior: LoggingBehavior) -> Logging {
     TestLogger(loggingBehavior: .developerErrors)

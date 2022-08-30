@@ -98,7 +98,7 @@ final class BridgeAPITests: XCTestCase {
       "The shared bridge API should use the system provided process info by default"
     )
     XCTAssertTrue(
-      _BridgeAPI.shared.logger is Logger,
+      _BridgeAPI.shared.logger is _Logger,
       "The shared bridge API should use the expected logger type by default"
     )
     XCTAssertEqual(
