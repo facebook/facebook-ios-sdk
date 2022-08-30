@@ -1,4 +1,0 @@
-module Mustache {
-    header "/Users/joesusnick/fbsource/fbobjc/ios-sdk/internal/scripts/Runner/.build/x86_64-apple-macosx/debug/Mustache.build/Mustache-Swift.h"
-    requires objc
-}
