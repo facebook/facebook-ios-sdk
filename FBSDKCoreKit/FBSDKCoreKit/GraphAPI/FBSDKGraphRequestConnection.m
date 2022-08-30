@@ -14,7 +14,6 @@
 #import "FBSDKAccessToken.h"
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKCoreKitVersions.h"
-#import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"

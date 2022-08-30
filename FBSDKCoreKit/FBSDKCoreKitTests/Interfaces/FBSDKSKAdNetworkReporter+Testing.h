@@ -7,7 +7,6 @@
  */
 
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
-#import "FBSDKSKAdNetworkReporter.h"
 
 typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 

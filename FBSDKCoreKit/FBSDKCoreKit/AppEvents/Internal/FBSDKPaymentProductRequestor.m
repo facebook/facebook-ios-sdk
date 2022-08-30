@@ -16,7 +16,6 @@
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventParameterName+Internal.h"
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
-#import "FBSDKAppStoreReceiptProviding.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettingsProtocol.h"

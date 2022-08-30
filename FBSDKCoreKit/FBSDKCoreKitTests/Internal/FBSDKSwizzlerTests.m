@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <XCTest/XCTest.h>
 
-#import "FBSDKSwizzler.h"
 #import "FBSDKSwizzler+Testing.h"
 
 @interface FBSDKSwizzlerTestObject : NSObject

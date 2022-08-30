@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(LoggerCreating)
+NS_SWIFT_NAME(_LoggerCreating)
 @protocol __FBSDKLoggerCreating
 
 - (id<FBSDKLogging>)createLoggerWithLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;

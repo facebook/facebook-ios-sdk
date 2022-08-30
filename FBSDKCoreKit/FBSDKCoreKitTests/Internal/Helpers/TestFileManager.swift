@@ -12,7 +12,7 @@ import XCTest
 
 import Foundation
 
-final class TestFileManager: FileManaging {
+final class TestFileManager: _FileManaging {
   var removeItemAtPathWasCalled = false
   var contentsOfDirectoryAtPathWasCalled = false
   var capturedFileExistsAtPath: String?

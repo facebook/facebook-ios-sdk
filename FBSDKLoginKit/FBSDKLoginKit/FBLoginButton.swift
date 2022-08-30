@@ -73,7 +73,7 @@ public final class FBLoginButton: FBButton {
       } else {
         nonceValue = nil
         let msg = "Unable to set invalid nonce: \(String(describing: nonce)) on FBLoginButton"
-        Logger.singleShotLogEntry(.developerErrors, logEntry: msg)
+        _Logger.singleShotLogEntry(.developerErrors, logEntry: msg)
       }
     }
   }

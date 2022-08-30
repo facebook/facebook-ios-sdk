@@ -19,7 +19,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKWebViewFactory)
-public final class _WebViewFactory: NSObject, WebViewProviding {
+public final class _WebViewFactory: NSObject, _WebViewProviding {
   public func createWebView(frame: CGRect) -> WebView {
     WKWebView(frame: frame)
   }

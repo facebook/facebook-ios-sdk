@@ -179,7 +179,7 @@ public final class LoginConfiguration: NSObject {
 
     guard NonceValidator.isValid(nonce: nonce) else {
       let message = "Invalid nonce:\(nonce) provided to login configuration. Returning nil"
-      Logger.singleShotLogEntry(.developerErrors, logEntry: message)
+      _Logger.singleShotLogEntry(.developerErrors, logEntry: message)
       return nil
     }
 
@@ -187,14 +187,14 @@ public final class LoginConfiguration: NSObject {
       let permissions = FBPermission.permissions(fromRawPermissions: Set(permissions))
     else {
       let message = "Invalid combination of permissions provided to login configuration."
-      Logger.singleShotLogEntry(.developerErrors, logEntry: message)
+      _Logger.singleShotLogEntry(.developerErrors, logEntry: message)
       return nil
     }
 
     if let authType = authType,
        ![.rerequest, .reauthorize].contains(authType) {
       let message = "Invalid auth_type provided to login configuration."
-      Logger.singleShotLogEntry(.developerErrors, logEntry: message)
+      _Logger.singleShotLogEntry(.developerErrors, logEntry: message)
       return nil
     }
 

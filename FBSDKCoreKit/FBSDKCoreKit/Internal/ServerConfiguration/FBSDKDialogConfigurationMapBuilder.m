@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKDialogConfigurationMapBuilder.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 @implementation FBSDKDialogConfigurationMapBuilder

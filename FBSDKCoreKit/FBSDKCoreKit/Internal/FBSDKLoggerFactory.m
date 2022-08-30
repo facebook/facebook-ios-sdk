@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKLoggerFactory.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 
 #import "FBSDKLogger+Internal.h"

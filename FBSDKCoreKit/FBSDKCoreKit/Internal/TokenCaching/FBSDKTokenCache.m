@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKTokenCache.h"
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKAuthenticationToken+Internal.h"
@@ -22,8 +20,6 @@ static NSString *const kFBSDKAuthenticationTokenKeychainKey = @"com.facebook.sdk
 
 static NSString *const kFBSDKTokenUUIDKey = @"tokenUUID";
 static NSString *const kFBSDKTokenEncodedKey = @"tokenEncoded";
-
-NSString *const DefaultKeychainServicePrefix = @"com.facebook.sdk.tokencache";
 
 @implementation FBSDKTokenCache
 

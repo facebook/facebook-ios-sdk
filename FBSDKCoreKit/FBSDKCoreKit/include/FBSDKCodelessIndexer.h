@@ -8,6 +8,7 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCodelessIndexing.h>
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -27,7 +28,7 @@ typedef void (^FBSDKCodelessSettingLoadBlock)(BOOL isCodelessSetupEnabled, NSErr
  @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(_CodelessIndexer)
-@interface FBSDKCodelessIndexer : NSObject
+@interface FBSDKCodelessIndexer : NSObject <FBSDKCodelessIndexing>
 
 @property (class, nonatomic, readonly, copy) NSString *extInfo;
 

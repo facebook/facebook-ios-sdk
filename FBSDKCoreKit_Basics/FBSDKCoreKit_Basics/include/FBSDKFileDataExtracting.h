@@ -12,8 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// An internal protocol used to describe a type that can extract data from a file
-NS_SWIFT_NAME(FileDataExtracting)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_FileDataExtracting)
 @protocol FBSDKFileDataExtracting
 
 + (nullable NSData *)fb_dataWithContentsOfFile:(NSString *)path
@@ -22,6 +27,12 @@ NS_SWIFT_NAME(FileDataExtracting)
 
 @end
 
+/**
+ Internal conformance exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 FB_LINK_CATEGORY_INTERFACE(NSData, FileDataExtracting)
 @interface NSData (FileDataExtracting) <FBSDKFileDataExtracting>
 

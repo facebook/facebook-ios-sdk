@@ -32,7 +32,7 @@ final class TestSwizzler: NSObject, _Swizzling {
   static func swizzleSelector(
     _ aSelector: Selector,
     on aClass: AnyClass,
-    with block: @escaping swizzleBlock,
+    with block: @escaping _swizzleBlock,
     named aName: String
   ) {
     evidence.append(.init(selector: aSelector, class: aClass))

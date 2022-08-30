@@ -76,7 +76,7 @@ public final class LoginManager: NSObject {
     }
 
     let keychainStore = keychainStoreFactory.createKeychainStore(
-      withService: "com.facebook.sdk.loginmanager.\(bundleIdentifier)",
+      service: "com.facebook.sdk.loginmanager.\(bundleIdentifier)",
       accessGroup: nil
     )
 
@@ -179,7 +179,7 @@ public final class LoginManager: NSObject {
         Cannot login without a valid login configuration. Please make sure the `LoginConfiguration` provided is non-nil.
         """
 
-      Logger.singleShotLogEntry(.developerErrors, logEntry: failureMessage)
+      _Logger.singleShotLogEntry(.developerErrors, logEntry: failureMessage)
 
       // swiftformat:disable:next redundantSelf
       let error = self.errorFactory?.error(
@@ -326,7 +326,7 @@ public final class LoginManager: NSObject {
         underlyingError: nil
       )
 
-      Logger.singleShotLogEntry(.developerErrors, logEntry: message)
+      _Logger.singleShotLogEntry(.developerErrors, logEntry: message)
       return handler(nil, error)
     }
 
@@ -388,7 +388,7 @@ public final class LoginManager: NSObject {
           behavior. You should wait until the previous login handler gets called to start a new login.
           """
 
-        Logger.singleShotLogEntry(.developerErrors, logEntry: message)
+        _Logger.singleShotLogEntry(.developerErrors, logEntry: message)
         return false
       }
 
@@ -488,7 +488,7 @@ public final class LoginManager: NSObject {
         This is unsupported behavior. You should request additional permissions only when they are needed, such as \
         requesting for publish_actions when the user performs a sharing action.
         """
-      Logger.singleShotLogEntry(.developerErrors, logEntry: message)
+      _Logger.singleShotLogEntry(.developerErrors, logEntry: message)
     }
   }
 

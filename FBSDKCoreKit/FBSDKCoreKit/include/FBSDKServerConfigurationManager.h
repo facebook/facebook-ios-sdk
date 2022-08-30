@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKServerConfigurationProviding.h>
 #import <Foundation/Foundation.h>
 
 #define FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT (60 * 60)
 
 @protocol FBSDKGraphRequestFactory;
+@protocol FBSDKGraphRequestConnectionFactory;
+@protocol FBSDKDialogConfigurationMapBuilding;
 
 NS_ASSUME_NONNULL_BEGIN
 

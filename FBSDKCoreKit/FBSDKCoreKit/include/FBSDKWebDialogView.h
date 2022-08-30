@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol FBSDKWebDialogViewDelegate;
+@protocol FBSDKWebViewProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 

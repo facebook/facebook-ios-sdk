@@ -11,9 +11,9 @@
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIRequest+Private.h"
 
-#import <UIKit/UIApplication.h>
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <UIKit/UIApplication.h>
 
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
@@ -23,7 +23,6 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings.h"
 #import "FBSDKURLScheme.h"
-#import "UIApplication+URLOpener.h"
 
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";
 NSString *const FBSDKBridgeAPISchemeSuffixKey = @"scheme_suffix";

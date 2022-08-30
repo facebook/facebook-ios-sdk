@@ -15,4 +15,4 @@ protocol GamingLogging {
   )
 }
 
-extension Logger: GamingLogging {}
+extension _Logger: GamingLogging {}

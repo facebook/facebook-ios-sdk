@@ -12,8 +12,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// An internal protocol used to describe a file manager
-NS_SWIFT_NAME(FileManaging)
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_FileManaging)
 @protocol FBSDKFileManaging
 
 - (BOOL)fb_createDirectoryAtPath:(NSString *)path

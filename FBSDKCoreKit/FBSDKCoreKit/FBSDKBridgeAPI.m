@@ -25,8 +25,6 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKURLScheme.h"
-#import "NSProcessInfo+OperatingSystemVersionComparing.h"
-#import "UIApplication+URLOpener.h"
 
 /// Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
 typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {

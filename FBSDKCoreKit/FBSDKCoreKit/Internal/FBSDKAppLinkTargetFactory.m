@@ -8,7 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKAppLinkTargetFactory.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKAppLinkTarget+Internal.h"
 

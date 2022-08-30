@@ -8,6 +8,7 @@
 
 #if !TARGET_OS_TV
 
+#import <FBAEMKit/FBAEMKit.h>
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -36,6 +37,16 @@ NS_SWIFT_NAME(_AEMReporterProtocol)
 + (void)setCatalogMatchingEnabled:(BOOL)enabled;
 
 + (void)setAdvertiserRuleMatchInServerEnabled:(BOOL)enabled;
+
+@end
+
+/**
+ Internal conformance exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+@interface FBAEMReporter (AEMReporterProtocol) <FBSDKAEMReporter>
 
 @end
 

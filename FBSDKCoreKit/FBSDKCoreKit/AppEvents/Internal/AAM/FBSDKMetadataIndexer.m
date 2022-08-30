@@ -8,15 +8,12 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKMetadataIndexer.h"
-
-#import <UIKit/UIKit.h>
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKTypeUtility.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
+#import <UIKit/UIKit.h>
 
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKUtility.h"

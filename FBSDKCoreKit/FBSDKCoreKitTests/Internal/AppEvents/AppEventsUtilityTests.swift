@@ -141,7 +141,7 @@ final class AppEventsUtilityTests: XCTestCase {
     let testCity = "menlopark"
     let testState = "test_s"
     let testExternalId = "facebook123"
-    let store = UserDataStore()
+    let store = _UserDataStore()
 
     store.setUserData(testEmail, forType: .email)
     store.setUserData(testFirstName, forType: .firstName)

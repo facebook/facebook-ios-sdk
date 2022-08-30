@@ -13,7 +13,7 @@ enum TestCoreKitComponents {
 
   static func makeComponents(
     accessTokenExpirer: _AccessTokenExpiring = TestAccessTokenExpirer(),
-    accessTokenWallet: (_AccessTokenProviding & TokenStringProviding).Type = TestAccessTokenWallet.self,
+    accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type = TestAccessTokenWallet.self,
     advertiserIDProvider: _AdvertiserIDProviding = TestAdvertiserIDProvider(),
     appEvents: _AppEventsConfiguring & _ApplicationActivating & _ApplicationLifecycleObserving & _ApplicationStateSetting & EventLogging & _SourceApplicationTracking = TestAppEvents(),
     appEventsConfigurationProvider: _AppEventsConfigurationProviding = TestAppEventsConfigurationProvider(),
@@ -41,7 +41,7 @@ enum TestCoreKitComponents {
     infoDictionaryProvider: InfoDictionaryProviding = TestBundle(),
     internalUtility: InternalUtilityProtocol = TestInternalUtility(),
     logger: Logging.Type = TestLogger.self,
-    loggerFactory: LoggerCreating = TestLoggerFactory(),
+    loggerFactory: _LoggerCreating = TestLoggerFactory(),
     macCatalystDeterminator: _MacCatalystDetermining = TestMacCatalystDeterminator(),
     notificationCenter: NotificationDelivering & _NotificationPosting = TestNotificationCenter(),
     operatingSystemVersionComparer: _OperatingSystemVersionComparing = TestProcessInfo(),
@@ -68,9 +68,9 @@ enum TestCoreKitComponents {
     appLinkURLFactory: _AppLinkURLCreating = TestAppLinkURLFactory(),
     backgroundEventLogger: _BackgroundEventLogging = TestBackgroundEventLogger(),
     codelessIndexer: _CodelessIndexing.Type = TestCodelessEvents.self,
-    dataExtractor: FileDataExtracting.Type = TestFileDataExtractor.self,
+    dataExtractor: _FileDataExtracting.Type = TestFileDataExtractor.self,
     featureExtractor: _FeatureExtracting.Type = TestFeatureExtractor.self,
-    fileManager: FileManaging = TestFileManager(),
+    fileManager: _FileManaging = TestFileManager(),
     internalURLOpener: _InternalURLOpener = TestInternalURLOpener(),
     metadataIndexer: _MetadataIndexing = TestMetadataIndexer(),
     modelManager: _EventProcessing & _IntegrityParametersProcessorProvider = TestOnDeviceMLModelManager(),
@@ -82,7 +82,7 @@ enum TestCoreKitComponents {
     swizzler: _Swizzling.Type = TestSwizzler.self,
     urlHoster: URLHosting = TestURLHoster(),
     userIDProvider: _UserIDProviding = TestUserIDProvider(),
-    webViewProvider: WebViewProviding = TestWebViewFactory()
+    webViewProvider: _WebViewProviding = TestWebViewFactory()
   ) -> _CoreKitComponents {
     _CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,

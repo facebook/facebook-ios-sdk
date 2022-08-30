@@ -17,7 +17,7 @@ public final class TestKeychainStoreFactory: NSObject, KeychainStoreProviding {
   public var stubbedKeychainStore: TestKeychainStore?
 
   public func createKeychainStore(
-    withService service: String,
+    service: String,
     accessGroup: String?
   ) -> KeychainStoreProtocol {
     capturedService = service

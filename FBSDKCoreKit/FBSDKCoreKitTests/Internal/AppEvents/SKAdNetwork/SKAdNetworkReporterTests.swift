@@ -28,7 +28,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
   ]
   // swiftlint:disable:next force_unwrapping
   lazy var defaultConfiguration = SKAdNetworkConversionConfiguration(json: json)!
-  lazy var skAdNetworkReporter = SKAdNetworkReporter(
+  lazy var skAdNetworkReporter = _SKAdNetworkReporter(
     graphRequestFactory: graphRequestFactory,
     dataStore: userDefaultsSpy,
     conversionValueUpdater: TestConversionValueUpdating.self
@@ -333,7 +333,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
   func testInitializeWithDependencies() {
     let graphRequestFactory = GraphRequestFactory()
     let store = UserDefaultsSpy()
-    let reporter = SKAdNetworkReporter(
+    let reporter = _SKAdNetworkReporter(
       graphRequestFactory: graphRequestFactory,
       dataStore: store,
       conversionValueUpdater: TestConversionValueUpdating.self

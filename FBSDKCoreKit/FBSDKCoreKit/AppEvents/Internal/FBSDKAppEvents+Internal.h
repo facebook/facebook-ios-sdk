@@ -19,13 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Completed;
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 
-@interface FBSDKAppEvents (Internal) <
-  FBSDKApplicationActivating,
-  FBSDKApplicationLifecycleObserving,
-  FBSDKApplicationStateSetting,
-  FBSDKSourceApplicationTracking,
-  FBSDKUserIDProviding
->
+@interface FBSDKAppEvents (Internal)
 
 // Dependencies
 

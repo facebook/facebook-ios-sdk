@@ -13,7 +13,7 @@ import XCTest
 final class TokenCacheTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var cache: TokenCache!
+  var cache: _TokenCache!
   var settings: TestSettings!
   var keychainStore: TestKeychainStore!
   // swiftlint:enable implicitly_unwrapped_optional
@@ -23,7 +23,7 @@ final class TokenCacheTests: XCTestCase {
 
     settings = TestSettings()
     keychainStore = TestKeychainStore()
-    cache = TokenCache(settings: settings, keychainStore: keychainStore)
+    cache = _TokenCache(settings: settings, keychainStore: keychainStore)
   }
 
   func testSettings() {

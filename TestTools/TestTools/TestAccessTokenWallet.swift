@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public final class TestAccessTokenWallet: NSObject, _AccessTokenProviding, TokenStringProviding {
+public final class TestAccessTokenWallet: NSObject, _AccessTokenProviding, _TokenStringProviding {
 
   public static var tokenCache: TokenCaching?
   public static var stubbedCurrentAccessToken: AccessToken?
