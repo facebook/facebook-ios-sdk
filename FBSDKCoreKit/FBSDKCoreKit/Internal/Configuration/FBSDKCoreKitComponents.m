@@ -29,7 +29,6 @@
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKImpressionLoggerFactory.h"
 #import "FBSDKLoggerFactory.h"
-#import "FBSDKMeasurementEvent+Internal.h"
 #import "FBSDKMetadataIndexer.h"
 #import "FBSDKModelManager.h"
 #import "FBSDKPaymentProductRequestorFactory.h"

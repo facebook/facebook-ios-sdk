@@ -14,7 +14,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppLinkURLKeys.h"
-#import "FBSDKMeasurementEvent+Internal.h"
 #import "FBSDKMeasurementEventNames.h"
 #import "FBSDKSettingsProtocol.h"
 

@@ -21,8 +21,12 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(_AppLinkEventPosting)
 @protocol FBSDKAppLinkEventPosting
 
+// UNCRUSTIFY_FORMAT_OFF
 - (void)postNotificationForEventName:(NSString *)name
-                                args:(NSDictionary<NSString *, id> *)args;
+                                args:(NSDictionary<NSString *, id> *)args
+NS_SWIFT_NAME(postNotification(eventName:arguments:));
+
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

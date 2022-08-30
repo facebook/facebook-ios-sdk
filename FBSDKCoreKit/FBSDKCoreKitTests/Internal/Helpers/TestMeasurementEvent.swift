@@ -14,7 +14,7 @@ final class TestMeasurementEvent: NSObject, _AppLinkEventPosting {
   var capturedEventName: String?
   var capturedArgs = [String: String]()
 
-  func postNotification(forEventName name: String, args: [String: Any]) {
+  func postNotification(eventName name: String, arguments args: [String: Any]) {
     capturedEventName = name
     capturedArgs = args as? [String: String] ?? [:]
   }

@@ -8,7 +8,6 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
 #import <FBSDKCoreKit/FBSDKMeasurementEventListener.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 

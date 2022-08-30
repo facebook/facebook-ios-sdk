@@ -495,7 +495,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppLinkEventPoster() {
     XCTAssertTrue(
-      components.appLinkEventPoster is MeasurementEvent,
+      components.appLinkEventPoster is _MeasurementEvent,
       "The default components should use an instance of MeasurementEvent as its app link event poster"
     )
   }
