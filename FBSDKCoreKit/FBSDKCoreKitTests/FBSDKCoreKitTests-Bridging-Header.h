@@ -99,7 +99,7 @@
 #import "FBSDKProfileProtocols.h"
 #import "FBSDKRestrictiveDataFilterManager+Testing.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
-#import "FBSDKSKAdNetworkEvent.h"
+#import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKSKAdNetworkReporter+Testing.h"
 #import "FBSDKSKAdNetworkRule.h"
 #import "FBSDKServerConfiguration+Internal.h"

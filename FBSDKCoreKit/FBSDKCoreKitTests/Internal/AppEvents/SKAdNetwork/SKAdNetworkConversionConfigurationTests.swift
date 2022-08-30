@@ -84,7 +84,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100,
+                "amount": 100.0,
               ],
             ],
           ],
@@ -98,11 +98,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100,
+                "amount": 100.0,
               ],
               [
                 "currency": "JPY",
-                "amount": 100,
+                "amount": 100.0,
               ],
             ],
           ],
@@ -122,7 +122,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100,
+                "amount": 100.0,
               ],
             ],
           ],
@@ -139,11 +139,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100,
+                "amount": 100.0,
               ],
               [
                 "currency": "JPY",
-                "amount": 100,
+                "amount": 100.0,
               ],
             ],
           ],
@@ -183,7 +183,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "event_name": "fb_mobile_purchase",
             "values": [
               [
-                "amount": 100,
+                "amount": 100.0,
               ],
             ],
           ],
@@ -197,7 +197,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
             "values": [
               [
                 "currency": "USD",
-                "amount": 100,
+                "amount": 100.0,
               ],
             ],
           ],
@@ -255,7 +255,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "USD",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                   ],
                 ],
@@ -264,7 +264,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "EU",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                   ],
                 ],
@@ -278,11 +278,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "USD",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                     [
                       "currency": "JPY",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                   ],
                 ],
@@ -326,7 +326,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "USD",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                   ],
                 ],
@@ -335,7 +335,7 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "eu",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                   ],
                 ],
@@ -349,11 +349,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
                   "values": [
                     [
                       "currency": "usd",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                     [
                       "currency": "jpy",
-                      "amount": 100,
+                      "amount": 100.0,
                     ],
                   ],
                 ],
