@@ -68,7 +68,6 @@
 #import <FBSDKCoreKit/FBSDKATEPublisherFactory.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationStatusUtility.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
-#import <FBSDKCoreKit/FBSDKAuthenticationTokenClaims.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKBackgroundEventLogger.h>
 #import <FBSDKCoreKit/FBSDKBackgroundEventLogging.h>

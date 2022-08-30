@@ -8,8 +8,6 @@
 
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-#import "FBSDKAuthenticationTokenClaims+Testing.h"
-
 // +Testing.h files
 #import "FBSDKAccessToken+Testing.h"
 #import "FBSDKDeviceLoginManagerResult+Testing.h"
