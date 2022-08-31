@@ -14,6 +14,7 @@
 
 #import <AuthenticationServices/AuthenticationServices.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKBridgeAPIResponseCreating.h"
@@ -82,7 +83,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
     FBSDKErrorFactory *errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
     _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo
                                                  logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]
-                                              urlOpener:UIApplication.sharedApplication
+                                              urlOpener:CoreUIApplication.shared
                                bridgeAPIResponseFactory:[FBSDKBridgeAPIResponseFactory new]
                                         frameworkLoader:FBSDKDynamicFrameworkLoader.shared
                                    appURLSchemeProvider:FBSDKInternalUtility.sharedUtility

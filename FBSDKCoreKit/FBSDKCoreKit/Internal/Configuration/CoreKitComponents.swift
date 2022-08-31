@@ -617,7 +617,7 @@ final class CoreKitComponents {
       dataExtractor: NSData.self,
       featureExtractor: _FeatureExtractor.self,
       fileManager: FileManager.default,
-      internalURLOpener: UIApplication.shared,
+      internalURLOpener: CoreUIApplication.shared,
       metadataIndexer: metaIndexer,
       modelManager: _ModelManager.shared,
       profileSetter: Profile.self,
