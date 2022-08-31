@@ -85,7 +85,6 @@
 #import <FBSDKCoreKit/FBSDKCodelessIndexer.h>
 #import <FBSDKCoreKit/FBSDKCodelessIndexing.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
-#import <FBSDKCoreKit/FBSDKCoreKitComponents.h>
 #import <FBSDKCoreKit/FBSDKConversionValueUpdating.h>
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
 #import <FBSDKCoreKit/FBSDKCrashObserver.h>

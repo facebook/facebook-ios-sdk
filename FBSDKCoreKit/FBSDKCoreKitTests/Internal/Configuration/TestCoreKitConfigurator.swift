@@ -9,9 +9,9 @@
 @testable import FBSDKCoreKit
 
 final class TestCoreKitConfigurator: CoreKitConfiguring {
-  let components: _CoreKitComponents
+  let components: CoreKitComponents
 
-  init(components: _CoreKitComponents) {
+  init(components: CoreKitComponents) {
     self.components = components
   }
 
