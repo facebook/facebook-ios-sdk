@@ -133,7 +133,7 @@ static void SetSharingContentPeopleIDs(id<FBSDKSharingContent> sharingContent, N
 
 static void SetSharingContentPlaceID(id<FBSDKSharingContent> sharingContent)
 {
-  sharingContent.placeID = @"166793820034304"; // Facebook HQ
+  sharingContent.placeID = @"104048449631599"; // Menlo Park
 }
 
 @interface SharingDialogViewController () <ImagePickerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
