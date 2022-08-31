@@ -62,8 +62,8 @@ public enum SampleURLs {
       queryItems: SampleRawLoginResponse.withEmptyPermissions.queryItems,
       useFragments: true
     )
-    public static let withNoAccessToken = loginRedirect(
-      queryItems: SampleRawLoginResponse.withNoAccessToken.queryItems,
+    public static let withNoAccessTokenAndError = loginRedirect(
+      queryItems: SampleRawLoginResponse.withNoAccessTokenAndError.queryItems,
       useFragments: true
     )
     public static let withNoSignedRequestParameter = loginRedirect(
@@ -72,6 +72,10 @@ public enum SampleURLs {
     )
     public static let withInvalidSignedRequestParameter = loginRedirect(
       queryItems: SampleRawLoginResponse.withInvalidSignedRequestParameter.queryItems,
+      useFragments: true
+    )
+    public static let withCancellationRequest = loginRedirect(
+      queryItems: SampleRawLoginResponse.withCancellationRequestParameter.queryItems,
       useFragments: true
     )
   }

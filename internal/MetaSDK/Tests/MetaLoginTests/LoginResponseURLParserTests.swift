@@ -9,6 +9,12 @@
 @testable import MetaLogin
 import XCTest
 
+extension LoginError: Equatable {
+  public static func == (lhs: LoginError, rhs: LoginError) -> Bool {
+    return lhs.localizedDescription == rhs.localizedDescription
+  }
+}
+
 final class LoginResponseURLParserTests: XCTestCase {
   func testParseWithAllParameters() throws {
     let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
@@ -187,15 +193,15 @@ final class LoginResponseURLParserTests: XCTestCase {
     )
   }
 
-  func testParseWithNoAccessToken() throws {
-    let sampleURL = SampleURLs.LoginResponses.withNoAccessToken
+  func testParseWithNoAccessTokenAndError() throws {
+    let sampleURL = SampleURLs.LoginResponses.withNoAccessTokenAndError
     XCTAssertThrowsError(
       _ = try LoginResponseURLParser().parse(url: sampleURL)
     ) { error in
       XCTAssertEqual(
         error as? LoginError,
-        .invalidIncomingURL,
-        "Should return error if the access token parameter does not exist"
+        .cancelledLogin,
+        "Should return cancellationLogin if the access token parameter does not exist and no error in Url"
       )
     }
   }
@@ -205,7 +211,11 @@ final class LoginResponseURLParserTests: XCTestCase {
     XCTAssertThrowsError(
       _ = try LoginResponseURLParser().parse(url: sampleURL)
     ) { error in
-      XCTAssertEqual(error as? LoginError, .invalidIncomingURL, "Should return error if signed request is not provided")
+      XCTAssertEqual(
+        error as? LoginError,
+        .invalidIncomingURL,
+        "Should return error if signed request is not provided"
+      )
     }
   }
 
@@ -214,7 +224,24 @@ final class LoginResponseURLParserTests: XCTestCase {
     XCTAssertThrowsError(
       _ = try LoginResponseURLParser().parse(url: sampleURL)
     ) { error in
-      XCTAssertEqual(error as? LoginError, .invalidIncomingURL, "Should return error if signed request is invalid")
+      XCTAssertEqual(
+        error as? LoginError,
+        .unhandledError(message: "InvalidSignedRequest with InvalidSignedRequest"),
+        "Should return error if signed request is invalid"
+      )
+    }
+  }
+
+  func testParseWithCancelledUrl() throws {
+    let sampleURL = SampleURLs.LoginResponses.withCancellationRequest
+    XCTAssertThrowsError(
+      _ = try LoginResponseURLParser().parse(url: sampleURL)
+    ) { error in
+      XCTAssertEqual(
+        error as? LoginError,
+        .cancelledLogin,
+        "Should return cancelledLogin error if received error is nil and user session data is not provided"
+      )
     }
   }
 
@@ -223,14 +250,6 @@ final class LoginResponseURLParserTests: XCTestCase {
     XCTAssertTrue(
       LoginResponseURLParser().isValidAuthenticationURL(sampleURL),
       "URL shows cancelled session if incoming URL has no parameters"
-    )
-  }
-
-  func testIsCancellationWithNotCancelledURL() throws {
-    let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
-    XCTAssertFalse(
-      LoginResponseURLParser().isCancellationURL(sampleURL),
-      "URL is not cancelled if it has parameters"
     )
   }
 

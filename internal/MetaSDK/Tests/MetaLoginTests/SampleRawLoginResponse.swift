@@ -20,6 +20,14 @@ enum SampleRawLoginResponse {
     static let expiresIn = "expires_in"
     static let dataAccessExpirationTime = "data_access_expiration_time"
     static let graphDomain = "graph_domain"
+    static let error = "error"
+    static let errorMessage = "error_message"
+  }
+
+  enum SampleURLError {
+    static let invalidSignedRequestParameterError = "InvalidSignedRequestError"
+    static let invalidSignedRequestParameterErrorMsg = "Invalid signed request"
+    static let AccessCancellationError = "Access_Cancelled"
   }
 
   static let accessToken = "some_access_token"
@@ -69,7 +77,7 @@ enum SampleRawLoginResponse {
     return parameters
   }
 
-  static var withNoAccessToken: [String: Any] {
+  static var withNoAccessTokenAndError: [String: Any] {
     filterParameters(withKeys: [Keys.accessToken])
   }
 
@@ -80,6 +88,14 @@ enum SampleRawLoginResponse {
   static var withInvalidSignedRequestParameter: [String: Any] {
     var parameters = withDefaultParameters
     parameters[Keys.signedRequest] = "some_signed_request"
+    parameters[Keys.error] = SampleURLError.invalidSignedRequestParameterError
+    parameters[Keys.errorMessage] = SampleURLError.invalidSignedRequestParameterErrorMsg
+    return parameters
+  }
+
+  static var withCancellationRequestParameter: [String: Any] {
+    var parameters: [String: Any] = [:]
+    parameters[Keys.error] = SampleURLError.AccessCancellationError
     return parameters
   }
 

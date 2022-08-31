@@ -159,7 +159,6 @@ public struct MetaLogin {
 
     let parser = LoginResponseURLParser()
     guard parser.isValidAuthenticationURL(url) else { return completion(.failure(LoginError.invalidIncomingURL)) }
-    guard !parser.isCancellationURL(url) else { return completion(.cancel) }
     do {
       let userSession = try LoginResponseURLParser().parse(url: url)
       // TODO: convert completion handler into async function
@@ -168,6 +167,8 @@ public struct MetaLogin {
       }
       return completion(.success(userSession))
 
+    } catch LoginError.cancelledLogin {
+      return completion(.cancel)
     } catch {
       return completion(.failure(error))
     }

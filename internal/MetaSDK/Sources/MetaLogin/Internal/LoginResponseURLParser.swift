@@ -11,6 +11,8 @@ import Foundation
 enum LoginError: Error {
   case invalidIncomingURL
   case invalidURLCreation
+  case cancelledLogin
+  case unhandledError(message: String?)
 }
 
 struct LoginResponseURLParser {
@@ -24,6 +26,8 @@ struct LoginResponseURLParser {
     static let expiresIn = "expires_in"
     static let dataAccessExpirationTime = "data_access_expiration_time"
     static let graphDomain = "graph_domain"
+    static let error = "error"
+    static let errorMessage = "error_message"
   }
 
   func parse(url: URL) throws -> UserSession {
@@ -42,12 +46,21 @@ struct LoginResponseURLParser {
       result[item.name] = item.value
     }
 
+    if let error = parseError(from: queryItemsDictionary) {
+      throw error
+    }
+
     guard let token = AccessToken(
       tokenString: queryItemsDictionary[Keys.accessToken] ?? "",
       expirationDate: expirationDateFrom(parameters: queryItemsDictionary),
       dataAccessExpirationDate: dataAccessExpirationDateFrom(parameters: queryItemsDictionary)
-    ),
-      let userID = UserIDExtractor().getUserID(from: queryItemsDictionary[Keys.signedRequest] ?? "")
+    ) else {
+      // if error is nil and no access token found, then this should be processed as a cancellation
+      throw LoginError.cancelledLogin
+    }
+
+    guard let signedRequest = queryItemsDictionary[Keys.signedRequest],
+          let userID = UserIDExtractor().getUserID(from: signedRequest)
     else {
       throw LoginError.invalidIncomingURL
     }
@@ -81,17 +94,6 @@ struct LoginResponseURLParser {
     )
 
     return userSession
-  }
-
-  func isCancellationURL(_ url: URL) -> Bool {
-    var urlString = url.absoluteString
-    // Changes url with fragments to url with query items to enable URLComponents parsing
-    urlString = urlString.replacingOccurrences(of: "#", with: "?")
-
-    guard let components = URLComponents(string: urlString)
-    else { return false }
-
-    return components.queryItems == nil
   }
 
   func dataAccessExpirationDateFrom(parameters: [String: String]) -> Date {
@@ -128,5 +130,13 @@ struct LoginResponseURLParser {
     else { return false }
 
     return scheme == redirectURL.scheme && host == redirectURL.host
+  }
+
+  private func parseError(from urlParameters: [String: String]) -> LoginError? {
+    guard let errorMsg = urlParameters[Keys.errorMessage] else {
+      return nil
+    }
+    let error = urlParameters[Keys.error] ?? errorMsg
+    return LoginError.unhandledError(message: "\(error)")
   }
 }
