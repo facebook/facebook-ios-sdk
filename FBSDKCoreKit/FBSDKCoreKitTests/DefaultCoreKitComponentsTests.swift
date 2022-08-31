@@ -572,8 +572,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testInternalURLOpener() {
-    XCTAssertTrue(
-      components.internalURLOpener === UIApplication.shared,
+    XCTAssertIdentical(
+      components.internalURLOpener,
+      CoreUIApplication.shared,
       "The default components should use the shared UIApplication as its internal URL opener"
     )
   }

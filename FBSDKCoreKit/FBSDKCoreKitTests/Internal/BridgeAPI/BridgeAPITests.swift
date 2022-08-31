@@ -101,9 +101,9 @@ final class BridgeAPITests: XCTestCase {
       _BridgeAPI.shared.logger is _Logger,
       "The shared bridge API should use the expected logger type by default"
     )
-    XCTAssertEqual(
-      _BridgeAPI.shared.urlOpener as? UIApplication,
-      UIApplication.shared,
+    XCTAssertIdentical(
+      _BridgeAPI.shared.urlOpener as AnyObject,
+      CoreUIApplication.shared,
       "Should use the expected concrete url opener by default"
     )
     XCTAssertTrue(
