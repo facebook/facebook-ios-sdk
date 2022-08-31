@@ -12,9 +12,9 @@ import FBAEMKit
 
 final class CoreKitConfigurator: CoreKitConfiguring {
 
-  let components: _CoreKitComponents
+  let components: CoreKitComponents
 
-  init(components: _CoreKitComponents) {
+  init(components: CoreKitComponents) {
     self.components = components
   }
 

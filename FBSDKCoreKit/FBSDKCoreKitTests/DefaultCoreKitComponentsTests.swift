@@ -11,7 +11,7 @@
 import XCTest
 
 final class DefaultCoreKitComponentsTests: XCTestCase {
-  let components = _CoreKitComponents.default
+  let components = CoreKitComponents.default
 
   // MARK: - All Platforms
 

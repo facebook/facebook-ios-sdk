@@ -22,7 +22,7 @@ import UIKit
 public final class ApplicationDelegate: NSObject {
 
   var applicationObservers = NSHashTable<FBSDKApplicationObserving>(options: .weakMemory)
-  let components: _CoreKitComponents
+  let components: CoreKitComponents
   let configurator: CoreKitConfiguring
   var isAppLaunched = false
   private var hasInitializeBeenCalled = false
@@ -39,11 +39,11 @@ public final class ApplicationDelegate: NSObject {
   public private(set) static var shared = ApplicationDelegate()
 
   override convenience init() {
-    let components = _CoreKitComponents.default
+    let components = CoreKitComponents.default
     self.init(components: components, configurator: CoreKitConfigurator(components: components))
   }
 
-  init(components: _CoreKitComponents, configurator: CoreKitConfiguring) {
+  init(components: CoreKitComponents, configurator: CoreKitConfiguring) {
     self.components = components
     self.configurator = configurator
     super.init()

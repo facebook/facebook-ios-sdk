@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 // swiftlint:disable:next swiftlint_disable_without_this_or_next
 // swiftlint:disable line_length
 
@@ -83,8 +85,8 @@ enum TestCoreKitComponents {
     urlHoster: URLHosting = TestURLHoster(),
     userIDProvider: _UserIDProviding = TestUserIDProvider(),
     webViewProvider: _WebViewProviding = TestWebViewFactory()
-  ) -> _CoreKitComponents {
-    _CoreKitComponents(
+  ) -> CoreKitComponents {
+    CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
       accessTokenWallet: accessTokenWallet,
       advertiserIDProvider: advertiserIDProvider,
@@ -95,6 +97,7 @@ enum TestCoreKitComponents {
       appEventsUtility: appEventsUtility,
       atePublisherFactory: atePublisherFactory,
       authenticationTokenWallet: authenticationTokenWallet,
+      capiReporter: capiReporter,
       crashHandler: crashHandler,
       crashObserver: crashObserver,
       defaultDataStore: defaultDataStore,
@@ -127,7 +130,6 @@ enum TestCoreKitComponents {
       tokenCache: tokenCache,
       urlSessionProxyFactory: urlSessionProxyFactory,
       userDataStore: userDataStore,
-      capiReporter: capiReporter,
 
       // Non-tvOS
       aemNetworker: aemNetworker,

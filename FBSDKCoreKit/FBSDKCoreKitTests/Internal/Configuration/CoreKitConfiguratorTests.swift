@@ -12,7 +12,7 @@ import XCTest
 
 final class CoreKitConfiguratorTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
-  var components: _CoreKitComponents!
+  var components: CoreKitComponents!
   var configurator: CoreKitConfigurator!
   // swiftlint:enable implicitly_unwrapped_optional
 
