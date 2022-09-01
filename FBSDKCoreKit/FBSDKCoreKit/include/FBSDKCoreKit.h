@@ -93,7 +93,6 @@
 #import <FBSDKCoreKit/FBSDKDeviceInformationProviding.h>
 #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
 #import <FBSDKCoreKit/FBSDKDialogConfiguration.h>
-#import <FBSDKCoreKit/FBSDKDialogConfigurationMapBuilder.h>
 #import <FBSDKCoreKit/FBSDKDialogConfigurationMapBuilding.h>
 #import <FBSDKCoreKit/FBSDKDynamicFrameworkLoaderProxy.h>
 #import <FBSDKCoreKit/FBSDKDynamicSocialFrameworkLoader.h>
