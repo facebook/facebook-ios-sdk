@@ -31,7 +31,6 @@ settings:
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
-    SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
 
 targets:

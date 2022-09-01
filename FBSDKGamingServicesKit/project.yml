@@ -32,7 +32,6 @@ settings:
     # Some iOS defaults will be overridden by Xcodegen.
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
-    SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
 
 schemes:
