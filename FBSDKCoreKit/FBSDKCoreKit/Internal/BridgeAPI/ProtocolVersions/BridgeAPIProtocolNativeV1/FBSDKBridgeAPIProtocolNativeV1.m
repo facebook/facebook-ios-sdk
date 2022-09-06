@@ -9,6 +9,10 @@
 #if !TARGET_OS_TV
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.h"
+#import "FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.h"
+#import "FBSDKBridgeAPIProtocolNativeV1InputKeys.h"
+#import "FBSDKBridgeAPIProtocolNativeV1OutputKeys.h"
 
 #import <UIKit/UIKit.h>
 
@@ -26,32 +30,6 @@
 #import "UIPasteboard+Pasteboard.h"
 
 #define FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold (1024 * 16)
-
-const FBSDKBridgeAPIProtocolNativeV1OutputKeysStruct FBSDKBridgeAPIProtocolNativeV1OutputKeys =
-{
-  .bridgeArgs = @"bridge_args",
-  .methodArgs = @"method_args",
-};
-
-const FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeysStruct FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys =
-{
-  .actionID = @"action_id",
-  .appIcon = @"app_icon",
-  .appName = @"app_name",
-  .sdkVersion = @"sdk_version",
-};
-
-const FBSDKBridgeAPIProtocolNativeV1InputKeysStruct FBSDKBridgeAPIProtocolNativeV1InputKeys =
-{
-  .bridgeArgs = @"bridge_args",
-  .methodResults = @"method_results",
-};
-
-const FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeysStruct FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys =
-{
-  .actionID = @"action_id",
-  .error = @"error",
-};
 
 static const struct {
   __unsafe_unretained NSString *isBase64;

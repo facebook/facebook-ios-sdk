@@ -13,6 +13,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
+#import "FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.h"
+#import "FBSDKBridgeAPIProtocolNativeV1InputKeys.h"
 #import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
