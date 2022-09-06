@@ -411,15 +411,21 @@ final class CoreKitComponents {
       accessTokenWallet: AccessToken.self
     )
     let loggerFactory: _LoggerCreating = _LoggerFactory()
-    let paymentProductRequestorFactory: _PaymentProductRequestorCreating = _PaymentProductRequestorFactory(
-      settings: Settings.shared,
-      eventLogger: AppEvents.shared,
-      gateKeeperManager: _GateKeeperManager.self,
-      store: UserDefaults.standard,
-      loggerFactory: loggerFactory,
-      productsRequestFactory: _ProductRequestFactory(),
-      receiptProvider: Bundle(for: ApplicationDelegate.self)
+
+    _PaymentProductRequestorFactory.setDependencies(
+      .init(
+        settings: Settings.shared,
+        eventLogger: AppEvents.shared,
+        gateKeeperManager: _GateKeeperManager.self,
+        store: UserDefaults.standard,
+        loggerFactory: loggerFactory,
+        productsRequestFactory: _ProductRequestFactory(),
+        appStoreReceiptProvider: Bundle(for: ApplicationDelegate.self)
+      )
     )
+
+    let paymentProductRequestorFactory: _PaymentProductRequestorCreating = _PaymentProductRequestorFactory()
+
     let paymentObserver: _PaymentObserving = _PaymentObserver(
       paymentQueue: SKPaymentQueue.default(),
       paymentProductRequestorFactory: paymentProductRequestorFactory

@@ -324,32 +324,35 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       observer.requestorFactory as? _PaymentProductRequestorFactory,
       "The observer should use an instance of PaymentProductRequestorFactory as its requestor factory"
     )
+
+    let factoryDependencies = try type(of: factory).getDependencies()
+
     XCTAssertTrue(
-      factory.settings === components.settings,
+      factoryDependencies.settings === components.settings,
       "The factory should use the components' settings"
     )
     XCTAssertTrue(
-      factory.eventLogger === components.eventLogger,
+      factoryDependencies.eventLogger === components.eventLogger,
       "The factory should use the components' app events"
     )
     XCTAssertTrue(
-      factory.gateKeeperManager === components.gateKeeperManager,
+      factoryDependencies.gateKeeperManager === components.gateKeeperManager,
       "The factory should use the components' gate keeper manager"
     )
     XCTAssertTrue(
-      factory.store === components.defaultDataStore,
+      factoryDependencies.store === components.defaultDataStore,
       "The factory should use the components' default data store"
     )
     XCTAssertTrue(
-      factory.loggerFactory === components.loggerFactory,
+      factoryDependencies.loggerFactory === components.loggerFactory,
       "The factory should use the components' logger factory"
     )
     XCTAssertTrue(
-      factory.productsRequestFactory is _ProductRequestFactory,
+      factoryDependencies.productsRequestFactory is _ProductRequestFactory,
       "The factory should use an instance of ProductRequestFactory for its products request factory"
     )
     XCTAssertTrue(
-      factory.appStoreReceiptProvider === Bundle(for: ApplicationDelegate.self),
+      factoryDependencies.appStoreReceiptProvider === Bundle(for: ApplicationDelegate.self),
       "The factory should use the bundle of the application delegate"
     )
   }
