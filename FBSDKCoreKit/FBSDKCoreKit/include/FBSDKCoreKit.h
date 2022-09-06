@@ -165,7 +165,6 @@
 #import <FBSDKCoreKit/FBSDKPaymentObserving.h>
 #import <FBSDKCoreKit/FBSDKPaymentProductRequestor.h>
 #import <FBSDKCoreKit/FBSDKPaymentProductRequestorCreating.h>
-#import <FBSDKCoreKit/FBSDKPaymentProductRequestorFactory.h>
 #import <FBSDKCoreKit/FBSDKProductRequestFactory.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>

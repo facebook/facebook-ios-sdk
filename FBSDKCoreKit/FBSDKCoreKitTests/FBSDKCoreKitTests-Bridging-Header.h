@@ -118,7 +118,6 @@
 #import "FBSDKWebDialogView+Testing.h"
 #import "ImageDownloader+Testing.h"
 #import "PaymentProductRequestor+Testing.h"
-#import "PaymentProductRequestorFactory+Testing.h"
 #import "SuggestedEventsIndexer+Testing.h"
 #import "UIApplication+URLOpener.h"
 #import "WebViewAppLinkResolver+Testing.h"
