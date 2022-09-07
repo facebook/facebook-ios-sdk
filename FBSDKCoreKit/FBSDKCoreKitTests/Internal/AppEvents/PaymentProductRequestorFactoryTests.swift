@@ -84,29 +84,29 @@ final class PaymentProductRequestorFactoryTests: XCTestCase {
     XCTAssertIdentical(
       dependencies.gateKeeperManager,
       _GateKeeperManager.self,
-      .defaultDependency("the gatekeeper manager", for: "gatekeeping")
+      .defaultDependency("the gatekeeper manager type", for: "gatekeeping")
     )
 
     XCTAssertIdentical(
       dependencies.store as AnyObject,
       UserDefaults.standard,
-      .defaultDependency("the user defaults", for: "data persisting")
+      .defaultDependency("the standard user defaults", for: "data persisting")
     )
 
     XCTAssertTrue(
-      dependencies.loggerFactory is _LoggerCreating,
-      .defaultDependency("the logger factory", for: "logger creating")
+      dependencies.loggerFactory is _LoggerFactory,
+      .defaultDependency("a logger factory", for: "logger creating")
     )
 
     XCTAssertTrue(
-      dependencies.productsRequestFactory is _ProductsRequestCreating,
-      .defaultDependency("the products request factory", for: "product request creating")
+      dependencies.productsRequestFactory is _ProductRequestFactory,
+      .defaultDependency("a products request factory", for: "product request creating")
     )
 
     XCTAssertIdentical(
       dependencies.appStoreReceiptProvider as AnyObject,
       Bundle(for: ApplicationDelegate.self),
-      .defaultDependency("the app store receipt provider", for: "app store receipt providing")
+      .defaultDependency("the framework's bundle", for: "app store receipt providing")
     )
   }
 
