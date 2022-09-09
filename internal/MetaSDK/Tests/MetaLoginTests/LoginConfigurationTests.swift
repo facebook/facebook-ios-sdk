@@ -27,7 +27,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testDefaultDependencies() throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.publicProfile])
+    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
     loginConfiguration.resetDependencies()
     let dependencies = try loginConfiguration.getDependencies()
 
@@ -39,7 +39,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCustomDependencies() throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.publicProfile])
+    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
     loginConfiguration.setDependencies(
       .init(appConfigurationInquirer: appConfigurationInquirer)
     )
@@ -53,7 +53,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithNoAppID() throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.publicProfile])
+    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
     loginConfiguration.setDependencies(
       .init(appConfigurationInquirer: appConfigurationInquirer)
     )
@@ -72,7 +72,7 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithNoFacebookAppID() {
     var loginConfiguration = LoginConfiguration(
-      permissions: [.publicProfile],
+      permissions: [.userAvatar],
       metaAppID: "some_meta_app_id"
     )
     loginConfiguration.setDependencies(
@@ -89,7 +89,7 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithNoMetaAppID() {
     var loginConfiguration = LoginConfiguration(
-      permissions: [.publicProfile],
+      permissions: [.userAvatar],
       facebookAppID: "some_fb_app_id"
     )
     loginConfiguration.setDependencies(
@@ -120,7 +120,7 @@ final class LoginConfigurationTests: XCTestCase {
 
   func testCreatingWithPermissionsAndAppIDs() throws {
     var loginConfiguration = LoginConfiguration(
-      permissions: [.publicProfile],
+      permissions: [.userAvatar],
       facebookAppID: "some_fb_app_id",
       metaAppID: "some_meta_app_id"
     )
@@ -130,7 +130,7 @@ final class LoginConfigurationTests: XCTestCase {
 
     XCTAssertEqual(
       loginConfiguration.permissions,
-      [.publicProfile],
+      [.userAvatar],
       "A configuration should be created with provided permissions"
     )
     XCTAssertEqual(loginConfiguration.facebookAppID, "some_fb_app_id", "Should set Facebook App ID from parameters")
@@ -142,7 +142,7 @@ final class LoginConfigurationTests: XCTestCase {
     appConfigurationInquirer.facebookAppID = nil
 
     var loginConfiguration = LoginConfiguration(
-      permissions: [.publicProfile]
+      permissions: [.userAvatar]
     )
     loginConfiguration.setDependencies(
       .init(appConfigurationInquirer: appConfigurationInquirer)

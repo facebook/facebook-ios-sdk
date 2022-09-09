@@ -9,7 +9,7 @@
 /// Values epresenting login account domains
 public enum GraphDomain: String, Codable {
   /// For logins using a Facebook account.
-  case facebook = "Facebook"
+  case facebook
   /// For logins using a Meta account.
-  case meta = "Meta"
+  case meta
 }

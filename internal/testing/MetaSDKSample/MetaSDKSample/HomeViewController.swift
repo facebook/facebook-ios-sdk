@@ -18,9 +18,8 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
   let metaLogin = MetaLogin()
   let loginButtonLabel = "Login"
   let logoutButtonLabel = "Logout"
-  let appId = "421415891237674"
 
-  var selectedPermissions: Set<Permission> = [.publicProfile]
+  var selectedPermissions: Set<Permission> = [.userAvatar]
   var isLoggedIn: Bool {
     get async {
       return await metaLogin.userSession != nil
@@ -29,8 +28,15 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
 
   var cellConfigs: [LoginCellConfig] {[
     LoginCellConfig(
-      cellTitle: "App ID:",
-      cellValue: appId,
+      cellTitle: "FB App ID:",
+      cellValue: LoginConfiguration().facebookAppID,
+      cellSelectionStyle: .none,
+      cellAccessoryType: .none,
+      activity: {}
+    ),
+    LoginCellConfig(
+      cellTitle: "Meta App ID:",
+      cellValue: LoginConfiguration().metaAppID,
       cellSelectionStyle: .none,
       cellAccessoryType: .none,
       activity: {}
@@ -76,9 +82,7 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
       } else {
         self.consoleDataManager.addMessage(message: "Started login request")
         let configuration = LoginConfiguration(
-          permissions: selectedPermissions,
-          facebookAppID: appId,
-          metaAppID: "some_meta_app_id"
+          permissions: selectedPermissions
         )
 
         metaLogin.logIn(configuration: configuration) { result in

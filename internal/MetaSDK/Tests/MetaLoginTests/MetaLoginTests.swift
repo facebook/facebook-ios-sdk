@@ -20,7 +20,7 @@ final class MetaLoginTests: XCTestCase {
     super.setUp()
 
     loginConfiguration = LoginConfiguration(
-      permissions: [.publicProfile],
+      permissions: [.userAvatar],
       facebookAppID: "facebook_app_id",
       metaAppID: "some_meta_app_id"
     )
@@ -160,8 +160,13 @@ final class MetaLoginTests: XCTestCase {
     }
 
     XCTAssertEqual(
-      parameters[SampleMetaLoginParameters.Keys.appID],
+      parameters[SampleMetaLoginParameters.Keys.fbAppID],
       loginConfiguration.facebookAppID,
+      "Should set app ID from login configuration"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.metaAppID],
+      loginConfiguration.metaAppID,
       "Should set app ID from login configuration"
     )
     XCTAssertEqual(
@@ -212,7 +217,7 @@ final class MetaLoginTests: XCTestCase {
 
   func testLoginWithInvalidIncomingAuthenticationURL() throws {
     let loginConfiguration = LoginConfiguration(
-      permissions: [.publicProfile],
+      permissions: [.userAvatar],
       facebookAppID: "facebook_app_id",
       metaAppID: "some_meta_app_id"
     )
@@ -261,7 +266,7 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testLoginWithInvalidLoginURLCreation() throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.publicProfile])
+    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
     let appConfigurationInquirer = TestAppConfigurationInquirer()
     appConfigurationInquirer.metaAppID = nil
     appConfigurationInquirer.facebookAppID = nil

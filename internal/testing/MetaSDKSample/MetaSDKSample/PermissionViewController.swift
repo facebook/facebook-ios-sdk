@@ -12,8 +12,7 @@ import MetaLogin
 class PermissionViewController: UITableViewController {
 
   let permissionViewItems: [PermissionViewItem] = [
-    PermissionViewItem(permission: Permission.userAvatar),
-    PermissionViewItem(permission: Permission.publicProfile)
+    PermissionViewItem(permission: Permission.userAvatar)
   ]
 
   weak var delegate: PermissionSelectedDelegate?

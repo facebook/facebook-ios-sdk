@@ -30,7 +30,6 @@ final class PermissionTests: XCTestCase {
 
   func testValidPermissions() {
     let permissions: [(Permission, String)] = [
-      (.publicProfile, "public_profile"),
       (.userAvatar, "user_avatar"),
     ]
 

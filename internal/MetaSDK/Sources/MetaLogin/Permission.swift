@@ -38,9 +38,6 @@ public struct Permission: RawRepresentable, Hashable, Codable {
 
   // swiftlint:disable force_unwrapping
 
-  /// Provides access to a subset of items that are part of a user's public profile.
-  public static let publicProfile = Self(rawValue: "public_profile")!
-
   /// Provides access to a user's avatar.
   public static let userAvatar = Self(rawValue: "user_avatar")!
 

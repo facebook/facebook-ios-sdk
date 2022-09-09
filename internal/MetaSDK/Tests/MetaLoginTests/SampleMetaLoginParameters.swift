@@ -11,7 +11,8 @@ import Foundation
 
 enum SampleMetaLoginParameters {
   enum Keys {
-    static let appID = "app_id"
+    static let fbAppID = "fb_app_id"
+    static let metaAppID = "meta_app_id"
     static let display = "display"
     static let sdk = "sdk"
     static let returnScopes = "return_scopes"
@@ -26,7 +27,7 @@ enum SampleMetaLoginParameters {
   static let returnScopes = "true"
   static let cbt = String(round(1000 * Date().timeIntervalSince1970))
   static let responseType = "token,graph_domain,signed_request"
-  static let scope = "public_profile"
+  static let scope = "user_avatar"
   static let redirectURI = "fbconnect://success"
 
   static var defaultParameters: [String: Any] = [

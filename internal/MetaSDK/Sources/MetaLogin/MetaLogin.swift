@@ -30,7 +30,8 @@ public struct MetaLogin {
   static let callbackURLScheme: String = "fbconnect"
 
   private enum ParameterKeys {
-    static let appID = "app_id"
+    static let fbAppID = "fb_app_id"
+    static let metaAppID = "meta_app_id"
     static let display = "display"
     static let sdk = "sdk"
     static let returnScopes = "return_scopes"
@@ -122,11 +123,13 @@ public struct MetaLogin {
     configuration: LoginConfiguration
   ) -> [String: String]? {
     let cbtInMilliseconds = round(1000 * Date().timeIntervalSince1970)
-    guard let appID = configuration.facebookAppID
+    guard let fbAppID = configuration.facebookAppID,
+          let metaAppID = configuration.metaAppID
     else { return nil }
 
     var parameters: [String: String] = [
-      ParameterKeys.appID: appID,
+      ParameterKeys.fbAppID: fbAppID,
+      ParameterKeys.metaAppID: metaAppID,
       ParameterKeys.display: ParameterValues.display,
       ParameterKeys.sdk: ParameterValues.sdk,
       ParameterKeys.returnScopes: ParameterValues.returnScopes,
