@@ -9,7 +9,7 @@
 @testable import MetaLogin
 import XCTest
 
-final class AccessTokenTest: XCTestCase {
+final class AccessTokenTests: XCTestCase {
   var expiredAccessToken: AccessToken!
   var newAccessToken: AccessToken!
   var accessTokenWithoutExpirationDate: AccessToken!
