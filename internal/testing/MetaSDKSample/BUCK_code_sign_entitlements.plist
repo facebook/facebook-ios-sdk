@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>application-identifier</key>
+    <string>3NW3KR6Q88.com.meta.MetaSDKSample.master</string>
+    <key>get-task-allow</key>
+    <false/>
+    <key>keychain-access-groups</key>
+    <array>
+        <string>3NW3KR6Q88.*</string>
+        <string>com.apple.token</string>
+    </array>
+    <key>com.apple.developer.team-identifier</key>
+    <string>4W5TH4RKQ2</string>
+</dict>
+</plist>
