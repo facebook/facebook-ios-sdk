@@ -19,7 +19,7 @@ actor AppleWebAuthenticator: WebAuthenticating {
     presentationContextProvider: DefaultASWebAuthenticationSessionPresentationContextProvider()
   )
 
-  func authenticate(to url: URL) async throws -> URL {
+  func authenticate(parameters: WebAuthenticationParameters) async throws -> URL {
     guard !isAuthenticating else { throw LoginFailure.inProgress }
 
     isAuthenticating = true
@@ -28,8 +28,8 @@ actor AppleWebAuthenticator: WebAuthenticating {
 
     return try await withCheckedThrowingContinuation { continuation in
       let session = dependencies.sessionFactory.makeSession(
-        url: url,
-        callbackURLScheme: nil
+        url: parameters.url,
+        callbackURLScheme: parameters.callbackScheme
       ) { [self] url, error in
         isAuthenticating = false
 

@@ -85,13 +85,13 @@ final class AppleWebAuthenticatorTests: XCTestCase {
 
   func testInProgressAuthentication() async throws {
     Task {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     }
 
     try await Task.sleep(nanoseconds: 10_000)
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
       XCTFail(.concurrentAuthenticationFails)
     } catch LoginFailure.inProgress {
       // Expecting this error
@@ -106,7 +106,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
       session?.completionHandler?(.authenticated, nil)
     }
 
-    _ = try await authenticator.authenticate(to: .sample)
+    _ = try await authenticator.authenticate(parameters: .sample)
 
     Task {
       try await Task.sleep(nanoseconds: 10_000)
@@ -114,7 +114,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
     }
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     } catch {
       XCTFail(.subsequentAuthenticationProceeds)
     }
@@ -122,14 +122,14 @@ final class AppleWebAuthenticatorTests: XCTestCase {
 
   func testSessionCreated() async throws {
     Task {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     }
 
     try await Task.sleep(nanoseconds: 10_000)
 
     let session = try XCTUnwrap(session, .createsSession)
     XCTAssertEqual(session.url, .sample, .createsSession)
-    XCTAssertNil(session.callbackURLScheme, .createsSession)
+    XCTAssertEqual(session.callbackURLScheme, .callbackScheme, .createsSession)
     XCTAssertIdentical(
       session.presentationContextProvider as AnyObject,
       presentationContextProvider as AnyObject,
@@ -139,7 +139,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
 
   func testSessionStarted() async throws {
     Task {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     }
 
     try await Task.sleep(nanoseconds: 10_000)
@@ -152,7 +152,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
     await makeAuthenticator(shouldSessionStartSucceed: false)
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
       XCTFail(.sessionStartFailure)
     } catch LoginFailure.sessionStart {
       // Expecting this error
@@ -165,7 +165,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
     sessionFactory.autocompleteArguments = (nil, nil)
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     } catch LoginFailure.unknown {
       // Expecting this error
     } catch {
@@ -179,7 +179,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
     sessionFactory.autocompleteArguments = (nil, testError)
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     } catch LoginFailure.unknown {
       // Expecting this error
     } catch {
@@ -191,7 +191,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
     sessionFactory.autocompleteArguments = (nil, ASWebAuthenticationSessionError(.canceledLogin))
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     } catch LoginFailure.isCanceled {
       // Expecting this error
     } catch {
@@ -204,7 +204,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
     sessionFactory.autocompleteArguments = (nil, testError)
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     } catch let LoginFailure.internal(error) {
       XCTAssertEqual(error as? ASWebAuthenticationSessionError, testError, .invalidPresentationContext)
     } catch {
@@ -217,7 +217,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
     sessionFactory.autocompleteArguments = (nil, testError)
 
     do {
-      _ = try await authenticator.authenticate(to: .sample)
+      _ = try await authenticator.authenticate(parameters: .sample)
     } catch let LoginFailure.internal(error) {
       XCTAssertEqual(error as? ASWebAuthenticationSessionError, testError, .invalidPresentationContext)
     } catch {
@@ -227,7 +227,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
 
   func testSuccessfulAuthentication() async throws {
     sessionFactory.autocompleteArguments = (.authenticated, nil)
-    let url = try await authenticator.authenticate(to: .sample)
+    let url = try await authenticator.authenticate(parameters: .sample)
     XCTAssertEqual(url, .authenticated, .success)
   }
 }
@@ -275,4 +275,12 @@ fileprivate extension URL {
   static let sample = URL(string: "https://facebook.com/authenticate-me")!
   static let authenticated = URL(string: "https://facebook.com/did-authenticate")!
   // swiftlint:enable force_unwrapping
+}
+
+fileprivate extension String {
+  static let callbackScheme = "callback"
+}
+
+fileprivate extension WebAuthenticationParameters {
+  static let sample = Self(url: .sample, callbackScheme: .callbackScheme)
 }

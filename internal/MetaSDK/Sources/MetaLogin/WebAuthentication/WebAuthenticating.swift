@@ -9,5 +9,10 @@
 import Foundation
 
 protocol WebAuthenticating {
-  func authenticate(to url: URL) async throws -> URL
+  func authenticate(parameters: WebAuthenticationParameters) async throws -> URL
+}
+
+struct WebAuthenticationParameters {
+  let url: URL
+  let callbackScheme: String?
 }
