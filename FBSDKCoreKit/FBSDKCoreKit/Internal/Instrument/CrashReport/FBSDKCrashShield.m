@@ -96,7 +96,7 @@ static id<FBSDKSettings> _settings;
         @"FBSDKIntegrityManager",
       ],
       @"EventDeactivation" : @[
-        @"FBSDKEventDeactivationManager",
+        @"EventDeactivationManager",
       ],
       @"SKAdNetworkConversionValue" : @[
         @"FBSDKSKAdNetworkReporter",

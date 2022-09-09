@@ -469,7 +469,7 @@ final class CoreKitComponents {
     let errorConfigurationProvider: _ErrorConfigurationProviding = _ErrorConfigurationProvider()
     let errorFactory: ErrorCreating = ErrorFactory(reporter: ErrorReporter.shared)
     let errorReporter: ErrorReporting = ErrorReporter.shared
-    let eventDeactivationManager: _AppEventsParameterProcessing & _EventsProcessing = _EventDeactivationManager()
+    let eventDeactivationManager: _AppEventsParameterProcessing & _EventsProcessing = EventDeactivationManager()
     let eventLogger: EventLogging = AppEvents.shared
     let featureChecker: FeatureChecking & _FeatureDisabling = _FeatureManager.shared
     let gateKeeperManager: _GateKeeperManaging.Type = _GateKeeperManager.self

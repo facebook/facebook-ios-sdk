@@ -106,7 +106,6 @@
 #import <FBSDKCoreKit/FBSDKErrorRecoveryConfiguration.h>
 #import <FBSDKCoreKit/FBSDKErrorReporter.h>
 #import <FBSDKCoreKit/FBSDKErrorReporting.h>
-#import <FBSDKCoreKit/FBSDKEventDeactivationManager.h>
 #import <FBSDKCoreKit/FBSDKEventLogging.h>
 #import <FBSDKCoreKit/FBSDKEventProcessing.h>
 #import <FBSDKCoreKit/FBSDKEventsProcessing.h>
