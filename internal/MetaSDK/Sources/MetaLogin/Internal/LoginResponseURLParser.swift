@@ -12,7 +12,6 @@ struct LoginResponseURLParser {
   private enum Keys {
     static let accessToken = "access_token"
     static let grantedScopes = "granted_scopes"
-    static let deniedScopes = "denied_scopes"
     static let signedRequest = "signed_request"
     static let expires = "expires"
     static let expiresAt = "expires_at"
@@ -73,23 +72,12 @@ struct LoginResponseURLParser {
       )
     }
 
-    var declinedPermissions = Set<Permission>()
-    if let deniedScopes = queryItemsDictionary[Keys.deniedScopes],
-       !deniedScopes.isEmpty {
-      declinedPermissions = Set(
-        deniedScopes
-          .components(separatedBy: ",")
-          .compactMap(Permission.init(rawValue:))
-      )
-    }
-
     let domain = queryItemsDictionary[Keys.graphDomain].flatMap(GraphDomain.init(rawValue:)) ?? .facebook
     return UserSession(
       userID: userID,
       graphDomain: domain,
       accessToken: token,
-      requestedPermissions: grantedPermissions,
-      declinedPermissions: declinedPermissions
+      requestedPermissions: grantedPermissions
     )
   }
 

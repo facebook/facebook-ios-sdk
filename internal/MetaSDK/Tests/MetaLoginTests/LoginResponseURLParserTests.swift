@@ -54,11 +54,6 @@ final class LoginResponseURLParserTests: XCTestCase {
       SampleRawLoginResponse.requestedPermissions,
       "Should set requested permissions from granted scopes in incoming URL"
     )
-    XCTAssertEqual(
-      userSession.declinedPermissions,
-      SampleRawLoginResponse.declinedPermissions,
-      "Should set declined permissions from denied scopes in incoming URL"
-    )
   }
 
   func testInitWithAllQueryItems() throws {
@@ -101,11 +96,6 @@ final class LoginResponseURLParserTests: XCTestCase {
       userSession.requestedPermissions,
       SampleRawLoginResponse.requestedPermissions,
       "Should set requested permissions from granted scopes in incoming URL"
-    )
-    XCTAssertEqual(
-      userSession.declinedPermissions,
-      SampleRawLoginResponse.declinedPermissions,
-      "Should set declined permissions from denied scopes in incoming URL"
     )
   }
 
@@ -174,20 +164,6 @@ final class LoginResponseURLParserTests: XCTestCase {
       SampleRawLoginResponse.expiresInDate.timeIntervalSince1970,
       accuracy: 0.005,
       "Should use expires_in parameter if the expires parameter is not returned"
-    )
-  }
-
-  func testParseWithNoDeclinedPermissions() throws {
-    let sampleURL = SampleURLs.LoginResponses.withEmptyPermissions
-    let userSession = try XCTUnwrap(
-      LoginResponseURLParser().parse(url: sampleURL),
-      "Should return user session instance with no declined permissions parameters"
-    )
-
-    XCTAssertEqual(
-      userSession.declinedPermissions,
-      [],
-      "Empty array should be derived from no permissions"
     )
   }
 

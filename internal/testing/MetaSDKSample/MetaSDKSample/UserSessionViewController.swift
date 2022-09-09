@@ -14,7 +14,6 @@ class UserSessionViewController: UITableViewController {
   @IBOutlet weak var userIdLabel: UILabel!
   @IBOutlet weak var requestedPermissionsLabel: UILabel!
   @IBOutlet weak var graphDomainLabel: UILabel!
-  @IBOutlet weak var declinedPermissionsLabel: UILabel!
   @IBOutlet weak var userIDCopyButton: UIButton!
 
   @IBAction func onCopy(_ sender: Any) {
@@ -36,9 +35,6 @@ class UserSessionViewController: UITableViewController {
         .map {$0.rawValue}
         .joined(separator: ", ")
       graphDomainLabel.text = userSession.graphDomain.rawValue
-      declinedPermissionsLabel.text = userSession.declinedPermissions
-        .map {$0.rawValue}
-        .joined(separator: ", ")
     }
   }
 

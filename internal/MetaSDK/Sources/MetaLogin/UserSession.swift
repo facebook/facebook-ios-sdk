@@ -19,20 +19,16 @@ public final class UserSession: Codable {
   public internal(set) var accessToken: AccessToken
   /// The permissions that were requested when the token was obtained
   public internal(set) var requestedPermissions: Set<Permission>
-  /// The permissions that were declined when the token was obtained
-  public internal(set) var declinedPermissions: Set<Permission>
 
   init(
     userID: UInt,
     graphDomain: GraphDomain,
     accessToken: AccessToken,
-    requestedPermissions: Set<Permission>,
-    declinedPermissions: Set<Permission>
+    requestedPermissions: Set<Permission>
   ) {
     self.accessToken = accessToken
     self.graphDomain = graphDomain
     self.requestedPermissions = requestedPermissions
     self.userID = userID
-    self.declinedPermissions = declinedPermissions
   }
 }

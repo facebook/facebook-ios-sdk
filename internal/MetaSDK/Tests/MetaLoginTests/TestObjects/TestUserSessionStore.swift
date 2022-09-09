@@ -26,8 +26,7 @@ final class TestUserSessionStore: UserSessionPersisting {
       userID: UInt(111),
       graphDomain: .facebook,
       accessToken: sampleToken,
-      requestedPermissions: [],
-      declinedPermissions: []
+      requestedPermissions: []
     )
   }
 

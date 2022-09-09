@@ -29,8 +29,7 @@ extension UserSession: Equatable {
     lhs.accessToken == rhs.accessToken &&
       lhs.userID == rhs.userID &&
       lhs.graphDomain == rhs.graphDomain &&
-      lhs.requestedPermissions == rhs.requestedPermissions &&
-      lhs.declinedPermissions == rhs.declinedPermissions
+      lhs.requestedPermissions == rhs.requestedPermissions
   }
 }
 
@@ -52,8 +51,7 @@ final class UserSessionTest: XCTestCase {
       userID: userID,
       graphDomain: graphDomain,
       accessToken: token,
-      requestedPermissions: [],
-      declinedPermissions: []
+      requestedPermissions: []
     )
   }
 

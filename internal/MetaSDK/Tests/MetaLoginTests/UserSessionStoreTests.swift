@@ -36,8 +36,7 @@ final class UserSessionStoreTests: XCTestCase {
       userID: UInt(111),
       graphDomain: GraphDomain.meta,
       accessToken: sampleAccessToken,
-      requestedPermissions: [],
-      declinedPermissions: []
+      requestedPermissions: []
     )
     await userSessionStore.setDependencies(
       .init(
