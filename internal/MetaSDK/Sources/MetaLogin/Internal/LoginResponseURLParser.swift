@@ -8,15 +8,8 @@
 
 import Foundation
 
-enum LoginError: Error {
-  case invalidIncomingURL
-  case invalidURLCreation
-  case cancelledLogin
-  case unhandledError(message: String?)
-}
-
 struct LoginResponseURLParser {
-  enum Keys {
+  private enum Keys {
     static let accessToken = "access_token"
     static let grantedScopes = "granted_scopes"
     static let deniedScopes = "denied_scopes"
@@ -30,6 +23,13 @@ struct LoginResponseURLParser {
     static let errorMessage = "error_message"
   }
 
+  enum Error: Swift.Error {
+    case invalidResponse
+    case isCanceled
+    case service(message: String)
+  }
+
+  // swiftlint:disable:next function_body_length
   func parse(url: URL) throws -> UserSession {
     var urlString = url.absoluteString
     // Changes url with fragments to url with query items to enable URLComponents parsing
@@ -39,16 +39,14 @@ struct LoginResponseURLParser {
       let components = URLComponents(string: urlString),
       let queryItems = components.queryItems
     else {
-      throw LoginError.invalidIncomingURL
+      throw Error.invalidResponse
     }
 
     let queryItemsDictionary = queryItems.reduce(into: [String: String]()) { result, item in
       result[item.name] = item.value
     }
 
-    if let error = parseError(from: queryItemsDictionary) {
-      throw error
-    }
+    try throwServiceError(from: queryItemsDictionary)
 
     guard let token = AccessToken(
       tokenString: queryItemsDictionary[Keys.accessToken] ?? "",
@@ -56,13 +54,13 @@ struct LoginResponseURLParser {
       dataAccessExpirationDate: dataAccessExpirationDateFrom(parameters: queryItemsDictionary)
     ) else {
       // if error is nil and no access token found, then this should be processed as a cancellation
-      throw LoginError.cancelledLogin
+      throw Error.isCanceled
     }
 
     guard let signedRequest = queryItemsDictionary[Keys.signedRequest],
           let userID = UserIDExtractor().getUserID(from: signedRequest)
     else {
-      throw LoginError.invalidIncomingURL
+      throw Error.invalidResponse
     }
 
     var grantedPermissions = Set<Permission>()
@@ -85,15 +83,14 @@ struct LoginResponseURLParser {
       )
     }
 
-    let userSession = UserSession(
+    let domain = queryItemsDictionary[Keys.graphDomain].flatMap(GraphDomain.init(rawValue:)) ?? .facebook
+    return UserSession(
       userID: userID,
-      graphDomain: GraphDomain(rawValue: queryItemsDictionary[Keys.graphDomain] ?? "") ?? .facebook,
+      graphDomain: domain,
       accessToken: token,
       requestedPermissions: grantedPermissions,
       declinedPermissions: declinedPermissions
     )
-
-    return userSession
   }
 
   func dataAccessExpirationDateFrom(parameters: [String: String]) -> Date {
@@ -132,11 +129,9 @@ struct LoginResponseURLParser {
     return scheme == redirectURL.scheme && host == redirectURL.host
   }
 
-  private func parseError(from urlParameters: [String: String]) -> LoginError? {
-    guard let errorMsg = urlParameters[Keys.errorMessage] else {
-      return nil
-    }
-    let error = urlParameters[Keys.error] ?? errorMsg
-    return LoginError.unhandledError(message: "\(error)")
+  private func throwServiceError(from items: [String: String]) throws {
+    guard let message = items[Keys.errorMessage] else { return }
+
+    throw Error.service(message: items[Keys.error] ?? message)
   }
 }

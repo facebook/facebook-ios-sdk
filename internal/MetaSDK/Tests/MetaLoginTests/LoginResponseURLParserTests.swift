@@ -110,35 +110,33 @@ final class LoginResponseURLParserTests: XCTestCase {
   }
 
   func testInitWithNoParameters() throws {
-    let sampleURL = SampleURLs.loginRedirect
-    XCTAssertThrowsError(
-      _ = try LoginResponseURLParser().parse(url: sampleURL)
-    ) { error in
-      XCTAssertEqual(error as? LoginError, .invalidIncomingURL, "Should return error for a URL with no parameters")
+    do {
+      _ = try LoginResponseURLParser().parse(url: SampleURLs.loginRedirect)
+      XCTFail("The parser throws an error for a URL with no parameters")
+    } catch LoginResponseURLParser.Error.invalidResponse {
+      // This is the expected error
+    } catch {
+      XCTFail("The parser throws an error for a URL with no parameters; received error: \(error)")
     }
   }
 
   func testParseWithNoExpirationDatesParameters() throws {
-    let sampleURL = SampleURLs.LoginResponses.withNoExpirationParameters
-    let userSession = try XCTUnwrap(
-      LoginResponseURLParser().parse(url: sampleURL),
-      "Should return user session instance with no expiration parameters"
-    )
-    let accessToken = try XCTUnwrap(
-      userSession.accessToken,
-      "User session should have an access token instance"
-    )
+    do {
+      let userSession = try LoginResponseURLParser().parse(url: SampleURLs.LoginResponses.withNoExpirationParameters)
 
-    XCTAssertEqual(
-      accessToken.dataAccessExpirationDate,
-      Date.distantFuture,
-      "Data access expiration date should be set to distant future if no expiration parameters exist"
-    )
-    XCTAssertEqual(
-      accessToken.expirationDate,
-      Date.distantFuture,
-      "Expiration date should be set to distant future if no expiration parameters exist"
-    )
+      XCTAssertEqual(
+        userSession.accessToken.dataAccessExpirationDate,
+        .distantFuture,
+        "The data access expiration date is set to the distant past when no expiration parameters exist"
+      )
+      XCTAssertEqual(
+        userSession.accessToken.expirationDate,
+        .distantFuture,
+        "The expiration date is set to the distant past if no expiration parameters exist"
+      )
+    } catch {
+      XCTFail("The parser returns a user session without expiration parameters; received error: \(error)")
+    }
   }
 
   func testParseWithNoExpiresParameter() throws {
@@ -194,54 +192,50 @@ final class LoginResponseURLParserTests: XCTestCase {
   }
 
   func testParseWithNoAccessTokenAndError() throws {
-    let sampleURL = SampleURLs.LoginResponses.withNoAccessTokenAndError
-    XCTAssertThrowsError(
-      _ = try LoginResponseURLParser().parse(url: sampleURL)
-    ) { error in
-      XCTAssertEqual(
-        error as? LoginError,
-        .cancelledLogin,
-        "Should return cancellationLogin if the access token parameter does not exist and no error in Url"
-      )
+    do {
+      _ = try LoginResponseURLParser().parse(url: SampleURLs.LoginResponses.withNoAccessTokenAndError)
+      XCTFail("Should return cancellationLogin if the access token parameter does not exist and no error in Url")
+    } catch LoginResponseURLParser.Error.isCanceled {
+      // This is the expected error
+    } catch {
+      XCTFail("Should return cancellationLogin if the access token parameter does not exist and no error in Url")
     }
   }
 
   func testParseWithNoUserID() throws {
-    let sampleURL = SampleURLs.LoginResponses.withNoSignedRequestParameter
-    XCTAssertThrowsError(
-      _ = try LoginResponseURLParser().parse(url: sampleURL)
-    ) { error in
-      XCTAssertEqual(
-        error as? LoginError,
-        .invalidIncomingURL,
-        "Should return error if signed request is not provided"
-      )
+    do {
+      _ = try LoginResponseURLParser().parse(url: SampleURLs.LoginResponses.withNoSignedRequestParameter)
+      XCTFail("Should return error if signed request is not provided")
+    } catch LoginResponseURLParser.Error.invalidResponse {
+      // This is the expected error
+    } catch {
+      XCTFail("Should return error if signed request is not provided")
     }
   }
 
   func testParseWithInvalidUserID() throws {
-    let sampleURL = SampleURLs.LoginResponses.withInvalidSignedRequestParameter
-    XCTAssertThrowsError(
-      _ = try LoginResponseURLParser().parse(url: sampleURL)
-    ) { error in
+    do {
+      _ = try LoginResponseURLParser().parse(url: SampleURLs.LoginResponses.withInvalidSignedRequestParameter)
+      XCTFail("Should return error if signed request is invalid")
+    } catch let LoginResponseURLParser.Error.service(message: message) {
       XCTAssertEqual(
-        error as? LoginError,
-        .unhandledError(message: "InvalidSignedRequest with InvalidSignedRequest"),
+        message,
+        "InvalidSignedRequestError",
         "Should return error if signed request is invalid"
       )
+    } catch {
+      XCTFail("Should return error if signed request is invalid")
     }
   }
 
   func testParseWithCancelledUrl() throws {
-    let sampleURL = SampleURLs.LoginResponses.withCancellationRequest
-    XCTAssertThrowsError(
-      _ = try LoginResponseURLParser().parse(url: sampleURL)
-    ) { error in
-      XCTAssertEqual(
-        error as? LoginError,
-        .cancelledLogin,
-        "Should return cancelledLogin error if received error is nil and user session data is not provided"
-      )
+    do {
+      _ = try LoginResponseURLParser().parse(url: SampleURLs.LoginResponses.withCancellationRequest)
+      XCTFail("Should return cancelledLogin error if received error is nil and user session data is not provided")
+    } catch LoginResponseURLParser.Error.isCanceled {
+      // This is the expected error
+    } catch {
+      XCTFail("Should return cancelledLogin error if received error is nil and user session data is not provided")
     }
   }
 
