@@ -196,7 +196,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testEventDeactivationManager() {
     XCTAssertTrue(
-      components.eventDeactivationManager is _EventDeactivationManager,
+      components.eventDeactivationManager is EventDeactivationManager,
       "The default components should use an instance of EventDeactivationManager as its event deactivation manager"
     )
   }
