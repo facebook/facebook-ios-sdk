@@ -9,7 +9,8 @@ struct GeneratePodspecs: ParsableCommand {
 
   mutating func run() throws {
     try Product.allCases
-      .filter { $0 != .tvoskit }
+//    TODO: Uncomment for release
+//      .filter { $0 != .tvoskit }
       .forEach {
         let repository = TemplateRepository(bundle: Bundle.module)
         let template = try repository.template(named: "\($0.rawValue).podspec")

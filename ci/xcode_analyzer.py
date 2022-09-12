@@ -51,18 +51,18 @@ my_job = [
                 ],
                 "shell": analyze("BuildAllKits-Dynamic", "Debug", "allKitsOutput"),
             },
-            {
-                "name": "Analyze All Kits - TV",
-                "provide_artifacts": [
-                    {
-                        "name": "Analyzer Output for all tvOS kits",
-                        "paths": ["allKitsTVOutput.txt"],
-                        "required": False,
-                        "upload_when": ["USER_ERROR"],
-                    },
-                ],
-                "shell": analyze("BuildAllKits_TV-Dynamic", "Debug", "allKitsTVOutput"),
-            },
+            # {
+            #     "name": "Analyze All Kits - TV",
+            #     "provide_artifacts": [
+            #         {
+            #             "name": "Analyzer Output for all tvOS kits",
+            #             "paths": ["allKitsTVOutput.txt"],
+            #             "required": False,
+            #             "upload_when": ["USER_ERROR"],
+            #         },
+            #     ],
+            #     "shell": analyze("BuildAllKits_TV-Dynamic", "Debug", "allKitsTVOutput"),
+            # },
         ],
         },
     }

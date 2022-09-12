@@ -4,26 +4,29 @@ import Foundation
 
 enum Platform: CaseIterable {
     case iOS
-    case tvOS
+//    TODO: Uncomment for release
+//    case tvOS
 
     var buildDirectory: Directory {
         switch self {
         case .iOS: return .build
-        case .tvOS: return .tv
+//        case .tvOS: return .tv
         }
     }
 
     var schemeSuffix: String {
         switch self {
         case .iOS: return ""
-        case .tvOS: return "_TV"
+//        TODO: Uncomment for release
+//        case .tvOS: return "_TV"
         }
     }
 
     var supportedArchitectures: [Architecture] {
         switch self {
         case .iOS: return [.arm64, .armv7, .x86_64]
-        case .tvOS: return [.arm64, .x86_64]
+//        TODO: Uncomment for release
+//        case .tvOS: return [.arm64, .x86_64]
         }
     }
 
@@ -37,14 +40,15 @@ enum Platform: CaseIterable {
                 .share,
                 .gamingServices,
             ]
-        case .tvOS:
-            return [
-                .basics,
-                .core,
-                .login,
-                .share,
-                .tvoskit
-            ]
+//        TODO: Uncomment for release
+//        case .tvOS:
+//            return [
+//                .basics,
+//                .core,
+//                .login,
+//                .share,
+//                .tvoskit
+//            ]
         }
     }
 }
@@ -61,18 +65,19 @@ struct Destination {
     let archiveToken: String
     let platform: Platform
 
-    static let tvos = Destination(
-        name: "generic/platform=tvOS",
-        sdk: "appletvos",
-        archiveToken: "tvos",
-        platform: .tvOS
-    )
-    static let tvosSimulator = Destination(
-        name: "generic/platform=tvOS Simulator",
-        sdk: "appletvsimulator",
-        archiveToken: "tvos-simulator",
-        platform: .tvOS
-    )
+//    TODO: Uncomment for release
+//    static let tvos = Destination(
+//        name: "generic/platform=tvOS",
+//        sdk: "appletvos",
+//        archiveToken: "tvos",
+//        platform: .tvOS
+//    )
+//    static let tvosSimulator = Destination(
+//        name: "generic/platform=tvOS Simulator",
+//        sdk: "appletvsimulator",
+//        archiveToken: "tvos-simulator",
+//        platform: .tvOS
+//    )
     static let ios = Destination(
         name: "generic/platform=iOS",
         sdk: "iphoneos",

@@ -9,7 +9,8 @@ enum Product: String, CaseIterable, ExpressibleByArgument {
     case login = "FBSDKLoginKit"
     case share = "FBSDKShareKit"
     case gamingServices = "FBSDKGamingServicesKit"
-    case tvoskit = "FBSDKTVOSKit"
+//    TODO: Uncomment for release
+//    case tvoskit = "FBSDKTVOSKit"
 
     init?(argument: String) {
         switch argument {
@@ -19,7 +20,8 @@ enum Product: String, CaseIterable, ExpressibleByArgument {
         case "login", "Login", "LoginKit": self = .login
         case "share", "Share", "FBSDKShareKit": self = .share
         case "gamingServices", "GamingServices", "FBSDKGamingServicesKit": self = .gamingServices
-        case "tvos", "TVOS", "FBSDKTVOSKit": self = .tvoskit
+//        TODO: Uncomment for release
+//        case "tvos", "TVOS", "FBSDKTVOSKit": self = .tvoskit
         default:
             fatalError("Invalid product argument: \(argument)")
         }
@@ -32,8 +34,9 @@ enum Product: String, CaseIterable, ExpressibleByArgument {
                 Destination.ios,
                 Destination.iosSimulator,
                 Destination.macCatalyst,
-                Destination.tvos,
-                Destination.tvosSimulator
+//                TODO: Uncomment for release
+//                Destination.tvos,
+//                Destination.tvosSimulator
             ]
         case .gamingServices:
             return [
@@ -41,11 +44,13 @@ enum Product: String, CaseIterable, ExpressibleByArgument {
                 Destination.iosSimulator,
                 Destination.macCatalyst
             ]
-        case .tvoskit:
-            return [
-                Destination.tvos,
-                Destination.tvosSimulator
-            ]
+
+//        TODO: Uncomment for release
+//        case .tvoskit:
+//            return [
+//                Destination.tvos,
+//                Destination.tvosSimulator
+//            ]
         }
     }
 
