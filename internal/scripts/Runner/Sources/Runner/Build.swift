@@ -202,14 +202,22 @@ struct Build: ParsableCommand {
             return Archive(path: archiveURL, product: product, libraryType: libraryType)
         }
 
+        try embedStringsBundleInArchive(ofProduct: product, atURL: archiveURL)
+
+        return archive
+    }
+
+    private func embedStringsBundleInArchive(
+        ofProduct product: Product,
+        atURL url: URL
+    ) throws {
         if let path = product.stringBundlePathInArchive(for: libraryType) {
             try FileSystem.execute(from: .sdk) {
-                let copyCommand = "cp -R FacebookSDKStrings.bundle \(archiveURL.appendingPathComponent(path).path)"
+                let copyCommand = "cp -R FacebookSDKStrings.bundle \(url.appendingPathComponent(path).path)"
                 try shellOut(to: copyCommand)
             }
         }
 
-        return archive
     }
 
     private static func createFileHandles() throws -> ResultHandles {
