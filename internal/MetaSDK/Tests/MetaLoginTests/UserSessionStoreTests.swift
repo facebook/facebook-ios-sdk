@@ -67,11 +67,27 @@ final class UserSessionStoreTests: XCTestCase {
   func testReadUserSessionSuccessfully() async throws {
     userSessionMap.stubbedIntegerForKey = UserSessionStore.userSessionSavedFlag
     keychainStore.stubbedUserSessionData = try JSONEncoder().encode(userSession)
-    let result = try await userSessionStore.getUserSession()
+    let session = try await userSessionStore.getUserSession()
+
     XCTAssertEqual(
-      result,
-      userSession,
-      "Read userSession successfully"
+      session.userID,
+      userSession.userID,
+      "The persisted session is retrieved from the store"
+    )
+    XCTAssertEqual(
+      session.graphDomain,
+      userSession.graphDomain,
+      "The persisted session is retrieved from the store"
+    )
+    XCTAssertEqual(
+      session.accessToken.tokenString,
+      userSession.accessToken.tokenString,
+      "The persisted session is retrieved from the store"
+    )
+    XCTAssertEqual(
+      session.requestedPermissions,
+      userSession.requestedPermissions,
+      "The persisted session is retrieved from the store"
     )
     XCTAssertTrue(
       keychainStore.isReadCalled,
