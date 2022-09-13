@@ -9,12 +9,6 @@
 @testable import MetaLogin
 import XCTest
 
-extension LoginError: Equatable {
-  public static func == (lhs: LoginError, rhs: LoginError) -> Bool {
-    return lhs.localizedDescription == rhs.localizedDescription
-  }
-}
-
 final class LoginResponseURLParserTests: XCTestCase {
   func testParseWithAllParameters() throws {
     let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
