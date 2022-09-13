@@ -8,26 +8,17 @@
 
 import Foundation
 
-public enum LoginResult {
-  case cancel
-  case success(UserSession)
-  case failure(Error)
-}
-
-public typealias LoginCompletion = (LoginResult) -> Void
-
 /// Provides methods for logging the user in and out.
 public struct MetaLogin {
 
   var configuredDependencies: InstanceDependencies?
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
-    authenticationDialogPresenter: AuthenticationDialogPresenter(),
-    userSessionStore: UserSessionStore(),
-    authenticationSessionStateStore: AuthenticationSessionStateStore()
+    webAuthenticator: AppleWebAuthenticator(),
+    userSessionStore: UserSessionStore()
   )
 
   static let redirectURI: String = "fbconnect://success"
-  static let callbackURLScheme: String = "fbconnect"
+  static let callbackURLScheme = "fbconnect"
 
   private enum ParameterKeys {
     static let fbAppID = "fb_app_id"
@@ -50,13 +41,13 @@ public struct MetaLogin {
     static let rerequest = "rerequest"
   }
 
-  /// represents login information including both user and authentication data
+  /// Login information including both user and authentication data.
   public var userSession: UserSession? {
     get async {
-      guard let dependencies = try? getDependencies() else { return nil }
+      guard let userSessionStore = try? getDependencies().userSessionStore else { return nil }
 
       do {
-        return try await dependencies.userSessionStore.getUserSession()
+        return try await userSessionStore.getUserSession()
       } catch LocalStorageError.itemNotFound {
         return nil
       } catch {
@@ -71,33 +62,31 @@ public struct MetaLogin {
 
   /**
    Logs the user in or authorizes additional permissions.
+
    - Parameter configuration: The login configuration to use. If not explicitly set, the default
-   configuration will be used
-   - Parameter param: completion the login completion handler.
+   configuration will be used.
    */
-  public func logIn(
-    configuration: LoginConfiguration,
-    completion: @escaping LoginCompletion
-  ) {
-    guard let dependencies = try? getDependencies() else { return }
+  @discardableResult
+  public func logIn(configuration: LoginConfiguration = LoginConfiguration()) async throws -> UserSession {
+    let authenticator = try getDependenciesWithLoginFailure().webAuthenticator
 
-    guard let parameters = makeLoginParameters(configuration: configuration),
-          let url = getUniversalLoginURL(parameters: parameters)
-    else { return completion(.failure(LoginError.invalidURLCreation)) }
-
-    dependencies.authenticationDialogPresenter.presentAuthenticationDialog(
-      url: url,
-      callbackURLScheme: "fbconnect"
-    ) { result in
-      switch result {
-      case let .success(url):
-        completeLogin(url: url, completion: completion)
-      case let .failure(error):
-        return completion(.failure(error))
-      case .cancel:
-        return completion(.cancel)
-      }
+    let url: URL
+    do {
+      url = try createUniversalLoginURL(
+        from: try getLoginParameters(from: configuration)
+      )
+    } catch {
+      throw LoginFailure.internal(error)
     }
+
+    let response = try await authenticator.authenticate(
+      parameters: WebAuthenticationParameters(
+        url: url,
+        callbackScheme: Self.callbackURLScheme
+      )
+    )
+
+    return try await completeLogin(with: response)
   }
 
   /**
@@ -112,20 +101,25 @@ public struct MetaLogin {
 
     do {
       try await dependencies.userSessionStore.deleteUserSession()
-      await dependencies.authenticationSessionStateStore.setAuthenticationSessionState(nil)
     } catch {
       // TODO: error logging
       print("Failed to logout with \(error)")
     }
   }
 
-  func makeLoginParameters(
-    configuration: LoginConfiguration
-  ) -> [String: String]? {
+  enum LoginURLError: Error {
+    case missingApplicationIdentifier
+    case invalidComponents
+    case invalidResponse
+  }
+
+  func getLoginParameters(from configuration: LoginConfiguration) throws -> [String: String] {
+    guard
+      let fbAppID = configuration.facebookAppID,
+      let metaAppID = configuration.metaAppID
+    else { throw LoginURLError.missingApplicationIdentifier }
+
     let cbtInMilliseconds = round(1000 * Date().timeIntervalSince1970)
-    guard let fbAppID = configuration.facebookAppID,
-          let metaAppID = configuration.metaAppID
-    else { return nil }
 
     var parameters: [String: String] = [
       ParameterKeys.fbAppID: fbAppID,
@@ -140,12 +134,12 @@ public struct MetaLogin {
 
     let permissions = configuration.permissions
     parameters[ParameterKeys.scope] = permissions.map(\.rawValue).joined(separator: ",")
-    parameters[ParameterKeys.redirectURI] = MetaLogin.redirectURI
+    parameters[ParameterKeys.redirectURI] = Self.redirectURI
 
     return parameters
   }
 
-  private func getUniversalLoginURL(parameters: [String: String]) -> URL? {
+  private func createUniversalLoginURL(from parameters: [String: String]) throws -> URL {
     var components = URLComponents()
     components.scheme = "https"
     components.host = "facebook.com"
@@ -154,34 +148,47 @@ public struct MetaLogin {
       URLQueryItem(name: $0, value: $1)
     }
 
-    return components.url
+    guard let url = components.url else {
+      throw LoginURLError.invalidComponents
+    }
+
+    return url
   }
 
-  func completeLogin(url: URL, completion: @escaping LoginCompletion) {
-    guard let dependencies = try? getDependencies() else { return }
+  func completeLogin(with url: URL) async throws -> UserSession {
+    let userSessionStore: UserSessionPersisting
+    do {
+      userSessionStore = try getDependencies().userSessionStore
+    } catch {
+      throw LoginFailure.internal(error)
+    }
 
     let parser = LoginResponseURLParser()
-    guard parser.isValidAuthenticationURL(url) else { return completion(.failure(LoginError.invalidIncomingURL)) }
-    do {
-      let userSession = try LoginResponseURLParser().parse(url: url)
-      // TODO: convert completion handler into async function
-      Task {
-        try await dependencies.userSessionStore.saveUserSession(userSession)
-      }
-      return completion(.success(userSession))
+    guard parser.isValidAuthenticationURL(url) else {
+      throw LoginFailure.internal(LoginURLError.invalidResponse)
+    }
 
-    } catch LoginError.cancelledLogin {
-      return completion(.cancel)
+    do {
+      let userSession = try parser.parse(url: url)
+      try await userSessionStore.saveUserSession(userSession)
+      return userSession
     } catch {
-      return completion(.failure(error))
+      throw LoginFailure.internal(error)
     }
   }
 }
 
 extension MetaLogin: DependentAsInstance {
   struct InstanceDependencies {
-    var authenticationDialogPresenter: AuthenticationDialogPresenting
+    var webAuthenticator: WebAuthenticating
     var userSessionStore: UserSessionPersisting
-    var authenticationSessionStateStore: AuthenticationSessionStatePersisting
+  }
+
+  func getDependenciesWithLoginFailure() throws -> InstanceDependencies {
+    do {
+      return try getDependencies()
+    } catch {
+      throw LoginFailure.internal(error)
+    }
   }
 }

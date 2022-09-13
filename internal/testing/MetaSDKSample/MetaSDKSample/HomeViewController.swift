@@ -85,17 +85,16 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
           permissions: selectedPermissions
         )
 
-        metaLogin.logIn(configuration: configuration) { result in
-          switch result {
-          case .success:
-            Task {
-              await self.updateLoginButtonLabel()
-              self.consoleDataManager.addMessage(message: "Login request completed")
-            }
-          case .failure(let error):
-            self.consoleDataManager.addMessage(message: "Failed to login with \(error)")
-          case .cancel:
+        do {
+          try await metaLogin.logIn(configuration: configuration)
+          await self.updateLoginButtonLabel()
+          self.consoleDataManager.addMessage(message: "Login request completed")
+        } catch let loginFailure as LoginFailure {
+          switch loginFailure {
+          case .isCanceled:
             self.consoleDataManager.addMessage(message: "Login cancelled")
+          default:
+            self.consoleDataManager.addMessage(message: "Failed to login with \(loginFailure)")
           }
         }
       }

@@ -10,39 +10,34 @@
 import XCTest
 
 final class MetaLoginTests: XCTestCase {
-  var presenter: TestAuthenticationDialogPresenter!
   var metaLogin: MetaLogin!
-  var loginConfiguration: LoginConfiguration!
+  var webAuthenticator: TestWebAuthenticator!
   var userSessionStore: TestUserSessionStore!
-  var authenticationSessionStateStore: TestAuthenticationSessionStateStore!
+
+  let loginConfiguration = LoginConfiguration(
+    permissions: [.userAvatar],
+    facebookAppID: "facebook_app_id",
+    metaAppID: "some_meta_app_id"
+  )
 
   override func setUp() {
     super.setUp()
 
-    loginConfiguration = LoginConfiguration(
-      permissions: [.userAvatar],
-      facebookAppID: "facebook_app_id",
-      metaAppID: "some_meta_app_id"
-    )
+    webAuthenticator = TestWebAuthenticator()
     userSessionStore = TestUserSessionStore()
-    authenticationSessionStateStore = TestAuthenticationSessionStateStore()
     metaLogin = MetaLogin()
-    presenter = TestAuthenticationDialogPresenter()
     metaLogin.setDependencies(
       .init(
-        authenticationDialogPresenter: presenter,
-        userSessionStore: userSessionStore,
-        authenticationSessionStateStore: authenticationSessionStateStore
+        webAuthenticator: webAuthenticator,
+        userSessionStore: userSessionStore
       )
     )
   }
 
   override func tearDown() {
-    loginConfiguration = nil
     metaLogin = nil
-    presenter = nil
+    webAuthenticator = nil
     userSessionStore = nil
-    authenticationSessionStateStore = nil
 
     super.tearDown()
   }
@@ -52,112 +47,87 @@ final class MetaLoginTests: XCTestCase {
     let dependencies = try metaLogin.getDependencies()
 
     XCTAssertTrue(
-      dependencies.authenticationDialogPresenter is AuthenticationDialogPresenter,
-      "A login manager uses a provided authentication web view"
+      dependencies.webAuthenticator is AppleWebAuthenticator,
+      "A login manager uses an Apple web authenticator by default"
     )
     XCTAssertTrue(
       dependencies.userSessionStore is UserSessionStore,
-      "A login manager uses a provided LocalStorage"
+      "A login manager uses a user session store by default"
     )
   }
 
   func testCustomDependencies() throws {
     let dependencies = try metaLogin.getDependencies()
 
-    XCTAssertTrue(
-      dependencies.authenticationDialogPresenter is TestAuthenticationDialogPresenter,
-      "Should be set to a custom authentication web view"
-    )
-    XCTAssertTrue(
-      dependencies.userSessionStore is TestUserSessionStore,
-      "A login manager uses a custom LocalStorage"
-    )
-  }
-
-  func testSuccessfulLogin() throws {
-    let didReceiveResponse = expectation(description: #function)
-    var capturedUserSession: UserSession?
-    metaLogin.logIn(configuration: loginConfiguration) { result in
-      if case let .success(result) = result {
-        capturedUserSession = result
-      } else {
-        XCTFail("Should not fail with successful login")
-      }
-      didReceiveResponse.fulfill()
-    }
-
-    let sampleURL = SampleURLs.LoginResponses.withDefaultParameters
-    presenter.capturedCompletion?(.success(sampleURL))
-    wait(for: [didReceiveResponse], timeout: 0.5)
-    XCTAssertNotNil(capturedUserSession, "Should capture user session after successful login")
-    XCTAssertEqual(
-      capturedUserSession,
-      userSessionStore.capturedUserSessionInSave,
-      "Should save user session upon successful login"
-    )
-    XCTAssertTrue(presenter.wasPresentAuthenticationDialogCalled, "Login should call open URL")
-    XCTAssertEqual(
-      presenter.capturedCallbackURLScheme,
-      MetaLogin.callbackURLScheme,
-      "Should capture set callback URL scheme"
-    )
-  }
-
-  func testLoginWithLoginResponseError() throws {
-    var capturedError: Error?
-    metaLogin.logIn(configuration: loginConfiguration) { result in
-      if case let .failure(error) = result {
-        capturedError = error
-      }
-    }
-    presenter.capturedCompletion?(.success(SampleURLs.loginRedirect))
-
-    presenter.capturedCompletion?(.success(SampleURLs.example))
-
-    XCTAssertEqual(
-      capturedError as? LoginError,
-      LoginError.invalidIncomingURL,
-      "Authentication session error should be set to assigned value"
-    )
-  }
-
-  func testLoginWithCancelledLoginSession() throws {
-    var capturedResult: LoginResult?
-    metaLogin.logIn(configuration: loginConfiguration) { result in
-      if case .cancel = result {
-        capturedResult = result
-      } else {
-        XCTFail("Should return cancel result when login is cancelled")
-      }
-    }
-
-    presenter.capturedCompletion?(.cancel)
-    XCTAssertNotNil(capturedResult, "The captured result should indicate a cancellation")
-  }
-
-  func testLoginWithOpenURLError() throws {
-    var capturedError: Error?
-    metaLogin.logIn(configuration: loginConfiguration) { result in
-      if case let .failure(error) = result {
-        capturedError = error
-      }
-    }
-
-    let sampleError = SampleError.WebAuthSessionCancelledError
-    presenter.capturedCompletion?(.failure(sampleError))
     XCTAssertIdentical(
-      capturedError as AnyObject,
-      sampleError as AnyObject,
-      "Authentication session error should be set to assigned value"
+      dependencies.webAuthenticator as AnyObject,
+      webAuthenticator,
+      "A login manager uses a custom web authenticator when provided"
+    )
+    XCTAssertIdentical(
+      dependencies.userSessionStore as AnyObject,
+      userSessionStore,
+      "A login manager uses a custom user session store when provided"
     )
   }
 
-  func testMakeLoginParameters() throws {
-    guard let parameters = metaLogin.makeLoginParameters(configuration: loginConfiguration)
-    else {
-      XCTFail("Should return dictionary of parameters with valid login configuration")
-      return
+  func testSuccessfulLogin() async throws {
+    await webAuthenticator.setResponseURL(SampleURLs.LoginResponses.withDefaultParameters)
+
+    do {
+      let session = try await metaLogin.logIn(configuration: loginConfiguration)
+
+      XCTAssertIdentical(
+        session,
+        userSessionStore.capturedUserSessionInSave,
+        "The user session is saved upon successful login"
+      )
+    } catch {
+      XCTFail("No error is thrown for a successful login")
     }
+  }
+
+  func testLoginWithLoginResponseError() async throws {
+    await webAuthenticator.setResponseURL(SampleURLs.loginRedirect)
+
+    do {
+      try await metaLogin.logIn(configuration: loginConfiguration)
+      XCTFail("An error is thrown with an invalid response URL")
+    } catch LoginFailure.internal {
+      // This is the expected error
+    } catch {
+      XCTFail("Authentication session error should be set to assigned value")
+    }
+  }
+
+  func testLoginWithCancelledLoginSession() async throws {
+    await webAuthenticator.setError(LoginFailure.isCanceled)
+
+    do {
+      try await metaLogin.logIn(configuration: loginConfiguration)
+      XCTFail("Should return cancel result when login is cancelled")
+    } catch LoginFailure.isCanceled {
+      // This is the expected error
+    } catch {
+      XCTFail("Should return cancel result when login is cancelled")
+    }
+  }
+
+  func testLoginWithOtherError() async throws {
+    await webAuthenticator.setError(LoginFailure.unknown)
+
+    do {
+      try await metaLogin.logIn(configuration: loginConfiguration)
+      XCTFail("Authentication session error should be set to assigned value")
+    } catch LoginFailure.unknown {
+      // This is the expected error
+    } catch {
+      XCTFail("Authentication session error should be set to assigned value")
+    }
+  }
+
+  func testLoginParameters() throws {
+    let parameters = try metaLogin.getLoginParameters(from: loginConfiguration)
 
     XCTAssertEqual(
       parameters[SampleMetaLoginParameters.Keys.fbAppID],
@@ -202,70 +172,60 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testLogout() async throws {
-    authenticationSessionStateStore.stubbedAuthenticationSessionState = .performingLogin
     await metaLogin.logOut()
-    let state = await authenticationSessionStateStore.getAuthenticationSessionState()
-    XCTAssertNil(
-      state,
-      "AuthenticationSessionState should be set as none after user logs out"
-    )
+
     XCTAssertTrue(
       userSessionStore.isDeleteUserSessionCalled,
       "Should delete the stored user session when a user logs out"
     )
   }
 
-  func testLoginWithInvalidIncomingAuthenticationURL() throws {
+  func testLoginWithInvalidIncomingAuthenticationURL() async throws {
     let loginConfiguration = LoginConfiguration(
       permissions: [.userAvatar],
       facebookAppID: "facebook_app_id",
       metaAppID: "some_meta_app_id"
     )
-    var capturedError: Error?
+    await webAuthenticator.setResponseURL(SampleURLs.example(path: "foo"))
 
-    metaLogin.logIn(configuration: loginConfiguration) { result in
-      if case let .failure(error) = result {
-        capturedError = error
-      }
+    do {
+      try await metaLogin.logIn(configuration: loginConfiguration)
+      XCTFail("Should return URL error if the incoming URL does not begin with the Meta Login redirect uri")
+    } catch {
+      // Expecting an error to be thrown
     }
-
-    let url = SampleURLs.example(path: "foo")
-    presenter.capturedCompletion?(.success(url))
-    XCTAssertNotNil(
-      capturedError,
-      "Should return URL error if the incoming URL does not begin with the Meta Login redirect uri"
-    )
   }
 
-  func testGetUserSession() async throws {
-    let userSessionResult = await metaLogin.userSession
-    XCTAssertEqual(
+  func testGettingUserSession() async throws {
+    let userSession = await metaLogin.userSession
+    XCTAssertIdentical(
+      userSession,
       userSessionStore.stubbedUserSession,
-      userSessionResult,
       "The userSession variable should be consistent with cached data"
     )
   }
 
-  func testGetUserSessionWithItemNotFoundError() async throws {
+  func testGettingUserSessionWithItemNotFoundError() async {
     userSessionStore.stubbedError = LocalStorageError.itemNotFound
-    let userSessionResult = await metaLogin.userSession
+    let userSession = await metaLogin.userSession
+
     XCTAssertNil(
-      userSessionResult,
+      userSession,
       "The userSession should be nil when error occurs in userSessionStore get method "
     )
   }
 
-  func testGetUserSessionWithUnhandledError() async throws {
-    userSessionStore.stubbedError = LocalStorageError.unhandledError(
-      status: SecCopyErrorMessageString(errSecBadReq, nil) as? String)
-    let userSessionResult = await metaLogin.userSession
+  func testGettingUserSessionWithUnhandledError() async {
+    userSessionStore.stubbedError = LocalStorageError.unhandledError(status: "foo")
+    let userSession = await metaLogin.userSession
+
     XCTAssertNil(
-      userSessionResult,
+      userSession,
       "The userSession should be nil when error occurs in userSessionStore get method "
     )
   }
 
-  func testLoginWithInvalidLoginURLCreation() throws {
+  func testLoginWithInvalidLoginURLCreation() async throws {
     var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
     let appConfigurationInquirer = TestAppConfigurationInquirer()
     appConfigurationInquirer.metaAppID = nil
@@ -274,16 +234,13 @@ final class MetaLoginTests: XCTestCase {
       .init(appConfigurationInquirer: appConfigurationInquirer)
     )
 
-    var capturedError: Error?
-    metaLogin.logIn(configuration: loginConfiguration) { result in
-      if case let .failure(error) = result {
-        capturedError = error
-      }
+    do {
+      try await metaLogin.logIn(configuration: loginConfiguration)
+      XCTFail("Should return error if login parameters cannot be retrieved")
+    } catch LoginFailure.internal {
+      // This is the expected error
+    } catch {
+      XCTFail("Should return error if login parameters cannot be retrieved")
     }
-    XCTAssertEqual(
-      capturedError as? LoginError,
-      LoginError.invalidURLCreation,
-      "Should return error if login parameters cannot be retrieved"
-    )
   }
 }
