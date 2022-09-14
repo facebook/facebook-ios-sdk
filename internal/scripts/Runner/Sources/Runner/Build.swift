@@ -169,6 +169,48 @@ struct Build: ParsableCommand {
         }
     }
 
+    /**
+     Used for getting the path to the directory that the repo was cloned into.
+     This is so that we can strip this directory from the debug cloning map and avoid bugs like:
+     https://github.com/facebook/facebook-ios-sdk/issues/2091
+     This will work for pathing as long as the repo has the name `facebook-ios-sdk`.
+     */
+    private func getPathToCloningDirectory() throws -> String {
+        let path = try shellOut(to: "git rev-parse --show-toplevel")
+        return path.replacingOccurrences(of: "/facebook-ios-sdk", with: "")
+    }
+
+    private func getSwiftDriverFlags() throws -> String {
+        var flags = [String]()
+        // Only use line-tables-only for static libraries
+        if libraryType == .static {
+            // Will ensure only enough information is generated to populate a stack trace
+            flags.append("-gline-tables-only")
+        }
+
+        flags.append(
+            // Maps the debug prefix map to be empty
+            "-debug-prefix-map \(try getPathToCloningDirectory())="
+        )
+
+        return flags.joined(separator: " ")
+    }
+
+    private func getCDriverFlags() throws -> String {
+        var flags = [String]()
+        // Only use line-tables-only for static libraries
+        if libraryType == .static {
+            // Will ensure only enough information is generated to populate a stack trace
+            flags.append("-gline-tables-only")
+        }
+
+        // Maps the debug prefix map and other file prefixes to be empty
+        flags.append(
+            "-ffile-prefix-map=\(try getPathToCloningDirectory())="
+        )
+        return flags.joined(separator: " ")
+    }
+
     private func archive(
         product: Product,
         destination: Destination,
@@ -180,8 +222,17 @@ struct Build: ParsableCommand {
             CommandLine.Option(name: "-scheme", arguments: [product.scheme(destination: destination, libraryType: libraryType)]),
             CommandLine.Option(name: "-destination", arguments: [destination.name]),
             sdk.flatMap { CommandLine.Option(name: "-sdk", arguments: [$0]) },
+            CommandLine.Option(
+                name: "-derivedDataPath",
+                arguments: [Directory.build.url.standardizedFileURL.path]
+            ),
             CommandLine.Option(name: "-archivePath", arguments: [url.standardizedFileURL.path]),
         ].compactMap { $0 }
+
+        let frontendFlags = [
+            "-Xfrontend -no-clang-module-breadcrumbs",
+            "-no-serialize-debugging-options",
+        ].joined(separator: " -Xfrontend ")
 
         let commandLine = CommandLine(
             command: "xcodebuild",
@@ -191,7 +242,14 @@ struct Build: ParsableCommand {
             environmentVariables: [
                 CommandLine.EnvironmentVariable(name: "SWIFT_SERIALIZE_DEBUGGING_OPTIONS", value: "NO"),
                 CommandLine.EnvironmentVariable(name: "SKIP_INSTALL", value: "NO"),
-                CommandLine.EnvironmentVariable(name: "OTHER_SWIFT_FLAGS", value: "\"-Xfrontend -no-serialize-debugging-options\"")
+                CommandLine.EnvironmentVariable(
+                    name: "OTHER_SWIFT_FLAGS",
+                    value: "\"\(try getSwiftDriverFlags()) \(frontendFlags)\""
+                ),
+                CommandLine.EnvironmentVariable(
+                    name: "OTHER_CFLAGS",
+                    value: "\"\(try getCDriverFlags())\""
+                ),
             ]
         )
 
