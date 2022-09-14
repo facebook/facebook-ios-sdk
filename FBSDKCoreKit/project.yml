@@ -62,7 +62,6 @@ targets:
         script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      FB_BITCODE_FLAG[sdk=iphoneos11.0]: -fembed-bitcode
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
       CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit-Dynamic:

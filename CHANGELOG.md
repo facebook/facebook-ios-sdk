@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Removed
+
+- Support for bitcode. Bitcode is no longer needed or supported by Apple as of Xcode 14 - https://developer.apple.com/documentation/xcode-release-notes/xcode-14-release-notes
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.1.0...HEAD)
 
 ## 14.1.0
