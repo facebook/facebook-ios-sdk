@@ -10,9 +10,6 @@ SKIP_INSTALL = YES
 CODE_SIGNING_REQUIRED = NO
 CODE_SIGN_IDENTITY =
 
-// Required for dynamic frameworks to properly emit bitcode
-ENABLE_BITCODE = YES
-
 // Enables the framework to be included from any location as long as the
 // loader’s runpath search paths includes it. For example from an application
 // bundle (inside the "Frameworks" folder) or shared folder

@@ -18,5 +18,5 @@ VALIDATE_PRODUCT = YES
 // Code Generation
 GCC_OPTIMIZATION_LEVEL = s
 
-// Apple LLVM / Bitcode Support
-OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG) -DNS_BLOCK_ASSERTIONS=1
+// Apple LLVM Support
+OTHER_CFLAGS = $(inherited) -DNS_BLOCK_ASSERTIONS=1

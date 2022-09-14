@@ -33,11 +33,8 @@ targets:
       - sdk: Accelerate.framework
       - sdk: JavaScriptCore.framework
       - sdk: UIKit.framework
-    settings:
-      FB_BITCODE_FLAG[sdk=iphoneos11.0]: -fembed-bitcode
     compilerFlags:
       - "-w"
-      - "-fembed-bitcode"
       - "-Wunused-function"
       - "-Werror"
       - "-Wincomplete-implementation"

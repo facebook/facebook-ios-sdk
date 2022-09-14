@@ -67,19 +67,10 @@ struct Build: ParsableCommand {
     }
 
     private func produceFrameworks() throws {
-        // Keeps track of used symbol map paths for each product to prevent
-        // duplication across frameworks
-        var usedSymbolMaps = [String]()
-
         try products.forEach { product in
             let archives = try buildXCArchives(for: product)
 
-            try buildXCFramework(for: product, from: archives, excludingSymbolMaps: usedSymbolMaps)
-
-            let symbolMaps = archives.flatMap {
-                return $0.bcSymbolMapsPaths
-            }
-            usedSymbolMaps.append(contentsOf: symbolMaps)
+            try buildXCFramework(for: product, from: archives)
         }
     }
 
@@ -127,12 +118,11 @@ struct Build: ParsableCommand {
 
     private func buildXCFramework(
         for product: Product,
-        from archives: [Archive],
-        excludingSymbolMaps symbolMaps: [String]
+        from archives: [Archive]
     ) throws {
         try FileSystem.execute(from: .sdk) {
             let frameworkOptions = try archives.flatMap {
-                return try $0.commandLineOptions(excludingSymbolMaps: symbolMaps)
+                return try $0.commandLineOptions()
             }
             let artifactPath = "\(Directory.xcframeworks.path)/\(libraryType.rawValue.capitalized)/\(product.rawValue).xcframework"
 
@@ -230,9 +220,9 @@ struct Build: ParsableCommand {
         ].compactMap { $0 }
 
         let frontendFlags = [
-            "-Xfrontend -no-clang-module-breadcrumbs",
-            "-no-serialize-debugging-options",
-        ].joined(separator: " -Xfrontend ")
+            "-Xfrontend -no-clang-module-breadcrumbs", // attempt to get rid of .pcm files
+            "-Xfrontend -no-serialize-debugging-options",
+        ].joined(separator: " ")
 
         let commandLine = CommandLine(
             command: "xcodebuild",
@@ -298,27 +288,26 @@ struct Build: ParsableCommand {
         let product: Product
         let libraryType: LibraryType
 
-        var bcSymbolMapsPaths: [String] {
-            guard let urls = bcSymbolMapsUrls else { return [] }
+        func commandLineOptions() throws -> [CommandLine.Option] {
+            let symbolsOption = CommandLine.Option(
+                name: "-debug-symbols",
+                arguments: [
+                    path
+                        .appendingPathComponent("dSYMS/\(product.rawValue).framework.dSYM")
+                        .standardizedFileURL.path
+                ]
+            )
+            let frameworkOption = CommandLine.Option(
+                name: "-framework",
+                arguments: [frameworkUrl.standardizedFileURL.path]
+            )
 
-            return urls.map { $0.lastPathComponent }
-        }
-
-        func commandLineOptions(excludingSymbolMaps symbolMaps: [String]) throws -> [CommandLine.Option] {
-            let symbols = debugSymbolsUrls()
-                .filter { !symbolMaps.contains($0.lastPathComponent) }
-                .map {
-                    CommandLine.Option(
-                        name: "-debug-symbols",
-                        arguments: [$0.standardizedFileURL.path]
-                    )
-                }
-            return [
-                CommandLine.Option(
-                    name: "-framework",
-                    arguments: [frameworkUrl.standardizedFileURL.path]
-                )
-            ] + symbols
+            switch libraryType {
+            case .dynamic:
+                return [frameworkOption, symbolsOption]
+            case .static:
+                return [frameworkOption]
+            }
         }
 
         private var frameworkUrl: URL {
@@ -334,27 +323,8 @@ struct Build: ParsableCommand {
             return url.appendingPathComponent("\(product.rawValue).framework")
         }
 
-        private func debugSymbolsUrls() -> [URL] {
-            guard let validDsymUrl = dsymUrl,
-                  let validSymbolMapsUrls = bcSymbolMapsUrls,
-                  !validSymbolMapsUrls.isEmpty
-            else {
-                return []
-            }
-
-            return [validDsymUrl] + validSymbolMapsUrls
-        }
-
         private var dsymUrl: URL? {
             path.appendingPathComponent("dSYMS/\(product.rawValue).framework.dSYM")
-        }
-
-        private var bcSymbolMapsUrls: [URL]? {
-            let mapsPath = path.appendingPathComponent("BCSymbolMaps")
-
-            return FileManager.default.subpaths(atPath: mapsPath.standardizedFileURL.path)?
-                .compactMap(URL.init)
-                .map { mapsPath.appendingPathComponent($0.path) }
         }
     }
 }
