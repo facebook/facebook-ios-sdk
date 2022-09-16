@@ -172,6 +172,8 @@ public struct MetaLogin {
       let userSession = try parser.parse(url: url)
       try await userSessionStore.saveUserSession(userSession)
       return userSession
+    } catch LoginResponseURLParser.Error.isCanceled {
+      throw LoginFailure.isCanceled
     } catch {
       throw LoginFailure.internal(error)
     }

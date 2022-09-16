@@ -243,4 +243,17 @@ final class MetaLoginTests: XCTestCase {
       XCTFail("Should return error if login parameters cannot be retrieved")
     }
   }
+
+  func testLoginWithCancellationURL() async throws {
+    await webAuthenticator.setResponseURL(SampleURLs.LoginResponses.withNoAccessTokenAndError)
+
+    do {
+      try await metaLogin.logIn(configuration: loginConfiguration)
+      XCTFail("An error is thrown with an invalid response URL")
+    } catch LoginFailure.isCanceled {
+      // This is the expected error
+    } catch {
+      XCTFail("Authentication session error should be set to assigned value")
+    }
+  }
 }
