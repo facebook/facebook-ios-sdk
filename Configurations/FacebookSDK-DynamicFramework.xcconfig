@@ -10,9 +10,6 @@ MACH_O_TYPE = mh_dylib
 SKIP_INSTALL = YES
 CODE_SIGNING_REQUIRED = NO
 
-// Required for dynamic frameworks to properly emit bitcode
-ENABLE_BITCODE = YES
-
 // Whether to strip out code that isn't called from anywhere
 DEAD_CODE_STRIPPING = NO
 
