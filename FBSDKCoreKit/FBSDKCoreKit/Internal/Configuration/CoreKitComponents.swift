@@ -457,7 +457,7 @@ final class CoreKitComponents {
     let appEvents: _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
       & _ApplicationActivating & _ApplicationStateSetting & EventLogging = AppEvents.shared
     let appEventsConfigurationProvider: _AppEventsConfigurationProviding = _AppEventsConfigurationManager.shared
-    let appEventsStateProvider: _AppEventsStateProviding = _AppEventsStateFactory()
+    let appEventsStateProvider: _AppEventsStateProviding = AppEventsStateFactory()
     let appEventsStateStore: _AppEventsStatePersisting = _AppEventsStateManager.shared
     let appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtility
       & _LoggingNotifying = _AppEventsUtility.shared

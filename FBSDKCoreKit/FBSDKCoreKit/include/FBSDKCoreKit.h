@@ -32,7 +32,6 @@
 #import <FBSDKCoreKit/FBSDKAppEventsParameterProcessing.h>
 #import <FBSDKCoreKit/FBSDKAppEventsReporter.h>
 #import <FBSDKCoreKit/FBSDKAppEventsState.h>
-#import <FBSDKCoreKit/FBSDKAppEventsStateFactory.h>
 #import <FBSDKCoreKit/FBSDKAppEventsStateManager.h>
 #import <FBSDKCoreKit/FBSDKAppEventsStatePersisting.h>
 #import <FBSDKCoreKit/FBSDKAppEventsStateProviding.h>

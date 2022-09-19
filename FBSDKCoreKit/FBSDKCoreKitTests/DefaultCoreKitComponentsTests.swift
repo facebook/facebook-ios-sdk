@@ -59,7 +59,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppEventsStateProvider() {
     XCTAssertTrue(
-      components.appEventsStateProvider is _AppEventsStateFactory,
+      components.appEventsStateProvider is AppEventsStateFactory,
       "The default components should use an instance of AppEventsStateFactory as its app events state provider"
     )
   }
