@@ -55,7 +55,6 @@
 #import <FBSDKCoreKit/FBSDKAppLinksBlock.h>
 #import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
 #import <FBSDKCoreKit/FBSDKAppLinkTargetCreating.h>
-#import <FBSDKCoreKit/FBSDKAppLinkTargetFactory.h>
 #import <FBSDKCoreKit/FBSDKAppLinkTargetProtocol.h>
 #import <FBSDKCoreKit/FBSDKAppLinkURL.h>
 #import <FBSDKCoreKit/FBSDKAppLinkURLCreating.h>

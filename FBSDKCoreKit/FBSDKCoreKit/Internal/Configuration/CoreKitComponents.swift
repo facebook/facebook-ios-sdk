@@ -616,7 +616,7 @@ final class CoreKitComponents {
       appLinkEventPoster: _MeasurementEvent(),
       appLinkFactory: _AppLinkFactory(),
       appLinkResolver: WebViewAppLinkResolver.shared,
-      appLinkTargetFactory: _AppLinkTargetFactory(),
+      appLinkTargetFactory: AppLinkTargetFactory(),
       appLinkURLFactory: _AppLinkURLFactory(),
       backgroundEventLogger: backgroundEventLogger,
       codelessIndexer: _CodelessIndexer.self,
