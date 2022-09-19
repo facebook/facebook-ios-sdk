@@ -519,7 +519,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppLinkTargetFactory() {
     XCTAssertTrue(
-      components.appLinkTargetFactory is _AppLinkTargetFactory,
+      components.appLinkTargetFactory is AppLinkTargetFactory,
       "The default components should use an instance of AppLinkTargetFactory as its app link target factory"
     )
   }
