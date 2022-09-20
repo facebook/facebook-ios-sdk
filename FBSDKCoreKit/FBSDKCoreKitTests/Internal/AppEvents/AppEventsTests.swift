@@ -1194,19 +1194,17 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testLogEventWillRecordAndUpdateWithSKAdNetworkReporter() {
-    if #available(iOS 11.3, *) {
-      appEvents.logEvent(eventName, valueToSum: purchaseAmount)
-      XCTAssertEqual(
-        eventName.rawValue,
-        skAdNetworkReporter.capturedEvent,
-        "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
-      )
-      XCTAssertEqual(
-        purchaseAmount,
-        skAdNetworkReporter.capturedValue?.doubleValue,
-        "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
-      )
-    }
+    appEvents.logEvent(eventName, valueToSum: purchaseAmount)
+    XCTAssertEqual(
+      eventName.rawValue,
+      skAdNetworkReporter.capturedEvent,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
+    )
+    XCTAssertEqual(
+      purchaseAmount,
+      skAdNetworkReporter.capturedValue?.doubleValue,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
+    )
     validateAEMReporterCalled(
       eventName: eventName,
       currency: nil,
@@ -1456,23 +1454,21 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-    if #available(iOS 11.3, *) {
-      featureManager.completeCheck(
-        forFeature: .skAdNetwork,
-        with: true
-      )
-      featureManager.completeCheck(
-        forFeature: .skAdNetworkConversionValue,
-        with: true
-      )
-      XCTAssertTrue(
-        skAdNetworkReporter.enableWasCalled,
-        """
-        Fetching a configuration should enable SKAdNetworkReporter when SKAdNetworkReport \
-        and SKAdNetworkConversionValue are enabled
-        """
-      )
-    }
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: true
+    )
+    XCTAssertTrue(
+      skAdNetworkReporter.enableWasCalled,
+      """
+      Fetching a configuration should enable SKAdNetworkReporter when SKAdNetworkReport \
+      and SKAdNetworkConversionValue are enabled
+      """
+    )
   }
 
   func testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabled() {
@@ -1480,20 +1476,18 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-    if #available(iOS 11.3, *) {
-      featureManager.completeCheck(
-        forFeature: .skAdNetwork,
-        with: true
-      )
-      featureManager.completeCheck(
-        forFeature: .skAdNetworkConversionValue,
-        with: false
-      )
-      XCTAssertFalse(
-        skAdNetworkReporter.enableWasCalled,
-        "Fetching a configuration should NOT enable SKAdNetworkReporter if SKAdNetworkConversionValue is disabled"
-      )
-    }
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: false
+    )
+    XCTAssertFalse(
+      skAdNetworkReporter.enableWasCalled,
+      "Fetching a configuration should NOT enable SKAdNetworkReporter if SKAdNetworkConversionValue is disabled"
+    )
   }
 
   func testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabled() {

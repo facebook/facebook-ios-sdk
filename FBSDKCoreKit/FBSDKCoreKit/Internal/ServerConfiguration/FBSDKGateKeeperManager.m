@@ -187,11 +187,7 @@ static id<FBSDKDataPersisting> _store;
       NSString *defaultKey = [NSString stringWithFormat:FBSDK_GATEKEEPERS_USER_DEFAULTS_KEY,
                               _settings.appID];
 
-    #if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_11_0
       NSData *data = [NSKeyedArchiver archivedDataWithRootObject:gateKeeper requiringSecureCoding:NO error:NULL];
-    #else
-      NSData *data = [NSKeyedArchiver archivedDataWithRootObject:gateKeeper];
-    #endif
 
       [self.store fb_setObject:data forKey:defaultKey];
     }

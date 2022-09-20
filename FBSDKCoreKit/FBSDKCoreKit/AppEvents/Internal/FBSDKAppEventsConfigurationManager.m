@@ -64,16 +64,9 @@ static FBSDKAppEventsConfigurationManager *_shared;
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
   id data = [self.store fb_objectForKey:FBSDKAppEventsConfigurationKey];
 
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   if ([data isKindOfClass:NSData.class]) {
-    if (@available(iOS 11.0, tvOS 11.0, *)) {
-      self.configuration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKAppEventsConfiguration.class fromData:data error:nil];
-    } else {
-      self.configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    }
+    self.configuration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKAppEventsConfiguration.class fromData:data error:nil];
   }
-  #pragma clang diagnostic pop
 
   if (!self.configuration) {
     self.configuration = FBSDKAppEventsConfiguration.defaultConfiguration;

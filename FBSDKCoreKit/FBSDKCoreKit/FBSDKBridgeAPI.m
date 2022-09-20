@@ -27,7 +27,7 @@
 #import "FBSDKLogger+Internal.h"
 #import "FBSDKURLScheme.h"
 
-/// Specifies state of FBSDKAuthenticationSession (SFAuthenticationSession (iOS 11) and ASWebAuthenticationSession (iOS 12+))
+/// Specifies state of FBSDKAuthenticationSession
 typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   /// There is no active authentication session
   FBSDKAuthenticationSessionNone,
@@ -62,8 +62,8 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 @property (nonatomic) NSObject<FBSDKBridgeAPIRequest> *pendingRequest;
 @property (nonatomic) FBSDKBridgeAPIResponseBlock pendingRequestCompletionBlock;
 @property (nonatomic) id<FBSDKURLOpening> pendingURLOpen;
-@property (nonatomic) id<FBSDKAuthenticationSession> authenticationSession NS_AVAILABLE_IOS(11_0);
-@property (nonatomic) FBSDKAuthenticationCompletionHandler authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
+@property (nonatomic) id<FBSDKAuthenticationSession> authenticationSession;
+@property (nonatomic) FBSDKAuthenticationCompletionHandler authenticationSessionCompletionHandler;
 @property (nonatomic) FBSDKAuthenticationSession authenticationSessionState;
 @property (nonatomic) BOOL expectingBackground;
 @property (nullable, nonatomic) SFSafariViewController *safariViewController;
@@ -125,13 +125,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   } else if (_authenticationSession && _authenticationSessionState == FBSDKAuthenticationSessionCanceledBySystem) {
     [_authenticationSession cancel];
     _authenticationSession = nil;
-    NSString *errorDomain;
-    if (@available(iOS 12.0, *)) {
-      errorDomain = @"com.apple.AuthenticationServices.WebAuthenticationSession";
-    } else {
-      errorDomain = @"com.apple.SafariServices.Authentication";
-    }
-
+    NSString *errorDomain = @"com.apple.AuthenticationServices.WebAuthenticationSession";
     NSError *error = [self.errorFactory errorWithDomain:errorDomain
                                                    code:1
                                                userInfo:nil

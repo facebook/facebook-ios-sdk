@@ -494,13 +494,11 @@ final class CoreKitComponents {
     }
 
     var skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
-    if #available(iOS 11.3, *) {
-      skAdNetworkReporter = _SKAdNetworkReporter(
-        graphRequestFactory: graphRequestFactory,
-        dataStore: UserDefaults.standard,
-        conversionValueUpdater: SKAdNetwork.self
-      )
-    }
+    skAdNetworkReporter = _SKAdNetworkReporter(
+      graphRequestFactory: graphRequestFactory,
+      dataStore: UserDefaults.standard,
+      conversionValueUpdater: SKAdNetwork.self
+    )
 
     let metaIndexer: _MetadataIndexing = _MetadataIndexer(userDataStore: userDataStore, swizzler: _Swizzler.self)
     let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol = _SuggestedEventsIndexer(

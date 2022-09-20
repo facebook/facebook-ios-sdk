@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@available(iOS 11.2, *)
 enum SampleProducts {
   static func createValid() -> TestProduct {
     TestProduct()
