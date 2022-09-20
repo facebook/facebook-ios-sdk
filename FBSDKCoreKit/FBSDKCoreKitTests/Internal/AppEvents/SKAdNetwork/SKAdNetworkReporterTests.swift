@@ -54,7 +54,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     }
   }
 
-  func testLoadReportData() {
+  func testLoadReportData() throws {
     let set = Set(["fb_mobile_puchase"])
     let recordedEvents = NSMutableSet(set: set)
     let recordedValues: NSMutableDictionary = ["fb_mobile_purchase": ["USD": 10]]
@@ -62,7 +62,12 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let conversionValue = 10
     let timestamp = Date()
 
-    saveEvents(events: recordedEvents, values: recordedValues, conversionValue: conversionValue, timestamp: timestamp)
+    try saveEvents(
+      events: recordedEvents,
+      values: recordedValues,
+      conversionValue: conversionValue,
+      timestamp: timestamp
+    )
 
     skAdNetworkReporter._loadReportData()
     XCTAssertEqual(
@@ -360,13 +365,16 @@ final class SKAdNetworkReporterTests: XCTestCase {
     values: NSMutableDictionary,
     conversionValue: NSInteger,
     timestamp: Date
-  ) {
+  ) throws {
     let reportData: NSMutableDictionary = [:]
     reportData["conversion_value"] = conversionValue
     reportData["timestamp"] = timestamp
     reportData["recorded_events"] = events
     reportData["recorded_values"] = values
-    let cache = NSKeyedArchiver.archivedData(withRootObject: reportData)
+    let cache = try NSKeyedArchiver.archivedData(
+      withRootObject: reportData,
+      requiringSecureCoding: true
+    )
     userDefaultsSpy.set(cache, forKey: "com.facebook.sdk:FBSDKSKAdNetworkReporter")
   }
 }

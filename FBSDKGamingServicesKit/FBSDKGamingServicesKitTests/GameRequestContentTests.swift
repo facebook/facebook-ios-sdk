@@ -31,10 +31,10 @@ final class GameRequestContentTests: XCTestCase {
     XCTAssertEqual(contentCopy, content)
   }
 
-  func testCoding() {
+  func testCoding() throws {
     let content = Self.contentWithAllProperties()
-    let data = NSKeyedArchiver.archivedData(withRootObject: content)
-    let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
+    let data = try NSKeyedArchiver.archivedData(withRootObject: content, requiringSecureCoding: true)
+    let unarchiver = try NSKeyedUnarchiver(forReadingFrom: data)
     unarchiver.requiresSecureCoding = true
     let unarchivedObject = unarchiver.decodeObject(
       of: GameRequestContent.self,

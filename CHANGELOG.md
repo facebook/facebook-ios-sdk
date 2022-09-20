@@ -14,6 +14,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 15.0.0
 
+### Changed 
+
+- The minimum supported version of iOS and tvOS is now 12.0.
+
 ### Deprecated
 
 - Support for tvOS is now deprecated and will be removed in Version 16.

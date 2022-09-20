@@ -105,8 +105,10 @@ final class ErrorConfigurationTests: XCTestCase {
   func testErrorConfigurationAdditonalArray() throws {
     let intermediaryConfiguration = _ErrorConfiguration(dictionary: nil)
     intermediaryConfiguration.update(with: rawErrorCodeConfiguration)
-    let data = NSKeyedArchiver.archivedData(
-      withRootObject: intermediaryConfiguration)
+    let data = try NSKeyedArchiver.archivedData(
+      withRootObject: intermediaryConfiguration,
+      requiringSecureCoding: true
+    )
 
     let configuration = try NSKeyedUnarchiver.unarchivedObject(
       ofClass: _ErrorConfiguration.self, from: data

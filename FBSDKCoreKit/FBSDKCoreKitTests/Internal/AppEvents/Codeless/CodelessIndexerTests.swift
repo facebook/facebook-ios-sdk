@@ -230,7 +230,7 @@ final class CodelessIndexerTests: XCTestCase {
   }
 
   func testLoadingValidCachedSetting() throws {
-    dataStore.set(archivedSetting(), forKey: codelessSettingStorageKey)
+    dataStore.set(try archivedSetting(), forKey: codelessSettingStorageKey)
 
     _CodelessIndexer.loadCodelessSetting { isEnabled, potentialError in
       self.capturedIsEnabled = isEnabled
@@ -254,8 +254,8 @@ final class CodelessIndexerTests: XCTestCase {
     )
   }
 
-  func testLoadingExpiredCachedSettingWithoutAdvertiserID() {
-    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+  func testLoadingExpiredCachedSettingWithoutAdvertiserID() throws {
+    dataStore.set(try archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     _CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not invoke the completion")
@@ -269,9 +269,9 @@ final class CodelessIndexerTests: XCTestCase {
     )
   }
 
-  func testLoadingExpiredCachedSettingWithAdvertiserID() {
+  func testLoadingExpiredCachedSettingWithAdvertiserID() throws {
     advertiserIDProvider.advertiserID = name
-    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+    dataStore.set(try archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     _CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not invoke the completion")
@@ -290,9 +290,9 @@ final class CodelessIndexerTests: XCTestCase {
     )
   }
 
-  func testCompletingLoadingSettingWithOnlyError() {
+  func testCompletingLoadingSettingWithOnlyError() throws {
     advertiserIDProvider.advertiserID = name
-    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+    dataStore.set(try archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     _CodelessIndexer.loadCodelessSetting { _, _ in
       XCTFail("Should not invoke the completion if the network call completes with an error")
@@ -371,9 +371,9 @@ final class CodelessIndexerTests: XCTestCase {
     )
   }
 
-  func testCompletingLoadingNewSettingWithExpiredCachedSetting() {
+  func testCompletingLoadingNewSettingWithExpiredCachedSetting() throws {
     advertiserIDProvider.advertiserID = name
-    dataStore.set(archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
+    dataStore.set(try archivedSetting(date: .distantPast), forKey: codelessSettingStorageKey)
 
     _CodelessIndexer.loadCodelessSetting { isEnabled, potentialError in
       self.capturedIsEnabled = isEnabled
@@ -811,12 +811,13 @@ final class CodelessIndexerTests: XCTestCase {
   func archivedSetting(
     isEnabled: Bool = true,
     date: Date = Date()
-  ) -> Data {
-    NSKeyedArchiver.archivedData(
+  ) throws -> Data {
+    try NSKeyedArchiver.archivedData(
       withRootObject: [
         "codeless_setup_enabled": isEnabled,
         "codeless_setting_timestamp": date,
-      ]
+      ],
+      requiringSecureCoding: true
     )
   }
 }
