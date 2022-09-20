@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKURL (Internal) <FBSDKAppLinkURL>
+@interface FBSDKURL (Internal) 
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKSettings> settings;
 @property (class, nullable, nonatomic, readonly) id<FBSDKAppLinkCreating> appLinkFactory;

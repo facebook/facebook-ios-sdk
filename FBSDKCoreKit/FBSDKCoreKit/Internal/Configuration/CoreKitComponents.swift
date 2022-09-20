@@ -617,7 +617,7 @@ final class CoreKitComponents {
       appLinkFactory: _AppLinkFactory(),
       appLinkResolver: WebViewAppLinkResolver.shared,
       appLinkTargetFactory: AppLinkTargetFactory(),
-      appLinkURLFactory: _AppLinkURLFactory(),
+      appLinkURLFactory: AppLinkURLFactory(),
       backgroundEventLogger: backgroundEventLogger,
       codelessIndexer: _CodelessIndexer.self,
       dataExtractor: NSData.self,
