@@ -15,7 +15,6 @@ import Security
 import Social
 import XCTest
 
-@available(iOS 12.0, *)
 final class DynamicFrameworkLoaderTests: XCTestCase {
 
   #if BUCK

@@ -974,19 +974,17 @@ static BOOL g_explicitEventsLoggedYet = NO;
           [self.onDeviceMLModelManager enable];
         }
       }];
-      if (@available(iOS 11.3, *)) {
-        if ([self.settings isSKAdNetworkReportEnabled]) {
-          [self.featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
-            if (SKAdNetworkEnabled) {
-              [SKAdNetwork registerAppForAdNetworkAttribution];
-              [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
-                if (SKAdNetworkConversionValueEnabled) {
-                  [self.skAdNetworkReporter enable];
-                }
-              }];
-            }
-          }];
-        }
+      if ([self.settings isSKAdNetworkReportEnabled]) {
+        [self.featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
+          if (SKAdNetworkEnabled) {
+            [SKAdNetwork registerAppForAdNetworkAttribution];
+            [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
+              if (SKAdNetworkConversionValueEnabled) {
+                [self.skAdNetworkReporter enable];
+              }
+            }];
+          }
+        }];
       }
       if (@available(iOS 14.0, *)) {
         [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {

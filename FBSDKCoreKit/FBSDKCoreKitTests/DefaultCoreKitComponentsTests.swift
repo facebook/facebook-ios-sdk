@@ -625,7 +625,6 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
-  @available(iOS 11.3, *)
   func testSKAdNetworkReporter() throws {
     let reporter = try XCTUnwrap(
       components.skAdNetworkReporter as? _SKAdNetworkReporter,
