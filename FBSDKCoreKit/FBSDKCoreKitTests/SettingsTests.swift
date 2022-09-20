@@ -1498,7 +1498,10 @@ final class SettingsTests: XCTestCase {
       "Should not be able to set data processing options to invalid list of options but you can"
     )
 
-    let persistedData = NSKeyedArchiver.archivedData(withRootObject: settings.persistableDataProcessingOptions as Any)
+    let persistedData = try NSKeyedArchiver.archivedData(
+      withRootObject: settings.persistableDataProcessingOptions as Any,
+      requiringSecureCoding: true
+    )
 
     let capturedValues = userDefaultsSpy.capturedValues
 
