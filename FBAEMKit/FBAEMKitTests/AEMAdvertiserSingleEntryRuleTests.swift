@@ -10,8 +10,6 @@
 
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
 
   enum Keys {
@@ -487,5 +485,3 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
 fileprivate extension String {
   static let isCodable = "AEMAdvertiserSingleEntryRule should be encodable and decodable"
 }
-
-#endif

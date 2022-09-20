@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
  Error codes from the SDK in the range 400-499 are reserved for this domain.
  */
 FOUNDATION_EXPORT NSErrorDomain const FBSDKTVOSErrorDomain
-NS_SWIFT_NAME(TVOSErrorDomain);
+NS_SWIFT_NAME(TVOSErrorDomain)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.");
 
 /**
  FBSDKTVOSError
@@ -28,6 +29,8 @@ typedef NS_ERROR_ENUM (FBSDKTVOSErrorDomain, FBSDKTVOSError)
 
   /// The error code for unknown errors.
   FBSDKTVOSErrorUnknown,
-} NS_SWIFT_NAME(TVOSError);
+}
+NS_SWIFT_NAME(TVOSError)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.");
 
 NS_ASSUME_NONNULL_END

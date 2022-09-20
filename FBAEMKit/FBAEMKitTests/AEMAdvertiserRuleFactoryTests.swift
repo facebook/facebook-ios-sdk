@@ -10,8 +10,6 @@
 
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMAdvertiserRuleFactoryTests: XCTestCase {
 
   let factory = _AEMAdvertiserRuleFactory()
@@ -311,5 +309,3 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
     }
   }
 }
-
-#endif

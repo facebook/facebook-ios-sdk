@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 NS_SWIFT_NAME(FBTVLoginViewControllerElement)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKTVLoginViewControllerElement : TVViewElement <FBSDKDeviceLoginViewControllerDelegate>
 
 @end

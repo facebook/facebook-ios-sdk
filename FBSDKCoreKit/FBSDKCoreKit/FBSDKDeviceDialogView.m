@@ -23,7 +23,10 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKDeviceDialogView
+#pragma clang diagnostic pop
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
