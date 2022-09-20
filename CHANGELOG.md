@@ -18,6 +18,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Support for bitcode. Bitcode is no longer needed or supported by Apple as of Xcode 14 - https://developer.apple.com/documentation/xcode-release-notes/xcode-14-release-notes
 
+### Improved
+
+- Binary artifact sizes are now smaller.
+
 [2022-09-19](https://github.com/facebook/facebook-ios-sdk/releases/tag/v15.0.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.1.0...v15.0.0)
 
