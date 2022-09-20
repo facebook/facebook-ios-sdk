@@ -138,7 +138,6 @@
 #import <FBSDKCoreKit/FBSDKInternalUtilityProtocol.h>
 #import <FBSDKCoreKit/FBSDKInstrumentManager.h>
 #import <FBSDKCoreKit/FBSDKKeychainStore.h>
-#import <FBSDKCoreKit/FBSDKKeychainStoreFactory.h>
 #import <FBSDKCoreKit/FBSDKKeychainStoreProtocol.h>
 #import <FBSDKCoreKit/FBSDKKeychainStoreProviding.h>
 #import <FBSDKCoreKit/FBSDKLocation.h>
