@@ -204,10 +204,13 @@ final class GateKeeperManagerTests: XCTestCase {
     XCTAssertEqual(completionCallCount, 2, "Should invoke all pending completions when the request finishes")
   }
 
-  func testLoadingGateKeepersWithNonEmptyStore() {
+  func testLoadingGateKeepersWithNonEmptyStore() throws {
     settings.appID = name
 
-    let data = NSKeyedArchiver.archivedData(withRootObject: SampleRawRemoteGatekeeper.validEnabled)
+    let data = try NSKeyedArchiver.archivedData(
+      withRootObject: SampleRawRemoteGatekeeper.validEnabled,
+      requiringSecureCoding: true
+    )
     store.setValue(data, forKey: storeIdentifierPrefix + name)
 
     _GateKeeperManager.loadGateKeepers(nil)
