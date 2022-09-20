@@ -10,7 +10,10 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKJS
+#pragma clang diagnostic pop
 
 + (NSString *)accessTokenString
 {

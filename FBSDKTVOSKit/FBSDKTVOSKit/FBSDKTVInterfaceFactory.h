@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
  * `<FBSDKLoginViewController />` (see FBSDKTVLoginViewControllerElement.h for details)
  */
 NS_SWIFT_NAME(TVInterfaceFactory)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKTVInterfaceFactory : NSObject <TVInterfaceCreating>
 
 - (instancetype)init NS_UNAVAILABLE;

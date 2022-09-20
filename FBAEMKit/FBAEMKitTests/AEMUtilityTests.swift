@@ -10,8 +10,6 @@ import FBAEMKit
 import Foundation
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMUtilityTests: XCTestCase {
   enum Keys {
     static let content = "fb_content"
@@ -190,5 +188,3 @@ final class AEMUtilityTests: XCTestCase {
     return String(data: jsonData!, encoding: String.Encoding.ascii)! // swiftlint:disable:this force_unwrapping
   }
 }
-
-#endif

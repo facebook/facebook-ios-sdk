@@ -23,6 +23,7 @@ NS_SWIFT_NAME(DeviceDialogViewDelegate)
  */
 
 NS_SWIFT_NAME(FBDeviceDialogView)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKDeviceDialogView : UIView
 
 @property (nonatomic, weak) id<FBSDKDeviceDialogViewDelegate> delegate;
@@ -34,6 +35,7 @@ NS_SWIFT_NAME(FBDeviceDialogView)
 @end
 
 NS_SWIFT_NAME(DeviceDialogViewDelegate)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @protocol FBSDKDeviceDialogViewDelegate <NSObject>
 
 - (void)deviceDialogViewDidCancel:(FBSDKDeviceDialogView *)deviceDialogView;

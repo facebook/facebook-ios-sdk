@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// A delegate for `FBSDKDeviceLoginViewController`
 NS_SWIFT_NAME(DeviceLoginViewControllerDelegate)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @protocol FBSDKDeviceLoginViewControllerDelegate <NSObject>
 
 /// Indicates the login was cancelled or timed out.
@@ -47,6 +48,7 @@ NS_SWIFT_NAME(DeviceLoginViewControllerDelegate)
                   completion:NULL];
  */
 NS_SWIFT_NAME(FBDeviceLoginViewController)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKDeviceLoginViewController : FBSDKDeviceViewControllerBase
 
 /// The delegate.

@@ -11,8 +11,6 @@
 import TestTools
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMConfigurationTests: XCTestCase {
 
   enum Keys {
@@ -355,5 +353,3 @@ final class AEMConfigurationTests: XCTestCase {
 fileprivate extension String {
   static let isCodable = "AEMConfiguration should be encodable and decodable"
 }
-
-#endif

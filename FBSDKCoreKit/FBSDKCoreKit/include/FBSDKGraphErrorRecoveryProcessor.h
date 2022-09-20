@@ -46,10 +46,6 @@ NS_SWIFT_NAME(GraphErrorRecoveryProcessorDelegate)
 
 @end
 
-NS_ASSUME_NONNULL_END
-
-NS_ASSUME_NONNULL_BEGIN
-
 /**
  Defines a type that can process Facebook NSErrors with best practices.
 

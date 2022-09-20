@@ -14,6 +14,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 15.0.0
 
+### Deprecated
+
+- Support for tvOS is now deprecated and will be removed in Version 16.
+
 ### Removed
 
 - Support for bitcode. Bitcode is no longer needed or supported by Apple as of Xcode 14 - https://developer.apple.com/documentation/xcode-release-notes/xcode-14-release-notes

@@ -21,7 +21,10 @@ Subclasses should generally:
 - override viewDidDisappear to handle cancellations
 - assign `deviceDialogView.confirmationCode` to set the code
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKDeviceViewControllerBase
+#pragma clang diagnostic pop
 
 - (instancetype)init
 {

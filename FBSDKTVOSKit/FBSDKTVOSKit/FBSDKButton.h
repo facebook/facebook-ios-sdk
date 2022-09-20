@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// A base class for common SDK buttons.
 NS_SWIFT_NAME(FBButton)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKButton : FBSDKImpressionLoggingButton
 
 @property (nonatomic, readonly, getter = isImplicitlyDisabled) BOOL implicitlyDisabled;

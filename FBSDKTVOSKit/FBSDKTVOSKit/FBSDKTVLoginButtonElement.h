@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  - `redirectURL` an optional URL to redirect the user to after completing the login.
  */
 NS_SWIFT_NAME(FBTVLoginButtonElement)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKTVLoginButtonElement : TVViewElement <FBSDKDeviceLoginButtonDelegate>
 
 @end

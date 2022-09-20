@@ -20,7 +20,10 @@
 @property (nonatomic) UIImageView *qrImageView;
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKSmartDeviceDialogView
+#pragma clang diagnostic pop
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
