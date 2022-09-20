@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
  and handling for App Link requests.
  */
 NS_SWIFT_NAME(AppLinkURL)
-@interface FBSDKURL : NSObject
+@interface FBSDKURL : NSObject <FBSDKAppLinkURL>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

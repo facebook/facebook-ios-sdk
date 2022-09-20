@@ -526,7 +526,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppLinkURLFactory() {
     XCTAssertTrue(
-      components.appLinkURLFactory is _AppLinkURLFactory,
+      components.appLinkURLFactory is AppLinkURLFactory,
       "The default components should use an instance of AppLinkURLFactory as its app link URL factory"
     )
   }
