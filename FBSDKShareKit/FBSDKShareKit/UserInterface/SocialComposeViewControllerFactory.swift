@@ -17,4 +17,5 @@ final class SocialComposeViewControllerFactory: SocialComposeViewControllerFacto
     SLComposeViewController(forServiceType: Self.socialComposeServiceType)
   }
 }
+
 #endif

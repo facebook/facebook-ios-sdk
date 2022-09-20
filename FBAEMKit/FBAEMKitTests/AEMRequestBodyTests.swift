@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 @testable import FBAEMKit
 import XCTest
 
@@ -93,5 +91,3 @@ final class AEMRequestBodyTests: XCTestCase {
     return try XCTUnwrap(json as? [String: String])
   }
 }
-
-#endif

@@ -15,6 +15,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(FBSmartDeviceDialogView)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKSmartDeviceDialogView : FBSDKDeviceDialogView
 @end
 

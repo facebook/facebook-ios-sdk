@@ -11,8 +11,6 @@
 import TestTools
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMRuleTests: XCTestCase {
 
   enum Keys {
@@ -358,5 +356,3 @@ final class AEMRuleTests: XCTestCase {
 fileprivate extension String {
   static let isCodable = "AEMRule should be encodable and decodable"
 }
-
-#endif

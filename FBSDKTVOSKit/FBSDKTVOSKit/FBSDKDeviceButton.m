@@ -21,7 +21,10 @@ static const CGFloat kFBLogoLeftMargin = 36.0;
 static const CGFloat kRightMargin = 12.0;
 static const CGFloat kPreferredPaddingBetweenLogoTitle = 44.0;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKDeviceButton
+#pragma clang diagnostic pop
 
 #pragma mark - Layout
 

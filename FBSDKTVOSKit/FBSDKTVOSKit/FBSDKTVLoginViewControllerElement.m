@@ -8,7 +8,10 @@
 
 #import "FBSDKTVLoginViewControllerElement.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKTVLoginViewControllerElement
+#pragma clang diagnostic pop
 
 - (void)deviceLoginViewControllerDidCancel:(FBSDKDeviceLoginViewController *)viewController
 {
