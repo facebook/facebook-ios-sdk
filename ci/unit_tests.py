@@ -34,30 +34,30 @@ my_job = [
             ],
         },
     },
-    # {
-    #     "alias": "meta-sdk-unit-tests",
-    #     "capabilities": ios_sdk_capabilities(),
-    #     "command": "SandcastleUniversalCommand",
-    #     "description": "Runs the Unit Tests defined in the MetaSDK package",
-    #     "oncall": ONCALL,
-    #     "priority": 0,
-    #     "tags": ["meta-ios-sdk", "unit-tests"],
-    #     "args": {
-    #         "oncall": ONCALL,
-    #         "steps": [
-    #             {
-    #                 "name": "Run Unit Tests",
-    #                 "shell": """
-    #                     export DESTINATION_ID=$( python3 ci/simulator_selection.py | tail -1 );
-    #                     cd internal/MetaSDK;
-    #                     xcodebuild test \
-    #                         -scheme MetaSDK \
-    #                         -destination "id=$DESTINATION_ID"
-    #                 """,
-    #             },
-    #         ],
-    #     },
-    # }
+    {
+        "alias": "meta-sdk-unit-tests",
+        "capabilities": ios_sdk_capabilities(),
+        "command": "SandcastleUniversalCommand",
+        "description": "Runs the Unit Tests defined in the MetaSDK package",
+        "oncall": ONCALL,
+        "priority": 0,
+        "tags": ["meta-ios-sdk", "unit-tests"],
+        "args": {
+            "oncall": ONCALL,
+            "steps": [
+                {
+                    "name": "Run Unit Tests",
+                    "shell": """
+                        export DESTINATION_ID=$( python3 ci/simulator_selection.py | tail -1 );
+                        cd internal/MetaSDK;
+                        xcodebuild test \
+                            -scheme MetaSDK \
+                            -destination "id=$DESTINATION_ID"
+                    """,
+                },
+            ],
+        },
+    }
 ]
 
 print(json.dumps(my_job, indent=4))
