@@ -20,6 +20,7 @@ enum SampleMetaLoginParameters {
     static let responseType = "response_type"
     static let scope = "scope"
     static let redirectURI = "redirect_uri"
+    static let tokenType = "token_type"
   }
 
   static let display = "touch"

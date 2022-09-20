@@ -31,6 +31,7 @@ public struct MetaLogin {
     static let scope = "scope"
     static let redirectURI = "redirect_uri"
     static let authType = "auth_type"
+    static let tokenType = "token_type"
   }
 
   private enum ParameterValues {
@@ -72,7 +73,7 @@ public struct MetaLogin {
 
     let url: URL
     do {
-      url = try createUniversalLoginURL(
+      url = try await createUniversalLoginURL(
         from: try getLoginParameters(from: configuration)
       )
     } catch {
@@ -113,7 +114,7 @@ public struct MetaLogin {
     case invalidResponse
   }
 
-  func getLoginParameters(from configuration: LoginConfiguration) throws -> [String: String] {
+  func getLoginParameters(from configuration: LoginConfiguration) async throws -> [String: String] {
     guard
       let fbAppID = configuration.facebookAppID,
       let metaAppID = configuration.metaAppID
@@ -131,6 +132,10 @@ public struct MetaLogin {
       ParameterKeys.responseType: ParameterValues.responseType,
       ParameterKeys.authType: ParameterValues.rerequest,
     ]
+
+    if let session = await userSession {
+      parameters[ParameterKeys.tokenType] = session.graphDomain.rawValue
+    }
 
     let permissions = configuration.permissions
     parameters[ParameterKeys.scope] = permissions.map(\.rawValue).joined(separator: ",")

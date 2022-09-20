@@ -14,6 +14,7 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var loginButton: UIButton!
   @IBOutlet weak var appTitle: UINavigationItem!
+  @IBOutlet weak var editPermissionsButton: UIButton!
 
   let metaLogin = MetaLogin()
   let loginButtonLabel = "Login"
@@ -65,7 +66,7 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
     super.viewDidLoad()
 
     Task {
-      await updateLoginButtonLabel()
+      await updateLoginButtons()
     }
   }
 
@@ -77,35 +78,49 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
     Task {
       if await isLoggedIn {
         await metaLogin.logOut()
-        await self.updateLoginButtonLabel()
+        await self.updateLoginButtons()
         self.consoleDataManager.addMessage(message: "User logged out")
       } else {
-        self.consoleDataManager.addMessage(message: "Started login request")
-        let configuration = LoginConfiguration(
-          permissions: selectedPermissions
-        )
-
-        do {
-          try await metaLogin.logIn(configuration: configuration)
-          await self.updateLoginButtonLabel()
-          self.consoleDataManager.addMessage(message: "Login request completed")
-        } catch let loginFailure as LoginFailure {
-          switch loginFailure {
-          case .isCanceled:
-            self.consoleDataManager.addMessage(message: "Login cancelled")
-          default:
-            self.consoleDataManager.addMessage(message: "Failed to login with \(loginFailure)")
-          }
-        }
+        await login()
       }
     }
   }
 
-  private func updateLoginButtonLabel() async {
+  @IBAction func editPermissionsButtonTapped(_ sender: Any) {
+    Task {
+      await login()
+    }
+  }
+
+  func login() async {
+    self.consoleDataManager.addMessage(message: "Started login request")
+    let configuration = LoginConfiguration(
+      permissions: selectedPermissions
+    )
+
+    do {
+      try await metaLogin.logIn(configuration: configuration)
+      await self.updateLoginButtons()
+      self.consoleDataManager.addMessage(message: "Login request completed")
+    } catch let loginFailure as LoginFailure {
+      switch loginFailure {
+      case .isCanceled:
+        self.consoleDataManager.addMessage(message: "Login cancelled")
+      default:
+        self.consoleDataManager.addMessage(message: "Failed to login with \(loginFailure)")
+      }
+    } catch {
+      self.consoleDataManager.addMessage(message: "Unknown Error")
+    }
+  }
+
+  private func updateLoginButtons() async {
     if await isLoggedIn {
       loginButton.setTitle(logoutButtonLabel, for: .normal)
+      editPermissionsButton.isHidden = false
     } else {
       loginButton.setTitle(loginButtonLabel, for: .normal)
+      editPermissionsButton.isHidden = true
     }
   }
 }

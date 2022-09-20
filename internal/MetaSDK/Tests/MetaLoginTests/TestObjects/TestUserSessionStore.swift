@@ -10,25 +10,11 @@
 import Foundation
 
 final class TestUserSessionStore: UserSessionPersisting {
-  var stubbedUserSession: UserSession
+  var stubbedUserSession: UserSession?
   var capturedUserSessionInSave: UserSession?
   var isDeleteUserSessionCalled = false
   var isGetUserSessionCalled = false
   var stubbedError: LocalStorageError?
-
-  init() {
-    let sampleToken = AccessToken(
-      tokenString: "testToken",
-      expirationDate: Date().addingTimeInterval(100),
-      dataAccessExpirationDate: Date().addingTimeInterval(100)
-    )!
-    stubbedUserSession = UserSession(
-      userID: UInt(111),
-      graphDomain: .facebook,
-      accessToken: sampleToken,
-      requestedPermissions: []
-    )
-  }
 
   func saveUserSession(_ userSession: UserSession) async throws {
     capturedUserSessionInSave = userSession
@@ -43,6 +29,10 @@ final class TestUserSessionStore: UserSessionPersisting {
     if let error = stubbedError {
       throw error
     }
-    return stubbedUserSession
+
+    guard let userSession = stubbedUserSession else {
+      throw LocalStorageError.itemNotFound
+    }
+    return userSession
   }
 }

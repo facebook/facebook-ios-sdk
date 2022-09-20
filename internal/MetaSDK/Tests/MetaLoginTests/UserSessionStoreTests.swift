@@ -27,17 +27,7 @@ final class UserSessionStoreTests: XCTestCase {
     userSessionStore = UserSessionStore()
     userSessionMap = TestKeyedValueMap()
     keychainStore = TestDataStore()
-    let sampleAccessToken = AccessToken(
-      tokenString: "testToken",
-      expirationDate: Date().addingTimeInterval(100),
-      dataAccessExpirationDate: Date().addingTimeInterval(100)
-    )!
-    userSession = UserSession(
-      userID: UInt(111),
-      graphDomain: GraphDomain.meta,
-      accessToken: sampleAccessToken,
-      requestedPermissions: []
-    )
+    userSession = SampleUserSessions.example(graphDomain: GraphDomain.meta)
     await userSessionStore.setDependencies(
       .init(
         userSessionMap: userSessionMap,

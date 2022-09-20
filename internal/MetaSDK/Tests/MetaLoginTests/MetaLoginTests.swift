@@ -126,8 +126,8 @@ final class MetaLoginTests: XCTestCase {
     }
   }
 
-  func testLoginParameters() throws {
-    let parameters = try metaLogin.getLoginParameters(from: loginConfiguration)
+  func testLoginParameters() async throws {
+    let parameters = try await metaLogin.getLoginParameters(from: loginConfiguration)
 
     XCTAssertEqual(
       parameters[SampleMetaLoginParameters.Keys.fbAppID],
@@ -168,6 +168,37 @@ final class MetaLoginTests: XCTestCase {
       parameters[SampleMetaLoginParameters.Keys.redirectURI],
       SampleMetaLoginParameters.redirectURI,
       "Should set default redirect URI from parameters"
+    )
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.redirectURI],
+      SampleMetaLoginParameters.redirectURI,
+      "Should set default redirect URI from parameters"
+    )
+    XCTAssertNil(
+      parameters[SampleMetaLoginParameters.Keys.tokenType],
+      "Should not set token type when UserSession is not provided"
+    )
+  }
+
+  func testLoginParametersWithFBUserSessoion() async throws {
+    userSessionStore.stubbedUserSession =
+      SampleUserSessions.example(graphDomain: GraphDomain.facebook)
+    let parameters = try await metaLogin.getLoginParameters(from: loginConfiguration)
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.tokenType],
+      GraphDomain.facebook.rawValue,
+      "Should set token type to facebook when FB UserSession is provided"
+    )
+  }
+
+  func testLoginParametersWitMetaUserSession() async throws {
+    userSessionStore.stubbedUserSession =
+      SampleUserSessions.example(graphDomain: GraphDomain.meta)
+    let parameters = try await metaLogin.getLoginParameters(from: loginConfiguration)
+    XCTAssertEqual(
+      parameters[SampleMetaLoginParameters.Keys.tokenType],
+      GraphDomain.meta.rawValue,
+      "Should set token type to meta when Meta UserSession is provided"
     )
   }
 
