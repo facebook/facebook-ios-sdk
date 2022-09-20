@@ -34,7 +34,6 @@
 #import "FBSDKAppLink+Internal.h"
 #import "FBSDKAppLinkNavigation+Testing.h"
 #import "FBSDKAppLinkResolverRequestBuilder.h"
-#import "FBSDKAppLinkTarget+Internal.h"
 #import "FBSDKAppLinkUtility+Testing.h"
 #import "FBSDKAppURLSchemeProviding.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
