@@ -256,13 +256,6 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     )
   }
 
-  func testSFAuthenticationSessionClass() {
-    XCTAssertTrue(
-      fbsdkdfl_SFAuthenticationSessionClass() is SFAuthenticationSession.Type,
-      "Should dynamically load the SFAuthenticationSession class"
-    )
-  }
-
   func testASWebAuthenticationSessionClass() {
     XCTAssertTrue(
       fbsdkdfl_ASWebAuthenticationSessionClass() is ASWebAuthenticationSession.Type,
