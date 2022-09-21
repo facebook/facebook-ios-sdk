@@ -427,13 +427,9 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
 {
   Class AuthenticationSessionClass = fbsdkdfl_ASWebAuthenticationSessionClass();
 
-  if (!AuthenticationSessionClass) {
-    AuthenticationSessionClass = fbsdkdfl_SFAuthenticationSessionClass();
-  }
-
   if (AuthenticationSessionClass != nil) {
     if (_authenticationSession != nil) {
-      [self.logger logEntry:@"There is already a request for authenticated session. Cancelling active SFAuthenticationSession before starting the new one."];
+      [self.logger logEntry:@"There is already a request for authenticated session. Cancelling active authentication session before starting the new one."];
       [_authenticationSession cancel];
     }
     _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url

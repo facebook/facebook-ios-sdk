@@ -377,7 +377,7 @@ public final class LoginManager: NSObject {
     switch state {
     case .start:
       if usedSafariSession {
-        // Using SFAuthenticationSession makes an interstitial dialog that blocks the app, but in certain situations
+        // Using safari makes an interstitial dialog that blocks the app, but in certain situations
         // such as screen lock it can be dismissed and have the control returned to the app without invoking the
         // completionHandler. In this case, the view controller has the control back and tried to reinvoke the login.
         // This is acceptable behavior and we should pop up the dialog again
