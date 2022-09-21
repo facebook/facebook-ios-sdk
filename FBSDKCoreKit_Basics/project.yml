@@ -19,6 +19,8 @@ configFiles:
 
 targets:
   FBSDKCoreKit_Basics-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKCoreKit_Basics
@@ -32,13 +34,11 @@ targets:
     configFiles:
       Debug: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
       Release: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
   FBSDKCoreKit_Basics-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     dependencies:
       - sdk: UIKit.framework
@@ -57,11 +57,9 @@ targets:
       Release: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
     settings:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
   FBSDKCoreKit_Basics_TV-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKCoreKit_Basics
@@ -77,11 +75,9 @@ targets:
       Release: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
     settings:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
   FBSDKCoreKit_Basics_TV-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     dependencies:
       - sdk: UIKit.framework
@@ -100,10 +96,6 @@ targets:
       Release: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
     settings:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
   FBSDKCoreKit_BasicsTests:
     type: bundle.unit-test
     platform: iOS

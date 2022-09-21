@@ -35,6 +35,8 @@ settings:
 
 targets:
   FBSDKLoginKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKLoginKit
@@ -56,13 +58,11 @@ targets:
         link: false
       - target: FBSDKCoreKit/FBSDKCoreKit-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKLoginKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKLoginKit
@@ -84,13 +84,11 @@ targets:
       - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKLoginKit_TV-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKLoginKit
@@ -111,13 +109,11 @@ targets:
         link: false
       - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKLoginKit_TV-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKLoginKit
@@ -138,10 +134,6 @@ targets:
       - target: FBSDKCoreKit/FBSDKCoreKit_TV-Dynamic
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKLoginKitTests:

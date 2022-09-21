@@ -17,6 +17,8 @@ settings:
 
 targets:
   TestTools:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     sources:
@@ -29,7 +31,3 @@ targets:
         link: false
       - target: FBAEMKit/FBAEMKit-Dynamic
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
