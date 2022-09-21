@@ -21,6 +21,8 @@ configFiles:
 
 targets:
   FBAEMKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBAEMKit
@@ -32,13 +34,11 @@ targets:
     configFiles:
       Debug: Configurations/FBAEMKit-Static.xcconfig
       Release: Configurations/FBAEMKit-Static.xcconfig
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
   FBAEMKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBAEMKit
@@ -53,11 +53,9 @@ targets:
       Release: Configurations/FBAEMKit-Dynamic.xcconfig
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
   FBAEMKit_TV-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBAEMKit
@@ -69,13 +67,11 @@ targets:
     configFiles:
       Debug: Configurations/FBAEMKit-tvOS-Static.xcconfig
       Release: Configurations/FBAEMKit-tvOS-Static.xcconfig
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
   FBAEMKit_TV-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBAEMKit
@@ -90,10 +86,6 @@ targets:
       Release: Configurations/FBAEMKit-tvOS-Dynamic.xcconfig
     settings:
       GCC_PREFIX_HEADER: FBAEMKit/FBAEMKit-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
   FBAEMKitTests:
     type: bundle.unit-test
     platform: iOS
