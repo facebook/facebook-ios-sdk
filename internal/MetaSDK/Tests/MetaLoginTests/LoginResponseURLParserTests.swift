@@ -137,7 +137,7 @@ final class LoginResponseURLParserTests: XCTestCase {
     XCTAssertEqual(
       accessToken.expirationDate.timeIntervalSince1970,
       SampleRawLoginResponse.expiresAtDate.timeIntervalSince1970,
-      accuracy: 0.005,
+      accuracy: 1,
       "Should use expires_at parameter if the expires parameter is not returned"
     )
   }
@@ -156,7 +156,7 @@ final class LoginResponseURLParserTests: XCTestCase {
     XCTAssertEqual(
       accessToken.expirationDate.timeIntervalSince1970,
       SampleRawLoginResponse.expiresInDate.timeIntervalSince1970,
-      accuracy: 0.005,
+      accuracy: 1,
       "Should use expires_in parameter if the expires parameter is not returned"
     )
   }

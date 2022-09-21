@@ -43,6 +43,8 @@ final class AppleWebAuthenticatorTests: XCTestCase {
   }
 
   override func tearDown() {
+    session?.completeAuthenticationIfNeeded()
+
     sessionFactory = nil
     presentationContextProvider = nil
     authenticator = nil
@@ -88,7 +90,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
       _ = try await authenticator.authenticate(parameters: .sample)
     }
 
-    try await Task.sleep(nanoseconds: 10_000)
+    try await Task.sleep(nanoseconds: 100_000)
 
     do {
       _ = try await authenticator.authenticate(parameters: .sample)
@@ -102,14 +104,14 @@ final class AppleWebAuthenticatorTests: XCTestCase {
 
   func testSubsequentRepeatAuthentication() async throws {
     Task {
-      try await Task.sleep(nanoseconds: 10_000)
+      try await Task.sleep(nanoseconds: 100_000)
       session?.completionHandler?(.authenticated, nil)
     }
 
     _ = try await authenticator.authenticate(parameters: .sample)
 
     Task {
-      try await Task.sleep(nanoseconds: 10_000)
+      try await Task.sleep(nanoseconds: 200_000)
       session?.completionHandler?(.authenticated, nil)
     }
 
@@ -125,7 +127,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
       _ = try await authenticator.authenticate(parameters: .sample)
     }
 
-    try await Task.sleep(nanoseconds: 10_000)
+    try await Task.sleep(nanoseconds: 100_000)
 
     let session = try XCTUnwrap(session, .createsSession)
     XCTAssertEqual(session.url, .sample, .createsSession)
@@ -142,7 +144,7 @@ final class AppleWebAuthenticatorTests: XCTestCase {
       _ = try await authenticator.authenticate(parameters: .sample)
     }
 
-    try await Task.sleep(nanoseconds: 10_000)
+    try await Task.sleep(nanoseconds: 100_000)
 
     let session = try XCTUnwrap(session, .createsSession)
     XCTAssertTrue(session.wasStartCalled, .sessionStarted)

@@ -36,7 +36,7 @@ final class TestASWebAuthenticationSession: ASWebAuthenticationSession {
     self.url = url
     self.callbackURLScheme = callbackURLScheme
     self.completionHandler = completionHandler
-    super.init(url: url, callbackURLScheme: callbackURLScheme, completionHandler: completionHandler)
+    super.init(url: url, callbackURLScheme: callbackURLScheme) { _, _ in }
   }
 
   // MARK: Starting
@@ -49,10 +49,25 @@ final class TestASWebAuthenticationSession: ASWebAuthenticationSession {
   override func start() -> Bool {
     wasStartCalled = true
 
-    if let arguments = autocompleteArguments {
-      Task { completionHandler?(arguments.0, arguments.1) }
+    if shouldStartSucceed {
+      completeAuthenticationIfNeeded()
     }
 
     return shouldStartSucceed
+  }
+
+  func completeAuthenticationIfNeeded() {
+    guard
+      let arguments = autocompleteArguments,
+      let handler = completionHandler
+    else { return }
+
+    autocompleteArguments = nil
+    completionHandler = nil
+
+    Task {
+      try await Task.sleep(nanoseconds: 10_000)
+      handler(arguments.0, arguments.1)
+    }
   }
 }
