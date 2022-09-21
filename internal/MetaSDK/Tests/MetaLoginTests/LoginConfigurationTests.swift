@@ -27,7 +27,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testDefaultDependencies() throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
+    var loginConfiguration = MetaLogin.Configuration(permissions: [.userAvatar])
     loginConfiguration.resetDependencies()
     let dependencies = try loginConfiguration.getDependencies()
 
@@ -39,7 +39,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCustomDependencies() throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
+    var loginConfiguration = MetaLogin.Configuration(permissions: [.userAvatar])
     loginConfiguration.setDependencies(
       .init(appConfigurationInquirer: appConfigurationInquirer)
     )
@@ -53,7 +53,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithNoAppID() throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
+    var loginConfiguration = MetaLogin.Configuration(permissions: [.userAvatar])
     loginConfiguration.setDependencies(
       .init(appConfigurationInquirer: appConfigurationInquirer)
     )
@@ -71,7 +71,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithNoFacebookAppID() {
-    var loginConfiguration = LoginConfiguration(
+    var loginConfiguration = MetaLogin.Configuration(
       permissions: [.userAvatar],
       metaAppID: "some_meta_app_id"
     )
@@ -88,7 +88,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithNoMetaAppID() {
-    var loginConfiguration = LoginConfiguration(
+    var loginConfiguration = MetaLogin.Configuration(
       permissions: [.userAvatar],
       facebookAppID: "some_fb_app_id"
     )
@@ -105,7 +105,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithAppIDsAndNoPermissions() throws {
-    var loginConfiguration = LoginConfiguration(
+    var loginConfiguration = MetaLogin.Configuration(
       facebookAppID: "some_fb_app_id",
       metaAppID: "some_meta_app_id"
     )
@@ -119,7 +119,7 @@ final class LoginConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithPermissionsAndAppIDs() throws {
-    var loginConfiguration = LoginConfiguration(
+    var loginConfiguration = MetaLogin.Configuration(
       permissions: [.userAvatar],
       facebookAppID: "some_fb_app_id",
       metaAppID: "some_meta_app_id"
@@ -141,7 +141,7 @@ final class LoginConfigurationTests: XCTestCase {
     appConfigurationInquirer.metaAppID = nil
     appConfigurationInquirer.facebookAppID = nil
 
-    var loginConfiguration = LoginConfiguration(
+    var loginConfiguration = MetaLogin.Configuration(
       permissions: [.userAvatar]
     )
     loginConfiguration.setDependencies(

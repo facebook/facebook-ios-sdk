@@ -17,6 +17,8 @@ public struct MetaLogin {
     userSessionStore: UserSessionStore()
   )
 
+  let configuration: Configuration
+
   static let redirectURI: String = "fbconnect://success"
   static let callbackURLScheme = "fbconnect"
 
@@ -59,7 +61,9 @@ public struct MetaLogin {
     }
   }
 
-  public init() {}
+  public init(configuration: Configuration = Configuration()) {
+    self.configuration = configuration
+  }
 
   /**
    Logs the user in or authorizes additional permissions.
@@ -68,13 +72,13 @@ public struct MetaLogin {
    configuration will be used.
    */
   @discardableResult
-  public func logIn(configuration: LoginConfiguration = LoginConfiguration()) async throws -> UserSession {
+  public func logIn() async throws -> UserSession {
     let authenticator = try getDependenciesWithLoginFailure().webAuthenticator
 
     let url: URL
     do {
       url = try await createUniversalLoginURL(
-        from: try getLoginParameters(from: configuration)
+        from: try getLoginParameters()
       )
     } catch {
       throw LoginFailure.internal(error)
@@ -114,7 +118,7 @@ public struct MetaLogin {
     case invalidResponse
   }
 
-  func getLoginParameters(from configuration: LoginConfiguration) async throws -> [String: String] {
+  func getLoginParameters() async throws -> [String: String] {
     guard
       let fbAppID = configuration.facebookAppID,
       let metaAppID = configuration.metaAppID

@@ -10,11 +10,13 @@
 import XCTest
 
 final class MetaLoginTests: XCTestCase {
+  // swiftlint:disable implicitly_unwrapped_optional
   var metaLogin: MetaLogin!
   var webAuthenticator: TestWebAuthenticator!
   var userSessionStore: TestUserSessionStore!
+  // swiftlint:enable implicitly_unwrapped_optional
 
-  let loginConfiguration = LoginConfiguration(
+  var configuration = MetaLogin.Configuration(
     permissions: [.userAvatar],
     facebookAppID: "facebook_app_id",
     metaAppID: "some_meta_app_id"
@@ -25,7 +27,7 @@ final class MetaLoginTests: XCTestCase {
 
     webAuthenticator = TestWebAuthenticator()
     userSessionStore = TestUserSessionStore()
-    metaLogin = MetaLogin()
+    metaLogin = MetaLogin(configuration: configuration)
     metaLogin.setDependencies(
       .init(
         webAuthenticator: webAuthenticator,
@@ -71,11 +73,29 @@ final class MetaLoginTests: XCTestCase {
     )
   }
 
+  func testConfiguration() {
+    XCTAssertEqual(
+      metaLogin.configuration.permissions,
+      configuration.permissions,
+      "A login manager uses the configuration it is provided"
+    )
+    XCTAssertEqual(
+      metaLogin.configuration.facebookAppID,
+      configuration.facebookAppID,
+      "A login manager uses the configuration it is provided"
+    )
+    XCTAssertEqual(
+      metaLogin.configuration.metaAppID,
+      configuration.metaAppID,
+      "A login manager uses the configuration it is provided"
+    )
+  }
+
   func testSuccessfulLogin() async throws {
     await webAuthenticator.setResponseURL(SampleURLs.LoginResponses.withDefaultParameters)
 
     do {
-      let session = try await metaLogin.logIn(configuration: loginConfiguration)
+      let session = try await metaLogin.logIn()
 
       XCTAssertIdentical(
         session,
@@ -91,7 +111,7 @@ final class MetaLoginTests: XCTestCase {
     await webAuthenticator.setResponseURL(SampleURLs.loginRedirect)
 
     do {
-      try await metaLogin.logIn(configuration: loginConfiguration)
+      try await metaLogin.logIn()
       XCTFail("An error is thrown with an invalid response URL")
     } catch LoginFailure.internal {
       // This is the expected error
@@ -104,7 +124,7 @@ final class MetaLoginTests: XCTestCase {
     await webAuthenticator.setError(LoginFailure.isCanceled)
 
     do {
-      try await metaLogin.logIn(configuration: loginConfiguration)
+      try await metaLogin.logIn()
       XCTFail("Should return cancel result when login is cancelled")
     } catch LoginFailure.isCanceled {
       // This is the expected error
@@ -117,7 +137,7 @@ final class MetaLoginTests: XCTestCase {
     await webAuthenticator.setError(LoginFailure.unknown)
 
     do {
-      try await metaLogin.logIn(configuration: loginConfiguration)
+      try await metaLogin.logIn()
       XCTFail("Authentication session error should be set to assigned value")
     } catch LoginFailure.unknown {
       // This is the expected error
@@ -127,16 +147,16 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testLoginParameters() async throws {
-    let parameters = try await metaLogin.getLoginParameters(from: loginConfiguration)
+    let parameters = try await metaLogin.getLoginParameters()
 
     XCTAssertEqual(
       parameters[SampleMetaLoginParameters.Keys.fbAppID],
-      loginConfiguration.facebookAppID,
+      configuration.facebookAppID,
       "Should set app ID from login configuration"
     )
     XCTAssertEqual(
       parameters[SampleMetaLoginParameters.Keys.metaAppID],
-      loginConfiguration.metaAppID,
+      configuration.metaAppID,
       "Should set app ID from login configuration"
     )
     XCTAssertEqual(
@@ -183,7 +203,7 @@ final class MetaLoginTests: XCTestCase {
   func testLoginParametersWithFBUserSessoion() async throws {
     userSessionStore.stubbedUserSession =
       SampleUserSessions.example(graphDomain: GraphDomain.facebook)
-    let parameters = try await metaLogin.getLoginParameters(from: loginConfiguration)
+    let parameters = try await metaLogin.getLoginParameters()
     XCTAssertEqual(
       parameters[SampleMetaLoginParameters.Keys.tokenType],
       GraphDomain.facebook.rawValue,
@@ -194,7 +214,7 @@ final class MetaLoginTests: XCTestCase {
   func testLoginParametersWitMetaUserSession() async throws {
     userSessionStore.stubbedUserSession =
       SampleUserSessions.example(graphDomain: GraphDomain.meta)
-    let parameters = try await metaLogin.getLoginParameters(from: loginConfiguration)
+    let parameters = try await metaLogin.getLoginParameters()
     XCTAssertEqual(
       parameters[SampleMetaLoginParameters.Keys.tokenType],
       GraphDomain.meta.rawValue,
@@ -212,15 +232,10 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testLoginWithInvalidIncomingAuthenticationURL() async throws {
-    let loginConfiguration = LoginConfiguration(
-      permissions: [.userAvatar],
-      facebookAppID: "facebook_app_id",
-      metaAppID: "some_meta_app_id"
-    )
     await webAuthenticator.setResponseURL(SampleURLs.example(path: "foo"))
 
     do {
-      try await metaLogin.logIn(configuration: loginConfiguration)
+      try await metaLogin.logIn()
       XCTFail("Should return URL error if the incoming URL does not begin with the Meta Login redirect uri")
     } catch {
       // Expecting an error to be thrown
@@ -257,16 +272,16 @@ final class MetaLoginTests: XCTestCase {
   }
 
   func testLoginWithInvalidLoginURLCreation() async throws {
-    var loginConfiguration = LoginConfiguration(permissions: [.userAvatar])
+    configuration = .init(permissions: [.userAvatar])
     let appConfigurationInquirer = TestAppConfigurationInquirer()
     appConfigurationInquirer.metaAppID = nil
     appConfigurationInquirer.facebookAppID = nil
-    loginConfiguration.setDependencies(
+    configuration.setDependencies(
       .init(appConfigurationInquirer: appConfigurationInquirer)
     )
 
     do {
-      try await metaLogin.logIn(configuration: loginConfiguration)
+      try await MetaLogin(configuration: configuration).logIn()
       XCTFail("Should return error if login parameters cannot be retrieved")
     } catch LoginFailure.internal {
       // This is the expected error
@@ -279,7 +294,7 @@ final class MetaLoginTests: XCTestCase {
     await webAuthenticator.setResponseURL(SampleURLs.LoginResponses.withNoAccessTokenAndError)
 
     do {
-      try await metaLogin.logIn(configuration: loginConfiguration)
+      try await metaLogin.logIn()
       XCTFail("An error is thrown with an invalid response URL")
     } catch LoginFailure.isCanceled {
       // This is the expected error

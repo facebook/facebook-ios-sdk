@@ -16,28 +16,27 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
   @IBOutlet weak var appTitle: UINavigationItem!
   @IBOutlet weak var editPermissionsButton: UIButton!
 
-  let metaLogin = MetaLogin()
   let loginButtonLabel = "Login"
   let logoutButtonLabel = "Logout"
 
   var selectedPermissions: Set<Permission> = [.userAvatar]
   var isLoggedIn: Bool {
     get async {
-      return await metaLogin.userSession != nil
+      return await MetaLogin().userSession != nil
     }
   }
 
   var cellConfigs: [LoginCellConfig] {[
     LoginCellConfig(
       cellTitle: "FB App ID:",
-      cellValue: LoginConfiguration().facebookAppID,
+      cellValue: MetaLogin.Configuration().facebookAppID,
       cellSelectionStyle: .none,
       cellAccessoryType: .none,
       activity: {}
     ),
     LoginCellConfig(
       cellTitle: "Meta App ID:",
-      cellValue: LoginConfiguration().metaAppID,
+      cellValue: MetaLogin.Configuration().metaAppID,
       cellSelectionStyle: .none,
       cellAccessoryType: .none,
       activity: {}
@@ -77,7 +76,7 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
   @IBAction func loginButtonTapped(_ sender: Any) {
     Task {
       if await isLoggedIn {
-        await metaLogin.logOut()
+        await MetaLogin().logOut()
         await self.updateLoginButtons()
         self.consoleDataManager.addMessage(message: "User logged out")
       } else {
@@ -94,12 +93,10 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
 
   func login() async {
     self.consoleDataManager.addMessage(message: "Started login request")
-    let configuration = LoginConfiguration(
-      permissions: selectedPermissions
-    )
+    let configuration = MetaLogin.Configuration(permissions: selectedPermissions)
 
     do {
-      try await metaLogin.logIn(configuration: configuration)
+      try await MetaLogin(configuration: configuration).logIn()
       await self.updateLoginButtons()
       self.consoleDataManager.addMessage(message: "Login request completed")
     } catch let loginFailure as LoginFailure {
