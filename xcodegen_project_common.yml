@@ -20,5 +20,6 @@ targetTemplates:
   SwiftlintBuildPhaseTemplate:
     preBuildScripts:
       - name: Run Swiftlint
+        basedOnDependencyAnalysis: false
         showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
