@@ -69,7 +69,7 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit FBSDKGamingServicesKitTests
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
     transitivelyLinkDependencies: true
@@ -92,7 +92,7 @@ targets:
     preBuildScripts:
       - name: Run Swiftlint
         showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit
+        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKGamingServicesKitTests:
