@@ -16,8 +16,8 @@ class HomeViewController: UIViewController, PermissionSelectedDelegate, ConsoleD
   @IBOutlet weak var appTitle: UINavigationItem!
   @IBOutlet weak var editPermissionsButton: UIButton!
 
-  let loginButtonLabel = "Login"
-  let logoutButtonLabel = "Logout"
+  let loginButtonLabel = "Log In"
+  let logoutButtonLabel = "Log Out"
 
   var selectedPermissions: Set<Permission> = [.userAvatar]
   var isLoggedIn: Bool {
