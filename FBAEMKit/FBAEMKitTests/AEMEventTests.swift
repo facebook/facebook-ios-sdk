@@ -180,6 +180,6 @@ final class AEMEventTests: XCTestCase {
 
 // MARK: - Assumptions
 
-fileprivate extension String {
-  static let isCodable = "AEMEvents should be encodable and decodable"
+extension String {
+  fileprivate static let isCodable = "AEMEvents should be encodable and decodable"
 }

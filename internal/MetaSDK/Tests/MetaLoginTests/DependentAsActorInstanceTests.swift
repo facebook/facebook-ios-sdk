@@ -98,6 +98,8 @@ private actor Dependent: DependentAsActorInstance {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {

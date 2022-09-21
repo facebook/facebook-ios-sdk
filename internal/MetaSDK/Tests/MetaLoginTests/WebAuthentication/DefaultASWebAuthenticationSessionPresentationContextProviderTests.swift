@@ -46,6 +46,8 @@ final class DefaultASWebAuthenticationSessionPresentationContextProviderTests: X
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {

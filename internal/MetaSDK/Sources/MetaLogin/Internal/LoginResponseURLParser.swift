@@ -28,7 +28,6 @@ struct LoginResponseURLParser {
     case service(message: String)
   }
 
-  // swiftlint:disable:next function_body_length
   func parse(url: URL) throws -> UserSession {
     var urlString = url.absoluteString
     // Changes url with fragments to url with query items to enable URLComponents parsing

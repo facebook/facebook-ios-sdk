@@ -521,11 +521,13 @@ public final class ApplicationDelegate: NSObject {
   #endif
 }
 
+// swiftformat:disable:next extensionaccesscontrol
 fileprivate extension AppEvents.Name {
   static let appLinkInboundEvent = Self("fb_al_inbound")
   static let autoAppLink = Self("fb_auto_applink")
 }
 
+// swiftformat:disable:next extensionaccesscontrol
 fileprivate extension AppEvents.ParameterName {
   static let targetURL = Self("targetURL")
   static let targetURLHost = Self("targetURLHost")

@@ -350,6 +350,6 @@ final class AEMConfigurationTests: XCTestCase {
 
 // MARK: - Assumptions
 
-fileprivate extension String {
-  static let isCodable = "AEMConfiguration should be encodable and decodable"
+extension String {
+  fileprivate static let isCodable = "AEMConfiguration should be encodable and decodable"
 }

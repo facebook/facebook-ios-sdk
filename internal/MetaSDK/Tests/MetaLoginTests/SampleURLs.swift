@@ -81,6 +81,8 @@ public enum SampleURLs {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 private extension Dictionary where Key == String, Value: Any {
   var queryItems: [URLQueryItem] {
     return map {
@@ -88,3 +90,5 @@ private extension Dictionary where Key == String, Value: Any {
     }
   }
 }
+
+// swiftformat:enable extensionaccesscontrol

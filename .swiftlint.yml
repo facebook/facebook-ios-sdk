@@ -115,7 +115,6 @@ only_rules:
   - empty_string
   - empty_xctest_method
   - explicit_init
-  - extension_access_modifier
   - fallthrough
   - fatal_error_message
   - file_header
