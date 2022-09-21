@@ -59,6 +59,8 @@ final class DeviceRequestsHelperTests: XCTestCase, NetServiceDelegate {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {

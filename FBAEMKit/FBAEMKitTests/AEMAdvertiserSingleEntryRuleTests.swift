@@ -482,6 +482,6 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
 
 // MARK: - Assumptions
 
-fileprivate extension String {
-  static let isCodable = "AEMAdvertiserSingleEntryRule should be encodable and decodable"
+extension String {
+  fileprivate static let isCodable = "AEMAdvertiserSingleEntryRule should be encodable and decodable"
 }

@@ -131,6 +131,8 @@ final class FBShareButtonTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {

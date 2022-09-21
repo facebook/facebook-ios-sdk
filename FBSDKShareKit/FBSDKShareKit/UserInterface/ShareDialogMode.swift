@@ -10,7 +10,7 @@
 
 import Foundation
 
-public extension ShareDialog {
+extension ShareDialog {
   /**
    Modes for the FBSDKShareDialog.
 
@@ -18,7 +18,7 @@ public extension ShareDialog {
    appropriate mode for the dialog that is available.
    */
   @objc(FBSDKShareDialogMode)
-  enum Mode: UInt, CustomStringConvertible {
+  public enum Mode: UInt, CustomStringConvertible {
     /// Acts with the most appropriate mode that is available.
     case automatic
 

@@ -149,6 +149,8 @@ final class PHImageManagerSearchingTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {

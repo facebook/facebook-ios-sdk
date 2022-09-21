@@ -58,6 +58,7 @@ final class CoreKitConfigurator: CoreKitConfiguring {
 
 // MARK: - All platforms
 
+// swiftformat:disable:next extensionaccesscontrol
 private extension CoreKitConfigurator {
   func configureAccessToken() {
     AccessToken.configure(
