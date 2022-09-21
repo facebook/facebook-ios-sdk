@@ -8,25 +8,25 @@
 
 import Foundation
 
-public enum SampleURLs {
-  public static let example = URL(string: "https://www.example.com")!
-  public static let loginRedirect = URL(string: "fbconnect://success")!
+enum SampleURLs {
+  static let example = URL(string: "https://www.example.com")!
+  static let loginRedirect = URL(string: "fbconnect://success")!
 
-  public static func example(path: String) -> URL {
+  static func example(path: String) -> URL {
     example.appendingPathComponent(path)
   }
 
-  public static func example(queryItems: [URLQueryItem]) -> URL {
+  static func example(queryItems: [URLQueryItem]) -> URL {
     var components = URLComponents(url: example, resolvingAgainstBaseURL: false)!
     components.queryItems = queryItems
     return components.url!
   }
 
-  public static func loginRedirect(path: String) -> URL {
+  static func loginRedirect(path: String) -> URL {
     loginRedirect.appendingPathComponent(path)
   }
 
-  public static func loginRedirect(queryItems: [URLQueryItem], useFragments: Bool) -> URL {
+  static func loginRedirect(queryItems: [URLQueryItem], useFragments: Bool) -> URL {
     var components = URLComponents(url: loginRedirect, resolvingAgainstBaseURL: false)!
     components.queryItems = queryItems
     var url = components.url!.absoluteString
@@ -37,44 +37,44 @@ public enum SampleURLs {
     return URL(string: url)!
   }
 
-  public enum LoginResponses {
-    public static let withDefaultParameters = loginRedirect(
+  enum LoginResponses {
+    static let withDefaultParameters = loginRedirect(
       queryItems: SampleRawLoginResponse.withDefaultParameters.queryItems,
       useFragments: true
     )
-    public static let withDefaultParametersWithQuery = loginRedirect(
+    static let withDefaultParametersWithQuery = loginRedirect(
       queryItems: SampleRawLoginResponse.withDefaultParameters.queryItems,
       useFragments: false
     )
-    public static let withNoExpirationParameters = loginRedirect(
+    static let withNoExpirationParameters = loginRedirect(
       queryItems: SampleRawLoginResponse.withNoExpirationParameters.queryItems,
       useFragments: true
     )
-    public static let withNoExpiresParameter = loginRedirect(
+    static let withNoExpiresParameter = loginRedirect(
       queryItems: SampleRawLoginResponse.withNoExpiresParameter.queryItems,
       useFragments: true
     )
-    public static let withNoExpiresAndExpiresAtParameters = loginRedirect(
+    static let withNoExpiresAndExpiresAtParameters = loginRedirect(
       queryItems: SampleRawLoginResponse.withNoExpiresAndExpiresAtParameters.queryItems,
       useFragments: true
     )
-    public static let withEmptyPermissions = loginRedirect(
+    static let withEmptyPermissions = loginRedirect(
       queryItems: SampleRawLoginResponse.withEmptyPermissions.queryItems,
       useFragments: true
     )
-    public static let withNoAccessTokenAndError = loginRedirect(
+    static let withNoAccessTokenAndError = loginRedirect(
       queryItems: SampleRawLoginResponse.withNoAccessTokenAndError.queryItems,
       useFragments: true
     )
-    public static let withNoSignedRequestParameter = loginRedirect(
+    static let withNoSignedRequestParameter = loginRedirect(
       queryItems: SampleRawLoginResponse.withNoSignedRequestParameter.queryItems,
       useFragments: true
     )
-    public static let withInvalidSignedRequestParameter = loginRedirect(
+    static let withInvalidSignedRequestParameter = loginRedirect(
       queryItems: SampleRawLoginResponse.withInvalidSignedRequestParameter.queryItems,
       useFragments: true
     )
-    public static let withCancellationRequest = loginRedirect(
+    static let withCancellationRequest = loginRedirect(
       queryItems: SampleRawLoginResponse.withCancellationRequestParameter.queryItems,
       useFragments: true
     )
