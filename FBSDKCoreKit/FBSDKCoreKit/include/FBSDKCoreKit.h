@@ -153,8 +153,6 @@
 #import <FBSDKCoreKit/FBSDKMetadataIndexing.h>
 #import <FBSDKCoreKit/FBSDKModelManager.h>
 #import <FBSDKCoreKit/FBSDKMutableCopying.h>
-#import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>
-#import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
 #import <FBSDKCoreKit/FBSDKOperatingSystemVersionComparing.h>
 #import <FBSDKCoreKit/FBSDKPaymentObserving.h>
 #import <FBSDKCoreKit/FBSDKPaymentProductRequestor.h>
