@@ -123,8 +123,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock
 {
   @try {
@@ -192,8 +190,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     }
   } @catch (NSException *exception) {}
 }
-
-#pragma clang diagnostic pop
 
 #pragma mark - Internal
 
@@ -366,10 +362,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
     NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
     if (serverConfiguration) {
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-      NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration];
-      #pragma clang diagnostic pop
+      NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration requiringSecureCoding:NO error:nil];
       [defaults setObject:data forKey:defaultsKey];
     }
 

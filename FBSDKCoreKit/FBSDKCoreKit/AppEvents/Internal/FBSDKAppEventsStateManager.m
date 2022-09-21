@@ -48,8 +48,6 @@
   self.canSkipDiskCheck = YES;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState
 {
   NSString *msg = [NSString stringWithFormat:@"FBSDKAppEvents Persist: Writing %lu events", (unsigned long)appEventsState.events.count];
@@ -61,8 +59,10 @@
   }
   NSMutableArray<FBSDKAppEventsState *> *existingEvents = [NSMutableArray arrayWithArray:[self retrievePersistedAppEventsStates]];
   [FBSDKTypeUtility array:existingEvents addObject:appEventsState];
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [NSKeyedArchiver archiveRootObject:existingEvents toFile:[self filePath]];
+#pragma clang diagnostic pop
   self.canSkipDiskCheck = NO;
 }
 
@@ -91,7 +91,6 @@
   return eventsStates;
 }
 
-#pragma clang diagnostic pop
 
 #pragma mark - Private Helpers
 

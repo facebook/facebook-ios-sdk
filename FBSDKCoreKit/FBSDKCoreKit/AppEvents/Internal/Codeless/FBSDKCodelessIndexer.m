@@ -173,8 +173,6 @@ static id<FBSDKSettings> _settings;
   });
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 // DO NOT call this function, it is only called once in the enable function
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock
 {
@@ -228,7 +226,7 @@ static id<FBSDKSettings> _settings;
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:@(isCodelessSetupEnabled) forKey:CODELESS_SETUP_ENABLED_KEY];
           [FBSDKTypeUtility dictionary:_codelessSetting setObject:[NSDate date] forKey:CODELESS_SETTING_TIMESTAMP_KEY];
           // update the cached copy in user defaults
-          [self.dataStore fb_setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
+          [self.dataStore fb_setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting requiringSecureCoding:NO error:nil] forKey:defaultKey];
           completionBlock(isCodelessSetupEnabled, codelessLoadingError);
         }
       }];
@@ -236,8 +234,6 @@ static id<FBSDKSettings> _settings;
     }
   }];
 }
-
-#pragma clang diagnostic pop
 
 + (nullable id<FBSDKGraphRequest>)requestToLoadCodelessSetup:(NSString *)appID
 {
