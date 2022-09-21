@@ -109,8 +109,6 @@ static FBSDKAppEventsConfigurationManager *_shared;
   }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)_processResponse:(id)response
                    error:(NSError *)error
 {
@@ -132,12 +130,10 @@ static FBSDKAppEventsConfigurationManager *_shared;
     }
     [self.completionBlocks removeAllObjects];
   }
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.configuration];
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.configuration requiringSecureCoding:NO error:nil];
   [self.store fb_setObject:data forKey:FBSDKAppEventsConfigurationKey];
   [self.store fb_setObject:date forKey:FBSDKAppEventsConfigurationTimestampKey];
 }
-
-#pragma clang diagnostic pop
 
 - (BOOL)_isTimestampValid
 {

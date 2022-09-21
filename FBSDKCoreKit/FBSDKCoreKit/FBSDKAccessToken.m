@@ -221,8 +221,6 @@ static id<FBSDKErrorCreating> g_errorFactory;
 
 - (NSUInteger)hash
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   NSUInteger subhashes[] = {
     self.tokenString.hash,
     self.permissions.hash,
@@ -234,7 +232,6 @@ static id<FBSDKErrorCreating> g_errorFactory;
     self.expirationDate.hash,
     self.dataAccessExpirationDate.hash,
   };
-  #pragma clang diagnostic pop
 
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -252,8 +249,6 @@ static id<FBSDKErrorCreating> g_errorFactory;
 
 - (BOOL)isEqualToAccessToken:(FBSDKAccessToken *)token
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return (token
     && [FBSDKInternalUtility.sharedUtility object:self.tokenString isEqualToObject:token.tokenString]
     && [FBSDKInternalUtility.sharedUtility object:self.permissions isEqualToObject:token.permissions]
@@ -264,7 +259,6 @@ static id<FBSDKErrorCreating> g_errorFactory;
     && [FBSDKInternalUtility.sharedUtility object:self.refreshDate isEqualToObject:token.refreshDate]
     && [FBSDKInternalUtility.sharedUtility object:self.expirationDate isEqualToObject:token.expirationDate]
     && [FBSDKInternalUtility.sharedUtility object:self.dataAccessExpirationDate isEqualToObject:token.dataAccessExpirationDate]);
-  #pragma clang diagnostic pop
 }
 
 #pragma mark - NSCopying

@@ -27,11 +27,9 @@
   return self;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
-  NSData *data = value == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:value];
+  NSData *data = value == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:value requiringSecureCoding:NO error:nil];
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
@@ -51,8 +49,6 @@
   }
   return dict;
 }
-
-#pragma clang diagnostic pop
 
 - (BOOL)setString:(NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {

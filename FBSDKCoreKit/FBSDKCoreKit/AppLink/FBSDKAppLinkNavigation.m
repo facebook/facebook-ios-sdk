@@ -180,8 +180,6 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
                                         eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
                                               error:(NSError *__autoreleasing *)error
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   NSURL *openedURL = nil;
   NSError *encodingError = nil;
   FBSDKAppLinkNavigationType retType = FBSDKAppLinkNavigationTypeFailure;
@@ -214,7 +212,6 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
       openedURL = appLinkBrowserURL;
     }
   }
-  #pragma clang diagnostic pop
 
   [self postAppLinkNavigateEventNotificationWithTargetURL:openedURL
                                                     error:error ? *error : nil

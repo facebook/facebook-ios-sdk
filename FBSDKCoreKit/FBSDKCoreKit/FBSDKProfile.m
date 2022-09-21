@@ -518,12 +518,10 @@ static id<FBSDKURLHosting> _urlHoster;
   }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)cacheProfile:(FBSDKProfile *)profile
 {
   if (profile) {
-    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profile];
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:profile requiringSecureCoding:NO error:nil];
     [self.dataStore fb_setObject:data forKey:FBSDKProfileUserDefaultsKey];
   } else {
     [self.dataStore fb_removeObjectForKey:FBSDKProfileUserDefaultsKey];
@@ -754,8 +752,6 @@ static id<FBSDKURLHosting> _urlHoster;
   }
   return _dateFormatter;
 }
-
-#pragma clang diagnostic pop
 
 #if DEBUG
 
