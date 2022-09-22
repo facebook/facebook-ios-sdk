@@ -18,7 +18,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppLink.h"
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
 
@@ -71,7 +70,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 - (instancetype)init
 {
-  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  FBSDKErrorFactory *factory = [FBSDKErrorFactory new];
   return [self initWithSessionProvider:NSURLSession.sharedSession
                           errorFactory:factory];
 }

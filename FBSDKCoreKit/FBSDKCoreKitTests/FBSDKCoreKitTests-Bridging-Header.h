@@ -56,7 +56,6 @@
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKDynamicFrameworkResolving.h"
 #import "FBSDKErrorConfiguration.h"
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKErrorReport+Testing.h"
 #import "FBSDKErrorReporter.h"

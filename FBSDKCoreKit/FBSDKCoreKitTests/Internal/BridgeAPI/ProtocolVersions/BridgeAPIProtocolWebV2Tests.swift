@@ -101,12 +101,10 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
       bridge.nativeBridge is BridgeAPIProtocolNativeV1,
       "Should use the expected default native bridge"
     )
-    let factory = try XCTUnwrap(
-      bridge.errorFactory as? ErrorFactory,
-      "Should use the expected type of error factory by default"
-    )
+
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === ErrorReporter.shared,
+      reporter === ErrorReporter.shared,
       "The error factory should use the shared error reporter"
     )
     XCTAssertTrue(

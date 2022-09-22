@@ -114,7 +114,7 @@ public final class CustomUpdateGraphRequest {
       with: encodedContent,
       options: .allowFragments
     ) as? [String: Any] else {
-      throw ErrorFactory().invalidArgumentError(
+      throw _ErrorFactory().invalidArgumentError(
         name: "CustomUpdateContent",
         value: content,
         message: "Custom Update Content is invalid please check parameters.",

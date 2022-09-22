@@ -97,7 +97,6 @@
 #import <FBSDKCoreKit/FBSDKErrorConfigurationProvider.h>
 #import <FBSDKCoreKit/FBSDKErrorConfigurationProviding.h>
 #import <FBSDKCoreKit/FBSDKErrorCreating.h>
-#import <FBSDKCoreKit/FBSDKErrorFactory.h>
 #import <FBSDKCoreKit/FBSDKErrorRecoveryAttempting.h>
 #import <FBSDKCoreKit/FBSDKErrorRecoveryConfiguration.h>
 #import <FBSDKCoreKit/FBSDKErrorReporter.h>

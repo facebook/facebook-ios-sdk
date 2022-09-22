@@ -81,7 +81,7 @@ extension ShareMediaContent: SharingValidatable {
         do {
           try photo.validate(options: bridgeOptions)
         } catch {
-          throw ErrorFactory().invalidArgumentError(
+          throw _ErrorFactory().invalidArgumentError(
             domain: ShareErrorDomain,
             name: "media",
             value: photo,
@@ -91,7 +91,7 @@ extension ShareMediaContent: SharingValidatable {
         }
       } else if let video = media as? ShareVideo {
         guard !hasVideo else {
-          throw ErrorFactory().invalidArgumentError(
+          throw _ErrorFactory().invalidArgumentError(
             domain: ShareErrorDomain,
             name: "media",
             value: media,
@@ -105,7 +105,7 @@ extension ShareMediaContent: SharingValidatable {
         try _ShareUtility.validateRequiredValue(video, named: "video")
         try video.validate(options: bridgeOptions)
       } else {
-        throw ErrorFactory().invalidArgumentError(
+        throw _ErrorFactory().invalidArgumentError(
           domain: ShareErrorDomain,
           name: "media",
           value: media,

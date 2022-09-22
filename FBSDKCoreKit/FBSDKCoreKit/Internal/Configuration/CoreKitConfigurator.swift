@@ -27,7 +27,6 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureAppEventsUtility()
     configureAuthenticationToken()
     configureButton()
-    configureErrorFactory()
     configureGatekeeperManager()
     configureGraphRequest()
     configureGraphRequestConnection()
@@ -134,10 +133,6 @@ private extension CoreKitConfigurator {
       eventLogger: components.eventLogger,
       accessTokenProvider: components.accessTokenWallet
     )
-  }
-
-  func configureErrorFactory() {
-    ErrorFactory.configure(defaultReporter: components.errorReporter)
   }
 
   func configureGatekeeperManager() {

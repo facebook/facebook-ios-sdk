@@ -103,7 +103,7 @@ public final class GamingImageUploader: NSObject {
     completion completionHandler: @escaping GamingServiceResultCompletion,
     andProgressHandler progressHandler: GamingServiceProgressHandler?
   ) {
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
 
     if AccessToken.current == nil {
       completionHandler(

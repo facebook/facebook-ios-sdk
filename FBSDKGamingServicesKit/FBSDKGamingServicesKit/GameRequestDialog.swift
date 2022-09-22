@@ -56,7 +56,7 @@ public final class GameRequestDialog: NSObject {
 
   var defaultDependencies: InstanceDependencies? = InstanceDependencies(
     bridgeAPIRequestOpener: _BridgeAPI.shared,
-    errorFactory: ErrorFactory(),
+    errorFactory: _ErrorFactory(),
     gameRequestURLProvider: GameRequestURLProvider.self,
     internalUtility: InternalUtility.shared,
     logger: _Logger.self,

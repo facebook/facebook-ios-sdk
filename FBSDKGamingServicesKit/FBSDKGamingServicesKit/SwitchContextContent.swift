@@ -39,7 +39,7 @@ public final class SwitchContextContent: NSObject, ValidatableProtocol {
       !contextTokenID.isEmpty
     else {
       let message = "The contextToken is required."
-      let errorFactory = ErrorFactory()
+      let errorFactory = _ErrorFactory()
       throw errorFactory.requiredArgumentError(
         name: "contextToken",
         message: message,

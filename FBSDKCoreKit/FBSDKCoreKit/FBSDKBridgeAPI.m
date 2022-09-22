@@ -21,7 +21,6 @@
 #import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
@@ -80,7 +79,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAuthenticationSession) {
   static FBSDKBridgeAPI *_sharedInstance;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    FBSDKErrorFactory *errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+    FBSDKErrorFactory *errorFactory = [FBSDKErrorFactory new];
     _sharedInstance = [[self alloc] initWithProcessInfo:NSProcessInfo.processInfo
                                                  logger:[[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorDeveloperErrors]
                                               urlOpener:CoreUIApplication.shared

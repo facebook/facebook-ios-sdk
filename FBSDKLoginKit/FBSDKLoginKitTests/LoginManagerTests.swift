@@ -241,7 +241,7 @@ final class LoginManagerTests: XCTestCase {
       .Dependencies.defaultDependency("AuthenticationToken", for: "authentication token wallet")
     )
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorFactory,
+      dependencies.errorFactory is _ErrorFactory,
       .Dependencies.defaultDependency("a concrete error factory", for: "error factory")
     )
     XCTAssertTrue(

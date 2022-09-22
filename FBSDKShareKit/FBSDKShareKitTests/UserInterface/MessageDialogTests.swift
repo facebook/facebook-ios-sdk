@@ -96,7 +96,7 @@ final class MessageDialogTests: XCTestCase {
       .defaultDependency("the shared BridgeAPI", for: "bridge API request opening")
     )
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorFactory,
+      dependencies.errorFactory is _ErrorFactory,
       .defaultDependency("a concrete error factory", for: "error factory")
     )
     XCTAssertIdentical(

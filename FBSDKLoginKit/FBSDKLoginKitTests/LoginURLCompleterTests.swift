@@ -45,7 +45,7 @@ final class LoginURLCompleterTests: XCTestCase {
   var authenticationTokenFactory: TestAuthenticationTokenFactory!
   var graphRequestFactory: TestGraphRequestFactory!
   var internalUtility: TestInternalUtility!
-  var errorFactory: ErrorFactory!
+  var errorFactory: _ErrorFactory!
   var urlCompleter: LoginURLCompleter!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -56,7 +56,7 @@ final class LoginURLCompleterTests: XCTestCase {
     authenticationTokenFactory = TestAuthenticationTokenFactory()
     graphRequestFactory = TestGraphRequestFactory()
     internalUtility = TestInternalUtility()
-    errorFactory = ErrorFactory()
+    errorFactory = _ErrorFactory()
     internalUtility.stubbedAppURL = URL(string: Values.redirectURL)
 
     LoginURLCompleter.setDependencies(

@@ -17,12 +17,12 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKApplicationLifecycleNotifications.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKConstants.h"
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKPasteboard.h"
@@ -73,7 +73,7 @@ static const struct {
 
 - (instancetype)initWithAppScheme:(nullable NSString *)appScheme
 {
-  id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
   return [self initWithAppScheme:appScheme
                       pasteboard:UIPasteboard.generalPasteboard
              dataLengthThreshold:FBSDKBridgeAPIProtocolNativeV1BridgeMaxBase64DataLengthThreshold
