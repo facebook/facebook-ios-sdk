@@ -107,7 +107,7 @@ final class BridgeAPITests: XCTestCase {
       "Should use the expected concrete url opener by default"
     )
     XCTAssertTrue(
-      _BridgeAPI.shared.bridgeAPIResponseFactory is BridgeAPIResponseFactory,
+      _BridgeAPI.shared.bridgeAPIResponseFactory is _BridgeAPIResponseFactory,
       "Should use and instance of the expected concrete response factory type by default"
     )
     XCTAssertEqual(
