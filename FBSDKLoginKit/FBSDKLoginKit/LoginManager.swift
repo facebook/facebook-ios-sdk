@@ -83,7 +83,7 @@ public final class LoginManager: NSObject {
     return InstanceDependencies(
       accessTokenWallet: AccessToken.self,
       authenticationTokenWallet: AuthenticationToken.self,
-      errorFactory: ErrorFactory(),
+      errorFactory: _ErrorFactory(),
       graphRequestFactory: GraphRequestFactory(),
       internalUtility: InternalUtility.shared,
       keychainStore: keychainStore,

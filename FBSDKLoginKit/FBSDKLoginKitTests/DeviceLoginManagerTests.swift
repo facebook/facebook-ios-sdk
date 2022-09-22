@@ -123,7 +123,7 @@ final class DeviceLoginManagerTests: XCTestCase {
       "A device login manager uses the shared internal utility by default"
     )
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorFactory,
+      dependencies.errorFactory is _ErrorFactory,
       "A device login manager uses a concrete error factory by default"
     )
   }

@@ -69,7 +69,7 @@ public final class ChooseContextContent: NSObject, ValidatableProtocol {
     let minimumGreaterThanMaximum = minParticipants > maxParticipants
     if minimumGreaterThanMaximum, maxParticipants != 0 {
       let message = "The minimum size cannot be greater than the maximum size"
-      throw ErrorFactory().requiredArgumentError(
+      throw _ErrorFactory().requiredArgumentError(
         name: "minParticipants",
         message: message,
         underlyingError: nil

@@ -73,7 +73,7 @@ extension AppInviteContent: DependentAsType {
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
     validator: _ShareUtility.self,
-    errorFactory: ErrorFactory()
+    errorFactory: _ErrorFactory()
   )
 }
 

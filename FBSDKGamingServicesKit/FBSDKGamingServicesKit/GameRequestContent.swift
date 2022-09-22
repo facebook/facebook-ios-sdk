@@ -84,7 +84,7 @@ public final class GameRequestContent: NSObject, SharingValidatable, NSSecureCod
   public func validate(options: ShareBridgeOptions = []) throws {
     try _ShareUtility.validateRequiredValue(message, named: "message")
 
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
     let mustHaveObjectID = (actionType == .send) || (actionType == .askFor)
     let hasObjectID = !objectID.isEmpty
 

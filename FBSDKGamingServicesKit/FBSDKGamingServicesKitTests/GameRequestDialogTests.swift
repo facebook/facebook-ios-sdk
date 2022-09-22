@@ -89,7 +89,7 @@ final class GameRequestDialogTests: XCTestCase {
       .Dependencies.defaultDependency("the shared BridgeAPI", for: "bridge API request opener")
     )
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorFactory,
+      dependencies.errorFactory is _ErrorFactory,
       .Dependencies.defaultDependency("a concrete error factory", for: "error factory")
     )
     XCTAssertIdentical(

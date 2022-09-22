@@ -120,12 +120,9 @@ final class BridgeAPITests: XCTestCase {
       "Should use the expected internal utility type by default"
     )
 
-    let factory = try XCTUnwrap(
-      _BridgeAPI.shared.errorFactory as? ErrorFactory,
-      "Should create an error factory"
-    )
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === ErrorReporter.shared,
+      reporter === ErrorReporter.shared,
       "Should use the shared error reporter by default"
     )
   }

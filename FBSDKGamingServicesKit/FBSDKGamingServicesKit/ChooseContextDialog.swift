@@ -66,7 +66,7 @@ public final class ChooseContextDialog: ContextWebDialog, URLOpening {
       }
 
       if !success, bridgeError != nil {
-        let sdkError = ErrorFactory().error(
+        let sdkError = _ErrorFactory().error(
           code: CoreError.errorBridgeAPIInterruption.rawValue,
           userInfo: nil,
           message: "Error occurred while interacting with Gaming Services, Failed to open bridge.",
@@ -80,7 +80,7 @@ public final class ChooseContextDialog: ContextWebDialog, URLOpening {
 
   public override func validate() throws {
     guard Settings.shared.appID != nil else {
-      throw ErrorFactory().error(
+      throw _ErrorFactory().error(
         code: CoreError.errorUnknown.rawValue,
         userInfo: nil,
         message: "App ID is not set in settings",
@@ -114,7 +114,7 @@ public final class ChooseContextDialog: ContextWebDialog, URLOpening {
         contextSize = size
       }
       if queryItem.name == Constants.errorMessage, let errorMessage = queryItem.value {
-        throw ErrorFactory().unknownError(message: errorMessage, userInfo: nil)
+        throw _ErrorFactory().unknownError(message: errorMessage, userInfo: nil)
       }
     }
 

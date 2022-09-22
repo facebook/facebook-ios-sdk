@@ -177,12 +177,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testErrorFactory() throws {
-    let factory = try XCTUnwrap(
-      components.errorFactory as? ErrorFactory,
-      "The default components should use an instance of ErrorFactory as its error factory"
-    )
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === components.errorReporter,
+      reporter === components.errorReporter,
       "The factory should use the components' error reporter"
     )
   }

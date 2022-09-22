@@ -467,7 +467,7 @@ final class CoreKitComponents {
     let deviceInformationProvider: _DeviceInformationProviding = _AppEventsDeviceInfo.shared
     let dialogConfigurationMapBuilder: _DialogConfigurationMapBuilding = _DialogConfigurationMapBuilder()
     let errorConfigurationProvider: _ErrorConfigurationProviding = _ErrorConfigurationProvider()
-    let errorFactory: ErrorCreating = ErrorFactory(reporter: ErrorReporter.shared)
+    let errorFactory: ErrorCreating = _ErrorFactory()
     let errorReporter: ErrorReporting = ErrorReporter.shared
     let eventDeactivationManager: _AppEventsParameterProcessing & _EventsProcessing = EventDeactivationManager()
     let eventLogger: EventLogging = AppEvents.shared

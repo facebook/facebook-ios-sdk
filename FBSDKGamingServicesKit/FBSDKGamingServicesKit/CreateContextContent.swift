@@ -41,7 +41,7 @@ public final class CreateContextContent: NSObject, ValidatableProtocol {
   public func validate() throws {
     let hasPlayerID = !playerID.isEmpty
     guard hasPlayerID else {
-      throw ErrorFactory().requiredArgumentError(
+      throw _ErrorFactory().requiredArgumentError(
         name: "playerID",
         message: "The playerID is required.",
         underlyingError: nil

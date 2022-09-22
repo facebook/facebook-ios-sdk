@@ -349,7 +349,7 @@ extension MessageDialog: DependentAsType {
     accessTokenWallet: AccessToken.self,
     bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
     bridgeAPIRequestOpener: _BridgeAPI.shared,
-    errorFactory: ErrorFactory(),
+    errorFactory: _ErrorFactory(),
     eventLogger: AppEvents.shared,
     internalUtility: InternalUtility.shared,
     shareUtility: _ShareUtility.self

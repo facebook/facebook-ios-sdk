@@ -432,7 +432,7 @@ extension LoginURLCompleter: DependentAsType {
     authenticationTokenCreator: AuthenticationTokenFactory(),
     graphRequestFactory: GraphRequestFactory(),
     internalUtility: InternalUtility.shared,
-    errorFactory: ErrorFactory()
+    errorFactory: _ErrorFactory()
   )
 }
 

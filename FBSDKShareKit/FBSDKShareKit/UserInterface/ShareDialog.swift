@@ -148,7 +148,7 @@ extension ShareDialog: DependentAsType {
     bridgeAPIRequestOpener: _BridgeAPI.shared,
     socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
     windowFinder: InternalUtility.shared,
-    errorFactory: ErrorFactory(),
+    errorFactory: _ErrorFactory(),
     eventLogger: AppEvents.shared,
     mediaLibrarySearcher: PHImageManager.default()
   )

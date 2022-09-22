@@ -297,7 +297,7 @@ extension _WebDialog: DependentAsType {
   static var configuredDependencies: TypeDependencies?
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
-    errorFactory: ErrorFactory(reporter: ErrorReporter.shared),
+    errorFactory: _ErrorFactory(),
     windowFinder: InternalUtility.shared
   )
 }

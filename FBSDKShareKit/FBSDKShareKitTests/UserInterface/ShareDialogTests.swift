@@ -134,7 +134,7 @@ final class ShareDialogTests: XCTestCase {
       InternalUtility.shared,
       .DefaultDependencies.usesInternalUtilityAsWindowFinderByDefault
     )
-    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .DefaultDependencies.usesErrorFactoryByDefault)
+    XCTAssertTrue(dependencies.errorFactory is _ErrorFactory, .DefaultDependencies.usesErrorFactoryByDefault)
     XCTAssertIdentical(
       dependencies.eventLogger as AnyObject,
       AppEvents.shared,
@@ -1036,7 +1036,7 @@ fileprivate extension String {
     static let usesInternalUtilityAsWindowFinderByDefault = """
       The default window finding dependency should be the shared InternalUtility
       """
-    static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete ErrorFactory"
+    static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete _ErrorFactory"
     static let usesAppEventsByDefault = "The default event logging dependency should be the shared AppEvents"
     static let usesPHImageManagerAsMediaLibrarySearcherByDefault = """
       The default media library searching dependency should be the default PHImageManager

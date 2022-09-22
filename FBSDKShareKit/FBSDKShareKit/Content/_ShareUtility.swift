@@ -34,7 +34,7 @@ extension _ShareUtility: ShareValidating {
     }
 
     guard isValid else {
-      throw ErrorFactory().requiredArgumentError(
+      throw _ErrorFactory().requiredArgumentError(
         domain: ShareErrorDomain,
         name: name,
         message: nil,
@@ -49,7 +49,7 @@ extension _ShareUtility: ShareValidating {
     in possibleValues: Set<Argument>
   ) throws {
     guard possibleValues.contains(value) else {
-      throw ErrorFactory().invalidArgumentError(
+      throw _ErrorFactory().invalidArgumentError(
         domain: ShareErrorDomain,
         name: name,
         value: value,
@@ -66,7 +66,7 @@ extension _ShareUtility: ShareValidating {
     named name: String
   ) throws {
     guard (minCount ... maxCount).contains(array.count) else {
-      throw ErrorFactory().invalidArgumentError(
+      throw _ErrorFactory().invalidArgumentError(
         domain: ShareErrorDomain,
         name: name,
         value: array,
@@ -78,7 +78,7 @@ extension _ShareUtility: ShareValidating {
 
   static func validateNetworkURL(_ url: URL, named name: String) throws {
     guard InternalUtility.shared.isBrowserURL(url) else {
-      throw ErrorFactory().invalidArgumentError(
+      throw _ErrorFactory().invalidArgumentError(
         domain: ShareErrorDomain,
         name: name,
         value: url,

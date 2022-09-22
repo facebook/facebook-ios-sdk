@@ -99,7 +99,7 @@ extension ShareVideo: DependentAsType {
 
   static var configuredDependencies: TypeDependencies?
 
-  static var defaultDependencies: TypeDependencies? = TypeDependencies(errorFactory: ErrorFactory())
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(errorFactory: _ErrorFactory())
 }
 
 // MARK: - Validation

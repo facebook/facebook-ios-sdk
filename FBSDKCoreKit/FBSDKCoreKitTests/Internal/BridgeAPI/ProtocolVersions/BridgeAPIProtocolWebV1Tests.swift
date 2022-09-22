@@ -93,12 +93,10 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
 
   func testDefaultDependencies() throws {
     bridge = BridgeAPIProtocolWebV1()
-    let factory = try XCTUnwrap(
-      bridge.errorFactory as? ErrorFactory,
-      "The class should have an error factory by default"
-    )
+
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === ErrorReporter.shared,
+      reporter === ErrorReporter.shared,
       "The default factory should use the shared error reporter"
     )
     XCTAssertTrue(

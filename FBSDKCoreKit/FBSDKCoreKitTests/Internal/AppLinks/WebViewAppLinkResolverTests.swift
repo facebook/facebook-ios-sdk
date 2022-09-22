@@ -32,12 +32,9 @@ final class WebViewAppLinkResolverTests: XCTestCase {
       "Should use the shared system session by default"
     )
 
-    let factory = try XCTUnwrap(
-      resolver.errorFactory as? ErrorFactory,
-      "Should create an error factory"
-    )
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === ErrorReporter.shared,
+      reporter === ErrorReporter.shared,
       "Should use the shared error reporter by default"
     )
   }

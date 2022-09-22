@@ -71,7 +71,7 @@ extension ShareCameraEffectContent: DependentAsType {
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
     internalUtility: InternalUtility.shared,
-    errorFactory: ErrorFactory()
+    errorFactory: _ErrorFactory()
   )
 }
 

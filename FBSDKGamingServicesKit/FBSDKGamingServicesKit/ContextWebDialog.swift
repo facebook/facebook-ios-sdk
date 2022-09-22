@@ -90,7 +90,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     if
       let errorCode = results[Keys.errorCode] as? Int,
       let errorMessage = results[Keys.errorMessage] as? String {
-      let errorFactory = ErrorFactory()
+      let errorFactory = _ErrorFactory()
       let error = errorFactory.error(
         code: errorCode,
         userInfo: nil,

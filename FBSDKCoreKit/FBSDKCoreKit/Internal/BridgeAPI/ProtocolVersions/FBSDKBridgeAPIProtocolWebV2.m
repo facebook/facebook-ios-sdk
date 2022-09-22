@@ -11,11 +11,11 @@
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 #import "FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.h"
 #import "FBSDKBridgeAPIProtocolNativeV1InputKeys.h"
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 
@@ -25,7 +25,7 @@
 
 - (instancetype)init
 {
-  id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
   id<FBSDKBridgeAPIProtocol> nativeBridge = [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
                                                                                            pasteboard:nil
                                                                                   dataLengthThreshold:0
