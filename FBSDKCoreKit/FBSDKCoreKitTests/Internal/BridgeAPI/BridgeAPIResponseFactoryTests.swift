@@ -13,17 +13,17 @@ import XCTest
 
 final class BridgeAPIResponseFactoryTests: XCTestCase {
 
-  let factory = BridgeAPIResponseFactory()
+  let factory = _BridgeAPIResponseFactory()
   let request = TestBridgeAPIRequest(url: SampleURLs.valid)
   let error = SampleError()
   lazy var response = factory.createResponse(
-    with: request,
+    request: request,
     error: error
   )
 
   func testCreatingResponseWithError() {
     response = factory.createResponse(
-      with: request,
+      request: request,
       error: error
     )
     XCTAssertEqual(
@@ -38,7 +38,7 @@ final class BridgeAPIResponseFactoryTests: XCTestCase {
   }
 
   func testCreatingCancelledResponse() {
-    response = factory.createResponseCancelled(with: request)
+    response = factory.createResponseCancelled(request: request)
 
     XCTAssertEqual(
       response.request as? TestBridgeAPIRequest,
@@ -54,7 +54,7 @@ final class BridgeAPIResponseFactoryTests: XCTestCase {
   func testCreatingWithRequestResponseAndSourceApplication() throws {
     request.protocol = TestBridgeAPIProtocol()
     response = try factory.createResponse(
-      with: request,
+      request: request,
       responseURL: SampleURLs.valid,
       sourceApplication: "foo"
     )

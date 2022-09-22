@@ -8,10 +8,9 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 #import "FBSDKBridgeAPI.h"
-#import "FBSDKBridgeAPIResponseCreating.h"
 #import "FBSDKDynamicFrameworkResolving.h"
 
 NS_ASSUME_NONNULL_BEGIN

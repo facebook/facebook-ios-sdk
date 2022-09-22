@@ -17,8 +17,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKBridgeAPIResponseCreating.h"
-#import "FBSDKBridgeAPIResponseFactory.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKErrorReporter.h"
