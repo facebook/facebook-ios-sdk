@@ -27,6 +27,7 @@ settings:
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING: YES
 
 targets:
   FBSDKCoreKit-Static:
