@@ -182,7 +182,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
       self.secondsSpentInCurrentSession = [results[FBSDKTimeSpentPersistKeySessionSecondsSpent] intValue];
       self.sessionID = results[FBSDKTimeSpentPersistKeySessionID] ?: [NSUUID UUID].UUIDString;
       self.numInterruptionsInCurrentSession = [results[FBSDKTimeSpentPersistKeySessionNumInterruptions] intValue];
-      self.shouldLogActivateEvent = (self.timeSinceLastSuspend > [[self.serverConfigurationProvider cachedServerConfiguration] sessionTimoutInterval]);
+      self.shouldLogActivateEvent = (self.timeSinceLastSuspend > [[self.serverConfigurationProvider cachedServerConfiguration] sessionTimeoutInterval]);
 
       // Other than the first launch, we always log the last session's deactivate with this session's activate.
       self.shouldLogDeactivateEvent = self.shouldLogActivateEvent;
