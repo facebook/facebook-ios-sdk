@@ -122,7 +122,7 @@ NS_SWIFT_NAME(_ServerConfiguration)
 @property (nonatomic, readonly, getter = isUninstallTrackingEnabled, assign) BOOL uninstallTrackingEnabled;
 @property (nullable, nonatomic, readonly, copy) NSString *loginTooltipText;
 @property (nullable, nonatomic, readonly, copy) NSDate *timestamp;
-@property (nonatomic, assign) NSTimeInterval sessionTimoutInterval;
+@property (nonatomic, assign) NSTimeInterval sessionTimeoutInterval;
 @property (nullable, nonatomic, readonly, copy) NSString *loggingToken;
 @property (nonatomic, readonly, assign) FBSDKServerConfigurationSmartLoginOptions smartLoginOptions;
 @property (nullable, nonatomic, readonly, copy) NSURL *smartLoginBookmarkIconURL;

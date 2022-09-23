@@ -70,7 +70,7 @@ final class ServerConfigurationFixtures: NSObject {
     let errorConfiguration = dict["errorConfiguration"] as? _ErrorConfiguration
       ?? defaultConfiguration.errorConfiguration
 
-    var sessionTimeoutInterval = defaultConfiguration.sessionTimoutInterval
+    var sessionTimeoutInterval = defaultConfiguration.sessionTimeoutInterval
     if let intInterval = dict["sessionTimeoutInterval"] as? Int {
       sessionTimeoutInterval = TimeInterval(Double(intInterval))
     } else if let doubleInterval = dict["sessionTimeoutInterval"] as? Double {

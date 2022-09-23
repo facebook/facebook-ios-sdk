@@ -216,7 +216,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithDefaultSessionTimeoutInterval() {
     XCTAssertEqual(
-      configuration.sessionTimoutInterval,
+      configuration.sessionTimeoutInterval,
       60,
       "Should set the correct default timeout interval"
     )
@@ -225,7 +225,7 @@ final class ServerConfigurationTests: XCTestCase {
   func testCreatingWithSessionTimeoutInterval() {
     configuration = Fixtures.configuration(withDictionary: ["sessionTimeoutInterval": 200])
     XCTAssertEqual(
-      configuration.sessionTimoutInterval,
+      configuration.sessionTimeoutInterval,
       200,
       "Should set the session timeout interval from the remote"
     )
@@ -560,7 +560,7 @@ final class ServerConfigurationTests: XCTestCase {
     XCTAssertEqualDicts(coder.encodedObject["dialogFlows"] as? [String: Any], configuration.dialogFlows())
     XCTAssertEqual(coder.encodedObject["timestamp"] as? Date, configuration.timestamp)
     XCTAssertEqual(coder.encodedObject["errorConfigs"] as? _ErrorConfiguration, configuration.errorConfiguration)
-    XCTAssertEqual(coder.encodedObject["sessionTimeoutInterval"] as? TimeInterval, configuration.sessionTimoutInterval)
+    XCTAssertEqual(coder.encodedObject["sessionTimeoutInterval"] as? TimeInterval, configuration.sessionTimeoutInterval)
     XCTAssertNil(
       coder.encodedObject["defaults"],
       "Should not encode whether default values were used to create server configuration"
