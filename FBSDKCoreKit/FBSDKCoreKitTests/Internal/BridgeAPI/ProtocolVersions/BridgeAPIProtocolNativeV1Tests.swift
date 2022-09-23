@@ -9,19 +9,110 @@
 @testable import FBSDKCoreKit
 
 import Foundation
+import TestTools
 
 final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   let actionID = UUID().uuidString
   let scheme = UUID().uuidString
   let methodName = UUID().uuidString
   let methodVersion = UUID().uuidString
-  let pasteboard = TestPasteboard()
-  let errorFactory = TestErrorFactory()
-  lazy var protocolNativeV1: BridgeAPIProtocolNativeV1 = {
-    let bridgeProtocol = BridgeAPIProtocolNativeV1(appScheme: scheme)
-    bridgeProtocol.errorFactory = errorFactory
-    return bridgeProtocol
-  }()
+  let sampleURL = URL(string: "https://example.com")! // swiftlint:disable:this force_unwrapping
+  // swiftlint:disable implicitly_unwrapped_optional
+  var pasteboard: TestPasteboard!
+  var errorFactory: TestErrorFactory!
+  var protocolNativeV1: _BridgeAPIProtocolNativeV1!
+  var bundle: TestBundle!
+  var notificationCenter: TestNotificationCenter!
+  var internalUtility: InternalUtilityProtocol!
+
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+    pasteboard = TestPasteboard()
+    errorFactory = TestErrorFactory()
+    bundle = TestBundle()
+    internalUtility = InternalUtility.shared
+    notificationCenter = TestNotificationCenter()
+
+    _BridgeAPIProtocolNativeV1.setDependencies(
+      .init(
+        errorFactory: errorFactory,
+        bundle: bundle,
+        notificationDeliverer: notificationCenter,
+        internalUtility: internalUtility
+      )
+    )
+    protocolNativeV1 = _BridgeAPIProtocolNativeV1(appScheme: scheme)
+  }
+
+  override func tearDown() {
+    errorFactory = nil
+    bundle = nil
+    notificationCenter = nil
+    internalUtility = nil
+    pasteboard = nil
+    protocolNativeV1 = nil
+    _BridgeAPIProtocolNativeV1.resetDependencies()
+
+    super.tearDown()
+  }
+
+  func testDefaultTypeDependencies() throws {
+    _BridgeAPIProtocolNativeV1.resetDependencies()
+    let dependencies = try _BridgeAPIProtocolNativeV1.getDependencies()
+
+    XCTAssertTrue(
+      dependencies.errorFactory is _ErrorFactory,
+      .defaultDependency("an error factoring", for: "error creating")
+    )
+
+    XCTAssertIdentical(
+      dependencies.bundle as AnyObject,
+      Bundle.main,
+      .defaultDependency("a dictionary provider", for: "providing dictionaries")
+    )
+
+    XCTAssertIdentical(
+      dependencies.notificationDeliverer as AnyObject,
+      NotificationCenter.default,
+      .defaultDependency("a notification deliverer", for: "delivering notifications")
+    )
+
+    XCTAssertIdentical(
+      dependencies.internalUtility as AnyObject,
+      InternalUtility.shared,
+      .defaultDependency("internal utility", for: "creating urls")
+    )
+  }
+
+  func testCustomTypeDependencies() throws {
+    let dependencies = try _BridgeAPIProtocolNativeV1.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.errorFactory as AnyObject,
+      errorFactory,
+      .customDependency(for: "error creating")
+    )
+
+    XCTAssertIdentical(
+      dependencies.bundle as AnyObject,
+      bundle,
+      .customDependency(for: "providing dictionaries")
+    )
+
+    XCTAssertIdentical(
+      dependencies.notificationDeliverer as AnyObject,
+      notificationCenter,
+      .customDependency(for: "delivering notifications")
+    )
+
+    XCTAssertIdentical(
+      dependencies.internalUtility as AnyObject,
+      internalUtility,
+      .customDependency(for: "creating urls")
+    )
+  }
 
   func testRequestURL() {
     let parameters = [
@@ -31,7 +122,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let requestURL = try protocolNativeV1.requestURL(
-        withActionID: actionID,
+        actionID: actionID,
         scheme: scheme,
         methodName: methodName,
         parameters: parameters
@@ -61,7 +152,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: [:],
         cancelled: &cancelled
       )
@@ -73,7 +164,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: [:],
         cancelled: &cancelled
       )
@@ -96,7 +187,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: [:],
         cancelled: &cancelled
       )
@@ -128,7 +219,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let response: [String: Any] = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: queryParameters,
         cancelled: &cancelled
       )
@@ -157,7 +248,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: [:],
         cancelled: &cancelled
       )
@@ -182,7 +273,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: queryParameters,
         cancelled: &cancelled
       )
@@ -213,7 +304,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: queryParameters,
         cancelled: &cancelled
       )
@@ -257,7 +348,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: queryParameters,
         cancelled: &cancelled
       )
@@ -286,7 +377,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     queryParameters = stubEncodeQueryParameters(queryParameters)
     do {
       let response = try protocolNativeV1.responseParameters(
-        forActionID: actionID,
+        actionID: actionID,
         queryParameters: queryParameters,
         cancelled: &cancelled
       )
@@ -298,12 +389,11 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   }
 
   func testRequestParametersWithDataJSON() {
-    let protocolNative = BridgeAPIProtocolNativeV1(
+    let protocolNative = _BridgeAPIProtocolNativeV1(
       appScheme: scheme,
       pasteboard: nil,
       dataLengthThreshold: UInt.max,
-      includeAppIcon: false,
-      errorFactory: errorFactory
+      shouldIncludeAppIcon: false
     )
 
     let parameters: [String: Any] = [
@@ -314,7 +404,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let requestURL = try protocolNative.requestURL(
-        withActionID: actionID,
+        actionID: actionID,
         scheme: scheme,
         methodName: methodName,
         parameters: parameters
@@ -350,12 +440,11 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   }
 
   func testRequestParametersWithImageJSON() {
-    let protocolNative = BridgeAPIProtocolNativeV1(
+    let protocolNative = _BridgeAPIProtocolNativeV1(
       appScheme: scheme,
       pasteboard: nil,
       dataLengthThreshold: UInt.max,
-      includeAppIcon: false,
-      errorFactory: errorFactory
+      shouldIncludeAppIcon: false
     )
 
     let parameters: [String: Any] = [
@@ -366,7 +455,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let requestURL = try protocolNative.requestURL(
-        withActionID: actionID,
+        actionID: actionID,
         scheme: scheme,
         methodName: methodName,
         parameters: parameters
@@ -407,12 +496,11 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     pasteboard.name = pasteboardName
     let data = stubData()
 
-    let protocolNative = BridgeAPIProtocolNativeV1(
+    let protocolNative = _BridgeAPIProtocolNativeV1(
       appScheme: scheme,
       pasteboard: pasteboard,
       dataLengthThreshold: 0,
-      includeAppIcon: false,
-      errorFactory: errorFactory
+      shouldIncludeAppIcon: false
     )
 
     let parameters: [String: Any] = [
@@ -423,7 +511,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let requestURL = try protocolNative.requestURL(
-        withActionID: actionID,
+        actionID: actionID,
         scheme: scheme,
         methodName: methodName,
         parameters: parameters
@@ -459,12 +547,11 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
     let image = stubImage()
     let data = stubData(with: image)
 
-    let protocolNative = BridgeAPIProtocolNativeV1(
+    let protocolNative = _BridgeAPIProtocolNativeV1(
       appScheme: scheme,
       pasteboard: pasteboard,
       dataLengthThreshold: 0,
-      includeAppIcon: false,
-      errorFactory: errorFactory
+      shouldIncludeAppIcon: false
     )
 
     let parameters: [String: Any] = [
@@ -475,7 +562,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
 
     do {
       let requestURL = try protocolNative.requestURL(
-        withActionID: actionID,
+        actionID: actionID,
         scheme: scheme,
         methodName: methodName,
         parameters: parameters
@@ -584,5 +671,18 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   func stubImageSerialized(_ image: UIImage?) -> [String: Any]? {
     let data = stubData(with: image)
     return stubDataSerialized(data, tag: "png")
+  }
+}
+
+// MARK: - Assumptions
+
+// swiftformat:disable extensionaccesscontrol
+fileprivate extension String {
+  static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The _BridgeAPIProtocolNativeV1 type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  static func customDependency(for type: String) -> String {
+    "The _BridgeAPIProtocolNativeV1 type uses a custom \(type) dependency when provided"
   }
 }

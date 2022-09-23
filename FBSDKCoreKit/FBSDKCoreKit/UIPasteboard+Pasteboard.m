@@ -8,11 +8,11 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/UIPasteboard+Pasteboard.h>
+
 #import <UIKit/UIKit.h>
 
-@interface UIPasteboard (FBSDKPasteboard) <FBSDKPasteboard>
-@end
-
+FB_LINK_CATEGORY_IMPLEMENTATION(UIPasteboard, FBSDKPasteboard)
 @implementation UIPasteboard (FBSDKPasteboard)
 
 - (BOOL)_isGeneralPasteboard
@@ -20,10 +20,6 @@
   return UIPasteboardNameGeneral == self.name;
 }
 
-NS_ASSUME_NONNULL_BEGIN
-
 @end
-
-NS_ASSUME_NONNULL_END
 
 #endif
