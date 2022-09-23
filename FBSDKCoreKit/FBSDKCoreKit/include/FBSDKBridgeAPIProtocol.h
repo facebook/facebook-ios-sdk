@@ -27,15 +27,22 @@ FOUNDATION_EXPORT NSString *const FBSDKBridgeAPIVersionKey;
 NS_SWIFT_NAME(BridgeAPIProtocol)
 @protocol FBSDKBridgeAPIProtocol <NSObject>
 
+// UNCRUSTIFY_FORMAT_OFF
 - (nullable NSURL *)requestURLWithActionID:(NSString *)actionID
                                     scheme:(NSString *)scheme
                                 methodName:(NSString *)methodName
                                 parameters:(NSDictionary<NSString *, id> *)parameters
-                                     error:(NSError *_Nullable *)errorRef;
+                                     error:(NSError *_Nullable *)errorRef
+NS_SWIFT_NAME(requestURL(actionID:scheme:methodName:parameters:));
+// UNCRUSTIFY_FORMAT_ON
+
+// UNCRUSTIFY_FORMAT_OFF
 - (nullable NSDictionary<NSString *, id> *)responseParametersForActionID:(NSString *)actionID
                                                          queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                                                                cancelled:(nullable BOOL *)cancelledRef
-                                                                   error:(NSError *_Nullable *)errorRef;
+                                                                   error:(NSError *_Nullable *)errorRef
+NS_SWIFT_NAME(responseParameters(actionID:queryParameters:cancelled:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

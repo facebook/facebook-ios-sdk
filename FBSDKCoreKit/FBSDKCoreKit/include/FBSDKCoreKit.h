@@ -155,6 +155,7 @@
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
 #import <FBSDKCoreKit/FBSDKOperatingSystemVersionComparing.h>
+#import <FBSDKCoreKit/FBSDKPasteboard.h>
 #import <FBSDKCoreKit/FBSDKPaymentObserving.h>
 #import <FBSDKCoreKit/FBSDKPaymentProductRequestor.h>
 #import <FBSDKCoreKit/FBSDKPaymentProductRequestorCreating.h>
@@ -205,4 +206,5 @@
 #import <FBSDKCoreKit/NSProcessInfo+MacCatalystDetermining.h>
 #import <FBSDKCoreKit/NSProcessInfo+OperatingSystemVersionComparing.h>
 #import <FBSDKCoreKit/UIApplication+URLOpener.h>
+#import <FBSDKCoreKit/UIPasteboard+Pasteboard.h>
 #import <FBSDKCoreKit/WKWebView+WebViewProtocol.h>
