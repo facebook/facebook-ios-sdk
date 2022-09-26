@@ -73,14 +73,12 @@ main() {
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
-      "FBAEMKit/FBAEMKit/FBAEMKitVersions.h"
       "FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
       "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
-      "FBAEMKit/FBAEMKit/FBAEMKitVersions.h"
       "FBAEMKit/FBAEMKit/_AEMNetworker.swift"
     )
 
