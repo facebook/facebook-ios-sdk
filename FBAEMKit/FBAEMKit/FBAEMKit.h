@@ -10,5 +10,4 @@
 #import <FBAEMKit/FBAEMReporter.h>
 
 // Temporarily public
-#import <FBAEMKit/FBAEMAdvertiserRuleMatching.h>
 #import <FBAEMKit/FBAEMKit-Prefix-Header.h>

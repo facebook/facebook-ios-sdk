@@ -6,13 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <TargetConditionals.h>
+#if !os(tvOS)
 
-#if !TARGET_OS_TV
-
- #import <Foundation/Foundation.h>
-
-NS_ASSUME_NONNULL_BEGIN
+import Foundation
 
 /**
  Internal Type exposed to facilitate transition to Swift.
@@ -20,13 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(_AEMAdvertiserRuleMatching)
-@protocol FBAEMAdvertiserRuleMatching <NSObject>
-
-- (BOOL)isMatchedEventParameters:(nullable NSDictionary<NSString *, id> *)eventParams;
-
-@end
-
-NS_ASSUME_NONNULL_END
+@objc
+public protocol _AEMAdvertiserRuleMatching {
+  func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool
+}
 
 #endif
