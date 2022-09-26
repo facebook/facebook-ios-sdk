@@ -7,4 +7,3 @@
  */
 
 #import <TestTools/FBSDKAuthenticationToken+Testing.h>
-#import <TestTools/FBSDKTestCoder.h>

@@ -1045,23 +1045,6 @@ final class ProfileTests: XCTestCase {
     let graphPath = Profile.graphPath(for: token)
     XCTAssertEqual(graphPath, expectedPath, file: file, line: line)
   }
-
-  func decodeObjectCheck(
-    decodedObject: String,
-    objectType: Any,
-    failureMessage: String,
-    file: StaticString = #file,
-    line: UInt = #line
-  ) {
-    let coder = TestCoder()
-    _ = Profile(coder: coder)
-    XCTAssertTrue(
-      coder.decodedObject[decodedObject].self as? Any.Type == objectType as? Any.Type,
-      failureMessage,
-      file: file,
-      line: line
-    )
-  }
 }
 
 // swiftformat:disable extensionaccesscontrol
