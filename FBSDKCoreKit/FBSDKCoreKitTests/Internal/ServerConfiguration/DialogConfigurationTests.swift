@@ -11,8 +11,6 @@
 import TestTools
 
 final class DialogConfigurationTests: XCTestCase {
-
-  let coder = TestCoder()
   let versions = ["1", "2", "3"]
 
   enum Keys {

@@ -25,7 +25,6 @@
 		8D939CDB5ED7890B6DD2EB54 /* TestInternalUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44853480B9144B4E2A10493 /* TestInternalUtility.swift */; };
 		99059344C6095D5E6AF2C327 /* TestAEMNetworker.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE9262A768F837E5F021673 /* TestAEMNetworker.swift */; };
 		99EFAC95A1FB2E0A37D88F38 /* TestWindowFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */; };
-		9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */; };
 		A9B54F70CDE4F662492705AC /* TestAccessTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */; };
 		ABAAE5DF3C5E29E2C9421FED /* TestGraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */; };
 		B5A27FB94BAF6038E1A156CF /* CodabilityTesting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC6E2092D7CFFF0E3CAC8BF /* CodabilityTesting.swift */; };
@@ -41,7 +40,6 @@
 		E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8D4BE357D16D0721EE967 /* Fuzzer.swift */; };
 		ECA21F7C52F9A7C5192642E2 /* SampleAuthenticationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3BBF889E05BBA85DFD18DD /* SampleAuthenticationToken.swift */; };
 		F5C5088D9B790C47A9FB6DB5 /* TestBridgeAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134CD181A17C3D73F6D958E3 /* TestBridgeAPIRequest.swift */; };
-		F8EBFCABCA0ED72EAC933EFD /* FBSDKTestCoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FB7D50EB7B42C13CF153050F /* TestAccessTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */; };
 /* End PBXBuildFile section */
 
@@ -83,7 +81,6 @@
 		0E6EAAFF5FD98DE8A3459008 /* TestGraphRequestConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnection.swift; sourceTree = "<group>"; };
 		134CD181A17C3D73F6D958E3 /* TestBridgeAPIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequest.swift; sourceTree = "<group>"; };
 		155F624DBCDE8DE6D71A4921 /* TestKeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestKeychainStore.swift; sourceTree = "<group>"; };
-		339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKTestCoder.h; sourceTree = "<group>"; };
 		373AC4291587EE6AC6185981 /* FBAEMKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBAEMKit; path = ../FBAEMKit/FBAEMKit.xcodeproj; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
 		4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProfileProvider.swift; sourceTree = "<group>"; };
@@ -96,7 +93,6 @@
 		8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleAccessTokens.swift; sourceTree = "<group>"; };
 		9A195867B3F02933BC7BC2BE /* TestErrorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestErrorFactory.swift; sourceTree = "<group>"; };
 		A53246B76E3184C42F412D14 /* SampleURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleURLs.swift; sourceTree = "<group>"; };
-		A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestCoder.m; sourceTree = "<group>"; };
 		AE56E96C01E2B4764992770B /* TestBridgeAPIRequestOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBridgeAPIRequestOpener.swift; sourceTree = "<group>"; };
 		B26F9D497DC3FEC7192A188F /* TestURLHoster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLHoster.swift; sourceTree = "<group>"; };
 		B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestURLOpener.swift; sourceTree = "<group>"; };
@@ -140,8 +136,6 @@
 			children = (
 				0AC6E2092D7CFFF0E3CAC8BF /* CodabilityTesting.swift */,
 				EE90E7B3A5223FB9B851A0F6 /* FBSDKAuthenticationToken+Testing.h */,
-				339256DAFAA306B6900BB4E8 /* FBSDKTestCoder.h */,
-				A6A4922697A11B50B06F8282 /* FBSDKTestCoder.m */,
 				03A8D4BE357D16D0721EE967 /* Fuzzer.swift */,
 				8946DC7A460B75F7B65F5BE5 /* SampleAccessTokens.swift */,
 				DE3BBF889E05BBA85DFD18DD /* SampleAuthenticationToken.swift */,
@@ -215,7 +209,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D5040753CDE54C5B7AAFF2C2 /* FBSDKAuthenticationToken+Testing.h in Headers */,
-				F8EBFCABCA0ED72EAC933EFD /* FBSDKTestCoder.h in Headers */,
 				CD78B55C79B11804946E08EE /* TestTools.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -326,7 +319,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5A27FB94BAF6038E1A156CF /* CodabilityTesting.swift in Sources */,
-				9A4ABF0D3E4E13CE761A0B61 /* FBSDKTestCoder.m in Sources */,
 				E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */,
 				BD38E8A36C58EBF74120120C /* SampleAccessTokens.swift in Sources */,
 				ECA21F7C52F9A7C5192642E2 /* SampleAuthenticationToken.swift in Sources */,
