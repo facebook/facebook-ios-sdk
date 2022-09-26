@@ -17,15 +17,7 @@
 #import "FBSDKAppLink+Internal.h"
 #import "FBSDKMeasurementEventNames.h"
 #import "FBSDKWebViewAppLinkResolver.h"
-
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkTargetKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkUserAgentKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkExtrasKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersionKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppLink;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
+#import "FBSDKAppLinkURLKeys.h"
 
 @interface FBSDKAppLinkNavigation ()
 

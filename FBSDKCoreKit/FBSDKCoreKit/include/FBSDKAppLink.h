@@ -16,10 +16,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// The version of the App Link protocol that this library supports
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersion
-NS_SWIFT_NAME(AppLinkVersion);
-
 /**
  Contains App Link metadata relevant for navigation on this device
  derived from the HTML at a given URL.

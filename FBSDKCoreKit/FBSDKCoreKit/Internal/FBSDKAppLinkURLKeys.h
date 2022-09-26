@@ -20,7 +20,6 @@ FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersionKeyName;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppLink;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppName;
 FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersion;
 
 NS_ASSUME_NONNULL_END
 
