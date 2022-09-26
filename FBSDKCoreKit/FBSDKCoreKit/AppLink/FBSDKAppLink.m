@@ -10,16 +10,6 @@
 
 #import "FBSDKAppLink+Internal.h"
 
-NSString *const FBSDKAppLinkDataParameterName = @"al_applink_data";
-NSString *const FBSDKAppLinkTargetKeyName = @"target_url";
-NSString *const FBSDKAppLinkUserAgentKeyName = @"user_agent";
-NSString *const FBSDKAppLinkExtrasKeyName = @"extras";
-NSString *const FBSDKAppLinkRefererAppLink = @"referer_app_link";
-NSString *const FBSDKAppLinkRefererAppName = @"app_name";
-NSString *const FBSDKAppLinkRefererUrl = @"url";
-NSString *const FBSDKAppLinkVersionKeyName = @"version";
-NSString *const FBSDKAppLinkVersion = @"1.0";
-
 @interface FBSDKAppLink ()
 
 @property (nullable, nonatomic, readwrite, strong) NSURL *sourceURL;

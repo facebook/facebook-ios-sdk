@@ -58,6 +58,7 @@
 #import <FBSDKCoreKit/FBSDKAppLinkURL.h>
 #import <FBSDKCoreKit/FBSDKAppLinkURLCreating.h>
 #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
+#import <FBSDKCoreKit/FBSDKAppLinkVersionKey.h>
 #import <FBSDKCoreKit/FBSDKAppStoreReceiptProviding.h>
 #import <FBSDKCoreKit/FBSDKAppURLSchemeProviding.h>
 #import <FBSDKCoreKit/FBSDKATEPublisherCreating.h>
