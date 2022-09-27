@@ -474,8 +474,8 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   @available(iOS 14, *)
   func testAEMNetworker() {
     XCTAssertNotNil(
-      components.aemNetworker as? __AEMNetworker,
-      "The default components should use an instance of __AEMNetworker as its AEM networker"
+      components.aemNetworker as? AEMNetworker,
+      "The default components should use an instance of AEMNetworker as its AEM networker"
     )
   }
 
