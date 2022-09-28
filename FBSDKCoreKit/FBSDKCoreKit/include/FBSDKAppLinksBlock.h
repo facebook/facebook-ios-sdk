@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAppLink.h>
+@class FBSDKAppLink;
 
 NS_ASSUME_NONNULL_BEGIN
 

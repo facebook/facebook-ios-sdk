@@ -10,9 +10,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAppLink.h>
 #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
 
+@class FBSDKAppLink;
 @protocol FBSDKInternalURLOpener;
 @protocol FBSDKSettings;
 

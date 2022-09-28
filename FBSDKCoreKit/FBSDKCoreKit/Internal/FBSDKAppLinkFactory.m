@@ -8,9 +8,7 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
-#import "FBSDKAppLink+Internal.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
                                         webURL:(nullable NSURL *)webURL
                               isBackToReferrer:(BOOL)isBackToReferrer
 {
-  return [FBSDKAppLink appLinkWithSourceURL:sourceURL
+  return [[FBSDKAppLink alloc] initWithSourceURL:sourceURL
                                     targets:targets
                                      webURL:webURL
                            isBackToReferrer:isBackToReferrer];

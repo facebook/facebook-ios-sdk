@@ -17,7 +17,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppLink.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
 
@@ -293,7 +292,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     webUrl = [NSURL URLWithString:webUrlString];
   }
 
-  return [FBSDKAppLink appLinkWithSourceURL:destination
+  return [[FBSDKAppLink alloc] initWithSourceURL:destination
                                     targets:linkTargets
                                      webURL:webUrl];
 }

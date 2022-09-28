@@ -31,7 +31,6 @@
 #import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEventsUtility+Testing.h"
-#import "FBSDKAppLink+Internal.h"
 #import "FBSDKAppLinkNavigation+Testing.h"
 #import "FBSDKAppLinkResolverRequestBuilder.h"
 #import "FBSDKAppLinkUtility+Testing.h"
