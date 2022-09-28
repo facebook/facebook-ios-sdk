@@ -2,8 +2,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKAppLink.h>
-
 #import "Coffee.h"
 
 @interface ProductDetailViewController : UIViewController

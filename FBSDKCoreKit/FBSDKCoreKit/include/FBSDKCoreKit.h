@@ -42,7 +42,6 @@
 #import <FBSDKCoreKit/FBSDKApplicationLifecycleObserving.h>
 #import <FBSDKCoreKit/FBSDKApplicationObserving.h>
 #import <FBSDKCoreKit/FBSDKApplicationStateSetting.h>
-#import <FBSDKCoreKit/FBSDKAppLink.h>
 #import <FBSDKCoreKit/FBSDKAppLinkCreating.h>
 #import <FBSDKCoreKit/FBSDKAppLinkEventPosting.h>
 #import <FBSDKCoreKit/FBSDKAppLinkFactory.h>

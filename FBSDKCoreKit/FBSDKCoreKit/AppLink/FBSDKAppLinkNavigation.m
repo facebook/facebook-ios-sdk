@@ -14,7 +14,6 @@
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppLink+Internal.h"
 #import "FBSDKMeasurementEventNames.h"
 #import "FBSDKWebViewAppLinkResolver.h"
 #import "FBSDKAppLinkURLKeys.h"
