@@ -224,7 +224,7 @@ final class ErrorReporterTests: XCTestCase {
     reporter.uploadErrors()
 
     guard
-      let reports = factory.capturedParameters["error_reports"] as? String,
+      let reports = factory.capturedParameters?["error_reports"] as? String,
       let data = reports.data(using: .utf8)
     else {
       return XCTFail("Should upload reports as an array of strings")
@@ -242,7 +242,7 @@ final class ErrorReporterTests: XCTestCase {
       "Should upload the expected reports"
     )
     XCTAssertEqual(
-      factory.capturedHttpMethod,
+      factory.capturedHTTPMethod,
       .post,
       "Should use the correct http method"
     )

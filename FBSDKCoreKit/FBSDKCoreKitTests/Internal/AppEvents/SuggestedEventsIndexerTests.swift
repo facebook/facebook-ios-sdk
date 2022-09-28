@@ -288,7 +288,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
 
     let expectedMetadata = [Keys.dense: Values.denseFeature, Keys.buttonText: Values.buttonText]
     guard
-      let parameter = graphRequestFactory.capturedParameters[Keys.metadata] as? String,
+      let parameter = graphRequestFactory.capturedParameters?[Keys.metadata] as? String,
       let data = parameter.data(using: .utf8),
       let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
     else {
@@ -301,7 +301,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       "Should use the app identifier from the settings"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedParameters[Keys.eventName] as? String,
+      graphRequestFactory.capturedParameters?[Keys.eventName] as? String,
       name,
       "Should capture the event name in the parameters"
     )
@@ -315,12 +315,12 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       "The request should be tokenless"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       .post,
       "Should use the expected http method"
     )
-    XCTAssertTrue(
-      graphRequestFactory.capturedFlags.isEmpty,
+    XCTAssertNil(
+      graphRequestFactory.capturedFlags,
       "Should not create the request with explicit request flags"
     )
   }

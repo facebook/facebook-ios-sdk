@@ -28,9 +28,9 @@ final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
   }
 
   func testConfigure() {
-    XCTAssertEqual(
-      factory,
-      FBSDKAppEventsCAPIManager.shared.factory as? TestGraphRequestFactory,
+    XCTAssertIdentical(
+      factory as AnyObject,
+      FBSDKAppEventsCAPIManager.shared.factory,
       "Should configure with the expected graph request factory"
     )
     XCTAssertEqual(

@@ -40,8 +40,8 @@ final class TournamentUpdaterTest: XCTestCase {
   }
 
   func testCustomDependencies() {
-    XCTAssertEqual(
-      updater.graphRequestFactory as? TestGraphRequestFactory,
+    XCTAssertIdentical(
+      updater.graphRequestFactory as AnyObject,
       factory,
       "Should be able to create with a custom graph request factory"
     )

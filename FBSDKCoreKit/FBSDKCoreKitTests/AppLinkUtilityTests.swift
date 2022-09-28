@@ -162,7 +162,7 @@ final class AppLinkUtilityTests: XCTestCase {
     appEventsConfigurationProvider.firstCapturedBlock?()
 
     XCTAssertEqual(graphRequestFactory.capturedGraphPath, "(null)/activities")
-    XCTAssertEqual(graphRequestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
+    XCTAssertEqual(graphRequestFactory.capturedHTTPMethod, .post)
   }
 
   func testValidatingConfiguration() {

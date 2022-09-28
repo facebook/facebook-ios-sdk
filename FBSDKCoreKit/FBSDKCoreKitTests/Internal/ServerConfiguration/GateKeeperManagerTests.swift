@@ -262,14 +262,14 @@ final class GateKeeperManagerTests: XCTestCase {
       "\(appIdentifier)/mobile_sdk_gk",
       "Should use the app identifier from the settings"
     )
-    XCTAssertEqual(graphRequestFactory.capturedParameters["platform"] as? String, "ios")
+    XCTAssertEqual(graphRequestFactory.capturedParameters?["platform"] as? String, "ios")
     XCTAssertEqual(
-      graphRequestFactory.capturedParameters["sdk_version"] as? String,
+      graphRequestFactory.capturedParameters?["sdk_version"] as? String,
       version,
       "Should use the sdk version from the settings"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedParameters["fields"] as? String,
+      graphRequestFactory.capturedParameters?["fields"] as? String,
       "gatekeepers",
       "Should request the expected fields"
     )
@@ -278,7 +278,7 @@ final class GateKeeperManagerTests: XCTestCase {
       "The gate keepers request should be tokenless"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       "Should not provide an explicit http method"
     )
     XCTAssertEqual(

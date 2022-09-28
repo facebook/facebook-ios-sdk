@@ -971,7 +971,7 @@ final class AppEventsTests: XCTestCase {
       "Should include the access token in the request when there is one available"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedParameters["udid"],
+      graphRequestFactory.capturedParameters?["udid"],
       "Should not include the udid in the request when there is none available"
     )
   }
@@ -994,7 +994,7 @@ final class AppEventsTests: XCTestCase {
       "Should include the access token in the request when there is one available"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedParameters["udid"],
+      graphRequestFactory.capturedParameters?["udid"],
       "Should not include the udid in the request when there is an access token available"
     )
     XCTAssertEqual(
@@ -1003,7 +1003,7 @@ final class AppEventsTests: XCTestCase {
       "Should use the expected graph path for the request"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       .get,
       "Should use the expected http method for the request"
     )
