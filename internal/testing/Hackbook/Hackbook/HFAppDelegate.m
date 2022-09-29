@@ -117,7 +117,11 @@
 {
   UINavigationController *navigationController = (UINavigationController *)_window.rootViewController;
   MainViewController *mainViewController = (MainViewController *)navigationController.topViewController;
-  [mainViewController updateDeepLinkLabel:url];
+  if ([mainViewController respondsToSelector:@selector(updateDeepLinkLabel:)]) {
+    [mainViewController updateDeepLinkLabel:url];
+  } else {
+    NSLog(@"%@ does not respond to selector: %@", NSStringFromClass([mainViewController class]), NSStringFromSelector(@selector(updateDeepLinkLabel:)));
+  }
 }
 
 @end
