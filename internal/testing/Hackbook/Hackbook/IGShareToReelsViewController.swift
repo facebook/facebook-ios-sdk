@@ -1,8 +1,8 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-import UIKit
-import Photos
 import MobileCoreServices
+import Photos
+import UIKit
 
 class IGShareToReelsViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
@@ -20,16 +20,17 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
 
   // MARK: Table view data source
+
   override func numberOfSections(in tableView: UITableView) -> Int {
     2
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    0 == section ? 3 : 1
+    section == 0 ? 3 : 1
   }
 
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    0 == section ? "Editor" : "Error"
+    section == 0 ? "Editor" : "Error"
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -62,16 +63,17 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
 
   // MARK: - UIImagePickerControllerDelegate
+
   public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     picker.dismiss(animated: true, completion: nil)
     if let videoUrl = info[UIImagePickerController.InfoKey.mediaURL] as? URL,
-      let videoData = try? Data(contentsOf: videoUrl) {
-        share(video: videoData)
+       let videoData = try? Data(contentsOf: videoUrl) {
+      share(video: videoData)
     }
   }
 
   private func share(video: Data) {
-    if shareToReels(appID: appID, backgroundVideo:video, stickerImage:nil) {
+    if shareToReels(appID: appID, backgroundVideo: video, stickerImage: nil) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
@@ -80,7 +82,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
 
   private func shareDemoVideo() {
     guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
-      let videoData = try? Data.init(contentsOf: videoUrl) as Data
+          let videoData = try? Data(contentsOf: videoUrl) as Data
     else {
       ConsoleReportBugWithFormattedMessage("process demo video failed")
       return
@@ -98,7 +100,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
             kUTTypeMovie as String,
             kUTTypeAVIMovie as String,
             kUTTypeVideo as String,
-            kUTTypeMPEG4 as String
+            kUTTypeMPEG4 as String,
           ]
           imagePicker.sourceType = .photoLibrary
           imagePicker.videoQuality = .typeHigh
@@ -114,38 +116,38 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
 
   private func shareDemoVideoWithSticker() {
     guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
-          let videoData = try? Data.init(contentsOf: videoUrl) as Data
+          let videoData = try? Data(contentsOf: videoUrl) as Data
     else {
       ConsoleReportBugWithFormattedMessage("process demo video failed")
       return
     }
     let stickerImageURL = "https://i.scdn.co/image/920142fb308970e28aade4a288041a4d1b8f9519"
-    let stickerImage = imageFromURL(imageURL:stickerImageURL)
+    let stickerImage = imageFromURL(imageURL: stickerImageURL)
 
     let stickerImageData = stickerImage?.pngData()
-    if shareToReels(appID: appID, backgroundVideo:videoData, stickerImage:stickerImageData) {
-      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
-    } else {
-      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
-    }
-  }
-  
-  private func shareWithoutVideo() {
-    if shareToReels(appID: appID, backgroundVideo:nil, stickerImage:nil) {
+    if shareToReels(appID: appID, backgroundVideo: videoData, stickerImage: stickerImageData) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
     }
   }
 
-  private func imageFromURL(imageURL:String) -> UIImage? {
+  private func shareWithoutVideo() {
+    if shareToReels(appID: appID, backgroundVideo: nil, stickerImage: nil) {
+      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
+    } else {
+      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
+    }
+  }
+
+  private func imageFromURL(imageURL: String) -> UIImage? {
     guard let url = URL(string: imageURL),
           let image = try? UIImage(data: Data(contentsOf: url))
-    else{
+    else {
       ConsoleReportBugWithFormattedMessage("Failed to create image from url: \(imageURL)")
-    return nil
+      return nil
     }
-    
+
     return image
   }
 }

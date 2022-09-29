@@ -1,7 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-import Foundation
 import FBSDKGamingServicesKit
+import Foundation
 
 enum TournamentCell: Int, CaseIterable {
   case get = 0
@@ -48,19 +48,19 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
 
     switch indexPath.row {
     case 1:
-      let frame = CGRect(x: tableViewCell.frame.maxX/1.25, y: 0, width: 100, height: tableViewCell.frame.height)
+      let frame = CGRect(x: tableViewCell.frame.maxX / 1.25, y: 0, width: 100, height: tableViewCell.frame.height)
       let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Score")
-      self.postScoreTextField = cellTextField
+      postScoreTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
     case 2:
-      let frame = CGRect(x: tableViewCell.frame.maxX/1.25, y: 0, width: 100, height: tableViewCell.frame.height)
+      let frame = CGRect(x: tableViewCell.frame.maxX / 1.25, y: 0, width: 100, height: tableViewCell.frame.height)
       let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Score")
-      self.updateScoreTextField = cellTextField
+      updateScoreTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
     case 3:
-      let frame = CGRect(x: tableViewCell.frame.maxX/1.25, y: 0, width: 100, height: tableViewCell.frame.height)
+      let frame = CGRect(x: tableViewCell.frame.maxX / 1.25, y: 0, width: 100, height: tableViewCell.frame.height)
       let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Score")
-      self.createScoreTextField = cellTextField
+      createScoreTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
     default:
       tableViewCell.accessoryType = .disclosureIndicator
@@ -69,35 +69,35 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     let cell = TournamentCell(rawValue: indexPath.row)
-     switch cell {
-     case .get:
-       getTournaments()
-     case .post:
-       if tournamentIDFromFBAPP != nil {
-        return self.useTournamentIDFromFBToPeform(tournamentAPI: .post)
-       }
-       selectTournament(andPerform: .post)
-     case .shareUpdate:
-       if tournamentIDFromFBAPP != nil {
-         return self.useTournamentIDFromFBToPeform(tournamentAPI: .shareUpdate)
-       }
-       selectTournament(andPerform: .shareUpdate)
-     case .shareCreate:
-       showCreateAndShareTournamentDialog()
-     case .none:
-       return
-     }
+    let cell = TournamentCell(rawValue: indexPath.row)
+    switch cell {
+    case .get:
+      getTournaments()
+    case .post:
+      if tournamentIDFromFBAPP != nil {
+        return useTournamentIDFromFBToPeform(tournamentAPI: .post)
+      }
+      selectTournament(andPerform: .post)
+    case .shareUpdate:
+      if tournamentIDFromFBAPP != nil {
+        return useTournamentIDFromFBToPeform(tournamentAPI: .shareUpdate)
+      }
+      selectTournament(andPerform: .shareUpdate)
+    case .shareCreate:
+      showCreateAndShareTournamentDialog()
+    case .none:
+      return
+    }
   }
 
   func getTournaments() {
     Console.sharedInstance().addMessage("Attempting to fetch tournaments", notificationName: "ConsoleDidSucceedNotification")
     TournamentFetcher().fetchTournaments { result in
       switch result {
-      case .success(let tournaments):
+      case let .success(tournaments):
         self.fetchedTournaments = tournaments
         Console.sharedInstance().addMessage("Tournaments did succeed with \(tournaments)", notificationName: "ConsoleDidSucceedNotification")
-      case .failure(let error):
+      case let .failure(error):
         Console.sharedInstance().addMessage("Please report bug: \(error)", notificationName: "ConsoleDidReportBugNotification")
       }
     }
@@ -113,23 +113,23 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
 
     switch tournamentAPI {
     case .post:
-      self.post(tournamentId: tournamentID)
+      post(tournamentId: tournamentID)
     case .shareUpdate:
-      self.showShareDialog(tournamentID: tournamentID)
+      showShareDialog(tournamentID: tournamentID)
     default:
       break
     }
   }
 
   func selectTournament(andPerform tournamentAPI: TournamentCell) {
-    guard fetchedTournaments.count > 0 else {
+    guard !fetchedTournaments.isEmpty else {
       return Console.sharedInstance().addMessage(
         "Can't find a tournament to update, use Get Tournaments to fetch list of tournaments",
         notificationName: "ConsoleDidReportBugNotification"
       )
     }
 
-    let tournamentSelectorTableViewController = TournamentSelectorTableViewController(withTournaments: self.fetchedTournaments) { [weak self] selectedTournament in
+    let tournamentSelectorTableViewController = TournamentSelectorTableViewController(withTournaments: fetchedTournaments) { [weak self] selectedTournament in
       guard let strongSelf = self else {
         return
       }
@@ -145,11 +145,11 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
       strongSelf.dismiss(animated: true)
     }
     self.tournamentSelectorTableViewController = tournamentSelectorTableViewController
-    self.present(tournamentSelectorTableViewController, animated: true)
+    present(tournamentSelectorTableViewController, animated: true)
   }
 
   func post(tournament: Tournament) {
-    guard let scoreText = self.postScoreTextField?.text, let score = Int(scoreText) else {
+    guard let scoreText = postScoreTextField?.text, let score = Int(scoreText) else {
       return Console.sharedInstance().addMessage(
         "A score is missing or is invalid, please fix",
         notificationName: "ConsoleDidReportBugNotification"
@@ -159,14 +159,14 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
       switch result {
       case .success:
         Console.sharedInstance().addMessage("Tournament score update success!", notificationName: "ConsoleDidSucceedNotification")
-      case .failure(let error):
+      case let .failure(error):
         Console.sharedInstance().addMessage("Please report bug: \(error)", notificationName: "ConsoleDidReportBugNotification")
       }
     }
   }
 
   func post(tournamentId: String) {
-    guard let scoreText = self.postScoreTextField?.text, let score = Int(scoreText) else {
+    guard let scoreText = postScoreTextField?.text, let score = Int(scoreText) else {
       return Console.sharedInstance().addMessage(
         "A score is missing or is invalid, please fix",
         notificationName: "ConsoleDidReportBugNotification"
@@ -177,7 +177,7 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
       switch result {
       case .success:
         Console.sharedInstance().addMessage("Tournament score update success!", notificationName: "ConsoleDidSucceedNotification")
-      case .failure(let error):
+      case let .failure(error):
         Console.sharedInstance().addMessage("Please report bug: \(error)", notificationName: "ConsoleDidReportBugNotification")
       }
     }
@@ -192,7 +192,7 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
   }
 
   func showShareDialog(tournament: Tournament) {
-    guard let scoreText = self.updateScoreTextField?.text, let score = Int(scoreText) else {
+    guard let scoreText = updateScoreTextField?.text, let score = Int(scoreText) else {
       return Console.sharedInstance().addMessage(
         "A score is missing or is invalid, please fix",
         notificationName: "ConsoleDidReportBugNotification"
@@ -207,7 +207,7 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
   }
 
   func showShareDialog(tournamentID: String) {
-    guard let scoreText = self.updateScoreTextField?.text, let score = Int(scoreText) else {
+    guard let scoreText = updateScoreTextField?.text, let score = Int(scoreText) else {
       return Console.sharedInstance().addMessage(
         "A score is missing or is invalid, please fix",
         notificationName: "ConsoleDidReportBugNotification"
@@ -223,17 +223,17 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
   }
 
   func showCreateAndShareTournamentDialog() {
-    guard let scoreText = self.createScoreTextField?.text, let score = Int(scoreText) else {
+    guard let scoreText = createScoreTextField?.text, let score = Int(scoreText) else {
       return Console.sharedInstance().addMessage("A score is missing or is invalid, please fix", notificationName: "ConsoleDidReportBugNotification")
     }
     let shareDialog = ShareTournamentDialog(delegate: self)
     let twoHoursFromNow = Calendar.current.date(byAdding: .hour, value: 2, to: Date())
     let config = TournamentConfig(title: "iOS Native Tourny", endTime: twoHoursFromNow, payload: "iOS Native Tournament Hackbook")
-     do {
-       try shareDialog.show(initialScore: score, config: config)
-     } catch {
-       Console.sharedInstance().addMessage("Please report bug: \(error)", notificationName: "ConsoleDidReportBugNotification")
-     }
+    do {
+      try shareDialog.show(initialScore: score, config: config)
+    } catch {
+      Console.sharedInstance().addMessage("Please report bug: \(error)", notificationName: "ConsoleDidReportBugNotification")
+    }
   }
 
   func didComplete(dialog: ShareTournamentDialog, tournament: Tournament) {
@@ -257,7 +257,6 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
 extension TournamentsTableViewController: GamingPayloadDelegate {
   func parsedTournamentURLContaining(_ payload: GamingPayload, tournamentID: String) {
     Console.sharedInstance().addMessage("Tournament was parsed \(tournamentID) and you can update or share this tournament", notificationName: "ConsoleDidSucceedNotification")
-    self.tournamentIDFromFBAPP = tournamentID
+    tournamentIDFromFBAPP = tournamentID
   }
-
 }

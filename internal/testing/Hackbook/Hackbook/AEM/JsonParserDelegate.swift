@@ -2,5 +2,5 @@
 
 protocol JsonParserDelegate: AnyObject {
 
-    func setJsonData(_ data: String?)
+  func setJsonData(_ data: String?)
 }

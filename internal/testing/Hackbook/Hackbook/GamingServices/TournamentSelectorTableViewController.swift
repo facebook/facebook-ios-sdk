@@ -1,14 +1,14 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-import Foundation
 import FBSDKGamingServicesKit
+import Foundation
 
 class TournamentSelectorTableViewController: UITableViewController {
   var selectedTournamentCompletion: ((Tournament) -> Void)?
   var tournaments: [Tournament] = []
 
-  init(withTournaments tournaments: [Tournament], selectionCompletion:  @escaping ((Tournament) -> Void)) {
-    self.selectedTournamentCompletion = selectionCompletion
+  init(withTournaments tournaments: [Tournament], selectionCompletion: @escaping ((Tournament) -> Void)) {
+    selectedTournamentCompletion = selectionCompletion
     self.tournaments = tournaments
 
     super.init(style: .plain)
@@ -34,7 +34,7 @@ class TournamentSelectorTableViewController: UITableViewController {
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if let selectCompletion = selectedTournamentCompletion, indexPath.row != 0 {
-      selectCompletion(tournaments[indexPath.row-1])
+      selectCompletion(tournaments[indexPath.row - 1])
     }
   }
 }

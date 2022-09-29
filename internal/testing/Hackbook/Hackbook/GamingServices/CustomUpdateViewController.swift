@@ -8,8 +8,8 @@ import UIKit
 public class CustomUpdateViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
   @IBOutlet var contextTokenIDField: UITextField!
-  @IBOutlet weak var customTextField: UITextField!
-  @IBOutlet weak var CTAField: UITextField!
+  @IBOutlet var customTextField: UITextField!
+  @IBOutlet var CTAField: UITextField!
   @IBOutlet var gifURLField: UITextField!
   @IBOutlet var imageView: UIImageView!
 
@@ -54,26 +54,24 @@ public class CustomUpdateViewController: UIViewController, UITextFieldDelegate, 
         imagePicker.allowsEditing = false
 
         present(imagePicker, animated: true, completion: nil)
-      } else {
-
-      }
+      } else {}
     }
   }
 
   func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!) {
-    self.dismiss(animated: true)
+    dismiss(animated: true)
 
     imageView.image = image
   }
 
   @IBAction func sendCustomUpdate(_ sender: Any) {
     let content = createCustomUpdateContentFromTextField()
-    let completion: ((Result<Bool, CustomUpdateGraphRequestError>) -> Void) = { [weak self](result) in
+    let completion: ((Result<Bool, CustomUpdateGraphRequestError>) -> Void) = { [weak self] result in
       switch result {
-      case .success(let success):
+      case let .success(success):
         self?.showAlert(message: "Custom update returned with success value: \(success)")
-      case .failure(let error):
-        self?.showAlert(message: "Error: \((error as NSError))")
+      case let .failure(error):
+        self?.showAlert(message: "Error: \(error as NSError)")
       }
     }
     do {
@@ -83,18 +81,18 @@ public class CustomUpdateViewController: UIViewController, UITextFieldDelegate, 
         try CustomUpdateGraphRequest().request(content: mediaContent, completionHandler: completion)
       }
     } catch CustomUpdateContentError.notInGameContext {
-      self.showAlert(message: "Couldn't create a custom update request because you're not in a game context. Use the Create, Switch or Choose Context dialogs to join a game context.")
+      showAlert(message: "Couldn't create a custom update request because you're not in a game context. Use the Create, Switch or Choose Context dialogs to join a game context.")
       return
     } catch {
-      self.showAlert(message: " An error occured performing a Custom Update: \(error)")
+      showAlert(message: " An error occured performing a Custom Update: \(error)")
       return
     }
   }
 
   func createCustomUpdateContentFromTextField() -> Any? {
-    let customText =  customTextField.text?.isEmpty ?? true ?  "Come play this really cool game": customTextField.text!
-    let ctaText = CTAField.text?.isEmpty ?? true ? "Join Game":CTAField.text!
-    let gifURLText = gifURLField.text?.isEmpty ?? true ? "https://media.giphy.com/media/7ISIRaCMrgFfa/giphy.gif":gifURLField.text!
+    let customText = customTextField.text?.isEmpty ?? true ? "Come play this really cool game" : customTextField.text!
+    let ctaText = CTAField.text?.isEmpty ?? true ? "Join Game" : CTAField.text!
+    let gifURLText = gifURLField.text?.isEmpty ?? true ? "https://media.giphy.com/media/7ISIRaCMrgFfa/giphy.gif" : gifURLField.text!
     let gifURL = URL(string: gifURLText)!
     let gifMedia = FacebookGIF(withUrl: gifURL)
     if let contextTokenID = contextTokenIDField.text, !contextTokenID.isEmpty {
@@ -105,20 +103,22 @@ public class CustomUpdateViewController: UIViewController, UITextFieldDelegate, 
       let content = CustomUpdateContentImage(
         message: customText,
         image: selectedImage,
-        cta: ctaText)
+        cta: ctaText
+      )
       return content
     }
 
     let content = CustomUpdateContentMedia(
       message: customText,
       media: gifMedia,
-      cta: ctaText)
+      cta: ctaText
+    )
     return content
   }
 
-   func showAlert(message: String) {
+  func showAlert(message: String) {
     let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
-    self.present(alert, animated: true)
+    present(alert, animated: true)
     Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { _ in
       alert.dismiss(animated: true)
     }

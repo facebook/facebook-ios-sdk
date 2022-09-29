@@ -12,17 +12,17 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
   private let toggles: Array = ["Event Collection Enabled", "IDFA Collection Enabled", "Default ATE", "Set ATE", "Log Event", "Reset", "Publish Install"]
   #endif
 
-  private let consoleView: UITextView = UITextView()
+  private let consoleView: UITextView = .init()
 
-  private let defaultStatusSC: UISegmentedControl = UISegmentedControl(items: ["Default On", "Default OFF", "Default Unspecified"])
-  private let statusSC: UISegmentedControl = UISegmentedControl(items: ["On", "OFF", "Unspecified"])
+  private let defaultStatusSC: UISegmentedControl = .init(items: ["Default On", "Default OFF", "Default Unspecified"])
+  private let statusSC: UISegmentedControl = .init(items: ["On", "OFF", "Unspecified"])
 
-  private let osVersionToggle: UISwitch = UISwitch()
-  private let eventCollectionToggle: UISwitch = UISwitch()
-  private let advertiserIDCollectionToggle: UISwitch = UISwitch()
-  private let LATToggle: UISwitch = UISwitch()
+  private let osVersionToggle: UISwitch = .init()
+  private let eventCollectionToggle: UISwitch = .init()
+  private let advertiserIDCollectionToggle: UISwitch = .init()
+  private let LATToggle: UISwitch = .init()
 
-  private let tableView: UITableView = UITableView()
+  private let tableView: UITableView = .init()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -47,7 +47,7 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     // Set Accessibility ID
     consoleView.accessibilityIdentifier = "textview_console"
 
-    self.reset()
+    reset()
     AppEvents.shared.flush()
     Settings.shared.enableLoggingBehavior(.appEvents)
     Settings.shared.enableLoggingBehavior(.networkRequests)
@@ -60,19 +60,19 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     #endif
     PrivacyTestUtils.swizzleLogger(forConsole: consoleView)
 
-    consoleView.frame = CGRect(x: 0, y: 44, width: self.view.frame.width, height: 200)
-    tableView.frame = CGRect(x: 0, y: 244, width: self.view.frame.width, height: self.view.frame.height - 244)
-    self.view.addSubview(consoleView)
-    self.view.addSubview(tableView)
+    consoleView.frame = CGRect(x: 0, y: 44, width: view.frame.width, height: 200)
+    tableView.frame = CGRect(x: 0, y: 244, width: view.frame.width, height: view.frame.height - 244)
+    view.addSubview(consoleView)
+    view.addSubview(tableView)
   }
 
- // MARK: View Management
+  // MARK: View Management
 
-   func numberOfSections(in tableView: UITableView) -> Int {
+  func numberOfSections(in tableView: UITableView) -> Int {
     1
   }
 
-   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     toggles.count
   }
 
@@ -116,7 +116,7 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     case 6:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      let button = UIButton(frame: CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34))
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
       button.backgroundColor = .systemBlue
       button.setTitle("Log Event", for: .normal)
       button.layer.cornerRadius = 5.0
@@ -126,7 +126,7 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     case 7:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      let button = UIButton(frame: CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34))
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
       button.backgroundColor = .systemBlue
       button.setTitle("Reset flags and console", for: .normal)
       button.layer.cornerRadius = 5.0
@@ -136,7 +136,7 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     case 8:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      let button = UIButton(frame: CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34))
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
       button.backgroundColor = .systemBlue
       button.setTitle("Publish Install", for: .normal)
       button.layer.cornerRadius = 5.0
@@ -175,7 +175,7 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     case 4:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      let button = UIButton(frame: CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34))
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
       button.backgroundColor = .systemBlue
       button.setTitle("Log Event", for: .normal)
       button.layer.cornerRadius = 5.0
@@ -185,7 +185,7 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     case 5:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      let button = UIButton(frame: CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34))
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
       button.backgroundColor = .systemBlue
       button.setTitle("Reset flags and console", for: .normal)
       button.layer.cornerRadius = 5.0
@@ -195,7 +195,7 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     case 6:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      let button = UIButton(frame: CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34))
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
       button.backgroundColor = .systemBlue
       button.setTitle("Publish Install", for: .normal)
       button.layer.cornerRadius = 5.0

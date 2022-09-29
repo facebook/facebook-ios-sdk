@@ -17,26 +17,26 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     "New Ads Click",
     "Generate Parameter",
     "ATE",
-    "Deeplink Type"
+    "Deeplink Type",
   ]
 
-  private let consoleView: UITextView = UITextView()
-  private let campaignTextView: UITextView = UITextView()
-  private let businessIDTextView: UITextView = UITextView()
-  private let eventTextView: UITextView = UITextView()
-  private let currencyTextView: UITextView = UITextView()
-  private let valueTextView: UITextView = UITextView()
-  private let parameterTextView: UITextView = UITextView()
+  private let consoleView: UITextView = .init()
+  private let campaignTextView: UITextView = .init()
+  private let businessIDTextView: UITextView = .init()
+  private let eventTextView: UITextView = .init()
+  private let currencyTextView: UITextView = .init()
+  private let valueTextView: UITextView = .init()
+  private let parameterTextView: UITextView = .init()
 
-  private let recordEventButton: UIButton = UIButton()
-  private let resetButton: UIButton = UIButton()
-  private let parameterGenerationButton: UIButton = UIButton()
-  private let ATEToggle: UISwitch = UISwitch()
-  private let deeplinkTypeSegmentedControl: UISegmentedControl = UISegmentedControl()
+  private let recordEventButton: UIButton = .init()
+  private let resetButton: UIButton = .init()
+  private let parameterGenerationButton: UIButton = .init()
+  private let ATEToggle: UISwitch = .init()
+  private let deeplinkTypeSegmentedControl: UISegmentedControl = .init()
 
   private var deeplinkType: DeeplinkURLType = .customURLScheme
 
-  private let tableView: UITableView = UITableView()
+  private let tableView: UITableView = .init()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -47,39 +47,39 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     consoleView.layer.cornerRadius = 3
     consoleView.isEditable = false
     consoleView.accessibilityIdentifier = "textview_console"
-    consoleView.frame = CGRect(x: 0, y: 44, width: self.view.frame.width, height: 300)
+    consoleView.frame = CGRect(x: 0, y: 44, width: view.frame.width, height: 300)
 
-    campaignTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    campaignTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     campaignTextView.layer.borderWidth = 1
     campaignTextView.layer.borderColor = UIColor.systemBlue.cgColor
     campaignTextView.text = "test_campaign_1111"
     campaignTextView.accessibilityIdentifier = "test_campaign"
 
-    businessIDTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    businessIDTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     businessIDTextView.layer.borderWidth = 1
     businessIDTextView.layer.borderColor = UIColor.systemBlue.cgColor
     businessIDTextView.text = "Hackbook"
     businessIDTextView.accessibilityIdentifier = "test_business_id"
 
-    eventTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    eventTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     eventTextView.layer.borderWidth = 1
     eventTextView.layer.borderColor = UIColor.systemBlue.cgColor
     eventTextView.text = "fb_mobile_purchase"
     eventTextView.accessibilityIdentifier = "testview_event"
 
-    currencyTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    currencyTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     currencyTextView.layer.borderWidth = 1
     currencyTextView.layer.borderColor = UIColor.systemBlue.cgColor
     currencyTextView.text = "USD"
     currencyTextView.accessibilityIdentifier = "testview_currency"
 
-    valueTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    valueTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     valueTextView.layer.borderWidth = 1
     valueTextView.layer.borderColor = UIColor.systemBlue.cgColor
     valueTextView.text = "3"
     valueTextView.accessibilityIdentifier = "testview_value"
 
-    parameterTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    parameterTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     parameterTextView.layer.borderWidth = 1
     parameterTextView.layer.borderColor = UIColor.systemBlue.cgColor
     parameterTextView.accessibilityIdentifier = "testview_parameter"
@@ -91,28 +91,28 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     deeplinkTypeSegmentedControl.accessibilityIdentifier = "deeplink_type_segmented_control"
     deeplinkTypeSegmentedControl.selectedSegmentIndex = deeplinkType.rawValue
 
-    recordEventButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    recordEventButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     recordEventButton.backgroundColor = .systemBlue
     recordEventButton.setTitle("Record Event", for: .normal)
     recordEventButton.layer.cornerRadius = 5.0
     recordEventButton.addTarget(self, action: #selector(AEMViewController.recordEvent), for: .touchUpInside)
     recordEventButton.accessibilityIdentifier = "button_record_event"
 
-    resetButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    resetButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     resetButton.backgroundColor = .systemBlue
     resetButton.setTitle("New Ads Click", for: .normal)
     resetButton.layer.cornerRadius = 5.0
     resetButton.addTarget(self, action: #selector(AEMViewController.reset), for: .touchUpInside)
     resetButton.accessibilityIdentifier = "button_reset"
 
-    parameterGenerationButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    parameterGenerationButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     parameterGenerationButton.backgroundColor = .systemBlue
     parameterGenerationButton.setTitle("Parameter Parser", for: .normal)
     parameterGenerationButton.layer.cornerRadius = 5.0
     parameterGenerationButton.addTarget(
-        self,
-        action: #selector(AEMViewController.generateParameter),
-        for: .touchUpInside
+      self,
+      action: #selector(AEMViewController.generateParameter),
+      for: .touchUpInside
     )
     parameterGenerationButton.accessibilityIdentifier = "button_generate_parameter"
 
@@ -124,13 +124,13 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ToggleCell")
     tableView.delegate = self
     tableView.dataSource = self
-    tableView.frame = CGRect(x: 0, y: 344, width: self.view.frame.width, height: self.view.frame.height - 344)
+    tableView.frame = CGRect(x: 0, y: 344, width: view.frame.width, height: view.frame.height - 344)
 
     AEMTestUtils.reset(consoleView)
-    self.swizzleReporter()
+    swizzleReporter()
 
-    self.view.addSubview(consoleView)
-    self.view.addSubview(tableView)
+    view.addSubview(consoleView)
+    view.addSubview(tableView)
   }
 
   // MARK: View Management
@@ -210,22 +210,26 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
   // MARK: Json Management
 
   func setJsonData(_ data: String?) {
-    self.parameterTextView.text = data ?? ""
+    parameterTextView.text = data ?? ""
   }
 
   @objc func reset() {
-    AEMTestUtils.reset(consoleView,
-                       campaign: campaignTextView.text,
-                       businessID: businessIDTextView.text,
-                       deeplinkType: deeplinkType)
+    AEMTestUtils.reset(
+      consoleView,
+      campaign: campaignTextView.text,
+      businessID: businessIDTextView.text,
+      deeplinkType: deeplinkType
+    )
   }
 
   @objc func recordEvent() {
-    AEMTestUtils.recordAndUpdateEvent(eventTextView.text,
-                                      currency: currencyTextView.text,
-                                      value: valueTextView.text,
-                                      eventParameter: parameterTextView.text,
-                                      console: consoleView)
+    AEMTestUtils.recordAndUpdateEvent(
+      eventTextView.text,
+      currency: currencyTextView.text,
+      value: valueTextView.text,
+      eventParameter: parameterTextView.text,
+      console: consoleView
+    )
   }
 
   @objc func swizzleReporter() {
@@ -235,7 +239,7 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
   @objc func generateParameter() {
     let viewController = AEMEventParameterViewController()
     viewController.delegate = self
-    self.navigationController?.pushViewController(viewController, animated: true)
+    navigationController?.pushViewController(viewController, animated: true)
   }
 
   @objc func switchATE(sender: UISwitch) {

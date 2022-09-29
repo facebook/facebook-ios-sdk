@@ -8,12 +8,12 @@ class AEMEventParameterViewController: UIViewController, UITableViewDelegate, UI
 
   private let toggles: Array = ["Validate", "Set Data"]
 
-  private let textView: UITextView = UITextView()
+  private let textView: UITextView = .init()
 
-  private let validationButton: UIButton = UIButton()
-  private let generationButton: UIButton = UIButton()
+  private let validationButton: UIButton = .init()
+  private let generationButton: UIButton = .init()
 
-  private let tableView: UITableView = UITableView()
+  private let tableView: UITableView = .init()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -23,9 +23,9 @@ class AEMEventParameterViewController: UIViewController, UITableViewDelegate, UI
     textView.layer.cornerRadius = 3
     textView.isEditable = true
     textView.accessibilityIdentifier = "textview_console"
-    textView.frame = CGRect(x: 0, y: 44, width: self.view.frame.width, height: 300)
+    textView.frame = CGRect(x: 0, y: 44, width: view.frame.width, height: 300)
 
-    validationButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    validationButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     validationButton.backgroundColor = .systemBlue
     validationButton.setTitle("Validate Parameter", for: .normal)
     validationButton.layer.cornerRadius = 5.0
@@ -36,7 +36,7 @@ class AEMEventParameterViewController: UIViewController, UITableViewDelegate, UI
     )
     validationButton.accessibilityIdentifier = "button_validate_parameter"
 
-    generationButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    generationButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     generationButton.backgroundColor = .systemBlue
     generationButton.setTitle("Generate Parameter", for: .normal)
     generationButton.layer.cornerRadius = 5.0
@@ -51,11 +51,12 @@ class AEMEventParameterViewController: UIViewController, UITableViewDelegate, UI
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ParameterCell")
     tableView.delegate = self
     tableView.dataSource = self
-    tableView.frame = CGRect(x: 0, y: 344, width: self.view.frame.width, height: self.view.frame.height - 344)
+    tableView.frame = CGRect(x: 0, y: 344, width: view.frame.width, height: view.frame.height - 344)
 
-    self.view.addSubview(textView)
-    self.view.addSubview(tableView)
+    view.addSubview(textView)
+    view.addSubview(tableView)
   }
+
   // MARK: View Management
 
   func numberOfSections(in tableView: UITableView) -> Int {
@@ -88,20 +89,20 @@ class AEMEventParameterViewController: UIViewController, UITableViewDelegate, UI
   }
 
   @objc func validateParameter() {
-    let text = self.textView.text ?? ""
+    let text = textView.text ?? ""
     let jsonData = text.data(using: String.Encoding.utf8)!
     let json = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
     if json != nil {
-      self.present(validationMessage: "Valid Json")
+      present(validationMessage: "Valid Json")
     } else {
-      self.present(validationMessage: "Invalid Json")
+      present(validationMessage: "Invalid Json")
     }
   }
 
   @objc func generateParameter() {
-    self.delegate?.setJsonData(self.textView.text)
+    delegate?.setJsonData(textView.text)
 
-    self.navigationController?.popViewController(animated: true)
+    navigationController?.popViewController(animated: true)
   }
 
   func present(validationMessage: String) {
@@ -111,6 +112,6 @@ class AEMEventParameterViewController: UIViewController, UITableViewDelegate, UI
       preferredStyle: .alert
     )
     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-    self.present(alert, animated: true)
+    present(alert, animated: true)
   }
 }

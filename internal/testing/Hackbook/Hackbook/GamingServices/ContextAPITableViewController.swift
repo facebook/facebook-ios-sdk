@@ -1,7 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
-import Foundation
 import FBSDKGamingServicesKit
+import Foundation
 import UIKit
 
 enum ContextAPICell: Int, CaseIterable {
@@ -27,17 +27,13 @@ enum ContextAPICell: Int, CaseIterable {
 class ContextAPITableViewController:
   UITableViewController,
   UITextFieldDelegate,
-  ContextDialogDelegate
-{
+  ContextDialogDelegate {
 
   var playerIDTextField: UITextField?
   var contextIDTextField: UITextField?
   let presenter = ContextDialogPresenter()
 
-  override func viewDidLoad() {
-
-  }
-
+  override func viewDidLoad() {}
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return ContextAPICell.allCases.count
@@ -51,14 +47,14 @@ class ContextAPITableViewController:
 
     switch indexPath.row {
     case 0:
-      let frame = CGRect(x: tableViewCell.frame.maxX/2, y: 0, width: tableViewCell.frame.maxX/2, height: tableViewCell.frame.height)
-      let cellTextField = createCellTextField(withFrame: frame, placeholderText:"Enter Player ID")
-      self.playerIDTextField = cellTextField
+      let frame = CGRect(x: tableViewCell.frame.maxX / 2, y: 0, width: tableViewCell.frame.maxX / 2, height: tableViewCell.frame.height)
+      let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Player ID")
+      playerIDTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
     case 1:
-      let frame = CGRect(x: tableViewCell.frame.maxX/2, y: 0, width: tableViewCell.frame.maxX/2, height: tableViewCell.frame.height)
-      let cellTextField = createCellTextField(withFrame: frame, placeholderText:"Enter Context ID")
-      self.contextIDTextField = cellTextField
+      let frame = CGRect(x: tableViewCell.frame.maxX / 2, y: 0, width: tableViewCell.frame.maxX / 2, height: tableViewCell.frame.height)
+      let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Context ID")
+      contextIDTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
     case 2:
       if let cell = tableView.dequeueReusableCell(withIdentifier: "ContextChooseCell") as? ContextChooseCell {
@@ -90,14 +86,14 @@ class ContextAPITableViewController:
   }
 
   func createContext() {
-    guard let playerID = self.playerIDTextField?.text, !playerID.isEmpty else {
+    guard let playerID = playerIDTextField?.text, !playerID.isEmpty else {
       return Console.sharedInstance().addMessage(
         "A player ID is missing or is invalid, please fix",
-        notificationName:"ConsoleDidReportBugNotification"
+        notificationName: "ConsoleDidReportBugNotification"
       )
     }
 
-    self.playerIDTextField?.resignFirstResponder()
+    playerIDTextField?.resignFirstResponder()
     let content = CreateContextContent(playerID: playerID)
     do {
       try presenter.makeAndShowCreateContextDialog(
@@ -107,21 +103,21 @@ class ContextAPITableViewController:
     } catch {
       Console.sharedInstance().addMessage(
         "An error occured presenting the create context dialog: \(error)",
-        notificationName:"ConsoleDidReportBugNotification"
+        notificationName: "ConsoleDidReportBugNotification"
       )
     }
   }
 
   func switchContext() {
-    guard let contextID = self.contextIDTextField?.text, !contextID.isEmpty else {
+    guard let contextID = contextIDTextField?.text, !contextID.isEmpty else {
       return Console.sharedInstance().addMessage(
         "A context ID is missing or is invalid, please fix",
-        notificationName:"ConsoleDidReportBugNotification"
+        notificationName: "ConsoleDidReportBugNotification"
       )
     }
 
-    self.contextIDTextField?.resignFirstResponder()
-    let content = SwitchContextContent.init(contextID: contextID)
+    contextIDTextField?.resignFirstResponder()
+    let content = SwitchContextContent(contextID: contextID)
     do {
       try presenter.makeAndShowSwitchContextDialog(
         content: content,
@@ -130,16 +126,16 @@ class ContextAPITableViewController:
     } catch {
       Console.sharedInstance().addMessage(
         "An error occured presenting the switch context dialog: \(error)",
-        notificationName:"ConsoleDidReportBugNotification"
+        notificationName: "ConsoleDidReportBugNotification"
       )
     }
   }
 
   func segueToCustomUpdateController() {
-    self.performSegue(withIdentifier: "customUpdateSegue", sender: self)
+    performSegue(withIdentifier: "customUpdateSegue", sender: self)
   }
 
-  func createCellTextField(withFrame frame: CGRect, placeholderText:String) -> UITextField {
+  func createCellTextField(withFrame frame: CGRect, placeholderText: String) -> UITextField {
     let cellTextField = UITextField(frame: frame)
     cellTextField.placeholder = placeholderText
     cellTextField.font = UIFont.systemFont(ofSize: 15)
@@ -147,31 +143,30 @@ class ContextAPITableViewController:
     return cellTextField
   }
 
-
   func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {
     Console.sharedInstance().addMessage(
       "Current context updated with context id: \(GamingContext.current?.identifier ?? "") size: \(GamingContext.current?.size ?? 0)",
-      notificationName:"ConsoleDidReportBugNotification"
+      notificationName: "ConsoleDidReportBugNotification"
     )
   }
 
   func contextDialog(_ contextDialog: ContextWebDialog, didFailWithError error: Error) {
     Console.sharedInstance().addMessage(
       "Context dialog returned with: \(error)",
-      notificationName:"ConsoleDidReportBugNotification"
+      notificationName: "ConsoleDidReportBugNotification"
     )
   }
 
   func contextDialogDidCancel(_ contextDialog: ContextWebDialog) {
     Console.sharedInstance().addMessage(
       "Dialog cancelled",
-      notificationName:"ConsoleDidReportBugNotification"
+      notificationName: "ConsoleDidReportBugNotification"
     )
   }
 
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     textField.resignFirstResponder()
-    return true;
+    return true
   }
 }
 
@@ -202,7 +197,7 @@ class ContextChooseCell: UITableViewCell, UITextFieldDelegate, UIPickerViewDeleg
     return 1
   }
 
-  func pickerView(_ : UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+  func pickerView(_: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
     return filterPickerValues.count
   }
 
@@ -210,9 +205,9 @@ class ContextChooseCell: UITableViewCell, UITextFieldDelegate, UIPickerViewDeleg
     return filterPickerValues[row].name
   }
 
-  func pickerView(_: UIPickerView , didSelectRow row: Int, inComponent component: Int) {
+  func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     filterTextField?.text = filterPickerValues[row].name
-    self.selectedFilter = filterPickerValues[row]
+    selectedFilter = filterPickerValues[row]
     filterTextField?.resignFirstResponder()
   }
 
@@ -235,12 +230,12 @@ class ContextChooseCell: UITableViewCell, UITextFieldDelegate, UIPickerViewDeleg
 
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     textField.resignFirstResponder()
-    return true;
+    return true
   }
 
   func textFieldDidBeginEditing(_ textField: UITextField) {
-    if textField == self.filterTextField {
-      self.filterPicker.isHidden = false
+    if textField == filterTextField {
+      filterPicker.isHidden = false
     }
   }
 }

@@ -11,18 +11,18 @@ class SKANViewController: UIViewController, UITableViewDelegate, UITableViewData
     "Currency",
     "Value",
     "Record Event",
-    "New Install"
+    "New Install",
   ]
 
-  private let consoleView: UITextView = UITextView()
-  private let eventTextView: UITextView = UITextView()
-  private let currencyTextView: UITextView = UITextView()
-  private let valueTextView: UITextView = UITextView()
+  private let consoleView: UITextView = .init()
+  private let eventTextView: UITextView = .init()
+  private let currencyTextView: UITextView = .init()
+  private let valueTextView: UITextView = .init()
 
-  private let recordEventButton: UIButton = UIButton()
-  private let resetButton: UIButton = UIButton()
+  private let recordEventButton: UIButton = .init()
+  private let resetButton: UIButton = .init()
 
-  private let tableView: UITableView = UITableView()
+  private let tableView: UITableView = .init()
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -33,34 +33,34 @@ class SKANViewController: UIViewController, UITableViewDelegate, UITableViewData
     consoleView.layer.cornerRadius = 3
     consoleView.isEditable = false
     consoleView.accessibilityIdentifier = "textview_console"
-    consoleView.frame = CGRect(x: 0, y: 44, width: self.view.frame.width, height: 300)
+    consoleView.frame = CGRect(x: 0, y: 44, width: view.frame.width, height: 300)
 
-    eventTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    eventTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     eventTextView.layer.borderWidth = 1
     eventTextView.layer.borderColor = UIColor.systemBlue.cgColor
     eventTextView.text = "fb_mobile_purchase"
     eventTextView.accessibilityIdentifier = "testview_event"
 
-    currencyTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    currencyTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     currencyTextView.layer.borderWidth = 1
     currencyTextView.layer.borderColor = UIColor.systemBlue.cgColor
     currencyTextView.text = "USD"
     currencyTextView.accessibilityIdentifier = "testview_currency"
 
-    valueTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    valueTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     valueTextView.layer.borderWidth = 1
     valueTextView.layer.borderColor = UIColor.systemBlue.cgColor
     valueTextView.text = "3"
     valueTextView.accessibilityIdentifier = "testview_value"
 
-    recordEventButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    recordEventButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     recordEventButton.backgroundColor = .systemBlue
     recordEventButton.setTitle("Record Event", for: .normal)
     recordEventButton.layer.cornerRadius = 5.0
     recordEventButton.addTarget(self, action: #selector(AEMViewController.recordEvent), for: .touchUpInside)
     recordEventButton.accessibilityIdentifier = "button_record_event"
 
-    resetButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    resetButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     resetButton.backgroundColor = .systemBlue
     resetButton.setTitle("New Install", for: .normal)
     resetButton.layer.cornerRadius = 5.0
@@ -71,13 +71,13 @@ class SKANViewController: UIViewController, UITableViewDelegate, UITableViewData
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ToggleCell")
     tableView.delegate = self
     tableView.dataSource = self
-    tableView.frame = CGRect(x: 0, y: 344, width: self.view.frame.width, height: self.view.frame.height - 344)
+    tableView.frame = CGRect(x: 0, y: 344, width: view.frame.width, height: view.frame.height - 344)
 
     SKANTestUtils.reset(consoleView)
-    self.swizzleReporter()
+    swizzleReporter()
 
-    self.view.addSubview(consoleView)
-    self.view.addSubview(tableView)
+    view.addSubview(consoleView)
+    view.addSubview(tableView)
   }
 
   // MARK: View Management
@@ -131,10 +131,12 @@ class SKANViewController: UIViewController, UITableViewDelegate, UITableViewData
   }
 
   @objc func recordEvent() {
-    SKANTestUtils.recordAndUpdateEvent(eventTextView.text,
-                                       currency: currencyTextView.text,
-                                       value: valueTextView.text,
-                                       console: consoleView)
+    SKANTestUtils.recordAndUpdateEvent(
+      eventTextView.text,
+      currency: currencyTextView.text,
+      value: valueTextView.text,
+      console: consoleView
+    )
   }
 
   @objc func swizzleReporter() {

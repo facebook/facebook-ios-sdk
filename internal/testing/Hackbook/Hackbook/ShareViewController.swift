@@ -14,12 +14,13 @@ class ShareViewController: UITableViewController {
   }
 
   // MARK: - Table view data source
+
   override func numberOfSections(in tableView: UITableView) -> Int {
     3
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    0 == section ? 4 : 1
+    section == 0 ? 4 : 1
   }
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

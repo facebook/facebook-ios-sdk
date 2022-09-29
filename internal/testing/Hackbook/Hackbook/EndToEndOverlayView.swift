@@ -30,7 +30,7 @@ public final class FBEndToEndOverlayView: NSObject {
       return
     }
 
-    let rootView = self.appWindow.subviews.first
+    let rootView = appWindow.subviews.first
     overlayView.rootViews = NSPointerArray.weakObjects()
     rootView?.accessibilityElements = [overlayView]
     for window in UIApplication.shared.windows {
