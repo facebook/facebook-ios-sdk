@@ -43,10 +43,6 @@ FOUNDATION_EXPORT Class fbsdkdfl_ASIdentifierManagerClass(void);
 
 FOUNDATION_EXPORT Class fbsdkdfl_SFSafariViewControllerClass(void);
 
-#pragma mark - AuthenticationServices Classes
-
-FOUNDATION_EXPORT Class fbsdkdfl_ASWebAuthenticationSessionClass(void);
-
 #pragma mark - Accounts Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_ACAccountStoreClass(void);

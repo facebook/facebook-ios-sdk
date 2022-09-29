@@ -8,7 +8,6 @@
 
 @testable import FBSDKCoreKit
 
-import AuthenticationServices
 import CoreTelephony
 import SafariServices
 import Security
@@ -238,13 +237,6 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     XCTAssertTrue(
       fbsdkdfl_SFSafariViewControllerClass() is SFSafariViewController.Type,
       "Should dynamically load the SFSafariViewController class"
-    )
-  }
-
-  func testASWebAuthenticationSessionClass() {
-    XCTAssertTrue(
-      fbsdkdfl_ASWebAuthenticationSessionClass() is ASWebAuthenticationSession.Type,
-      "Should dynamically load the ASWebAuthenticationSession class"
     )
   }
 
