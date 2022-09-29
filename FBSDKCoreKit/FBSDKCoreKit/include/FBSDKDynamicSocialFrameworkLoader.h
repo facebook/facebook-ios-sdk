@@ -10,11 +10,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Social Constants
-
-/// Dynamically loaded constant for SLServiceTypeFacebook
-FOUNDATION_EXPORT NSString *fbsdkdfl_SLServiceTypeFacebook(void);
-
 #pragma mark - Social Classes
 
 FOUNDATION_EXPORT Class fbsdkdfl_SLComposeViewControllerClass(void);

@@ -89,12 +89,6 @@ static void fbsdkdfl_load_symbol_once(void *context)
   NSCAssert(k != NULL, @"Failed to load constant %@ in the %@ framework", @#SYMBOL, @#FRAMEWORK); \
   return *k
 
-// convenience macro for getting a pointer to a named NSString, verifying it loaded correctly, and returning it
-#define _fbsdkdfl_get_and_return_NSString(LIBRARY, SYMBOL) \
-  _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, NSString **); \
-  NSCAssert([*k isKindOfClass:NSString.class], @"Loaded symbol %@ is not of type NSString *", @#SYMBOL); \
-  _fbsdkdfl_return_k(LIBRARY, SYMBOL)
-
 #pragma mark - Security Framework
 
 _fbsdkdfl_load_framework_once_impl_(Security)
@@ -237,13 +231,6 @@ OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query)
 
 _fbsdkdfl_load_framework_once_impl_(Social)
 _fbsdkdfl_handle_get_impl_(Social)
-
-#define _fbsdkdfl_Social_get_and_return_constant(SYMBOL) _fbsdkdfl_get_and_return_NSString(Social, SYMBOL)
-
-NSString *fbsdkdfl_SLServiceTypeFacebook(void)
-{
-  __weak _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeFacebook);
-}
 
 #pragma mark - Social Classes
 
