@@ -609,7 +609,7 @@ final class CoreKitComponents {
       appEventParametersExtractor: _AppEventsUtility.shared,
       appEventsDropDeterminer: _AppEventsUtility.shared,
       appLinkEventPoster: _MeasurementEvent(),
-      appLinkFactory: _AppLinkFactory(),
+      appLinkFactory: AppLinkFactory(),
       appLinkResolver: WebViewAppLinkResolver.shared,
       appLinkTargetFactory: AppLinkTargetFactory(),
       appLinkURLFactory: AppLinkURLFactory(),
