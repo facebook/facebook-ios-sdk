@@ -65,7 +65,6 @@
 #import <FBSDKCoreKit/FBSDKAuthenticationStatusUtility.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
-#import <FBSDKCoreKit/FBSDKBridgeAPI.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
@@ -79,6 +78,7 @@
 #import <FBSDKCoreKit/FBSDKCodelessIndexer.h>
 #import <FBSDKCoreKit/FBSDKCodelessIndexing.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
+#import <FBSDKCoreKit/FBSDKContainerViewController.h>
 #import <FBSDKCoreKit/FBSDKConversionValueUpdating.h>
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
 #import <FBSDKCoreKit/FBSDKCrashObserver.h>

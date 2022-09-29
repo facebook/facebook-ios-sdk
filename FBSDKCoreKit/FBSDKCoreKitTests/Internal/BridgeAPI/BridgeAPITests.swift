@@ -7,10 +7,12 @@
  */
 
 @testable import FBSDKCoreKit
+import SafariServices
 
 import TestTools
 import XCTest
 
+@available(iOS 13.0, *)
 final class BridgeAPITests: XCTestCase {
 
   let sampleSource = "com.example"
@@ -20,7 +22,6 @@ final class BridgeAPITests: XCTestCase {
   let validBridgeResponseURL = URL(string: "http://bridge")! // swiftlint:disable:this force_unwrapping
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var processInfo: TestProcessInfo!
   var logger: TestLogger!
   var urlOpener: TestInternalURLOpener!
   var responseFactory: TestBridgeAPIResponseFactory!
@@ -35,22 +36,18 @@ final class BridgeAPITests: XCTestCase {
 
     FBSDKLoginManager.resetTestEvidence()
 
-    processInfo = TestProcessInfo()
     logger = TestLogger(loggingBehavior: .developerErrors)
     urlOpener = TestInternalURLOpener()
     responseFactory = TestBridgeAPIResponseFactory()
-    frameworkLoader = TestDylibResolver()
     appURLSchemeProvider = TestInternalUtility()
     errorFactory = TestErrorFactory()
 
     configureSDK()
 
     api = _BridgeAPI(
-      processInfo: processInfo,
       logger: logger,
       urlOpener: urlOpener,
       bridgeAPIResponseFactory: responseFactory,
-      frameworkLoader: frameworkLoader,
       appURLSchemeProvider: appURLSchemeProvider,
       errorFactory: errorFactory
     )
@@ -64,7 +61,6 @@ final class BridgeAPITests: XCTestCase {
   }
 
   override func tearDown() {
-    processInfo = nil
     logger = nil
     urlOpener = nil
     responseFactory = nil
@@ -97,14 +93,6 @@ final class BridgeAPITests: XCTestCase {
   // MARK: - Dependencies
 
   func testDefaultDependencies() throws {
-    XCTAssertTrue(
-      _BridgeAPI.shared.processInfo is ProcessInfo,
-      "The shared bridge API should use the system provided process info by default"
-    )
-    XCTAssertTrue(
-      _BridgeAPI.shared.logger is _Logger,
-      "The shared bridge API should use the expected logger type by default"
-    )
     XCTAssertIdentical(
       _BridgeAPI.shared.urlOpener as AnyObject,
       CoreUIApplication.shared,
@@ -113,11 +101,6 @@ final class BridgeAPITests: XCTestCase {
     XCTAssertTrue(
       _BridgeAPI.shared.bridgeAPIResponseFactory is _BridgeAPIResponseFactory,
       "Should use and instance of the expected concrete response factory type by default"
-    )
-    XCTAssertEqual(
-      _BridgeAPI.shared.frameworkLoader as? DynamicFrameworkLoader,
-      DynamicFrameworkLoader.shared(),
-      "Should use the expected instance of dynamic framework loader"
     )
     XCTAssertTrue(
       _BridgeAPI.shared.appURLSchemeProvider is InternalUtility,
@@ -132,11 +115,6 @@ final class BridgeAPITests: XCTestCase {
   }
 
   func testCreatingWithDependencies() {
-    XCTAssertIdentical(
-      api.processInfo as? TestProcessInfo,
-      processInfo,
-      "Should be able to create a bridge api with a specific process info"
-    )
     XCTAssertEqual(
       api.logger as? TestLogger,
       logger,
@@ -151,11 +129,6 @@ final class BridgeAPITests: XCTestCase {
       api.bridgeAPIResponseFactory as? TestBridgeAPIResponseFactory,
       responseFactory,
       "Should be able to create a bridge api with a specific response factory"
-    )
-    XCTAssertEqual(
-      api.frameworkLoader as? TestDylibResolver,
-      frameworkLoader,
-      "Should be able to create a bridge api with a specific framework loader"
     )
     XCTAssertTrue(
       api.errorFactory === errorFactory,
@@ -193,7 +166,7 @@ final class BridgeAPITests: XCTestCase {
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
 
     [
-      AuthenticationSession.none,
+      AuthenticationSessionState.none,
       .showAlert,
       .showWebBrowser,
       .canceledBySystem,
@@ -226,7 +199,7 @@ final class BridgeAPITests: XCTestCase {
 
   func testUpdatingShowAlertStateForDidBecomeActiveWithoutAuthSession() {
     [
-      AuthenticationSession.none,
+      AuthenticationSessionState.none,
       .started,
       .showAlert,
       .showWebBrowser,
@@ -318,11 +291,11 @@ final class BridgeAPITests: XCTestCase {
   // MARK: Did Enter Background
 
   func testDidEnterBackgroundWithoutAuthSession() {
-    api.setActive(true)
-    api.expectingBackground = true
+    api.isActive = true
+    api.isExpectingBackground = true
 
     [
-      AuthenticationSession.none,
+      AuthenticationSessionState.none,
       .started,
       .showAlert,
       .showWebBrowser,
@@ -337,7 +310,7 @@ final class BridgeAPITests: XCTestCase {
           "Should mark a bridge api inactive when entering the background"
         )
         XCTAssertFalse(
-          api.expectingBackground,
+          api.isExpectingBackground,
           "Should mark a bridge api as not expecting backgrounding when entering the background"
         )
       }
@@ -359,7 +332,7 @@ final class BridgeAPITests: XCTestCase {
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
 
     [
-      AuthenticationSession.none,
+      AuthenticationSessionState.none,
       .started,
       .showWebBrowser,
       .canceledBySystem,
@@ -441,11 +414,11 @@ final class BridgeAPITests: XCTestCase {
     ) { _, _ in }
 
     XCTAssertTrue(
-      api.expectingBackground,
+      api.isExpectingBackground,
       "Should set expecting background to true when opening a URL"
     )
     XCTAssertNil(
-      api.pendingURLOpen,
+      api.pendingURLOpener,
       "Should not set the pending url opener if there is no sender"
     )
   }
@@ -457,53 +430,11 @@ final class BridgeAPITests: XCTestCase {
       sender: urlOpener
     ) { _, _ in }
 
-    XCTAssertTrue(api.expectingBackground, "Should set expecting background to true when opening a URL")
+    XCTAssertTrue(api.isExpectingBackground, "Should set expecting background to true when opening a URL")
     XCTAssertTrue(
-      api.pendingURLOpen === urlOpener,
+      api.pendingURLOpener === urlOpener,
       "Should set the pending url opener to the sender"
     )
-  }
-
-  func testOpenUrlWithVersionBelow10WhenApplicationOpens() {
-    processInfo.stubbedOperatingSystemCheckResult = false
-    urlOpener.stubOpen(url: sampleURL, success: true)
-
-    var capturedSuccess = false
-    var capturedError: Error?
-    api.open(
-      sampleURL,
-      sender: nil
-    ) { success, error in
-      capturedSuccess = success
-      capturedError = error
-    }
-
-    XCTAssertTrue(
-      capturedSuccess,
-      "Should call the completion handler with the expected value"
-    )
-    XCTAssertNil(capturedError, "Should not call the completion handler with an error")
-  }
-
-  func testOpenUrlWithVersionBelow10WhenApplicationDoesNotOpen() {
-    processInfo.stubbedOperatingSystemCheckResult = false
-    urlOpener.stubOpen(url: sampleURL, success: false)
-
-    var capturedSuccess = true
-    var capturedError: Error?
-    api.open(
-      sampleURL,
-      sender: nil
-    ) { success, error in
-      capturedSuccess = success
-      capturedError = error
-    }
-
-    XCTAssertFalse(
-      capturedSuccess,
-      "Should call the completion handler with the expected value"
-    )
-    XCTAssertNil(capturedError, "Should not call the completion handler with an error")
   }
 
   func testOpenUrlWhenApplicationOpens() {
@@ -556,7 +487,7 @@ final class BridgeAPITests: XCTestCase {
     api.pendingRequest = request
     api.pendingRequestCompletionBlock = { _ in }
 
-    let completion = api._bridgeAPIRequestCompletionBlock(with: request, completion: responseBlock)
+    let completion = api.bridgeAPIRequestCompletionBlock(request: request, completion: responseBlock)
 
     // With Error
     completion(true, SampleError())
@@ -577,7 +508,7 @@ final class BridgeAPITests: XCTestCase {
     api.pendingRequest = request
     api.pendingRequestCompletionBlock = { _ in }
 
-    let completion = api._bridgeAPIRequestCompletionBlock(with: request, completion: responseBlock)
+    let completion = api.bridgeAPIRequestCompletionBlock(request: request, completion: responseBlock)
 
     // With Error
     completion(false, SampleError())
@@ -615,7 +546,7 @@ final class BridgeAPITests: XCTestCase {
     api.pendingRequest = request
     api.pendingRequestCompletionBlock = { _ in }
 
-    let completion = api._bridgeAPIRequestCompletionBlock(with: request, completion: responseBlock)
+    let completion = api.bridgeAPIRequestCompletionBlock(request: request, completion: responseBlock)
 
     // Without Error
     completion(false, nil)
@@ -654,7 +585,7 @@ final class BridgeAPITests: XCTestCase {
     api.pendingRequest = request
     api.pendingRequestCompletionBlock = { _ in }
 
-    let completion = api._bridgeAPIRequestCompletionBlock(with: request, completion: responseBlock)
+    let completion = api.bridgeAPIRequestCompletionBlock(request: request, completion: responseBlock)
 
     // With Error
     completion(false, SampleError())
@@ -693,7 +624,7 @@ final class BridgeAPITests: XCTestCase {
     api.pendingRequest = request
     api.pendingRequestCompletionBlock = { _ in }
 
-    let completion = api._bridgeAPIRequestCompletionBlock(with: request, completion: responseBlock)
+    let completion = api.bridgeAPIRequestCompletionBlock(request: request, completion: responseBlock)
 
     // Without Error
     completion(false, nil)
@@ -725,7 +656,7 @@ final class BridgeAPITests: XCTestCase {
 
   func testSafariVcDidFinishWithPendingUrlOpener() throws {
     let urlOpener = FBSDKLoginManager()
-    api.pendingURLOpen = urlOpener
+    api.pendingURLOpener = urlOpener
     api.safariViewController = TestSafariViewController(url: sampleURL)
 
     // Setting a pending request so we can assert that it's nilled out upon cancellation
@@ -736,7 +667,7 @@ final class BridgeAPITests: XCTestCase {
     let safariViewController = try XCTUnwrap(api.safariViewController)
     api.safariViewControllerDidFinish(safariViewController)
 
-    XCTAssertNil(api.pendingURLOpen, "Should remove the reference to the pending url opener")
+    XCTAssertNil(api.pendingURLOpener, "Should remove the reference to the pending url opener")
     XCTAssertNil(
       api.safariViewController,
       "Should remove the reference to the safari view controller when the delegate method is called"
@@ -763,7 +694,7 @@ final class BridgeAPITests: XCTestCase {
     let safariViewController = try XCTUnwrap(api.safariViewController)
     api.safariViewControllerDidFinish(safariViewController)
 
-    XCTAssertNil(api.pendingURLOpen, "Should remove the reference to the pending url opener")
+    XCTAssertNil(api.pendingURLOpener, "Should remove the reference to the pending url opener")
     XCTAssertNil(
       api.safariViewController,
       "Should remove the reference to the safari view controller when the delegate method is called"
@@ -779,7 +710,7 @@ final class BridgeAPITests: XCTestCase {
 
   func testViewControllerDidDisappearWithSafariViewController() {
     api.safariViewController = TestSafariViewController(url: sampleURL)
-    let container = FBContainerViewController()
+    let container = _ContainerViewController()
 
     // Setting a pending request so we can assert that it's nilled out upon cancellation
     api.pendingRequest = createSampleTestBridgeAPIRequest()
@@ -788,13 +719,18 @@ final class BridgeAPITests: XCTestCase {
 
     XCTAssertEqual(
       logger.capturedContents,
-      "**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\nThis can happen if you are triggering login from a UIAlertController. Instead, make sure your top most view controller will not be prematurely dismissed." // swiftlint:disable:this line_length
+      """
+      **ERROR**:
+      The SFSafariViewController's parent view controller was dismissed.
+      This can happen if you are triggering login from a UIAlertController. Instead, make sure your topmost view \
+      controller will not be prematurely dismissed.
+      """
     )
     XCTAssertNil(api.pendingRequest, "Should cancel the request")
   }
 
   func testViewControllerDidDisappearWithoutSafariViewController() {
-    let container = FBContainerViewController()
+    let container = _ContainerViewController()
 
     // Setting a pending request so we can assert that it's nilled out upon cancellation
     api.pendingRequest = createSampleTestBridgeAPIRequest()
@@ -812,7 +748,7 @@ final class BridgeAPITests: XCTestCase {
     appURLSchemeProvider.appURLScheme = "foo"
 
     XCTAssertFalse(
-      api._handleResponseURL(sampleURL, sourceApplication: ""),
+      api.handleBridgeAPIResponse(url: sampleURL, sourceApplication: ""),
       "Should not successfully handle bridge api response url with an invalid url scheme"
     )
     assertPendingPropertiesCleared()
@@ -823,7 +759,7 @@ final class BridgeAPITests: XCTestCase {
     appURLSchemeProvider.appURLScheme = try XCTUnwrap(sampleURL.scheme)
 
     XCTAssertFalse(
-      api._handleResponseURL(sampleURL, sourceApplication: ""),
+      api.handleBridgeAPIResponse(url: sampleURL, sourceApplication: ""),
       "Should not successfully handle bridge api response url with an invalid url host"
     )
     assertPendingPropertiesCleared()
@@ -834,7 +770,7 @@ final class BridgeAPITests: XCTestCase {
     appURLSchemeProvider.appURLScheme = try XCTUnwrap(validBridgeResponseURL.scheme)
 
     XCTAssertFalse(
-      api._handleResponseURL(validBridgeResponseURL, sourceApplication: ""),
+      api.handleBridgeAPIResponse(url: validBridgeResponseURL, sourceApplication: ""),
       "Should not successfully handle bridge api response url with a missing request"
     )
     assertPendingPropertiesCleared()
@@ -846,7 +782,7 @@ final class BridgeAPITests: XCTestCase {
     api.pendingRequest = TestBridgeAPIRequest(url: sampleURL)
 
     XCTAssertTrue(
-      api._handleResponseURL(validBridgeResponseURL, sourceApplication: ""),
+      api.handleBridgeAPIResponse(url: validBridgeResponseURL, sourceApplication: ""),
       "Should successfully handle bridge api response url with a missing completion block"
     )
     assertPendingPropertiesCleared()
@@ -869,7 +805,7 @@ final class BridgeAPITests: XCTestCase {
     }
 
     XCTAssertTrue(
-      api._handleResponseURL(validBridgeResponseURL, sourceApplication: ""),
+      api.handleBridgeAPIResponse(url: validBridgeResponseURL, sourceApplication: ""),
       "Should successfully handle creation of a bridge api response"
     )
 
@@ -894,7 +830,7 @@ final class BridgeAPITests: XCTestCase {
     }
 
     XCTAssertTrue(
-      api._handleResponseURL(validBridgeResponseURL, sourceApplication: ""),
+      api.handleBridgeAPIResponse(url: validBridgeResponseURL, sourceApplication: ""),
       "Should retry creation of a bridge api response if the first attempt has an error"
     )
     XCTAssertEqual(capturedResponse, response, "Should invoke the completion with the expected bridge api response")
@@ -920,7 +856,7 @@ final class BridgeAPITests: XCTestCase {
     }
 
     XCTAssertFalse(
-      api._handleResponseURL(validBridgeResponseURL, sourceApplication: ""),
+      api.handleBridgeAPIResponse(url: validBridgeResponseURL, sourceApplication: ""),
       "Should return false when a bridge response cannot be created"
     )
     XCTAssertNil(capturedResponse, "Should not invoke pending completion handler")
@@ -932,7 +868,7 @@ final class BridgeAPITests: XCTestCase {
   func createSampleTestBridgeAPIRequest() -> TestBridgeAPIRequest {
     TestBridgeAPIRequest(
       url: sampleURL,
-      protocolType: .web,
+      protocolType: FBSDKBridgeAPIProtocolType.web,
       scheme: "1"
     )
   }

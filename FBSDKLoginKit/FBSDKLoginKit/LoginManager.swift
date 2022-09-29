@@ -827,6 +827,11 @@ public final class LoginManager: NSObject {
 }
 
 extension LoginManager: URLOpening {
+
+  public static func makeOpener() -> LoginManager {
+    LoginManager()
+  }
+
   public func application(
     _ application: UIApplication?,
     open url: URL?,
