@@ -14,9 +14,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKGraphRequest;
 
-// Internal only class to facilitate FBSDKGraphRequest processing, specifically
-// associating FBSDKGraphRequest and FBSDKGraphRequestBlock instances and necessary
-// data for retry processing.
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ Used to facilitate FBSDKGraphRequest processing, specifically
+ associating FBSDKGraphRequest and FBSDKGraphRequestBlock instances and necessary
+ data for retry processing.
+
+ @warning INTERNAL - DO NOT USE
+ */
 NS_SWIFT_NAME(GraphRequestMetadata)
 @interface FBSDKGraphRequestMetadata : NSObject
 
