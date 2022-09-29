@@ -69,7 +69,7 @@ static const CGFloat marginYForBanner = 0;
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  self.tableView.rowHeight = 44;
+
   UIView *tableHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 80)];
   loginButton = [[FBSDKLoginButton alloc] initWithFrame:CGRectMake(0, 0, 220, 30)];
   [tableHeader addSubview:loginButton];
@@ -335,11 +335,6 @@ static const CGFloat marginYForBanner = 0;
       break;
     }
   }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  return 30;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
