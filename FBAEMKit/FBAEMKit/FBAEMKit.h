@@ -7,6 +7,3 @@
  */
 
 #import <FBAEMKit/FBAEMReporter.h>
-
-// Temporarily public
-#import <FBAEMKit/FBAEMKit-Prefix-Header.h>
