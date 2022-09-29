@@ -92,7 +92,7 @@ final class CoreKitComponents {
   let appLinkURLFactory: _AppLinkURLCreating
 
   @available(tvOS, unavailable)
-  let backgroundEventLogger: _BackgroundEventLogging
+  let backgroundEventLogger: BackgroundEventLogging
 
   @available(tvOS, unavailable)
   let codelessIndexer: _CodelessIndexing.Type
@@ -204,7 +204,7 @@ final class CoreKitComponents {
     appLinkResolver: AppLinkResolving,
     appLinkTargetFactory: _AppLinkTargetCreating,
     appLinkURLFactory: _AppLinkURLCreating,
-    backgroundEventLogger: _BackgroundEventLogging,
+    backgroundEventLogger: BackgroundEventLogging,
     codelessIndexer: _CodelessIndexing.Type,
     dataExtractor: _FileDataExtracting.Type,
     featureExtractor: _FeatureExtracting.Type,
@@ -510,7 +510,7 @@ final class CoreKitComponents {
       featureExtractor: _FeatureExtractor.self,
       eventProcessor: _ModelManager.shared
     )
-    let backgroundEventLogger: _BackgroundEventLogging = BackgroundEventLogger()
+    let backgroundEventLogger: BackgroundEventLogging = BackgroundEventLogger()
     #endif
 
     #if os(tvOS)
