@@ -13,7 +13,6 @@
 
 #import <dlfcn.h>
 
-#import "FBSDKDynamicSocialFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
@@ -225,21 +224,6 @@ OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query)
 {
   _fbsdkdfl_Security_get_f(SecItemDelete);
   return f(query);
-}
-
-#pragma mark - Social Constants
-
-_fbsdkdfl_load_framework_once_impl_(Social)
-_fbsdkdfl_handle_get_impl_(Social)
-
-#pragma mark - Social Classes
-
-#define _fbsdkdfl_Social_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(Social, SYMBOL)
-
-Class fbsdkdfl_SLComposeViewControllerClass(void)
-{
-  _fbsdkdfl_Social_get_c(SLComposeViewController);
-  return c;
 }
 
 #pragma mark - QuartzCore Classes

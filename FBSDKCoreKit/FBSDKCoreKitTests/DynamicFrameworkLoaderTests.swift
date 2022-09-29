@@ -192,13 +192,6 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     }
   }
 
-  func testSLComposeViewControllerClass() {
-    XCTAssertTrue(
-      fbsdkdfl_SLComposeViewControllerClass() is SLComposeViewController.Type,
-      "Should dynamically load the SLComposeViewController class"
-    )
-  }
-
   func testCATransactionClass() {
     XCTAssertTrue(
       fbsdkdfl_CATransactionClass() is CATransaction.Type,
