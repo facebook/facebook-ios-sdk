@@ -529,16 +529,17 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testBackgroundEventLogger() throws {
-    let logger = try XCTUnwrap(
-      components.backgroundEventLogger as? _BackgroundEventLogger,
+    XCTAssertTrue(
+      components.backgroundEventLogger is BackgroundEventLogger,
       "The default components should use an instance of BackgroundEventLogger as its background event logger"
     )
+    let dependencies = try BackgroundEventLogger.getDependencies()
     XCTAssertTrue(
-      logger.infoDictionaryProvider === components.infoDictionaryProvider,
+      dependencies.infoDictionaryProvider === components.infoDictionaryProvider,
       "The cache should use the components' info dictionary provider"
     )
     XCTAssertTrue(
-      logger.eventLogger === components.eventLogger,
+      dependencies.eventLogger === components.eventLogger,
       "The cache should use the components' app events"
     )
   }

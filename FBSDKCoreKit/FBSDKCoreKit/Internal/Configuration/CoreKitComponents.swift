@@ -510,10 +510,7 @@ final class CoreKitComponents {
       featureExtractor: _FeatureExtractor.self,
       eventProcessor: _ModelManager.shared
     )
-    let backgroundEventLogger: _BackgroundEventLogging = _BackgroundEventLogger(
-      infoDictionaryProvider: Bundle.main,
-      eventLogger: AppEvents.shared
-    )
+    let backgroundEventLogger: _BackgroundEventLogging = BackgroundEventLogger()
     #endif
 
     #if os(tvOS)

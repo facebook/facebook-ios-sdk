@@ -54,6 +54,13 @@ final class BridgeAPITests: XCTestCase {
       appURLSchemeProvider: appURLSchemeProvider,
       errorFactory: errorFactory
     )
+
+    TestBackgroundEventLogger.setDependencies(
+      .init(
+        infoDictionaryProvider: TestBundle(),
+        eventLogger: TestAppEvents()
+      )
+    )
   }
 
   override func tearDown() {
@@ -72,10 +79,7 @@ final class BridgeAPITests: XCTestCase {
   }
 
   func configureSDK() {
-    let backgroundEventLogger = TestBackgroundEventLogger(
-      infoDictionaryProvider: TestBundle(),
-      eventLogger: TestAppEvents()
-    )
+    let backgroundEventLogger = TestBackgroundEventLogger()
     let serverConfigurationProvider = TestServerConfigurationProvider(
       configuration: ServerConfigurationFixtures.defaultConfiguration
     )

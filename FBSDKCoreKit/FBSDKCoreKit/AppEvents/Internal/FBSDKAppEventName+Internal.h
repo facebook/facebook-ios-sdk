@@ -8,13 +8,6 @@
 
 #import "FBSDKAppEventName.h"
 
-// MARK: - Application Lifecycle
-
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameInitializeSDK;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusAvailable;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusDenied;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusRestricted;
-
 // MARK: - E-Commerce
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameProductCatalogUpdate;
