@@ -92,7 +92,6 @@
 #import <FBSDKCoreKit/FBSDKDialogConfiguration.h>
 #import <FBSDKCoreKit/FBSDKDialogConfigurationMapBuilding.h>
 #import <FBSDKCoreKit/FBSDKDynamicFrameworkLoaderProxy.h>
-#import <FBSDKCoreKit/FBSDKDynamicSocialFrameworkLoader.h>
 #import <FBSDKCoreKit/FBSDKErrorConfiguration.h>
 #import <FBSDKCoreKit/FBSDKErrorConfigurationProtocol.h>
 #import <FBSDKCoreKit/FBSDKErrorConfigurationProvider.h>
