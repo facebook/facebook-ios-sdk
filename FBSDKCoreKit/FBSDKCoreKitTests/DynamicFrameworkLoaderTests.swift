@@ -192,14 +192,6 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     }
   }
 
-  func testSLServiceTypeFacebook() {
-    XCTAssertEqual(
-      fbsdkdfl_SLServiceTypeFacebook(),
-      "com.apple.social.facebook",
-      "Should dynamically load the constant for the facebook service type"
-    )
-  }
-
   func testSLComposeViewControllerClass() {
     XCTAssertTrue(
       fbsdkdfl_SLComposeViewControllerClass() is SLComposeViewController.Type,
