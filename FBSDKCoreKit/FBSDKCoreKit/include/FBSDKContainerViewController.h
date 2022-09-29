@@ -14,14 +14,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKContainerViewController;
 
-NS_SWIFT_NAME(ContainerViewControllerDelegate)
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ContainerViewControllerDelegate)
 @protocol FBSDKContainerViewControllerDelegate <NSObject>
 
 - (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated;
 
 @end
 
-NS_SWIFT_NAME(FBContainerViewController)
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_ContainerViewController)
 @interface FBSDKContainerViewController : UIViewController
 
 @property (nullable, nonatomic, weak) id<FBSDKContainerViewControllerDelegate> delegate;

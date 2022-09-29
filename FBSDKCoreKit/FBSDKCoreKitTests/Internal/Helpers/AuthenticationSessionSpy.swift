@@ -6,16 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+import AuthenticationServices
 
+@testable import FBSDKCoreKit
+
+@available(iOS 13.0, *)
 @objcMembers
-final class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
+final class AuthenticationSessionSpy: NSObject, AuthenticationSessionProtocol {
 
   var capturedURL: URL
   var capturedCallbackURLScheme: String?
-  var capturedCompletionHandler: FBSDKAuthenticationCompletionHandler?
+  var capturedCompletionHandler: AuthenticationCompletionHandler?
   var startCallCount = 0
   var cancelCallCount = 0
+  var presentationContextProvider: ASWebAuthenticationPresentationContextProviding?
 
   static func makeDefaultSpy() -> AuthenticationSessionSpy {
     guard let url = URL(string: "http://example.com") else { fatalError("Url creation failed") }
@@ -23,10 +27,10 @@ final class AuthenticationSessionSpy: NSObject, AuthenticationSessionHandling {
     return AuthenticationSessionSpy(url: url, callbackURLScheme: nil) { _, _ in }
   }
 
-  required init(
+  init(
     url: URL,
     callbackURLScheme: String?,
-    completionHandler: @escaping FBSDKAuthenticationCompletionHandler
+    completionHandler: @escaping (URL?, Error?) -> Void
   ) {
     capturedURL = url
     capturedCallbackURLScheme = callbackURLScheme

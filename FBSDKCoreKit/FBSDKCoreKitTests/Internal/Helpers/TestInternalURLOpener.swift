@@ -40,7 +40,7 @@ final class TestInternalURLOpener: NSObject, _InternalURLOpener {
 
   func open(
     _ url: URL,
-    options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
+    options: [UIApplication.OpenExternalURLOptionsKey: Any],
     completionHandler completion: ((Bool) -> Void)?
   ) {
     capturedOpenURL = url
