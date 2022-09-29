@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FBSDKGraphRequest;
 @protocol FBSDKGraphRequestConnecting;
 @protocol FBSDKGraphRequestConnectionDelegate;
+@class FBSDKGraphRequestMetadata;
 
 /**
  FBSDKGraphRequestCompletion
@@ -48,6 +49,15 @@ NS_SWIFT_NAME(GraphRequestConnecting)
 
 - (void)start;
 - (void)cancel;
+
+
+/**
+ Internal property exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+@property (nonatomic, readonly) NSMutableArray<FBSDKGraphRequestMetadata *> *requests;
 
 @end
 

@@ -117,7 +117,7 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestFactory.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestFlags.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestPiggybackManager.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestMetadata.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestPiggybackManaging.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
 #import <FBSDKCoreKit/FBSDKImpressionLoggerFactory.h>

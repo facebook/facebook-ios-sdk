@@ -355,33 +355,12 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testPiggybackManager() throws {
-    let manager = try XCTUnwrap(
-      components.piggybackManager as? _GraphRequestPiggybackManager,
+    try XCTUnwrap(
+      components.piggybackManager as? GraphRequestPiggybackManager,
       """
       The default components should use an instance of GraphRequestPiggybackManager as \
       its graph request piggyback manager
       """
-    )
-    XCTAssertIdentical(
-      manager.tokenWallet,
-      components.accessTokenWallet,
-      "The piggyback manager should use the components' access token wallet"
-    )
-
-    XCTAssertIdentical(
-      manager.settings,
-      components.settings,
-      "The piggyback manager should use the components' settings"
-    )
-    XCTAssertIdentical(
-      manager.serverConfigurationProvider,
-      components.serverConfigurationProvider,
-      "The piggyback manager should use the components' server configuration provider"
-    )
-    XCTAssertIdentical(
-      manager.graphRequestFactory,
-      components.graphRequestFactory,
-      "The piggyback manager should use the components' graph request factory"
     )
   }
 

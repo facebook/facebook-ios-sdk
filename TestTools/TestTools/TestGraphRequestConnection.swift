@@ -11,6 +11,17 @@ import Foundation
 
 @objcMembers
 public final class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
+  public var requests: NSMutableArray {
+    NSMutableArray(
+      array: graphRequests.compactMap {
+        GraphRequestMetadata(
+          request: $0.request,
+          completionHandler: $0.completion,
+          batchParameters: nil
+        )
+      }
+    )
+  }
 
   public typealias Completion = @convention(block) (GraphRequestConnecting, Any?, Error?) -> Void
 

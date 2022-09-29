@@ -430,12 +430,7 @@ final class CoreKitComponents {
       paymentQueue: SKPaymentQueue.default(),
       paymentProductRequestorFactory: paymentProductRequestorFactory
     )
-    let piggybackManager: _GraphRequestPiggybackManaging = _GraphRequestPiggybackManager(
-      tokenWallet: AccessToken.self,
-      settings: Settings.shared,
-      serverConfigurationProvider: _ServerConfigurationManager.shared,
-      graphRequestFactory: graphRequestFactory
-    )
+    let piggybackManager: _GraphRequestPiggybackManaging = GraphRequestPiggybackManager()
     let timeSpentRecorder: (_SourceApplicationTracking & _TimeSpentRecording) = _TimeSpentData(
       eventLogger: AppEvents.shared,
       serverConfigurationProvider: _ServerConfigurationManager.shared

@@ -64,7 +64,6 @@
 #import "FBSDKGraphRequest+Testing.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnecting+Internal.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
 #import "FBSDKGraphRequestConnection+Testing.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
