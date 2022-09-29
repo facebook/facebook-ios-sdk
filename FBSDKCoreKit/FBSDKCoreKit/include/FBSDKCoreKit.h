@@ -66,7 +66,6 @@
 #import <FBSDKCoreKit/FBSDKAuthenticationStatusUtility.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
-#import <FBSDKCoreKit/FBSDKBackgroundEventLogging.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPI.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>

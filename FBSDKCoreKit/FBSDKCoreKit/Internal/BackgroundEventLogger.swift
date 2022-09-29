@@ -8,9 +8,7 @@
 
 #if !os(tvOS)
 
-import Foundation
-
-final class BackgroundEventLogger: NSObject, _BackgroundEventLogging {
+struct BackgroundEventLogger: BackgroundEventLogging {
 
   private enum Keys {
     static let schedulerIdentifiers = "BGTaskSchedulerPermittedIdentifiers"

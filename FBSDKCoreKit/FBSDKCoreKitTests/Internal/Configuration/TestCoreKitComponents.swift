@@ -68,7 +68,7 @@ enum TestCoreKitComponents {
     appLinkResolver: AppLinkResolving = TestAppLinkResolver(),
     appLinkTargetFactory: _AppLinkTargetCreating = TestAppLinkTargetFactory(),
     appLinkURLFactory: _AppLinkURLCreating = TestAppLinkURLFactory(),
-    backgroundEventLogger: _BackgroundEventLogging = TestBackgroundEventLogger(),
+    backgroundEventLogger: BackgroundEventLogging = TestBackgroundEventLogger(),
     codelessIndexer: _CodelessIndexing.Type = TestCodelessEvents.self,
     dataExtractor: _FileDataExtracting.Type = TestFileDataExtractor.self,
     featureExtractor: _FeatureExtracting.Type = TestFeatureExtractor.self,

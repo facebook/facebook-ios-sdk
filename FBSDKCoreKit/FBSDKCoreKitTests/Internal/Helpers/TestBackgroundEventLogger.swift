@@ -8,9 +8,7 @@
 
 @testable import FBSDKCoreKit
 
-import Foundation
-
-final class TestBackgroundEventLogger: NSObject, _BackgroundEventLogging {
+final class TestBackgroundEventLogger: BackgroundEventLogging {
 
   var logBackgroundRefresStatusCallCount = 0
 
