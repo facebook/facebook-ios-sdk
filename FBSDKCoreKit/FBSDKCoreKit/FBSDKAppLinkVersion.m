@@ -9,7 +9,7 @@
 
 #if !TARGET_OS_TV
 
-#import <FBSDKCoreKit/FBSDKAppLinkVersionKey.h>
+#import <FBSDKCoreKit/FBSDKAppLinkVersion.h>
 #import <Foundation/Foundation.h>
 
 NSString *const FBSDKAppLinkVersion = @"1.0";
