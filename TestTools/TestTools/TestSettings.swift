@@ -15,7 +15,7 @@ public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var isAdvertiserIDCollectionEnabled = false
   public var appID: String?
   public var clientToken: String?
-  public var sdkVersion: String = ""
+  public var sdkVersion = ""
   public var userAgentSuffix: String?
   public var displayName: String?
   public var facebookDomainPart: String?

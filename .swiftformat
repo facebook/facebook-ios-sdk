@@ -14,9 +14,6 @@
 
 # Excluded files and dirs
 --exclude samples,testing,ads
---exclude internal/scripts
---exclude internal/testing
---exclude internal/tools
 --exclude Package.swift
 
 # Enabled rules
@@ -111,6 +108,7 @@
 --indent 2
 --indentstrings true
 --modifierorder open, override
+--redundanttype "inferred"
 --swiftversion 5
 --wraparguments before-first
 --xcodeindentation enabled
