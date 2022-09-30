@@ -14,12 +14,12 @@ struct GeneratePackageManifest: ParsableCommand {
 
         // The content to use for filling out the template
         var content: [String: Any] = [
-            "version": try Versioning.extract(useCurrentVersion: true)
+            "version": try Versioning.extract(useCurrentVersion: true),
         ]
 
         try Product.allCases.forEach { product in
             content[product.rawValue] = [
-                "checksum": try generateChecksum(for: product)
+                "checksum": try generateChecksum(for: product),
             ]
         }
         let manifest = try template.render(content)

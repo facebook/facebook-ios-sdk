@@ -8,23 +8,23 @@ class CloudBridgeViewController: UIViewController, UITableViewDelegate, UITableV
 
   private let toggles: Array = ["Event Name", "Currency", "Value", "Event Parameter", "Endpoint", "Dataset Id", "Access Key", "Parameter Parser", "Log Event"]
 
-  private let consoleView: UITextView = UITextView()
-  private let eventTextView: UITextView = UITextView()
-  private let currencyTextView: UITextView = UITextView()
-  private let valueTextView: UITextView = UITextView()
-  private let parameterTextView: UITextView = UITextView()
-  private let endpointTextView: UITextView = UITextView()
-  private let datasetTextView: UITextView = UITextView()
-  private let accessKeyTextView: UITextView = UITextView()
+  private let consoleView = UITextView()
+  private let eventTextView = UITextView()
+  private let currencyTextView = UITextView()
+  private let valueTextView = UITextView()
+  private let parameterTextView = UITextView()
+  private let endpointTextView = UITextView()
+  private let datasetTextView = UITextView()
+  private let accessKeyTextView = UITextView()
 
-  private let recordEventButton: UIButton = UIButton()
-  private let parameterGenerationButton: UIButton = UIButton()
+  private let recordEventButton = UIButton()
+  private let parameterGenerationButton = UIButton()
 
-  private let tableView: UITableView = UITableView()
+  private let tableView = UITableView()
 
-  private var datasetId: String = "885075468745573"
-  private var url: String = "https://mar29-appsdk.iots.us"
-  private var accessKey: String = "ndREzKMtQP"
+  private var datasetId = "885075468745573"
+  private var url = "https://mar29-appsdk.iots.us"
+  private var accessKey = "ndREzKMtQP"
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -35,53 +35,53 @@ class CloudBridgeViewController: UIViewController, UITableViewDelegate, UITableV
     consoleView.layer.cornerRadius = 3
     consoleView.isEditable = false
     consoleView.accessibilityIdentifier = "textview_console"
-    consoleView.frame = CGRect(x: 0, y: 44, width: self.view.frame.width, height: 400)
+    consoleView.frame = CGRect(x: 0, y: 44, width: view.frame.width, height: 400)
 
-    eventTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    eventTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     eventTextView.layer.borderWidth = 1
     eventTextView.layer.borderColor = UIColor.systemBlue.cgColor
     eventTextView.text = "fb_mobile_purchase"
     eventTextView.accessibilityIdentifier = "testview_event"
 
-    currencyTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    currencyTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     currencyTextView.layer.borderWidth = 1
     currencyTextView.layer.borderColor = UIColor.systemBlue.cgColor
     currencyTextView.text = "USD"
     currencyTextView.accessibilityIdentifier = "testview_currency"
 
-    valueTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    valueTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     valueTextView.layer.borderWidth = 1
     valueTextView.layer.borderColor = UIColor.systemBlue.cgColor
     valueTextView.text = "3"
     valueTextView.accessibilityIdentifier = "testview_value"
 
-    parameterTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    parameterTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     parameterTextView.layer.borderWidth = 1
     parameterTextView.layer.borderColor = UIColor.systemBlue.cgColor
     parameterTextView.accessibilityIdentifier = "testview_parameter"
 
-    endpointTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    endpointTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     endpointTextView.layer.borderWidth = 1
     endpointTextView.layer.borderColor = UIColor.systemBlue.cgColor
     endpointTextView.accessibilityIdentifier = "endpoint_value"
     endpointTextView.delegate = self
     endpointTextView.text = url
 
-    datasetTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    datasetTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     datasetTextView.layer.borderWidth = 1
     datasetTextView.layer.borderColor = UIColor.systemBlue.cgColor
     datasetTextView.accessibilityIdentifier = "dataset_value"
     datasetTextView.delegate = self
     datasetTextView.text = datasetId
 
-    accessKeyTextView.frame = CGRect(x: self.view.frame.width / 2, y: 3, width: self.view.frame.width / 2, height: 34)
+    accessKeyTextView.frame = CGRect(x: view.frame.width / 2, y: 3, width: view.frame.width / 2, height: 34)
     accessKeyTextView.layer.borderWidth = 1
     accessKeyTextView.layer.borderColor = UIColor.systemBlue.cgColor
     accessKeyTextView.accessibilityIdentifier = "accessKey_value"
     accessKeyTextView.delegate = self
     accessKeyTextView.text = accessKey
 
-    parameterGenerationButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    parameterGenerationButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     parameterGenerationButton.backgroundColor = .systemBlue
     parameterGenerationButton.setTitle("Parameter Parser", for: .normal)
     parameterGenerationButton.layer.cornerRadius = 5.0
@@ -92,7 +92,7 @@ class CloudBridgeViewController: UIViewController, UITableViewDelegate, UITableV
     )
     parameterGenerationButton.accessibilityIdentifier = "button_generate_parameter"
 
-    recordEventButton.frame = CGRect(x: 20, y: 3, width: self.view.frame.width - 40, height: 34)
+    recordEventButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     recordEventButton.backgroundColor = .systemBlue
     recordEventButton.setTitle("Log Event", for: .normal)
     recordEventButton.layer.cornerRadius = 5.0
@@ -103,11 +103,11 @@ class CloudBridgeViewController: UIViewController, UITableViewDelegate, UITableV
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ToggleCell")
     tableView.delegate = self
     tableView.dataSource = self
-    tableView.frame = CGRect(x: 0, y: 444, width: self.view.frame.width, height: self.view.frame.height - 444)
+    tableView.frame = CGRect(x: 0, y: 444, width: view.frame.width, height: view.frame.height - 444)
 
-    self.view.addSubview(consoleView)
-    self.view.addSubview(tableView)
-    self.reset()
+    view.addSubview(consoleView)
+    view.addSubview(tableView)
+    reset()
     CloudBridgeTestUtils.setup()
   }
 
@@ -202,13 +202,13 @@ class CloudBridgeViewController: UIViewController, UITableViewDelegate, UITableV
   @objc func generateParameter() {
     let viewController = EventParameterParserViewController()
     viewController.delegate = self
-    self.navigationController?.pushViewController(viewController, animated: true)
+    navigationController?.pushViewController(viewController, animated: true)
   }
 
   // MARK: Json Management
 
   func setJsonData(_ data: String?) {
-    self.parameterTextView.text = data ?? ""
+    parameterTextView.text = data ?? ""
   }
 }
 
@@ -216,11 +216,9 @@ extension CloudBridgeViewController: UITextViewDelegate {
   func textViewDidChange(_ textView: UITextView) {
     if textView == endpointTextView {
       url = textView.text
-    }
-    else if textView == datasetTextView {
+    } else if textView == datasetTextView {
       datasetId = textView.text
-    }
-    else if textView == accessKeyTextView {
+    } else if textView == accessKeyTextView {
       accessKey = textView.text
     }
   }

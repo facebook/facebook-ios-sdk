@@ -1,0 +1,3 @@
+# SwiftFormat config override for internal/scripts/Runner
+
+--indent 4

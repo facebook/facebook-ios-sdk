@@ -23,13 +23,13 @@ struct Build: ParsableCommand {
     var libraryType = LibraryType.dynamic
 
     @Option(
-      name: .shortAndLong,
-      parsing: .upToNextOption,
-      help: """
-        The list of products to build.
-        Accepts some variation in casing and prefixing
-        example usage: `-p aem core LoginKit FBSDKShareKit
-        """
+        name: .shortAndLong,
+        parsing: .upToNextOption,
+        help: """
+            The list of products to build.
+            Accepts some variation in casing and prefixing
+            example usage: `-p aem core LoginKit FBSDKShareKit
+            """
     )
     var products = Product.allCases
 
@@ -106,14 +106,14 @@ struct Build: ParsableCommand {
         try products
 //    TODO: Uncomment for release
 //            .filter { $0 != .tvoskit }
-            .forEach { product in
-                try FileSystem.execute(from: .xcframeworks) {
-                    let frameworkPath = "$PWD/\(libraryType.rawValue.capitalized)/\(product.rawValue).xcframework/ios-arm64_x86_64-maccatalyst/\(product.rawValue).framework"
-                    try shellOut(to: "cd \(frameworkPath) && find . -type l -exec unlink {} \\;")
-                    try shellOut(to: "cd \(frameworkPath) && cp -rp Versions/A/* .")
-                    try shellOut(to: "rm -rf \(frameworkPath)/Versions")
+                .forEach { product in
+                    try FileSystem.execute(from: .xcframeworks) {
+                        let frameworkPath = "$PWD/\(libraryType.rawValue.capitalized)/\(product.rawValue).xcframework/ios-arm64_x86_64-maccatalyst/\(product.rawValue).framework"
+                        try shellOut(to: "cd \(frameworkPath) && find . -type l -exec unlink {} \\;")
+                        try shellOut(to: "cd \(frameworkPath) && cp -rp Versions/A/* .")
+                        try shellOut(to: "rm -rf \(frameworkPath)/Versions")
+                    }
                 }
-            }
     }
 
     private func buildXCFramework(
@@ -122,7 +122,7 @@ struct Build: ParsableCommand {
     ) throws {
         try FileSystem.execute(from: .sdk) {
             let frameworkOptions = try archives.flatMap {
-                return try $0.commandLineOptions()
+                try $0.commandLineOptions()
             }
             let artifactPath = "\(Directory.xcframeworks.path)/\(libraryType.rawValue.capitalized)/\(product.rawValue).xcframework"
 
@@ -132,7 +132,7 @@ struct Build: ParsableCommand {
                     CommandLine.Option(
                         name: "-output",
                         arguments: [artifactPath]
-                    )
+                    ),
                 ]
 
             let buildCommand = CommandLine(
@@ -265,7 +265,6 @@ struct Build: ParsableCommand {
                 try shellOut(to: copyCommand)
             }
         }
-
     }
 
     private static func createFileHandles() throws -> ResultHandles {
@@ -294,7 +293,7 @@ struct Build: ParsableCommand {
                 arguments: [
                     path
                         .appendingPathComponent("dSYMS/\(product.rawValue).framework.dSYM")
-                        .standardizedFileURL.path
+                        .standardizedFileURL.path,
                 ]
             )
             let frameworkOption = CommandLine.Option(

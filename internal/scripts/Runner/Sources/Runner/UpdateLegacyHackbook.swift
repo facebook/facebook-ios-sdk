@@ -73,7 +73,7 @@ struct UpdateLegacyHackbook: ParsableCommand {
             }
 
             guard let handle = try? String(contentsOf: handleURL, encoding: .utf8),
-                !handle.isEmpty
+                  !handle.isEmpty
             else {
                 throw Error.missingEverstoreHandle
             }

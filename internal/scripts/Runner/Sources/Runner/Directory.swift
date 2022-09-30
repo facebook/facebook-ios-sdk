@@ -83,13 +83,11 @@ enum Directory {
         case let .fbsource(isSandcastle):
             if isSandcastle {
                 return URL(fileURLWithPath: "/data/sandcastle/boxes/trunk-hg-fbobjc-fbsource")
-            }
-            else {
+            } else {
                 do {
                     let fbsourcePath = try shellOut(to: "echo ~/fbsource")
                     return URL(fileURLWithPath: fbsourcePath)
-                }
-                catch {
+                } catch {
                     fatalError("Could not resolve path: ~/fbsource. Is fbsource checked out on your local machine?")
                 }
             }

@@ -3,5 +3,6 @@
 import ArgumentParser
 
 enum LibraryType: String, ExpressibleByArgument {
-    case dynamic, `static`
+    case dynamic
+    case `static`
 }

@@ -13,7 +13,8 @@ import Darwin.C
 enum HostType: String {
     static let `default`: HostType = .internal
 
-    case `internal`, external
+    case `internal`
+    case external
 
     static var current: HostType {
         if let hostTypePointer = getenv("HOST_TYPE") {
@@ -42,13 +43,13 @@ enum HostType: String {
                     name: "Mustache",
                     url: "https://github.com/groue/GRMustache.swift",
                     from: "4.0.1"
-                )
+                ),
             ]
         case .internal:
             return [
                 .package(name: "swift-argument-parser", path: "../../tools/swift-argument-parser"),
                 .package(name: "ShellOut", path: "../../tools/ShellOut"),
-                .package(name: "Mustache", path: "../../tools/GRMustache")
+                .package(name: "Mustache", path: "../../tools/GRMustache"),
             ]
         }
     }
@@ -61,7 +62,7 @@ let package = Package(
         .executable(
             name: "runner",
             targets: ["Runner"]
-        )
+        ),
     ],
     dependencies: HostType.current.dependencies,
     targets: [
@@ -73,11 +74,12 @@ let package = Package(
                 .product(name: "Mustache", package: "Mustache"),
             ],
             resources: [
-                .process("Templates")
+                .process("Templates"),
             ]
         ),
         .testTarget(
             name: "RunnerTests",
-            dependencies: ["Runner"])
+            dependencies: ["Runner"]
+        ),
     ]
 )

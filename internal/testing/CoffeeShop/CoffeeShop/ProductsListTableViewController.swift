@@ -51,7 +51,7 @@ class ProductsListTableViewController: UITableViewController {
       }
     }))
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-    alert.popoverPresentationController?.sourceView = self.view
+    alert.popoverPresentationController?.sourceView = view
     present(alert, animated: true, completion: nil)
   }
 
@@ -79,16 +79,20 @@ class ProductsListTableViewController: UITableViewController {
     vc.view.addSubview(vWeb)
 
     vc.view.addConstraints(
-      NSLayoutConstraint.constraints(withVisualFormat: "H:|[web]|",
-                                     options: [],
-                                     metrics: nil,
-                                     views: ["web": vWeb])
+      NSLayoutConstraint.constraints(
+        withVisualFormat: "H:|[web]|",
+        options: [],
+        metrics: nil,
+        views: ["web": vWeb]
+      )
     )
     vc.view.addConstraints(
-      NSLayoutConstraint.constraints(withVisualFormat: "V:|[web]|",
-                                     options: [],
-                                     metrics: nil,
-                                     views: ["web": vWeb])
+      NSLayoutConstraint.constraints(
+        withVisualFormat: "V:|[web]|",
+        options: [],
+        metrics: nil,
+        views: ["web": vWeb]
+      )
     )
     vWeb.load(URLRequest(url: url))
 
@@ -112,7 +116,7 @@ class ProductsListTableViewController: UITableViewController {
     consentFormVC.providesPresentationContextTransitionStyle = true
     consentFormVC.definesPresentationContext = true
     consentFormVC.modalPresentationStyle = .overCurrentContext
-    self.present(consentFormVC, animated: false, completion: nil)
+    present(consentFormVC, animated: false, completion: nil)
   }
 
   // MARK: - Table view data source
@@ -127,7 +131,7 @@ class ProductsListTableViewController: UITableViewController {
 
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: cellIdentifier)
-    if nil == cell {
+    if cell == nil {
       cell = UITableViewCell(style: .value1, reuseIdentifier: cellIdentifier)
     }
 
@@ -144,8 +148,8 @@ class ProductsListTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    if 0 == section {
-      let header: UIButton = UIButton()
+    if section == 0 {
+      let header = UIButton()
       let screenSize = UIScreen.main.bounds.size
       header.frame = CGRect(x: 0, y: 0, width: screenSize.width, height: 50)
       header.setTitle("Test", for: .normal)
@@ -159,6 +163,6 @@ class ProductsListTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    0 == section ? 50 : 0
+    section == 0 ? 50 : 0
   }
 }

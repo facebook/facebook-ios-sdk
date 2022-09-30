@@ -21,7 +21,7 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
   private let tableView: UITableView = .init()
 
-  private var deeplinkType: DeeplinkUrlType = .customUrlScheme;
+  private var deeplinkType: DeeplinkUrlType = .customUrlScheme
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -159,9 +159,11 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
   }
 
   @objc func reset() {
-    AEMTestUtils.reset(consoleView,
-                       campaign: campaignTextView.text,
-                       deeplinkType: deeplinkType)
+    AEMTestUtils.reset(
+      consoleView,
+      campaign: campaignTextView.text,
+      deeplinkType: deeplinkType
+    )
   }
 
   @objc private func deeplinkTypeValueChanged(_ sender: UISegmentedControl) {
@@ -169,10 +171,12 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
   }
 
   @objc func recordEvent() {
-    AEMTestUtils.recordAndUpdateEvent(eventTextView.text,
-                                      currency: currencyTextView.text,
-                                      value: valueTextView.text,
-                                      console: consoleView)
+    AEMTestUtils.recordAndUpdateEvent(
+      eventTextView.text,
+      currency: currencyTextView.text,
+      value: valueTextView.text,
+      console: consoleView
+    )
   }
 
   @objc func recordConsecutiveEvents() {
@@ -180,10 +184,12 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
       if event.isEmpty {
         continue
       }
-      AEMTestUtils.recordAndUpdateEvent(event,
-                                        currency: currencyTextView.text,
-                                        value: valueTextView.text,
-                                        console: consoleView)
+      AEMTestUtils.recordAndUpdateEvent(
+        event,
+        currency: currencyTextView.text,
+        value: valueTextView.text,
+        console: consoleView
+      )
     }
   }
 

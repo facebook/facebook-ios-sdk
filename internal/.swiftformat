@@ -1,0 +1,9 @@
+# SwiftFormat config override for internal dir
+
+
+# Excluded files and dirs
+--exclude tools # third party libs (GRMustache, ShellOut, swift-argument-parser)
+--exclude MetaSDK
+--exclude testing/MetaSDKSample
+
+--header "// (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary."

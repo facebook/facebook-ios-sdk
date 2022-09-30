@@ -3,10 +3,9 @@
 import XCTest
 
 final class RunnerTests: XCTestCase {
-    func testExample() {
-    }
+    func testExample() {}
 
     static var allTests = [
-        ("testExample", testExample)
+        ("testExample", testExample),
     ]
 }

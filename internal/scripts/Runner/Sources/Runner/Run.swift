@@ -13,7 +13,7 @@ struct Run: ParsableCommand {
             GeneratePodspecs.self,
             PrepareRelease.self,
             UpdateLegacyHackbook.self,
-            ZipXCFrameworks.self
+            ZipXCFrameworks.self,
         ]
     )
 }

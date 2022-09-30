@@ -13,7 +13,7 @@ import XCTest
 
 final class LoginButtonTests: XCTestCase {
 
-  let validNonce: String = "abc123"
+  let validNonce = "abc123"
   // swiftlint:disable implicitly_unwrapped_optional
   var loginProvider: TestLoginProvider!
   var stringProvider: TestUserInterfaceStringProvider!

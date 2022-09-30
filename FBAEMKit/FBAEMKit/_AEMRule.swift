@@ -25,9 +25,9 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   public let events: [_AEMEvent]
 
   private enum Keys {
-    static let conversionValueKey: String = "conversion_value"
-    static let priorityKey: String = "priority"
-    static let eventsKey: String = "events"
+    static let conversionValueKey = "conversion_value"
+    static let priorityKey = "priority"
+    static let eventsKey = "events"
   }
 
   @objc(initWithJSON:)

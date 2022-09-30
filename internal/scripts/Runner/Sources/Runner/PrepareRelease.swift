@@ -9,10 +9,10 @@ struct PrepareRelease: ParsableCommand {
 
     static var configuration = CommandConfiguration(
         abstract: """
-        Prepares static and dynamically linked XCFramework artifacts for release.
-        Builds and zips XCFrameworks for uploading to the release.
-        Updates Podspecs and the Swift Package Manifest for the release.
-        """
+            Prepares static and dynamically linked XCFramework artifacts for release.
+            Builds and zips XCFrameworks for uploading to the release.
+            Updates Podspecs and the Swift Package Manifest for the release.
+            """
     )
 
     mutating func run() throws {

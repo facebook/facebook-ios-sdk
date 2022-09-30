@@ -42,7 +42,7 @@ enum Product: String, CaseIterable, ExpressibleByArgument {
             return [
                 Destination.ios,
                 Destination.iosSimulator,
-                Destination.macCatalyst
+                Destination.macCatalyst,
             ]
 
 //        TODO: Uncomment for release

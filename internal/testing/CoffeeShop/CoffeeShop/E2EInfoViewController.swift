@@ -7,7 +7,7 @@ class E2EInfoViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    self.view.backgroundColor = UIColor.white
+    view.backgroundColor = .white
 
     let isTestingLabel = UILabel()
     isTestingLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +40,7 @@ class E2EInfoViewController: UIViewController {
       isTestingLabel.topAnchor.constraint(equalTo: view.topAnchor),
       labProxyLabel.topAnchor.constraint(equalTo: isTestingLabel.bottomAnchor),
       labHostLabel.topAnchor.constraint(equalTo: labProxyLabel.bottomAnchor),
-      labPortLabel.topAnchor.constraint(equalTo: labHostLabel.bottomAnchor)
+      labPortLabel.topAnchor.constraint(equalTo: labHostLabel.bottomAnchor),
     ])
   }
 }

@@ -23,8 +23,8 @@ enum File {
             case .hackbookIPA: return "Hackbook.ipa"
             case .output: return "output.txt"
             case .packageManifest: return "Package.swift"
-            case .podspec(let name): return "\(name).podspec"
-            case .zip(let version): return "\(version).zip"
+            case let .podspec(name): return "\(name).podspec"
+            case let .zip(version): return "\(version).zip"
             }
         }
     }

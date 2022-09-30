@@ -10,16 +10,16 @@ import FBSDKGamingServicesKit
 #endif
 
 extension ViewController {
-    func testSymbols() {
-        // Just sanity checking that symbols are available
-        _ = AccessToken.current
-        _ = AuthenticationToken.current
-        _ = [Permission.email]
-        _ = SharePhoto(image: UIImage(), isUserGenerated: true)
-        _ = LoginConfiguration()
-        _ = LoginManager()
-        _ = GamingImageUploader.self
+  func testSymbols() {
+    // Just sanity checking that symbols are available
+    _ = AccessToken.current
+    _ = AuthenticationToken.current
+    _ = [Permission.email]
+    _ = SharePhoto(image: UIImage(), isUserGenerated: true)
+    _ = LoginConfiguration()
+    _ = LoginManager()
+    _ = GamingImageUploader.self
 
-        SomeObjCType().doStuff()
-    }
+    SomeObjCType().doStuff()
+  }
 }
