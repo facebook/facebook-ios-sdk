@@ -13,7 +13,6 @@
 #import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKAdvertiserIDProviding.h>
 #import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
-#import <FBSDKCoreKit/FBSDKAEMReporterProtocol.h>
 #import <FBSDKCoreKit/FBSDKAppAvailabilityChecker.h>
 #import <FBSDKCoreKit/FBSDKAppEventDropDetermining.h>
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
