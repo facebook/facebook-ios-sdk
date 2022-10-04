@@ -93,6 +93,10 @@ public enum Permission: Hashable, ExpressibleByStringLiteral {
   case pagesManageInstantArticles
   /// Provides the access to Ads Insights API to pull ads report information for ad accounts you have access to.
   case adsRead
+  /// Provides access to the Facebook profile URL of the person using your app.
+  case userLink
+  /// Provides access a person's age range as listed in their Facebook profile.
+  case userAgeRange
   /**
    Permission with a custom string value.
    See https://developers.facebook.com/docs/facebook-login/permissions for full list of available permissions.
@@ -157,6 +161,8 @@ public enum Permission: Hashable, ExpressibleByStringLiteral {
     case .pagesManageCta: return .pagesManageCta
     case .pagesManageInstantArticles: return .pagesManageInstantArticles
     case .adsRead: return .adsRead
+    case .userLink: return .userLink
+    case .userAgeRange: return .userAgeRange
     case .custom: return nil
     }
   }
@@ -198,6 +204,8 @@ private enum StringPermission: String {
   case pagesManageCta = "pages_manage_cta"
   case pagesManageInstantArticles = "pages_manage_instant_articles"
   case adsRead = "ads_read"
+  case userLink = "user_link"
+  case userAgeRange = "user_age_range"
 
   var permission: Permission {
     switch self {
@@ -236,6 +244,8 @@ private enum StringPermission: String {
     case .pagesManageCta: return .pagesManageCta
     case .pagesManageInstantArticles: return .pagesManageInstantArticles
     case .adsRead: return .adsRead
+    case .userLink: return .userLink
+    case .userAgeRange: return .userAgeRange
     }
   }
 }
