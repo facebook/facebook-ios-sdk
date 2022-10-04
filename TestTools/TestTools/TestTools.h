@@ -6,4 +6,4 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <TestTools/FBSDKAuthenticationToken+Testing.h>
+@import FBSDKCoreKit;

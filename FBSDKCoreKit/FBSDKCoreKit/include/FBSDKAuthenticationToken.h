@@ -60,6 +60,14 @@ NS_SWIFT_NAME(AuthenticationToken)
  */
 @property (class, nullable, nonatomic, copy) id<FBSDKTokenCaching> tokenCache;
 
+#pragma mark - Test methods
+
+#if DEBUG
+- (instancetype)initWithTokenString:(NSString *)tokenString
+                              nonce:(NSString *)nonce;
++ (void)resetCurrentAuthenticationTokenCache;
+#endif
+
 @end
 
 NS_ASSUME_NONNULL_END
