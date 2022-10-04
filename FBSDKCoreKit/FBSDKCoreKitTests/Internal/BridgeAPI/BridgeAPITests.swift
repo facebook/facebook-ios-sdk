@@ -125,9 +125,8 @@ final class BridgeAPITests: XCTestCase {
       urlOpener,
       "Should be able to create a bridge api with a specific url opener"
     )
-    XCTAssertEqual(
-      api.bridgeAPIResponseFactory as? TestBridgeAPIResponseFactory,
-      responseFactory,
+    XCTAssertTrue(
+      api.bridgeAPIResponseFactory is TestBridgeAPIResponseFactory,
       "Should be able to create a bridge api with a specific response factory"
     )
     XCTAssertTrue(

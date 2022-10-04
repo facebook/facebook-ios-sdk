@@ -355,7 +355,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testPiggybackManager() throws {
-    try XCTUnwrap(
+    XCTAssertNotNil(
       components.piggybackManager as? GraphRequestPiggybackManager,
       """
       The default components should use an instance of GraphRequestPiggybackManager as \

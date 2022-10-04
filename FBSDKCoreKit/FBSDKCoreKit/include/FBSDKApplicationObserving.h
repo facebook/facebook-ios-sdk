@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
  Describes any types that optionally responds to various lifecycle events
  received by the system and propagated by `ApplicationDelegate`.
  */
-@protocol FBSDKApplicationObserving <NSObject>
+@protocol FBSDKApplicationObserving
 
 @optional
 - (void)applicationDidBecomeActive:(nullable UIApplication *)application;

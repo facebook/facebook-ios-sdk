@@ -33,7 +33,7 @@ public final class _BridgeAPI: NSObject,
 
   let logger: _Logger
   let urlOpener: _InternalURLOpener
-  let bridgeAPIResponseFactory: _BridgeAPIResponseCreating
+  let bridgeAPIResponseFactory: BridgeAPIResponseCreating
   let appURLSchemeProvider: AppURLSchemeProviding
   let errorFactory: ErrorCreating
   var pendingRequest: BridgeAPIRequestProtocol?
@@ -58,7 +58,7 @@ public final class _BridgeAPI: NSObject,
   init(
     logger: _Logger,
     urlOpener: _InternalURLOpener,
-    bridgeAPIResponseFactory: _BridgeAPIResponseCreating,
+    bridgeAPIResponseFactory: BridgeAPIResponseCreating,
     appURLSchemeProvider: AppURLSchemeProviding,
     errorFactory: ErrorCreating
   ) {
