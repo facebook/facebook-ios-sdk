@@ -12,5 +12,4 @@
 #import "FBSDKAccessToken+Testing.h"
 #import "FBSDKDeviceLoginManagerResult+Testing.h"
 #import "FBSDKInternalUtility+Testing.h"
-#import "FBSDKProfile+Testing.h"
 #import "FBSDKSettings+Testing.h"

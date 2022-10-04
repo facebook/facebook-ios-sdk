@@ -10,6 +10,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Deprecated
+
+- The `Profile.enableUpdatesOnAccessTokenChange(_:)` method is deprecated in favor of the `Profile.isUpdatedWithAccessTokenChange` property.
+
+### Removed
+
+- `Profile` conformance to `NSCopying` has been removed as well as custom hashability and equatability.
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.0.0...HEAD)
 
 ## 15.0.0

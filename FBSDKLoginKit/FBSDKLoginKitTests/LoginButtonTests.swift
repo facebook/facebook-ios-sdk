@@ -165,7 +165,7 @@ final class LoginButtonTests: XCTestCase {
   func testInitialContentUpdateWithInactiveAccessTokenWithProfile() {
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
 
     loginButton.initializeContent()
 
@@ -191,7 +191,7 @@ final class LoginButtonTests: XCTestCase {
 
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
 
     loginButton.initializeContent()
 
@@ -244,7 +244,7 @@ final class LoginButtonTests: XCTestCase {
 
   func testInitialContentUpdateWithoutAccessTokenWithoutProfile() {
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(nil, shouldPostNotification: false)
+    Profile.current = nil
 
     loginButton.initializeContent()
 
@@ -424,7 +424,7 @@ final class LoginButtonTests: XCTestCase {
     )
 
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
 
     loginButton.profileDidChange(notification)
 
@@ -454,7 +454,7 @@ final class LoginButtonTests: XCTestCase {
     )
 
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
     loginButton.updateContentForUser(profile)
     loginButton.profileDidChange(notification)
 

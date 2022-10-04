@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
 @testable import FBSDKLoginKit
 
 import FBSDKCoreKit_Basics
@@ -163,7 +164,7 @@ final class LoginManagerTests: XCTestCase {
   }
 
   func resetClassDependencies() {
-    Profile.reset()
+    Profile.resetDependencies()
     AccessToken.resetClassDependencies()
     AccessToken.resetCurrentAccessTokenCache()
     AuthenticationToken.resetCurrentAuthenticationTokenCache()

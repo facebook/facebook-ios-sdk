@@ -159,11 +159,8 @@
 #import <FBSDKCoreKit/FBSDKProductRequestFactory.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
-#import <FBSDKCoreKit/FBSDKProfile.h>
 #import <FBSDKCoreKit/FBSDKProfileBlock.h>
 #import <FBSDKCoreKit/FBSDKProfileNotifications.h>
-#import <FBSDKCoreKit/FBSDKProfilePictureMode.h>
-#import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 #import <FBSDKCoreKit/FBSDKRandom.h>
 #import <FBSDKCoreKit/FBSDKRestrictiveDataFilterManager.h>
 #import <FBSDKCoreKit/FBSDKRulesFromKeyProvider.h>
