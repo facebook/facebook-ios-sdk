@@ -20,7 +20,7 @@ final class ProfilePictureViewTests: XCTestCase {
     super.setUp()
 
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(nil, shouldPostNotification: false)
+    Profile.current = nil
     testProfile = SampleUserProfiles.createValid()
     profilePictureView = FBProfilePictureView(frame: .zero)
   }
@@ -187,7 +187,7 @@ final class ProfilePictureViewTests: XCTestCase {
       object: nil,
       userInfo: [AccessTokenDidChangeUserIDKey: true]
     )
-    Profile.setCurrent(testProfile, shouldPostNotification: false)
+    Profile.current = testProfile
     profilePictureView.updateImageWithProfile()
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
     profilePictureView.accessTokenDidChange(notification)
@@ -280,7 +280,7 @@ final class ProfilePictureViewTests: XCTestCase {
       object: nil,
       userInfo: nil
     )
-    Profile.setCurrent(testProfile, shouldPostNotification: false)
+    Profile.current = testProfile
     profilePictureView.profileDidChange(notification)
     XCTAssertNotNil(profilePictureView.lastState, .hasLastState)
   }

@@ -14,9 +14,9 @@
 
 #import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
-#import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
+@protocol FBSDKProfileProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 

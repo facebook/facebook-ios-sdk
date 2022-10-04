@@ -68,7 +68,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     FBWebDialogView.resetClassDependencies()
     _FeatureExtractor.reset()
     _ModelManager.reset()
-    Profile.reset()
+    Profile.resetDependencies()
   }
 
   // MARK: - All Platforms
@@ -1267,48 +1267,38 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  func testConfiguringProfile() {
-    XCTAssertNil(
-      Profile.dataStore,
-      "Profile should not have a data store by default"
-    )
-    XCTAssertNil(
-      Profile.accessTokenProvider,
-      "Profile should not have an access token provider by default"
-    )
-    XCTAssertNil(
-      Profile.notificationCenter,
-      "Profile should not have a notification center by default"
-    )
-    XCTAssertNil(
-      Profile.settings,
-      "Profile should not have settings by default"
-    )
-    XCTAssertNil(
-      Profile.urlHoster,
-      "Profile should not have a URL hoster by default"
-    )
-
+  func testConfiguringProfile() throws {
     configurator.performConfiguration()
+    let dependencies = try Profile.getDependencies()
 
-    XCTAssertTrue(
-      Profile.dataStore === components.defaultDataStore,
-      "Profile should be configured with the default data store"
-    )
-    XCTAssertTrue(
-      Profile.accessTokenProvider === components.accessTokenWallet,
+    XCTAssertIdentical(
+      dependencies.accessTokenProvider as AnyObject,
+      components.accessTokenWallet,
       "Profile should be configured with the access token wallet"
     )
-    XCTAssertTrue(
-      Profile.notificationCenter === components.notificationCenter,
+    XCTAssertIdentical(
+      dependencies.dataStore as AnyObject,
+      components.defaultDataStore,
+      "Profile should be configured with the default data store"
+    )
+    XCTAssertIdentical(
+      dependencies.graphRequestFactory as AnyObject,
+      components.graphRequestFactory,
+      "Profile should be configured with the graph request factory"
+    )
+    XCTAssertIdentical(
+      dependencies.notificationCenter as AnyObject,
+      components.notificationCenter,
       "Profile should be configured with the notification center"
     )
-    XCTAssertTrue(
-      Profile.settings === components.settings,
+    XCTAssertIdentical(
+      dependencies.settings as AnyObject,
+      components.settings,
       "Profile should be configured with the settings"
     )
-    XCTAssertTrue(
-      Profile.urlHoster === components.urlHoster,
+    XCTAssertIdentical(
+      dependencies.urlHoster as AnyObject,
+      components.urlHoster,
       "Profile should be configured with the URL hoster"
     )
   }

@@ -343,12 +343,15 @@ private extension CoreKitConfigurator {
 
   @available(tvOS, unavailable)
   func configureProfile() {
-    Profile.configure(
-      dataStore: components.defaultDataStore,
-      accessTokenProvider: components.accessTokenWallet,
-      notificationCenter: components.notificationCenter,
-      settings: components.settings,
-      urlHoster: components.urlHoster
+    Profile.setDependencies(
+      .init(
+        accessTokenProvider: components.accessTokenWallet,
+        dataStore: components.defaultDataStore,
+        graphRequestFactory: components.graphRequestFactory,
+        notificationCenter: components.notificationCenter,
+        settings: components.settings,
+        urlHoster: components.urlHoster
+      )
     )
   }
 

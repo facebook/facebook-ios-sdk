@@ -17,6 +17,7 @@ final class ProfileTests: XCTestCase {
   var notificationCenter: TestNotificationCenter!
   var settings: TestSettings!
   var urlHoster: TestURLHoster!
+  var graphRequestFactory: TestGraphRequestFactory!
   var profile: Profile!
   var testGraphRequest: TestGraphRequest!
   var result: [String: Any]!
@@ -41,8 +42,10 @@ final class ProfileTests: XCTestCase {
     notificationCenter = TestNotificationCenter()
     settings = TestSettings()
     urlHoster = TestURLHoster(url: stubbedURL)
+    graphRequestFactory = TestGraphRequestFactory()
     profile = SampleUserProfiles.createValid()
     testGraphRequest = TestGraphRequest()
+    graphRequestFactory.stubbedGraphRequest = testGraphRequest
 
     result = [
       "id": profile.userID,
@@ -56,22 +59,34 @@ final class ProfileTests: XCTestCase {
 
     Settings.shared.graphAPIVersion = sdkVersion
     TestAccessTokenWallet.reset()
-    Profile.resetCurrentProfileCache()
-    Profile.configure(
-      dataStore: dataStore,
-      accessTokenProvider: TestAccessTokenWallet.self,
-      notificationCenter: notificationCenter,
-      settings: settings,
-      urlHoster: urlHoster
+    Profile.current = nil
+    Profile.setDependencies(
+      .init(
+        accessTokenProvider: TestAccessTokenWallet.self,
+        dataStore: dataStore,
+        graphRequestFactory: graphRequestFactory,
+        notificationCenter: notificationCenter,
+        settings: settings,
+        urlHoster: urlHoster
+      )
     )
   }
 
   override func tearDown() {
     super.tearDown()
 
-    Profile.reset()
+    testGraphRequest = nil
+    dataStore = nil
+    notificationCenter = nil
+    settings = nil
+    urlHoster = nil
+    graphRequestFactory = nil
+
+    Profile.resetDependencies()
     TestAccessTokenWallet.reset()
-    Profile.resetCurrentProfileCache()
+    Profile.current = nil
+
+    profile = nil
   }
 
   private func makeImageURL(
@@ -86,6 +101,50 @@ final class ProfileTests: XCTestCase {
     )
   }
 
+  // MARK: - Type Dependencies
+
+  func testDefaultDependencies() {
+    Profile.resetDependencies()
+    XCTAssertThrowsError(try Profile.getDependencies(), .defaultDependencies)
+  }
+
+  func testCustomDependencies() throws {
+    let dependencies = try Profile.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.accessTokenProvider,
+      TestAccessTokenWallet.self,
+      .customDependency(for: "access token provider")
+    )
+    XCTAssertIdentical(
+      dependencies.dataStore,
+      dataStore,
+      .customDependency(for: "data store")
+    )
+    XCTAssertIdentical(
+      dependencies.graphRequestFactory,
+      graphRequestFactory,
+      .customDependency(for: "graph request factory")
+    )
+    XCTAssertIdentical(
+      dependencies.notificationCenter,
+      notificationCenter,
+      .customDependency(for: "notification center")
+    )
+    XCTAssertIdentical(
+      dependencies.settings,
+      settings,
+      .customDependency(for: "settings")
+    )
+    XCTAssertIdentical(
+      dependencies.urlHoster,
+      urlHoster,
+      .customDependency(for: "url hoster")
+    )
+  }
+
+  // MARK: - Creating Image URL
+
   func testCreatingImageURL() throws {
     try makeImageURL()
     XCTAssertEqual(urlHoster.capturedHostPrefix, "graph")
@@ -93,8 +152,6 @@ final class ProfileTests: XCTestCase {
     XCTAssertNotNil(urlHoster.capturedQueryParameters)
     XCTAssertEqual(imageURL, urlHoster.stubbedURL)
   }
-
-  // MARK: - Creating Image URL
 
   func testCreatingImageURLWithNoAccessTokenNoClientToken() throws {
     try makeImageURL()
@@ -350,78 +407,76 @@ final class ProfileTests: XCTestCase {
   // MARK: - Profile Loading
 
   func testGraphPathForProfileLoadWithLinkPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,link",
-      permissions: ["user_link"]
+    verifyGraphParameters(
+      permissions: ["user_link"],
+      expectedFields: "id,first_name,middle_name,last_name,name,link"
     )
   }
 
   func testGraphPathForProfileLoadWithNoPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name",
-      permissions: []
+    verifyGraphParameters(
+      permissions: [],
+      expectedFields: "id,first_name,middle_name,last_name,name"
     )
   }
 
   func testGraphPathForProfileLoadWithEmailPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,email",
-      permissions: ["email"]
+    verifyGraphParameters(
+      permissions: ["email"],
+      expectedFields: "id,first_name,middle_name,last_name,name,email"
     )
   }
 
   func testGraphPathForProfileLoadWithFriendsPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,friends",
-      permissions: ["user_friends"]
+    verifyGraphParameters(
+      permissions: ["user_friends"],
+      expectedFields: "id,first_name,middle_name,last_name,name,friends"
     )
   }
 
   func testGraphPathForProfileLoadWithBirthdayPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,birthday",
-      permissions: ["user_birthday"]
+    verifyGraphParameters(
+      permissions: ["user_birthday"],
+      expectedFields: "id,first_name,middle_name,last_name,name,birthday"
     )
   }
 
   func testGraphPathForProfileLoadWithAgeRangePermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,age_range",
-      permissions: ["user_age_range"]
+    verifyGraphParameters(
+      permissions: ["user_age_range"],
+      expectedFields: "id,first_name,middle_name,last_name,name,age_range"
     )
   }
 
   func testGraphPathForProfileLoadWithHometownPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,hometown",
-      permissions: ["user_hometown"]
+    verifyGraphParameters(
+      permissions: ["user_hometown"],
+      expectedFields: "id,first_name,middle_name,last_name,name,hometown"
     )
   }
 
   func testGraphPathForProfileLoadWithLocationPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,location",
-      permissions: ["user_location"]
+    verifyGraphParameters(
+      permissions: ["user_location"],
+      expectedFields: "id,first_name,middle_name,last_name,name,location"
     )
   }
 
   func testGraphPathForProfileLoadWithGenderPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,gender",
-      permissions: ["user_gender"]
+    verifyGraphParameters(
+      permissions: ["user_gender"],
+      expectedFields: "id,first_name,middle_name,last_name,name,gender"
     )
   }
 
   func testLoadingProfile() throws {
     let formatter = DateFormatter()
     formatter.dateFormat = "MM/dd/yyyy"
+    graphRequestFactory.stubbedGraphRequest = testGraphRequest
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -455,10 +510,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -474,10 +526,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: nil,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: nil) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -495,10 +544,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -515,10 +561,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -535,10 +578,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -555,10 +595,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -575,10 +612,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -595,10 +629,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -615,10 +646,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -635,10 +663,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: nil,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: nil) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -666,10 +691,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: nil,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: nil) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -690,15 +712,11 @@ final class ProfileTests: XCTestCase {
 
   func testLoadingProfileWithLimitedProfileWithToken() {
     Profile.current = SampleUserProfiles.validLimited
-    let request = TestGraphRequest()
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
     XCTAssertEqual(
-      request.startCallCount,
+      testGraphRequest.startCallCount,
       1,
       "Should fetch a profile if it is limited and there is an access token"
     )
@@ -707,15 +725,11 @@ final class ProfileTests: XCTestCase {
   func testLoadingProfileWithExpiredNonLimitedProfileWithToken() {
     let expected = SampleUserProfiles.createValid(isExpired: true)
     Profile.current = expected
-    let request = TestGraphRequest()
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
     XCTAssertEqual(
-      request.startCallCount,
+      testGraphRequest.startCallCount,
       1,
       "Should fetch a profile if it is expired and there is an access token"
     )
@@ -724,19 +738,12 @@ final class ProfileTests: XCTestCase {
   func testLoadingProfileWithCurrentlyLoadingProfile() {
     let expected = SampleUserProfiles.createValid(isExpired: true)
     Profile.current = expected
-    let request = TestGraphRequest()
     let connection = TestGraphRequestConnection()
-    request.stubbedConnection = connection
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    testGraphRequest.stubbedConnection = connection
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
     XCTAssertEqual(
@@ -746,47 +753,9 @@ final class ProfileTests: XCTestCase {
     )
   }
 
-  func testProfileParseBlockInvokedOnSuccessfulGraphRequest() throws {
-    let result: [String: String] = [:]
-    var capturedProfileRef: AutoreleasingUnsafeMutablePointer<Profile>?
-    var capturedResult: Any?
-    Profile.load(
-      with: SampleAccessTokens.validToken,
-      graphRequest: testGraphRequest,
-      completion: { _, _ in },
-      parseBlock: {
-        capturedResult = $0
-        capturedProfileRef = $1
-      }
-    )
-    let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
-    completion(nil, result, nil)
-    XCTAssertNotNil(capturedProfileRef)
-    XCTAssertNotNil(capturedResult)
-  }
-
-  func testProfileParseBlockShouldHaveNonNullPointer() throws {
-    let result: [String: String] = [:]
-    var capturedProfileRef: AutoreleasingUnsafeMutablePointer<Profile>?
-    var capturedResult: Any?
-    Profile.load(
-      with: SampleAccessTokens.validToken,
-      graphRequest: testGraphRequest,
-      completion: { _, _ in },
-      parseBlock: {
-        capturedResult = $0
-        capturedProfileRef = $1
-      }
-    )
-    let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
-    completion(nil, result, nil)
-    XCTAssertNotNil(capturedProfileRef)
-    XCTAssertNotNil(capturedResult)
-  }
-
   func testProfileParseBlockReturnsNilIfResultIsEmpty() throws {
     let result: [String: String] = [:]
-    Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken, completion: nil)
 
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
     completion(nil, result, nil)
@@ -800,7 +769,7 @@ final class ProfileTests: XCTestCase {
       "last_name": "lastname",
       "name": "name",
     ]
-    Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken, completion: nil)
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
     completion(nil, result, nil)
     XCTAssertNil(Profile.current)
@@ -808,7 +777,7 @@ final class ProfileTests: XCTestCase {
 
   func testProfileParseBlockReturnsNilIfResultHasEmptyID() throws {
     result["id"] = ""
-    Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken, completion: nil)
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
     completion(nil, result, nil)
     XCTAssertNil(Profile.current)
@@ -818,10 +787,7 @@ final class ProfileTests: XCTestCase {
     for _ in 0 ..< 100 {
       let randomizedResult = Fuzzer.randomize(json: sampleGraphResult())
       var completed = false
-      Profile.load(
-        token: SampleAccessTokens.validToken,
-        request: testGraphRequest
-      ) { _, _ in
+      Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
         completed = true
       }
       let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
@@ -833,7 +799,7 @@ final class ProfileTests: XCTestCase {
   // MARK: Update Notifications
 
   func testClearingMissingProfile() {
-    Profile.setCurrent(nil, shouldPostNotification: true)
+    Profile.current = nil
     XCTAssertTrue(
       notificationCenter.capturedPostNames.isEmpty,
       "Clearing an empty current profile should not post a notification"
@@ -841,10 +807,10 @@ final class ProfileTests: XCTestCase {
   }
 
   func testClearingProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
     notificationCenter.capturedPostNames = []
 
-    Profile.setCurrent(nil, shouldPostNotification: true)
+    Profile.current = nil
 
     XCTAssertFalse(
       notificationCenter.capturedPostNames.isEmpty,
@@ -853,7 +819,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testSettingProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
 
     XCTAssertFalse(
       notificationCenter.capturedPostNames.isEmpty,
@@ -862,10 +828,10 @@ final class ProfileTests: XCTestCase {
   }
 
   func testSettingSameProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
     notificationCenter.capturedPostNames = []
 
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
 
     XCTAssertTrue(
       notificationCenter.capturedPostNames.isEmpty,
@@ -874,7 +840,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testUpdatingProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
     notificationCenter.capturedPostNames = []
 
     let newProfile = SampleUserProfiles.createValid(
@@ -884,7 +850,7 @@ final class ProfileTests: XCTestCase {
       isExpired: true,
       isLimited: true
     )
-    Profile.setCurrent(newProfile, shouldPostNotification: true)
+    Profile.current = newProfile
 
     XCTAssertFalse(
       notificationCenter.capturedPostNames.isEmpty,
@@ -897,12 +863,8 @@ final class ProfileTests: XCTestCase {
   func testEncodingAndDecoding() throws {
     let profile = SampleUserProfiles.validLimited
     let decodedObject = try CodabilityTesting.encodeAndDecode(profile)
+    // Test Properties
 
-    // Test Objects
-    XCTAssertEqual(decodedObject, profile, .isCodable)
-    XCTAssertNotIdentical(decodedObject, profile, .isCodable)
-
-    // Test Properites
     XCTAssertEqual(decodedObject.userID, profile.userID, .isCodable)
     XCTAssertEqual(decodedObject.firstName, profile.firstName, .isCodable)
     XCTAssertEqual(decodedObject.middleName, profile.middleName, .isCodable)
@@ -921,7 +883,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testDefaultDataStore() {
-    Profile.reset()
+    Profile.resetDependencies()
     XCTAssertNil(
       Profile.dataStore,
       "Should not have a default data store"
@@ -943,7 +905,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testDefaultAccessTokenProvider() {
-    Profile.reset()
+    Profile.resetDependencies()
     XCTAssertNil(
       Profile.accessTokenProvider,
       "Should not have a default access token provider"
@@ -958,7 +920,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testDefaultSettings() {
-    Profile.reset()
+    Profile.resetDependencies()
     XCTAssertNil(
       Profile.settings,
       "Should not have default settings"
@@ -1035,15 +997,15 @@ final class ProfileTests: XCTestCase {
     ]
   }
 
-  func verfiyGraphPath(
-    expectedPath: String,
+  func verifyGraphParameters(
     permissions: [String],
+    expectedFields: String,
     file: StaticString = #file,
     line: UInt = #line
   ) {
     let token = SampleAccessTokens.create(withPermissions: permissions)
-    let graphPath = Profile.graphPath(for: token)
-    XCTAssertEqual(graphPath, expectedPath, file: file, line: line)
+    let parameters = Profile.makeGraphRequestParameters(token: token)
+    XCTAssertEqual(parameters["fields"], expectedFields, file: file, line: line)
   }
 }
 
@@ -1053,4 +1015,9 @@ final class ProfileTests: XCTestCase {
 
 fileprivate extension String {
   static let isCodable = "Profile should be encodable and decodable"
+  static let defaultDependencies = "The Profile type does not have any default dependencies"
+
+  static func customDependency(for type: String) -> String {
+    "The Profile type uses a custom \(type) dependency when provided"
+  }
 }
