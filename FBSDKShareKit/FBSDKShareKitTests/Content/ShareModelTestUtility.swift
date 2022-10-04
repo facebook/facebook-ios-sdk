@@ -8,6 +8,7 @@
 
 import FBSDKShareKit
 import TestTools
+import UIKit
 
 enum ShareModelTestUtility {
 

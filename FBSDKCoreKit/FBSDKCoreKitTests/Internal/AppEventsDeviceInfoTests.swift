@@ -8,6 +8,7 @@
 
 @testable import FBSDKCoreKit
 
+import TestTools
 import XCTest
 
 final class AppEventsDeviceInfoTests: XCTestCase {

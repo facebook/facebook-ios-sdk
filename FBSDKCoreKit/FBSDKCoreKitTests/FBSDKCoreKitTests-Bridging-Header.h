@@ -11,7 +11,7 @@
 #import <FBAEMKit/FBAEMKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-#import <TestTools/TestTools.h>
+@import TestTools;
 
 #import "XCTestCase+Extensions.h"
 

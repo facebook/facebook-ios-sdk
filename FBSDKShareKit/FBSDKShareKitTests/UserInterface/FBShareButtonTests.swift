@@ -7,6 +7,8 @@
  */
 
 @testable import FBSDKShareKit
+
+import FBSDKCoreKit
 import TestTools
 import XCTest
 

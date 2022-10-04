@@ -23,7 +23,6 @@ targets:
     platform: iOS
     sources:
       - path: TestTools
-        headerVisibility: public
         excludes:
           - Info.plist
     dependencies:
