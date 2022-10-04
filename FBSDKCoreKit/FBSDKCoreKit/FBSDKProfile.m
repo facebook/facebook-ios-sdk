@@ -10,9 +10,10 @@
 
 #import "FBSDKProfile+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKProfileNotifications.h>
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <FBSDKCoreKit/_FBSDKNotificationPosting.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKGraphRequestConnecting.h"
@@ -23,10 +24,6 @@
 #import "FBSDKUnarchiverProvider.h"
 #import "FBSDKUserAgeRange.h"
 
-NSNotificationName const FBSDKProfileDidChangeNotification = @"com.facebook.sdk.FBSDKProfile.FBSDKProfileDidChangeNotification";;
-
-NSString *const FBSDKProfileChangeOldKey = @"FBSDKProfileOld";
-NSString *const FBSDKProfileChangeNewKey = @"FBSDKProfileNew";
 static NSString *const FBSDKProfileUserDefaultsKey = @"com.facebook.sdk.FBSDKProfile.currentProfile";
 static FBSDKProfile *g_currentProfile;
 static NSDateFormatter *_dateFormatter;
