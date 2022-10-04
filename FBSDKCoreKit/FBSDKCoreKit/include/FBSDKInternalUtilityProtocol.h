@@ -67,7 +67,8 @@ NS_SWIFT_NAME(InternalUtilityProtocol)
 - (nullable NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                          path:(NSString *)path
                               queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
-                                        error:(NSError *__autoreleasing *)errorRef;
+                                        error:(NSError *__autoreleasing *)errorRef
+NS_SWIFT_NAME(facebookURL(hostPrefix:path:queryParameters:));
 
 /**
  Registers a transient object so that it will not be deallocated until unregistered
