@@ -33,7 +33,6 @@
 		BF1AFE1973B52493C7B6D03C /* SampleUserProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD0C12E3DCAF88D1A6D0E0A /* SampleUserProfiles.swift */; };
 		C267A09733E0B5399A583086 /* TestSDKError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1261F972AA29EAF48DA1D6B /* TestSDKError.swift */; };
 		C975A94CFA4522D7A5194379 /* TestKeychainStoreFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEA859E1F31F30B29819BC2F /* TestKeychainStoreFactory.swift */; };
-		CD78B55C79B11804946E08EE /* TestTools.h in Headers */ = {isa = PBXBuildFile; fileRef = CC38C544BAC3F3485C5F699F /* TestTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CDF18EF7B43D29D705F3FCDD /* TestAuthenticationTokenWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791B050D2D078864251AB3F2 /* TestAuthenticationTokenWallet.swift */; };
 		D8D8E4F13BCAEEF3BFEB564F /* TestURLHoster.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26F9D497DC3FEC7192A188F /* TestURLHoster.swift */; };
 		E9F7C901C033B4975EA0AB2A /* Fuzzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8D4BE357D16D0721EE967 /* Fuzzer.swift */; };
@@ -100,7 +99,6 @@
 		BCFB16AD8A9E8D19987885E4 /* TestGraphRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestFactory.swift; sourceTree = "<group>"; };
 		C0C7B46D8CAABDBF309B458A /* TestAccessTokenWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenWallet.swift; sourceTree = "<group>"; };
 		C1261F972AA29EAF48DA1D6B /* TestSDKError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSDKError.swift; sourceTree = "<group>"; };
-		CC38C544BAC3F3485C5F699F /* TestTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestTools.h; sourceTree = "<group>"; };
 		CEDC22C4008A0E09368CF757 /* SampleError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleError.swift; sourceTree = "<group>"; };
 		D07160C9DDB965A64C22AE60 /* TestGraphRequestConnectionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequestConnectionFactory.swift; sourceTree = "<group>"; };
 		D44853480B9144B4E2A10493 /* TestInternalUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestInternalUtility.swift; sourceTree = "<group>"; };
@@ -160,7 +158,6 @@
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
 				BCFA80AADB26410AC60714D8 /* TestSettings.swift */,
 				5EADCEC319126E782252276B /* TestSKAdNetworkReporter.swift */,
-				CC38C544BAC3F3485C5F699F /* TestTools.h */,
 				B26F9D497DC3FEC7192A188F /* TestURLHoster.swift */,
 				B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */,
 				E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */,
@@ -200,24 +197,12 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		8DB9EAC958C8DBE41CFBE228 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CD78B55C79B11804946E08EE /* TestTools.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		7EE1BFF550650C49854D563A /* TestTools */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8484440B93FEF66A21A7D2E1 /* Build configuration list for PBXNativeTarget "TestTools" */;
 			buildPhases = (
 				DC1ECA2D21D9A8B0E51DB831 /* Run Swiftlint */,
-				8DB9EAC958C8DBE41CFBE228 /* Headers */,
 				514FB552E0988BBC0743E3FC /* Sources */,
 			);
 			buildRules = (
