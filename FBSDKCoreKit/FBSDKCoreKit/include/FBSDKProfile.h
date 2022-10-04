@@ -8,8 +8,10 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKProfileBlock.h>
 #import <FBSDKCoreKit/FBSDKProfilePictureMode.h>
 #import <FBSDKCoreKit/FBSDKProfileProtocols.h>
+#import <FBSDKCoreKit/FBSDKUserIdentifier.h>
 
 @class FBSDKLocation;
 @class FBSDKProfile;
@@ -20,41 +22,6 @@
 @protocol _FBSDKNotificationPosting;
 
 NS_ASSUME_NONNULL_BEGIN
-
-/**
- Notification indicating that the `currentProfile` has changed.
-
- the userInfo dictionary of the notification will contain keys
- `FBSDKProfileChangeOldKey` and
- `FBSDKProfileChangeNewKey`.
- */
-FOUNDATION_EXPORT NSNotificationName const FBSDKProfileDidChangeNotification
-NS_SWIFT_NAME(ProfileDidChange);
-
-/*   key in notification's userInfo object for getting the old profile.
-
- If there was no old profile, the key will not be present.
- */
-FOUNDATION_EXPORT NSString *const FBSDKProfileChangeOldKey
-NS_SWIFT_NAME(ProfileChangeOldKey);
-
-/*   key in notification's userInfo object for getting the new profile.
-
- If there is no new profile, the key will not be present.
- */
-FOUNDATION_EXPORT NSString *const FBSDKProfileChangeNewKey
-NS_SWIFT_NAME(ProfileChangeNewKey);
-
-/**
- Describes the callback for loadCurrentProfileWithCompletion.
- @param profile the FBSDKProfile
- @param error the error during the request, if any
- */
-typedef void (^ FBSDKProfileBlock)(FBSDKProfile *_Nullable profile, NSError *_Nullable error)
-NS_SWIFT_NAME(ProfileBlock);
-
-/// Represents the unique identifier for an end user
-typedef NSString *FBSDKUserIdentifier NS_SWIFT_NAME(UserIdentifier) NS_SWIFT_BRIDGED_TYPEDEF;
 
 /**
  Represents an immutable Facebook profile

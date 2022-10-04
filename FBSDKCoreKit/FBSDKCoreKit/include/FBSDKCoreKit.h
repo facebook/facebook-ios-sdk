@@ -159,6 +159,8 @@
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>
+#import <FBSDKCoreKit/FBSDKProfileBlock.h>
+#import <FBSDKCoreKit/FBSDKProfileNotifications.h>
 #import <FBSDKCoreKit/FBSDKProfilePictureMode.h>
 #import <FBSDKCoreKit/FBSDKProfileProtocols.h>
 #import <FBSDKCoreKit/FBSDKRandom.h>
@@ -191,6 +193,7 @@
 #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
 #import <FBSDKCoreKit/FBSDKUserDataPersisting.h>
 #import <FBSDKCoreKit/FBSDKUserDataStore.h>
+#import <FBSDKCoreKit/FBSDKUserIdentifier.h>
 #import <FBSDKCoreKit/FBSDKUserIDProviding.h>
 #import <FBSDKCoreKit/FBSDKUtility.h>
 #import <FBSDKCoreKit/FBSDKWebDialogDelegate.h>
