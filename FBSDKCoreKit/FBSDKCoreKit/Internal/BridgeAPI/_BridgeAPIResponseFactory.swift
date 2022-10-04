@@ -8,19 +8,12 @@
 
 #if !os(tvOS)
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
-@objc(FBSDKBridgeAPIResponseFactory)
-public final class _BridgeAPIResponseFactory: NSObject, _BridgeAPIResponseCreating {
-  public func createResponse(request: BridgeAPIRequestProtocol, error: Error) -> BridgeAPIResponse {
+final class _BridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
+  func createResponse(request: BridgeAPIRequestProtocol, error: Error) -> BridgeAPIResponse {
     BridgeAPIResponse(request: request, error: error)
   }
 
-  public func createResponse(
+  func createResponse(
     request: BridgeAPIRequestProtocol,
     responseURL: URL,
     sourceApplication: String?
@@ -32,7 +25,7 @@ public final class _BridgeAPIResponseFactory: NSObject, _BridgeAPIResponseCreati
     )
   }
 
-  public func createResponseCancelled(request: BridgeAPIRequestProtocol) -> BridgeAPIResponse {
+  func createResponseCancelled(request: BridgeAPIRequestProtocol) -> BridgeAPIResponse {
     BridgeAPIResponse(cancelledWith: request)
   }
 }

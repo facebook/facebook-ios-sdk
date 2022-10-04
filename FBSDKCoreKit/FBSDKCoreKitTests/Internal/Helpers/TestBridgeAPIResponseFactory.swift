@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+@testable import FBSDKCoreKit
 
-@objcMembers
-final class TestBridgeAPIResponseFactory: NSObject, _BridgeAPIResponseCreating {
+final class TestBridgeAPIResponseFactory: BridgeAPIResponseCreating {
 
   var capturedResponseURL: URL?
   var capturedSourceApplication: String?
