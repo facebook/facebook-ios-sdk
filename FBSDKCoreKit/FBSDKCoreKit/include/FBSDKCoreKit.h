@@ -150,6 +150,7 @@
 #import <FBSDKCoreKit/FBSDKMutableCopying.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecker.h>
 #import <FBSDKCoreKit/FBSDKNetworkErrorChecking.h>
+#import <FBSDKCoreKit/FBSDKObjectDecoding.h>
 #import <FBSDKCoreKit/FBSDKOperatingSystemVersionComparing.h>
 #import <FBSDKCoreKit/FBSDKPasteboard.h>
 #import <FBSDKCoreKit/FBSDKPaymentObserving.h>
@@ -190,6 +191,8 @@
 #import <FBSDKCoreKit/FBSDKURLScheme.h>
 #import <FBSDKCoreKit/FBSDKURLSessionProxyFactory.h>
 #import <FBSDKCoreKit/FBSDKURLSessionProxyProviding.h>
+#import <FBSDKCoreKit/FBSDKUnarchiverProvider.h>
+#import <FBSDKCoreKit/FBSDKUnarchiverProviding.h>
 #import <FBSDKCoreKit/FBSDKUserAgeRange.h>
 #import <FBSDKCoreKit/FBSDKUserDataPersisting.h>
 #import <FBSDKCoreKit/FBSDKUserDataStore.h>

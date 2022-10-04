@@ -6,12 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKObjectDecoding.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKObjectDecoding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+/**
+ Internal type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 @protocol FBSDKUnarchiverProviding <NSObject>
 
 + (nonnull id<FBSDKObjectDecoding>)createSecureUnarchiverFor:(NSData *)data;
