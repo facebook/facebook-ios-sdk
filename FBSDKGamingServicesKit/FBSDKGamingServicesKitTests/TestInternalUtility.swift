@@ -39,7 +39,7 @@ final class TestInternalUtility: InternalUtilityProtocol {
   }
 
   func facebookURL(
-    withHostPrefix hostPrefix: String,
+    hostPrefix: String,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {

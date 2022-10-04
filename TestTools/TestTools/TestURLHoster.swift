@@ -39,7 +39,7 @@ public final class TestURLHoster: URLHosting {
   }
 
   public func facebookURL(
-    withHostPrefix hostPrefix: String,
+    hostPrefix: String,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {

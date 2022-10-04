@@ -650,7 +650,7 @@ public final class LoginManager: NSObject {
        parameters["redirect_uri"] != nil {
       do {
         authenticationURL = try dependencies.internalUtility.facebookURL(
-          withHostPrefix: "m.",
+          hostPrefix: "m.",
           path: Self.oAuthPath,
           queryParameters: parameters
         )

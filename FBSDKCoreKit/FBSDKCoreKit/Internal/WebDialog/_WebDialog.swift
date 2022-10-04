@@ -162,7 +162,7 @@ public final class _WebDialog: NSObject {
       urlParameters = parameters.merging(urlParameters) { _, last in last }
     }
     return try InternalUtility.shared.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "/dialog/\(name)",
       queryParameters: urlParameters
     )

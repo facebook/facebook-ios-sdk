@@ -35,7 +35,9 @@ NS_SWIFT_NAME(URLHosting)
 - (nullable NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                          path:(NSString *)path
                               queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
-                                        error:(NSError *__autoreleasing *)errorRef;
+                                        error:(NSError *__autoreleasing *)errorRef
+NS_SWIFT_NAME(facebookURL(hostPrefix:path:queryParameters:));
+
 
 @end
 
