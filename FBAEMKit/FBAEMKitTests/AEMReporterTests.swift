@@ -7,7 +7,6 @@
  */
 
 @testable import FBAEMKit
-import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
@@ -283,7 +282,7 @@ final class AEMReporterTests: XCTestCase {
 
   func testClearConfigurations() {
     AEMReporter.configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
       Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessIDAndContentRule()],
       Values.cpasMode: [SampleAEMConfigurations.createCpasConfiguration()],
     ]
@@ -683,7 +682,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testGetConfigRequestParameterWithoutAdvertiserIDs() {
-    AEMReporter.invocations = NSMutableArray(array: [SampleAEMData.invocationWithoutAdvertiserID])
+    AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
@@ -693,8 +692,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testGetConfigRequestParameterWithAdvertiserIDs() {
-    AEMReporter.invocations =
-      NSMutableArray(array: [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithoutAdvertiserID])
+    AEMReporter.invocations = [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithoutAdvertiserID]
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
@@ -702,8 +700,11 @@ final class AEMReporterTests: XCTestCase {
       "Should have expected advertiserIDs in configuration request params"
     )
 
-    AEMReporter.invocations =
-      NSMutableArray(array: [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithAdvertiserID2, SampleAEMData.invocationWithoutAdvertiserID]) // swiftlint:disable:this line_length
+    AEMReporter.invocations = [
+      SampleAEMData.invocationWithAdvertiserID1,
+      SampleAEMData.invocationWithAdvertiserID2,
+      SampleAEMData.invocationWithoutAdvertiserID,
+    ]
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
@@ -759,8 +760,8 @@ final class AEMReporterTests: XCTestCase {
       SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -788,8 +789,8 @@ final class AEMReporterTests: XCTestCase {
       SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -813,8 +814,8 @@ final class AEMReporterTests: XCTestCase {
       SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -841,8 +842,8 @@ final class AEMReporterTests: XCTestCase {
     let invocation2 = SampleAEMInvocations.createGeneralInvocation2()
     let invocations = [invocation1, invocation2]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -865,8 +866,8 @@ final class AEMReporterTests: XCTestCase {
     let invocation2 = SampleAEMInvocations.createGeneralInvocation2()
     let invocations = [invocation1, invocation2]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -889,7 +890,7 @@ final class AEMReporterTests: XCTestCase {
     let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
 
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -920,7 +921,7 @@ final class AEMReporterTests: XCTestCase {
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
 
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
