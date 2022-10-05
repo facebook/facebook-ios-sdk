@@ -442,7 +442,15 @@ final class CoreKitComponents {
       service: keychainService,
       accessGroup: nil
     )
-    let tokenCache: TokenCaching = _TokenCache(settings: Settings.shared, keychainStore: keychainStore)
+    var tokenCache = TokenCache()
+    tokenCache.setDependencies(
+      .init(
+        settings: Settings.shared,
+        keychainStore: keychainStore,
+        dataStore: UserDefaults.standard
+      )
+    )
+
     let userDataStore: _UserDataPersisting = _UserDataStore()
     let capiReporter: CAPIReporter = AppEventsCAPIManager.shared
 

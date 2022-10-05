@@ -409,7 +409,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testTokenCache() throws {
     let cache = try XCTUnwrap(
-      components.tokenCache as? _TokenCache,
+      components.tokenCache as? TokenCache,
       "The default components should use an instance of TokenCache as its token cache"
     )
     XCTAssertTrue(
