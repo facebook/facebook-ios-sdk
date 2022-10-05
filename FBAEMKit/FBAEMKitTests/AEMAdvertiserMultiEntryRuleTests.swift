@@ -8,6 +8,7 @@
 
 @testable import FBAEMKit
 
+import TestTools
 import XCTest
 
 #if !os(tvOS)
