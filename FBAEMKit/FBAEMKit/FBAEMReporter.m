@@ -53,7 +53,7 @@ static BOOL g_isAdvertiserRuleMatchInServerEnabled = NO;
 static dispatch_queue_t g_serialQueue;
 static NSString *g_reportFile;
 static NSString *g_configFile;
-static NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *g_configurations;
+static NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *g_configurations;
 static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
 static NSDate *g_minAggregationRequestTimestamp;
@@ -372,7 +372,7 @@ static id<FBSDKDataPersisting> _store;
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                     configurations:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
+                                     configurations:(NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
   BOOL isGeneralInvocationVisited = NO;
   FBAEMInvocation *attributedInvocation = nil;
@@ -677,7 +677,7 @@ static id<FBSDKDataPersisting> _store;
   [self.store fb_setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
 }
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigurations
++ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations
 {
   NSData *cachedConfiguration = [NSData dataWithContentsOfFile:g_configFile
                                                        options:NSDataReadingMappedIfSafe
@@ -685,12 +685,12 @@ static id<FBSDKDataPersisting> _store;
   if ([cachedConfiguration isKindOfClass:NSData.class]) {
     NSSet<Class> *classes = [NSSet setWithArray:@[
       NSMutableDictionary.class,
-      NSMutableArray.class,
+      NSArray.class,
       NSString.class,
       FBAEMConfiguration.class,
       FBAEMRule.class,
       FBAEMEvent.class]];
-    NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfiguration error:nil]];
+    NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfiguration error:nil]];
     if (cache) {
       return [cache mutableCopy];
     }
@@ -727,9 +727,9 @@ static id<FBSDKDataPersisting> _store;
   if (!configuration.mode) {
     return;
   }
-  NSMutableArray<FBAEMConfiguration *> *configurations = [FBSDKTypeUtility dictionary:g_configurations
-                                                                         objectForKey:configuration.mode
-                                                                               ofType:NSMutableArray.class];
+  NSArray<FBAEMConfiguration *> *configurations = [FBSDKTypeUtility dictionary:g_configurations
+                                                                  objectForKey:configuration.mode
+                                                                        ofType:NSArray.class];
   // Remove the configuration in the array that has the same "validFrom" and "businessID" as the added configuration
   NSMutableArray<FBAEMConfiguration *> *res = [NSMutableArray new];
   for (FBAEMConfiguration *candidateConfiguration in configurations) {
@@ -879,9 +879,9 @@ static id<FBSDKDataPersisting> _store;
 {
   BOOL shouldSaveCache = NO;
   if (g_configurations.count > 0) {
-    NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configurations = [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *configurations = [NSMutableDictionary new];
     for (NSString *key in g_configurations) {
-      NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [FBSDKTypeUtility dictionary:g_configurations objectForKey:key ofType:NSMutableArray.class];
+      NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [[FBSDKTypeUtility dictionary:g_configurations objectForKey:key ofType:NSArray.class] mutableCopy];
       NSMutableArray<FBAEMConfiguration *> *newConfigurations = [NSMutableArray new];
 
       // Removes the last of the old default mode configurations and stores it so it can be
@@ -944,12 +944,12 @@ static id<FBSDKDataPersisting> _store;
 
 #if DEBUG
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
++ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
   return g_configurations;
 }
 
-+ (void)setConfigurations:(NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
++ (void)setConfigurations:(NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
   g_configurations = configurations;
 }
