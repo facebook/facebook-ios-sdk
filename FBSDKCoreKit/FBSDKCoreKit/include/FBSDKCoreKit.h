@@ -177,7 +177,6 @@
 #import <FBSDKCoreKit/FBSDKSwizzler.h>
 #import <FBSDKCoreKit/FBSDKSwizzling.h>
 #import <FBSDKCoreKit/FBSDKTimeSpentData.h>
-#import <FBSDKCoreKit/FBSDKTokenCache.h>
 #import <FBSDKCoreKit/FBSDKTimeSpentRecording.h>
 #import <FBSDKCoreKit/FBSDKTokenStringProviding.h>
 #import <FBSDKCoreKit/FBSDKTransformer.h>
