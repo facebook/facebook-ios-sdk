@@ -71,7 +71,12 @@ public class GamingWebDialog<Success: GamingWebDialogSuccess>: WebDialogDelegate
       return
     }
 
-    completion?(.success(Success(results)))
+    do {
+      let success = try Success(results)
+      completion?(.success(success))
+    } catch {
+      completion?(.failure(error))
+    }
     completion = nil
   }
 
@@ -87,7 +92,12 @@ public class GamingWebDialog<Success: GamingWebDialogSuccess>: WebDialogDelegate
     guard webDialog == dialog else {
       return
     }
-    completion?(.success(Success([:])))
+    do {
+      let success = try Success([:])
+      completion?(.success(success))
+    } catch {
+      completion?(.failure(error))
+    }
     InternalUtility.shared.unregisterTransientObject(self)
   }
 }

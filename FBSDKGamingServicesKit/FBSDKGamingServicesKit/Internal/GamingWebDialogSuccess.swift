@@ -13,5 +13,5 @@ import Foundation
  - warning: INTERNAL - DO NOT USE
  */
 public protocol GamingWebDialogSuccess {
-  init(_ dict: [String: Any])
+  init(_ dict: [String: Any]) throws
 }
