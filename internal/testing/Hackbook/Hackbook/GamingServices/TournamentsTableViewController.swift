@@ -8,6 +8,7 @@ enum TournamentCell: Int, CaseIterable {
   case post
   case shareUpdate
   case shareCreate
+  case join
 
   var text: String {
     switch self {
@@ -19,6 +20,8 @@ enum TournamentCell: Int, CaseIterable {
       return "Update Tournament and Share"
     case .shareCreate:
       return "Create Tournament and Share"
+    case .join:
+      return "Join Tournament"
     }
   }
 }
@@ -31,6 +34,7 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
   var postScoreTextField: UITextField?
   var updateScoreTextField: UITextField?
   var createScoreTextField: UITextField?
+  var joinTournamentIDTextField: UITextField?
   var payloadObserver: GamingPayloadObserver?
 
   override func viewDidLoad() {
@@ -47,20 +51,25 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
     tableViewCell.textLabel?.text = tournamentCell?.text
 
     switch indexPath.row {
-    case 1:
+    case TournamentCell.post.rawValue:
       let frame = CGRect(x: tableViewCell.frame.maxX / 1.25, y: 0, width: 100, height: tableViewCell.frame.height)
       let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Score")
       postScoreTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
-    case 2:
+    case TournamentCell.shareUpdate.rawValue:
       let frame = CGRect(x: tableViewCell.frame.maxX / 1.25, y: 0, width: 100, height: tableViewCell.frame.height)
       let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Score")
       updateScoreTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
-    case 3:
+    case TournamentCell.shareCreate.rawValue:
       let frame = CGRect(x: tableViewCell.frame.maxX / 1.25, y: 0, width: 100, height: tableViewCell.frame.height)
       let cellTextField = createCellTextField(withFrame: frame, placeholderText: "Enter Score")
       createScoreTextField = cellTextField
+      tableViewCell.contentView.addSubview(cellTextField)
+    case TournamentCell.join.rawValue:
+      let frame = CGRect(x: tableViewCell.frame.maxX / 1.25, y: 0, width: 100, height: tableViewCell.frame.height)
+      let cellTextField = createCellTextField(withFrame: frame, placeholderText: "ID (optional)")
+      joinTournamentIDTextField = cellTextField
       tableViewCell.contentView.addSubview(cellTextField)
     default:
       tableViewCell.accessoryType = .disclosureIndicator
@@ -85,6 +94,8 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
       selectTournament(andPerform: .shareUpdate)
     case .shareCreate:
       showCreateAndShareTournamentDialog()
+    case .join:
+      showJoinTournamentDialog()
     case .none:
       return
     }
@@ -189,6 +200,29 @@ class TournamentsTableViewController: UITableViewController, UITextFieldDelegate
     cellTextField.font = UIFont.systemFont(ofSize: 15)
     cellTextField.delegate = self
     return cellTextField
+  }
+
+  func showJoinTournamentDialog() {
+    let payload = "Join from Hackbook"
+    let dialog = JoinTournamentDialog()
+    if let id = joinTournamentIDTextField?.text {
+      dialog.showSpecific(tournamentID: id, payload: payload, completion: joinTournamentCompletion)
+    } else {
+      dialog.showSuggested(payload: payload, completion: joinTournamentCompletion)
+    }
+  }
+
+  func joinTournamentCompletion(_ result: Result<JoinTournamentDialogSuccess, Error>) {
+    switch result {
+    case let .success(success):
+      var message = "Tournament Joined successfully.\nID: \(success.tournamentID)"
+      if let payload = success.payload {
+        message += "\nPayload: \(payload)"
+      }
+      Console.sharedInstance().addMessage(message, notificationName: "ConsoleDidSucceedNotification")
+    case let .failure(error):
+      Console.sharedInstance().addMessage("Please report bug: \(error)", notificationName: "ConsoleDidReportBugNotification")
+    }
   }
 
   func showShareDialog(tournament: Tournament) {
