@@ -145,6 +145,8 @@ final class AppEventsConfigurationTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 extension AppEventsConfiguration {
   // swiftlint:disable:next override_in_extension
   open override func isEqual(_ object: Any?) -> Bool {

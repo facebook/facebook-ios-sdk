@@ -1,5 +1,5 @@
 # SwiftFormat Config
-# Version: 0.49.0
+# Version: 0.49.14
 # Rules: https://github.com/nicklockwood/SwiftFormat/blob/master/Rules.md
 
 # NOTE: Caveat with using both SwiftFormat and SwiftLint:
@@ -13,8 +13,8 @@
 
 
 # Excluded files and dirs
---exclude samples,testing,ads,internal # dirs
---exclude Package.swift # files
+--exclude samples,testing,ads
+--exclude Package.swift
 
 # Enabled rules
 --rules andOperator
@@ -101,12 +101,14 @@
 # --rules wrapSwitchCases # (opt-in) # splits "case .one, .two:" onto 2 lines
 
 # Options
+--extensionacl on-declarations
 --header "/*\n * Copyright (c) Meta Platforms, Inc. and affiliates.\n * All rights reserved.\n *\n * This source code is licensed under the license found in the\n * LICENSE file in the root directory of this source tree.\n */"
 --ifdef no-indent
 --importgrouping  "testable-first"
 --indent 2
 --indentstrings true
 --modifierorder open, override
+--redundanttype "inferred"
 --swiftversion 5
 --wraparguments before-first
 --xcodeindentation enabled

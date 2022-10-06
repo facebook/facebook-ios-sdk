@@ -135,7 +135,7 @@ final class AppEventsTests: XCTestCase {
 
   func configureAppEvents() {
     appEvents.configure(
-      withGateKeeperManager: TestGateKeeperManager.self,
+      gateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       serverConfigurationProvider: serverConfigurationProvider,
       graphRequestFactory: graphRequestFactory,
@@ -971,7 +971,7 @@ final class AppEventsTests: XCTestCase {
       "Should include the access token in the request when there is one available"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedParameters["udid"],
+      graphRequestFactory.capturedParameters?["udid"],
       "Should not include the udid in the request when there is none available"
     )
   }
@@ -994,7 +994,7 @@ final class AppEventsTests: XCTestCase {
       "Should include the access token in the request when there is one available"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedParameters["udid"],
+      graphRequestFactory.capturedParameters?["udid"],
       "Should not include the udid in the request when there is an access token available"
     )
     XCTAssertEqual(
@@ -1003,7 +1003,7 @@ final class AppEventsTests: XCTestCase {
       "Should use the expected graph path for the request"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       .get,
       "Should use the expected http method for the request"
     )
@@ -1194,19 +1194,17 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testLogEventWillRecordAndUpdateWithSKAdNetworkReporter() {
-    if #available(iOS 11.3, *) {
-      appEvents.logEvent(eventName, valueToSum: purchaseAmount)
-      XCTAssertEqual(
-        eventName.rawValue,
-        skAdNetworkReporter.capturedEvent,
-        "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
-      )
-      XCTAssertEqual(
-        purchaseAmount,
-        skAdNetworkReporter.capturedValue?.doubleValue,
-        "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
-      )
-    }
+    appEvents.logEvent(eventName, valueToSum: purchaseAmount)
+    XCTAssertEqual(
+      eventName.rawValue,
+      skAdNetworkReporter.capturedEvent,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
+    )
+    XCTAssertEqual(
+      purchaseAmount,
+      skAdNetworkReporter.capturedValue?.doubleValue,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
+    )
     validateAEMReporterCalled(
       eventName: eventName,
       currency: nil,
@@ -1456,23 +1454,21 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-    if #available(iOS 11.3, *) {
-      featureManager.completeCheck(
-        forFeature: .skAdNetwork,
-        with: true
-      )
-      featureManager.completeCheck(
-        forFeature: .skAdNetworkConversionValue,
-        with: true
-      )
-      XCTAssertTrue(
-        skAdNetworkReporter.enableWasCalled,
-        """
-        Fetching a configuration should enable SKAdNetworkReporter when SKAdNetworkReport \
-        and SKAdNetworkConversionValue are enabled
-        """
-      )
-    }
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: true
+    )
+    XCTAssertTrue(
+      skAdNetworkReporter.enableWasCalled,
+      """
+      Fetching a configuration should enable SKAdNetworkReporter when SKAdNetworkReport \
+      and SKAdNetworkConversionValue are enabled
+      """
+    )
   }
 
   func testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabled() {
@@ -1480,20 +1476,18 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-    if #available(iOS 11.3, *) {
-      featureManager.completeCheck(
-        forFeature: .skAdNetwork,
-        with: true
-      )
-      featureManager.completeCheck(
-        forFeature: .skAdNetworkConversionValue,
-        with: false
-      )
-      XCTAssertFalse(
-        skAdNetworkReporter.enableWasCalled,
-        "Fetching a configuration should NOT enable SKAdNetworkReporter if SKAdNetworkConversionValue is disabled"
-      )
-    }
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: false
+    )
+    XCTAssertFalse(
+      skAdNetworkReporter.enableWasCalled,
+      "Fetching a configuration should NOT enable SKAdNetworkReporter if SKAdNetworkConversionValue is disabled"
+    )
   }
 
   func testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabled() {
@@ -1558,6 +1552,27 @@ final class AppEventsTests: XCTestCase {
       XCTAssertTrue(
         TestAEMReporter.capturedCatalogMatchingEnabled,
         "AEM Catalog Matching should be enabled"
+      )
+    }
+  }
+
+  func testFetchingConfigurationIncludingAEMAdvertiserRuleMatchInServer() {
+    if #available(iOS 14.0, *) {
+      featureManager.enable(feature: .aemAdvertiserRuleMatchInServer)
+      appEvents.fetchServerConfiguration(nil)
+      appEventsConfigurationProvider.firstCapturedBlock?()
+      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+      featureManager.completeCheck(
+        forFeature: .AEM,
+        with: true
+      )
+      XCTAssertTrue(
+        TestAEMReporter.setAdvertiserRuleMatchInServerEnabledWasCalled,
+        "Should enable or disable the AEM Advertiser Rule Match in server"
+      )
+      XCTAssertTrue(
+        TestAEMReporter.capturedAdvertiserRuleMatchInServerEnabled,
+        "AEM Advertiser Rule Match in server should be enabled"
       )
     }
   }

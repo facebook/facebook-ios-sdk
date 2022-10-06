@@ -36,8 +36,6 @@ final class AppLinkResolverTests: XCTestCase {
     static let url = "example://things/1234567890"
     static let fallbackURL = "http://www.example.com/somethingelse"
     static let package = "com.example.app"
-    static let `true` = "true"
-    static let `false` = "false"
   }
 
   let linkValues1 = [
@@ -58,37 +56,45 @@ final class AppLinkResolverTests: XCTestCase {
 
   let queryParameters = [String: String]()
 
-  let builder = TestAppLinkResolverRequestBuilder()
-  let clientTokenProvider = TestClientTokenProvider(clientToken: "clienttoken")
-  let accessTokenProvider = TestAccessTokenWallet.self
-  let graphRequest = TestGraphRequest()
+  var accessTokenProvider = TestAccessTokenWallet.self
   var resolved: AppLink?
   var error: Error?
 
-  lazy var resolver = AppLinkResolver(
-    userInterfaceIdiom: .phone,
-    requestBuilder: builder,
-    clientTokenProvider: clientTokenProvider,
-    accessTokenProvider: accessTokenProvider
-  )
+  // swiftlint:disable implicitly_unwrapped_optional
+  var resolver: AppLinkResolver!
+  var builder: TestAppLinkResolverRequestBuilder!
+  var clientTokenProvider: TestClientTokenProvider!
+  var graphRequest: TestGraphRequest!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
+    builder = TestAppLinkResolverRequestBuilder()
+    clientTokenProvider = TestClientTokenProvider(clientToken: "clienttoken")
+    graphRequest = TestGraphRequest()
     builder.stubbedGraphRequest = graphRequest
+    resolver = AppLinkResolver()
+
+    AppLinkResolver.setDependencies(
+      .init(
+        requestBuilder: builder,
+        clientTokenProvider: clientTokenProvider,
+        accessTokenProvider: accessTokenProvider
+      )
+    )
   }
 
   override func tearDown() {
-    super.tearDown()
+    resolver = nil
+    builder = nil
+    clientTokenProvider = nil
+    graphRequest = nil
 
     TestAccessTokenWallet.reset()
-  }
+    AppLinkResolver.resetDependencies()
 
-  func testDefaultDependecies() {
-    resolver = AppLinkResolver(userInterfaceIdiom: .phone)
-    XCTAssertTrue(resolver.requestBuilder is AppLinkResolverRequestBuilder)
-    XCTAssertTrue(resolver.clientTokenProvider === Settings.shared)
-    XCTAssertTrue(resolver.accessTokenProvider is AccessToken.Type)
+    super.tearDown()
   }
 
   func testResolvingWithPhoneIdiom() {
@@ -263,7 +269,7 @@ final class AppLinkResolverTests: XCTestCase {
         Keys.appLinks: [
           Keys.web: [
             Keys.url: Values.fallbackURL,
-            Keys.shouldFallback: Values.true,
+            Keys.shouldFallback: true,
           ],
         ],
         Keys.id: Keys.appLinkURL.absoluteString,
@@ -289,7 +295,7 @@ final class AppLinkResolverTests: XCTestCase {
       Keys.appLinkURL.absoluteString: [
         Keys.appLinks: [
           Keys.web: [
-            Keys.shouldFallback: Values.true,
+            Keys.shouldFallback: true,
           ],
         ],
         Keys.id: Keys.appLinkURL.absoluteString,
@@ -316,7 +322,7 @@ final class AppLinkResolverTests: XCTestCase {
         Keys.appLinks: [
           Keys.web: [
             Keys.url: Values.fallbackURL,
-            Keys.shouldFallback: Values.false,
+            Keys.shouldFallback: false,
           ],
         ],
         Keys.id: Keys.appLinkURL.absoluteString,

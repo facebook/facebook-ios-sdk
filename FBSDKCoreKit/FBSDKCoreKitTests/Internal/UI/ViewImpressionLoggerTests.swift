@@ -13,9 +13,11 @@ import XCTest
 
 final class ViewImpressionLoggerTests: XCTestCase {
 
-  let graphRequestFactory = TestGraphRequestFactory()
-  let logger = TestEventLogger()
-  let notificationCenter = TestNotificationCenter()
+  // swiftlint:disable implicitly_unwrapped_optional
+  var graphRequestFactory: TestGraphRequestFactory!
+  var logger: TestEventLogger!
+  var notificationCenter: TestNotificationCenter!
+  // swiftlint:enable implicitly_unwrapped_optional
   let sharedTrackerName = AppEvents.Name("shared")
   lazy var tracker = createImpressionLogger(named: sharedTrackerName)
   let impressionIdentifier = "foo"
@@ -24,37 +26,86 @@ final class ViewImpressionLoggerTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    ViewImpressionLogger.reset()
+    graphRequestFactory = TestGraphRequestFactory()
+    logger = TestEventLogger()
+    notificationCenter = TestNotificationCenter()
+
     TestAccessTokenWallet.current = SampleAccessTokens.validToken
+    _ViewImpressionLogger.setDependencies(
+      .init(
+        graphRequestFactory: graphRequestFactory,
+        eventLogger: logger,
+        notificationDeliverer: notificationCenter,
+        tokenWallet: TestAccessTokenWallet.self
+      )
+    )
     tracker = createImpressionLogger(named: sharedTrackerName)
   }
 
-  override class func tearDown() {
+  override func tearDown() {
+    graphRequestFactory = nil
+    logger = nil
+    notificationCenter = nil
+    TestAccessTokenWallet.current = nil
+    _ViewImpressionLogger.resetDependencies()
     super.tearDown()
-
-    ViewImpressionLogger.reset()
   }
 
   // MARK: - Dependencies
 
-  func testCreatingWithDependencies() {
+  func testDefaultTypeDependencies() throws {
+    _ViewImpressionLogger.resetDependencies()
+    let dependencies = try _ViewImpressionLogger.getDependencies()
+
     XCTAssertTrue(
-      tracker.graphRequestFactory === graphRequestFactory,
-      "Should be able to create with a graph request provider"
+      dependencies.graphRequestFactory is GraphRequestFactory,
+      .defaultDependency("GraphRequestFactory", for: "graph request factory")
     )
-    XCTAssertEqual(
-      tracker.eventLogger as? TestEventLogger,
+
+    XCTAssertIdentical(
+      dependencies.eventLogger as AnyObject,
+      AppEvents.shared,
+      .customDependency(for: "event logging")
+    )
+
+    XCTAssertIdentical(
+      dependencies.notificationDeliverer as AnyObject,
+      NotificationCenter.default,
+      .customDependency(for: "notification delivery")
+    )
+
+    XCTAssertIdentical(
+      dependencies.tokenWallet as AnyObject,
+      AccessToken.self,
+      .customDependency(for: "access token")
+    )
+  }
+
+  func testCustomTypeDependencies() throws {
+    let dependencies = try _ViewImpressionLogger.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.graphRequestFactory as AnyObject,
+      graphRequestFactory,
+      .customDependency(for: "graph request factory")
+    )
+
+    XCTAssertIdentical(
+      dependencies.eventLogger as AnyObject,
       logger,
-      "Should be able to create with an event logger"
+      .customDependency(for: "event logging")
     )
-    XCTAssertEqual(
-      tracker.notificationObserver as? TestNotificationCenter,
+
+    XCTAssertIdentical(
+      dependencies.notificationDeliverer as AnyObject,
       notificationCenter,
-      "Should be able to create with a notification observer"
+      .customDependency(for: "notification delivery")
     )
-    XCTAssertTrue(
-      tracker.tokenWallet is TestAccessTokenWallet.Type,
-      "Should be able to create with a token wallet type"
+
+    XCTAssertIdentical(
+      dependencies.tokenWallet as AnyObject,
+      TestAccessTokenWallet.self,
+      .customDependency(for: "access token")
     )
   }
 
@@ -66,7 +117,7 @@ final class ViewImpressionLoggerTests: XCTestCase {
         TestNotificationCenter.ObserverEvidence(
           observer: tracker as Any,
           name: UIApplication.didEnterBackgroundNotification,
-          selector: #selector(ViewImpressionLogger._applicationDidEnterBackgroundNotification(_:)),
+          selector: #selector(_ViewImpressionLogger.applicationDidEnterBackground),
           object: nil
         )
       ),
@@ -79,12 +130,12 @@ final class ViewImpressionLoggerTests: XCTestCase {
       withIdentifier: impressionIdentifier,
       parameters: parameters
     )
-    XCTAssertFalse(tracker.trackedImpressions().isEmpty)
+    XCTAssertFalse(tracker.trackedImpressions.isEmpty)
 
-    tracker._applicationDidEnterBackgroundNotification(Notification(name: .init("foo")))
+    tracker.applicationDidEnterBackground(Notification(name: .init("foo")))
 
     XCTAssertTrue(
-      tracker.trackedImpressions().isEmpty,
+      tracker.trackedImpressions.isEmpty,
       "Backgrounding the app should clear any tracked impressions"
     )
   }
@@ -205,13 +256,21 @@ final class ViewImpressionLoggerTests: XCTestCase {
 
   // MARK: - Helpers
 
-  func createImpressionLogger(named name: AppEvents.Name) -> ViewImpressionLogger {
-    ViewImpressionLogger(
-      eventName: name,
-      graphRequestFactory: graphRequestFactory,
-      eventLogger: logger,
-      notificationObserver: notificationCenter,
-      tokenWallet: TestAccessTokenWallet.self
-    )
+  func createImpressionLogger(named name: AppEvents.Name) -> _ViewImpressionLogger {
+    _ViewImpressionLogger(eventName: name)
+  }
+}
+
+// swiftformat:disable extensionaccesscontrol
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The _ViewImpressionLogger type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  static func customDependency(for type: String) -> String {
+    "The _ViewImpressionLogger type uses a custom \(type) dependency when provided"
   }
 }

@@ -73,13 +73,13 @@ extension AppInviteContent: DependentAsType {
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
     validator: _ShareUtility.self,
-    errorFactory: ErrorFactory()
+    errorFactory: _ErrorFactory()
   )
 }
 
 // MARK: - Validation
 
-extension AppInviteContent: SharingValidation {
+extension AppInviteContent: SharingValidatable {
 
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
     let validator = try Self.getDependencies().validator

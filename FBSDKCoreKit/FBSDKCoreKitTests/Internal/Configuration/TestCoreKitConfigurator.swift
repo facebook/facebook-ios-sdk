@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
 
 final class TestCoreKitConfigurator: CoreKitConfiguring {
   let components: CoreKitComponents

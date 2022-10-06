@@ -10,19 +10,13 @@
 
 #import "FBSDKAppLinkUtility+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAdvertiserIDProviding.h"
-#import "FBSDKAppEventDropDetermining.h"
-#import "FBSDKAppEventParametersExtracting.h"
-#import "FBSDKAppEventsConfigurationProviding.h"
-#import "FBSDKAppLinkURL.h"
-#import "FBSDKAppLinkURLCreating.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKUserDataPersisting.h"
 
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
 static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
@@ -285,7 +279,7 @@ static BOOL _isConfigured = NO;
     return NO;
   }
   [self validateConfiguration];
-  for (NSDictionary<NSString *, id> *urlType in [self.infoDictionaryProvider objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
+  for (NSDictionary<NSString *, id> *urlType in [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
     for (NSString *urlScheme in urlType[@"CFBundleURLSchemes"]) {
       if ([urlScheme caseInsensitiveCompare:scheme] == NSOrderedSame) {
         return YES;

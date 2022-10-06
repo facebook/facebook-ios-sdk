@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// The error domain for all errors from LoginKit
 /// Error codes from the SDK in the range 300-399 are reserved for login errors in this domain.
 /// Error codes from the SDK in the range 1349100-1349199 are reserved for device login errors in this domain.
-FOUNDATION_EXPORT NSErrorDomain const FBSDKLoginErrorDomain
-NS_SWIFT_NAME(LoginErrorDomain);
+FOUNDATION_EXPORT NSErrorDomain const FBSDKLoginErrorDomain;
 
 NS_ASSUME_NONNULL_END

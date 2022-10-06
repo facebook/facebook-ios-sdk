@@ -6,14 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKURLSession.h"
-
 #import <Foundation/Foundation.h>
 
-// At some point this default conformance declaration needs to be moved out of
-// this class and treated like the dependency it is.
-@interface NSURLSession (SessionProviding) <FBSDKSessionProviding>
-@end
+#import <FBSDKCoreKit_Basics/FBSDKURLSession.h>
+#import <FBSDKCoreKit_Basics/FBSDKURLSessionProviding.h>
 
 @implementation FBSDKURLSession
 

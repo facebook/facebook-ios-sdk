@@ -79,4 +79,18 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
       isConversionFilteringEligible: true
     )! // swiftlint:disable:this force_unwrapping
   }
+
+  static func createInvocationWithBusinessID() -> _AEMInvocation {
+    _AEMInvocation(
+      campaignID: "81", // The campaign id mod 8 (catalog optimization modulus) modulus is 1
+      acsToken: "debugging_token",
+      acsSharedSecret: "debugging_shared_secret",
+      acsConfigurationID: "debugging_config_id_123",
+      businessID: "test_business_id",
+      catalogID: "test_catalog_id",
+      isTestMode: false,
+      hasStoreKitAdNetwork: true,
+      isConversionFilteringEligible: true
+    )! // swiftlint:disable:this force_unwrapping
+  }
 }

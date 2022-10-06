@@ -73,7 +73,7 @@ public final class FBLoginButton: FBButton {
       } else {
         nonceValue = nil
         let msg = "Unable to set invalid nonce: \(String(describing: nonce)) on FBLoginButton"
-        Logger.singleShotLogEntry(.developerErrors, logEntry: msg)
+        _Logger.singleShotLogEntry(.developerErrors, logEntry: msg)
       }
     }
   }
@@ -94,9 +94,9 @@ public final class FBLoginButton: FBButton {
 
   var userID: String?
   var userName: String?
-  var elementProvider: _UserInterfaceElementProviding = InternalUtility.shared
-  var stringProvider: _UserInterfaceStringProviding = InternalUtility.shared
-  var loginProvider: _LoginProviding = LoginManager()
+  var elementProvider: UserInterfaceElementProviding = InternalUtility.shared
+  var stringProvider: UserInterfaceStringProviding = InternalUtility.shared
+  var loginProvider: LoginProviding = LoginManager()
   var graphRequestFactory: GraphRequestFactoryProtocol = GraphRequestFactory()
 
   var isAuthenticated: Bool {
@@ -142,9 +142,9 @@ public final class FBLoginButton: FBButton {
 
   convenience init(
     frame: CGRect = .zero,
-    elementProvider: _UserInterfaceElementProviding,
-    stringProvider: _UserInterfaceStringProviding,
-    loginProvider: _LoginProviding,
+    elementProvider: UserInterfaceElementProviding,
+    stringProvider: UserInterfaceStringProviding,
+    loginProvider: LoginProviding,
     graphRequestFactory: GraphRequestFactoryProtocol
   ) {
     self.init(frame: frame)
@@ -348,11 +348,11 @@ public final class FBLoginButton: FBButton {
     }
 
     if let loginConfiguration = loginConfiguration {
-      loginProvider.__logIn(
-        from: elementProvider.viewController(for: self),
+      loginProvider.logIn(
+        viewController: elementProvider.viewController(for: self),
         configuration: loginConfiguration
-      ) { result, error in
-        self.delegate?.loginButton(self, didCompleteWith: result, error: error)
+      ) { result in
+        self.delegate?.loginButton(self, didCompleteWith: result.loginManagerResult, error: result.error)
       }
     }
   }

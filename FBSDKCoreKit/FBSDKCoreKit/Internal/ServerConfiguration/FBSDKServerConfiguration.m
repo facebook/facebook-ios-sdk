@@ -112,7 +112,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
     _dialogFlows = [dialogFlows copy];
     _timestamp = [timestamp copy];
     _errorConfiguration = [errorConfiguration copy];
-    _sessionTimoutInterval = sessionTimeoutInterval ?: DEFAULT_SESSION_TIMEOUT_INTERVAL;
+    _sessionTimeoutInterval = sessionTimeoutInterval ?: DEFAULT_SESSION_TIMEOUT_INTERVAL;
     _defaults = defaults;
     _loggingToken = loggingToken;
     _smartLoginOptions = smartLoginOptions;
@@ -249,7 +249,12 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSURL *smartLoginBookmarkIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
   NSURL *smartLoginMenuIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
   NSString *updateMessage = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
-  NSArray<NSDictionary<NSString *, id> *> *eventBindings = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
+  NSSet<Class> *eventBindingsClasses = [[NSSet alloc] initWithObjects:
+                                        [NSDictionary<NSString *, id> class],
+                                        NSString.class,
+                                        NSArray.class,
+                                        nil];
+  NSArray<NSDictionary<NSString *, id> *> *eventBindings = [decoder decodeObjectOfClasses:eventBindingsClasses forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
   NSSet<Class> *dictionaryClasses = [NSSet setWithObjects:
                                      [NSDictionary<NSString *, id> class],
                                      NSArray.class,
@@ -310,7 +315,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                forKey:FBSDK_SERVER_CONFIGURATION_TRACK_UNINSTALL_ENABLED_KEY];
   [encoder encodeObject:_loginTooltipText forKey:FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_KEY];
   [encoder encodeObject:_timestamp forKey:FBSDK_SERVER_CONFIGURATION_TIMESTAMP_KEY];
-  [encoder encodeDouble:_sessionTimoutInterval forKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
+  [encoder encodeDouble:_sessionTimeoutInterval forKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
   [encoder encodeObject:_loggingToken forKey:FBSDK_SERVER_CONFIGURATION_LOGGING_TOKEN];
   [encoder encodeInteger:_smartLoginOptions forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
   [encoder encodeObject:_smartLoginBookmarkIconURL forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];

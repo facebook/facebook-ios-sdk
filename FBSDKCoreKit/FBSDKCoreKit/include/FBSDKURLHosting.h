@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#if !TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(URLHosting)
@@ -33,8 +35,12 @@ NS_SWIFT_NAME(URLHosting)
 - (nullable NSURL *)facebookURLWithHostPrefix:(NSString *)hostPrefix
                                          path:(NSString *)path
                               queryParameters:(NSDictionary<NSString *, NSString *> *)queryParameters
-                                        error:(NSError *__autoreleasing *)errorRef;
+                                        error:(NSError *__autoreleasing *)errorRef
+NS_SWIFT_NAME(facebookURL(hostPrefix:path:queryParameters:));
+
 
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

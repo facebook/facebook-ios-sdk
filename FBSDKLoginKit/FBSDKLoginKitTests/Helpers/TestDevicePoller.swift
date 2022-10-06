@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKLoginKit
+
 final class TestDevicePoller: DevicePolling {
   var capturedInterval: UInt = 0
 
-  func scheduleBlock(_ block: @escaping () -> Void, interval: UInt) {
+  func schedule(interval: UInt, block: @escaping () -> Void) {
     capturedInterval = interval
     block()
   }

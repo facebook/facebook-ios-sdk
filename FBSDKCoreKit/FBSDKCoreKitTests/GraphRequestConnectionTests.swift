@@ -25,7 +25,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   var sessionFactory: TestURLSessionProxyFactory!
   var errorConfiguration: TestErrorConfiguration!
   var errorConfigurationProvider: TestErrorConfigurationProvider!
-  var errorRecoveryConfiguration: ErrorRecoveryConfiguration!
+  var errorRecoveryConfiguration: _ErrorRecoveryConfiguration!
   var settings: TestSettings!
   var graphRequestConnectionFactory: TestGraphRequestConnectionFactory!
   var eventLogger: TestEventLogger!
@@ -75,7 +75,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     errorFactory = TestErrorFactory()
     piggybackManager = TestGraphRequestPiggybackManager()
     GraphRequestConnection.configure(
-      withURLSessionProxyFactory: sessionFactory,
+      urlSessionProxyFactory: sessionFactory,
       errorConfigurationProvider: errorConfigurationProvider,
       piggybackManager: piggybackManager,
       settings: settings,
@@ -84,7 +84,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       operatingSystemVersionComparer: processInfo,
       macCatalystDeterminator: macCatalystDeterminator,
       accessTokenProvider: TestAccessTokenWallet.self,
-      accessTokenSetter: TestAccessTokenWallet.self,
       errorFactory: errorFactory,
       authenticationTokenProvider: TestAuthenticationTokenWallet.self
     )
@@ -194,10 +193,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       "A graph request connection should not an access token provider by default"
     )
     XCTAssertNil(
-      GraphRequestConnection.accessTokenSetter,
-      "A graph request connection should not have an access token setter by default"
-    )
-    XCTAssertNil(
       GraphRequestConnection.errorFactory,
       "A graph request connection should not have an error factory by default"
     )
@@ -247,10 +242,6 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     XCTAssertTrue(
       GraphRequestConnection.accessTokenProvider === TestAccessTokenWallet.self,
       "A graph request connection should persist the access token provider it was created with"
-    )
-    XCTAssertTrue(
-      GraphRequestConnection.accessTokenSetter === TestAccessTokenWallet.self,
-      "A graph request connection should persist the access token setter it was created with"
     )
     XCTAssertTrue(
       GraphRequestConnection.errorFactory === errorFactory,
@@ -464,7 +455,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   func testAddingRequestToBatchSetsMethod() {
     let postRequest = TestGraphRequest(
       graphPath: "me",
-      HTTPMethod: .post
+      httpMethod: .post
     )
     let metadata = GraphRequestMetadata(
       request: postRequest,
@@ -1306,7 +1297,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     let parameters: [String: Any] = [
       "first_key": "first_value",
     ]
-    let singleRequest = TestGraphRequest(graphPath: "activities", parameters: parameters, HTTPMethod: .post)
+    let singleRequest = TestGraphRequest(graphPath: "activities", parameters: parameters, httpMethod: .post)
     connection.add(singleRequest) { _, _, _ in }
     let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
     let request = connection.request(withBatch: requests, timeout: 0)
@@ -1334,7 +1325,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       graphPath: "me",
       parameters: ["fields": ""],
       tokenString: expectedToken,
-      HTTPMethod: .get,
+      httpMethod: .get,
       flags: []
     )
     let token = connection.accessToken(with: request)
@@ -1656,8 +1647,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     ]
   }
 
-  func makeTransientErrorRecoveryConfiguration() -> ErrorRecoveryConfiguration {
-    ErrorRecoveryConfiguration(
+  func makeTransientErrorRecoveryConfiguration() -> _ErrorRecoveryConfiguration {
+    _ErrorRecoveryConfiguration(
       recoveryDescription: "Recovery Description",
       optionDescriptions: ["Option1", "Option2"],
       category: .transient,
@@ -1665,8 +1656,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     )
   }
 
-  func makeNonTransientErrorRecoveryConfiguration() -> ErrorRecoveryConfiguration {
-    ErrorRecoveryConfiguration(
+  func makeNonTransientErrorRecoveryConfiguration() -> _ErrorRecoveryConfiguration {
+    _ErrorRecoveryConfiguration(
       recoveryDescription: "Recovery Description",
       optionDescriptions: ["Option1", "Option2"],
       category: .other,

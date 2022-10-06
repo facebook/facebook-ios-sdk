@@ -7,6 +7,8 @@
  */
 
 @testable import FBSDKShareKit
+
+import FBSDKCoreKit
 import TestTools
 import XCTest
 
@@ -92,11 +94,11 @@ final class MessageDialogTests: XCTestCase {
     )
     XCTAssertIdentical(
       dependencies.bridgeAPIRequestOpener,
-      BridgeAPI.shared,
+      _BridgeAPI.shared,
       .defaultDependency("the shared BridgeAPI", for: "bridge API request opening")
     )
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorFactory,
+      dependencies.errorFactory is _ErrorFactory,
       .defaultDependency("a concrete error factory", for: "error factory")
     )
     XCTAssertIdentical(
@@ -409,6 +411,8 @@ final class MessageDialogTests: XCTestCase {
     XCTAssertEqual(delegate.sharerDidCompleteResults as? [String: String], results, .successIsHandled)
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 

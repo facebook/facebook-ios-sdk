@@ -15,7 +15,7 @@ import Foundation
 /// A model for a game request.
 @objcMembers
 @objc(FBSDKGameRequestContent)
-public final class GameRequestContent: NSObject, SharingValidation, NSSecureCoding {
+public final class GameRequestContent: NSObject, SharingValidatable, NSSecureCoding {
 
   /**
    Used when defining additional context about the nature of the request.
@@ -84,7 +84,7 @@ public final class GameRequestContent: NSObject, SharingValidation, NSSecureCodi
   public func validate(options: ShareBridgeOptions = []) throws {
     try _ShareUtility.validateRequiredValue(message, named: "message")
 
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
     let mustHaveObjectID = (actionType == .send) || (actionType == .askFor)
     let hasObjectID = !objectID.isEmpty
 

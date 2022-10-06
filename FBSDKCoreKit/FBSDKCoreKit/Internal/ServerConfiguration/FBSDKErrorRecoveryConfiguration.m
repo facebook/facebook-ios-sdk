@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKErrorRecoveryConfiguration.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #define FBSDK_ERROR_RECOVERY_CONFIGURATION_DESCRIPTION_KEY @"description"
 #define FBSDK_ERROR_RECOVERY_CONFIGURATION_OPTIONS_KEY @"options"

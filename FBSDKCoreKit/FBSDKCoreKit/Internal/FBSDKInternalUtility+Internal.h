@@ -39,11 +39,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
 /// The version of the operating system on which the process is executing.
 @property (nonatomic, readonly, assign) NSOperatingSystemVersion operatingSystemVersion;
 
-- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
-                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
-                                   settings:(id<FBSDKSettings>)settings
-                               errorFactory:(id<FBSDKErrorCreating>)errorFactory;
-
 /**
  Constructs a Facebook URL.
  @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.

@@ -16,23 +16,23 @@ final class TestGraphRequestBody: GraphRequestBody {
   var capturedData: Data?
   var capturedAttachment: GraphRequestDataAttachment?
 
-  override func append(withKey key: String, formValue value: String, logger: Logger?) {
+  override func append(withKey key: String, formValue value: String, logger: _Logger?) {
     capturedKey = key
     capturedFormValue = value
   }
 
-  override func append(withKey key: String, imageValue image: UIImage, logger: Logger?) {
+  override func append(withKey key: String, imageValue image: UIImage, logger: _Logger?) {
     capturedImage = image
   }
 
-  override func append(withKey key: String, dataValue data: Data, logger: Logger?) {
+  override func append(withKey key: String, dataValue data: Data, logger: _Logger?) {
     capturedData = data
   }
 
   override func append(
     withKey key: String,
     dataAttachmentValue dataAttachment: GraphRequestDataAttachment,
-    logger: Logger?
+    logger: _Logger?
   ) {
     capturedAttachment = dataAttachment
   }

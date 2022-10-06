@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestInternalURLOpener: NSObject, InternalURLOpener {
+final class TestInternalURLOpener: NSObject, _InternalURLOpener {
   var capturedOpenURL: URL?
   var capturedCanOpenURL: URL?
   var openURLStubs = [URL: Bool]()
@@ -40,7 +40,7 @@ final class TestInternalURLOpener: NSObject, InternalURLOpener {
 
   func open(
     _ url: URL,
-    options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
+    options: [UIApplication.OpenExternalURLOptionsKey: Any],
     completionHandler completion: ((Bool) -> Void)?
   ) {
     capturedOpenURL = url

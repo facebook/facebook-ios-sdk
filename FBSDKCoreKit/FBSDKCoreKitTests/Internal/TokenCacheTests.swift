@@ -16,6 +16,7 @@ final class TokenCacheTests: XCTestCase {
   var cache: TokenCache!
   var settings: TestSettings!
   var keychainStore: TestKeychainStore!
+  var store: TestDataStore!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -23,20 +24,45 @@ final class TokenCacheTests: XCTestCase {
 
     settings = TestSettings()
     keychainStore = TestKeychainStore()
-    cache = TokenCache(settings: settings, keychainStore: keychainStore)
-  }
-
-  func testSettings() {
-    XCTAssertTrue(
-      cache.settings === settings,
-      "The cache should be created with the provided settings"
+    store = TestDataStore()
+    cache = TokenCache()
+    cache.setDependencies(
+      .init(
+        settings: settings,
+        keychainStore: keychainStore,
+        dataStore: store
+      )
     )
   }
 
-  func testKeychainStore() throws {
+  override func tearDown() {
+    settings = nil
+    keychainStore = nil
+    store = nil
+    cache = nil
+
+    super.tearDown()
+  }
+
+  func testDefaultTypeDependencies() {
+    XCTAssertNil(
+      try? TokenCache().getDependencies(),
+      "TokenCache does not have dependencies by default"
+    )
+  }
+
+  func testSettingsDependencies() {
+    XCTAssertTrue(
+      cache.settings === settings,
+      "Can set a settings for the cache"
+    )
     XCTAssertTrue(
       cache.keychainStore === keychainStore,
-      "The cache should be created with the provided keychain store"
+      "Can set a keychain store for the cache"
+    )
+    XCTAssertTrue(
+      cache.dataStore === store,
+      "Can set a store for the cache"
     )
   }
 }

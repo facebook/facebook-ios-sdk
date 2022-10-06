@@ -17,7 +17,8 @@ public final class TestBundle: NSObject, InfoDictionaryProviding {
   public var capturedKeys = [String]()
   public var didAccessInfoDictionary = false
 
-  public var infoDictionary: [String: Any]? {
+  // swiftlint:disable:next identifier_name
+  public var fb_infoDictionary: [String: Any]? {
     get {
       didAccessInfoDictionary = true
       return stubbedInfoDictionary
@@ -35,12 +36,13 @@ public final class TestBundle: NSObject, InfoDictionaryProviding {
     stubbedInfoDictionary = infoDictionary
   }
 
-  public var bundleIdentifier: String?
+  // swiftlint:disable:next identifier_name
+  public var fb_bundleIdentifier: String?
 
-  public func object(forInfoDictionaryKey key: String) -> Any? {
+  public func fb_object(forInfoDictionaryKey key: String) -> Any? {
     lastCapturedKey = key
     capturedKeys.append(key)
-    return infoDictionary?[key] as Any?
+    return fb_infoDictionary?[key] as Any?
   }
 
   public func reset() {

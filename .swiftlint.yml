@@ -1,5 +1,4 @@
 excluded:
-  - ads
   - internal
   - samples
   - testing
@@ -33,6 +32,7 @@ file_name:
     ShareAppEventParameters.swift,
     ShareDialogMode.swift,
     LoginAppEventNames.swift,
+    FBSDKAppEventConversionsAPITransformer.swift,
   ]
 trailing_comma:
   mandatory_comma: true
@@ -115,7 +115,6 @@ only_rules:
   - empty_string
   - empty_xctest_method
   - explicit_init
-  - extension_access_modifier
   - fallthrough
   - fatal_error_message
   - file_header

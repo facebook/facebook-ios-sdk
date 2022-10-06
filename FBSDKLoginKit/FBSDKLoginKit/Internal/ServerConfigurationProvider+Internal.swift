@@ -8,4 +8,4 @@
 
 import FBSDKCoreKit
 
-extension ServerConfigurationProvider: _ServerConfigurationProviding {}
+extension ServerConfigurationProvider: ServerConfigurationProviding {}

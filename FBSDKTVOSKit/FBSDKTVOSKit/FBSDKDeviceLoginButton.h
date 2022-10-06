@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKTVOSKit/FBSDKDeviceButton.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
  will size the button to its desired frame.
  */
 NS_SWIFT_NAME(FBDeviceLoginButton)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKDeviceLoginButton : FBSDKDeviceButton
 
 /// Gets or sets the delegate.
@@ -55,6 +56,7 @@ NS_SWIFT_NAME(FBDeviceLoginButton)
  A delegate protocol for `FBSDKDeviceLoginButton`
  */
 NS_SWIFT_NAME(DeviceLoginButtonDelegate)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @protocol FBSDKDeviceLoginButtonDelegate <NSObject>
 
 /// Indicates the login was cancelled or timed out.

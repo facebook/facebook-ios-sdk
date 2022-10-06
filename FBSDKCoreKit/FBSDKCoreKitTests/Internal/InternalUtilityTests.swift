@@ -65,7 +65,7 @@ final class InternalUtilityTests: XCTestCase {
 
   func configureInternalUtility() {
     internalUtility.configure(
-      withInfoDictionaryProvider: bundle,
+      infoDictionaryProvider: bundle,
       loggerFactory: loggerFactory,
       settings: settings,
       errorFactory: errorFactory
@@ -118,7 +118,7 @@ final class InternalUtilityTests: XCTestCase {
     var urlString = ""
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "",
+      hostPrefix: "",
       path: "",
       queryParameters: [:]
     ).absoluteString
@@ -126,35 +126,35 @@ final class InternalUtilityTests: XCTestCase {
     XCTAssertEqual(urlString, "https://facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m.",
+      hostPrefix: "m.",
       path: "",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "/dialog/share",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "dialog/share",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "dialog/share",
       queryParameters: ["key": "value"]
     ).absoluteString
@@ -164,7 +164,7 @@ final class InternalUtilityTests: XCTestCase {
     )
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "/v1.0/dialog/share",
       queryParameters: [:]
     ).absoluteString
@@ -187,7 +187,7 @@ final class InternalUtilityTests: XCTestCase {
     XCTAssertEqual(urlString, "https://m.facebook.com/v1.0/dialog/share")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "/v987654321.2/dialog/share",
       queryParameters: [:]
     ).absoluteString
@@ -238,14 +238,14 @@ final class InternalUtilityTests: XCTestCase {
     AuthenticationToken.current = authToken
 
     var urlString = try internalUtility.facebookURL(
-      withHostPrefix: "graph",
+      hostPrefix: "graph",
       path: "",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://graph.fb.gg/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "graph-video",
+      hostPrefix: "graph-video",
       path: "",
       queryParameters: [:]
     ).absoluteString
@@ -719,7 +719,7 @@ final class InternalUtilityTests: XCTestCase {
 
     XCTAssertTrue(internalUtility.isRegisteredCanOpenURLScheme(name), "Sanity check")
 
-    bundle.infoDictionary = [:]
+    bundle.fb_infoDictionary = [:]
 
     XCTAssertTrue(
       internalUtility.isRegisteredCanOpenURLScheme(name),

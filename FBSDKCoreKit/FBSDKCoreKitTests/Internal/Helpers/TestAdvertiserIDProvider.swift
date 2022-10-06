@@ -10,6 +10,6 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestAdvertiserIDProvider: NSObject, AdvertiserIDProviding {
+final class TestAdvertiserIDProvider: NSObject, _AdvertiserIDProviding {
   var advertiserID: String?
 }

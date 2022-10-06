@@ -8,11 +8,11 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
 #import "FBSDKEventLogging.h"
-#import "FBSDKLoggingNotifying.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -14,12 +14,11 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
-#import "FBSDKATEPublisherCreating.h"
 #import "FBSDKATEPublishing.h"
 #import "FBSDKAccessToken.h"
-#import "FBSDKAdvertiserIDProviding.h"
 #import "FBSDKAppEventName.h"
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventParameterName+Internal.h"
@@ -27,43 +26,23 @@
 #import "FBSDKAppEventParameterProduct+Internal.h"
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsConfigurationProviding.h"
-#import "FBSDKAppEventsDeviceInfo.h"
-#import "FBSDKAppEventsParameterProcessing.h"
-#import "FBSDKAppEventsReporter.h"
-#import "FBSDKAppEventsState.h"
-#import "FBSDKAppEventsStatePersisting.h"
-#import "FBSDKAppEventsStateProviding.h"
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKAppEventsWKWebViewKeys.h"
-#import "FBSDKAtePublisherCreating.h"
 #import "FBSDKAtePublishing.h"
-#import "FBSDKCodelessIndexing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKEventsProcessing.h"
 #import "FBSDKFeatureChecking.h"
-#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
-#import "FBSDKMetadataIndexing.h"
-#import "FBSDKPaymentObserving.h"
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKServerConfigurationProviding.h"
 #import "FBSDKSettingsProtocol.h"
-#import "FBSDKSwizzling.h"
-#import "FBSDKTimeSpentRecording.h"
-#import "FBSDKUserDataPersisting.h"
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
 
  #import "FBSDKEventBindingManager.h"
- #import "FBSDKEventProcessing.h"
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
- #import "FBSDKIntegrityParametersProcessorProvider.h"
 
 #endif
 
@@ -524,7 +503,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 {
   [self validateConfiguration];
   _userID = [userID copy];
-  [self.primaryDataStore setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
+  [self.primaryDataStore fb_setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
 }
 
 - (void)setUserEmail:(nullable NSString *)email
@@ -689,7 +668,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
   self.isConfigured = YES;
 
-  self.userID = [primaryDataStore stringForKey:USER_ID_USER_DEFAULTS_KEY];
+  self.userID = [primaryDataStore fb_stringForKey:USER_ID_USER_DEFAULTS_KEY];
 }
 
 #if !TARGET_OS_TV
@@ -856,7 +835,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
   NSString *lastAttributionPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", appID];
-  if ([self.primaryDataStore objectForKey:lastAttributionPingString]) {
+  if ([self.primaryDataStore fb_objectForKey:lastAttributionPingString]) {
     return;
   }
   [self fetchServerConfiguration:^{
@@ -878,9 +857,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
     __block id<FBSDKDataPersisting> weakStore = self.primaryDataStore;
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (!error) {
-        [weakStore setObject:[NSDate date] forKey:lastAttributionPingString];
+        [weakStore fb_setObject:[NSDate date] forKey:lastAttributionPingString];
         NSString *lastInstallResponseKey = [NSString stringWithFormat:@"com.facebook.sdk:lastInstallResponse%@", appID];
-        [weakStore setObject:result forKey:lastInstallResponseKey];
+        [weakStore fb_setObject:result forKey:lastInstallResponseKey];
       }
     }];
   }];
@@ -995,19 +974,17 @@ static BOOL g_explicitEventsLoggedYet = NO;
           [self.onDeviceMLModelManager enable];
         }
       }];
-      if (@available(iOS 11.3, *)) {
-        if ([self.settings isSKAdNetworkReportEnabled]) {
-          [self.featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
-            if (SKAdNetworkEnabled) {
-              [SKAdNetwork registerAppForAdNetworkAttribution];
-              [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
-                if (SKAdNetworkConversionValueEnabled) {
-                  [self.skAdNetworkReporter enable];
-                }
-              }];
-            }
-          }];
-        }
+      if ([self.settings isSKAdNetworkReportEnabled]) {
+        [self.featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
+          if (SKAdNetworkEnabled) {
+            [SKAdNetwork registerAppForAdNetworkAttribution];
+            [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
+              if (SKAdNetworkConversionValueEnabled) {
+                [self.skAdNetworkReporter enable];
+              }
+            }];
+          }
+        }];
       }
       if (@available(iOS 14.0, *)) {
         [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
@@ -1015,6 +992,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
             [self.aemReporter enable];
             [self.aemReporter setCatalogMatchingEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogMatching]];
             [self.aemReporter setConversionFilteringEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMConversionFiltering]];
+            [self.aemReporter setAdvertiserRuleMatchInServerEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMAdvertiserRuleMatchInServer]];
           }
         }];
       }

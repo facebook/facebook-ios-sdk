@@ -19,7 +19,7 @@ final class AppEventsUtilityTests: XCTestCase {
   var settings: TestSettings!
   var internalUtility: TestInternalUtility!
   var errorFactory: TestErrorFactory!
-  var appEventsUtility: AppEventsUtility!
+  var appEventsUtility: _AppEventsUtility!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -31,7 +31,7 @@ final class AppEventsUtilityTests: XCTestCase {
     settings = TestSettings()
     internalUtility = TestInternalUtility()
     errorFactory = TestErrorFactory()
-    appEventsUtility = AppEventsUtility()
+    appEventsUtility = _AppEventsUtility()
     appEventsUtility.configure(
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       deviceInformationProvider: deviceInformationProvider,
@@ -141,7 +141,7 @@ final class AppEventsUtilityTests: XCTestCase {
     let testCity = "menlopark"
     let testState = "test_s"
     let testExternalId = "facebook123"
-    let store = UserDataStore()
+    let store = _UserDataStore()
 
     store.setUserData(testEmail, forType: .email)
     store.setUserData(testFirstName, forType: .firstName)

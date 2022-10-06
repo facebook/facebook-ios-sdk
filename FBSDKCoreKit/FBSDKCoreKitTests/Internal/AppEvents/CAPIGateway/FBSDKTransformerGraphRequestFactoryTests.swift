@@ -10,7 +10,7 @@
 import TestTools
 import XCTest
 
-class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
+final class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
 
   enum Keys {
     static let eventName = "event_name"
@@ -134,11 +134,11 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
   func testAppendEventsOverLimits() {
     let event = [Keys.eventName: Values.testEvent]
     var events: [[String: Any]] = []
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       events.append(event)
     }
 
-    for _ in 0..<990 {
+    for _ in 0 ..< 990 {
       FBSDKTransformerGraphRequestFactory.shared.transformedEvents.append(event)
     }
 
@@ -154,11 +154,11 @@ class FBSDKTransformerGraphRequestFactoryTests: XCTestCase {
     let event = [Keys.eventName: Values.testEvent]
     var events: [[String: Any]] = []
 
-    for _ in 0..<100 {
+    for _ in 0 ..< 100 {
       events.append(event)
     }
 
-    for _ in 0..<10 {
+    for _ in 0 ..< 10 {
       FBSDKTransformerGraphRequestFactory.shared.transformedEvents.append(event)
     }
 

@@ -24,6 +24,22 @@ public final class _AEMUtility: NSObject {
 
   @objc(sharedUtility) public static let shared = _AEMUtility()
 
+  public func getMatchedInvocation(_ invocations: [_AEMInvocation], businessID: String?) -> _AEMInvocation? {
+    guard let businessID = businessID else {
+      for invocation in invocations.reversed() where invocation.businessID == nil {
+        return invocation
+      }
+      return nil
+    }
+
+    for invocation in invocations.reversed() {
+      if let thisID = invocation.businessID, thisID == businessID {
+        return invocation
+      }
+    }
+    return nil
+  }
+
   public func getInSegmentValue(
     _ parameters: [String: Any]?,
     matchingRule: _AEMAdvertiserRuleMatching?
@@ -48,6 +64,14 @@ public final class _AEMUtility: NSObject {
     return NSNumber(value: value)
   }
 
+  public func getContent(_ parameters: [String: Any]?) -> String? {
+    guard let parameters = parameters else {
+      return nil
+    }
+
+    return parameters[Keys.content] as? String
+  }
+
   public func getContentID(_ parameters: [String: Any]?) -> String? {
     guard let parameters = parameters else {
       return nil
@@ -63,6 +87,16 @@ public final class _AEMUtility: NSObject {
         return nil
       }
     } ?? (parameters[Keys.contentID] as? String)
+  }
+
+  public func getBusinessIDsInOrder(_ invocations: [_AEMInvocation]) -> [String] {
+    var res: [String] = []
+
+    for invocation in invocations.reversed() {
+      res.append(invocation.businessID ?? "")
+    }
+
+    return res
   }
 
   private func getContentIDs(_ content: String) throws -> String {

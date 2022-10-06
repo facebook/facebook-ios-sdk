@@ -65,13 +65,13 @@ public final class SwitchContextDialog: ContextWebDialog, Showable {
       return false
     }
 
-    currentWebDialog = WebDialog.createAndShow(
+    currentWebDialog = _WebDialog(
       name: "context",
       parameters: [Keys.contextID: content.contextTokenID],
-      frame: frame,
-      delegate: self,
-      windowFinder: windowFinder
+      webViewFrame: frame
     )
+    currentWebDialog?.delegate = self
+    currentWebDialog?.show()
 
     InternalUtility.shared.registerTransientObject(self)
 

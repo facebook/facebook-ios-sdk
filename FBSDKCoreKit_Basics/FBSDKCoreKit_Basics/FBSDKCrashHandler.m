@@ -15,14 +15,14 @@
 #import "FBSDKCrashObserving.h"
 #import "FBSDKFileDataExtracting.h"
 #import "FBSDKFileManaging.h"
+#import "FBSDKInfoDictionaryProviding.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKTypeUtility.h"
-#import "NSBundle+InfoDictionaryProviding.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
 #ifndef FBSDK_VERSION_STRING
- #define FBSDK_VERSION_STRING @"13.2.0"
+ #define FBSDK_VERSION_STRING @"15.0.0"
 #endif
 
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
@@ -64,8 +64,11 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
     _dataExtractor = dataExtractor;
 
     NSString *dirPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_CRASH_PATH_NAME];
-    if (![_fileManager fileExistsAtPath:dirPath]) {
-      [_fileManager createDirectoryAtPath:dirPath withIntermediateDirectories:NO attributes:NULL error:NULL];
+    if (![_fileManager fb_fileExistsAtPath:dirPath]) {
+      [_fileManager fb_createDirectoryAtPath:dirPath
+                 withIntermediateDirectories:NO
+                                  attributes:NULL
+                                       error:NULL];
     }
     directoryPath = dirPath;
     NSString *identifier = [[NSUUID UUID] UUIDString];
@@ -156,12 +159,13 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 - (void)clearCrashReportFiles
 {
-  NSArray<NSString *> *files = [self.fileManager contentsOfDirectoryAtPath:directoryPath error:nil];
+  NSArray<NSString *> *files = [self.fileManager fb_contentsOfDirectoryAtPath:directoryPath error:nil];
 
   for (NSUInteger i = 0; i < files.count; i++) {
     // remove all crash related files except for the current mapping table
     if ([[FBSDKTypeUtility array:files objectAtIndex:i] hasPrefix:@"crash_"] && ![[FBSDKTypeUtility array:files objectAtIndex:i] containsString:mappingTableIdentifier]) {
-      [self.fileManager removeItemAtPath:[directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]] error:nil];
+      NSString *path = [directoryPath stringByAppendingPathComponent:[FBSDKTypeUtility array:files objectAtIndex:i]];
+      [self.fileManager fb_removeItemAtPath:path error:nil];
     }
   }
 }
@@ -236,7 +240,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 - (NSArray<NSDictionary<NSString *, id> *> *)_loadCrashLogs
 {
-  NSArray<NSString *> *files = [self.fileManager contentsOfDirectoryAtPath:directoryPath error:NULL];
+  NSArray<NSString *> *files = [self.fileManager fb_contentsOfDirectoryAtPath:directoryPath error:NULL];
   NSArray<NSString *> *fileNames = [[self _getCrashLogFileNames:files] sortedArrayUsingComparator:^NSComparisonResult (id _Nonnull obj1, id _Nonnull obj2) {
     return [obj2 compare:obj1];
   }];
@@ -259,7 +263,9 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 - (nullable NSData *)_loadCrashLog:(NSString *)fileName
 {
-  return [self.dataExtractor dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName] options:NSDataReadingMappedIfSafe error:nil];
+  return [self.dataExtractor fb_dataWithContentsOfFile:[directoryPath stringByAppendingPathComponent:fileName]
+                                               options:NSDataReadingMappedIfSafe
+                                                 error:nil];
 }
 
 - (NSArray<NSString *> *)_getCrashLogFileNames:(NSArray<NSString *> *)files
@@ -283,8 +289,8 @@ static void FBSDKExceptionHandler(NSException *exception)
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:currentTimestamp forKey:kFBSDKCrashTimestamp];
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:mappingTableIdentifier forKey:kFBSDKMappingTableIdentifier];
 
-  NSString *version = [self.bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-  NSString *build = [self.bundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+  NSString *version = [self.bundle fb_objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+  NSString *build = [self.bundle fb_objectForInfoDictionaryKey:@"CFBundleVersion"];
   [FBSDKTypeUtility dictionary:completeCrashLog setObject:[NSString stringWithFormat:@"%@(%@)", version, build] forKey:kFBSDKAppVersion];
 
   struct utsname systemInfo;
@@ -376,7 +382,9 @@ static void FBSDKExceptionHandler(NSException *exception)
 - (nullable NSData *)_loadLibData:(NSDictionary<NSString *, id> *)crashLog
 {
   NSString *identifier = [FBSDKTypeUtility dictionary:crashLog objectForKey:kFBSDKMappingTableIdentifier ofType:NSObject.class];
-  return [self.dataExtractor dataWithContentsOfFile:[self _getPathToLibDataFile:identifier] options:NSDataReadingMappedIfSafe error:nil];
+  return [self.dataExtractor fb_dataWithContentsOfFile:[self _getPathToLibDataFile:identifier]
+                                               options:NSDataReadingMappedIfSafe
+                                                 error:nil];
 }
 
 + (NSString *)_getPathToCrashFile:(NSString *)timestamp
@@ -417,7 +425,7 @@ static void FBSDKExceptionHandler(NSException *exception)
     return YES;
   }
 
-  return [self.fileManager fileExistsAtPath:[self _getPathToLibDataFile:identifier]];
+  return [self.fileManager fb_fileExistsAtPath:[self _getPathToLibDataFile:identifier]];
 #endif
 }
 

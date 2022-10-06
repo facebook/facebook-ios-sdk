@@ -8,21 +8,28 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit_Basics/FBSDKLinking.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 /// An internal protocol used to describe a simple data store
 NS_SWIFT_NAME(DataPersisting)
 @protocol FBSDKDataPersisting
 
-- (void)setInteger:(NSInteger)value
-            forKey:(NSString *)defaultName;
-- (void)setObject:(id)value
-           forKey:(NSString *)defaultName;
-- (nullable NSData *)dataForKey:(NSString *)defaultName;
-- (NSInteger)integerForKey:(NSString *)defaultName;
-- (nullable NSString *)stringForKey:(NSString *)defaultName;
-- (nullable id)objectForKey:(NSString *)defaultName;
-- (void)removeObjectForKey:(NSString *)defaultName;
+- (void)fb_setInteger:(NSInteger)integer
+               forKey:(NSString *)key;
+- (void)fb_setObject:(id)object
+              forKey:(NSString *)key;
+- (nullable NSData *)fb_dataForKey:(NSString *)key;
+- (NSInteger)fb_integerForKey:(NSString *)key;
+- (nullable NSString *)fb_stringForKey:(NSString *)key;
+- (nullable id)fb_objectForKey:(NSString *)key;
+- (void)fb_removeObjectForKey:(NSString *)key;
+
+@end
+
+FB_LINK_CATEGORY_INTERFACE(NSUserDefaults, DataPersisting)
+@interface NSUserDefaults (DataPersisting) <FBSDKDataPersisting>
 
 @end
 

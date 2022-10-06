@@ -13,18 +13,10 @@ import XCTest
 
 final class LoginCompleterFactoryTests: XCTestCase {
 
-  // swiftlint:disable implicitly_unwrapped_optional
-  var graphConnection: TestGraphRequestConnection!
-  var authenticationTokenFactory: TestAuthenticationTokenFactory!
-  // swiftlint:enable implicitly_unwrapped_optional
-
   func testCreatingCompleterWithDependencies() {
     let completer = LoginCompleterFactory().createLoginCompleter(
       urlParameters: [:],
-      appID: name,
-      authenticationTokenCreator: TestAuthenticationTokenFactory(),
-      graphRequestFactory: TestGraphRequestFactory(),
-      internalUtility: TestInternalUtility()
+      appID: name
     )
     XCTAssertTrue(
       completer is LoginURLCompleter,

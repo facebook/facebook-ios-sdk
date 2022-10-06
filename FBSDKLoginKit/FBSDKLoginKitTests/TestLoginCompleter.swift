@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKLoginKit
+@testable import FBSDKLoginKit
 import Foundation
 
 @objcMembers
@@ -20,7 +20,11 @@ final class TestLoginCompleter: NSObject, LoginCompleting {
     capturedCompletionHandler = handler
   }
 
-  func completeLogin(handler: @escaping LoginCompletionParametersBlock, nonce: String?, codeVerifier: String?) {
+  func completeLogin(
+    nonce: String?,
+    codeVerifier: String?,
+    handler: @escaping LoginCompletionParametersBlock
+  ) {
     capturedCompletionHandler = handler
     capturedNonce = nonce
     capturedCodeVerifier = codeVerifier

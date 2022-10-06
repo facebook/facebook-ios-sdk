@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKDialogConfiguration.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #define FBSDK_DIALOG_CONFIGURATION_APP_VERSIONS_KEY @"appVersions"
 #define FBSDK_DIALOG_CONFIGURATION_NAME_KEY @"name"
@@ -37,7 +37,7 @@
 {
   NSString *name = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_DIALOG_CONFIGURATION_NAME_KEY];
   NSURL *URL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_DIALOG_CONFIGURATION_URL_KEY];
-  NSSet<Class> *appVersionsClasses = [NSSet setWithObjects:NSArray.class, NSNumber.class, nil];
+  NSSet<Class> *appVersionsClasses = [NSSet setWithObjects:NSArray.class, NSNumber.class, NSString.class, nil];
   NSArray<NSString *> *appVersions = [decoder decodeObjectOfClasses:appVersionsClasses
                                                              forKey:FBSDK_DIALOG_CONFIGURATION_APP_VERSIONS_KEY];
   return [self initWithName:name URL:URL appVersions:appVersions];

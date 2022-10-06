@@ -24,7 +24,7 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     static let url = URL(string: urlString)! // swiftlint:disable:this force_unwrapping
   }
 
-  let builder = DialogConfigurationMapBuilder()
+  let builder = _DialogConfigurationMapBuilder()
 
   func testBuildingWithEmptyRawConfigurations() {
     XCTAssertTrue(
@@ -100,13 +100,13 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     let configurationMap = builder.buildDialogConfigurationMap(from: rawConfigurations)
 
     let actual = try XCTUnwrap(configurationMap[name], "Should map dialog configurations to their name")
-    let expected = DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
+    let expected = _DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
     assertEqualConfigurations(actual, expected)
   }
 
   func testBuildingWithDuplicateConfigurations() throws {
-    let configuration = DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
-    let otherConfiguration = DialogConfiguration(
+    let configuration = _DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
+    let otherConfiguration = _DialogConfiguration(
       name: name,
       url: Values.url.appendingPathComponent("foo"),
       appVersions: [3]
@@ -133,8 +133,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
   // MARK: - Helpers
 
   func assertEqualConfigurations(
-    _ actual: DialogConfiguration,
-    _ expected: DialogConfiguration,
+    _ actual: _DialogConfiguration,
+    _ expected: _DialogConfiguration,
     _ file: StaticString = #file,
     _ line: UInt = #line
   ) {

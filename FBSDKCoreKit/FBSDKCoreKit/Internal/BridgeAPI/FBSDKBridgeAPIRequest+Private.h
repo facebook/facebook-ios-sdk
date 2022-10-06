@@ -8,9 +8,10 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIRequest.h"
-#import "FBSDKInternalURLOpener.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
 
@@ -23,10 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKSettings> settings;
 
 @property (nonatomic, readwrite) id<FBSDKBridgeAPIProtocol> protocol;
-
-+ (void)configureWithInternalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
-                       internalUtility:(id<FBSDKInternalUtility>)internalUtility
-                              settings:(id<FBSDKSettings>)settings;
 
 // UNCRUSTIFY_FORMAT_OFF
 - (nullable instancetype)initWithProtocol:(nullable id<FBSDKBridgeAPIProtocol>)protocol

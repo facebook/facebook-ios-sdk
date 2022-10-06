@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
-
+@dynamicMemberLookup
 protocol DependentAsType {
   associatedtype TypeDependencies
 
@@ -34,21 +33,13 @@ extension DependentAsType {
 
   static func getDependencies() throws -> TypeDependencies {
     guard let dependencies = configuredDependencies ?? defaultDependencies else {
-      throw MissingTypeDependenciesError(for: Self.self)
+      throw MissingDependenciesError(for: Self.self)
     }
 
     return dependencies
   }
-}
 
-struct MissingTypeDependenciesError<Dependent: DependentAsType>: Error, CustomStringConvertible {
-  private let dependent: Dependent.Type
-
-  fileprivate init(for dependent: Dependent.Type) {
-    self.dependent = dependent
-  }
-
-  var description: String {
-    "The dependencies for the type '\(dependent)' have not been set"
+  static subscript<Dependency>(dynamicMember keyPath: KeyPath<TypeDependencies, Dependency>) -> Dependency? {
+    try? getDependencies()[keyPath: keyPath]
   }
 }

@@ -16,7 +16,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var headerDictionary: [String: Any]!
-  var header: _AuthenticationTokenHeader!
+  var header: AuthenticationTokenHeader!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -35,7 +35,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
       return
     }
 
-    header = _AuthenticationTokenHeader(fromEncodedString: encodedHeader)
+    header = AuthenticationTokenHeader(fromEncodedString: encodedHeader)
   }
 
   override func tearDown() {
@@ -55,7 +55,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
     let headerData = try XCTUnwrap("invalid_header".data(using: .utf8))
     let encodedHeader = try base64URLEncoded(headerData)
 
-    XCTAssertNil(_AuthenticationTokenHeader(fromEncodedString: encodedHeader))
+    XCTAssertNil(AuthenticationTokenHeader(fromEncodedString: encodedHeader))
   }
 
   func testDecodeInvalidHeader() throws {
@@ -68,7 +68,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
     let headerData = try JSONSerialization.data(withJSONObject: header, options: [])
     let encodedHeader = try base64URLEncoded(headerData)
 
-    XCTAssertNil(_AuthenticationTokenHeader(fromEncodedString: encodedHeader))
+    XCTAssertNil(AuthenticationTokenHeader(fromEncodedString: encodedHeader))
   }
 
   func testDecodeRandomHeader() throws {
@@ -78,7 +78,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
 
       let headerData = try JSONSerialization.data(withJSONObject: randomizedHeader, options: [])
       let encodedHeader = try base64URLEncoded(headerData)
-      _ = _AuthenticationTokenHeader(fromEncodedString: encodedHeader)
+      _ = AuthenticationTokenHeader(fromEncodedString: encodedHeader)
     }
   }
 
@@ -103,7 +103,7 @@ final class AuthenticationTokenHeaderTests: XCTestCase {
     let encodedHeader = try base64URLEncoded(headerData)
 
     XCTAssertNil(
-      _AuthenticationTokenHeader(fromEncodedString: encodedHeader),
+      AuthenticationTokenHeader(fromEncodedString: encodedHeader),
       """
       Should not be able to create a token from a dictionary
       with the value: \(String(describing: value)) for the key: \(key)

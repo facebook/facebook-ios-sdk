@@ -12,7 +12,7 @@ import XCTest
 
 import Foundation
 
-final class TestFileManager: FileManaging {
+final class TestFileManager: _FileManaging {
   var removeItemAtPathWasCalled = false
   var contentsOfDirectoryAtPathWasCalled = false
   var capturedFileExistsAtPath: String?
@@ -27,20 +27,7 @@ final class TestFileManager: FileManaging {
     self.tempDirectoryURL = tempDirectoryURL
   }
 
-  func url(
-    for directory: FileManager.SearchPathDirectory,
-    in domain: FileManager.SearchPathDomainMask,
-    appropriateFor url: URL,
-    create shouldCreate: Bool
-  ) throws -> URL {
-    guard let url = tempDirectoryURL else {
-      throw SampleError()
-    }
-
-    return url
-  }
-
-  func createDirectory(
+  func fb_createDirectory(
     atPath path: String,
     withIntermediateDirectories createIntermediates: Bool,
     attributes: [FileAttributeKey: Any]? = [:]
@@ -51,18 +38,18 @@ final class TestFileManager: FileManaging {
     }
   }
 
-  func fileExists(atPath path: String) -> Bool {
+  func fb_fileExists(atPath path: String) -> Bool {
     capturedFileExistsAtPath = path
     return stubbedFileExists
   }
 
-  func contentsOfDirectory(atPath path: String, error: NSErrorPointer) -> [String] {
+  func fb_contentsOfDirectory(atPath path: String) throws -> [String] {
     contentsOfDirectoryAtPathWasCalled = true
 
     return stubbedContentsOfDirectory
   }
 
-  func removeItem(atPath path: String) throws {
+  func fb_removeItem(atPath path: String) throws {
     removeItemAtPathWasCalled = true
   }
 }

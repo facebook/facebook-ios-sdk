@@ -12,10 +12,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 
@@ -28,7 +28,7 @@
 
 - (instancetype)init
 {
-  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  FBSDKErrorFactory *factory = [FBSDKErrorFactory new];
   return [self initWithErrorFactory:factory internalUtility:FBSDKInternalUtility.sharedUtility];
 }
 

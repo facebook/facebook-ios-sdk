@@ -8,6 +8,6 @@
 
 import FBSDKCoreKit
 
-final class TestAppLinkEventPoster: AppLinkEventPosting {
-  func postNotification(forEventName name: String, args: [String: Any]) {}
+final class TestAppLinkEventPoster: _AppLinkEventPosting {
+  func postNotification(eventName name: String, arguments args: [String: Any]) {}
 }

@@ -13,10 +13,22 @@ import Foundation
 #if !os(tvOS)
 
 final class GameRequestFrictionlessRecipientCache {
-  private var recipientIDs = Set<String>()
+  private(set) var recipientIDs = Set<String>()
 
-  init() {
-    _ = NotificationCenter.default.addObserver(
+  var configuredDependencies: InstanceDependencies?
+
+  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+    graphRequestFactory: GraphRequestFactory(),
+    notificationCenter: NotificationCenter.default,
+    accessTokenWallet: AccessToken.self
+  )
+
+  // Custom implementation of dependency setting to perform additional work
+  // that would normally go in the initializer
+  func setDependencies(_ dependencies: InstanceDependencies) {
+    configuredDependencies = dependencies
+
+    _ = dependencies.notificationCenter.fb_addObserver(
       forName: .AccessTokenDidChange,
       object: nil,
       queue: nil
@@ -58,13 +70,15 @@ final class GameRequestFrictionlessRecipientCache {
   }
 
   private func updateCache() {
-    guard AccessToken.current != nil else {
+    guard let dependencies = try? getDependencies(),
+          dependencies.accessTokenWallet.current != nil
+    else {
       recipientIDs = []
       return
     }
 
-    let request = GraphRequest(
-      graphPath: "me/apprequestformerrecipients",
+    let request = dependencies.graphRequestFactory.createGraphRequest(
+      withGraphPath: "me/apprequestformerrecipients",
       parameters: ["fields": ""],
       flags: [.doNotInvalidateTokenOnError, .disableErrorRecovery]
     )
@@ -76,6 +90,14 @@ final class GameRequestFrictionlessRecipientCache {
       let recipients = items?["recipient_id"] as? [String]
       self.recipientIDs = Set(recipients ?? [])
     }
+  }
+}
+
+extension GameRequestFrictionlessRecipientCache: DependentAsInstance {
+  struct InstanceDependencies {
+    var graphRequestFactory: GraphRequestFactoryProtocol
+    var notificationCenter: NotificationDelivering
+    var accessTokenWallet: _AccessTokenProviding.Type
   }
 }
 

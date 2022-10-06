@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKSuggestedEventsIndexer.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @protocol FBSDKGraphRequestFactory;
 @protocol FBSDKServerConfigurationProviding;

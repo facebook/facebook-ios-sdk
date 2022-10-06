@@ -8,14 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKClientTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKLoggingBehavior.h>
 #import <FBSDKCoreKit/FBSDKSettingsLogging.h>
 #import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 
+@protocol FBSDKAppEventsConfigurationProviding;
+@protocol FBSDKDataPersisting;
+@protocol FBSDKEventLogging;
+@protocol FBSDKInfoDictionaryProviding;
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(Settings)
-@interface FBSDKSettings : NSObject <FBSDKSettings, FBSDKSettingsLogging>
+@interface FBSDKSettings : NSObject <FBSDKSettings, FBSDKSettingsLogging, FBSDKClientTokenProviding>
 
 #if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
@@ -191,6 +197,20 @@ Set the data processing options.
  @param loggingBehavior The LoggingBehavior to disable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
  */
 - (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+// UNCRUSTIFY_FORMAT_OFF
+- (void)      configureWithStore:(id<FBSDKDataPersisting>)store
+  appEventsConfigurationProvider:(id<FBSDKAppEventsConfigurationProviding>)provider
+          infoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                     eventLogger:(id<FBSDKEventLogging>)eventLogger
+NS_SWIFT_NAME(configure(store:appEventsConfigurationProvider:infoDictionaryProvider:eventLogger:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

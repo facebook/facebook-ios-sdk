@@ -15,6 +15,10 @@
 #import <FBSDKCoreKit/FBSDKBridgeAPIRequestProtocol.h>
 #import <FBSDKCoreKit/FBSDKURLScheme.h>
 
+@protocol FBSDKInternalURLOpener;
+@protocol FBSDKInternalUtility;
+@protocol FBSDKSettings;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -23,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @warning INTERNAL - DO NOT USE
  */
-NS_SWIFT_NAME(BridgeAPIRequest)
+NS_SWIFT_NAME(_BridgeAPIRequest)
 @interface FBSDKBridgeAPIRequest : NSObject <NSCopying, FBSDKBridgeAPIRequest>
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -42,6 +46,17 @@ NS_SWIFT_NAME(BridgeAPIRequest)
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *userInfo;
 
 - (nullable NSURL *)requestURL:(NSError *_Nullable *)errorRef;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)configureWithInternalURLOpener:(id<FBSDKInternalURLOpener>)internalURLOpener
+                       internalUtility:(id<FBSDKInternalUtility>)internalUtility
+                              settings:(id<FBSDKSettings>)settings
+NS_SWIFT_NAME(configure(internalURLOpener:internalUtility:settings:));
 
 @end
 

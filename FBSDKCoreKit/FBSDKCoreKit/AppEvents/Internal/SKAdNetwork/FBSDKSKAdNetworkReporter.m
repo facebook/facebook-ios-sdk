@@ -8,15 +8,12 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKSKAdNetworkReporter.h"
-
 #import <StoreKit/StoreKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/message.h>
 
-#import "FBSDKAppEventsUtility.h"
-#import "FBSDKConversionValueUpdating.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
@@ -123,7 +120,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
     return;
   }
   // Executes block if there is cache
-  if ([self _isConfigRefreshTimestampValid] && [self.dataStore objectForKey:FBSDKSKAdNetworkConversionConfigurationKey]) {
+  if ([self _isConfigRefreshTimestampValid] && [self.dataStore fb_objectForKey:FBSDKSKAdNetworkConversionConfigurationKey]) {
     [self dispatchOnQueue:self.serialQueue block:^() {
       [FBSDKTypeUtility array:self.completionBlocks addObject:block];
       for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
@@ -148,7 +145,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
         }
         NSDictionary<NSString *, id> *json = [FBSDKTypeUtility dictionaryValue:result];
         if (json) {
-          [self.dataStore setObject:json forKey:FBSDKSKAdNetworkConversionConfigurationKey];
+          [self.dataStore fb_setObject:json forKey:FBSDKSKAdNetworkConversionConfigurationKey];
           self.configRefreshTimestamp = [NSDate date];
           self.configuration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:json];
           for (FBSDKSKAdNetworkReporterBlock executionBlock in self.completionBlocks) {
@@ -247,7 +244,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if (!self.configuration.cutoffTime) {
     return true;
   }
-  NSDate *installTimestamp = [self.dataStore objectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
+  NSDate *installTimestamp = [self.dataStore fb_objectForKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
   return [installTimestamp isKindOfClass:NSDate.class] && [[NSDate date] timeIntervalSinceDate:installTimestamp] > self.configuration.cutoffTime * 86400;
 }
 
@@ -258,9 +255,9 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 - (void)_loadReportData
 {
-  id cachedJSON = [self.dataStore objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
+  id cachedJSON = [self.dataStore fb_objectForKey:FBSDKSKAdNetworkConversionConfigurationKey];
   self.configuration = [[FBSDKSKAdNetworkConversionConfiguration alloc] initWithJSON:cachedJSON];
-  NSData *cachedReportData = [self.dataStore objectForKey:FBSDKSKAdNetworkReporterKey];
+  NSData *cachedReportData = [self.dataStore fb_objectForKey:FBSDKSKAdNetworkReporterKey];
   self.recordedEvents = [NSMutableSet new];
   self.recordedValues = [NSMutableDictionary new];
   if ([cachedReportData isKindOfClass:NSData.class]) {
@@ -293,7 +290,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   [FBSDKTypeUtility dictionary:reportData setObject:self.recordedValues forKey:@"recorded_values"];
   NSData *cache = [NSKeyedArchiver archivedDataWithRootObject:reportData requiringSecureCoding:NO error:nil];
   if (cache) {
-    [self.dataStore setObject:cache forKey:FBSDKSKAdNetworkReporterKey];
+    [self.dataStore fb_setObject:cache forKey:FBSDKSKAdNetworkReporterKey];
   }
 }
 

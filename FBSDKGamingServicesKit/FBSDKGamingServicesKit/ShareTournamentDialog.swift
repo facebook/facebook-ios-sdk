@@ -23,7 +23,7 @@ public enum ShareTournamentDialogError: Error {
 public final class ShareTournamentDialog: NSObject, URLOpening {
 
   let gamingGraphDomain = "gaming"
-  var bridgeURLOpener: BridgeAPIRequestOpening = BridgeAPI.shared
+  var bridgeURLOpener: BridgeAPIRequestOpening = _BridgeAPI.shared
   weak var delegate: ShareTournamentDialogDelegate?
   var currentConfiguration: TournamentConfig?
   var tournamentToUpdate: Tournament?
@@ -45,7 +45,7 @@ public final class ShareTournamentDialog: NSObject, URLOpening {
   public convenience init(
     delegate: ShareTournamentDialogDelegate
   ) {
-    self.init(delegate: delegate, urlOpener: BridgeAPI.shared)
+    self.init(delegate: delegate, urlOpener: _BridgeAPI.shared)
   }
 
   /**

@@ -81,7 +81,7 @@ extension SharePhotoContent: SharingContent {
     _ existingParameters: [String: Any],
     options bridgeOptions: ShareBridgeOptions
   ) -> [String: Any] {
-    guard let imageFinder = try? Self.getDependencies().imageFinder else {
+    guard let imageFinder = Self.imageFinder else {
       return existingParameters
     }
 
@@ -113,9 +113,9 @@ extension SharePhotoContent: SharingContent {
   }
 }
 
-// MARK: - SharingValidation
+// MARK: - SharingValidatable
 
-extension SharePhotoContent: SharingValidation {
+extension SharePhotoContent: SharingValidatable {
   // The number of photos that can be shared at once is restricted
   private static let photosCountRange = 1 ... 6
 

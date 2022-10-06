@@ -10,8 +10,6 @@
 
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMAdvertiserRuleFactoryTests: XCTestCase {
 
   let factory = _AEMAdvertiserRuleFactory()
@@ -127,7 +125,7 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
         rule?.rules.count,
         "Multi Entry Rule should have the expected number of subrules"
       )
-        } // swiftlint:disable:this closure_end_indentation
+    } // swiftlint:disable:this closure_end_indentation
   }
 
   func testCreateMultiEntryRuleWithInvalidDict() {
@@ -311,5 +309,3 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
     }
   }
 }
-
-#endif

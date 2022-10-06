@@ -10,8 +10,6 @@ import FBAEMKit
 import Foundation
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMUtilityTests: XCTestCase {
   enum Keys {
     static let content = "fb_content"
@@ -19,6 +17,43 @@ final class AEMUtilityTests: XCTestCase {
     static let identity = "id"
     static let itemPrice = "item_price"
     static let quantity = "quantity"
+  }
+
+  func testGetMatchedInvocationWithoutBusinessID() {
+    let invocations = [SampleAEMInvocations.createGeneralInvocation1()]
+    XCTAssertNil(
+      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
+      "Should not expect to get the matched invocation without matched business ID"
+    )
+  }
+
+  func testGetMatchedInvocationWithNullBusinessID() {
+    let invocation = SampleAEMInvocations.createGeneralInvocation1()
+    let invocations = [invocation, SampleAEMInvocations.createInvocationWithBusinessID()]
+    XCTAssertEqual(
+      invocation,
+      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: nil),
+      "Should expect to get the matched invocation without businessID"
+    )
+  }
+
+  func testGetMatchedInvocationWithUnmatchedBusinessID() {
+    let invocationWithBusinessID = SampleAEMInvocations.createInvocationWithBusinessID()
+    let invocations = [invocationWithBusinessID, SampleAEMInvocations.createGeneralInvocation1()]
+    XCTAssertNil(
+      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
+      "Should not expect to get the matched invocation without matched business ID"
+    )
+  }
+
+  func testGetMatchedInvocationWithMatchedBusinessID() {
+    let invocationWithBusinessID = SampleAEMInvocations.createInvocationWithBusinessID()
+    let invocations = [invocationWithBusinessID, SampleAEMInvocations.createGeneralInvocation1()]
+    XCTAssertEqual(
+      invocationWithBusinessID,
+      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: invocationWithBusinessID.businessID),
+      "Should expect to get the matched invocation"
+    )
   }
 
   func testGetInSegmentValue() {
@@ -74,6 +109,26 @@ final class AEMUtilityTests: XCTestCase {
     XCTAssertEqual(value.intValue, 100, "Didn't get the expected in-segment value")
   }
 
+  func testGetContent() {
+    let content = _AEMUtility.shared.getContent([
+      Keys.content: getJsonString(object: [
+        [Keys.identity: "123"],
+        [Keys.identity: "456"],
+      ]),
+    ])
+    XCTAssertEqual(content, #"[{"id":"123"},{"id":"456"}]"#)
+  }
+
+  func testGetContentWithoutData() {
+    let content = _AEMUtility.shared.getContent([
+      Keys.contentID: getJsonString(object: [
+        [Keys.identity: "123"],
+        [Keys.identity: "456"],
+      ]),
+    ])
+    XCTAssertNil(content)
+  }
+
   func testGetContentWithIntID() {
     let contentID = _AEMUtility.shared.getContentID([
       Keys.content: getJsonString(object: [
@@ -101,10 +156,35 @@ final class AEMUtilityTests: XCTestCase {
     XCTAssertEqual(contentID, #"["123","456"]"#)
   }
 
+  func testGetBusinessIDsInOrderWithoutInvocations() {
+    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder([])
+    XCTAssertEqual(businessIDs, [])
+  }
+
+  func testGetBusinessIDsInOrderWithoutBusinessIDs() {
+    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder(
+      [
+        SampleAEMInvocations.createGeneralInvocation1(),
+        SampleAEMInvocations.createGeneralInvocation2(),
+      ]
+    )
+    XCTAssertEqual(businessIDs, ["", ""])
+  }
+
+  func testGetBusinessIDsInOrderWithBusinessIDs() {
+    let invocation = SampleAEMInvocations.createInvocationWithBusinessID()
+    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder(
+      [
+        SampleAEMInvocations.createGeneralInvocation1(),
+        SampleAEMInvocations.createGeneralInvocation2(),
+        invocation,
+      ]
+    )
+    XCTAssertEqual(businessIDs, [invocation.businessID, "", ""])
+  }
+
   func getJsonString(object: [Any]) -> String {
     let jsonData = try? JSONSerialization.data(withJSONObject: object, options: [])
     return String(data: jsonData!, encoding: String.Encoding.ascii)! // swiftlint:disable:this force_unwrapping
   }
 }
-
-#endif

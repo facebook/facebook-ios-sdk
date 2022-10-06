@@ -9,13 +9,13 @@
 import Foundation
 
 @objcMembers
-final class TestAppEventsStateProvider: NSObject, AppEventsStateProviding {
+final class TestAppEventsStateProvider: NSObject, _AppEventsStateProviding {
   var state: TestAppEventsState?
   var capturedTokenString: String?
   var capturedAppID: String?
   var isCreateStateCalled = false
 
-  func createState(tokenString: String, appID: String) -> AppEventsState {
+  func createState(tokenString: String, appID: String) -> _AppEventsState {
     isCreateStateCalled = true
     capturedTokenString = tokenString
     capturedAppID = appID

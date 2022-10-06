@@ -8,6 +8,7 @@
 
 @testable import FBSDKShareKit
 
+import FBSDKCoreKit
 import Photos
 import TestTools
 import XCTest
@@ -38,7 +39,7 @@ final class SharePhotoTests: XCTestCase {
     SharePhoto.resetDependencies()
 
     let dependencies = try SharePhoto.getDependencies()
-    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesConcreteErrorFactoryByDefault)
+    XCTAssertTrue(dependencies.errorFactory is _ErrorFactory, .usesConcreteErrorFactoryByDefault)
   }
 
   func testCustomDependencies() throws {
@@ -218,11 +219,13 @@ final class SharePhotoTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {
   static let usesConcreteErrorFactoryByDefault = """
-    The default error factory dependency should be a concrete ErrorFactory
+    The default error factory dependency should be a concrete _ErrorFactory
     """
   static let usesCustomErrorFactory = "The error factory dependency should be configurable"
 

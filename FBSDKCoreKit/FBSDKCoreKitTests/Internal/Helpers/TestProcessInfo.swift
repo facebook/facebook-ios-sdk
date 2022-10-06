@@ -10,18 +10,14 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestProcessInfo: NSObject, OperatingSystemVersionComparing {
+final class TestProcessInfo: _OperatingSystemVersionComparing {
   var stubbedOperatingSystemCheckResult: Bool
-
-  override convenience init() {
-    self.init(stubbedOperatingSystemCheckResult: true)
-  }
 
   init(stubbedOperatingSystemCheckResult: Bool = true) {
     self.stubbedOperatingSystemCheckResult = stubbedOperatingSystemCheckResult
   }
 
-  func isOperatingSystemAtLeast(_ version: OperatingSystemVersion) -> Bool {
+  func fb_isOperatingSystemAtLeast(_ version: OperatingSystemVersion) -> Bool {
     stubbedOperatingSystemCheckResult
   }
 }

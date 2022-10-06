@@ -54,7 +54,7 @@ public final class TestInternalUtility: NSObject,
   }
 
   public func facebookURL(
-    withHostPrefix hostPrefix: String,
+    hostPrefix: String,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
@@ -144,4 +144,6 @@ public final class TestInternalUtility: NSObject,
   }
 
   public var bundleForStrings: Bundle { .main }
+
+  public func topMostViewController() -> UIViewController? { nil }
 }

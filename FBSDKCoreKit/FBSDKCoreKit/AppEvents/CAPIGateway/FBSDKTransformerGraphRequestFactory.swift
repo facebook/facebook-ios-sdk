@@ -9,6 +9,7 @@
 import FBSDKCoreKit_Basics
 
 @objcMembers
+// swiftlint:disable:next prefer_final_classes
 public class FBSDKTransformerGraphRequestFactory: NSObject {
   let contentType = "application/json"
   let timeoutInterval = 60
@@ -58,13 +59,17 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
         let transformed = AppEventsConversionsAPITransformer.conversionsAPICompatibleEvent(from: parameters)
         self.appendEvents(events: transformed)
         let count = min(self.transformedEvents.count, self.maxProcessedEvents)
-        let processedEvents = Array(self.transformedEvents[0..<count])
-        self.transformedEvents.removeSubrange(0..<count)
+        let processedEvents = Array(self.transformedEvents[0 ..< count])
+        self.transformedEvents.removeSubrange(0 ..< count)
 
         let requestDictionary = self.capiGatewayRequestDictionary(with: processedEvents)
         let jsonData = try JSONSerialization.data(withJSONObject: requestDictionary, options: [])
 
-        var request = URLRequest(url: url, cachePolicy: NSURLRequest.CachePolicy.useProtocolCachePolicy, timeoutInterval: TimeInterval(self.timeoutInterval))
+        var request = URLRequest(
+          url: url,
+          cachePolicy: .useProtocolCachePolicy,
+          timeoutInterval: TimeInterval(self.timeoutInterval)
+        )
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue(self.contentType, forHTTPHeaderField: "Content-Type")
         request.httpShouldHandleCookies = false
@@ -74,12 +79,13 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
           self.serialQueue.async {
             guard error == nil,
                   let httpResponse = response as? HTTPURLResponse,
-                  200...299 ~= httpResponse.statusCode else {
-                    self.handleError(response: response, events: processedEvents)
-                    return
+                  200 ... 299 ~= httpResponse.statusCode else {
+              self.handleError(response: response, events: processedEvents)
+              return
             }
           }
-        }.resume()
+        }
+        .resume()
       } catch {
         return
       }
@@ -87,7 +93,7 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
   }
 
   internal func capiGatewayRequestDictionary(with events: [[String: Any]]) -> [String: Any] {
-    guard let accessKey = self.credentials?.accessKey else { return [:] }
+    guard let accessKey = credentials?.accessKey else { return [:] }
 
     return [
       "data": events,
@@ -105,7 +111,7 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
     // If it's not server error, we'll re-append the events to the event queue
     let response = response as? HTTPURLResponse
     if let statusCode = response?.statusCode {
-      if !self.retryEventsHttpResponse.contains(statusCode) {
+      if !retryEventsHttpResponse.contains(statusCode) {
         return
       }
     }
@@ -116,7 +122,7 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
     transformedEvents.append(contentsOf: events ?? [])
     let remainingEventsCount = transformedEvents.count - maxCachedEvents
     if remainingEventsCount > 0 {
-      transformedEvents.removeSubrange(0..<remainingEventsCount)
+      transformedEvents.removeSubrange(0 ..< remainingEventsCount)
     }
   }
 }

@@ -13,13 +13,14 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKAppLink;
+@protocol FBSDKAppLinkCreating;
 
 /**
  Provides a set of utilities for working with NSURLs, such as parsing of query parameters
  and handling for App Link requests.
  */
 NS_SWIFT_NAME(AppLinkURL)
-@interface FBSDKURL : NSObject
+@interface FBSDKURL : NSObject <FBSDKAppLinkURL>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -78,6 +79,20 @@ NS_SWIFT_NAME(init(inboundURL:sourceApplication:));
 
 /// The flag indicating whether the URL comes from auto app link
 @property (nonatomic, readonly, getter = isAutoAppLink) BOOL isAutoAppLink;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+               appLinkFactory:(id<FBSDKAppLinkCreating>)appLinkFactory
+         appLinkTargetFactory:(id<FBSDKAppLinkTargetCreating>)appLinkTargetFactory
+           appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+NS_SWIFT_NAME(configure(settings:appLinkFactory:appLinkTargetFactory:appLinkEventPoster:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

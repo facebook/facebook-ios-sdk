@@ -7,7 +7,6 @@
  */
 
 @testable import FBAEMKit
-import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
@@ -28,6 +27,7 @@ final class AEMReporterTests: XCTestCase {
     static let campaignID = "campaign_id"
     static let catalogID = "catalog_id"
     static let contentID = "fb_content_ids"
+    static let content = "fb_content"
     static let token = "token"
   }
 
@@ -110,6 +110,23 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter.setCatalogMatchingEnabled(true)
 
     XCTAssertTrue(AEMReporter.isCatalogMatchingEnabled, "AEM Catalog Matching should be enabled")
+  }
+
+  func testAdvertiserRuleMatchInServerEnabledDefaultConfigure() {
+    XCTAssertFalse(
+      AEMReporter.isAdvertiserRuleMatchInServerEnabled,
+      "AEM Advertiser Rule Match in server should be disabled by default"
+    )
+  }
+
+  func testSetAdvertiserRuleMatchInServerEnabled() {
+    AEMReporter.isAdvertiserRuleMatchInServerEnabled = false
+    AEMReporter.setAdvertiserRuleMatchInServerEnabled(true)
+
+    XCTAssertTrue(
+      AEMReporter.isAdvertiserRuleMatchInServerEnabled,
+      "AEM Advertiser Rule Match in server should be enabled"
+    )
   }
 
   func testConfigure() {
@@ -265,7 +282,7 @@ final class AEMReporterTests: XCTestCase {
 
   func testClearConfigurations() {
     AEMReporter.configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
       Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessIDAndContentRule()],
       Values.cpasMode: [SampleAEMConfigurations.createCpasConfiguration()],
     ]
@@ -428,6 +445,21 @@ final class AEMReporterTests: XCTestCase {
         "delay_flow": "server",
       ],
       "Should have expected request parameters for debugging invocation"
+    )
+  }
+
+  func testRuleMatchRequestParameters() {
+    let businessIDs = ["123"]
+    let content = #"[{"id": "123", "quantity": 5}]"#
+    let parameters = AEMReporter._ruleMatchRequestParameters(businessIDs, content: content)
+    let expected = [
+      "advertiser_ids": #"["123"]"#,
+      "fb_content_data": content,
+    ]
+    XCTAssertEqual(
+      parameters as? [String: String],
+      expected,
+      "Rule match request parameter is not expected"
     )
   }
 
@@ -650,7 +682,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testGetConfigRequestParameterWithoutAdvertiserIDs() {
-    AEMReporter.invocations = NSMutableArray(array: [SampleAEMData.invocationWithoutAdvertiserID])
+    AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
@@ -660,8 +692,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testGetConfigRequestParameterWithAdvertiserIDs() {
-    AEMReporter.invocations =
-      NSMutableArray(array: [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithoutAdvertiserID])
+    AEMReporter.invocations = [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithoutAdvertiserID]
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
@@ -669,8 +700,11 @@ final class AEMReporterTests: XCTestCase {
       "Should have expected advertiserIDs in configuration request params"
     )
 
-    AEMReporter.invocations =
-      NSMutableArray(array: [SampleAEMData.invocationWithAdvertiserID1, SampleAEMData.invocationWithAdvertiserID2, SampleAEMData.invocationWithoutAdvertiserID]) // swiftlint:disable:this line_length
+    AEMReporter.invocations = [
+      SampleAEMData.invocationWithAdvertiserID1,
+      SampleAEMData.invocationWithAdvertiserID2,
+      SampleAEMData.invocationWithoutAdvertiserID,
+    ]
 
     XCTAssertEqual(
       AEMReporter._requestParameters() as NSDictionary,
@@ -726,8 +760,8 @@ final class AEMReporterTests: XCTestCase {
       SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -755,8 +789,8 @@ final class AEMReporterTests: XCTestCase {
       SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -780,8 +814,8 @@ final class AEMReporterTests: XCTestCase {
       SampleAEMData.invocationWithAdvertiserID2,
     ]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -808,8 +842,8 @@ final class AEMReporterTests: XCTestCase {
     let invocation2 = SampleAEMInvocations.createGeneralInvocation2()
     let invocations = [invocation1, invocation2]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -832,8 +866,8 @@ final class AEMReporterTests: XCTestCase {
     let invocation2 = SampleAEMInvocations.createGeneralInvocation2()
     let invocations = [invocation1, invocation2]
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
-      Values.brandMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
+      Values.brandMode: [SampleAEMConfigurations.createConfigurationWithBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -856,7 +890,7 @@ final class AEMReporterTests: XCTestCase {
     let invocation = SampleAEMInvocations.createSKANOverlappedInvocation()
 
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -887,7 +921,7 @@ final class AEMReporterTests: XCTestCase {
     let invocation = SampleAEMInvocations.createGeneralInvocation1()
 
     let configurations = [
-      Values.defaultMode: NSMutableArray(array: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()]),
+      Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
 
     let attributedInvocation = AEMReporter._attributedInvocation(
@@ -1047,6 +1081,26 @@ final class AEMReporterTests: XCTestCase {
         }
       }
     }
+  }
+
+  // MARK: - Rule Match in Server
+
+  func testLoadRuleMatch() {
+    let content = #"[{"id": "123", "quantity": 5}]"#
+    AEMReporter._loadRuleMatch(["123"], event: "test", currency: nil, value: nil, parameters: [Keys.content: content])
+    let expectedParameters = [
+      "advertiser_ids": #"["123"]"#,
+      "fb_content_data": content,
+    ]
+    XCTAssertTrue(
+      (networker.capturedGraphPath?.contains("aem_attribution")) == true,
+      "Should start the rule match request"
+    )
+    XCTAssertEqual(
+      networker.capturedParameters as? [String: String],
+      expectedParameters,
+      "Should have the expected parameters in the rule match request"
+    )
   }
 
   // MARK: - Aggregation Request

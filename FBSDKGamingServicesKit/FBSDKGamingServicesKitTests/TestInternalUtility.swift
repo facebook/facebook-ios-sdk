@@ -39,7 +39,7 @@ final class TestInternalUtility: InternalUtilityProtocol {
   }
 
   func facebookURL(
-    withHostPrefix hostPrefix: String,
+    hostPrefix: String,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
@@ -80,6 +80,10 @@ final class TestInternalUtility: InternalUtilityProtocol {
   }
 
   var bundleForStrings: Bundle { .main }
+
+  var stubbedTopMostViewController: UIViewController?
+
+  func topMostViewController() -> UIViewController? { stubbedTopMostViewController }
 }
 
 enum URLConstants {

@@ -10,30 +10,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAppLink.h>
+#import <FBSDKCoreKit/FBSDKAppLinkNavigationBlock.h>
+#import <FBSDKCoreKit/FBSDKAppLinkNavigationType.h>
 #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
 
+@class FBSDKAppLink;
+@protocol FBSDKInternalURLOpener;
 @protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
-
-/// The result of calling navigate on a FBSDKAppLinkNavigation
-typedef NS_ENUM(NSInteger, FBSDKAppLinkNavigationType) {
-  /// Indicates that the navigation failed and no app was opened
-  FBSDKAppLinkNavigationTypeFailure,
-  /// Indicates that the navigation succeeded by opening the URL in the browser
-  FBSDKAppLinkNavigationTypeBrowser,
-  /// Indicates that the navigation succeeded by opening the URL in an app on the device
-  FBSDKAppLinkNavigationTypeApp,
-} NS_SWIFT_NAME(AppLinkNavigation.Type);
-
-/**
- Describes the callback for appLinkFromURLInBackground.
- @param navType the FBSDKAppLink representing the deferred App Link
- @param error the error during the request, if any
- */
-typedef void (^ FBSDKAppLinkNavigationBlock)(FBSDKAppLinkNavigationType navType, NSError *_Nullable error)
-NS_SWIFT_NAME(AppLinkNavigationBlock);
 
 /**
  Represents a pending request to navigate to an App Link. Most developers will
@@ -129,6 +114,18 @@ NS_SWIFT_NAME(callbackAppLinkData(forApp:url:));
 + (void)navigateToURL:(NSURL *)destination
              resolver:(id<FBSDKAppLinkResolving>)resolver
               handler:(FBSDKAppLinkNavigationBlock)handler;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)configureWithSettings:(id<FBSDKSettings>)settings
+                    urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
+           appLinkEventPoster:(id<FBSDKAppLinkEventPosting>)appLinkEventPoster
+              appLinkResolver:(id<FBSDKAppLinkResolving>)appLinkResolver
+NS_SWIFT_NAME(configure(settings:urlOpener:appLinkEventPoster:appLinkResolver:));
 
 @end
 

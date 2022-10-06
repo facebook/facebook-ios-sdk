@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestAppLinkURL: AppLinkURLProtocol {
+final class TestAppLinkURL: _AppLinkURLProtocol {
   var appLinkExtras: [String: Any]?
 
   init(appLinkExtras: [String: Any] = [:]) {

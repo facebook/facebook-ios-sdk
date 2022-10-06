@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <TargetConditionals.h>
+
 #if !TARGET_OS_TV
 
 #import "FBAEMReporter.h"
@@ -21,6 +23,7 @@ typedef void (^FBAEMReporterBlock)(NSError *);
 
 static NSString *const BUSINESS_ID_KEY = @"advertiser_id";
 static NSString *const BUSINESS_IDS_KEY = @"advertiser_ids";
+static NSString *const FB_CONTENT_DATA_KEY = @"fb_content_data";
 static NSString *const AL_APPLINK_DATA_KEY = @"al_applink_data";
 static NSString *const CAMPAIGN_ID_KEY = @"campaign_id";
 static NSString *const CONVERSION_DATA_KEY = @"conversion_data";
@@ -46,10 +49,11 @@ static BOOL g_isAEMReportEnabled = NO;
 static BOOL g_isLoadingConfiguration = NO;
 static BOOL g_isConversionFilteringEnabled = NO;
 static BOOL g_isCatalogMatchingEnabled = NO;
+static BOOL g_isAdvertiserRuleMatchInServerEnabled = NO;
 static dispatch_queue_t g_serialQueue;
 static NSString *g_reportFile;
 static NSString *g_configFile;
-static NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *g_configurations;
+static NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *g_configurations;
 static NSMutableArray<FBAEMInvocation *> *g_invocations;
 static NSDate *g_configRefreshTimestamp;
 static NSDate *g_minAggregationRequestTimestamp;
@@ -223,6 +227,11 @@ static id<FBSDKDataPersisting> _store;
   g_isCatalogMatchingEnabled = enabled;
 }
 
++ (void)setAdvertiserRuleMatchInServerEnabled:(BOOL)enabled
+{
+  g_isAdvertiserRuleMatchInServerEnabled = enabled;
+}
+
 + (void)handleURL:(NSURL *)url
 {
   if (!g_isAEMReportEnabled) {
@@ -276,32 +285,62 @@ static id<FBSDKDataPersisting> _store;
         return;
       }
 
-      FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations Event:event currency:currency value:value parameters:parameters configurations:g_configurations];
-      if (attributedInvocation) {
-        // We will report conversion in catalog level if
-        // 1. conversion filtering and catalog matching are enabled
-        // 2. invocation has catalog id
-        // 3. event is optimized
-        // 4. event's content id belongs to the catalog
-        if ([self _shouldReportConversionInCatalogLevel:attributedInvocation event:event]) {
-          NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
-          [self _loadCatalogOptimizationWithInvocation:attributedInvocation contentID:contentID block:^() {
-            [self _updateAttributedInvocation:attributedInvocation
-                                        event:event
-                                     currency:currency value:value
-                                   parameters:parameters
-                          shouldBoostPriority:YES];
-          }];
-        } else {
-          [self _updateAttributedInvocation:attributedInvocation
-                                      event:event
-                                   currency:currency
-                                      value:value
-                                 parameters:parameters
-                        shouldBoostPriority:g_isConversionFilteringEnabled];
-        }
+      NSArray<NSString *> *businessIDs = [FBAEMUtility.sharedUtility getBusinessIDsInOrder:g_invocations];
+      if (g_isAdvertiserRuleMatchInServerEnabled && businessIDs.firstObject.length > 0) {
+        [self _loadRuleMatch:businessIDs event:event currency:currency value:value parameters:parameters];
+      } else {
+        [self _attributionV1WithEvent:event currency:currency value:value parameters:parameters];
       }
     }];
+  }
+}
+
++ (void)_attributionV1WithEvent:(NSString *)event
+                       currency:(nullable NSString *)currency
+                          value:(nullable NSNumber *)value
+                     parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  FBAEMInvocation *attributedInvocation = [self _attributedInvocation:g_invocations event:event currency:currency value:value parameters:parameters configurations:g_configurations];
+  if (attributedInvocation) {
+    [self _attributionWithInvocation:attributedInvocation
+                               event:event
+                            currency:currency
+                               value:value
+                          parameters:parameters
+                 isRuleMatchInServer:NO];
+  }
+}
+
++ (void)_attributionWithInvocation:(FBAEMInvocation *)invocation
+                             event:(NSString *)event
+                          currency:(nullable NSString *)currency
+                             value:(nullable NSNumber *)value
+                        parameters:(nullable NSDictionary<NSString *, id> *)parameters
+               isRuleMatchInServer:(BOOL)isRuleMatchInServer
+{
+  // We will report conversion in catalog level if
+  // 1. conversion filtering and catalog matching are enabled
+  // 2. invocation has catalog id
+  // 3. event is optimized
+  // 4. event's content id belongs to the catalog
+  if ([self _shouldReportConversionInCatalogLevel:invocation event:event]) {
+    NSString *contentID = [FBAEMUtility.sharedUtility getContentID:parameters];
+    [self _loadCatalogOptimizationWithInvocation:invocation contentID:contentID block:^() {
+      [self _updateAttributedInvocation:invocation
+                                  event:event
+                               currency:currency value:value
+                             parameters:parameters
+                    shouldBoostPriority:YES
+                    isRuleMatchInServer:isRuleMatchInServer];
+    }];
+  } else {
+    [self _updateAttributedInvocation:invocation
+                                event:event
+                             currency:currency
+                                value:value
+                           parameters:parameters
+                  shouldBoostPriority:g_isConversionFilteringEnabled
+                  isRuleMatchInServer:isRuleMatchInServer];
   }
 }
 
@@ -311,13 +350,15 @@ static id<FBSDKDataPersisting> _store;
                               value:(nullable NSNumber *)value
                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
                 shouldBoostPriority:(BOOL)shouldBoostPriority
+                isRuleMatchInServer:(BOOL)isRuleMatchInServer
 {
   [invocation attributeEvent:event
                     currency:currency
                        value:value
                   parameters:parameters
               configurations:g_configurations
-           shouldUpdateCache:YES];
+           shouldUpdateCache:YES
+         isRuleMatchInServer:isRuleMatchInServer];
   if ([invocation updateConversionValueWithConfigurations:g_configurations
                                                     event:event
                                       shouldBoostPriority:shouldBoostPriority]) {
@@ -327,11 +368,11 @@ static id<FBSDKDataPersisting> _store;
 }
 
 + (nullable FBAEMInvocation *)_attributedInvocation:(NSArray<FBAEMInvocation *> *)invocations
-                                              Event:(NSString *)event
+                                              event:(NSString *)event
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                     configurations:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
+                                     configurations:(NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
   BOOL isGeneralInvocationVisited = NO;
   FBAEMInvocation *attributedInvocation = nil;
@@ -348,7 +389,8 @@ static id<FBSDKDataPersisting> _store;
                              value:value
                         parameters:parameters
                     configurations:configurations
-                 shouldUpdateCache:NO]) {
+                 shouldUpdateCache:NO
+               isRuleMatchInServer:NO]) {
       attributedInvocation = invocation;
       break;
     }
@@ -447,6 +489,60 @@ static id<FBSDKDataPersisting> _store;
                                       }];
 }
 
++ (void)_loadRuleMatch:(NSArray<NSString *> *)businessIDs
+                 event:(NSString *)event
+              currency:(nullable NSString *)potentialCurrency
+                 value:(nullable NSNumber *)potentialValue
+            parameters:(nullable NSDictionary<NSString *, id> *)parameters
+{
+  NSString *content = [FBAEMUtility.sharedUtility getContent:parameters];
+  [self.networker startGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/aem_attribution", self.appID]
+                                      parameters:[self _ruleMatchRequestParameters:businessIDs content:content]
+                                     tokenString:nil
+                                      HTTPMethod:FBAEMHTTPMethodGET
+                                      completion:^(id _Nullable result, NSError *_Nullable error) {
+                                        if (nil != error || nil == result) {
+                                          return;
+                                        }
+                                        NSDictionary<NSString *, id> *res = [FBSDKTypeUtility dictionaryValue:result];
+                                        NSArray<id> *data = [FBSDKTypeUtility dictionary:res objectForKey:@"data" ofType:NSArray.class];
+                                        NSDictionary<NSString *, id> *json = data.firstObject;
+                                        if (!json) {
+                                          return;
+                                        }
+                                        NSNumber *success = [FBSDKTypeUtility dictionary:json objectForKey:@"success" ofType:NSNumber.class];
+                                        if (success.boolValue) {
+                                          NSNumber *isValidMatch = [FBSDKTypeUtility dictionary:json objectForKey:@"is_valid_match" ofType:NSNumber.class];
+                                          NSString *matchedBusinessID = [FBSDKTypeUtility dictionary:json objectForKey:@"matched_advertiser_id" ofType:NSString.class];
+                                          NSNumber *inSegmentValue = [FBSDKTypeUtility dictionary:json objectForKey:@"in_segment_value" ofType:NSNumber.class];
+                                          FBAEMInvocation *matchedInvocation = [FBAEMUtility.sharedUtility getMatchedInvocation:g_invocations businessID:matchedBusinessID];
+                                          // Drop the conversion if not a valid match or no matched invocation
+                                          if (!isValidMatch.boolValue || !matchedInvocation) {
+                                            return;
+                                          }
+                                          [self dispatchOnQueue:g_serialQueue delay:0 block:^{
+                                            NSString *currency = potentialCurrency;
+                                            NSNumber *value = potentialValue;
+                                            if (matchedInvocation.businessID) {
+                                              currency = @"USD";
+                                              value = inSegmentValue;
+                                            }
+                                            [self _attributionWithInvocation:matchedInvocation
+                                                                       event:event
+                                                                    currency:currency
+                                                                       value:value
+                                                                  parameters:parameters
+                                                         isRuleMatchInServer:YES];
+                                          }];
+                                        } else {
+                                          // Fall back to attribution v1 if fails
+                                          [self dispatchOnQueue:g_serialQueue delay:0 block:^{
+                                            [self _attributionV1WithEvent:event currency:potentialCurrency value:potentialValue parameters:parameters];
+                                          }];
+                                        }
+                                      }];
+}
+
 + (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
                                         event:(NSString *)event
 {
@@ -485,6 +581,16 @@ static id<FBSDKDataPersisting> _store;
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
   [FBSDKTypeUtility dictionary:params setObject:contentID forKey:FB_CONTENT_IDS_KEY];
   [FBSDKTypeUtility dictionary:params setObject:catalogID forKey:CATALOG_ID_KEY];
+  return [params copy];
+}
+
++ (NSDictionary<NSString *, id> *)_ruleMatchRequestParameters:(NSArray<NSString *> *)businessIDs
+                                                      content:(nullable NSString *)content
+{
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary new];
+  NSString *businessIDsString = [FBSDKBasicUtility JSONStringForObject:businessIDs error:nil invalidObjectHandler:nil];
+  [FBSDKTypeUtility dictionary:params setObject:businessIDsString forKey:BUSINESS_IDS_KEY];
+  [FBSDKTypeUtility dictionary:params setObject:content forKey:FB_CONTENT_DATA_KEY];
   return [params copy];
 }
 
@@ -558,7 +664,7 @@ static id<FBSDKDataPersisting> _store;
 
 + (nullable NSDate *)_loadMinAggregationRequestTimestamp
 {
-  NSDate *timestamp = [self.store objectForKey:FBAEMMINAggregationRequestTimestampKey];
+  NSDate *timestamp = [self.store fb_objectForKey:FBAEMMINAggregationRequestTimestampKey];
   if ([timestamp isKindOfClass:NSDate.class]) {
     return timestamp;
   }
@@ -568,10 +674,10 @@ static id<FBSDKDataPersisting> _store;
 + (void)_updateAggregationRequestTimestamp:(NSTimeInterval)timestamp
 {
   g_minAggregationRequestTimestamp = [NSDate dateWithTimeIntervalSince1970:timestamp];
-  [self.store setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
+  [self.store fb_setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
 }
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigurations
++ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations
 {
   NSData *cachedConfiguration = [NSData dataWithContentsOfFile:g_configFile
                                                        options:NSDataReadingMappedIfSafe
@@ -579,12 +685,12 @@ static id<FBSDKDataPersisting> _store;
   if ([cachedConfiguration isKindOfClass:NSData.class]) {
     NSSet<Class> *classes = [NSSet setWithArray:@[
       NSMutableDictionary.class,
-      NSMutableArray.class,
+      NSArray.class,
       NSString.class,
       FBAEMConfiguration.class,
       FBAEMRule.class,
       FBAEMEvent.class]];
-    NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfiguration error:nil]];
+    NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfiguration error:nil]];
     if (cache) {
       return [cache mutableCopy];
     }
@@ -621,9 +727,9 @@ static id<FBSDKDataPersisting> _store;
   if (!configuration.mode) {
     return;
   }
-  NSMutableArray<FBAEMConfiguration *> *configurations = [FBSDKTypeUtility dictionary:g_configurations
-                                                                         objectForKey:configuration.mode
-                                                                               ofType:NSMutableArray.class];
+  NSArray<FBAEMConfiguration *> *configurations = [FBSDKTypeUtility dictionary:g_configurations
+                                                                  objectForKey:configuration.mode
+                                                                        ofType:NSArray.class];
   // Remove the configuration in the array that has the same "validFrom" and "businessID" as the added configuration
   NSMutableArray<FBAEMConfiguration *> *res = [NSMutableArray new];
   for (FBAEMConfiguration *candidateConfiguration in configurations) {
@@ -773,9 +879,9 @@ static id<FBSDKDataPersisting> _store;
 {
   BOOL shouldSaveCache = NO;
   if (g_configurations.count > 0) {
-    NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configurations = [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *configurations = [NSMutableDictionary new];
     for (NSString *key in g_configurations) {
-      NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [FBSDKTypeUtility dictionary:g_configurations objectForKey:key ofType:NSMutableArray.class];
+      NSMutableArray<FBAEMConfiguration *> *oldConfigurations = [[FBSDKTypeUtility dictionary:g_configurations objectForKey:key ofType:NSArray.class] mutableCopy];
       NSMutableArray<FBAEMConfiguration *> *newConfigurations = [NSMutableArray new];
 
       // Removes the last of the old default mode configurations and stores it so it can be
@@ -838,12 +944,12 @@ static id<FBSDKDataPersisting> _store;
 
 #if DEBUG
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
++ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
   return g_configurations;
 }
 
-+ (void)setConfigurations:(NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations
++ (void)setConfigurations:(NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
   g_configurations = configurations;
 }
@@ -886,6 +992,16 @@ static id<FBSDKDataPersisting> _store;
 + (BOOL)isCatalogMatchingEnabled
 {
   return g_isCatalogMatchingEnabled;
+}
+
++ (void)setIsAdvertiserRuleMatchInServerEnabled:(BOOL)enabled
+{
+  g_isAdvertiserRuleMatchInServerEnabled = enabled;
+}
+
++ (BOOL)isAdvertiserRuleMatchInServerEnabled
+{
+  return g_isAdvertiserRuleMatchInServerEnabled;
 }
 
 + (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
@@ -934,6 +1050,7 @@ static id<FBSDKDataPersisting> _store;
   g_isLoadingConfiguration = NO;
   g_isConversionFilteringEnabled = NO;
   g_isCatalogMatchingEnabled = NO;
+  g_isAdvertiserRuleMatchInServerEnabled = NO;
   g_completionBlocks = [NSMutableArray new];
   g_configurations = [NSMutableDictionary new];
   g_minAggregationRequestTimestamp = nil;

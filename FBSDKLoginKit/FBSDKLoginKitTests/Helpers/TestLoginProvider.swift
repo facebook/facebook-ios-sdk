@@ -6,18 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestLoginProvider: _LoginProviding {
+@testable import FBSDKLoginKit
+
+final class TestLoginProvider: LoginProviding {
 
   var defaultAudience: DefaultAudience = .friends
-  var capturedCompletion: LoginManagerLoginResultBlock?
+  var capturedCompletion: LoginResultBlock?
+  var capturedLegacyCompletion: LoginManagerLoginResultBlock?
   var capturedConfiguration: LoginConfiguration?
   var capturedPermissions: [String]?
   var didLogout = false
 
-  func __logIn( // swiftlint:disable:this identifier_name
-    from viewController: UIViewController?,
-    configuration: LoginConfiguration,
-    completion: @escaping LoginManagerLoginResultBlock
+  func logIn(
+    viewController: UIViewController?,
+    configuration: LoginConfiguration?,
+    completion: @escaping LoginResultBlock
   ) {
     capturedConfiguration = configuration
     capturedCompletion = completion
@@ -26,10 +29,10 @@ final class TestLoginProvider: _LoginProviding {
   func logIn(
     permissions: [String],
     from viewController: UIViewController?,
-    handler: @escaping LoginManagerLoginResultBlock
+    handler: LoginManagerLoginResultBlock?
   ) {
     capturedPermissions = permissions
-    capturedCompletion = handler
+    capturedLegacyCompletion = handler
   }
 
   func logOut() {

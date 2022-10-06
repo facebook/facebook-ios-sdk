@@ -14,7 +14,7 @@ import XCTest
 final class FeatureManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var manager: FeatureManager!
+  var manager: _FeatureManager!
   var settings: TestSettings!
   var store: UserDefaultsSpy!
   let userDefaultsPrefix = "com.facebook.sdk:FBSDKFeatureManager.FBSDKFeature"
@@ -28,52 +28,68 @@ final class FeatureManagerTests: XCTestCase {
     settings = TestSettings()
     store = UserDefaultsSpy()
 
-    manager = FeatureManager()
-    manager.configure(
-      gateKeeperManager: TestGateKeeperManager.self,
-      settings: settings,
-      store: store
+    manager = _FeatureManager()
+    _FeatureManager.setDependencies(
+      .init(
+        gateKeeperManager: TestGateKeeperManager.self,
+        settings: settings,
+        store: store
+      )
     )
   }
 
   override func tearDown() {
     super.tearDown()
 
+    _FeatureManager.resetDependencies()
     TestGateKeeperManager.reset()
     settings = nil
     store = nil
     manager = nil
   }
 
-  func testCreatingWithDefaults() {
-    manager = FeatureManager()
+  func testDefaultTypeDependencies() throws {
+    _FeatureManager.resetDependencies()
+    let dependencies = try _FeatureManager.getDependencies()
 
-    XCTAssertNil(
-      manager.gateKeeperManager,
-      "Should not have a gatekeeper manager by default"
+    XCTAssertIdentical(
+      dependencies.gateKeeperManager as AnyObject,
+      _GateKeeperManager.self,
+      .defaultDependency("the gatekeeper manager", for: "gatekeeper managing")
     )
-    XCTAssertNil(
-      manager.settings,
-      "Should not have settings by default"
+
+    XCTAssertIdentical(
+      dependencies.settings as AnyObject,
+      Settings.shared,
+      .defaultDependency("the shared settings", for: "settings sharing")
     )
-    XCTAssertNil(
-      manager.store,
-      "Should not have a persistent data store by default"
+
+    XCTAssertIdentical(
+      dependencies.store as AnyObject,
+      UserDefaults.standard,
+      .defaultDependency("the shared user defaults", for: "data persisting")
     )
   }
 
-  func testCreatingWithCustomDependencies() {
-    XCTAssertTrue(
-      manager.gateKeeperManager === TestGateKeeperManager.self,
-      "Should create with the provided gatekeeper manager"
+  func testCustomTypeDependencies() throws {
+    let dependencies = try _FeatureManager.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.gateKeeperManager as AnyObject,
+      TestGateKeeperManager.self,
+      .customDependency(for: "gatekeeper managing")
     )
-    XCTAssertTrue(
-      manager.settings === settings,
-      "Should create with the provided settings"
+
+    XCTAssertIdentical(
+      dependencies.settings as AnyObject,
+      settings,
+      .customDependency(for: "settings sharing")
     )
-    XCTAssertTrue(
-      manager.store === store,
-      "Should create with the provided persistent data store"
+
+    XCTAssertIdentical(
+      dependencies.store as AnyObject,
+      store,
+      .customDependency(for: "data persisting")
     )
   }
 
@@ -229,11 +245,25 @@ final class FeatureManagerTests: XCTestCase {
 
     testData.forEach { featureName in
       manager.disableFeature(featureName)
-      let featureString = FeatureManager.featureName(featureName)
+      let featureString = _FeatureManager.shared.featureName(for: featureName)
       XCTAssertEqual(
         store.capturedSetObjectKey,
         userDefaultsPrefix + featureString
       )
     }
+  }
+}
+
+// swiftformat:disable extensionaccesscontrol
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The _FeatureManager type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  static func customDependency(for type: String) -> String {
+    "The _FeatureManager type uses a custom \(type) dependency when provided"
   }
 }

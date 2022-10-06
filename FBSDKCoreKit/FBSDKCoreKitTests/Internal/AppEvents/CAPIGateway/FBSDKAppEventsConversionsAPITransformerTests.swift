@@ -9,14 +9,17 @@
 @testable import FBSDKCoreKit
 import XCTest
 
-class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
+// swiftlint:disable:next type_name
+final class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
 
   // MARK: Helper variables
 
   let customEvent1 = "[{\"_eventName\":\"fb_mobile_add_to_cart\",\"_logTime\":12345}]"
   let customEvent2 =
-  "[{\"_eventName\":\"fb_mobile_add_to_cart\",\"_logTime\":12345}, {\"_eventName\":\"new_event\",\"_logTime\":67890, \"fb_content_type\":\"product\", \"_valueToSum\":21.97, \"fb_currency\":\"GBP\"}]"
+    // swiftlint:disable:next line_length
+    "[{\"_eventName\":\"fb_mobile_add_to_cart\",\"_logTime\":12345}, {\"_eventName\":\"new_event\",\"_logTime\":67890, \"fb_content_type\":\"product\", \"_valueToSum\":21.97, \"fb_currency\":\"GBP\"}]"
 
+  // swiftlint:disable:next identifier_name
   let ud = "{\"fn\":\"1234567890\", \"em\":\"ABCDE\"}"
 
   let restOfData1 = [
@@ -130,19 +133,27 @@ class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
     var appData = [String: Any]()
 
     AppEventsConversionsAPITransformer.transformAndUpdateAppAndUserData(
-      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.advertiserId, value: "ABCDE-12345")
+      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.advertiserId, value: "ABCDE-12345"
+    )
     AppEventsConversionsAPITransformer.transformAndUpdateAppAndUserData(
-      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.advTE, value: 1)
+      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.advTE, value: 1
+    )
     AppEventsConversionsAPITransformer.transformAndUpdateAppAndUserData(
-      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.extinfo, value: ["i2"])
+      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.extinfo, value: ["i2"]
+    )
     AppEventsConversionsAPITransformer.transformAndUpdateAppAndUserData(
-      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.userData,
-      value: "{\"fn\":\"1234567890\", \"em\":\"ABCDE\"}")
+      userData: &userData,
+      appData: &appData,
+      field: AppEventUserAndAppDataField.userData,
+      value: "{\"fn\":\"1234567890\", \"em\":\"ABCDE\"}"
+    )
 
     let ATE = try XCTUnwrap(appData[ConversionsAPIUserAndAppDataField.advTE.rawValue] as? Int)
     let extinfo = try XCTUnwrap(appData[ConversionsAPIUserAndAppDataField.extinfo.rawValue] as? [Any])
     let madid = try XCTUnwrap(userData[ConversionsAPIUserAndAppDataField.madid.rawValue] as? String)
+    // swiftlint:disable:next identifier_name
     let fn = try XCTUnwrap(userData["fn"] as? String)
+    // swiftlint:disable:next identifier_name
     let em = try XCTUnwrap(userData["em"] as? String)
 
     XCTAssertEqual(ATE, 1)
@@ -171,12 +182,14 @@ class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
   }
 
   func testTransformValueATE() throws {
-    let ateTransformedValue = AppEventsConversionsAPITransformer.transformValue(
-      field: AppEventUserAndAppDataField.advTE.rawValue,
-      value: "1"
-    ) as? Bool
+    let ateTransformedValue = try XCTUnwrap(
+      AppEventsConversionsAPITransformer.transformValue(
+        field: AppEventUserAndAppDataField.advTE.rawValue,
+        value: "1"
+      ) as? Bool
+    )
 
-    XCTAssertEqual(ateTransformedValue, true)
+    XCTAssertTrue(ateTransformedValue)
   }
 
   func testTransformValueExtinfo() throws {
@@ -213,7 +226,8 @@ class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
     let combinedFields = AppEventsConversionsAPITransformer.combineCommonFields(
       userData: transformedUserData1,
       appData: transformedAppData1,
-      restOfData: restOfData1)
+      restOfData: restOfData1
+    )
     try checkIfCommonFieldsAreEqual(parameters: combinedFields)
   }
 
@@ -224,7 +238,8 @@ class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
       appData: transformedAppData1,
       restOfData: restOfData1,
       customEvents: [[String: Any]](),
-      eventTime: 23456)
+      eventTime: 23456
+    )
     XCTAssertEqual(transformedEvents?.count, 1)
 
     let firstEvent = try XCTUnwrap(transformedEvents?[0])
@@ -242,7 +257,8 @@ class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
       appData: transformedAppData1,
       restOfData: restOfData1,
       customEvents: customEvents,
-      eventTime: nil)
+      eventTime: nil
+    )
     XCTAssertEqual(transformedEvents?.count, 2)
 
     let firstEvent = try XCTUnwrap(transformedEvents?[0])
@@ -258,14 +274,29 @@ class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
     let customEvents = [transformedCustomEvent1, transformedCustomEvent2]
 
     XCTAssertNil(AppEventsConversionsAPITransformer.combineAllTransformedData(
-      eventType: AppEventType.other, userData: transformedUserData1, appData: transformedAppData1,
-      restOfData: restOfData1, customEvents: customEvents, eventTime: nil))
+      eventType: AppEventType.other,
+      userData: transformedUserData1,
+      appData: transformedAppData1,
+      restOfData: restOfData1,
+      customEvents: customEvents,
+      eventTime: nil
+    ))
     XCTAssertNil(AppEventsConversionsAPITransformer.combineAllTransformedData(
-      eventType: AppEventType.custom, userData: transformedUserData1, appData: transformedAppData1,
-      restOfData: restOfData1, customEvents: [[String: Any]](), eventTime: nil))
+      eventType: AppEventType.custom,
+      userData: transformedUserData1,
+      appData: transformedAppData1,
+      restOfData: restOfData1,
+      customEvents: [[String: Any]](),
+      eventTime: nil
+    ))
     XCTAssertNil(AppEventsConversionsAPITransformer.combineAllTransformedData(
-      eventType: AppEventType.mobileAppInstall, userData: transformedUserData1, appData: transformedAppData1,
-      restOfData: restOfData1, customEvents: [[String: Any]](), eventTime: nil))
+      eventType: AppEventType.mobileAppInstall,
+      userData: transformedUserData1,
+      appData: transformedAppData1,
+      restOfData: restOfData1,
+      customEvents: [[String: Any]](),
+      eventTime: nil
+    ))
   }
 
   func testConversionsAPICompatibleEvent1() throws {

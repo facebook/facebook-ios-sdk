@@ -10,6 +10,8 @@
 
 #import "FBSDKAuthenticationStatusUtility.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 
@@ -18,16 +20,16 @@ static NSString *const FBSDKOIDCStatusPath = @"/platform/oidc/status";
 @implementation FBSDKAuthenticationStatusUtility
 
 static Class<FBSDKProfileProviding> _profileSetter;
-static id<FBSDKSessionProviding> _sessionDataTaskProvider;
-static Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting> _accessTokenWallet;
-static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting> _authenticationTokenWallet;
+static id<FBSDKURLSessionProviding> _sessionDataTaskProvider;
+static Class<FBSDKAccessTokenProviding> _accessTokenWallet;
+static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenWallet;
 
-+ (nullable id<FBSDKSessionProviding>)sessionDataTaskProvider
++ (nullable id<FBSDKURLSessionProviding>)sessionDataTaskProvider
 {
   return _sessionDataTaskProvider;
 }
 
-+ (void)setSessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
++ (void)setSessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
 {
   _sessionDataTaskProvider = sessionDataTaskProvider;
 }
@@ -42,30 +44,30 @@ static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>
   _profileSetter = profileSetter;
 }
 
-+ (nullable Class<FBSDKAccessTokenSetting, FBSDKAccessTokenSetting>)accessTokenWallet
++ (nullable Class<FBSDKAccessTokenProviding>)accessTokenWallet
 {
   return _accessTokenWallet;
 }
 
-+ (void)setAccessTokenWallet:(nullable Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
++ (void)setAccessTokenWallet:(nullable Class<FBSDKAccessTokenProviding>)accessTokenWallet
 {
   _accessTokenWallet = accessTokenWallet;
 }
 
-+ (nullable Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
++ (nullable Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet
 {
   return _authenticationTokenWallet;
 }
 
-+ (void)setAuthenticationTokenWallet:(nullable Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet
++ (void)setAuthenticationTokenWallet:(nullable Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet
 {
   _authenticationTokenWallet = authenticationTokenWallet;
 }
 
 + (void)configureWithProfileSetter:(Class<FBSDKProfileProviding>)profileSetter
-           sessionDataTaskProvider:(id<FBSDKSessionProviding>)sessionDataTaskProvider
-                 accessTokenWallet:(Class<FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>)accessTokenWallet
-         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>)authenticationTokenWallet;
+           sessionDataTaskProvider:(id<FBSDKURLSessionProviding>)sessionDataTaskProvider
+                 accessTokenWallet:(Class<FBSDKAccessTokenProviding>)accessTokenWallet
+         authenticationTokenWallet:(Class<FBSDKAuthenticationTokenProviding>)authenticationTokenWallet;
 {
   self.profileSetter = profileSetter;
   self.sessionDataTaskProvider = sessionDataTaskProvider;
@@ -94,8 +96,8 @@ static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>
 
   NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
   if (request) {
-    [[self.sessionDataTaskProvider dataTaskWithRequest:request
-                                     completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
+    [[self.sessionDataTaskProvider fb_dataTaskWithRequest:request
+                                        completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
                                        if (!error) {
                                          fb_dispatch_on_main_thread(^{
                                            [self _handleResponse:response];
@@ -104,7 +106,7 @@ static Class<FBSDKAuthenticationTokenProviding, FBSDKAuthenticationTokenSetting>
                                          [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests
                                                                 logEntry:error.localizedDescription];
                                        }
-                                     }] resume];
+                                     }] fb_resume];
   }
 }
 

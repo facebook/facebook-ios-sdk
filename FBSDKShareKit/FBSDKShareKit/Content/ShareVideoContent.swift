@@ -88,7 +88,7 @@ extension ShareVideoContent: SharingContent {
       if bridgeOptions == .videoAsset {
         // Bridge the PHAsset.localIdentifier
         videoParameters["assetIdentifier"] = asset.localIdentifier
-      } else if let mediaLibrarySearcher = try? Self.getDependencies().mediaLibrarySearcher,
+      } else if let mediaLibrarySearcher = Self.mediaLibrarySearcher,
                 let url = try? mediaLibrarySearcher.fb_getVideoURL(for: asset) {
         // Bridge the legacy "assets-library" URL from AVAsset
         videoParameters["assetURL"] = url
@@ -120,7 +120,7 @@ extension ShareVideoContent: SharingContent {
   }
 }
 
-extension ShareVideoContent: SharingValidation {
+extension ShareVideoContent: SharingValidatable {
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
     let validator = try Self.getDependencies().validator

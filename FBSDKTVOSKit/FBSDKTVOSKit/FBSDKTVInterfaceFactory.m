@@ -21,7 +21,10 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
 @property (nonatomic) id<TVInterfaceCreating> interfaceCreator;
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKTVInterfaceFactory
+#pragma clang diagnostic pop
 
 - (instancetype)initWithInterfaceCreator:(id<TVInterfaceCreating>)interfaceCreator
 {

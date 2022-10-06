@@ -8,9 +8,6 @@
 
 #import "FBSDKDeviceLoginViewController.h"
 
-#import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
-#import <FBSDKLoginKit/FBSDKDeviceLoginManagerDelegate.h>
-
 #import <FBSDKLoginKit/FBSDKLoginKit-Swift.h>
 
 @interface FBSDKDeviceLoginViewController () <FBSDKDeviceLoginManagerDelegate>
@@ -20,7 +17,10 @@
 
 @end
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FBSDKDeviceLoginViewController
+#pragma clang diagnostic pop
 
 - (void)viewDidDisappear:(BOOL)animated
 {
@@ -55,8 +55,7 @@
   id<FBSDKDeviceLoginViewControllerDelegate> delegate = self.delegate;
   self.delegate = nil;
 
-  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
-  NSUInteger smartLoginOptions = [provider cachedSmartLoginOptions];
+  NSUInteger smartLoginOptions = FBSDKServerConfigurationManager.shared.cachedServerConfiguration.smartLoginOptions;
   NSUInteger smartLoginRequireConfirmation = 1 << 1;
   FBSDKAccessToken *token = result.accessToken;
   BOOL requireConfirm = ((smartLoginOptions & smartLoginRequireConfirmation)
@@ -204,8 +203,7 @@
   _loginManager.delegate = nil;
   [_loginManager cancel];
   _loginManager = nil;
-  FBSDKServerConfigurationProvider *provider = [FBSDKServerConfigurationProvider new];
-  NSUInteger smartLoginOptions = [provider cachedSmartLoginOptions];
+  NSUInteger smartLoginOptions = FBSDKServerConfigurationManager.shared.cachedServerConfiguration.smartLoginOptions;
   NSUInteger smartLoginRequireConfirmation = 1 << 0;
   BOOL enableSmartLogin = (!_isRetry
     && (smartLoginOptions & smartLoginRequireConfirmation));

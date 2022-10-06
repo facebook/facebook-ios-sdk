@@ -14,7 +14,6 @@
 #import "FBSDKAccessToken.h"
 #import "FBSDKAuthenticationToken.h"
 #import "FBSDKCoreKitVersions.h"
-#import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
@@ -22,7 +21,6 @@
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKSafeCast.h"
 #import "FBSDKSettingsProtocol.h"
 #import "FBSDKURLSessionProxying.h"
@@ -109,7 +107,6 @@ static id<FBSDKEventLogging> _eventLogger;
 static id<FBSDKOperatingSystemVersionComparing> _operatingSystemVersionComparer;
 static id<FBSDKMacCatalystDetermining> _macCatalystDeterminator;
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
-static Class<FBSDKAccessTokenSetting> _accessTokenSetter;
 static id<FBSDKErrorCreating> _errorFactory;
 static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
@@ -213,16 +210,6 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   _accessTokenProvider = accessTokenProvider;
 }
 
-+ (nullable Class<FBSDKAccessTokenSetting>)accessTokenSetter
-{
-  return _accessTokenSetter;
-}
-
-+ (void)setAccessTokenSetter:(nullable Class<FBSDKAccessTokenSetting>)accessTokenSetter
-{
-  _accessTokenSetter = accessTokenSetter;
-}
-
 + (nullable id<FBSDKErrorCreating>)errorFactory
 {
   return _errorFactory;
@@ -252,7 +239,6 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
              operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                     macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
                         accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                          accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
                                errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
                 authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider
 {
@@ -269,7 +255,6 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   self.operatingSystemVersionComparer = operatingSystemVersionComparer;
   self.macCatalystDeterminator = macCatalystDeterminator;
   self.accessTokenProvider = accessTokenProvider;
-  self.accessTokenSetter = accessTokenSetter;
   self.errorFactory = errorFactory;
   self.authenticationTokenProvider = authenticationTokenProvider;
 
@@ -290,7 +275,6 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   self.operatingSystemVersionComparer = nil;
   self.macCatalystDeterminator = nil;
   self.accessTokenProvider = nil;
-  self.accessTokenSetter = nil;
   self.errorFactory = nil;
   self.authenticationTokenProvider = nil;
 }
@@ -1011,9 +995,9 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
       return;
     }
     if (errorSubcode == 493) {
-      [self.class.accessTokenSetter setCurrentAccessToken:_CreateExpiredAccessToken([self.class.accessTokenProvider currentAccessToken])];
+      [self.class.accessTokenProvider setCurrentAccessToken:_CreateExpiredAccessToken([self.class.accessTokenProvider currentAccessToken])];
     } else {
-      [self.class.accessTokenSetter setCurrentAccessToken:nil];
+      [self.class.accessTokenProvider setCurrentAccessToken:nil];
     }
   };
 
@@ -1318,7 +1302,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
     agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.class.settings.userAgentSuffix];
   }
   if (@available(iOS 13.0, *)) {
-    if (self.class.macCatalystDeterminator.isMacCatalystApp) {
+    if (self.class.macCatalystDeterminator.fb_isMacCatalystApp) {
       return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
     }
   }

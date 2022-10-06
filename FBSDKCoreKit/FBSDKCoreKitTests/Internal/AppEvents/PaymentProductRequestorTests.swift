@@ -181,7 +181,7 @@ final class PaymentProductRequestorTests: XCTestCase {
     )
     XCTAssertEqual(
       eventLogger.capturedFlushReason,
-      AppEventsUtility.FlushReason.eagerlyFlushingEvent.rawValue,
+      AppEvents.FlushReason.eagerlyFlushingEvent,
       "Should capture the flush reason"
     )
   }

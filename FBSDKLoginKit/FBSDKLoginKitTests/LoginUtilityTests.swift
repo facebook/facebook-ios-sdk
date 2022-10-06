@@ -49,7 +49,7 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#granted_scopes=public_profile&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949&state=%7B%22challenge%22%3A%22a%2520%253Dbcdef%22%7D")
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertEqual(parameters[Keys.expiresIn], Values.expiration)
     XCTAssertEqual(parameters[Keys.accessToken], Values.accessToken)
@@ -70,7 +70,7 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied#_=_")
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertNil(parameters[Keys.expiresIn])
     XCTAssertNil(parameters[Keys.accessToken])
@@ -91,7 +91,7 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#granted_scopes=public_profile&denied_scopes=&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949&state=%7B%22challenge%22%3A%22a%2520%253Dbcdef%22%7D")
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertEqual(parameters[Keys.expiresIn], Values.expiration)
     XCTAssertEqual(parameters[Keys.accessToken], Values.accessToken)
@@ -112,7 +112,7 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#granted_scopes=public_profile,email,user_friends,user_birthday,user_age_range,user_hometown,user_location,user_gender,user_link&id_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFiY2QxMjM0In0=.eyJ1c2VyX2xvY2F0aW9uIjp7ImlkIjoiMTEwODQzNDE4OTQwNDg0IiwibmFtZSI6IlNlYXR0bGUsIFdhc2hpbmd0b24ifSwidXNlcl9saW5rIjoiaHR0cHM6XC9cL3d3dy5mYWNlYm9vay5jb20iLCJzdWIiOiIxMjM0IiwiaWF0IjoxNjM3NjkxOTUwLCJqdGkiOiJhIGp0aSBpcyBqdXN0IGFueSBzdHJpbmciLCJwaWN0dXJlIjoiaHR0cHM6XC9cL3d3dy5mYWNlYm9vay5jb21cL3NvbWVfcGljdHVyZSIsInVzZXJfYWdlX3JhbmdlIjp7Im1pbiI6MjF9LCJ1c2VyX2ZyaWVuZHMiOlsiMTIzIiwiNDU2Il0sImlzcyI6Imh0dHBzOlwvXC9mYWNlYm9vay5jb21cL2RpYWxvZ1wvb2F1dGgiLCJtaWRkbGVfbmFtZSI6Ik1pZGRsZSIsImF1ZCI6IjczOTE2Mjg0MzkiLCJmYW1pbHlfbmFtZSI6IlVzZXIiLCJuYW1lIjoiVGVzdCBVc2VyIiwidXNlcl9iaXJ0aGRheSI6IjAxXC8wMVwvMTk5MCIsIm5vbmNlIjoiZmVkY2IgPWEiLCJleHAiOjE2Mzc4NjQ4MTAsImdpdmVuX25hbWUiOiJUZXN0IiwidXNlcl9nZW5kZXIiOiJtYWxlIiwiZW1haWwiOiJlbWFpbEBlbWFpbC5jb20iLCJ1c2VyX2hvbWV0b3duIjp7ImlkIjoiMTEyNzI0OTYyMDc1OTk2IiwibmFtZSI6Ik1hcnR") // swiftlint:disable:this line_length
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertEqual(
       parameters[Keys.grantedScopes],
@@ -136,7 +136,7 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#granted_scopes=public_profile%2Cemail%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949&id_token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImFiY2QxMjM0In0=.eyJ1c2VyX2xvY2F0aW9uIjp7ImlkIjoiMTEwODQzNDE4OTQwNDg0IiwibmFtZSI6IlNlYXR0bGUsIFdhc2hpbmd0b24ifSwidXNlcl9saW5rIjoiaHR0cHM6XC9cL3d3dy5mYWNlYm9vay5jb20iLCJzdWIiOiIxMjM0IiwiaWF0IjoxNjM3NjkxOTUwLCJqdGkiOiJhIGp0aSBpcyBqdXN0IGFueSBzdHJpbmciLCJwaWN0dXJlIjoiaHR0cHM6XC9cL3d3dy5mYWNlYm9vay5jb21cL3NvbWVfcGljdHVyZSIsInVzZXJfYWdlX3JhbmdlIjp7Im1pbiI6MjF9LCJ1c2VyX2ZyaWVuZHMiOlsiMTIzIiwiNDU2Il0sImlzcyI6Imh0dHBzOlwvXC9mYWNlYm9vay5jb21cL2RpYWxvZ1wvb2F1dGgiLCJtaWRkbGVfbmFtZSI6Ik1pZGRsZSIsImF1ZCI6IjczOTE2Mjg0MzkiLCJmYW1pbHlfbmFtZSI6IlVzZXIiLCJuYW1lIjoiVGVzdCBVc2VyIiwidXNlcl9iaXJ0aGRheSI6IjAxXC8wMVwvMTk5MCIsIm5vbmNlIjoiZmVkY2IgPWEiLCJleHAiOjE2Mzc4NjQ4MTAsImdpdmVuX25hbWUiOiJUZXN0IiwidXNlcl9nZW5kZXIiOiJtYWxlIiwiZW1haWwiOiJlbWFpbEBlbWFpbC5jb20iLCJ1c2VyX2hvbWV0b3duIjp7ImlkIjoiMTEyNzI0OTYyMDc1OTk2IiwibmFtZSI6Ik1hcnR") // swiftlint:disable:this line_length
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertEqual(parameters[Keys.idToken], Values.idToken)
     XCTAssertEqual(parameters[Keys.expiresIn], Values.expiration)
@@ -157,7 +157,7 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#id_token=invalid_token&state=%7B%22challenge%22%3A%22a%2520%253Dbcdef%22%7D")
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertEqual(parameters[Keys.state], Values.challenge)
     XCTAssertEqual(parameters[Keys.idToken], Values.invalidToken)
@@ -178,7 +178,7 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "fb7391628439://authorize/#denied_scopes=user_friends,user_likes&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949&state=%7B%22challenge%22%3A%22a%2520%253Dbcdef%22%7D")
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertEqual(parameters[Keys.state], Values.challenge)
 
@@ -200,14 +200,14 @@ final class LoginUtilityTests: XCTestCase {
     let url = try XCTUnwrap(
       URL(string: "test://test?granted_scopes=public_profile&access_token=sometoken&expires_in=5183949")
     )
-    XCTAssertNil(_LoginUtility.queryParams(fromLoginURL: url))
+    XCTAssertNil(LoginUtility.getQueryParameters(from: url))
   }
 
   func testQueryParamsFromLoginURLWithoutFacebookDomainWithAuthorizeHost() throws {
     let url = try XCTUnwrap(
       URL(string: "test://authorize?granted_scopes=public_profile&access_token=sometoken&expires_in=5183949")
     )
-    let parameters = try XCTUnwrap(_LoginUtility.queryParams(fromLoginURL: url) as? [String: String])
+    let parameters = try XCTUnwrap(LoginUtility.getQueryParameters(from: url) as? [String: String])
 
     XCTAssertNil(parameters[Keys.state])
 
@@ -226,20 +226,22 @@ final class LoginUtilityTests: XCTestCase {
   }
 
   func testStringForAudienceOnlyMe() {
-    let audienceString = _LoginUtility.string(forAudience: .onlyMe)
+    let audienceString = LoginUtility.stringForAudience(.onlyMe)
     XCTAssertEqual(audienceString, "only_me", .providesStringForAudience)
   }
 
   func testStringForAudienceFriends() {
-    let audienceString = _LoginUtility.string(forAudience: .friends)
+    let audienceString = LoginUtility.stringForAudience(.friends)
     XCTAssertEqual(audienceString, "friends", .providesStringForAudience)
   }
 
   func testStringForAudienceEveryone() {
-    let audienceString = _LoginUtility.string(forAudience: .everyone)
+    let audienceString = LoginUtility.stringForAudience(.everyone)
     XCTAssertEqual(audienceString, "everyone", .providesStringForAudience)
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 

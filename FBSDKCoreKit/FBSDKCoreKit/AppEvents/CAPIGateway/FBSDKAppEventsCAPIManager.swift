@@ -18,13 +18,15 @@ enum SettingsAPIFields: String {
   case accessKey = "access_key"
 }
 
+public typealias AppEventsCAPIManager = FBSDKAppEventsCAPIManager
+
 @objcMembers
 public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
   private static let settingsPath = "cloudbridge_settings"
 
   public static let shared = FBSDKAppEventsCAPIManager()
 
-  internal var isEnabled: Bool = false
+  internal var isEnabled = false
   internal var factory: GraphRequestFactoryProtocol?
   internal var settings: SettingsProtocol?
 

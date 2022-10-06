@@ -600,7 +600,7 @@ static NSMapTable *_transientObjects;
 
   static NSArray<NSDictionary<NSString *, id> *> *urlTypes = nil;
   dispatch_once(&fetchUrlSchemesToken, ^{
-    urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
+    urlTypes = [self.infoDictionaryProvider.fb_infoDictionary valueForKey:@"CFBundleURLTypes"];
   });
   for (NSDictionary<NSString *, id> *urlType in urlTypes) {
     NSArray<NSString *> *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
@@ -637,7 +637,7 @@ static NSMapTable *_transientObjects;
 {
   static NSArray<NSString *> *schemes = nil;
   dispatch_once(&fetchApplicationQuerySchemesToken, ^{
-    schemes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
+    schemes = [self.infoDictionaryProvider.fb_infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
   });
 
   return [schemes containsObject:urlScheme];

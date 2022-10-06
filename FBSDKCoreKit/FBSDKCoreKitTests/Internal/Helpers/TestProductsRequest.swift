@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestProductsRequest: ProductsRequest {
+final class TestProductsRequest: _ProductsRequest {
   var cancelCallCount = 0
   var startCallCount = 0
 

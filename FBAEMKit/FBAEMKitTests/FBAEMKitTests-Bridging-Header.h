@@ -8,6 +8,4 @@
 
 // Import internal ObjC types here to use them in Swift tests
 
-#import <TestTools/TestTools-Swift.h>
-
 #import "FBAEMReporter+Testing.h"

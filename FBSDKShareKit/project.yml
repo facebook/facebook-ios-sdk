@@ -19,7 +19,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: '11.0'
+    tvOS: '12.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -31,11 +31,12 @@ settings:
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
-    SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
 
 targets:
   FBSDKShareKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKShareKit
@@ -50,14 +51,12 @@ targets:
         link: false
       - target: FBSDKCoreKit/FBSDKCoreKit-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
   FBSDKShareKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKShareKit
@@ -75,14 +74,12 @@ targets:
       - sdk: Photos.framework
       - sdk: Social.framework
         weak: true
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
   FBSDKShareKit_TV-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKShareKit
@@ -97,13 +94,11 @@ targets:
         link: false
       - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       DEFINES_MODULE: YES
   FBSDKShareKit_TV-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKShareKit
@@ -119,10 +114,6 @@ targets:
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
       - sdk: Photos.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       DEFINES_MODULE: YES
   FBSDKShareKitTests:

@@ -12,17 +12,44 @@ import XCTest
 
 final class ShareDialogConfigurationTests: XCTestCase {
 
-  let serverConfiguration = TestServerConfiguration()
-  lazy var provider = TestServerConfigurationProvider(configuration: serverConfiguration)
-  lazy var configuration = ShareDialogConfiguration(serverConfigurationProvider: provider)
+  // swiftlint:disable implicitly_unwrapped_optional
+  var serverConfiguration: TestServerConfiguration!
+  var provider: TestServerConfigurationProvider!
+  var configuration: ShareDialogConfiguration!
+  // swiftlint:enable implicitly_unwrapped_optional
 
-  func testDefaults() {
-    let configuration = ShareDialogConfiguration()
+  override func setUp() {
+    super.setUp()
 
-    XCTAssertEqual(
-      configuration.serverConfigurationProvider as? ServerConfigurationManager,
-      ServerConfigurationManager.shared,
-      "Should use the expected default server configuration provider"
+    serverConfiguration = TestServerConfiguration()
+    provider = TestServerConfigurationProvider(configuration: serverConfiguration)
+    configuration = ShareDialogConfiguration()
+
+    configuration.setDependencies(
+      .init(serverConfigurationProvider: provider)
+    )
+  }
+
+  override func tearDown() {
+    configuration.resetDependencies()
+
+    serverConfiguration = nil
+    provider = nil
+    configuration = nil
+
+    super.tearDown()
+  }
+
+  func testDefaultDependencies() throws {
+    configuration.resetDependencies()
+    let dependencies = try configuration.getDependencies()
+
+    XCTAssertTrue(
+      dependencies.serverConfigurationProvider is _ServerConfigurationManager,
+      """
+      The ShareDialogConfiguration type uses _ServerConfigurationManager as
+      its ServerConfigurationProvider dependency by default
+      """
     )
   }
 
@@ -30,7 +57,7 @@ final class ShareDialogConfigurationTests: XCTestCase {
     XCTAssertEqual(
       configuration.serverConfigurationProvider as? TestServerConfigurationProvider,
       provider,
-      "Should be able to create with a custom server configuration provider"
+      "Should be able to configure with a custom server configuration provider"
     )
   }
 
@@ -45,7 +72,7 @@ final class ShareDialogConfigurationTests: XCTestCase {
   }
 
   func testShouldUseNativeDialog() {
-    configuration.shouldUseNativeDialog(forDialogName: name)
+    _ = configuration.shouldUseNativeDialog(forDialogName: name)
     XCTAssertTrue(
       provider.didRetrieveCachedServerConfiguration,
       "Checking if a native dialog should be used should retrieve a server configuration to query"
@@ -58,7 +85,7 @@ final class ShareDialogConfigurationTests: XCTestCase {
   }
 
   func testShouldUseSafariController() {
-    configuration.shouldUseSafariViewController(forDialogName: name)
+    _ = configuration.shouldUseSafariViewController(forDialogName: name)
     XCTAssertTrue(
       provider.didRetrieveCachedServerConfiguration,
       "Checking if a native dialog should be used should retrieve a server configuration to query"

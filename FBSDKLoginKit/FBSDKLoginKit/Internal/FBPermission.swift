@@ -24,6 +24,7 @@ public final class FBPermission: NSObject {
   public override var description: String {
     value
   }
+
   public override var hash: Int {
     value.hash
   }

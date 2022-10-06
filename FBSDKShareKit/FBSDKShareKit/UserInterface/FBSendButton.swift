@@ -53,7 +53,7 @@ public final class FBSendButton: FBButton, SharingButton, FBButtonImpressionLogg
 
   public func configureButton() {
     var title = ""
-    if let internalUtility = try? Self.getDependencies().internalUtility {
+    if let internalUtility = Self.internalUtility {
       title = NSLocalizedString(
         "SendButton.Send",
         tableName: "FacebookSDK",

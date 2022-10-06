@@ -12,11 +12,11 @@ import UIKit
 // swiftformat:disable indent
 @objcMembers
 final class TestAppEvents: TestEventLogger,
-                           SourceApplicationTracking,
-                           AppEventsConfiguring,
-                           ApplicationActivating,
-                           ApplicationLifecycleObserving,
-                           ApplicationStateSetting {
+                           _SourceApplicationTracking,
+                           _AppEventsConfiguring,
+                           _ApplicationActivating,
+                           _ApplicationLifecycleObserving,
+                           _ApplicationStateSetting {
   // swiftformat:enable indent
   var wasActivateAppCalled = false
   var wasStartObservingApplicationLifecycleNotificationsCalled = false
@@ -24,7 +24,7 @@ final class TestAppEvents: TestEventLogger,
   var wasRegisterAutoResetSourceApplicationCalled = false
   var capturedSetSourceApplication: String?
   var capturedSetSourceApplicationURL: URL?
-  var capturedCodelessIndexer: CodelessIndexing.Type?
+  var capturedCodelessIndexer: _CodelessIndexing.Type?
 
   func activateApp() {
     wasActivateAppCalled = true
@@ -38,54 +38,54 @@ final class TestAppEvents: TestEventLogger,
     capturedApplicationState = state
   }
 
-  var capturedConfigureGateKeeperManager: GateKeeperManaging.Type?
-  var capturedConfigureAppEventsConfigurationProvider: AppEventsConfigurationProviding?
-  var capturedConfigureServerConfigurationProvider: ServerConfigurationProviding?
+  var capturedConfigureGateKeeperManager: _GateKeeperManaging.Type?
+  var capturedConfigureAppEventsConfigurationProvider: _AppEventsConfigurationProviding?
+  var capturedConfigureServerConfigurationProvider: _ServerConfigurationProviding?
   var capturedConfigureGraphRequestFactory: GraphRequestFactoryProtocol?
   var capturedConfigureFeatureChecker: FeatureChecking?
   var capturedConfigurePrimaryDataStore: DataPersisting?
   var capturedConfigureLogger: Logging.Type?
   var capturedConfigureSettings: SettingsProtocol?
-  var capturedConfigurePaymentObserver: PaymentObserving?
-  var capturedConfigureTimeSpentRecorder: (SourceApplicationTracking & TimeSpentRecording)?
-  var capturedConfigureAppEventsStateStore: AppEventsStatePersisting?
-  var capturedConfigureEventDeactivationParameterProcessor: AppEventsParameterProcessing?
-  var capturedConfigureRestrictiveDataFilterParameterProcessor: AppEventsParameterProcessing?
-  var capturedConfigureATEPublisherFactory: ATEPublisherCreating?
-  var capturedConfigureAppEventsStateProvider: AppEventsStateProviding?
-  var capturedConfigureSwizzler: Swizzling.Type?
-  var capturedAdvertiserIDProvider: AdvertiserIDProviding?
-  var capturedOnDeviceMLModelManager: EventProcessing?
-  var capturedMetadataIndexer: MetadataIndexing?
-  var capturedSKAdNetworkReporter: AppEventsReporter?
-  var capturedUserDataStore: UserDataPersisting?
+  var capturedConfigurePaymentObserver: _PaymentObserving?
+  var capturedConfigureTimeSpentRecorder: (_SourceApplicationTracking & _TimeSpentRecording)?
+  var capturedConfigureAppEventsStateStore: _AppEventsStatePersisting?
+  var capturedConfigureEventDeactivationParameterProcessor: _AppEventsParameterProcessing?
+  var capturedConfigureRestrictiveDataFilterParameterProcessor: _AppEventsParameterProcessing?
+  var capturedConfigureATEPublisherFactory: _ATEPublisherCreating?
+  var capturedConfigureAppEventsStateProvider: _AppEventsStateProviding?
+  var capturedConfigureSwizzler: _Swizzling.Type?
+  var capturedAdvertiserIDProvider: _AdvertiserIDProviding?
+  var capturedOnDeviceMLModelManager: _EventProcessing?
+  var capturedMetadataIndexer: _MetadataIndexing?
+  var capturedSKAdNetworkReporter: _AppEventsReporter?
+  var capturedUserDataStore: _UserDataPersisting?
   var capturedAEMReporter: _AEMReporterProtocol.Type?
   // swiftlint:disable:next line_length
-  var capturedAppEventsUtility: (AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying)?
+  var capturedAppEventsUtility: (_AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtilityProtocol & _LoggingNotifying)?
   var capturedInternalUtility: InternalUtilityProtocol?
   var capturedCAPIReporter: CAPIReporter?
 
   // swiftlint:disable:next function_parameter_count
   func configure(
-    withGateKeeperManager gateKeeperManager: GateKeeperManaging.Type,
-    appEventsConfigurationProvider: AppEventsConfigurationProviding,
-    serverConfigurationProvider: ServerConfigurationProviding,
+    gateKeeperManager: _GateKeeperManaging.Type,
+    appEventsConfigurationProvider: _AppEventsConfigurationProviding,
+    serverConfigurationProvider: _ServerConfigurationProviding,
     graphRequestFactory: GraphRequestFactoryProtocol,
     featureChecker: FeatureChecking,
     primaryDataStore: DataPersisting,
     logger: Logging.Type,
     settings: SettingsProtocol,
-    paymentObserver: PaymentObserving,
-    timeSpentRecorder: SourceApplicationTracking & TimeSpentRecording,
-    appEventsStateStore: AppEventsStatePersisting,
-    eventDeactivationParameterProcessor: AppEventsParameterProcessing,
-    restrictiveDataFilterParameterProcessor: AppEventsParameterProcessing,
-    atePublisherFactory: ATEPublisherCreating,
-    appEventsStateProvider: AppEventsStateProviding,
-    advertiserIDProvider: AdvertiserIDProviding,
-    userDataStore: UserDataPersisting,
+    paymentObserver: _PaymentObserving,
+    timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
+    appEventsStateStore: _AppEventsStatePersisting,
+    eventDeactivationParameterProcessor: _AppEventsParameterProcessing,
+    restrictiveDataFilterParameterProcessor: _AppEventsParameterProcessing,
+    atePublisherFactory: _ATEPublisherCreating,
+    appEventsStateProvider: _AppEventsStateProviding,
+    advertiserIDProvider: _AdvertiserIDProviding,
+    userDataStore: _UserDataPersisting,
     // swiftlint:disable:next line_length
-    appEventsUtility: AppEventDropDetermining & AppEventParametersExtracting & AppEventsUtilityProtocol & LoggingNotifying,
+    appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtilityProtocol & _LoggingNotifying,
     internalUtility: InternalUtilityProtocol,
     capiReporter: CAPIReporter
   ) {
@@ -113,11 +113,11 @@ final class TestAppEvents: TestEventLogger,
 
   // swiftlint:disable:next function_parameter_count
   func configureNonTVComponents(
-    onDeviceMLModelManager modelManager: EventProcessing,
-    metadataIndexer: MetadataIndexing,
-    skAdNetworkReporter: AppEventsReporter?,
-    codelessIndexer: CodelessIndexing.Type,
-    swizzler: Swizzling.Type,
+    onDeviceMLModelManager modelManager: _EventProcessing,
+    metadataIndexer: _MetadataIndexing,
+    skAdNetworkReporter: _AppEventsReporter?,
+    codelessIndexer: _CodelessIndexing.Type,
+    swizzler: _Swizzling.Type,
     aemReporter: _AEMReporterProtocol.Type
   ) {
     capturedOnDeviceMLModelManager = modelManager

@@ -11,8 +11,6 @@
 import TestTools
 
 final class DialogConfigurationTests: XCTestCase {
-
-  let coder = TestCoder()
   let versions = ["1", "2", "3"]
 
   enum Keys {
@@ -23,13 +21,13 @@ final class DialogConfigurationTests: XCTestCase {
 
   func testSecureCoding() {
     XCTAssertTrue(
-      DialogConfiguration.supportsSecureCoding,
+      _DialogConfiguration.supportsSecureCoding,
       "Should support secure coding"
     )
   }
 
   func testEncodingAndDecoding() throws {
-    let dialog = DialogConfiguration(
+    let dialog = _DialogConfiguration(
       name: name,
       url: SampleURLs.valid,
       appVersions: versions
@@ -50,6 +48,8 @@ final class DialogConfigurationTests: XCTestCase {
     )
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 

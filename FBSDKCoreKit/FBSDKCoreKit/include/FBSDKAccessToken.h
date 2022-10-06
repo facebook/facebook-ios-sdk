@@ -8,9 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
+#import <FBSDKCoreKit/FBSDKTokenStringProviding.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKTokenCaching.h>
+
+@protocol FBSDKGraphRequestConnectionFactory;
+@protocol FBSDKGraphRequestPiggybackManaging;
+@protocol FBSDKErrorCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,7 +70,7 @@ NS_SWIFT_NAME(AccessTokenDidExpireKey);
 
 /// Represents an immutable access token for using Facebook services.
 NS_SWIFT_NAME(AccessToken)
-@interface FBSDKAccessToken : NSObject <NSCopying, NSObject, NSSecureCoding, FBSDKAccessTokenProviding, FBSDKAccessTokenSetting>
+@interface FBSDKAccessToken : NSObject <NSCopying, NSObject, NSSecureCoding, FBSDKAccessTokenProviding, FBSDKTokenStringProviding>
 
 /**
  The "global" access token that represents the currently logged in user.
@@ -183,6 +188,19 @@ NS_SWIFT_NAME(hasGranted(permission:));
  If a token is already expired, it cannot be refreshed.
  */
 + (void)refreshCurrentAccessTokenWithCompletion:(nullable FBSDKGraphRequestCompletion)completion;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)configureWithTokenCache:(id<FBSDKTokenCaching>)tokenCache
+  graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+   graphRequestPiggybackManager:(id<FBSDKGraphRequestPiggybackManaging>)graphRequestPiggybackManager
+                   errorFactory:(id<FBSDKErrorCreating>)errorFactory
+NS_SWIFT_NAME(configure(tokenCache:graphRequestConnectionFactory:graphRequestPiggybackManager:errorFactory:));
+
 
 @end
 

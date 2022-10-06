@@ -25,9 +25,9 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   public let events: [_AEMEvent]
 
   private enum Keys {
-    static let conversionValueKey: String = "conversion_value"
-    static let priorityKey: String = "priority"
-    static let eventsKey: String = "events"
+    static let conversionValueKey = "conversion_value"
+    static let priorityKey = "priority"
+    static let eventsKey = "events"
   }
 
   @objc(initWithJSON:)
@@ -149,7 +149,7 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   }
 
   public override func isEqual(_ object: Any?) -> Bool {
-    guard let rule = object as?_AEMRule else {
+    guard let rule = object as? _AEMRule else {
       return false
     }
 
@@ -158,8 +158,8 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
     }
 
     return conversionValue == rule.conversionValue
-    && priority == rule.priority
-    && events == rule.events
+      && priority == rule.priority
+      && events == rule.events
   }
 }
 

@@ -19,7 +19,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: "11.0"
+    tvOS: '12.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -31,11 +31,12 @@ settings:
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
-    SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
 
 targets:
   FBSDKLoginKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKLoginKit
@@ -57,14 +58,11 @@ targets:
         link: false
       - target: FBSDKCoreKit/FBSDKCoreKit-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKLoginKit
@@ -86,14 +84,11 @@ targets:
       - target: FBSDKCoreKit/FBSDKCoreKit-Dynamic
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKit_TV-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKLoginKit
@@ -114,14 +109,11 @@ targets:
         link: false
       - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKit_TV-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKLoginKit
@@ -142,13 +134,8 @@ targets:
       - target: FBSDKCoreKit/FBSDKCoreKit_TV-Dynamic
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKLoginKit/Internal/FBSDKLoginKit-Prefix-Header.h
   FBSDKLoginKitTests:
     type: bundle.unit-test
     platform: iOS

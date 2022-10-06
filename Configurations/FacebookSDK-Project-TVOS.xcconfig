@@ -9,7 +9,7 @@
 #include "FacebookSDK-Library.xcconfig"
 
 ARCHS = x86_64 arm64
-TVOS_DEPLOYMENT_TARGET = 11.0
+TVOS_DEPLOYMENT_TARGET = 12.0
 SDKROOT = appletvos
 PRODUCT_NAME = $(PROJECT_NAME)
 INFOPLIST_FILE = $(PROJECT_NAME)/Info.plist
@@ -23,9 +23,3 @@ GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 SKIP_INSTALL = YES
 CODE_SIGN_IDENTITY =
 TARGETED_DEVICE_FAMILY = 3 // tvos
-
-// Bitcode Support
-// unlike iphoneos, appletvos requires this flag despite the explicit -fembed-bitcode.
-ENABLE_BITCODE = YES
-FB_BITCODE_FLAG = -fembed-bitcode -Wno-error=unused-command-line-argument
-OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)

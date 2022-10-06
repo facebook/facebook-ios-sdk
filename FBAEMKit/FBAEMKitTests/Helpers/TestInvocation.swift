@@ -57,7 +57,8 @@ final class TestInvocation: _AEMInvocation {
     value: NSNumber?,
     parameters: [String: Any]?,
     configurations: [String: [_AEMConfiguration]]?,
-    shouldUpdateCache: Bool
+    shouldUpdateCache: Bool,
+    isRuleMatchInServer: Bool
   ) -> Bool {
     attributionCallCount += 1
     return true

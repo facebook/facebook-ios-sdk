@@ -17,17 +17,14 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   let logger = TestLogger(loggingBehavior: .developerErrors)
   let urlOpener = TestInternalURLOpener(canOpenURL: true)
   let bridgeAPIResponseFactory = TestBridgeAPIResponseFactory()
-  let frameworkLoader = TestDylibResolver()
   let appURLSchemeProvider = TestInternalUtility()
   let sampleUrl = SampleURLs.valid
   let errorFactory = TestErrorFactory()
 
-  lazy var api = BridgeAPI(
-    processInfo: TestProcessInfo(),
+  lazy var api = _BridgeAPI(
     logger: logger,
     urlOpener: urlOpener,
     bridgeAPIResponseFactory: bridgeAPIResponseFactory,
-    frameworkLoader: frameworkLoader,
     appURLSchemeProvider: appURLSchemeProvider,
     errorFactory: errorFactory
   )
@@ -36,14 +33,12 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     super.setUp()
 
     FBSDKLoginManager.resetTestEvidence()
-
-    frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.self
   }
 
   // MARK: - Url Opening
 
   func testWithNonHttpUrlScheme() {
-    api.expectingBackground = true // So we can check that it's unchanged
+    api.isExpectingBackground = true // So we can check that it's unchanged
     let nonHTTPUrl = URL(string: "file://example.com")! // swiftlint:disable:this force_unwrapping
     api.openURLWithSafariViewController(
       url: nonHTTPUrl,
@@ -58,18 +53,18 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should try to open a url with a non http scheme"
     )
     XCTAssertTrue(
-      api.expectingBackground,
+      api.isExpectingBackground,
       "Should not modify whether the background is expected to change"
     )
     XCTAssertNil(
-      api.pendingURLOpen,
+      api.pendingURLOpener,
       "Should not set a pending url opener"
     )
   }
 
   func testWithAuthenticationURL() {
     loginManager.stubbedIsAuthenticationURL = true
-    api.expectingBackground = true
+    api.isExpectingBackground = true
 
     api.openURLWithSafariViewController(
       url: sampleUrl,
@@ -88,7 +83,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
 
   func testWithNonAuthenticationURLWithSafariControllerAvailable() {
     loginManager.stubbedIsAuthenticationURL = false
-    api.expectingBackground = true
+    api.isExpectingBackground = true
 
     api.openURLWithSafariViewController(
       url: sampleUrl,
@@ -105,34 +100,9 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     assertExpectingBackgroundAndPendingUrlOpener()
   }
 
-  func testWithoutSafariVcAvailable() {
-    frameworkLoader.stubSafariViewControllerClass = nil
-    loginManager.stubbedIsAuthenticationURL = false
-    api.expectingBackground = true
-
-    api.openURLWithSafariViewController(
-      url: sampleUrl,
-      sender: loginManager,
-      from: nil,
-      handler: uninvokedSuccessBlock()
-    )
-
-    XCTAssertEqual(
-      urlOpener.capturedOpenURL,
-      sampleUrl,
-      "Should try to open a url when a safari controller is not available"
-    )
-    XCTAssertNil(api.authenticationSessionCompletionHandler)
-    XCTAssertNil(api.authenticationSession)
-    XCTAssertTrue(
-      api.pendingURLOpen === loginManager,
-      "Should set the pending url opener to the passed in sender"
-    )
-  }
-
   func testWithoutFromViewController() {
     loginManager.stubbedIsAuthenticationURL = false
-    api.expectingBackground = true
+    api.isExpectingBackground = true
 
     api.openURLWithSafariViewController(
       url: sampleUrl,
@@ -155,7 +125,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
   func testWithFromViewControllerMissingTransitionCoordinator() {
     let spy = ViewControllerSpy.makeDefaultSpy()
     loginManager.stubbedIsAuthenticationURL = false
-    api.expectingBackground = true
+    api.isExpectingBackground = true
     var didInvokeHandler = false
     let handler: SuccessBlock = { success, error in
       XCTAssertTrue(success, "Should call the handler with success")
@@ -182,7 +152,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should set the correct modal presentation style"
     )
     XCTAssertEqual(
-      safariVc?.delegate as? BridgeAPI,
+      safariVc?.delegate as? _BridgeAPI,
       api,
       "Should set the safari view controller delegate to the bridge api"
     )
@@ -214,7 +184,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     let coordinator = TestViewControllerTransitionCoordinator()
     spy.stubbedTransitionCoordinator = coordinator
     loginManager.stubbedIsAuthenticationURL = false
-    api.expectingBackground = true
+    api.isExpectingBackground = true
     var didInvokeHandler = false
     let handler: SuccessBlock = { success, error in
       XCTAssertTrue(success, "Should call the handler with success")
@@ -252,7 +222,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       "Should set the correct modal presentation style"
     )
     XCTAssertEqual(
-      safariVc?.delegate as? BridgeAPI,
+      safariVc?.delegate as? _BridgeAPI,
       api,
       "Should set the safari view controller delegate to the bridge api"
     )
@@ -278,14 +248,14 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
     line: UInt = #line
   ) {
     XCTAssertFalse(
-      api.expectingBackground,
+      api.isExpectingBackground,
       "Should set expecting background to false",
       file: file,
       line: line
     )
 
     XCTAssertTrue(
-      api.pendingURLOpen === loginManager,
+      api.pendingURLOpener === loginManager,
       "Should set the pending url opener to the passed in sender",
       file: file,
       line: line

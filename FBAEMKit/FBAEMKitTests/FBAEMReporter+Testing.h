@@ -23,7 +23,8 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 @property (class, nonatomic) BOOL isEnabled;
 @property (class, nonatomic) BOOL isConversionFilteringEnabled;
 @property (class, nonatomic) BOOL isCatalogMatchingEnabled;
-@property (class, nonatomic) NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configurations;
+@property (class, nonatomic) BOOL isAdvertiserRuleMatchInServerEnabled;
+@property (class, nonatomic) NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *configurations;
 @property (class, nonatomic) NSMutableArray<FBAEMInvocation *> *invocations;
 @property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
 @property (class, nonatomic) NSString *reportFilePath;
@@ -50,6 +51,12 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
                                      contentID:(nullable NSString *)contentID
                                          block:(dispatch_block_t)block;
 
++ (void)_loadRuleMatch:(NSArray<NSString *> *)businessIDs
+                 event:(NSString *)event
+              currency:(nullable NSString *)currency
+                 value:(nullable NSNumber *)value
+            parameters:(nullable NSDictionary<NSString *, id> *)parameters;
+
 + (BOOL)_isContentOptimized:(id _Nullable)result;
 
 + (BOOL)_shouldReportConversionInCatalogLevel:(FBAEMInvocation *)invocation
@@ -59,11 +66,11 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
                                                   contentID:(nullable NSString *)contentID;
 
 + (nullable FBAEMInvocation *)_attributedInvocation:(NSArray<FBAEMInvocation *> *)invocations
-                                              Event:(NSString *)event
+                                              event:(NSString *)event
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                     configurations:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations;
+                                     configurations:(NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations;
 
 + (BOOL)_isDoubleCounting:(FBAEMInvocation *)invocation
                     event:(NSString *)event;
@@ -71,6 +78,9 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 + (void)_sendDebuggingRequest:(FBAEMInvocation *)invocation;
 
 + (NSDictionary<NSString *, id> *)_debuggingRequestParameters:(FBAEMInvocation *)invocation;
+
++ (NSDictionary<NSString *, id> *)_ruleMatchRequestParameters:(NSArray<NSString *> *)businessIDs
+                                                      content:(nullable NSString *)content;
 
 + (void)_sendAggregationRequest;
 
@@ -82,7 +92,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (BOOL)_shouldRefreshWithIsForced:(BOOL)isForced;
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigurations;
++ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations;
 
 + (void)_addConfigurations:(nullable NSArray<NSDictionary<NSString *, id> *> *)configurations;
 

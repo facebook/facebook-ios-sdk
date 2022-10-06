@@ -13,11 +13,9 @@ at https://developers.facebook.com/docs/ios
 
 Please take a moment and [subscribe to releases](https://docs.github.com/en/enterprise/2.15/user/articles/watching-and-unwatching-repositories) so that you can be notified about new features, deprecations, and critical fixes. To see information about the latest release, consult our [changelog](CHANGELOG.md).
 
-:wave: The SDK team is eager to learn from you! Fill out [this survey](https://facebook.co1.qualtrics.com/jfe/form/SV_2hJ13Imkq1YF9Sm?TrackID=GitHub) to tell us what’s most important to you and how we can improve.
-
 |:warning: Be Advised :warning:|
 |:---|
-|<p>We have begun rewriting the iOS SDK in Swift in order to modernize the code base.</p><p>Please monitor the changelog for updates to existing interfaces but keep in mind that some interfaces will be unstable during this process. As such, updating to a minor version may introduce compilation issues related to language interoperability.</p>Please bear with us as we work towards providing an improved experience for integrating with the Facebook platform.|
+|<p>We have begun rewriting the iOS SDK in Swift in order to modernize the code base.</p><p>Please monitor the changelog for updates to existing interfaces but keep in mind that some interfaces will be unstable during this process. As such, updating to a minor version may introduce compilation issues related to language interoperability. Using symbols now defined in Swift may require using `@import` syntax from Objective-C and using C++ will likely require workarounds like creating wrappers in Objective-C.</p>Please bear with us as we work towards providing an improved experience for integrating with the Facebook platform.|
 
 ## TRY IT OUT
 

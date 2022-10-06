@@ -122,7 +122,7 @@ final class ShareDialogTests: XCTestCase {
     )
     XCTAssertIdentical(
       dependencies.bridgeAPIRequestOpener,
-      BridgeAPI.shared,
+      _BridgeAPI.shared,
       .DefaultDependencies.usesBridgeAPIByDefault
     )
     XCTAssertTrue(
@@ -134,7 +134,7 @@ final class ShareDialogTests: XCTestCase {
       InternalUtility.shared,
       .DefaultDependencies.usesInternalUtilityAsWindowFinderByDefault
     )
-    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .DefaultDependencies.usesErrorFactoryByDefault)
+    XCTAssertTrue(dependencies.errorFactory is _ErrorFactory, .DefaultDependencies.usesErrorFactoryByDefault)
     XCTAssertIdentical(
       dependencies.eventLogger as AnyObject,
       AppEvents.shared,
@@ -744,7 +744,8 @@ final class ShareDialogTests: XCTestCase {
 
   func testWebDialogDelegateCancellation() {
     dialog = createEmptyDialog(mode: .web)
-    let webDialog = WebDialog(name: "test", delegate: dialog)
+    let webDialog = _WebDialog(name: "test")
+    webDialog.delegate = dialog
     dialog.webDialog = webDialog
     dialog.webDialogDidCancel(webDialog)
 
@@ -762,7 +763,8 @@ final class ShareDialogTests: XCTestCase {
 
   func testWebDialogDelegateFailure() throws {
     dialog = createEmptyDialog(mode: .web)
-    let webDialog = WebDialog(name: "test", delegate: dialog)
+    let webDialog = _WebDialog(name: "test")
+    webDialog.delegate = dialog
     dialog.webDialog = webDialog
     let error = TestSDKError(type: .unknown)
     dialog.webDialog(webDialog, didFailWithError: error)
@@ -782,7 +784,8 @@ final class ShareDialogTests: XCTestCase {
 
   func testWebDialogDelegateCompletionWithCancelErrorCode() {
     dialog = createEmptyDialog(mode: .web)
-    let webDialog = WebDialog(name: "test", delegate: dialog)
+    let webDialog = _WebDialog(name: "test")
+    webDialog.delegate = dialog
     dialog.webDialog = webDialog
     dialog.webDialog(webDialog, didCompleteWithResults: ["error_code": 4201])
 
@@ -800,7 +803,8 @@ final class ShareDialogTests: XCTestCase {
 
   func testWebDialogDelegateCompletionWithError() throws {
     dialog = createEmptyDialog(mode: .web)
-    let webDialog = WebDialog(name: "test", delegate: dialog)
+    let webDialog = _WebDialog(name: "test")
+    webDialog.delegate = dialog
     dialog.webDialog = webDialog
     dialog.webDialog(
       webDialog,
@@ -830,7 +834,8 @@ final class ShareDialogTests: XCTestCase {
 
   func testWebDialogDelegateCompletionWithCompletionGestureCancellation() {
     dialog = createEmptyDialog(mode: .web)
-    let webDialog = WebDialog(name: "test", delegate: dialog)
+    let webDialog = _WebDialog(name: "test")
+    webDialog.delegate = dialog
     dialog.webDialog = webDialog
     dialog.webDialog(
       webDialog,
@@ -854,7 +859,8 @@ final class ShareDialogTests: XCTestCase {
 
   func testWebDialogDelegateCompletion() throws {
     dialog = createEmptyDialog(mode: .web)
-    let webDialog = WebDialog(name: "test", delegate: dialog)
+    let webDialog = _WebDialog(name: "test")
+    webDialog.delegate = dialog
     dialog.webDialog = webDialog
     dialog.webDialog(
       webDialog,
@@ -1003,6 +1009,8 @@ final class ShareDialogTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {
@@ -1028,7 +1036,7 @@ fileprivate extension String {
     static let usesInternalUtilityAsWindowFinderByDefault = """
       The default window finding dependency should be the shared InternalUtility
       """
-    static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete ErrorFactory"
+    static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete _ErrorFactory"
     static let usesAppEventsByDefault = "The default event logging dependency should be the shared AppEvents"
     static let usesPHImageManagerAsMediaLibrarySearcherByDefault = """
       The default media library searching dependency should be the default PHImageManager

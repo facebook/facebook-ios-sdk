@@ -6,36 +6,35 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKLoginKit
+
 import FBSDKCoreKit
-import Foundation
 
-@objcMembers
-public final class TestProfileFactory: NSObject, _ProfileCreating {
-
-  public var capturedUserID: String?
-  public var capturedFirstName: String?
-  public var capturedMiddleName: String?
-  public var capturedLastName: String?
-  public var capturedName: String?
-  public var capturedLinkURL: URL?
-  public var capturedRefreshDate: Date?
-  public var capturedImageURL: URL?
-  public var capturedEmail: String?
-  public var capturedFriendIDs: [String]?
-  public var capturedBirthday: Date?
-  public var capturedAgeRange: UserAgeRange?
-  public var capturedHometown: Location?
-  public var capturedLocation: Location?
-  public var capturedGender: String?
-  public var capturedIsLimited = false
+final class TestProfileFactory: ProfileCreating {
+  var capturedUserID: UserIdentifier?
+  var capturedFirstName: String?
+  var capturedMiddleName: String?
+  var capturedLastName: String?
+  var capturedName: String?
+  var capturedLinkURL: URL?
+  var capturedRefreshDate: Date?
+  var capturedImageURL: URL?
+  var capturedEmail: String?
+  var capturedFriendIDs: [String]?
+  var capturedBirthday: Date?
+  var capturedAgeRange: UserAgeRange?
+  var capturedHometown: Location?
+  var capturedLocation: Location?
+  var capturedGender: String?
+  var capturedIsLimited = false
   private var stubbedProfile: Profile
 
-  public init(stubbedProfile: Profile) {
+  init(stubbedProfile: Profile) {
     self.stubbedProfile = stubbedProfile
   }
 
-  public func createProfile( // swiftlint:disable:this function_parameter_count
-    userID: String,
+  func createProfile( // swiftlint:disable:this function_parameter_count
+    userID: UserIdentifier,
     firstName: String?,
     middleName: String?,
     lastName: String?,

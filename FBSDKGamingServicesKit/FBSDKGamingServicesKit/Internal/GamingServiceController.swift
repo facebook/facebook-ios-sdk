@@ -24,7 +24,7 @@ final class GamingServiceController: NSObject {
     self.init(
       serviceType: serviceType,
       pendingResult: pendingResult,
-      urlOpener: BridgeAPI.shared,
+      urlOpener: _BridgeAPI.shared,
       settings: Settings.shared,
       completionHandler: completion
     )
@@ -48,7 +48,7 @@ final class GamingServiceController: NSObject {
     completionHandler?(
       false,
       nil,
-      ErrorFactory().error(
+      _ErrorFactory().error(
         code: CoreError.errorBridgeAPIInterruption.rawValue,
         userInfo: nil,
         message: "\(error != nil ? "Error" : "An unknown error") occured while interacting with Gaming Services",

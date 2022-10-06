@@ -8,4 +8,4 @@
 
 import FBSDKCoreKit
 
-extension AppEvents: _LoginEventLogging {}
+extension AppEvents: LoginEventLogging {}

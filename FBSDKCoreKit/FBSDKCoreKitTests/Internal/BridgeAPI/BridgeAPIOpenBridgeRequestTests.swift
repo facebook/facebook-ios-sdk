@@ -17,15 +17,12 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
   let sampleUrl = URL(string: "http://example.com")
   let urlOpener = TestInternalURLOpener(canOpenURL: true)
   let bridgeAPIResponseFactory = TestBridgeAPIResponseFactory()
-  let frameworkLoader = TestDylibResolver()
   let appURLSchemeProvider = TestInternalUtility()
   let logger = TestLogger(loggingBehavior: .developerErrors)
-  lazy var api = BridgeAPI(
-    processInfo: TestProcessInfo(),
+  lazy var api = _BridgeAPI(
     logger: logger,
     urlOpener: urlOpener,
     bridgeAPIResponseFactory: bridgeAPIResponseFactory,
-    frameworkLoader: frameworkLoader,
     appURLSchemeProvider: appURLSchemeProvider,
     errorFactory: TestErrorFactory()
   )
@@ -33,7 +30,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
   // MARK: - URL Opening
 
   func testOpeningBridgeRequestWithRequestUrlUsingSafariVcWithFromVc() {
-    frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.self
     let spy = ViewControllerSpy.makeDefaultSpy()
     let request = TestBridgeAPIRequest(url: sampleUrl)
     api.open(
@@ -50,19 +46,14 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       bridgeAPIResponseFactory.capturedResponseURL,
       "Should not create a bridge response"
     )
-    XCTAssertTrue(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should try and load the safari view controller class"
-    )
     XCTAssertEqual(
-      api.safariViewController?.delegate as? BridgeAPI,
+      api.safariViewController?.delegate as? _BridgeAPI,
       api,
       "Should create a safari controller with the bridge as its delegate"
     )
   }
 
   func testOpeningBridgeRequestWithRequestUrlUsingSafariVcWithoutFromVc() {
-    frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.self
     let request = TestBridgeAPIRequest(url: sampleUrl)
     api.open(
       request,
@@ -74,10 +65,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
     XCTAssertTrue(api.pendingRequest === request)
     XCTAssertNotNil(api.pendingRequestCompletionBlock)
 
-    XCTAssertTrue(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should try and load the safari view controller class"
-    )
     XCTAssertEqual(
       api.logger.contents,
       "There are no valid ViewController to present SafariViewController with"
@@ -85,7 +72,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
   }
 
   func testOpeningBridgeRequestWithRequestUrlNotUsingSafariVcWithFromVc() {
-    frameworkLoader.stubSafariViewControllerClass = SFSafariViewController.self
     let spy = ViewControllerSpy.makeDefaultSpy()
     let request = TestBridgeAPIRequest(url: sampleUrl)
     api.open(
@@ -97,11 +83,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
 
     XCTAssertTrue(api.pendingRequest === request)
     XCTAssertNotNil(api.pendingRequestCompletionBlock)
-
-    XCTAssertFalse(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should not try and load the safari view controller class when safari is not requested"
-    )
   }
 
   func testOpeningBridgeRequestWithRequestUrlNotUsingSafariVcWithoutFromVc() {
@@ -115,11 +96,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
 
     XCTAssertTrue(api.pendingRequest === request)
     XCTAssertNotNil(api.pendingRequestCompletionBlock)
-
-    XCTAssertFalse(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should not try and load the safari view controller class when safari is not requested"
-    )
   }
 
   func testOpeningBridgeRequestWithoutRequestUrlUsingSafariVcWithFromVc() {
@@ -149,10 +125,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
-    XCTAssertFalse(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should not try and load the safari view controller class when the request cannot provide a url"
-    )
     assertPendingPropertiesNotSet()
   }
 
@@ -179,10 +151,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
     XCTAssertNil(
       urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
-    )
-    XCTAssertFalse(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should not try and load the safari view controller class when the request cannot provide a url"
     )
     assertPendingPropertiesNotSet()
   }
@@ -213,10 +181,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
     )
-    XCTAssertFalse(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should not try and load the safari view controller class when the request cannot provide a url"
-    )
     assertPendingPropertiesNotSet()
   }
 
@@ -243,10 +207,6 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
     XCTAssertNil(
       urlOpener.capturedOpenURL,
       "Should not try to open a url when the request cannot provide one"
-    )
-    XCTAssertFalse(
-      frameworkLoader.didLoadSafariViewControllerClass,
-      "Should not try and load the safari view controller class when the request cannot provide a url"
     )
     assertPendingPropertiesNotSet()
   }

@@ -22,7 +22,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    AuthenticationStatusUtility.resetClassDependencies()
+    _AuthenticationStatusUtility.resetClassDependencies()
 
     TestAccessTokenWallet.stubbedCurrentAccessToken = SampleAccessTokens.validToken
     TestAuthenticationTokenWallet.current = SampleAuthenticationToken.validToken
@@ -32,8 +32,8 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
     sessionDataTaskProvider = TestSessionProvider()
     sessionDataTaskProvider.stubbedDataTask = sessionDataTask
 
-    AuthenticationStatusUtility.configure(
-      withProfileSetter: TestProfileProvider.self,
+    _AuthenticationStatusUtility.configure(
+      profileSetter: TestProfileProvider.self,
       sessionDataTaskProvider: sessionDataTaskProvider,
       accessTokenWallet: TestAccessTokenWallet.self,
       authenticationTokenWallet: TestAuthenticationTokenWallet.self
@@ -41,7 +41,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
   }
 
   override func tearDown() {
-    AuthenticationStatusUtility.resetClassDependencies()
+    _AuthenticationStatusUtility.resetClassDependencies()
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
     TestProfileProvider.reset()
@@ -52,48 +52,48 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
   }
 
   func testDefaultClassDependencies() {
-    AuthenticationStatusUtility.resetClassDependencies()
+    _AuthenticationStatusUtility.resetClassDependencies()
 
     XCTAssertNil(
-      AuthenticationStatusUtility.profileSetter,
+      _AuthenticationStatusUtility.profileSetter,
       "Should not have a profile setter by default"
     )
     XCTAssertNil(
-      AuthenticationStatusUtility.sessionDataTaskProvider,
+      _AuthenticationStatusUtility.sessionDataTaskProvider,
       "Should not have a session data task provider by default"
     )
     XCTAssertNil(
-      AuthenticationStatusUtility.accessTokenWallet,
+      _AuthenticationStatusUtility.accessTokenWallet,
       "Should not have an access token default"
     )
     XCTAssertNil(
-      AuthenticationStatusUtility.authenticationTokenWallet,
+      _AuthenticationStatusUtility.authenticationTokenWallet,
       "Should not have an authentication token by default"
     )
   }
 
   func testConfiguringWithCustomClassDependencies() {
     XCTAssertTrue(
-      AuthenticationStatusUtility.profileSetter === TestProfileProvider.self,
+      _AuthenticationStatusUtility.profileSetter === TestProfileProvider.self,
       "Should be able to set a custom profile setter"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.sessionDataTaskProvider === sessionDataTaskProvider,
+      _AuthenticationStatusUtility.sessionDataTaskProvider === sessionDataTaskProvider,
       "Should be able to set a custom session data task provider"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.accessTokenWallet === TestAccessTokenWallet.self,
+      _AuthenticationStatusUtility.accessTokenWallet === TestAccessTokenWallet.self,
       "Should be able to set a custom access token"
     )
     XCTAssertTrue(
-      AuthenticationStatusUtility.authenticationTokenWallet === TestAuthenticationTokenWallet.self,
+      _AuthenticationStatusUtility.authenticationTokenWallet === TestAuthenticationTokenWallet.self,
       "Should be able to set a custom authentication token"
     )
   }
 
   func testCheckAuthenticationStatusWithNoToken() {
     TestAuthenticationTokenWallet.current = nil
-    AuthenticationStatusUtility.checkAuthenticationStatus()
+    _AuthenticationStatusUtility.checkAuthenticationStatus()
 
     XCTAssertNil(
       sessionDataTaskProvider.capturedRequest,
@@ -111,7 +111,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
   }
 
   func testRequestURL() {
-    let url = AuthenticationStatusUtility._requestURL()
+    let url = _AuthenticationStatusUtility._requestURL()
 
     XCTAssertEqual(url.host, "m.facebook.com")
     XCTAssertEqual(url.path, "/platform/oidc/status")
@@ -132,7 +132,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
       headerFields: header
     )! // swiftlint:disable:this force_unwrapping
 
-    AuthenticationStatusUtility._handle(response)
+    _AuthenticationStatusUtility._handle(response)
 
     XCTAssertNil(
       TestAuthenticationTokenWallet.current,
@@ -157,7 +157,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
       headerFields: header
     )! // swiftlint:disable:this force_unwrapping
 
-    AuthenticationStatusUtility._handle(response)
+    _AuthenticationStatusUtility._handle(response)
 
     XCTAssertNotNil(
       TestAuthenticationTokenWallet.current,
@@ -181,7 +181,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
       headerFields: [:]
     )! // swiftlint:disable:this force_unwrapping
 
-    AuthenticationStatusUtility._handle(response)
+    _AuthenticationStatusUtility._handle(response)
 
     XCTAssertNotNil(
       TestAuthenticationTokenWallet.current,
@@ -211,7 +211,7 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
         headerFields: header as? [String: String]
       )! // swiftlint:disable:this force_unwrapping
 
-      AuthenticationStatusUtility._handle(response)
+      _AuthenticationStatusUtility._handle(response)
     }
   }
 }

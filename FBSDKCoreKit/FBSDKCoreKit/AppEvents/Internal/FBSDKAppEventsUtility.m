@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsUtility.h"
-
 #import <AdSupport/AdSupport.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
@@ -16,7 +14,6 @@
 
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKAppEventsFlushReason.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings+Internal.h"

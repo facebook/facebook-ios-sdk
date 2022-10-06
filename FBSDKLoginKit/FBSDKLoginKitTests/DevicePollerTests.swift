@@ -12,14 +12,14 @@ import XCTest
 
 final class DevicePollerTests: XCTestCase {
   func testScheduleBlock() {
-    let poller = _DevicePoller()
+    let poller = DevicePoller()
     let expectation = self.expectation(description: name)
 
     func block() {
       expectation.fulfill()
     }
 
-    poller.scheduleBlock(block, interval: 1)
+    poller.schedule(interval: 1, block: block)
 
     waitForExpectations(timeout: 2, handler: nil)
   }

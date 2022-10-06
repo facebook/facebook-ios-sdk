@@ -12,8 +12,7 @@
 
  #import <Foundation/Foundation.h>
 
- #import <FBAEMKit/FBAEMNetworking.h>
-
+@protocol FBAEMNetworking;
 @protocol FBSKAdNetworkReporting;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -22,6 +21,11 @@ NS_SWIFT_NAME(AEMReporter)
 @interface FBAEMReporter : NSObject
 
 /**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+
  Configure networker used for calling Facebook AEM Graph API endpoint
  Facebook App ID and SKAdNetwork reporter
 
@@ -35,9 +39,15 @@ NS_SWIFT_NAME(AEMReporter)
  */
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(nullable NSString *)appID
-                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter;
+                      reporter:(nullable id<FBSKAdNetworkReporting>)reporter
+NS_SWIFT_NAME(configure(networker:appID:reporter:));
 
 /**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+
  Configure networker used for calling Facebook AEM Graph API endpoint
  Facebook App ID, SKAdNetwork reporter and Analytics App ID
 
@@ -53,7 +63,8 @@ NS_SWIFT_NAME(AEMReporter)
 + (void)configureWithNetworker:(nullable id<FBAEMNetworking>)networker
                          appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
-                analyticsAppID:(nullable NSString *)analyticsAppID;
+                analyticsAppID:(nullable NSString *)analyticsAppID
+NS_SWIFT_NAME(configure(networker:appID:reporter:analyticsAppID:));
 
 /**
  Enable AEM reporting
@@ -75,6 +86,14 @@ NS_SWIFT_NAME(AEMReporter)
  This function should be called in application(_:open:options:) from ApplicationDelegate
  */
 + (void)setCatalogMatchingEnabled:(BOOL)enabled;
+
+/**
+ Control whether to enable advertiser rule match enabled in server side. This is expected
+ to be called internally by FB SDK and will be removed in the future
+
+ This function should be called in application(_:open:options:) from ApplicationDelegate
+ */
++ (void)setAdvertiserRuleMatchInServerEnabled:(BOOL)enabled;
 
 /**
  Handle deeplink

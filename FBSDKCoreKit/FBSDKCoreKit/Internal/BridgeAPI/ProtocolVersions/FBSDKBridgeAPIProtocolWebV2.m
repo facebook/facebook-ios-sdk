@@ -11,14 +11,10 @@
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
-#import "FBSDKBridgeAPIProtocolNativeV1.h"
-#import "FBSDKDialogConfiguration.h"
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKServerConfigurationManager.h"
-#import "FBSDKServerConfigurationProviding.h"
 
 @implementation FBSDKBridgeAPIProtocolWebV2
 
@@ -26,12 +22,11 @@
 
 - (instancetype)init
 {
-  id<FBSDKErrorCreating> errorFactory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  id<FBSDKErrorCreating> errorFactory = [FBSDKErrorFactory new];
   id<FBSDKBridgeAPIProtocol> nativeBridge = [[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:nil
                                                                                            pasteboard:nil
                                                                                   dataLengthThreshold:0
-                                                                                       includeAppIcon:NO
-                                                                                         errorFactory:errorFactory];
+                                                                                       includeAppIcon:NO];
   return [self initWithServerConfigurationProvider:FBSDKServerConfigurationManager.shared
                                       nativeBridge:nativeBridge
                                       errorFactory:errorFactory
@@ -62,11 +57,11 @@
 {
   NSDictionary<NSString *, id> *queryParameters = nil;
   if (actionID) {
-    NSDictionary<NSString *, id> *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID : actionID };
+    NSDictionary<NSString *, id> *bridgeArgs = @{ @"action_id" : actionID };
     NSString *bridgeArgsString = [FBSDKBasicUtility JSONStringForObject:bridgeArgs
                                                                   error:NULL
                                                    invalidObjectHandler:NULL];
-    queryParameters = @{ FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs : bridgeArgsString };
+    queryParameters = @{ @"bridge_args": bridgeArgsString };
   }
   return [self.internalUtility appURLWithHost:@"bridge" path:methodName queryParameters:queryParameters error:errorRef];
 }
@@ -121,7 +116,7 @@
   }
 
   NSMutableDictionary<NSString *, NSString *> *queryParameters = [[FBSDKBasicUtility dictionaryWithQueryString:requestURL.query] mutableCopy];
-  [FBSDKTypeUtility dictionary:queryParameters setObject:self.infoDictionaryProvider.bundleIdentifier forKey:@"ios_bundle_id"];
+  [FBSDKTypeUtility dictionary:queryParameters setObject:self.infoDictionaryProvider.fb_bundleIdentifier forKey:@"ios_bundle_id"];
   [FBSDKTypeUtility dictionary:queryParameters setObject:redirectURL.absoluteString forKey:@"redirect_url"];
 
   return [self.internalUtility URLWithScheme:requestURL.scheme

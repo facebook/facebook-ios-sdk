@@ -16,7 +16,9 @@ NS_SWIFT_NAME(KeychainStoreProviding)
 @protocol FBSDKKeychainStoreProviding
 
 - (nonnull id<FBSDKKeychainStore>)createKeychainStoreWithService:(NSString *)service
-                                                     accessGroup:(nullable NSString *)accessGroup;
+                                                     accessGroup:(nullable NSString *)accessGroup
+NS_SWIFT_NAME(createKeychainStore(service:accessGroup:));
+
 @end
 
 NS_ASSUME_NONNULL_END

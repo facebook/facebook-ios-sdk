@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKServerConfigurationManager.h"
-
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKLogger.h>
+#import <FBSDKCoreKit/FBSDKServerConfigurationManager.h>
 #import <FBSDKCoreKit/FBSDKSettings.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
@@ -124,8 +123,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)loadServerConfigurationWithCompletionBlock:(nullable FBSDKServerConfigurationBlock)completionBlock
 {
   @try {
@@ -193,8 +190,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     }
   } @catch (NSException *exception) {}
 }
-
-#pragma clang diagnostic pop
 
 #pragma mark - Internal
 
@@ -367,10 +362,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
     NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, appID];
     if (serverConfiguration) {
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-      NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration];
-      #pragma clang diagnostic pop
+      NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration requiringSecureCoding:NO error:nil];
       [defaults setObject:data forKey:defaultsKey];
     }
 

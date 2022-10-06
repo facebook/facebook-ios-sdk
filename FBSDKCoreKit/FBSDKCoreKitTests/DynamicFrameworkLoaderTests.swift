@@ -8,14 +8,12 @@
 
 @testable import FBSDKCoreKit
 
-import AuthenticationServices
 import CoreTelephony
 import SafariServices
 import Security
 import Social
 import XCTest
 
-@available(iOS 12.0, *)
 final class DynamicFrameworkLoaderTests: XCTestCase {
 
   #if BUCK
@@ -193,21 +191,6 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     }
   }
 
-  func testSLServiceTypeFacebook() {
-    XCTAssertEqual(
-      fbsdkdfl_SLServiceTypeFacebook(),
-      "com.apple.social.facebook",
-      "Should dynamically load the constant for the facebook service type"
-    )
-  }
-
-  func testSLComposeViewControllerClass() {
-    XCTAssertTrue(
-      fbsdkdfl_SLComposeViewControllerClass() is SLComposeViewController.Type,
-      "Should dynamically load the SLComposeViewController class"
-    )
-  }
-
   func testCATransactionClass() {
     XCTAssertTrue(
       fbsdkdfl_CATransactionClass() is CATransaction.Type,
@@ -254,20 +237,6 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     XCTAssertTrue(
       fbsdkdfl_SFSafariViewControllerClass() is SFSafariViewController.Type,
       "Should dynamically load the SFSafariViewController class"
-    )
-  }
-
-  func testSFAuthenticationSessionClass() {
-    XCTAssertTrue(
-      fbsdkdfl_SFAuthenticationSessionClass() is SFAuthenticationSession.Type,
-      "Should dynamically load the SFAuthenticationSession class"
-    )
-  }
-
-  func testASWebAuthenticationSessionClass() {
-    XCTAssertTrue(
-      fbsdkdfl_ASWebAuthenticationSessionClass() is ASWebAuthenticationSession.Type,
-      "Should dynamically load the ASWebAuthenticationSession class"
     )
   }
 

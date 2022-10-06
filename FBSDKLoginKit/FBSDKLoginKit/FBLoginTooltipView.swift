@@ -32,7 +32,7 @@ public final class FBLoginTooltipView: FBTooltipView {
    if set to YES, the view will always be displayed and the delegate's
    `loginTooltipView:shouldAppear:` will NOT be called.
    */
-  @objc public var forceDisplay: Bool = false
+  @objc public var forceDisplay = false
 
   /**
    if set to YES, the view will always be displayed and the delegate's
@@ -48,10 +48,10 @@ public final class FBLoginTooltipView: FBTooltipView {
   }
 
   /// Service configuration provider
-  let serverConfigurationProvider: _ServerConfigurationProviding
+  let serverConfigurationProvider: ServerConfigurationProviding
 
   /// UI String provider
-  let stringProvider: _UserInterfaceStringProviding
+  let stringProvider: UserInterfaceStringProviding
 
   // MARK: - Init
 
@@ -74,10 +74,9 @@ public final class FBLoginTooltipView: FBTooltipView {
   /// - Parameters:
   ///   - serverConfigurationProvider: Service configuration provider
   ///   - stringProvider: String provider
-  @objc(initWithServerConfigurationProvider:stringProvider:)
   init(
-    serverConfigurationProvider: _ServerConfigurationProviding,
-    stringProvider: _UserInterfaceStringProviding
+    serverConfigurationProvider: ServerConfigurationProviding,
+    stringProvider: UserInterfaceStringProviding
   ) {
     self.serverConfigurationProvider = serverConfigurationProvider
     self.stringProvider = stringProvider

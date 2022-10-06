@@ -41,10 +41,14 @@ final class ApplicationDelegateTests: XCTestCase {
     userDataStore = UserDefaultsSpy()
     observer = TestApplicationDelegateObserver()
     settings = TestSettings()
-    backgroundEventLogger = TestBackgroundEventLogger(
-      infoDictionaryProvider: TestBundle(),
-      eventLogger: TestAppEvents()
+
+    TestBackgroundEventLogger.setDependencies(
+      .init(
+        infoDictionaryProvider: TestBundle(),
+        eventLogger: TestAppEvents()
+      )
     )
+    backgroundEventLogger = TestBackgroundEventLogger()
     serverConfigurationProvider = TestServerConfigurationProvider()
     paymentObserver = TestPaymentObserver()
     profile = Profile(
@@ -103,7 +107,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func resetTestDependencies() {
-    ApplicationDelegate.reset()
+    ApplicationDelegate.shared.resetHasInitializeBeenCalled()
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
     TestGateKeeperManager.reset()
@@ -114,8 +118,8 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate = ApplicationDelegate()
 
     XCTAssertIdentical(
-      delegate.components,
-      CoreKitComponents.default,
+      delegate.components as AnyObject,
+      CoreKitComponents.default as AnyObject,
       "An application delegate should be created with the default components by default"
     )
 
@@ -124,8 +128,8 @@ final class ApplicationDelegateTests: XCTestCase {
       "An application delegate should be created with a concrete configurator by default"
     )
     XCTAssertIdentical(
-      configurator.components,
-      CoreKitComponents.default,
+      configurator.components as AnyObject,
+      CoreKitComponents.default as AnyObject,
       "The configurator should be created with the default components by default"
     )
 
@@ -142,12 +146,12 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate = ApplicationDelegate(components: components, configurator: configurator)
 
     XCTAssertIdentical(
-      delegate.components,
-      components,
+      delegate.components as AnyObject,
+      components as AnyObject,
       "An application delegate should be created with the provided components"
     )
     XCTAssertIdentical(
-      delegate.configurator,
+      delegate.configurator as AnyObject,
       configurator,
       "An application delegate should be created with the provided configurator"
     )
@@ -164,7 +168,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      delegate.applicationObservers.contains(BridgeAPI.shared),
+      delegate.applicationObservers.contains(_BridgeAPI.shared),
       "Should add the shared bridge api instance to the application observers"
     )
   }
@@ -285,7 +289,7 @@ final class ApplicationDelegateTests: XCTestCase {
 
   func testDidFinishLaunchingWithAutoLogEnabled() {
     settings.isAutoLogAppEventsEnabled = true
-    userDataStore.set(1, forKey: bitmaskKey)
+    userDataStore.set(0, forKey: bitmaskKey)
 
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
@@ -381,7 +385,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testSettingApplicationState() {
-    delegate.setApplicationState(.background)
+    delegate.applicationState = .background
     XCTAssertEqual(
       appEvents.capturedApplicationState,
       .background,
@@ -399,9 +403,10 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingSDKLogsAppEvent() {
-    userDataStore.setValue(1, forKey: bitmaskKey)
+    settings.isAutoLogAppEventsEnabled = true
+    userDataStore.setValue(0, forKey: bitmaskKey)
 
-    delegate._logSDKInitialize()
+    delegate.logSDKInitialize()
 
     XCTAssertEqual(
       appEvents.capturedEventName,

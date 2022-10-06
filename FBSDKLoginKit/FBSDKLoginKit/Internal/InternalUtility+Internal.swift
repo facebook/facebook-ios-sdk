@@ -8,6 +8,6 @@
 
 import FBSDKCoreKit
 
-extension InternalUtility: _UserInterfaceElementProviding {}
+extension InternalUtility: UserInterfaceElementProviding {}
 
-extension InternalUtility: _UserInterfaceStringProviding {}
+extension InternalUtility: UserInterfaceStringProviding {}

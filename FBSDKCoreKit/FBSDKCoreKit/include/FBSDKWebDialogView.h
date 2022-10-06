@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol FBSDKWebDialogViewDelegate;
+@protocol FBSDKWebViewProviding;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,19 @@ NS_SWIFT_NAME(FBWebDialogView)
 
 - (void)loadURL:(NSURL *)URL;
 - (void)stopLoading;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+// UNCRUSTIFY_FORMAT_OFF
++ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
+                           urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
+                        errorFactory:(id<FBSDKErrorCreating>)errorFactory
+NS_SWIFT_NAME(configure(webViewProvider:urlOpener:errorFactory:));
+// UNCRUSTIFY_FORMAT_ON
 
 @end
 

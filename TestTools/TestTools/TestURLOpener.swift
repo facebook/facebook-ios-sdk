@@ -30,13 +30,13 @@ public final class TestURLOpener: NSObject, URLOpener {
 
   public func openURLWithSafariViewController(
     url: URL,
-    sender: URLOpening,
-    from fromViewController: UIViewController,
+    sender: URLOpening?,
+    from viewController: UIViewController?,
     handler: @escaping SuccessBlock
   ) {
     capturedURL = url
     capturedRequests.append(handler)
     wasOpenURLWithSVCCalled = true
-    viewController = fromViewController
+    self.viewController = viewController
   }
 }

@@ -21,25 +21,29 @@ public final class GameRequestURLProvider: NSObject {
 
   @objc(createDeepLinkURLWithQueryDictionary:)
   public class func createDeepLinkURL(queryDictionary: [String: Any]) -> URL? {
+    guard let dependencies = try? getDependencies() else { return nil }
+
     var components = URLComponents()
     components.scheme = URLScheme.https.rawValue
     components.host = URLValues.host
-    components.path = "\(URLValues.path)\(AccessToken.current?.appID ?? "")"
+    components.path = "\(URLValues.path)\(dependencies.accessTokenWallet.current?.appID ?? "")"
     components.queryItems = Self.getQueryArray(from: queryDictionary)
     return components.url
   }
 
   @objc(filtersNameForFilters:)
   public class func filtersName(for filters: GameRequestFilter) -> String? {
+    guard let dependencies = try? getDependencies() else { return nil }
+
     switch filters {
     case .appUsers:
       return "app_users"
     case .appNonUsers:
       return "app_non_users"
     case .everybody:
-      let graphDomain = Utility.getGraphDomainFromToken()
+      let graphDomain = dependencies.authenticationTokenWallet.current?.graphDomain
       if graphDomain == "gaming",
-         InternalUtility.shared.isFacebookAppInstalled {
+         dependencies.appAvailabilityChecker.isFacebookAppInstalled {
         return "everybody"
       } else {
         return nil
@@ -67,6 +71,22 @@ public final class GameRequestURLProvider: NSObject {
       return URLQueryItem(name: key, value: value)
     }
   }
+}
+
+extension GameRequestURLProvider: DependentAsType {
+  struct TypeDependencies {
+    var accessTokenWallet: _AccessTokenProviding.Type
+    var authenticationTokenWallet: _AuthenticationTokenProviding.Type
+    var appAvailabilityChecker: AppAvailabilityChecker
+  }
+
+  static var configuredDependencies: TypeDependencies?
+
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(
+    accessTokenWallet: AccessToken.self,
+    authenticationTokenWallet: AuthenticationToken.self,
+    appAvailabilityChecker: InternalUtility.shared
+  )
 }
 
 #endif

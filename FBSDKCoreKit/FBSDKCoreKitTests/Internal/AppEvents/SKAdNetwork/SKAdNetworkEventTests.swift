@@ -15,26 +15,26 @@ import XCTest
 final class SKAdNetworkEventTests: XCTestCase {
 
   func testValidCases() {
-    var event = SKAdNetworkEvent(json: ["event_name": "fb_mobile_purchase"])
+    var event = _SKAdNetworkEvent(json: ["event_name": "fb_mobile_purchase"])
     XCTAssertTrue(event?.eventName == "fb_mobile_purchase")
     XCTAssertNil(event?.values)
-    event = SKAdNetworkEvent(
+    event = _SKAdNetworkEvent(
       json: [
         "event_name": "fb_mobile_purchase",
         "values": [
           [
             "currency": "usd",
-            "amount": 100,
+            "amount": 100.0,
           ],
           [
             "currency": "JPY",
-            "amount": 1000,
+            "amount": 1000.0,
           ],
         ],
       ]
     )
     XCTAssertTrue(event?.eventName == "fb_mobile_purchase")
-    let expectedValues: [String: NSNumber] = [
+    let expectedValues: [String: Double] = [
       "USD": 100,
       "JPY": 1000,
     ]
@@ -43,7 +43,7 @@ final class SKAdNetworkEventTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(SKAdNetworkEvent(json: invalidData))
+    XCTAssertNil(_SKAdNetworkEvent(json: invalidData))
     invalidData = [
       "values": [
         [
@@ -56,7 +56,7 @@ final class SKAdNetworkEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(SKAdNetworkEvent(json: invalidData))
+    XCTAssertNil(_SKAdNetworkEvent(json: invalidData))
     invalidData = [
       "event_name": "fb_mobile_purchase",
       "values": [
@@ -70,7 +70,7 @@ final class SKAdNetworkEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(SKAdNetworkEvent(json: invalidData))
+    XCTAssertNil(_SKAdNetworkEvent(json: invalidData))
   }
 }
 

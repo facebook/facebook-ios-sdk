@@ -6,41 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKRestrictiveDataFilterManager.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKServerConfigurationManager.h"
-#import "FBSDKServerConfigurationProviding.h"
-
-@interface FBSDKRestrictiveEventFilter : NSObject
-
-@property (nonatomic, readonly, copy) NSString *eventName;
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *restrictiveParams;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
-- (instancetype)initWithEventName:(NSString *)eventName
-                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams;
-
-@end
-
-@implementation FBSDKRestrictiveEventFilter
-
-- (instancetype)initWithEventName:(NSString *)eventName
-                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
-{
-  self = [super init];
-  if (self) {
-    _eventName = [eventName copy];
-    _restrictiveParams = [restrictiveParams copy];
-  }
-
-  return self;
-}
-
-@end
 
 static FBSDKRestrictiveDataFilterManager *_instance;
 
@@ -143,7 +111,7 @@ static FBSDKRestrictiveDataFilterManager *_instance;
   // match by params in custom events with event name
   for (FBSDKRestrictiveEventFilter *filter in self.params) {
     if ([filter.eventName isEqualToString:eventName]) {
-      NSString *type = [FBSDKTypeUtility coercedToStringValue:filter.restrictiveParams[paramKey]];
+      NSString *type = [FBSDKTypeUtility coercedToStringValue:filter.restrictiveParameters[paramKey]];
       if (type) {
         return type;
       }
@@ -171,7 +139,7 @@ static FBSDKRestrictiveDataFilterManager *_instance;
         }
         if (eventInfo[RESTRICTIVE_PARAM_KEY]) {
           FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName
-                                                                                                     restrictiveParams:eventInfo[RESTRICTIVE_PARAM_KEY]];
+                                                                                                 restrictiveParameters:eventInfo[RESTRICTIVE_PARAM_KEY]];
           [FBSDKTypeUtility array:eventFilterArray addObject:restrictiveEventFilter];
         }
         if (restrictiveParams[eventName][PROCESS_EVENT_NAME_KEY]) {

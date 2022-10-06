@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <TargetConditionals.h>
+
+#if !TARGET_OS_TV
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FBSDKURLOpening;
@@ -25,8 +29,8 @@ NS_SWIFT_NAME(URLOpener)
 
 // UNCRUSTIFY_FORMAT_OFF
 - (void)openURLWithSafariViewController:(NSURL *)url
-                                 sender:(id<FBSDKURLOpening>)sender
-                     fromViewController:(UIViewController *)fromViewController
+                                 sender:(nullable id<FBSDKURLOpening>)sender
+                     fromViewController:(nullable UIViewController *)fromViewController
                                 handler:(FBSDKSuccessBlock)handler
 NS_SWIFT_NAME(openURLWithSafariViewController(url:sender:from:handler:));
 // UNCRUSTIFY_FORMAT_ON
@@ -34,3 +38,5 @@ NS_SWIFT_NAME(openURLWithSafariViewController(url:sender:from:handler:));
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

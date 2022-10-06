@@ -101,6 +101,6 @@ public final class ContextDialogPresenter: NSObject {
       content: content,
       delegate: delegate
     )
-      .show()
+    .show()
   }
 }

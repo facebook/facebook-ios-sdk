@@ -6,18 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKLoginKit
-import Foundation
+@testable import FBSDKLoginKit
 
-@objcMembers
-final class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
+final class TestLoginCompleterFactory: LoginCompleterFactoryProtocol {
 
   let stubbedLoginCompleter: TestLoginCompleter
   var capturedURLParameters = [String: Any]()
   var capturedAppID: String?
-  var capturedAuthenticationTokenCreator: _AuthenticationTokenCreating?
-  var capturedGraphRequestFactory: GraphRequestFactoryProtocol?
-  var capturedInternalUtility: URLHosting?
 
   init(stubbedLoginCompleter: TestLoginCompleter = TestLoginCompleter()) {
     self.stubbedLoginCompleter = stubbedLoginCompleter
@@ -25,16 +20,10 @@ final class TestLoginCompleterFactory: NSObject, LoginCompleterFactoryProtocol {
 
   func createLoginCompleter(
     urlParameters parameters: [String: Any],
-    appID: String,
-    authenticationTokenCreator: _AuthenticationTokenCreating,
-    graphRequestFactory: GraphRequestFactoryProtocol,
-    internalUtility: URLHosting
+    appID: String
   ) -> LoginCompleting {
     capturedURLParameters = parameters
     capturedAppID = appID
-    capturedAuthenticationTokenCreator = authenticationTokenCreator
-    capturedGraphRequestFactory = graphRequestFactory
-    capturedInternalUtility = internalUtility
 
     return stubbedLoginCompleter
   }

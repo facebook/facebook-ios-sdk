@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+@testable import FBSDKLoginKit
 
-@objcMembers
-final class TestAuthenticationTokenFactory: NSObject, _AuthenticationTokenCreating {
+final class TestAuthenticationTokenFactory: AuthenticationTokenCreating {
   var capturedTokenString: String?
   var capturedNonce: String?
   var capturedCompletion: AuthenticationTokenBlock?

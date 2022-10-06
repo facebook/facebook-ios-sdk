@@ -8,15 +8,10 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKErrorConfigurationProviding.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestMetadata.h"
-#import "FBSDKGraphRequestPiggybackManaging.h"
-#import "FBSDKMacCatalystDetermining.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
-#import "FBSDKURLSessionProxyProviding.h"
 #import "FBSDKURLSessionProxying.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -43,7 +38,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 @property (class, nullable, nonatomic) id<FBSDKOperatingSystemVersionComparing> operatingSystemVersionComparer;
 @property (class, nullable, nonatomic) id<FBSDKMacCatalystDetermining> macCatalystDeterminator;
 @property (class, nullable, nonatomic) Class<FBSDKAccessTokenProviding> accessTokenProvider;
-@property (class, nullable, nonatomic) Class<FBSDKAccessTokenSetting> accessTokenSetter;
 @property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
 @property (class, nullable, nonatomic) Class<FBSDKAuthenticationTokenProviding> authenticationTokenProvider;
 @property (nonatomic) FBSDKLogger *logger;
@@ -59,20 +53,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 #endif
 
 + (BOOL)canMakeRequests;
-+ (void)setCanMakeRequests;
-
-+ (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
-                 errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
-                           piggybackManager:(nonnull id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
-                                   settings:(nonnull id<FBSDKSettings>)settings
-              graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
-                                eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
-             operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
-                    macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
-                        accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                          accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
-                               errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
-                authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                                   timeout:(NSTimeInterval)timeout;

@@ -10,10 +10,10 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestMacCatalystDeterminator: NSObject, MacCatalystDetermining {
+final class TestMacCatalystDeterminator: _MacCatalystDetermining {
   var stubbedIsMacCatalystApp = false
 
-  var isMacCatalystApp: Bool {
+  var fb_isMacCatalystApp: Bool { // swiftlint:disable:this identifier_name
     stubbedIsMacCatalystApp
   }
 }

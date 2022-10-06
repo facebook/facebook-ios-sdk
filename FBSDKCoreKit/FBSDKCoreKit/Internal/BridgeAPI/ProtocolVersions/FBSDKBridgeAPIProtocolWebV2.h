@@ -14,7 +14,6 @@
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKBridgeAPIProtocol.h"
-#import "FBSDKServerConfigurationProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

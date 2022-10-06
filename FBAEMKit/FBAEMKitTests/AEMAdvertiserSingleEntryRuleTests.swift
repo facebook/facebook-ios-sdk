@@ -8,9 +8,8 @@
 
 @testable import FBAEMKit
 
+import TestTools
 import XCTest
-
-#if !os(tvOS)
 
 final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
 
@@ -484,8 +483,6 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
 
 // MARK: - Assumptions
 
-fileprivate extension String {
-  static let isCodable = "AEMAdvertiserSingleEntryRule should be encodable and decodable"
+extension String {
+  fileprivate static let isCodable = "AEMAdvertiserSingleEntryRule should be encodable and decodable"
 }
-
-#endif

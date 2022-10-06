@@ -8,10 +8,8 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKFeatureExtractor.h"
-#import "FBSDKRulesFromKeyProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -9,9 +9,9 @@
 import FBSDKCoreKit
 
 struct CreateContextDialogFactory: CreateContextDialogMaking {
-  private var tokenProvider: AccessTokenProviding.Type
+  private var tokenProvider: _AccessTokenProviding.Type
 
-  init(tokenProvider: AccessTokenProviding.Type) {
+  init(tokenProvider: _AccessTokenProviding.Type) {
     self.tokenProvider = tokenProvider
   }
 

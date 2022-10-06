@@ -6,19 +6,27 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+@testable import FBSDKCoreKit
 
-@objcMembers
-final class TestBackgroundEventLogger: NSObject, BackgroundEventLogging {
-
-  required init(
-    infoDictionaryProvider: InfoDictionaryProviding = TestBundle(),
-    eventLogger: EventLogging = TestEventLogger()
-  ) {}
+final class TestBackgroundEventLogger: BackgroundEventLogging {
 
   var logBackgroundRefresStatusCallCount = 0
 
   func logBackgroundRefreshStatus(_ status: UIBackgroundRefreshStatus) {
     logBackgroundRefresStatusCallCount += 1
   }
+}
+
+extension TestBackgroundEventLogger: DependentAsType {
+  struct TypeDependencies {
+    var infoDictionaryProvider: InfoDictionaryProviding
+    var eventLogger: EventLogging
+  }
+
+  static var configuredDependencies: TypeDependencies?
+
+  static var defaultDependencies: TypeDependencies? = TypeDependencies(
+    infoDictionaryProvider: TestBundle(),
+    eventLogger: TestEventLogger()
+  )
 }

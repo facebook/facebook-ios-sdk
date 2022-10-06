@@ -9,11 +9,11 @@
 import Foundation
 
 @objcMembers
-final class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProviding {
+final class TestAppEventsConfigurationProvider: NSObject, _AppEventsConfigurationProviding {
   var stubbedConfiguration: AppEventsConfigurationProtocol?
   var didRetrieveCachedConfiguration = false
-  var firstCapturedBlock: AppEventsConfigurationProvidingBlock?
-  var lastCapturedBlock: AppEventsConfigurationProvidingBlock?
+  var firstCapturedBlock: _AppEventsConfigurationProvidingBlock?
+  var lastCapturedBlock: _AppEventsConfigurationProvidingBlock?
 
   var cachedAppEventsConfiguration: AppEventsConfigurationProtocol {
     guard let configuration = stubbedConfiguration else {
@@ -23,7 +23,7 @@ final class TestAppEventsConfigurationProvider: NSObject, AppEventsConfiguration
     return configuration
   }
 
-  func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
+  func loadAppEventsConfiguration(_ block: @escaping _AppEventsConfigurationProvidingBlock) {
     if firstCapturedBlock == nil {
       firstCapturedBlock = block
     }

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
 import Foundation
 
 @objcMembers
@@ -18,9 +18,9 @@ class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer
   var capturedIsImplicitlyLogged = false
   var capturedAccessToken: AccessToken?
   var capturedValueToSum: Double?
-  var capturedFlushReason: UInt?
+  var capturedFlushReason: AppEvents.FlushReason?
 
-  func flush(forReason flushReason: UInt) {
+  func flush(for flushReason: AppEvents.FlushReason) {
     flushCallCount += 1
     capturedFlushReason = flushReason
   }

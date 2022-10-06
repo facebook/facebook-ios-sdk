@@ -68,7 +68,7 @@ extension ShareMediaContent: SharingContent {
   }
 }
 
-extension ShareMediaContent: SharingValidation {
+extension ShareMediaContent: SharingValidatable {
   /// Asks the receiver to validate that its content or media values are valid.
   @objc(validateWithOptions:error:)
   public func validate(options bridgeOptions: ShareBridgeOptions) throws {
@@ -81,7 +81,7 @@ extension ShareMediaContent: SharingValidation {
         do {
           try photo.validate(options: bridgeOptions)
         } catch {
-          throw ErrorFactory().invalidArgumentError(
+          throw _ErrorFactory().invalidArgumentError(
             domain: ShareErrorDomain,
             name: "media",
             value: photo,
@@ -91,7 +91,7 @@ extension ShareMediaContent: SharingValidation {
         }
       } else if let video = media as? ShareVideo {
         guard !hasVideo else {
-          throw ErrorFactory().invalidArgumentError(
+          throw _ErrorFactory().invalidArgumentError(
             domain: ShareErrorDomain,
             name: "media",
             value: media,
@@ -105,7 +105,7 @@ extension ShareMediaContent: SharingValidation {
         try _ShareUtility.validateRequiredValue(video, named: "video")
         try video.validate(options: bridgeOptions)
       } else {
-        throw ErrorFactory().invalidArgumentError(
+        throw _ErrorFactory().invalidArgumentError(
           domain: ShareErrorDomain,
           name: "media",
           value: media,

@@ -10,6 +10,52 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Deprecated
+
+- The `Profile.enableUpdatesOnAccessTokenChange(_:)` method is deprecated in favor of the `Profile.isUpdatedWithAccessTokenChange` property.
+
+### Removed
+
+- `Profile` conformance to `NSCopying` has been removed as well as custom hashability and equatability.
+
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.0.0...HEAD)
+
+## 15.0.0
+
+### Changed 
+
+- The minimum supported version of iOS and tvOS is now 12.0.
+
+### Deprecated
+
+- Support for tvOS is now deprecated and will be removed in Version 16.
+
+### Removed
+
+- Support for bitcode. Bitcode is no longer needed or supported by Apple as of Xcode 14 - https://developer.apple.com/documentation/xcode-release-notes/xcode-14-release-notes
+
+### Improved
+
+- Binary artifact sizes are now smaller.
+
+[2022-09-19](https://github.com/facebook/facebook-ios-sdk/releases/tag/v15.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.1.0...v15.0.0)
+
+## 14.1.0
+
+### Fixed
+
+- Fixed GitHub Issue #2082.
+
+### Added
+
+- Added server-side AEM rule matching
+
+[2022-06-28](https://github.com/facebook/facebook-ios-sdk/releases/tag/v14.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.0.0...v14.1.0)
+
+## 14.0.0
+
 ### Removed
 
 - Removed deprecated `AEMReporter.configure(networker:appID:)` method.
@@ -21,6 +67,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed deprecated `ContextDialogPresenter.switchContextDialog(withContent:delegate:)` method.
 - Removed deprecated `SwitchContextDialog.dialog(content:windowFinder:delegate:)` method.
 - Removed deprecated `LoginConfiguration.authType(for:)` method.
+- Removed internal `AuthenticationTokenSettings` protocol.
 
 ### Changed
 
@@ -31,8 +78,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Made `LoginManagerLoginResult.declinedPermissions` immutable.
 - Made `AccessToken.currentAccessToken` use a Swift name of `current`.
 - Made `AuthenticationToken.currentAuthenticationToken` use a Swift name of `current`.
+- Renamed `SharingValidation` protocol to `SharingValidatable`.
+- Corrected type definition for `FBSDKUserIdentifier` to be `NSString *` instead of `NSString` for Swift compatibility.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...HEAD)
+[2022-06-03](https://github.com/facebook/facebook-ios-sdk/releases/tag/v14.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...v14.0.0)
 
 ## 13.2.0
 

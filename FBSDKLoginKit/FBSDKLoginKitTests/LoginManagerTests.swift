@@ -6,8 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
 @testable import FBSDKLoginKit
 
+import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
@@ -25,6 +27,7 @@ final class LoginManagerTests: XCTestCase {
   var loginCompleterFactory: TestLoginCompleterFactory!
   var testUser: Profile!
   var graphRequestFactory: TestGraphRequestFactory!
+  var errorFactory: TestErrorFactory!
   // swiftlint:enable implicitly_unwrapped_optional
 
   let appID = "7391628439"
@@ -54,25 +57,28 @@ final class LoginManagerTests: XCTestCase {
 
     internalUtility = TestInternalUtility()
     keychainStore = TestKeychainStore()
-    keychainStoreFactory = TestKeychainStoreFactory()
-    keychainStoreFactory.stubbedKeychainStore = keychainStore
     urlOpener = TestURLOpener()
     settings = TestSettings()
     settings.appID = appID
     loginCompleter = TestLoginCompleter()
     loginCompleterFactory = TestLoginCompleterFactory(stubbedLoginCompleter: loginCompleter)
     graphRequestFactory = TestGraphRequestFactory()
+    errorFactory = TestErrorFactory()
 
-    loginManager = LoginManager(
-      internalUtility: internalUtility,
-      keychainStoreFactory: keychainStoreFactory,
-      accessTokenWallet: TestAccessTokenWallet.self,
-      authenticationToken: TestAuthenticationTokenWallet.self,
-      profile: TestProfileProvider.self,
-      urlOpener: urlOpener,
-      settings: settings,
-      loginCompleterFactory: loginCompleterFactory,
-      graphRequestFactory: graphRequestFactory
+    loginManager = LoginManager()
+    loginManager.setDependencies(
+      .init(
+        accessTokenWallet: TestAccessTokenWallet.self,
+        authenticationTokenWallet: TestAuthenticationTokenWallet.self,
+        errorFactory: errorFactory,
+        graphRequestFactory: graphRequestFactory,
+        internalUtility: internalUtility,
+        keychainStore: keychainStore,
+        loginCompleterFactory: loginCompleterFactory,
+        profileProvider: TestProfileProvider.self,
+        settings: settings,
+        urlOpener: urlOpener
+      )
     )
     testUser = createProfile()
     TestProfileProvider.current = testUser
@@ -150,6 +156,7 @@ final class LoginManagerTests: XCTestCase {
     settings = nil
     loginCompleter = nil
     loginCompleterFactory = nil
+    errorFactory = nil
 
     resetClassDependencies()
 
@@ -157,23 +164,128 @@ final class LoginManagerTests: XCTestCase {
   }
 
   func resetClassDependencies() {
-    Profile.reset()
+    Profile.resetDependencies()
     AccessToken.resetClassDependencies()
     AccessToken.resetCurrentAccessTokenCache()
     AuthenticationToken.resetCurrentAuthenticationTokenCache()
+    TestAccessTokenWallet.reset()
+    TestProfileProvider.reset()
   }
 
-  func testDefaultDependencies() {
-    let loginManager = LoginManager()
+  func testCustomDependencies() throws {
+    let dependencies = try loginManager.getDependencies()
 
-    XCTAssertTrue(loginManager.internalUtility is InternalUtility)
-    XCTAssertTrue(loginManager.keychainStore.self is KeychainStore)
-    XCTAssertTrue(loginManager.accessTokenWallet is AccessToken.Type)
-    XCTAssertTrue(loginManager.authenticationToken is AuthenticationToken.Type)
-    XCTAssertTrue(loginManager.profile is Profile.Type)
-    XCTAssertTrue(loginManager.urlOpener is BridgeAPI)
-    XCTAssertTrue(loginManager.settings is Settings)
-    XCTAssertTrue(loginManager.loginCompleterFactory is LoginCompleterFactory)
+    XCTAssertIdentical(
+      dependencies.accessTokenWallet,
+      TestAccessTokenWallet.self,
+      .Dependencies.customDependency(for: "access token wallet")
+    )
+    XCTAssertIdentical(
+      dependencies.authenticationTokenWallet,
+      TestAuthenticationTokenWallet.self,
+      .Dependencies.customDependency(for: "authentication token wallet")
+    )
+    XCTAssertIdentical(
+      dependencies.errorFactory,
+      errorFactory,
+      .Dependencies.customDependency(for: "error factory")
+    )
+    XCTAssertIdentical(
+      dependencies.graphRequestFactory,
+      graphRequestFactory,
+      .Dependencies.customDependency(for: "graph request factory")
+    )
+    XCTAssertIdentical(
+      dependencies.internalUtility,
+      internalUtility,
+      .Dependencies.customDependency(for: "internal utility")
+    )
+    XCTAssertIdentical(
+      dependencies.keychainStore,
+      keychainStore,
+      .Dependencies.customDependency(for: "keychain store")
+    )
+    XCTAssertIdentical(
+      dependencies.loginCompleterFactory as AnyObject,
+      loginCompleterFactory,
+      .Dependencies.customDependency(for: "login completer factory")
+    )
+    XCTAssertIdentical(
+      dependencies.profileProvider,
+      TestProfileProvider.self,
+      .Dependencies.customDependency(for: "profile provider")
+    )
+    XCTAssertIdentical(
+      dependencies.settings,
+      settings,
+      .Dependencies.customDependency(for: "settings")
+    )
+    XCTAssertIdentical(
+      dependencies.urlOpener,
+      urlOpener,
+      .Dependencies.customDependency(for: "URL opener")
+    )
+  }
+
+  func testDefaultDependencies() throws {
+    loginManager.resetDependencies()
+    let dependencies = try loginManager.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.accessTokenWallet,
+      AccessToken.self,
+      .Dependencies.defaultDependency("AccessToken", for: "access token wallet")
+    )
+    XCTAssertIdentical(
+      dependencies.authenticationTokenWallet,
+      AuthenticationToken.self,
+      .Dependencies.defaultDependency("AuthenticationToken", for: "authentication token wallet")
+    )
+    XCTAssertTrue(
+      dependencies.errorFactory is _ErrorFactory,
+      .Dependencies.defaultDependency("a concrete error factory", for: "error factory")
+    )
+    XCTAssertTrue(
+      dependencies.graphRequestFactory is GraphRequestFactory,
+      .Dependencies.defaultDependency("a concrete graph request factory", for: "graph request factory")
+    )
+    XCTAssertIdentical(
+      dependencies.internalUtility,
+      InternalUtility.shared,
+      .Dependencies.defaultDependency("the shared InternalUtility", for: "internal utility")
+    )
+
+    let bundleIdentifier = Bundle.main.bundleIdentifier ?? ""
+    let keychainStore = dependencies.keychainStore as? KeychainStore
+    XCTAssertEqual(
+      keychainStore?.service,
+      "com.facebook.sdk.loginmanager.\(bundleIdentifier)",
+      .Dependencies.defaultDependency("a keychain store with the appropriate service", for: "keychain store")
+    )
+    XCTAssertNil(
+      keychainStore?.accessGroup,
+      .Dependencies.defaultDependency("a keychain store without an access group", for: "keychain store")
+    )
+
+    XCTAssertTrue(
+      dependencies.loginCompleterFactory is LoginCompleterFactory,
+      .Dependencies.defaultDependency("a concrete login completer factory", for: "login completer factory")
+    )
+    XCTAssertIdentical(
+      dependencies.profileProvider,
+      Profile.self,
+      .Dependencies.defaultDependency("Profile", for: "profile provider")
+    )
+    XCTAssertIdentical(
+      dependencies.settings,
+      Settings.shared,
+      .Dependencies.defaultDependency("the shared Settings", for: "settings")
+    )
+    XCTAssertIdentical(
+      dependencies.urlOpener,
+      _BridgeAPI.shared,
+      .Dependencies.defaultDependency("the shared BridgeAPI", for: "URL opener")
+    )
   }
 
   // MARK: Opening URL
@@ -212,7 +324,6 @@ final class LoginManagerTests: XCTestCase {
     XCTAssertEqual(
       loginCompleterFactory.capturedURLParameters["signed_request"] as? String,
       "ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0", // swiftlint:disable:this line_length
-
       "Should create a login completer using the parameters parsed from the url"
     )
     XCTAssertEqual(
@@ -225,18 +336,19 @@ final class LoginManagerTests: XCTestCase {
       "123",
       "Should create a login completer using the parameters parsed from the url"
     )
-    XCTAssertTrue(
-      loginCompleterFactory.capturedAuthenticationTokenCreator is _AuthenticationTokenFactory,
-      "Should create a login completer using the expected authentication token factory"
-    )
   }
 
   // MARK: Completing Authentication
 
   func testCompletingAuthenticationWithMixedPermissionsWithExpectedChallenge() throws {
     var capturedResult: LoginManagerLoginResult?
-    loginManager.setRequestedPermissions(["email", "user_friends"])
-    loginManager.handler = { result, _ in
+    loginManager.requestedPermissions = [
+      // swiftlint:disable force_unwrapping
+      FBPermission(string: "email")!,
+      FBPermission(string: "user_friends")!,
+      // swiftlint:enable force_unwrapping
+    ]
+    loginManager.handler = IdentifiedLoginResultHandler { result, _ in
       capturedResult = result
     }
 
@@ -254,7 +366,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.declinedPermissions = FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     parameters.userID = "123"
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     let result = try XCTUnwrap(capturedResult)
     XCTAssertFalse(result.isCancelled)
@@ -299,7 +411,7 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
@@ -307,7 +419,7 @@ final class LoginManagerTests: XCTestCase {
     let parameters = _LoginCompletionParameters()
     parameters.error = SampleError()
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     XCTAssertEqual(
       TestAccessTokenWallet.current,
@@ -345,11 +457,12 @@ final class LoginManagerTests: XCTestCase {
   func testCompletingAuthenticationWithRecentlyDeclinedPermissions() throws {
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
-    loginManager.setRequestedPermissions(["user_friends"])
+    // swiftlint:disable:next force_unwrapping
+    loginManager.requestedPermissions = [FBPermission(string: "user_friends")!]
 
     _ = keychainStore.setString(
       challenge,
@@ -364,7 +477,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.permissions = FBPermission.permissions(fromRawPermissions: ["public_profile"])
     parameters.declinedPermissions = FBPermission.permissions(fromRawPermissions: ["user_likes", "user_friends"])
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     let result = try XCTUnwrap(capturedResult)
     XCTAssertFalse(result.isCancelled)
@@ -380,11 +493,12 @@ final class LoginManagerTests: XCTestCase {
   func testCompletingAuthenticationWithoutGrantedPermissions() throws {
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
-    loginManager.setRequestedPermissions(["user_friends"])
+    // swiftlint:disable:next force_unwrapping
+    loginManager.requestedPermissions = [FBPermission(string: "user_friends")!]
 
     _ = keychainStore.setString(
       challenge,
@@ -398,7 +512,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.authenticationTokenString = "sometoken"
     parameters.declinedPermissions = FBPermission.permissions(fromRawPermissions: ["user_likes", "user_friends"])
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     let result = try XCTUnwrap(capturedResult)
     XCTAssertNil(result.token)
@@ -414,11 +528,16 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
-    loginManager.setRequestedPermissions(["public_profile", "read_stream"])
+    loginManager.requestedPermissions = [
+      // swiftlint:disable force_unwrapping
+      FBPermission(string: "public_profile")!,
+      FBPermission(string: "read_stream")!,
+      // swiftlint:enable force_unwrapping
+    ]
 
     _ = keychainStore.setString(
       challenge,
@@ -432,7 +551,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.authenticationTokenString = "sometoken"
     parameters.permissions = FBPermission.permissions(fromRawPermissions: ["public_profile", "read_stream"])
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     let capturedRequest = graphRequestFactory.capturedRequests.first
     XCTAssertEqual(
@@ -457,12 +576,17 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
 
-    loginManager.setRequestedPermissions(["email", "user_friends"])
+    loginManager.requestedPermissions = [
+      // swiftlint:disable force_unwrapping
+      FBPermission(string: "email")!,
+      FBPermission(string: "user_friends")!,
+      // swiftlint:enable force_unwrapping
+    ]
 
     let parameters = _LoginCompletionParameters()
     parameters.accessTokenString = "accessTokenString"
@@ -470,7 +594,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.authenticationTokenString = "sometoken"
     parameters.declinedPermissions = FBPermission.permissions(fromRawPermissions: ["user_likes", "user_friends"])
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     XCTAssertNotNil(capturedError)
     XCTAssertNil(capturedResult)
@@ -479,17 +603,22 @@ final class LoginManagerTests: XCTestCase {
   func testCompletingAuthenticationWithNoChallengeAndError() {
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
 
-    loginManager.setRequestedPermissions(["email", "user_friends"])
+    loginManager.requestedPermissions = [
+      // swiftlint:disable force_unwrapping
+      FBPermission(string: "email")!,
+      FBPermission(string: "user_friends")!,
+      // swiftlint:enable force_unwrapping
+    ]
 
     let parameters = _LoginCompletionParameters()
     parameters.error = SampleError()
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     XCTAssertNil(capturedResult)
     XCTAssertNotNil(capturedError)
@@ -535,12 +664,17 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
 
-    loginManager.setRequestedPermissions(["email", "user_friends"])
+    loginManager.requestedPermissions = [
+      // swiftlint:disable force_unwrapping
+      FBPermission(string: "email")!,
+      FBPermission(string: "user_friends")!,
+      // swiftlint:enable force_unwrapping
+    ]
 
     let parameters = _LoginCompletionParameters()
     parameters.authenticationTokenString = tokenString
@@ -549,7 +683,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.profile = testUser
     parameters.permissions = FBPermission.permissions(fromRawPermissions: ["public_profile"])
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     XCTAssertNil(capturedError)
     let result = try XCTUnwrap(capturedResult)
@@ -589,11 +723,16 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
-    loginManager.setRequestedPermissions(["email", "user_friends"])
+    loginManager.requestedPermissions = [
+      // swiftlint:disable force_unwrapping
+      FBPermission(string: "email")!,
+      FBPermission(string: "user_friends")!,
+      // swiftlint:enable force_unwrapping
+    ]
 
     let parameters = _LoginCompletionParameters()
     parameters.authenticationTokenString = tokenString
@@ -602,7 +741,7 @@ final class LoginManagerTests: XCTestCase {
     parameters.profile = testUser
     parameters.permissions = FBPermission.permissions(fromRawPermissions: ["public_profile"])
 
-    loginManager.completeAuthentication(parameters, expectChallenge: true)
+    loginManager.completeAuthentication(parameters: parameters, expectChallenge: true)
 
     let result = try XCTUnwrap(capturedResult)
 
@@ -671,7 +810,7 @@ final class LoginManagerTests: XCTestCase {
       "openURL should not be called"
     )
     XCTAssertTrue(
-      loginManager.usedSFAuthSession,
+      loginManager.usedSafariSession,
       "If useSafariViewController is YES, _usedSFAuthSession should be YES and openURLWithSafariViewController should be invoked" // swiftlint:disable:this line_length
     )
 
@@ -680,7 +819,7 @@ final class LoginManagerTests: XCTestCase {
 
   func testCallingLoginWithStateChange() {
     internalUtility.isFacebookAppInstalled = false
-    loginManager.usedSFAuthSession = false
+    loginManager.usedSafariSession = false
     loginManager.state = .start
 
     var didInvokeCompletionSynchronously = false
@@ -699,19 +838,19 @@ final class LoginManagerTests: XCTestCase {
       tracking: .enabled
     )
     let logger = try XCTUnwrap(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         loggingToken: "123",
         tracking: .enabled
       )
     )
+    loginManager.logger = logger
 
     internalUtility.stubbedAppURL = sampleURL
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
-        with: configuration,
+        configuration: configuration,
         loggingToken: "",
-        logger: logger,
-        authMethod: "sfvc_auth"
+        authenticationMethod: "sfvc_auth"
       )
     )
 
@@ -753,10 +892,9 @@ final class LoginManagerTests: XCTestCase {
     internalUtility.stubbedAppURL = sampleURL
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
-        with: configuration,
+        configuration: configuration,
         loggingToken: "",
-        logger: nil,
-        authMethod: "browser_auth"
+        authenticationMethod: "browser_auth"
       )
     )
 
@@ -799,16 +937,15 @@ final class LoginManagerTests: XCTestCase {
   func testLoginParamsWithNilConfiguration() {
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
 
     let parameters = loginManager.logInParameters(
-      with: nil,
+      configuration: nil,
       loggingToken: nil,
-      logger: nil,
-      authMethod: "sfvc_auth"
+      authenticationMethod: "sfvc_auth"
     )
 
     XCTAssertNil(capturedResult)
@@ -823,16 +960,15 @@ final class LoginManagerTests: XCTestCase {
       messengerPageId: nil,
       authType: nil
     )
-    let logger = _LoginManagerLogger(loggingToken: "123", tracking: .enabled)
+    loginManager.logger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
 
     internalUtility.stubbedAppURL = sampleURL
 
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
-        with: configuration,
+        configuration: configuration,
         loggingToken: nil,
-        logger: logger,
-        authMethod: "sfvc_auth"
+        authenticationMethod: "sfvc_auth"
       )
     )
 
@@ -867,15 +1003,14 @@ final class LoginManagerTests: XCTestCase {
       messengerPageId: nil,
       authType: .reauthorize
     )
-    let logger = _LoginManagerLogger(loggingToken: "123", tracking: .enabled)
+    loginManager.logger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
     internalUtility.stubbedAppURL = sampleURL
 
     let parameters = try XCTUnwrap(
       loginManager.logInParameters(
-        with: configuration,
+        configuration: configuration,
         loggingToken: nil,
-        logger: logger,
-        authMethod: "sfvc_auth"
+        authenticationMethod: "sfvc_auth"
       )
     )
 
@@ -904,16 +1039,54 @@ final class LoginManagerTests: XCTestCase {
     )
   }
 
-  func testLogInParametersFromNonAuthenticationURL() throws {
-    let url = try XCTUnwrap(
-      URL(string: "myapp://somelink/?al_applink_data=%7B%22target_url%22%3Anull%2C%22extras%22%3A%7B%22fb_login%22%3A%22%7B%5C%22granted_scopes%5C%22%3A%5C%22public_profile%5C%22%2C%5C%22denied_scopes%5C%22%3A%5C%22%5C%22%2C%5C%22signed_request%5C%22%3A%5C%22ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0%5C%22%2C%5C%22nonce%5C%22%3A%5C%22someNonce%5C%22%2C%5C%22data_access_expiration_time%5C%22%3A%5C%221607374566%5C%22%2C%5C%22expires_in%5C%22%3A%5C%225183401%5C%22%7D%22%7D%2C%22referer_app_link%22%3A%7B%22url%22%3A%22fb%3A%5C%2F%5C%2F%5C%2F%22%2C%22app_name%22%3A%22Facebook%22%7D%7D")
+  func testLoginParamsWithNilDefaultAudienceType() throws {
+    let configuration = LoginConfiguration(
+      permissions: ["public_profile", "email"],
+      tracking: .enabled,
+      messengerPageId: nil,
+      authType: nil
+    )
+    internalUtility.stubbedAppURL = sampleURL
+
+    let parameters = try XCTUnwrap(
+      loginManager.logInParameters(
+        configuration: configuration,
+        loggingToken: nil,
+        authenticationMethod: "sfvc_auth"
+      )
     )
 
-    let parameters = try XCTUnwrap(loginManager.logInParameters(from: url))
+    XCTAssertEqual(
+      parameters["default_audience"],
+      "friends",
+      "A login manager uses an audience of 'friends' by default"
+    )
+  }
 
-    XCTAssertEqual(parameters["nonce"], "someNonce")
-    XCTAssertEqual(parameters["granted_scopes"], "public_profile")
-    XCTAssertEqual(parameters["denied_scopes"], "")
+  func testLoginParamsWithExplicitlySetDefaultAudienceType() throws {
+    let configuration = LoginConfiguration(
+      permissions: ["public_profile", "email"],
+      tracking: .enabled,
+      messengerPageId: nil,
+      authType: nil
+    )
+
+    internalUtility.stubbedAppURL = sampleURL
+    loginManager.defaultAudience = .everyone
+
+    let parameters = try XCTUnwrap(
+      loginManager.logInParameters(
+        configuration: configuration,
+        loggingToken: nil,
+        authenticationMethod: "sfvc_auth"
+      )
+    )
+
+    XCTAssertEqual(
+      parameters["default_audience"],
+      "everyone",
+      "A login manager has the ability to explicitly set the audience"
+    )
   }
 
   // MARK: Logout
@@ -934,10 +1107,10 @@ final class LoginManagerTests: XCTestCase {
 
   func testStoreExpectedNonce() {
     loginManager.storeExpectedNonce("some_nonce")
-    XCTAssertEqual(loginManager.keychainStore.string(forKey: "expected_login_nonce"), "some_nonce")
+    XCTAssertEqual(keychainStore.string(forKey: "expected_login_nonce"), "some_nonce")
 
     loginManager.storeExpectedNonce(nil)
-    XCTAssertNil(loginManager.keychainStore.string(forKey: "expected_login_nonce"))
+    XCTAssertNil(keychainStore.string(forKey: "expected_login_nonce"))
   }
 
   // MARK: Reauthorization
@@ -991,7 +1164,7 @@ final class LoginManagerTests: XCTestCase {
     let grantedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     )
-    let recentlyGrantedPermissions = loginManager.recentlyGrantedPermissions(fromGrantedPermissions: grantedPermissions)
+    let recentlyGrantedPermissions = loginManager.getRecentlyGrantedPermissions(from: grantedPermissions)
     XCTAssertEqual(recentlyGrantedPermissions, grantedPermissions)
   }
 
@@ -1001,7 +1174,7 @@ final class LoginManagerTests: XCTestCase {
     )
     TestAccessTokenWallet.current = SampleAccessTokens.validToken
 
-    let recentlyGrantedPermissions = loginManager.recentlyGrantedPermissions(fromGrantedPermissions: grantedPermissions)
+    let recentlyGrantedPermissions = loginManager.getRecentlyGrantedPermissions(from: grantedPermissions)
     XCTAssertEqual(recentlyGrantedPermissions, grantedPermissions)
   }
 
@@ -1011,9 +1184,10 @@ final class LoginManagerTests: XCTestCase {
     let grantedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     )
-    loginManager.setRequestedPermissions(["user_friends"])
+    // swiftlint:disable:next force_unwrapping
+    loginManager.requestedPermissions = [FBPermission(string: "user_friends")!]
 
-    let recentlyGrantedPermissions = loginManager.recentlyGrantedPermissions(fromGrantedPermissions: grantedPermissions)
+    let recentlyGrantedPermissions = loginManager.getRecentlyGrantedPermissions(from: grantedPermissions)
     XCTAssertEqual(recentlyGrantedPermissions, grantedPermissions)
   }
 
@@ -1023,9 +1197,10 @@ final class LoginManagerTests: XCTestCase {
     let grantedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     )
-    loginManager.setRequestedPermissions(["user_friends"])
+    // swiftlint:disable:next force_unwrapping
+    loginManager.requestedPermissions = [FBPermission(string: "user_friends")!]
 
-    let recentlyGrantedPermissions = loginManager.recentlyGrantedPermissions(fromGrantedPermissions: grantedPermissions)
+    let recentlyGrantedPermissions = loginManager.getRecentlyGrantedPermissions(from: grantedPermissions)
     let expectedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["user_friends"])
     )
@@ -1037,9 +1212,7 @@ final class LoginManagerTests: XCTestCase {
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     )
 
-    let recentlyDeclinedPermissions = loginManager.recentlyDeclinedPermissions(
-      fromDeclinedPermissions: declinedPermissions
-    )
+    let recentlyDeclinedPermissions = loginManager.getRecentlyDeclinedPermissions(from: declinedPermissions)
     XCTAssertTrue(recentlyDeclinedPermissions.isEmpty)
   }
 
@@ -1047,11 +1220,10 @@ final class LoginManagerTests: XCTestCase {
     let declinedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["email", "user_friends"])
     )
-    loginManager.setRequestedPermissions(["user_friends"])
+    // swiftlint:disable:next force_unwrapping
+    loginManager.requestedPermissions = [FBPermission(string: "user_friends")!]
 
-    let recentlyDeclinedPermissions = loginManager.recentlyDeclinedPermissions(
-      fromDeclinedPermissions: declinedPermissions
-    )
+    let recentlyDeclinedPermissions = loginManager.getRecentlyDeclinedPermissions(from: declinedPermissions)
     let expectedPermissions = try XCTUnwrap(
       FBPermission.permissions(fromRawPermissions: ["user_friends"])
     )
@@ -1069,7 +1241,7 @@ final class LoginManagerTests: XCTestCase {
       declinedPermissions: []
     )
 
-    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
+    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, loginResult: result)
 
     let capturedRequest = graphRequestFactory.capturedRequests.first
     XCTAssertEqual(
@@ -1100,12 +1272,12 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
 
-    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
+    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, loginResult: result)
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, nil, SampleError())
 
     XCTAssertNotNil(capturedError)
@@ -1123,12 +1295,12 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
 
-    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
+    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, loginResult: result)
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(
       nil, ["id": SampleAccessTokens.validToken.userID], nil
     )
@@ -1148,12 +1320,12 @@ final class LoginManagerTests: XCTestCase {
 
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?
-    loginManager.handler = { result, error in
+    loginManager.handler = IdentifiedLoginResultHandler { result, error in
       capturedResult = result
       capturedError = error
     }
 
-    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, result: result)
+    loginManager.validateReauthentication(accessToken: SampleAccessTokens.validToken, loginResult: result)
     graphRequestFactory.capturedRequests.first?.capturedCompletionHandler?(nil, ["id": "456"], nil)
 
     XCTAssertNotNil(capturedError)
@@ -1342,5 +1514,21 @@ final class LoginManagerTests: XCTestCase {
       file: file,
       line: line
     )
+  }
+}
+
+// swiftformat:disable extensionaccesscontrol
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  enum Dependencies {
+    static func defaultDependency(_ dependency: String, for type: String) -> String {
+      "A LoginManager instance uses \(dependency) as its \(type) dependency by default"
+    }
+
+    static func customDependency(for type: String) -> String {
+      "A LoginManager instance uses a custom \(type) dependency when provided"
+    }
   }
 }

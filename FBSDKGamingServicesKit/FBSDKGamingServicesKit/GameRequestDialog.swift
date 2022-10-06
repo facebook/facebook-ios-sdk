@@ -42,14 +42,28 @@ public final class GameRequestDialog: NSObject {
 
   private var dialogIsFrictionless = false
   private var isAwaitingResult = false
-  private lazy var webDialog = WebDialog(
-    name: GameRequestDialog.appRequestMethodName,
-    delegate: self
-  )
+  private lazy var webDialog: _WebDialog = {
+    let webDialog = _WebDialog(name: GameRequestDialog.appRequestMethodName)
+    webDialog.delegate = self
+    return webDialog
+  }()
 
   private static let recipientCache = GameRequestFrictionlessRecipientCache()
   private static let appRequestMethodName = "apprequests"
   private static let gameRequestURLHost = "game_requests"
+
+  var configuredDependencies: InstanceDependencies?
+
+  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+    bridgeAPIRequestOpener: _BridgeAPI.shared,
+    errorFactory: _ErrorFactory(),
+    gameRequestURLProvider: GameRequestURLProvider.self,
+    internalUtility: InternalUtility.shared,
+    logger: _Logger.self,
+    settings: Settings.shared,
+    shareValidator: _ShareUtility.self,
+    utility: Utility.self
+  )
 
   public init(content: GameRequestContent, delegate: GameRequestDialogDelegate?) {
     self.content = content
@@ -81,10 +95,16 @@ public final class GameRequestDialog: NSObject {
     content: GameRequestContent,
     delegate: GameRequestDialogDelegate?
   ) -> GameRequestDialog {
-    let dialog = GameRequestDialog(content: content, delegate: delegate)
+    show(dialog: GameRequestDialog(content: content, delegate: delegate))
+  }
 
-    if Utility.getGraphDomainFromToken() == "gaming",
-       InternalUtility.shared.isFacebookAppInstalled {
+  /// Testable implementation of the public static `show` method. Allows us to configure dependencies on the
+  /// dialog that is acted upon.
+  static func show(dialog: GameRequestDialog) -> GameRequestDialog {
+    guard let dependencies = try? dialog.getDependencies() else { return dialog }
+
+    if dependencies.utility.getGraphDomainFromToken() == "gaming",
+       dependencies.internalUtility.isFacebookAppInstalled {
       dialog.launch()
     } else {
       dialog.show()
@@ -101,10 +121,14 @@ public final class GameRequestDialog: NSObject {
     }
 
     let contentDictionary = convertGameRequestContentToDictionaryV2()
-    guard let url = GameRequestURLProvider.createDeepLinkURL(queryDictionary: contentDictionary) else { return }
+
+    guard
+      let dependencies = try? getDependencies(),
+      let url = dependencies.gameRequestURLProvider.createDeepLinkURL(queryDictionary: contentDictionary)
+    else { return }
 
     isAwaitingResult = true
-    BridgeAPI.shared.open(url, sender: self) { [weak self] success, potentialError in
+    dependencies.bridgeAPIRequestOpener.open(url, sender: self) { [weak self] success, potentialError in
       guard success else { return }
 
       if let error = potentialError {
@@ -126,7 +150,10 @@ public final class GameRequestDialog: NSObject {
   }
 
   private func handleBridgeAPIFailure(_ error: Error) {
-    let bridgeAPIError = ErrorFactory().error(
+    // swiftformat:disable:next redundantSelf
+    guard let errorFactory = self.errorFactory else { return }
+
+    let bridgeAPIError = errorFactory.error(
       code: CoreError.errorBridgeAPIInterruption.rawValue,
       userInfo: nil,
       message: "Error occured while interacting with Gaming Services, Failed to open bridge.",
@@ -140,27 +167,34 @@ public final class GameRequestDialog: NSObject {
           let host = url.host
     else { return false }
 
-    let appID = Settings.shared.appID ?? ""
+    // swiftformat:disable:next redundantSelf
+    let appID = self.settings?.appID ?? ""
     let schemePrefixMatches = scheme.hasPrefix("fb\(appID)")
     let hostMatches = (host == Self.gameRequestURLHost)
     return schemePrefixMatches && hostMatches
   }
 
+  private enum PayloadKeys {
+    static let requestID = "request_id"
+    static let recipients = "recipients"
+  }
+
   private func parsePayload(from url: URL) -> [String: Any]? {
     // If the URL contains no query items, then the user self closed the dialog within fbios.
     guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-          let queryItems = components.queryItems
+          let queryItems = components.queryItems,
+          queryItems.contains(where: { $0.name == PayloadKeys.requestID })
     else {
       didCancel()
       return nil
     }
 
     var payload = [String: Any]()
-    if let requestIDItem = queryItems.last(where: { $0.name == "request_id" }),
+    if let requestIDItem = queryItems.last(where: { $0.name == PayloadKeys.requestID }),
        let value = requestIDItem.value {
       payload[requestIDItem.name] = value
     }
-    if let recipientsItem = queryItems.last(where: { $0.name == "recipients" }),
+    if let recipientsItem = queryItems.last(where: { $0.name == PayloadKeys.recipients }),
        let recipients = recipientsItem.value {
       payload[recipientsItem.name] = recipients.components(separatedBy: ",")
     }
@@ -174,17 +208,7 @@ public final class GameRequestDialog: NSObject {
    */
   @discardableResult
   public func show() -> Bool {
-    guard canShow else {
-      let error = ErrorFactory().error(
-        domain: ShareErrorDomain,
-        code: ShareError.dialogNotAvailable.rawValue,
-        userInfo: nil,
-        message: "Game request dialog is not available.",
-        underlyingError: nil
-      )
-      delegate?.gameRequestDialog(self, didFailWithError: error)
-      return false
-    }
+    guard let dependencies = try? getDependencies() else { return false }
 
     do {
       try validate()
@@ -212,18 +236,22 @@ public final class GameRequestDialog: NSObject {
 
     launchViaBridgeAPI(parameters: parameters)
 
-    InternalUtility.shared.registerTransientObject(self)
+    dependencies.internalUtility.registerTransientObject(self)
     return true
   }
 
   /// Validates the content on the receiver.
   @objc(validateWithError:)
   public func validate() throws {
-    try _ShareUtility.validateRequiredValue(content, named: "content")
+    let validator = try getDependencies().shareValidator
+    try validator.validateRequiredValue(content, named: "content")
     try content.validate(options: [])
   }
 
   private func convertGameRequestContentToDictionaryV1() -> [String: Any] {
+    // swiftformat:disable:next redundantSelf
+    guard let urlProvider = self.gameRequestURLProvider else { return [:] }
+
     var parameters: [String: Any] = [
       "to": content.recipients.joined(separator: ","),
       "message": content.message,
@@ -232,13 +260,13 @@ public final class GameRequestDialog: NSObject {
       "suggestions": content.recipientSuggestions.joined(separator: ","),
     ]
 
-    if let actionTypeName = GameRequestURLProvider.actionTypeName(for: content.actionType) {
+    if let actionTypeName = urlProvider.actionTypeName(for: content.actionType) {
       parameters["action_type"] = actionTypeName
     }
     if let data = content.data {
       parameters["data"] = data
     }
-    if let filtersName = GameRequestURLProvider.filtersName(for: content.filters) {
+    if let filtersName = urlProvider.filtersName(for: content.filters) {
       parameters["filters"] = filtersName
     }
 
@@ -246,6 +274,9 @@ public final class GameRequestDialog: NSObject {
   }
 
   private func convertGameRequestContentToDictionaryV2() -> [String: Any] {
+    // swiftformat:disable:next redundantSelf
+    guard let urlProvider = self.gameRequestURLProvider else { return [:] }
+
     var parameters: [String: Any] = [
       "to": content.recipientSuggestions.joined(separator: ","),
       "message": content.message,
@@ -254,13 +285,13 @@ public final class GameRequestDialog: NSObject {
       "cta": content.cta,
     ]
 
-    if let actionTypeName = GameRequestURLProvider.actionTypeName(for: content.actionType) {
+    if let actionTypeName = urlProvider.actionTypeName(for: content.actionType) {
       parameters["action_type"] = actionTypeName
     }
     if let data = content.data {
       parameters["data"] = data
     }
-    if let filtersName = GameRequestURLProvider.filtersName(for: content.filters) {
+    if let filtersName = urlProvider.filtersName(for: content.filters) {
       parameters["options"] = filtersName
     }
 
@@ -268,15 +299,17 @@ public final class GameRequestDialog: NSObject {
   }
 
   private func launchViaBridgeAPI(parameters: [String: Any]) {
-    guard let topMostViewController = InternalUtility.shared.topMostViewController() else {
-      Logger.singleShotLogEntry(
+    guard let dependencies = try? getDependencies() else { return }
+
+    guard let topMostViewController = dependencies.internalUtility.topMostViewController() else {
+      dependencies.logger.singleShotLogEntry(
         .developerErrors,
         logEntry: "There are no valid ViewController to present FBSDKWebDialog"
       )
       return handleCompletion()
     }
 
-    let potentialRequest = BridgeAPIRequest(
+    let potentialRequest = _BridgeAPIRequest(
       protocolType: .web,
       scheme: .https,
       methodName: Self.appRequestMethodName,
@@ -286,9 +319,9 @@ public final class GameRequestDialog: NSObject {
 
     guard let request = potentialRequest else { return }
 
-    InternalUtility.shared.registerTransientObject(self)
+    dependencies.internalUtility.registerTransientObject(self)
 
-    BridgeAPI.shared.open(
+    dependencies.bridgeAPIRequestOpener.open(
       request,
       useSafariViewController: false,
       from: topMostViewController
@@ -308,8 +341,10 @@ public final class GameRequestDialog: NSObject {
   }
 
   private func didComplete(results potentialResults: [String: Any]?) {
+    guard let dependencies = try? getDependencies() else { return }
+
     guard var results = potentialResults else {
-      let error = ErrorFactory().error(
+      let error = dependencies.errorFactory.error(
         domain: ShareErrorDomain,
         code: ShareError.unknown.rawValue,
         userInfo: nil,
@@ -328,7 +363,7 @@ public final class GameRequestDialog: NSObject {
     let unsignedErrorCode = (results["error_code"] as? UInt) ?? 0
     let errorCode = Int(exactly: unsignedErrorCode) ?? 0
 
-    let error = ErrorFactory().error(
+    let error = dependencies.errorFactory.error(
       code: errorCode,
       userInfo: nil,
       message: results["error_message"] as? String,
@@ -355,19 +390,21 @@ public final class GameRequestDialog: NSObject {
     }
 
     handleCompletion(dialogResults: results, error: error)
-    InternalUtility.shared.unregisterTransientObject(self)
+    dependencies.internalUtility.unregisterTransientObject(self)
   }
 
   private func didFail(error: Error) {
     cleanUp()
     handleCompletion(error: error)
-    InternalUtility.shared.unregisterTransientObject(self)
+    // swiftformat:disable:next redundantSelf
+    self.internalUtility?.unregisterTransientObject(self)
   }
 
   private func didCancel() {
     cleanUp()
     delegate?.gameRequestDialogDidCancel(self)
-    InternalUtility.shared.unregisterTransientObject(self)
+    // swiftformat:disable:next redundantSelf
+    self.internalUtility?.unregisterTransientObject(self)
   }
 
   private func cleanUp() {
@@ -391,19 +428,19 @@ public final class GameRequestDialog: NSObject {
 }
 
 extension GameRequestDialog: WebDialogDelegate {
-  public func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
+  public func webDialog(_ webDialog: _WebDialog, didCompleteWithResults results: [String: Any]) {
     guard self.webDialog === webDialog else { return }
 
     didComplete(results: results)
   }
 
-  public func webDialog(_ webDialog: WebDialog, didFailWithError error: Error) {
+  public func webDialog(_ webDialog: _WebDialog, didFailWithError error: Error) {
     guard self.webDialog === webDialog else { return }
 
     didFail(error: error)
   }
 
-  public func webDialogDidCancel(_ webDialog: WebDialog) {
+  public func webDialogDidCancel(_ webDialog: _WebDialog) {
     guard self.webDialog === webDialog else { return }
 
     didCancel()
@@ -451,6 +488,19 @@ extension GameRequestDialog: URLOpening {
 
   public func isAuthenticationURL(_ url: URL) -> Bool {
     false
+  }
+}
+
+extension GameRequestDialog: DependentAsInstance {
+  struct InstanceDependencies {
+    var bridgeAPIRequestOpener: BridgeAPIRequestOpening
+    var errorFactory: ErrorCreating
+    var gameRequestURLProvider: GameRequestURLProviding.Type
+    var internalUtility: InternalUtilityProtocol
+    var logger: GamingLogging.Type
+    var settings: SettingsProtocol
+    var shareValidator: GamingShareValidating.Type
+    var utility: GamingUtility.Type
   }
 }
 

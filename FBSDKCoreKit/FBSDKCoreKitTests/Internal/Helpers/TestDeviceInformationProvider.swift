@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestDeviceInformationProvider: DeviceInformationProviding {
+final class TestDeviceInformationProvider: _DeviceInformationProviding {
   var storageKey = "storageKey"
   var stubbedEncodedDeviceInfo: String?
   var encodedDeviceInfoWasCalled = false

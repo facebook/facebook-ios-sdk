@@ -5,16 +5,10 @@
 // LICENSE file in the root directory of this source tree.
 
 SDKROOT = appletvos
-TVOS_DEPLOYMENT_TARGET = 11.0
+TVOS_DEPLOYMENT_TARGET = 12.0
 
 // Supported device families (1 is iPhone, 2 is iPad, 3 is Apple TV)
 TARGETED_DEVICE_FAMILY = 3
 
 // Where to find embedded frameworks
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
-
-// Bitcode Support
-// unlike iphoneos, appletvos requires this flag despite the explicit -fembed-bitcode.
-ENABLE_BITCODE = YES
-FB_BITCODE_FLAG = -fembed-bitcode -Wno-error=unused-command-line-argument
-OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)

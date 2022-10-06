@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
 import XCTest
 
 @objcMembers
 // swiftlint:disable:next line_length
-final class TestAppEventsUtility: NSObject, AppEventDropDetermining, AppEventParametersExtracting, AppEventsUtilityProtocol, LoggingNotifying {
+final class TestAppEventsUtility: NSObject, _AppEventDropDetermining, _AppEventParametersExtracting, _AppEventsUtilityProtocol, _LoggingNotifying {
   var shouldDropAppEvents = false
   var unixTimeNow = TimeInterval(0)
   var stubbedIsIdentifierValid = false
@@ -39,7 +40,7 @@ final class TestAppEventsUtility: NSObject, AppEventDropDetermining, AppEventPar
     stubbedTokenStringToUse
   }
 
-  func flushReason(toString flushReason: AppEventsUtility.FlushReason) -> String {
+  func flushReason(toString flushReason: AppEvents.FlushReason) -> String {
     ""
   }
 

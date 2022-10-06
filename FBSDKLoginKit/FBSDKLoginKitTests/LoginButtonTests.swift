@@ -13,7 +13,7 @@ import XCTest
 
 final class LoginButtonTests: XCTestCase {
 
-  let validNonce: String = "abc123"
+  let validNonce = "abc123"
   // swiftlint:disable implicitly_unwrapped_optional
   var loginProvider: TestLoginProvider!
   var stringProvider: TestUserInterfaceStringProvider!
@@ -61,13 +61,13 @@ final class LoginButtonTests: XCTestCase {
   func testDefaultDependencies() {
     let loginButton = FBLoginButton()
     XCTAssertIdentical(
-      loginButton.elementProvider,
+      loginButton.elementProvider as AnyObject,
       InternalUtility.shared,
       .hasDefaultElementProvider
     )
 
     XCTAssertIdentical(
-      loginButton.stringProvider,
+      loginButton.stringProvider as AnyObject,
       InternalUtility.shared,
       .hasDefaultStringProvider
     )
@@ -85,19 +85,19 @@ final class LoginButtonTests: XCTestCase {
 
   func testCustomDependencies() {
     XCTAssertIdentical(
-      loginButton.elementProvider,
+      loginButton.elementProvider as AnyObject,
       elementProvider,
       .hasCustomElementProvider
     )
 
     XCTAssertIdentical(
-      loginButton.stringProvider,
+      loginButton.stringProvider as AnyObject,
       stringProvider,
       .hasCustomStringProvider
     )
 
     XCTAssertIdentical(
-      loginButton.loginProvider,
+      loginButton.loginProvider as AnyObject,
       loginProvider,
       .hasCustomLoginProvider
     )
@@ -165,7 +165,7 @@ final class LoginButtonTests: XCTestCase {
   func testInitialContentUpdateWithInactiveAccessTokenWithProfile() {
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
 
     loginButton.initializeContent()
 
@@ -191,7 +191,7 @@ final class LoginButtonTests: XCTestCase {
 
     AccessToken.setCurrent(SampleAccessTokens.validToken, shouldDispatchNotif: false)
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
 
     loginButton.initializeContent()
 
@@ -244,7 +244,7 @@ final class LoginButtonTests: XCTestCase {
 
   func testInitialContentUpdateWithoutAccessTokenWithoutProfile() {
     AccessToken.setCurrent(nil, shouldDispatchNotif: false)
-    Profile.setCurrent(nil, shouldPostNotification: false)
+    Profile.current = nil
 
     loginButton.initializeContent()
 
@@ -424,7 +424,7 @@ final class LoginButtonTests: XCTestCase {
     )
 
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
 
     loginButton.profileDidChange(notification)
 
@@ -454,7 +454,7 @@ final class LoginButtonTests: XCTestCase {
     )
 
     let profile = SampleUserProfiles.createValid()
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
     loginButton.updateContentForUser(profile)
     loginButton.profileDidChange(notification)
 
@@ -892,18 +892,18 @@ final class LoginButtonTests: XCTestCase {
 
     XCTAssertNotNil(loginProvider.capturedConfiguration)
     let completion = try XCTUnwrap(loginProvider.capturedCompletion)
-    let granted = Set(SampleAccessTokens.validToken.permissions.map { $0.name })
-    let declined = Set(SampleAccessTokens.validToken.declinedPermissions.map { $0.name })
+    let granted = Set(SampleAccessTokens.validToken.permissions.map(\.name))
+    let declined = Set(SampleAccessTokens.validToken.declinedPermissions.map(\.name))
     let result = LoginManagerLoginResult(
       token: SampleAccessTokens.validToken,
-      authenticationToken: sampleToken,
+      authenticationToken: nil,
       isCancelled: false,
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    completion(result, nil)
+    completion(LoginResult(result: result, error: nil))
 
-    XCTAssertEqual(delegate.capturedResult, result)
+    assertEqualLoginManagerLoginResults(delegate.capturedResult, result, .delegateIsPassedResult)
   }
 
   func testButtonPressAuthenticated() throws {
@@ -1009,7 +1009,25 @@ final class LoginButtonTests: XCTestCase {
       .hasCustomTitleFrame
     )
   }
+
+  // MARK: - Helpers
+
+  private func assertEqualLoginManagerLoginResults(
+    _ result1: LoginManagerLoginResult?,
+    _ result2: LoginManagerLoginResult?,
+    _ message: String,
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
+    XCTAssertEqual(result1?.token, result2?.token, message, file: file, line: line)
+    XCTAssertEqual(result1?.authenticationToken, result2?.authenticationToken, message, file: file, line: line)
+    XCTAssertEqual(result1?.isCancelled, result2?.isCancelled, message, file: file, line: line)
+    XCTAssertEqual(result1?.grantedPermissions, result2?.grantedPermissions, message, file: file, line: line)
+    XCTAssertEqual(result1?.declinedPermissions, result2?.declinedPermissions, message, file: file, line: line)
+  }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 
@@ -1200,4 +1218,5 @@ fileprivate extension String {
     User id should change when attempting to update content \
     with a profile with an identical user id has a new name
     """
+  static let delegateIsPassedResult = "The delegate is passed the login result"
 }

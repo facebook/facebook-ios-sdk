@@ -14,7 +14,7 @@ import XCTest
 final class LoginManagerLoggerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var loginManagerLogger: _LoginManagerLogger!
+  var loginManagerLogger: LoginManagerLogger!
   var eventLogger: TestLoginEventLogger!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -25,33 +25,33 @@ final class LoginManagerLoggerTests: XCTestCase {
   override func setUp() {
     super.setUp()
     eventLogger = TestLoginEventLogger()
-    loginManagerLogger = _LoginManagerLogger(loggingToken: "123", tracking: .enabled)
-    _LoginManagerLogger.setDependencies(.init(eventLogger: eventLogger))
+    loginManagerLogger = LoginManagerLogger(loggingToken: "123", tracking: .enabled)
+    LoginManagerLogger.setDependencies(.init(eventLogger: eventLogger))
   }
 
   override func tearDown() {
     eventLogger = nil
     loginManagerLogger = nil
-    _LoginManagerLogger.resetDependencies()
+    LoginManagerLogger.resetDependencies()
     super.tearDown()
   }
 
   func testDefaultTypeDependencies() throws {
-    _LoginManagerLogger.resetDependencies()
-    let dependencies = try _LoginManagerLogger.getDependencies()
+    LoginManagerLogger.resetDependencies()
+    let dependencies = try LoginManagerLogger.getDependencies()
 
     XCTAssertIdentical(
-      dependencies.eventLogger,
+      dependencies.eventLogger as AnyObject,
       AppEvents.shared,
       .defaultDependency("the shared AppEvents", for: "event logging")
     )
   }
 
   func testCustomTypeDependencies() throws {
-    let dependencies = try _LoginManagerLogger.getDependencies()
+    let dependencies = try LoginManagerLogger.getDependencies()
 
     XCTAssertIdentical(
-      dependencies.eventLogger,
+      dependencies.eventLogger as AnyObject,
       eventLogger,
       .customDependency(for: "event logging")
     )
@@ -59,7 +59,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithMissingParametersWithTrackingEnabled() {
     XCTAssertNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         parameters: nil,
         tracking: .enabled
       ),
@@ -69,7 +69,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithEmptyParametersWithTrackingEnabled() {
     XCTAssertNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         parameters: [:],
         tracking: .enabled
       ),
@@ -79,7 +79,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithParametersWithTrackingEnabled() {
     XCTAssertNotNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         parameters: validParameters,
         tracking: .enabled
       ),
@@ -89,7 +89,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithMissingParametersWithTrackingLimited() {
     XCTAssertNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         parameters: nil,
         tracking: .limited
       ),
@@ -99,7 +99,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithEmptyParametersWithTrackingLimited() {
     XCTAssertNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         parameters: [:],
         tracking: .limited
       ),
@@ -109,7 +109,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testCreatingWithParametersWithTrackingLimited() {
     XCTAssertNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         parameters: validParameters,
         tracking: .limited
       ),
@@ -119,7 +119,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingWithMissingLoggingTokenWithTrackingEnabled() {
     XCTAssertNotNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         loggingToken: nil,
         tracking: .enabled
       ),
@@ -129,7 +129,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingloggingTokenWithTrackingEnabled() {
     XCTAssertNotNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         loggingToken: "123",
         tracking: .enabled
       ),
@@ -139,7 +139,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingWithMissingLoggingTokenWithTrackingLimited() {
     XCTAssertNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         loggingToken: nil,
         tracking: .limited
       ),
@@ -149,7 +149,7 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testInitializingWithLoggingTokenWithTrackingLimited() {
     XCTAssertNil(
-      _LoginManagerLogger(
+      LoginManagerLogger(
         loggingToken: "123",
         tracking: .limited
       ),
@@ -159,7 +159,8 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testStartingSessionForLoginManager() throws {
     let loginManager = LoginManager(defaultAudience: .friends)
-    loginManager.setRequestedPermissions(["user_friends"])
+    // swiftlint:disable:next force_unwrapping
+    loginManager.requestedPermissions = [FBPermission(string: "user_friends")!]
     loginManagerLogger.startSession(for: loginManager)
 
     validateCommonEventLoggingParameters()
@@ -233,7 +234,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    loginManagerLogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(result: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -261,7 +262,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       grantedPermissions: granted,
       declinedPermissions: declined
     )
-    loginManagerLogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(result: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -298,7 +299,7 @@ final class LoginManagerLoggerTests: XCTestCase {
       declinedPermissions: declined
     )
 
-    loginManagerLogger.endLogin(with: result, error: nil)
+    loginManagerLogger.endLogin(result: result, error: nil)
 
     XCTAssertEqual(
       eventLogger.capturedEventName,
@@ -320,7 +321,7 @@ final class LoginManagerLoggerTests: XCTestCase {
     let errorDomain = "testingDomain"
     let errorCode = -1
     let error = NSError(domain: errorDomain, code: errorCode)
-    loginManagerLogger.endLogin(with: nil, error: error)
+    loginManagerLogger.endLogin(result: nil, error: error)
 
     XCTAssertEqual(eventLogger.capturedEventName, AppEvents.Name(rawValue: "fb_mobile_login_method_complete"))
     try validateEmptyExtraParameters()
@@ -354,9 +355,9 @@ final class LoginManagerLoggerTests: XCTestCase {
   }
 
   func testClientStateForAuthMethodWithNoExistingState() throws {
-    let clientStateString = _LoginManagerLogger.clientStateFor(
-      authMethod: "sfvc_auth",
-      andExistingState: nil,
+    let clientStateString = LoginManagerLogger.getClientState(
+      authenticationMethod: "sfvc_auth",
+      existingState: nil,
       logger: loginManagerLogger
     )
 
@@ -375,9 +376,9 @@ final class LoginManagerLoggerTests: XCTestCase {
 
   func testClientStateForAuthMethodWithExistingState() throws {
     let existingState = ["challenge": "ibUuyvhzJW36TvC7BBYpasPHrXk%3D"]
-    let clientStateString = _LoginManagerLogger.clientStateFor(
-      authMethod: "sfvc_auth",
-      andExistingState: existingState,
+    let clientStateString = LoginManagerLogger.getClientState(
+      authenticationMethod: "sfvc_auth",
+      existingState: existingState,
       logger: loginManagerLogger
     )
 
@@ -398,7 +399,7 @@ final class LoginManagerLoggerTests: XCTestCase {
   // MARK: - Helpers
 
   func testAuthMethod(_ method: String) throws {
-    loginManagerLogger.startWith(authMethod: method)
+    loginManagerLogger.start(authenticationMethod: method)
 
     validateCommonEventLoggingParameters()
     try validateEmptyExtraParameters()
@@ -467,15 +468,17 @@ final class LoginManagerLoggerTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {
   static func defaultDependency(_ dependency: String, for type: String) -> String {
-    "The _LoginManagerLogger type uses \(dependency) as its \(type) dependency by default"
+    "The LoginManagerLogger type uses \(dependency) as its \(type) dependency by default"
   }
 
   static func customDependency(for type: String) -> String {
-    "The _LoginManagerLogger type uses a custom \(type) dependency when provided"
+    "The LoginManagerLogger type uses a custom \(type) dependency when provided"
   }
 
   static let containsLoggingToken = "logger parameters contain a logging token"

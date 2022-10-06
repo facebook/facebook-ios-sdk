@@ -203,4 +203,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError) {
   FBSDKGraphRequestErrorRecoverable = 2,
 } NS_SWIFT_NAME(GraphRequestError);
 
+/**
+ Internal value exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+FOUNDATION_EXPORT NSString *const DefaultKeychainServicePrefix;
+
 NS_ASSUME_NONNULL_END

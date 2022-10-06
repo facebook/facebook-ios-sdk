@@ -8,12 +8,13 @@
 
 import FBSDKCoreKit
 
-public final class TestAccessTokenProvider: AccessTokenProviding {
+public final class TestAccessTokenProvider: _AccessTokenProviding {
 
   public static var stubbedAccessToken: AccessToken?
   public static var tokenCache: TokenCaching?
   public static var current: AccessToken? {
-    stubbedAccessToken
+    get { stubbedAccessToken }
+    set {} // swiftlint:disable:this unused_setter_value
   }
 
   public init() {}

@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
  see `FBSDKJS` for integration in TVML apps.
  */
 NS_SWIFT_NAME(JSExports)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @protocol FBSDKJSExports <JSExport>
 
 /// Returns the current access token string, if available.
@@ -83,6 +84,7 @@ NS_SWIFT_NAME(hasGranted(permission:));
  if the user is logged in.
  */
 NS_SWIFT_NAME(JS)
+DEPRECATED_MSG_ATTRIBUTE("Support for tvOS is deprecated and will be removed in the next major release.")
 @interface FBSDKJS : NSObject <FBSDKJSExports>
 
 @end

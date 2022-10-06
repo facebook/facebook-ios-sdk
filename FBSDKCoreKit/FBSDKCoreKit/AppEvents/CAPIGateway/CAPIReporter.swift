@@ -12,9 +12,9 @@ import FBSDKCoreKit_Basics
 
 @objc(FBSDKCAPIReporter)
 public protocol CAPIReporter {
-    func enable()
+  func enable()
 
-    func configure(factory: GraphRequestFactoryProtocol, settings: SettingsProtocol)
+  func configure(factory: GraphRequestFactoryProtocol, settings: SettingsProtocol)
 
-    func recordEvent(_ parameters: [String: Any])
+  func recordEvent(_ parameters: [String: Any])
 }

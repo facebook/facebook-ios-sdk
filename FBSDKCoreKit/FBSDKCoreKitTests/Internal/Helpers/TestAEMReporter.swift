@@ -18,6 +18,8 @@ final class TestAEMReporter: NSObject, _AEMReporterProtocol {
   static var capturedConversionFilteringEnabled = false
   static var setCatalogMatchingEnabledWasCalled = false
   static var capturedCatalogMatchingEnabled = false
+  static var setAdvertiserRuleMatchInServerEnabledWasCalled = false
+  static var capturedAdvertiserRuleMatchInServerEnabled = false
   static var capturedEvent: String?
   static var capturedCurrency: String?
   static var capturedValue: NSNumber?
@@ -47,6 +49,11 @@ final class TestAEMReporter: NSObject, _AEMReporterProtocol {
   static func setCatalogMatchingEnabled(_ enabled: Bool) {
     setCatalogMatchingEnabledWasCalled = true
     capturedCatalogMatchingEnabled = enabled
+  }
+
+  static func setAdvertiserRuleMatchInServerEnabled(_ enabled: Bool) {
+    setAdvertiserRuleMatchInServerEnabledWasCalled = true
+    capturedAdvertiserRuleMatchInServerEnabled = enabled
   }
 
   static func reset() {

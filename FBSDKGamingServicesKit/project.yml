@@ -21,7 +21,7 @@ projectReferences:
 
 options:
   deploymentTarget:
-    tvOS: '11.0'
+    tvOS: '12.0'
 
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
@@ -32,7 +32,6 @@ settings:
     # Some iOS defaults will be overridden by Xcodegen.
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
-    SWIFT_OPTIMIZATION_LEVEL: -O
     ENABLE_NS_ASSERTIONS: YES
 
 schemes:
@@ -53,6 +52,8 @@ schemes:
 
 targets:
   FBSDKGamingServicesKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKGamingServicesKit
@@ -67,14 +68,12 @@ targets:
       - target: FBSDKShareKit/FBSDKShareKit-Dynamic
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit FBSDKGamingServicesKitTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
     transitivelyLinkDependencies: true
   FBSDKGamingServicesKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKGamingServicesKit
@@ -90,10 +89,6 @@ targets:
         link: false
       - target: FBSDKShareKit/FBSDKShareKit-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKGamingServicesKitTests:

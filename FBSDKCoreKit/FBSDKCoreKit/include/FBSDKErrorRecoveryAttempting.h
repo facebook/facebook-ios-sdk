@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(ErrorRecoveryAttempting)
-@protocol FBSDKErrorRecoveryAttempting <NSObject>
+@protocol FBSDKErrorRecoveryAttempting
 
 /**
  Attempt the recovery
@@ -27,7 +27,8 @@ NS_SWIFT_NAME(ErrorRecoveryAttempting)
  Attempt recovery from the error, and call the completion handler. The value passed for didRecover must be YES if error recovery was completely successful, NO otherwise.
  */
 - (void)attemptRecoveryFromError:(NSError *)error
-               completionHandler:(void (^)(BOOL didRecover))completionHandler;
+               completionHandler:(void (^)(BOOL didRecover))completionHandler
+NS_SWIFT_NAME(attemptRecovery(from:completion:));
 @end
 
 NS_ASSUME_NONNULL_END

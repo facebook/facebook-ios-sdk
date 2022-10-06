@@ -8,7 +8,7 @@
 
 #import "FBSDKImpressionLoggingButton+Internal.h"
 
-#import "FBSDKButtonImpressionLogging.h"
+#import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 
 @implementation FBSDKImpressionLoggingButton
 

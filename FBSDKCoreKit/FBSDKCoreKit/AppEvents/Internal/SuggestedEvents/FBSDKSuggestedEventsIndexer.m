@@ -8,18 +8,14 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKSuggestedEventsIndexer.h"
-
-#import <UIKit/UIKit.h>
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
+#import <UIKit/UIKit.h>
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKAppEventsUtility.h"
-#import "FBSDKFeatureExtracting.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelUtility.h"

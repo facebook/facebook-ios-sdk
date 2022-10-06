@@ -10,15 +10,13 @@
 
 #import <StoreKit/StoreKit.h>
 
-#import <FBSDKCoreKit/__FBSDKLoggerCreating.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventParameterName+Internal.h"
-#import "FBSDKAppEventsFlushReason.h"
-#import "FBSDKAppStoreReceiptProviding.h"
+#import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import "FBSDKEventLogging.h"
-#import "FBSDKGateKeeperManaging.h"
 #import "FBSDKProductsRequestProtocols.h"
 #import "FBSDKSettingsProtocol.h"
 
@@ -77,7 +75,7 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
     _transaction = transaction;
     _formatter = [NSDateFormatter new];
     _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
-    NSString *data = [_store stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
+    NSString *data = [_store fb_stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
     _eventsWithReceipt = [NSSet setWithArray:@[FBSDKAppEventNamePurchased, FBSDKAppEventNameSubscribe,
                                                FBSDKAppEventNameStartTrial]];
     if (data) {
@@ -139,11 +137,10 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
 - (BOOL)isSubscription:(SKProduct *)product
 {
 #if !TARGET_OS_TV
-  if (@available(iOS 11.2, *)) {
-    return (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
-  }
-#endif
+  return (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
+#else
   return NO;
+#endif
 }
 
 - (NSMutableDictionary<NSString *, id> *)getEventParametersOfProduct:(SKProduct *)product
@@ -186,26 +183,24 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
   }
 
 #if !TARGET_OS_TV
-  if (@available(iOS 11.2, *)) {
-    if ([self isSubscription:product]) {
-      // subs inapp
-      [FBSDKTypeUtility dictionary:eventParameters setObject:[self durationOfSubscriptionPeriod:product.subscriptionPeriod] forKey:FBSDKAppEventParameterNameSubscriptionPeriod];
-      [FBSDKTypeUtility dictionary:eventParameters setObject:@"subs" forKey:FBSDKAppEventParameterNameInAppPurchaseType];
-      [FBSDKTypeUtility dictionary:eventParameters setObject:[self isStartTrial:transaction ofProduct:product] ? @"1" : @"0" forKey:FBSDKAppEventParameterNameIsStartTrial];
-      // trial information for subs
-      SKProductDiscount *discount = product.introductoryPrice;
-      if (discount) {
-        if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-          [FBSDKTypeUtility dictionary:eventParameters setObject:@"1" forKey:FBSDKAppEventParameterNameHasFreeTrial];
-        } else {
-          [FBSDKTypeUtility dictionary:eventParameters setObject:@"0" forKey:FBSDKAppEventParameterNameHasFreeTrial];
-        }
-        [FBSDKTypeUtility dictionary:eventParameters setObject:[self durationOfSubscriptionPeriod:discount.subscriptionPeriod] forKey:FBSDKAppEventParameterNameTrialPeriod];
-        [FBSDKTypeUtility dictionary:eventParameters setObject:discount.price forKey:FBSDKAppEventParameterNameTrialPrice];
+  if ([self isSubscription:product]) {
+    // subs inapp
+    [FBSDKTypeUtility dictionary:eventParameters setObject:[self durationOfSubscriptionPeriod:product.subscriptionPeriod] forKey:FBSDKAppEventParameterNameSubscriptionPeriod];
+    [FBSDKTypeUtility dictionary:eventParameters setObject:@"subs" forKey:FBSDKAppEventParameterNameInAppPurchaseType];
+    [FBSDKTypeUtility dictionary:eventParameters setObject:[self isStartTrial:transaction ofProduct:product] ? @"1" : @"0" forKey:FBSDKAppEventParameterNameIsStartTrial];
+    // trial information for subs
+    SKProductDiscount *discount = product.introductoryPrice;
+    if (discount) {
+      if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
+        [FBSDKTypeUtility dictionary:eventParameters setObject:@"1" forKey:FBSDKAppEventParameterNameHasFreeTrial];
+      } else {
+        [FBSDKTypeUtility dictionary:eventParameters setObject:@"0" forKey:FBSDKAppEventParameterNameHasFreeTrial];
       }
-    } else {
-      [FBSDKTypeUtility dictionary:eventParameters setObject:@"inapp" forKey:FBSDKAppEventParameterNameInAppPurchaseType];
+      [FBSDKTypeUtility dictionary:eventParameters setObject:[self durationOfSubscriptionPeriod:discount.subscriptionPeriod] forKey:FBSDKAppEventParameterNameTrialPeriod];
+      [FBSDKTypeUtility dictionary:eventParameters setObject:discount.price forKey:FBSDKAppEventParameterNameTrialPrice];
     }
+  } else {
+    [FBSDKTypeUtility dictionary:eventParameters setObject:@"inapp" forKey:FBSDKAppEventParameterNameInAppPurchaseType];
   }
 #endif
   return eventParameters;
@@ -217,8 +212,8 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
     return;
   }
   [self.originalTransactionSet addObject:transactionID];
-  [self.store setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
-                 forKey:FBSDKPaymentObserverOriginalTransactionKey];
+  [self.store fb_setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
+                    forKey:FBSDKPaymentObserverOriginalTransactionKey];
 }
 
 - (void)clearOriginalTransactionID:(NSString *)transactionID
@@ -227,8 +222,8 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
     return;
   }
   [self.originalTransactionSet removeObject:transactionID];
-  [self.store setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
-                 forKey:FBSDKPaymentObserverOriginalTransactionKey];
+  [self.store fb_setObject:[[self.originalTransactionSet allObjects] componentsJoinedByString:FBSDKPaymentObserverDelimiter]
+                    forKey:FBSDKPaymentObserverOriginalTransactionKey];
 }
 
 - (BOOL)isStartTrial:(SKPaymentTransaction *)transaction
@@ -248,15 +243,13 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
       }
     }
   }
-  // introductory offer starting from iOS 11.2
-  if (@available(iOS 11.2, *)) {
-    if (product.introductoryPrice
-        && product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
-      NSString *originalTransactionID = transaction.originalTransaction.transactionIdentifier;
-      // only consider the very first trial transaction as start trial
-      if (!originalTransactionID) {
-        return YES;
-      }
+
+  if (product.introductoryPrice
+      && product.introductoryPrice.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
+    NSString *originalTransactionID = transaction.originalTransaction.transactionIdentifier;
+    // only consider the very first trial transaction as start trial
+    if (!originalTransactionID) {
+      return YES;
     }
   }
 #endif
@@ -266,18 +259,16 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
 - (nullable NSString *)durationOfSubscriptionPeriod:(id)subcriptionPeriod
 {
 #if !TARGET_OS_TV
-  if (@available(iOS 11.2, *)) {
-    if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:SKProductSubscriptionPeriod.class]) {
-      SKProductSubscriptionPeriod *period = (SKProductSubscriptionPeriod *)subcriptionPeriod;
-      NSString *unit = nil;
-      switch (period.unit) {
-        case SKProductPeriodUnitDay: unit = @"D"; break;
-        case SKProductPeriodUnitWeek: unit = @"W"; break;
-        case SKProductPeriodUnitMonth: unit = @"M"; break;
-        case SKProductPeriodUnitYear: unit = @"Y"; break;
-      }
-      return [NSString stringWithFormat:@"P%lu%@", (unsigned long)period.numberOfUnits, unit];
+  if (subcriptionPeriod && [subcriptionPeriod isKindOfClass:SKProductSubscriptionPeriod.class]) {
+    SKProductSubscriptionPeriod *period = (SKProductSubscriptionPeriod *)subcriptionPeriod;
+    NSString *unit = nil;
+    switch (period.unit) {
+      case SKProductPeriodUnitDay: unit = @"D"; break;
+      case SKProductPeriodUnitWeek: unit = @"W"; break;
+      case SKProductPeriodUnitMonth: unit = @"M"; break;
+      case SKProductPeriodUnitYear: unit = @"Y"; break;
     }
+    return [NSString stringWithFormat:@"P%lu%@", (unsigned long)period.numberOfUnits, unit];
   }
 #endif
   return nil;

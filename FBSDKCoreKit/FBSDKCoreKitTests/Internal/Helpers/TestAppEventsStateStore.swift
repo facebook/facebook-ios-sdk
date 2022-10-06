@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestAppEventsStateStore: NSObject, AppEventsStatePersisting {
+final class TestAppEventsStateStore: NSObject, _AppEventsStatePersisting {
   var capturedPersistedState: [Any] = []
   var retrievePersistedAppEventStatesWasCalled = false
   var clearPersistedAppEventsWasCalled = false
@@ -20,7 +20,7 @@ final class TestAppEventsStateStore: NSObject, AppEventsStatePersisting {
     capturedPersistedState = []
   }
 
-  func persistAppEventsData(_ appEventsState: AppEventsState) {
+  func persistAppEventsData(_ appEventsState: _AppEventsState) {
     capturedPersistedState.append(appEventsState)
   }
 

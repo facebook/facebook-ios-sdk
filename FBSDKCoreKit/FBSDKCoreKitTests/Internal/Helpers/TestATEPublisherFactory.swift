@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestATEPublisherFactory: NSObject, ATEPublisherCreating {
+final class TestATEPublisherFactory: NSObject, _ATEPublisherCreating {
   var stubbedPublisher: ATEPublishing? = TestATEPublisher()
   var capturedAppID: String?
 

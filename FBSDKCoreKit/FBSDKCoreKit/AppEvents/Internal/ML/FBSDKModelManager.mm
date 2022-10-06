@@ -97,11 +97,14 @@ static dispatch_once_t enableNonce;
       }
 
       _directoryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
-      if (![self.fileManager fileExistsAtPath:_directoryPath]) {
-        [self.fileManager createDirectoryAtPath:_directoryPath withIntermediateDirectories:YES attributes:NULL error:NULL];
+      if (![self.fileManager fb_fileExistsAtPath:_directoryPath]) {
+        [self.fileManager fb_createDirectoryAtPath:_directoryPath
+                       withIntermediateDirectories:YES
+                                        attributes:NULL
+                                             error:NULL];
       }
-      _modelInfo = [self.store objectForKey:MODEL_INFO_KEY];
-      NSDate *timestamp = [self.store objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
+      _modelInfo = [self.store fb_objectForKey:MODEL_INFO_KEY];
+      NSDate *timestamp = [self.store fb_objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
       if ([_modelInfo count] == 0 || ![self.featureChecker isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
         // fetch api
         NSString *graphPath = [NSString stringWithFormat:@"%@/model_asset", self.settings.appID];
@@ -117,8 +120,8 @@ static dispatch_once_t enableNonce;
                 _modelInfo = [modelInfo mutableCopy];
                 [weakSelf.class processMTML];
                 // update cache for model info and timestamp
-                [weakSelf.store setObject:_modelInfo forKey:MODEL_INFO_KEY];
-                [weakSelf.store setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+                [weakSelf.store fb_setObject:_modelInfo forKey:MODEL_INFO_KEY];
+                [weakSelf.store fb_setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
               }
             }
           }
@@ -140,7 +143,9 @@ static dispatch_once_t enableNonce;
     if (model && model[VERSION_ID_KEY]) {
       NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
       if (filePath) {
-        NSData *rulesData = [self.dataExtractor dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
+        NSData *rulesData = [self.dataExtractor fb_dataWithContentsOfFile:filePath
+                                                                  options:NSDataReadingMappedIfSafe
+                                                                    error:nil];
         NSDictionary<NSString *, id> *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
         return rules;
       }

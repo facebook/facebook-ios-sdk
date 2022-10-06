@@ -184,7 +184,8 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     value potentialValue: NSNumber?,
     parameters: [String: Any]?,
     configurations: [String: [_AEMConfiguration]]?,
-    shouldUpdateCache: Bool
+    shouldUpdateCache: Bool,
+    isRuleMatchInServer: Bool
   ) -> Bool {
     guard
       let configuration = findConfiguration(in: configurations),
@@ -192,11 +193,14 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
       configuration.eventSet.contains(event)
     else { return false }
 
-    // Check advertiser rule matching
-    let processedParameters = getProcessedParameters(from: parameters)
-    if let matchingRule = configuration.matchingRule,
-       !matchingRule.isMatchedEventParameters(processedParameters) {
-      return false
+    var processedParameters: [String: Any]?
+    if !isRuleMatchInServer {
+      // Check advertiser rule matching
+      processedParameters = getProcessedParameters(from: parameters)
+      if let matchingRule = configuration.matchingRule,
+         !matchingRule.isMatchedEventParameters(processedParameters) {
+        return false
+      }
     }
 
     var isAttributed = false
@@ -216,10 +220,12 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
       valueCurrency = currency
     }
 
-    // Use in-segment value for CPAS
     var value = potentialValue
-    if configuration.mode == ConfigurationMode.cpas.rawValue {
-      value = _AEMUtility.shared.getInSegmentValue(processedParameters, matchingRule: configuration.matchingRule)
+    if !isRuleMatchInServer {
+      // Use in-segment value for CPAS
+      if configuration.mode == ConfigurationMode.cpas.rawValue {
+        value = _AEMUtility.shared.getInSegmentValue(processedParameters, matchingRule: configuration.matchingRule)
+      }
     }
 
     if let value = value {

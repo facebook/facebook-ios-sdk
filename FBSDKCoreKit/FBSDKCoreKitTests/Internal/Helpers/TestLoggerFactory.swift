@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestLoggerFactory: NSObject, LoggerCreating {
+final class TestLoggerFactory: NSObject, _LoggerCreating {
   var capturedLoggingBehavior: LoggingBehavior?
   var logger = TestLogger(loggingBehavior: .developerErrors)
 

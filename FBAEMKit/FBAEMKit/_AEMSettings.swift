@@ -18,11 +18,8 @@
 @objc(FBAEMSettings)
 public final class _AEMSettings: NSObject {
   public static func appID() -> String? {
-    guard let bundle = try? getDependencies().bundle else {
-      return nil
-    }
-
-    return bundle.object(forInfoDictionaryKey: "FacebookAppID") as? String
+    // swiftformat:disable:next redundantSelf
+    self.bundle?.object(forInfoDictionaryKey: "FacebookAppID") as? String
   }
 }
 

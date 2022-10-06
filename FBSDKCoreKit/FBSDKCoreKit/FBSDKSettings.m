@@ -10,10 +10,10 @@
 
 #import <AdSupport/AdSupport.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKAppEventsConfigurationProtocol.h"
-#import "FBSDKAppEventsConfigurationProviding.h"
 #import "FBSDKCoreKitVersions.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
@@ -30,10 +30,10 @@
   - (TYPE *)PROPERTY_NAME \
   { \
     if ((_ ## PROPERTY_NAME == nil) && ENABLE_CACHE) { \
-      _ ## PROPERTY_NAME = [[self.store objectForKey:@#PLIST_KEY] copy]; \
+      _ ## PROPERTY_NAME = [[self.store fb_objectForKey:@#PLIST_KEY] copy]; \
     } \
     if (_ ## PROPERTY_NAME == nil) { \
-      _ ## PROPERTY_NAME = [[self.infoDictionaryProvider objectForInfoDictionaryKey:@#PLIST_KEY] copy] ?: DEFAULT_VALUE; \
+      _ ## PROPERTY_NAME = [[self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@#PLIST_KEY] copy] ?: DEFAULT_VALUE; \
     } \
     return _ ## PROPERTY_NAME; \
   } \
@@ -42,9 +42,9 @@
     _ ## PROPERTY_NAME = [value copy]; \
     if (ENABLE_CACHE) { \
       if (value != nil) { \
-        [self.store setObject:value forKey:@#PLIST_KEY]; \
+        [self.store fb_setObject:value forKey:@#PLIST_KEY]; \
       } else { \
-        [self.store removeObjectForKey:@#PLIST_KEY]; \
+        [self.store fb_removeObjectForKey:@#PLIST_KEY]; \
       } \
     } \
     [self logIfSDKSettingsChanged]; \
@@ -186,7 +186,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (NSString *)appID
 {
   if (!_appID) {
-    _appID = [[self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAppID"] copy] ?: nil;
+    _appID = [[self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookAppID"] copy] ?: nil;
   }
   return _appID;
 }
@@ -201,7 +201,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (CGFloat)JPEGCompressionQuality
 {
   if (!_JPEGCompressionQuality) {
-    NSNumber *compressionQuality = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookJpegCompressionQuality"];
+    NSNumber *compressionQuality = [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookJpegCompressionQuality"];
     _JPEGCompressionQuality = [self _validateJPEGCompressionQuality:compressionQuality.floatValue ?: 0.9];
   }
   return _JPEGCompressionQuality;
@@ -262,7 +262,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   if (@available(iOS 14.0, *)) {
     if (self.advertiserTrackingStatusBacking == nil) {
-      self.advertiserTrackingStatusBacking = [self.store objectForKey:FBSDKSettingsAdvertisingTrackingStatus];
+      self.advertiserTrackingStatusBacking = [self.store fb_objectForKey:FBSDKSettingsAdvertisingTrackingStatus];
       if (self.advertiserTrackingStatusBacking == nil) {
         return [[self.appEventsConfigurationProvider cachedAppEventsConfiguration] defaultATEStatus];
       }
@@ -277,17 +277,17 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (void)setAdvertiserTrackingStatus:(FBSDKAdvertisingTrackingStatus)status
 {
   self.advertiserTrackingStatusBacking = @(status);
-  [self.store setObject:self.advertiserTrackingStatusBacking forKey:FBSDKSettingsAdvertisingTrackingStatus];
+  [self.store fb_setObject:self.advertiserTrackingStatusBacking forKey:FBSDKSettingsAdvertisingTrackingStatus];
 }
 
 - (BOOL)isSKAdNetworkReportEnabled
 {
   if (_SKAdNetworkReportEnabled == nil) {
-    _SKAdNetworkReportEnabled = [[self.store objectForKey:FacebookSKAdNetworkReportEnabled] copy];
+    _SKAdNetworkReportEnabled = [[self.store fb_objectForKey:FacebookSKAdNetworkReportEnabled] copy];
   }
 
   if (_SKAdNetworkReportEnabled == nil) {
-    _SKAdNetworkReportEnabled = [[self.infoDictionaryProvider objectForInfoDictionaryKey:FacebookSKAdNetworkReportEnabled] copy] ?: @(1);
+    _SKAdNetworkReportEnabled = [[self.infoDictionaryProvider fb_objectForInfoDictionaryKey:FacebookSKAdNetworkReportEnabled] copy] ?: @(1);
   }
 
   return _SKAdNetworkReportEnabled.boolValue;
@@ -297,13 +297,13 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 {
   [self validateConfiguration];
   _SKAdNetworkReportEnabled = @(skAdNetworkReportEnabled);
-  [self.store setObject:@(skAdNetworkReportEnabled) forKey:FacebookSKAdNetworkReportEnabled];
+  [self.store fb_setObject:@(skAdNetworkReportEnabled) forKey:FacebookSKAdNetworkReportEnabled];
   [self logIfSDKSettingsChanged];
 }
 
 - (BOOL)isEventDataUsageLimited
 {
-  NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsLimitEventAndDataUsage];
+  NSNumber *storedValue = [self.store fb_objectForKey:FBSDKSettingsLimitEventAndDataUsage];
   if (storedValue == nil) {
     return NO;
   }
@@ -312,7 +312,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (void)setIsEventDataUsageLimited:(BOOL)isEventDataUsageLimited
 {
-  [_store setObject:@(isEventDataUsageLimited) forKey:FBSDKSettingsLimitEventAndDataUsage];
+  [_store fb_setObject:@(isEventDataUsageLimited) forKey:FBSDKSettingsLimitEventAndDataUsage];
 }
 
 + (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
@@ -322,7 +322,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (BOOL)shouldUseCachedValuesForExpensiveMetadata
 {
-  NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
+  NSNumber *storedValue = [self.store fb_objectForKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
   if (storedValue == nil) {
     return NO;
   }
@@ -331,12 +331,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (void)setShouldUseCachedValuesForExpensiveMetadata:(BOOL)shouldUseCachedValuesForExpensiveMetadata
 {
-  [self.store setObject:@(shouldUseCachedValuesForExpensiveMetadata) forKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
+  [self.store fb_setObject:@(shouldUseCachedValuesForExpensiveMetadata) forKey:FBSDKSettingsUseCachedValuesForExpensiveMetadata];
 }
 
 - (BOOL)shouldUseTokenOptimizations
 {
-  NSNumber *storedValue = [self.store objectForKey:FBSDKSettingsUseTokenOptimizations];
+  NSNumber *storedValue = [self.store fb_objectForKey:FBSDKSettingsUseTokenOptimizations];
   if (storedValue == nil) {
     return YES;
   }
@@ -345,7 +345,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (void)setShouldUseTokenOptimizations:(BOOL)shouldUseTokenOptimizations
 {
-  [self.store setObject:@(shouldUseTokenOptimizations) forKey:FBSDKSettingsUseTokenOptimizations];
+  [self.store fb_setObject:@(shouldUseTokenOptimizations) forKey:FBSDKSettingsUseTokenOptimizations];
 }
 
 - (void)setLoggingBehaviors:(NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
@@ -360,7 +360,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (NSSet<FBSDKLoggingBehavior> *)loggingBehaviors
 {
   if (!_loggingBehaviors) {
-    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
+    NSArray<FBSDKLoggingBehavior> *bundleLoggingBehaviors = [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookLoggingBehavior"];
     if (bundleLoggingBehaviors) {
       _loggingBehaviors = [[NSMutableSet alloc] initWithArray:bundleLoggingBehaviors];
     } else {
@@ -389,8 +389,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   self.persistableDataProcessingOptions = json;
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:json requiringSecureCoding:NO error:nil];
   if (data) {
-    [self.store setObject:data
-                   forKey:FBSDKSettingsDataProcessingOptions];
+    [self.store fb_setObject:data
+                      forKey:FBSDKSettingsDataProcessingOptions];
   }
 }
 
@@ -451,7 +451,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (NSDictionary<NSString *, id> *)persistableDataProcessingOptions
 {
   if (!_persistableDataProcessingOptions) {
-    NSData *data = [self.store objectForKey:FBSDKSettingsDataProcessingOptions];
+    NSData *data = [self.store fb_objectForKey:FBSDKSettingsDataProcessingOptions];
     if (data && [data isKindOfClass:NSData.class]) {
       _persistableDataProcessingOptions = [NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSString.class, NSNumber.class, NSArray.class, NSDictionary.class, NSSet.class]] fromData:data error:nil];
     }
@@ -475,10 +475,10 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (void)logWarnings
 {
   // Log warnings for App Event Flags
-  if (![self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
+  if (![self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
     NSLog(autoLogAppEventsEnabledNotSetWarning);
   }
-  if (![self.infoDictionaryProvider objectForInfoDictionaryKey:@"FacebookAdvertiserIDCollectionEnabled"]) {
+  if (![self.infoDictionaryProvider fb_objectForInfoDictionaryKey:@"FacebookAdvertiserIDCollectionEnabled"]) {
     NSLog(advertiserIDCollectionEnabledNotSetWarning);
   }
   if (!self._advertiserIDCollectionEnabled.boolValue) {
@@ -494,9 +494,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
   bitmask |= (self._autoLogAppEventsEnabled.boolValue ? 1 : 0) << bit++;
   bitmask |= (self._advertiserIDCollectionEnabled.boolValue ? 1 : 0) << bit++;
 
-  NSInteger previousBitmask = [self.store integerForKey:FBSDKSettingsBitmask];
+  NSInteger previousBitmask = [self.store fb_integerForKey:FBSDKSettingsBitmask];
   if (previousBitmask != bitmask) {
-    [self.store setInteger:bitmask forKey:FBSDKSettingsBitmask];
+    [self.store fb_setInteger:bitmask forKey:FBSDKSettingsBitmask];
 
     NSArray<NSString *> *keys = @[@"FacebookAutoLogAppEventsEnabled",
                                   @"FacebookAdvertiserIDCollectionEnabled"];
@@ -504,7 +504,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
     NSInteger initialBitmask = 0;
     NSInteger usageBitmask = 0;
     for (int i = 0; i < keys.count; i++) {
-      NSNumber *plistValue = [self.infoDictionaryProvider objectForInfoDictionaryKey:[FBSDKTypeUtility array:keys objectAtIndex:i]];
+      NSNumber *plistValue = [self.infoDictionaryProvider fb_objectForInfoDictionaryKey:[FBSDKTypeUtility array:keys objectAtIndex:i]];
       BOOL initialValue = [(plistValue ?: [FBSDKTypeUtility array:defaultValues objectAtIndex:i]) boolValue];
       initialBitmask |= (initialValue ? 1 : 0) << i;
       usageBitmask |= (plistValue != nil ? 1 : 0) << i;
@@ -520,19 +520,19 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (void)recordInstall
 {
-  if (![self.store objectForKey:FBSDKSettingsInstallTimestamp]) {
-    [self.store setObject:[NSDate date] forKey:FBSDKSettingsInstallTimestamp];
+  if (![self.store fb_objectForKey:FBSDKSettingsInstallTimestamp]) {
+    [self.store fb_setObject:[NSDate date] forKey:FBSDKSettingsInstallTimestamp];
   }
 }
 
 - (void)recordSetAdvertiserTrackingEnabled
 {
-  [self.store setObject:[NSDate date] forKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
+  [self.store fb_setObject:[NSDate date] forKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
 }
 
 - (BOOL)isEventDelayTimerExpired
 {
-  NSDate *timestamp = [self.store objectForKey:FBSDKSettingsInstallTimestamp];
+  NSDate *timestamp = [self.store fb_objectForKey:FBSDKSettingsInstallTimestamp];
   if (timestamp) {
     return [[NSDate date] timeIntervalSinceDate:timestamp] > 86400;
   }
@@ -551,12 +551,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 
 - (NSDate *_Nullable)installTimestamp
 {
-  return [self.store objectForKey:FBSDKSettingsInstallTimestamp];
+  return [self.store fb_objectForKey:FBSDKSettingsInstallTimestamp];
 }
 
 - (NSDate *_Nullable)advertiserTrackingEnabledTimestamp
 {
-  return [self.store objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
+  return [self.store fb_objectForKey:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp];
 }
 
 #pragma mark - Internal - Graph API Debug

@@ -31,7 +31,7 @@ final class AccessTokenTests: XCTestCase {
     graphRequestPiggybackManager = TestGraphRequestPiggybackManager()
 
     AccessToken.configure(
-      withTokenCache: tokenCache,
+      tokenCache: tokenCache,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       graphRequestPiggybackManager: graphRequestPiggybackManager,
       errorFactory: TestErrorFactory()
@@ -211,6 +211,8 @@ final class AccessTokenTests: XCTestCase {
     XCTAssertTrue(token.hasGranted(Permission(stringLiteral: name)))
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 
