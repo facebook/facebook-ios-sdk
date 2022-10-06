@@ -47,7 +47,6 @@
 #import <FBSDKCoreKit/FBSDKAppLinkNavigationBlock.h>
 #import <FBSDKCoreKit/FBSDKAppLinkNavigationType.h>
 #import <FBSDKCoreKit/FBSDKAppLinkProtocol.h>
-#import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilder.h>
 #import <FBSDKCoreKit/FBSDKAppLinkResolverRequestBuilding.h>
 #import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
 #import <FBSDKCoreKit/FBSDKAppLinksBlock.h>
