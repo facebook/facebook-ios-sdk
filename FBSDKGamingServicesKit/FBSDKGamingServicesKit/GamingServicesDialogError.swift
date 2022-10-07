@@ -18,4 +18,7 @@ public enum GamingServicesDialogError: Error {
 
   /// Indicates error occured creating dialog deeplink
   case deeplinkURLCreation
+
+  /// Indicates that the dialog was cancelled
+  case cancelled
 }

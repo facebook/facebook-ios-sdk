@@ -6,17 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 final class AppLinkResolverRequestBuilderTests: XCTestCase {
 
   func testAsksForPhoneDataOnPhone() {
-    let builder = _AppLinkResolverRequestBuilder(userInterfaceIdiom: .phone)
+    let builder = AppLinkResolverRequestBuilder(userInterfaceIdiom: .phone)
     let request = builder.request(for: [])
     let askedForPhone = request.graphPath.contains("iphone")
     XCTAssertTrue(askedForPhone)
   }
 
   func testAsksForPadDataOnPad() {
-    let builder = _AppLinkResolverRequestBuilder(userInterfaceIdiom: .pad)
+    let builder = AppLinkResolverRequestBuilder(userInterfaceIdiom: .pad)
     let request = builder.request(for: [])
     let askedForPad = request.graphPath.contains("ipad")
     XCTAssertTrue(askedForPad)
