@@ -31,7 +31,6 @@
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEventsUtility+Testing.h"
 #import "FBSDKAppLinkNavigation+Testing.h"
-#import "FBSDKAppLinkResolverRequestBuilder.h"
 #import "FBSDKAppLinkUtility+Testing.h"
 #import "FBSDKAppURLSchemeProviding.h"
 #import "FBSDKApplicationLifecycleNotifications.h"
@@ -113,11 +112,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // Categories needed to expose private methods to Swift
-
-// Needed to expose this private method to AppLinkResolverRequestBuilderTests
-@interface FBSDKAppLinkResolverRequestBuilder (FBSDKAppLinkResolverTests)
-- (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
-@end
 
 // Needed to expose private methods to the ServerConfigurationFixtures class
 @interface FBSDKServerConfiguration (ServerConfigurationFixtures)
