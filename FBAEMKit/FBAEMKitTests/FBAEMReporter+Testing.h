@@ -96,7 +96,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (void)_addConfigurations:(nullable NSArray<NSDictionary<NSString *, id> *> *)configurations;
 
-+ (NSMutableArray<FBAEMInvocation *> *)_loadReportData;
++ (NSArray<FBAEMInvocation *> *)_loadReportData;
 
 + (void)_saveReportData;
 

@@ -178,11 +178,11 @@ final class AEMReporterTests: XCTestCase {
 
     AEMReporter.invocations = [invocation]
     AEMReporter._saveReportData()
-    let data = AEMReporter._loadReportData() as? [_AEMInvocation]
-    XCTAssertEqual(data?.count, 1)
-    XCTAssertEqual(data?[0].acsToken, "test_token_1234567")
-    XCTAssertEqual(data?[0].campaignID, "test_campaign_1234")
-    XCTAssertEqual(data?[0].businessID, "test_advertiserid_12345")
+    let data = AEMReporter._loadReportData()
+    XCTAssertEqual(data.count, 1)
+    XCTAssertEqual(data[0].acsToken, "test_token_1234567")
+    XCTAssertEqual(data[0].campaignID, "test_campaign_1234")
+    XCTAssertEqual(data[0].businessID, "test_advertiserid_12345")
   }
 
   func testLoadConfigurations() {
