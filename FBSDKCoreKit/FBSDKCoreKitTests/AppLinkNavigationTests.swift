@@ -171,27 +171,10 @@ final class AppLinkNavigationTests: XCTestCase {
       appLink: emptyAppLink, extras: [:], appLinkData: ["foo": Any.self], settings: settings
     )
 
-    do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
-
-      guard
-        let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
-        let appLinkItem = queryItems.first(where: { $0.name == "al_applink_data" })
-      else {
-        return XCTFail("Should have a query item for app link data")
-      }
-
-      XCTAssertEqual(
-        appLinkItem.value,
-        "",
-        "This probably shouldn't be the behavior but right now it is."
-      )
-    } catch {
-      XCTAssertNil(
-        error,
-        "This probably shouldn't be the behavior but right now it is."
-      )
-    }
+    XCTAssertThrowsError(
+      try navigation.appLinkURL(withTargetURL: SampleURLs.valid),
+      "An error is thrown when a valid url is passed but bad app link data is provided"
+    )
   }
 
   func testAppLinkWithTargetUrlWithValidStartingAppLinkData() {
@@ -499,6 +482,46 @@ final class AppLinkNavigationTests: XCTestCase {
     } catch {
       XCTAssertNil(error)
     }
+  }
+
+  func testUnsuccessfullyNavigatingWithoutTargetAndNoWebURL() {
+    let appLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+
+    do {
+
+      let result = try navigation.navigate()
+      XCTAssertEqual(
+        result,
+        .failure,
+        "A correct navigation type is returned when there are not targets, no web url"
+      )
+    } catch {
+      XCTAssertNil(error, "An error is not thrown when there are not targets and no web url")
+    }
+  }
+
+  func testUnsuccessfullyNavigatingWithoutTargetAndWebURL() {
+    let appLink = AppLink(sourceURL: nil, targets: [], webURL: SampleURLs.valid)
+    let appLinkData = ["bad link data": Date()]
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData, settings: settings)
+
+    XCTAssertThrowsError(
+      try navigation.navigate(),
+      "An error is thrown when there are not targets, there is a web url and bad link data is provided"
+    )
+  }
+
+  func testUnsuccessfullyNavigatingWithTargetAndBadLinkData() {
+    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
+    let appLinkData = ["bad link data": Date()]
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData, settings: settings)
+
+    XCTAssertThrowsError(
+      try navigation.navigate(),
+      "An error is thrown when there are targets, no web url and bad link data is provided"
+    )
   }
 
   func testNavigatingToUrlWithoutAppLink() {
