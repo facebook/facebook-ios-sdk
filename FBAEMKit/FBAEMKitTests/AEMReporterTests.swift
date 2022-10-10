@@ -188,10 +188,10 @@ final class AEMReporterTests: XCTestCase {
   func testLoadConfigurations() {
     AEMReporter._addConfigurations([SampleAEMData.validConfigurationData1])
     AEMReporter._addConfigurations([SampleAEMData.validConfigurationData1, SampleAEMData.validConfigurationData2])
-    let loadedConfigurations: NSMutableDictionary? = AEMReporter._loadConfigurations()
-    XCTAssertEqual(loadedConfigurations?.count, 1, "Should load the expected number of configuration")
+    let loadedConfigurations = AEMReporter._loadConfigurations()
+    XCTAssertEqual(loadedConfigurations.count, 1, "Should load the expected number of configuration")
 
-    let defaultConfigurations: [_AEMConfiguration]? = loadedConfigurations?[Values.defaultMode] as? [_AEMConfiguration]
+    let defaultConfigurations = loadedConfigurations[Values.defaultMode]
     XCTAssertEqual(
       defaultConfigurations?.count, 2, "Should load the expected number of default configuration"
     )

@@ -92,7 +92,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (BOOL)_shouldRefreshWithIsForced:(BOOL)isForced;
 
-+ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations;
++ (NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations;
 
 + (void)_addConfigurations:(nullable NSArray<NSDictionary<NSString *, id> *> *)configurations;
 
