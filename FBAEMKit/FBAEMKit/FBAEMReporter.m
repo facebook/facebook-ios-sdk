@@ -185,7 +185,7 @@ static id<FBSDKDataPersisting> _store;
       [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
         g_minAggregationRequestTimestamp = [self _loadMinAggregationRequestTimestamp];
         g_configurations = [self _loadConfigurations];
-        g_invocations = [self _loadReportData];
+        g_invocations = [[self _loadReportData] mutableCopy];
       }];
       [self _loadConfigurationWithRefreshForced:NO block:^(NSError *error) {
         if (error) {
@@ -752,16 +752,16 @@ static id<FBSDKDataPersisting> _store;
   }];
 }
 
-+ (NSMutableArray<FBAEMInvocation *> *)_loadReportData
++ (NSArray<FBAEMInvocation *> *)_loadReportData
 {
   NSData *cachedReportData = [NSData dataWithContentsOfFile:g_reportFile options:NSDataReadingMappedIfSafe error:nil];
   if ([cachedReportData isKindOfClass:NSData.class]) {
     NSArray<FBAEMInvocation *> *cache = [FBSDKTypeUtility arrayValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSArray.class, FBAEMInvocation.class]] fromData:cachedReportData error:nil]];
     if (cache) {
-      return [cache mutableCopy];
+      return cache;
     }
   }
-  return [NSMutableArray new];
+  return [NSArray new];
 }
 
 + (void)_saveReportData
