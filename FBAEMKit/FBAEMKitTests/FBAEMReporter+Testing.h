@@ -38,7 +38,8 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
                          appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
                 analyticsAppID:(nullable NSString *)analyticsAppID
-                         store:(nullable id<FBSDKDataPersisting>)store;
+                         store:(nullable id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(configure(networker:appID:reporter:analyticsAppID:store:));
 
 + (void)enable;
 
