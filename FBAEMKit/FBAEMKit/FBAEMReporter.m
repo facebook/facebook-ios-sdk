@@ -944,24 +944,24 @@ static id<FBSDKDataPersisting> _store;
 
 #if DEBUG
 
-+ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
++ (NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
-  return g_configurations;
+  return [g_configurations copy];
 }
 
-+ (void)setConfigurations:(NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
++ (void)setConfigurations:(NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
-  g_configurations = configurations;
+  g_configurations = [configurations mutableCopy];
 }
 
-+ (void)setInvocations:(NSMutableArray<FBAEMInvocation *> *)invocations
++ (void)setInvocations:(NSArray<FBAEMInvocation *> *)invocations
 {
-  g_invocations = invocations;
+  g_invocations = [invocations mutableCopy];
 }
 
-+ (NSMutableArray<FBAEMInvocation *> *)invocations
++ (NSArray<FBAEMInvocation *> *)invocations
 {
-  return g_invocations;
+  return [g_invocations copy];
 }
 
 + (void)setIsEnabled:(BOOL)enabled
@@ -1004,9 +1004,9 @@ static id<FBSDKDataPersisting> _store;
   return g_isAdvertiserRuleMatchInServerEnabled;
 }
 
-+ (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
++ (void)setCompletionBlocks:(NSArray<FBAEMReporterBlock> *)completionBlocks
 {
-  g_completionBlocks = completionBlocks;
+  g_completionBlocks = [completionBlocks mutableCopy];
 }
 
 + (void)setQueue:(nullable dispatch_queue_t)queue
