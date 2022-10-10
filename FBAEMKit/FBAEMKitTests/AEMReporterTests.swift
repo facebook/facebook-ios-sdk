@@ -73,7 +73,7 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter.reset()
     removeReportFile()
     AEMReporter.configure(
-      withNetworker: networker,
+      networker: networker,
       appID: "123",
       reporter: reporter,
       analyticsAppID: analyticsAppID,
