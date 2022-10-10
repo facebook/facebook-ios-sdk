@@ -184,7 +184,7 @@ static id<FBSDKDataPersisting> _store;
       }
       [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
         g_minAggregationRequestTimestamp = [self _loadMinAggregationRequestTimestamp];
-        g_configurations = [self _loadConfigurations];
+        g_configurations = [[self _loadConfigurations] mutableCopy];
         g_invocations = [[self _loadReportData] mutableCopy];
       }];
       [self _loadConfigurationWithRefreshForced:NO block:^(NSError *error) {
@@ -677,7 +677,7 @@ static id<FBSDKDataPersisting> _store;
   [self.store fb_setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
 }
 
-+ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations
++ (NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations
 {
   NSData *cachedConfiguration = [NSData dataWithContentsOfFile:g_configFile
                                                        options:NSDataReadingMappedIfSafe
@@ -692,11 +692,11 @@ static id<FBSDKDataPersisting> _store;
       FBAEMEvent.class]];
     NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfiguration error:nil]];
     if (cache) {
-      return [cache mutableCopy];
+      return cache;
     }
   }
 
-  return [NSMutableDictionary new];
+  return [NSDictionary new];
 }
 
 + (void)_saveConfigurations
