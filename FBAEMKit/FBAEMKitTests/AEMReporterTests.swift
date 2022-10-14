@@ -7,6 +7,8 @@
  */
 
 @testable import FBAEMKit
+
+import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
 
@@ -71,7 +73,7 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter.reset()
     removeReportFile()
     AEMReporter.configure(
-      withNetworker: networker,
+      networker: networker,
       appID: "123",
       reporter: reporter,
       analyticsAppID: analyticsAppID,
@@ -178,20 +180,20 @@ final class AEMReporterTests: XCTestCase {
 
     AEMReporter.invocations = [invocation]
     AEMReporter._saveReportData()
-    let data = AEMReporter._loadReportData() as? [_AEMInvocation]
-    XCTAssertEqual(data?.count, 1)
-    XCTAssertEqual(data?[0].acsToken, "test_token_1234567")
-    XCTAssertEqual(data?[0].campaignID, "test_campaign_1234")
-    XCTAssertEqual(data?[0].businessID, "test_advertiserid_12345")
+    let data = AEMReporter._loadReportData()
+    XCTAssertEqual(data.count, 1)
+    XCTAssertEqual(data[0].acsToken, "test_token_1234567")
+    XCTAssertEqual(data[0].campaignID, "test_campaign_1234")
+    XCTAssertEqual(data[0].businessID, "test_advertiserid_12345")
   }
 
   func testLoadConfigurations() {
     AEMReporter._addConfigurations([SampleAEMData.validConfigurationData1])
     AEMReporter._addConfigurations([SampleAEMData.validConfigurationData1, SampleAEMData.validConfigurationData2])
-    let loadedConfigurations: NSMutableDictionary? = AEMReporter._loadConfigurations()
-    XCTAssertEqual(loadedConfigurations?.count, 1, "Should load the expected number of configuration")
+    let loadedConfigurations = AEMReporter._loadConfigurations()
+    XCTAssertEqual(loadedConfigurations.count, 1, "Should load the expected number of configuration")
 
-    let defaultConfigurations: [_AEMConfiguration]? = loadedConfigurations?[Values.defaultMode] as? [_AEMConfiguration]
+    let defaultConfigurations = loadedConfigurations[Values.defaultMode]
     XCTAssertEqual(
       defaultConfigurations?.count, 2, "Should load the expected number of default configuration"
     )
@@ -233,7 +235,7 @@ final class AEMReporterTests: XCTestCase {
 
     AEMReporter._clearCache()
     var configurations = AEMReporter.configurations
-    var configList: [_AEMConfiguration]? = configurations[Values.defaultMode] as? [_AEMConfiguration]
+    var configList = configurations[Values.defaultMode]
     XCTAssertEqual(configList?.count, 1, "Should have the expected number of configuration")
 
     guard let invocation1 = _AEMInvocation(
@@ -268,13 +270,11 @@ final class AEMReporterTests: XCTestCase {
       [SampleAEMData.validConfigurationData1, SampleAEMData.validConfigurationData2, SampleAEMData.validConfigData3]
     )
     AEMReporter._clearCache()
-    guard let invocations = AEMReporter.invocations as? [_AEMInvocation] else {
-      return XCTFail("Should have invocations")
-    }
+    let invocations = AEMReporter.invocations
     XCTAssertEqual(invocations.count, 1, "Should clear the expired invocation")
     XCTAssertEqual(invocations[0].configurationID, 10000, "Should keep the expected invocation")
     configurations = AEMReporter.configurations
-    configList = configurations[Values.defaultMode] as? [_AEMConfiguration]
+    configList = configurations[Values.defaultMode]
     XCTAssertEqual(configList?.count, 2, "Should have the expected number of configuration")
     XCTAssertEqual(configList?[0].validFrom, 10000, "Should keep the expected ")
     XCTAssertEqual(configList?[1].validFrom, 20000, "Should keep the expected ")
@@ -288,9 +288,9 @@ final class AEMReporterTests: XCTestCase {
     ]
 
     AEMReporter._clearConfigurations()
-    let defaultConfigurations = AEMReporter.configurations[Values.defaultMode] as? [_AEMConfiguration]
-    let brandConfigurations = AEMReporter.configurations[Values.brandMode] as? [_AEMConfiguration]
-    let cpasConfigurations = AEMReporter.configurations[Values.cpasMode] as? [_AEMConfiguration]
+    let defaultConfigurations = AEMReporter.configurations[Values.defaultMode]
+    let brandConfigurations = AEMReporter.configurations[Values.brandMode]
+    let cpasConfigurations = AEMReporter.configurations[Values.cpasMode]
     XCTAssertEqual(
       defaultConfigurations?.count,
       1,
@@ -1049,7 +1049,7 @@ final class AEMReporterTests: XCTestCase {
 
     for catalogID in malformedInput {
       for contentID in malformedInput {
-        AEMReporter._catalogRequestParameters(catalogID, contentID: contentID)
+        _ = AEMReporter._catalogRequestParameters(catalogID, contentID: contentID)
       }
     }
   }
