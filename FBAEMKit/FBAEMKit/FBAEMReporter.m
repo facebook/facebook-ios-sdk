@@ -184,8 +184,8 @@ static id<FBSDKDataPersisting> _store;
       }
       [self dispatchOnQueue:g_serialQueue delay:0 block:^() {
         g_minAggregationRequestTimestamp = [self _loadMinAggregationRequestTimestamp];
-        g_configurations = [self _loadConfigurations];
-        g_invocations = [self _loadReportData];
+        g_configurations = [[self _loadConfigurations] mutableCopy];
+        g_invocations = [[self _loadReportData] mutableCopy];
       }];
       [self _loadConfigurationWithRefreshForced:NO block:^(NSError *error) {
         if (error) {
@@ -677,7 +677,7 @@ static id<FBSDKDataPersisting> _store;
   [self.store fb_setObject:g_minAggregationRequestTimestamp forKey:FBAEMMINAggregationRequestTimestampKey];
 }
 
-+ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations
++ (NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations
 {
   NSData *cachedConfiguration = [NSData dataWithContentsOfFile:g_configFile
                                                        options:NSDataReadingMappedIfSafe
@@ -692,11 +692,11 @@ static id<FBSDKDataPersisting> _store;
       FBAEMEvent.class]];
     NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *cache = [FBSDKTypeUtility dictionaryValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:classes fromData:cachedConfiguration error:nil]];
     if (cache) {
-      return [cache mutableCopy];
+      return cache;
     }
   }
 
-  return [NSMutableDictionary new];
+  return [NSDictionary new];
 }
 
 + (void)_saveConfigurations
@@ -752,16 +752,16 @@ static id<FBSDKDataPersisting> _store;
   }];
 }
 
-+ (NSMutableArray<FBAEMInvocation *> *)_loadReportData
++ (NSArray<FBAEMInvocation *> *)_loadReportData
 {
   NSData *cachedReportData = [NSData dataWithContentsOfFile:g_reportFile options:NSDataReadingMappedIfSafe error:nil];
   if ([cachedReportData isKindOfClass:NSData.class]) {
     NSArray<FBAEMInvocation *> *cache = [FBSDKTypeUtility arrayValue:[NSKeyedUnarchiver unarchivedObjectOfClasses:[NSSet setWithArray:@[NSArray.class, FBAEMInvocation.class]] fromData:cachedReportData error:nil]];
     if (cache) {
-      return [cache mutableCopy];
+      return cache;
     }
   }
-  return [NSMutableArray new];
+  return [NSArray new];
 }
 
 + (void)_saveReportData
@@ -944,24 +944,24 @@ static id<FBSDKDataPersisting> _store;
 
 #if DEBUG
 
-+ (NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
++ (NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
-  return g_configurations;
+  return [g_configurations copy];
 }
 
-+ (void)setConfigurations:(NSMutableDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
++ (void)setConfigurations:(NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations
 {
-  g_configurations = configurations;
+  g_configurations = [configurations mutableCopy];
 }
 
-+ (void)setInvocations:(NSMutableArray<FBAEMInvocation *> *)invocations
++ (void)setInvocations:(NSArray<FBAEMInvocation *> *)invocations
 {
-  g_invocations = invocations;
+  g_invocations = [invocations mutableCopy];
 }
 
-+ (NSMutableArray<FBAEMInvocation *> *)invocations
++ (NSArray<FBAEMInvocation *> *)invocations
 {
-  return g_invocations;
+  return [g_invocations copy];
 }
 
 + (void)setIsEnabled:(BOOL)enabled
@@ -1004,9 +1004,9 @@ static id<FBSDKDataPersisting> _store;
   return g_isAdvertiserRuleMatchInServerEnabled;
 }
 
-+ (void)setCompletionBlocks:(NSMutableArray<FBAEMReporterBlock> *)completionBlocks
++ (void)setCompletionBlocks:(NSArray<FBAEMReporterBlock> *)completionBlocks
 {
-  g_completionBlocks = completionBlocks;
+  g_completionBlocks = [completionBlocks mutableCopy];
 }
 
 + (void)setQueue:(nullable dispatch_queue_t)queue
