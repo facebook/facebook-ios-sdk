@@ -15,9 +15,9 @@ import Foundation
 final class GameRequestFrictionlessRecipientCache {
   private(set) var recipientIDs = Set<String>()
 
-  var configuredDependencies: InstanceDependencies?
+  var configuredDependencies: ObjectDependencies?
 
-  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+  var defaultDependencies: ObjectDependencies? = .init(
     graphRequestFactory: GraphRequestFactory(),
     notificationCenter: NotificationCenter.default,
     accessTokenWallet: AccessToken.self
@@ -25,7 +25,7 @@ final class GameRequestFrictionlessRecipientCache {
 
   // Custom implementation of dependency setting to perform additional work
   // that would normally go in the initializer
-  func setDependencies(_ dependencies: InstanceDependencies) {
+  func setDependencies(_ dependencies: ObjectDependencies) {
     configuredDependencies = dependencies
 
     _ = dependencies.notificationCenter.fb_addObserver(
@@ -93,8 +93,8 @@ final class GameRequestFrictionlessRecipientCache {
   }
 }
 
-extension GameRequestFrictionlessRecipientCache: DependentAsInstance {
-  struct InstanceDependencies {
+extension GameRequestFrictionlessRecipientCache: DependentAsObject {
+  struct ObjectDependencies {
     var graphRequestFactory: GraphRequestFactoryProtocol
     var notificationCenter: NotificationDelivering
     var accessTokenWallet: _AccessTokenProviding.Type
