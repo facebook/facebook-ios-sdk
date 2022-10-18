@@ -41,9 +41,9 @@ public final class DeviceLoginManager: NSObject {
   private var isCancelled = false
   private let isSmartLoginEnabled: Bool
 
-  var configuredDependencies: InstanceDependencies?
+  var configuredDependencies: ObjectDependencies?
 
-  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+  var defaultDependencies: ObjectDependencies? = .init(
     devicePoller: DevicePoller(),
     errorFactory: _ErrorFactory(),
     graphRequestFactory: GraphRequestFactory(),
@@ -304,8 +304,8 @@ extension DeviceLoginManager: NetServiceDelegate {
   }
 }
 
-extension DeviceLoginManager: DependentAsInstance {
-  struct InstanceDependencies {
+extension DeviceLoginManager: DependentAsObject {
+  struct ObjectDependencies {
     var devicePoller: DevicePolling
     var errorFactory: ErrorCreating
     var graphRequestFactory: GraphRequestFactoryProtocol

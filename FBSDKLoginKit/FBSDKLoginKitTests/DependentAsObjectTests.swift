@@ -9,7 +9,7 @@
 @testable import FBSDKLoginKit
 import XCTest
 
-final class DependentAsInstanceTests: XCTestCase {
+final class DependentAsObjectTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   private var defaultImplementationDependent: DefaultImplementationDependent!
@@ -110,12 +110,12 @@ private struct TestDependencies: Equatable {
   let value: Int
 }
 
-private final class DefaultImplementationDependent: DependentAsInstance {
+private final class DefaultImplementationDependent: DependentAsObject {
   var configuredDependencies: TestDependencies?
   var defaultDependencies: TestDependencies?
 }
 
-private final class CustomImplementationDependent: DependentAsInstance {
+private final class CustomImplementationDependent: DependentAsObject {
   var configuredDependencies: TestDependencies?
   var defaultDependencies: TestDependencies?
 
@@ -137,7 +137,7 @@ private final class CustomImplementationDependent: DependentAsInstance {
 
 fileprivate extension String {
   static let missingDependencies = """
-    Attempting to get the missing dependencies of a dependent throws a missing instance dependencies error
+    Attempting to get the missing dependencies of a dependent throws a missing dependencies error
     """
   static let defaultDependencies = """
     When a dependent's configured dependencies are missing, its default dependencies are provided
