@@ -7,21 +7,21 @@
  */
 
 @dynamicMemberLookup
-protocol DependentAsInstance {
-  associatedtype InstanceDependencies
+protocol DependentAsValue {
+  associatedtype ValueDependencies
 
-  var configuredDependencies: InstanceDependencies? { get set }
-  var defaultDependencies: InstanceDependencies? { get }
+  var configuredDependencies: ValueDependencies? { get set }
+  var defaultDependencies: ValueDependencies? { get }
 
-  mutating func setDependencies(_ dependencies: InstanceDependencies)
+  mutating func setDependencies(_ dependencies: ValueDependencies)
 
   #if DEBUG
   mutating func resetDependencies()
   #endif
 }
 
-extension DependentAsInstance {
-  mutating func setDependencies(_ dependencies: InstanceDependencies) {
+extension DependentAsValue {
+  mutating func setDependencies(_ dependencies: ValueDependencies) {
     configuredDependencies = dependencies
   }
 
@@ -31,7 +31,7 @@ extension DependentAsInstance {
   }
   #endif
 
-  func getDependencies() throws -> InstanceDependencies {
+  func getDependencies() throws -> ValueDependencies {
     guard let dependencies = configuredDependencies ?? defaultDependencies else {
       throw MissingDependenciesError(for: Self.self)
     }
@@ -39,7 +39,7 @@ extension DependentAsInstance {
     return dependencies
   }
 
-  subscript<Dependency>(dynamicMember keyPath: KeyPath<InstanceDependencies, Dependency>) -> Dependency? {
+  subscript<Dependency>(dynamicMember keyPath: KeyPath<ValueDependencies, Dependency>) -> Dependency? {
     try? getDependencies()[keyPath: keyPath]
   }
 }

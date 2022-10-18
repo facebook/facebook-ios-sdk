@@ -9,29 +9,13 @@
 @testable import FBSDKCoreKit
 import XCTest
 
-final class DependentAsInstanceTests: XCTestCase {
+final class DependentAsValueTests: XCTestCase {
 
-  // swiftlint:disable implicitly_unwrapped_optional
-  private var defaultImplementationDependent: DefaultImplementationDependent!
-  private var customImplementationDependent: CustomImplementationDependent!
-  // swiftlint:enable implicitly_unwrapped_optional
+  private var defaultImplementationDependent = DefaultImplementationDependent()
+  private var customImplementationDependent = CustomImplementationDependent()
 
   private let defaultDependencies = TestDependencies(value: 14)
   private let customDependencies = TestDependencies(value: 28)
-
-  override func setUp() {
-    super.setUp()
-
-    defaultImplementationDependent = DefaultImplementationDependent()
-    customImplementationDependent = CustomImplementationDependent()
-  }
-
-  override func tearDown() {
-    defaultImplementationDependent = nil
-    customImplementationDependent = nil
-
-    super.tearDown()
-  }
 
   func testMissingDependencies() {
     XCTAssertThrowsError(
@@ -110,12 +94,12 @@ private struct TestDependencies: Equatable {
   let value: Int
 }
 
-private final class DefaultImplementationDependent: DependentAsInstance {
+private final class DefaultImplementationDependent: DependentAsValue {
   var configuredDependencies: TestDependencies?
   var defaultDependencies: TestDependencies?
 }
 
-private final class CustomImplementationDependent: DependentAsInstance {
+private final class CustomImplementationDependent: DependentAsValue {
   var configuredDependencies: TestDependencies?
   var defaultDependencies: TestDependencies?
 
@@ -137,7 +121,7 @@ private final class CustomImplementationDependent: DependentAsInstance {
 
 fileprivate extension String {
   static let missingDependencies = """
-    Attempting to get the missing dependencies of a dependent throws a missing instance dependencies error
+    Attempting to get the missing dependencies of a dependent throws a missing dependencies error
     """
   static let defaultDependencies = """
     When a dependent's configured dependencies are missing, its default dependencies are provided
