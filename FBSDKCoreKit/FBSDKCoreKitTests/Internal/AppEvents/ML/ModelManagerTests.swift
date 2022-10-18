@@ -39,11 +39,11 @@ final class ModelManagerTests: XCTestCase {
 
     settings.appID = name
     manager.configure(
-      withFeatureChecker: featureChecker,
+      featureChecker: featureChecker,
       graphRequestFactory: factory,
       fileManager: fileManager,
       store: store,
-      settings: settings,
+      getAppID: { self.settings.appID ?? "" },
       dataExtractor: TestFileDataExtractor.self,
       gateKeeperManager: TestGateKeeperManager.self,
       suggestedEventsIndexer: suggestedEventsIndexer,
