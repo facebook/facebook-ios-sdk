@@ -52,9 +52,9 @@ public final class GameRequestDialog: NSObject {
   private static let appRequestMethodName = "apprequests"
   private static let gameRequestURLHost = "game_requests"
 
-  var configuredDependencies: InstanceDependencies?
+  var configuredDependencies: ObjectDependencies?
 
-  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+  var defaultDependencies: ObjectDependencies? = .init(
     bridgeAPIRequestOpener: _BridgeAPI.shared,
     errorFactory: _ErrorFactory(),
     gameRequestURLProvider: GameRequestURLProvider.self,
@@ -491,8 +491,8 @@ extension GameRequestDialog: URLOpening {
   }
 }
 
-extension GameRequestDialog: DependentAsInstance {
-  struct InstanceDependencies {
+extension GameRequestDialog: DependentAsObject {
+  struct ObjectDependencies {
     var bridgeAPIRequestOpener: BridgeAPIRequestOpening
     var errorFactory: ErrorCreating
     var gameRequestURLProvider: GameRequestURLProviding.Type
