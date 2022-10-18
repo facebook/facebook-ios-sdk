@@ -20,7 +20,9 @@
 #import <FBSDKCoreKit/FBSDKAppEventParameterProduct.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterValue.h>
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#import <FBSDKCoreKit/FBSDKAppEventsConfiguration.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfigurationManager.h>
+#import <FBSDKCoreKit/FBSDKAppEventsConfigurationProtocol.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfigurationProviding.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfiguring.h>
 #import <FBSDKCoreKit/FBSDKAppEventsDeviceInfo.h>

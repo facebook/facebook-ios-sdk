@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsConfiguration.h"
+#import <FBSDKCoreKit/FBSDKAppEventsConfiguration.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

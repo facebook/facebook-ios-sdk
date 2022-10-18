@@ -1262,7 +1262,7 @@ final class AppEventsTests: XCTestCase {
   // MARK: - Test for Server Configuration
 
   func testFetchServerConfiguration() {
-    let configuration = AppEventsConfiguration(json: [:])
+    let configuration = _AppEventsConfiguration(json: [:])
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     var didRunCallback = false

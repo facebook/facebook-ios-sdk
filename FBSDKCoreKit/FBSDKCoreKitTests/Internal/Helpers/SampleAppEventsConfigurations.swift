@@ -11,9 +11,9 @@ import Foundation
 @objcMembers
 final class SampleAppEventsConfigurations: NSObject {
 
-  static let `default` = AppEventsConfiguration.default()
+  static let `default` = _AppEventsConfiguration.default()
 
-  static var valid: AppEventsConfiguration {
+  static var valid: _AppEventsConfiguration {
     create(
       defaultATEStatus: AdvertisingTrackingStatus.unspecified,
       advertiserIDCollectionEnabled: true,
@@ -23,7 +23,7 @@ final class SampleAppEventsConfigurations: NSObject {
 
   static func create(
     defaultATEStatus status: AdvertisingTrackingStatus
-  ) -> AppEventsConfiguration {
+  ) -> _AppEventsConfiguration {
     create(
       defaultATEStatus: status,
       advertiserIDCollectionEnabled: self.default.advertiserIDCollectionEnabled,
@@ -33,7 +33,7 @@ final class SampleAppEventsConfigurations: NSObject {
 
   static func create(
     advertiserIDCollectionEnabled: Bool
-  ) -> AppEventsConfiguration {
+  ) -> _AppEventsConfiguration {
     create(
       defaultATEStatus: self.default.defaultATEStatus,
       advertiserIDCollectionEnabled: advertiserIDCollectionEnabled,
@@ -43,7 +43,7 @@ final class SampleAppEventsConfigurations: NSObject {
 
   static func create(
     eventCollectionEnabled: Bool
-  ) -> AppEventsConfiguration {
+  ) -> _AppEventsConfiguration {
     create(
       defaultATEStatus: self.default.defaultATEStatus,
       advertiserIDCollectionEnabled: self.default.advertiserIDCollectionEnabled,
@@ -55,8 +55,8 @@ final class SampleAppEventsConfigurations: NSObject {
     defaultATEStatus: AdvertisingTrackingStatus,
     advertiserIDCollectionEnabled: Bool,
     eventCollectionEnabled: Bool
-  ) -> AppEventsConfiguration {
-    AppEventsConfiguration(
+  ) -> _AppEventsConfiguration {
+    _AppEventsConfiguration(
       defaultATEStatus: defaultATEStatus,
       advertiserIDCollectionEnabled: advertiserIDCollectionEnabled,
       eventCollectionEnabled: eventCollectionEnabled

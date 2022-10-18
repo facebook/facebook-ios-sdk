@@ -25,7 +25,6 @@
 #import "FBSDKAppEventParameterProduct.h"
 #import "FBSDKAppEventParameterProduct+Internal.h"
 #import "FBSDKAppEventUserDataType.h"
-#import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKAppEventsWKWebViewKeys.h"
 #import "FBSDKAtePublishing.h"
 #import "FBSDKConstants.h"
