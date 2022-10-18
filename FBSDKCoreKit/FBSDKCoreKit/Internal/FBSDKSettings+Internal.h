@@ -8,10 +8,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#define DATA_PROCESSING_OPTIONS         @"data_processing_options"
-#define DATA_PROCESSING_OPTIONS_COUNTRY @"data_processing_options_country"
-#define DATA_PROCESSING_OPTIONS_STATE   @"data_processing_options_state"
-
 @protocol FBSDKTokenCaching;
 @protocol FBSDKDataPersisting;
 @protocol FBSDKAppEventsConfigurationProviding;
