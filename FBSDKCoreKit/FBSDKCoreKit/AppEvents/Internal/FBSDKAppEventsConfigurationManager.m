@@ -6,14 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <UIKit/UIKit.h>
-
-#import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnectionFactory.h"
-#import "FBSDKGraphRequestFactoryProtocol.h"
-#import "FBSDKSettingsProtocol.h"
 
 static NSString *const FBSDKAppEventsConfigurationKey = @"com.facebook.sdk:FBSDKAppEventsConfiguration";
 static NSString *const FBSDKAppEventsConfigurationTimestampKey = @"com.facebook.sdk:FBSDKAppEventsConfigurationTimestamp";

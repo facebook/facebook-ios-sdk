@@ -8,17 +8,15 @@
 
 #import "FBSDKPaymentProductRequestor.h"
 
-#import <StoreKit/StoreKit.h>
-
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <StoreKit/StoreKit.h>
 
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventParameterName+Internal.h"
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import "FBSDKEventLogging.h"
 #import "FBSDKProductsRequestProtocols.h"
-#import "FBSDKSettingsProtocol.h"
 
 static NSString *const FBSDKPaymentObserverOriginalTransactionKey = @"com.facebook.appevents.PaymentObserver.originalTransaction";
 static NSString *const FBSDKPaymentObserverDelimiter = @",";

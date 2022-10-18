@@ -13,10 +13,23 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Deprecated
 
 - The `Profile.enableUpdatesOnAccessTokenChange(_:)` method is deprecated in favor of the `Profile.isUpdatedWithAccessTokenChange` property.
+- `SettingsProtocol.codelessDebugLogEnabled` is deprecated in favor of `SettingsProtocol.isCodelessDebugLogEnabled`.
+- `SettingsProtocol.advertiserIDCollectionEnabled` is deprecated in favor of `SettingsProtocol.isAdvertiserIDCollectionEnabled`.
+- `SettingsProtocol.advertiserTrackingEnabled` is deprecated in favor of `SettingsProtocol.isAdvertiserTrackingEnabled`.
+- `SettingsProtocol.graphAPIDebugParamValue` is deprecated in favor of its new name `SettingsProtocol.graphAPIDebugParameterValue`
+- `Settings.autoLogAppEventsEnabled` is deprecated in favor of `Settings.isAutoLogAppEventsEnabled`.
+
+### Renamed
+
+- `SettingsProtocol.graphAPIDebugParamValue` has been renamed to `SettingsProtocol.graphAPIDebugParameterValue`
 
 ### Removed
 
 - `Profile` conformance to `NSCopying` has been removed as well as custom hashability and equatability.
+
+### Fixed
+
+- The documentation for the property list-backed value `Settings.isCodelessDebugLogEnabled` has been corrected to indicate that the default value is `false`.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.0.0...HEAD)
 

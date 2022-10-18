@@ -36,6 +36,7 @@ FBSDKAppEventName const FBSDKAppEventNameInitializeSDK = @"fb_sdk_initialize";
 FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusAvailable = @"fb_sdk_background_status_available";
 FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusDenied = @"fb_sdk_background_status_denied";
 FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusRestricted = @"fb_sdk_background_status_restricted";
+FBSDKAppEventName const FBSDKAppEventNameSDKSettingsChanged = @"fb_sdk_settings_changed";
 
 // MARK: - E-Commerce
 

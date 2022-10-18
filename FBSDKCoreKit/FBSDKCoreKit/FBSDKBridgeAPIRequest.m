@@ -21,7 +21,6 @@
 #import "FBSDKBridgeAPIProtocolWebV1.h"
 #import "FBSDKBridgeAPIProtocolWebV2.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKSettings.h"
 #import "FBSDKURLScheme.h"
 
 NSString *const FBSDKBridgeAPIAppIDKey = @"app_id";

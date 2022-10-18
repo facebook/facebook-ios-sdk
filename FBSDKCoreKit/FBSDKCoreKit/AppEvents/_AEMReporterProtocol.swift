@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !os(tvOS)
+
 import FBAEMKit
 import Foundation
 
@@ -35,3 +37,5 @@ public protocol _AEMReporterProtocol {
 }
 
 extension AEMReporter: _AEMReporterProtocol {}
+
+#endif

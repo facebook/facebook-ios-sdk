@@ -13,7 +13,6 @@
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKSettings.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

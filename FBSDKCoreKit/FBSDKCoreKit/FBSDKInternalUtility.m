@@ -8,12 +8,10 @@
 
 #import "FBSDKInternalUtility+Internal.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <mach-o/dyld.h>
 #import <sys/time.h>
-
-#import "FBSDKSettings+Internal.h"
 
 typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionMask) {
   FBSDKInternalUtilityMajorVersionMask = 0xFFFF0000,

@@ -7,7 +7,6 @@
  */
 
 #import <FBSDKCoreKit/FBSDKDeviceInformationProviding.h>
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
