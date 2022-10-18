@@ -2,7 +2,7 @@
 
 #import "SandboxViewController.h"
 
-#include <array>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 static NSString *const kSandboxNoOverride = @"No override specified.";
 static NSString *const kSandboxesCacheKey = @"recentSandboxesCacheKey";
@@ -33,14 +33,16 @@ typedef NS_ENUM(int, SandboxSectionType) {
   UITextField *_textField;
   UITableView *_tableView;
   NSString *_currentSandbox;
-  std::array<NSMutableOrderedSet<NSString *> *, SandboxSectionTypeCount> _dataSource;
+  NSArray<NSMutableOrderedSet<NSString *> *> *_dataSource;
 }
 
 - (instancetype)init
 {
   if ((self = [super init])) {
-    _dataSource[SandboxSectionTypeSelectedOverride] = [NSMutableOrderedSet new];
-    _dataSource[SandboxSectionTypeHistory] = [NSMutableOrderedSet new];
+    _dataSource = @[
+      [NSMutableOrderedSet new], // SandboxSectionTypeSelectedOverride
+      [NSMutableOrderedSet new] // SandboxSectionTypeHistory
+    ];
     _currentSandbox = [[NSUserDefaults standardUserDefaults] stringForKey:kSandboxOverrideKey];
     if (_currentSandbox.length > 0) {
       [_dataSource[SandboxSectionTypeSelectedOverride] addObject:_currentSandbox];

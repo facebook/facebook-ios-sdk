@@ -14,7 +14,6 @@
 #import <dlfcn.h>
 
 #import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
 
 static NSString *const g_frameworkPathTemplate = @"/System/Library/Frameworks/%@.framework/%@";
 

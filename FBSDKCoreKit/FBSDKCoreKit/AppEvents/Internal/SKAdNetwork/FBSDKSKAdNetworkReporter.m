@@ -17,7 +17,6 @@
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
-#import "FBSDKSettings.h"
 
 #define FBSDK_SKADNETWORK_CONFIG_TIME_OUT 86400
 

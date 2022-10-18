@@ -12,8 +12,9 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionFactoryProtocol.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestHTTPMethod.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestProtocol.h>
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <FBSDKCoreKit/FBSDKTokenStringProviding.h>
+
+@protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
 /**

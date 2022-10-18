@@ -793,40 +793,29 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  func testConfiguringSettings() {
-    XCTAssertNil(
-      Settings.shared.store,
-      "Settings should not have a data store by default"
-    )
-    XCTAssertNil(
-      Settings.shared.appEventsConfigurationProvider,
-      "Settings should not have an app events configuration provider by default"
-    )
-    XCTAssertNil(
-      Settings.shared.infoDictionaryProvider,
-      "Settings should not have an info dictionary provider by default"
-    )
-    XCTAssertNil(
-      Settings.shared.eventLogger,
-      "Settings should not have an event logger by default"
-    )
-
+  func testConfiguringSettings() throws {
     configurator.performConfiguration()
 
-    XCTAssertTrue(
-      Settings.shared.store === components.defaultDataStore,
+    let dependencies = try Settings.shared.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.dataStore,
+      components.defaultDataStore,
       "Settings should be configured with the data store"
     )
-    XCTAssertTrue(
-      Settings.shared.appEventsConfigurationProvider === components.appEventsConfigurationProvider,
+    XCTAssertIdentical(
+      dependencies.appEventsConfigurationProvider,
+      components.appEventsConfigurationProvider,
       "Settings should be configured with the app events configuration provider"
     )
-    XCTAssertTrue(
-      Settings.shared.infoDictionaryProvider === components.infoDictionaryProvider,
+    XCTAssertIdentical(
+      dependencies.infoDictionaryProvider,
+      components.infoDictionaryProvider,
       "Settings should be configured with the info dictionary provider"
     )
-    XCTAssertTrue(
-      Settings.shared.eventLogger === components.eventLogger,
+    XCTAssertIdentical(
+      dependencies.eventLogger,
+      components.eventLogger,
       "Settings should be configured with the event logger"
     )
   }

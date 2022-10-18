@@ -8,11 +8,10 @@
 
 #import "FBSDKAppEvents+Internal.h"
 
-#import <StoreKit/StoreKit.h>
-#import <UIKit/UIApplication.h>
-
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
+#import <StoreKit/StoreKit.h>
+#import <UIKit/UIApplication.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
@@ -35,7 +34,6 @@
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
 #import "FBSDKServerConfiguration.h"
-#import "FBSDKSettingsProtocol.h"
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
@@ -885,9 +883,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
 - (void)appendInstallTimestamp:(nonnull NSMutableDictionary<NSString *, NSString *> *)parameters
 {
   if (@available(iOS 14.0, *)) {
-    if ([self.settings isSetATETimeExceedsInstallTime]) {
-      NSDate *setATETimestamp = self.settings.advertiserTrackingEnabledTimestamp;
-      [FBSDKTypeUtility dictionary:parameters setObject:@([self.appEventsUtility convertToUnixTime:setATETimestamp]) forKey:@"install_timestamp"];
+    if (self.settings.isATETimeSufficientlyDelayed) {
+      NSDate *ateTimestamp = self.settings.advertiserTrackingEnabledTimestamp;
+      [FBSDKTypeUtility dictionary:parameters setObject:@([self.appEventsUtility convertToUnixTime:ateTimestamp]) forKey:@"install_timestamp"];
     } else {
       NSDate *installTimestamp = self.settings.installTimestamp;
       [FBSDKTypeUtility dictionary:parameters setObject:@([self.appEventsUtility convertToUnixTime:installTimestamp]) forKey:@"install_timestamp"];

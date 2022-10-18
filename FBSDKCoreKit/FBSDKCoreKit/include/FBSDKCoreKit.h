@@ -169,9 +169,7 @@
 #import <FBSDKCoreKit/FBSDKServerConfiguration.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationManager.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationProviding.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
 #import <FBSDKCoreKit/FBSDKSettingsLogging.h>
-#import <FBSDKCoreKit/FBSDKSettingsProtocol.h>
 #import <FBSDKCoreKit/FBSDKSKAdNetworkReporter.h>
 #import <FBSDKCoreKit/FBSDKSourceApplicationTracking.h>
 #import <FBSDKCoreKit/FBSDKSuggestedEventsIndexer.h>

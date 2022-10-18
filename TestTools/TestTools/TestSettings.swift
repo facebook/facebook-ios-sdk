@@ -14,6 +14,7 @@ public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var isEventDataUsageLimited = false
   public var shouldUseCachedValuesForExpensiveMetadata = false
   public var isAdvertiserIDCollectionEnabled = false
+  public var advertiserIDCollectionEnabled = false
   public var appID: String?
   public var clientToken: String?
   public var sdkVersion = ""
@@ -31,14 +32,18 @@ public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var installTimestamp: Date?
   public var advertiserTrackingEnabledTimestamp: Date?
   public var isSetATETimeExceedsInstallTime = false
+  public var isATETimeSufficientlyDelayed = false
   public var isSKAdNetworkReportEnabled = false
   public var shouldLimitEventAndDataUsage = false
   public var shouldUseTokenOptimizations = true
   public var isGraphErrorRecoveryEnabled = false
+  public var graphAPIDebugParameterValue: String?
   public var graphAPIDebugParamValue: String?
   public var isAdvertiserTrackingEnabled = false
+  public var advertiserTrackingEnabled = false
   public var loggingBehaviors = Set<LoggingBehavior>()
   public var isCodelessDebugLogEnabled = false
+  public var codelessDebugLogEnabled = false
   public static var loggingBehaviors = Set<LoggingBehavior>()
   public var persistableDataProcessingOptions: [String: Any]?
 

@@ -8,14 +8,10 @@
 
 #import "FBSDKGraphRequestBody.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKConstants.h"
-#import "FBSDKGraphRequestDataAttachment.h"
-#import "FBSDKLogger.h"
 #import "FBSDKLogger+Internal.h"
-#import "FBSDKRandom.h"
-#import "FBSDKSettings.h"
 
 #define kNewline @"\r\n"
 

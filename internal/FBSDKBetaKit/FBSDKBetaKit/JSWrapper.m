@@ -2,7 +2,7 @@
 
 #import "JSWrapper.h"
 
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 // TODO T103300381: Expose this correctly or dynamically call the private class

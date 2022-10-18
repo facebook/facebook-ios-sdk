@@ -8,7 +8,7 @@
 
 #import "FBSDKAppEventsATEPublisher.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKGraphRequestConnecting.h"
@@ -16,7 +16,6 @@
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKAppEventsATEPublisher ()
 

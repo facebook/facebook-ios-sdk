@@ -202,11 +202,13 @@ private extension CoreKitConfigurator {
   }
 
   func configureSettings() {
-    Settings.shared.configure(
-      store: components.defaultDataStore,
-      appEventsConfigurationProvider: components.appEventsConfigurationProvider,
-      infoDictionaryProvider: components.infoDictionaryProvider,
-      eventLogger: components.eventLogger
+    Settings.shared.setDependencies(
+      .init(
+        appEventsConfigurationProvider: components.appEventsConfigurationProvider,
+        dataStore: components.defaultDataStore,
+        eventLogger: components.eventLogger,
+        infoDictionaryProvider: components.infoDictionaryProvider
+      )
     )
   }
 

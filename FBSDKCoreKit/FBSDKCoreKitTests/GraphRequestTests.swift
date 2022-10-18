@@ -285,7 +285,7 @@ final class GraphRequestTests: XCTestCase {
 
   func testSetSettingsWithDebugParamValue() throws {
     let debugParameter = "TestValue"
-    settings.graphAPIDebugParamValue = debugParameter
+    settings.graphAPIDebugParameterValue = debugParameter
     let baseURL = try InternalUtility.shared.facebookURL(
       withHostPrefix: prefix,
       path: path,

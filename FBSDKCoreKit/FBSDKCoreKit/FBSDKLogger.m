@@ -6,13 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKLogger.h"
 #import "FBSDKLogger+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKSettings.h"
 
 static NSUInteger g_serialNumberCounter = 1111;
 static NSMutableDictionary<NSString *, id> *g_stringsToReplace = nil;

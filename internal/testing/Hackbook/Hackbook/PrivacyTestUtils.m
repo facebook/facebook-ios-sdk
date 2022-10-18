@@ -34,14 +34,6 @@ void dispatch_on_main_thread(dispatch_block_t block)
 
 @end
 
-@interface FBSDKSettings ()
-
-- (void)setAdvertiserTrackingStatus:(NSUInteger)status;
-
-- (NSUInteger)advertisingTrackingStatus;
-
-@end
-
 @implementation PrivacyTestUtils
 
 + (void)setAdvertiserTrackingStatus:(NSUInteger)status
@@ -51,7 +43,7 @@ void dispatch_on_main_thread(dispatch_block_t block)
     [self setDefaultAdvertiserTrackingStatus:_defaultATEStatus];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:FBSDKSettingsAdvertisingTrackingStatus];
   } else {
-    [FBSDKSettings.sharedSettings setAdvertiserTrackingStatus:status];
+    FBSDKSettings.sharedSettings.advertisingTrackingStatus = status;
   }
 }
 
@@ -64,7 +56,7 @@ void dispatch_on_main_thread(dispatch_block_t block)
 {
   _defaultATEStatus = status;
   if (_ATEStatus == 2) {
-    [FBSDKSettings.sharedSettings setAdvertiserTrackingStatus:status];
+    FBSDKSettings.sharedSettings.advertisingTrackingStatus = status;
   }
 }
 

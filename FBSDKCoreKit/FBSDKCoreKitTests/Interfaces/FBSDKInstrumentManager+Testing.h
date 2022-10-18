@@ -11,7 +11,6 @@
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKInstrumentManager.h"
-#import "FBSDKSettings.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
