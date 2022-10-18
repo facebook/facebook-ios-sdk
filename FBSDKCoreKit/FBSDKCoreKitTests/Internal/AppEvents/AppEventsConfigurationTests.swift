@@ -48,40 +48,40 @@ final class AppEventsConfigurationTests: XCTestCase {
   }
 
   func testCodingSecurity() {
-    XCTAssertTrue(AppEventsConfiguration.supportsSecureCoding, "Should support secure coding")
+    XCTAssertTrue(_AppEventsConfiguration.supportsSecureCoding, "Should support secure coding")
   }
 
   func testCreatingWithMissingDictionary() {
-    configuration = AppEventsConfiguration(json: nil)
+    configuration = _AppEventsConfiguration(json: nil)
     XCTAssertEqual(
       configuration,
-      AppEventsConfiguration.default(),
+      _AppEventsConfiguration.default(),
       "Should use the default configuration when creating with a missing dictionary"
     )
   }
 
   func testCreatingWithEmptyDictionary() {
-    configuration = AppEventsConfiguration(json: [:])
+    configuration = _AppEventsConfiguration(json: [:])
     XCTAssertEqual(
       configuration,
-      AppEventsConfiguration.default(),
+      _AppEventsConfiguration.default(),
       "Should use the default configuration when creating with an empty dictionary"
     )
   }
 
   func testCreatingWithMissingTopLevelKey() {
-    configuration = AppEventsConfiguration(
+    configuration = _AppEventsConfiguration(
       json: RawAppEventsConfigurationResponseFixtures.validMissingTopLevelKey
     )
     XCTAssertEqual(
       configuration,
-      AppEventsConfiguration.default(),
+      _AppEventsConfiguration.default(),
       "Should use the default configuration when creating with a missing top level key"
     )
   }
 
   func testCreatingWithInvalidValues() {
-    configuration = AppEventsConfiguration(
+    configuration = _AppEventsConfiguration(
       json: RawAppEventsConfigurationResponseFixtures.invalidValues
     )
     XCTAssertEqual(
@@ -100,7 +100,7 @@ final class AppEventsConfigurationTests: XCTestCase {
   }
 
   func testCreatingWithValidValues() {
-    configuration = AppEventsConfiguration(json: RawAppEventsConfigurationResponseFixtures.valid)
+    configuration = _AppEventsConfiguration(json: RawAppEventsConfigurationResponseFixtures.valid)
     XCTAssertEqual(
       configuration.defaultATEStatus,
       .disallowed,
@@ -119,7 +119,7 @@ final class AppEventsConfigurationTests: XCTestCase {
   // MARK: Coding
 
   func testEncodingAndDecoding() throws {
-    configuration = AppEventsConfiguration.default()
+    configuration = _AppEventsConfiguration.default()
     let decodedObject = try CodabilityTesting.encodeAndDecode(configuration)
 
     // Test Objects
@@ -147,10 +147,10 @@ final class AppEventsConfigurationTests: XCTestCase {
 
 // swiftformat:disable extensionaccesscontrol
 
-extension AppEventsConfiguration {
+extension _AppEventsConfiguration {
   // swiftlint:disable:next override_in_extension
   open override func isEqual(_ object: Any?) -> Bool {
-    if let other = object as? AppEventsConfiguration {
+    if let other = object as? _AppEventsConfiguration {
       return advertiserIDCollectionEnabled == other.advertiserIDCollectionEnabled &&
         eventCollectionEnabled == other.eventCollectionEnabled &&
         defaultATEStatus == other.defaultATEStatus
@@ -161,5 +161,5 @@ extension AppEventsConfiguration {
 }
 
 fileprivate extension String {
-  static let isCodable = "AppEventsConfiguration should be encodable and decodable"
+  static let isCodable = "_AppEventsConfiguration should be encodable and decodable"
 }

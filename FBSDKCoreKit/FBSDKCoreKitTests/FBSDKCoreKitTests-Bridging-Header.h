@@ -27,7 +27,6 @@
 #import "FBSDKAppEventsATEPublisher.h"
 #import "FBSDKAppEventsConfiguration+Testing.h"
 #import "FBSDKAppEventsConfigurationManager+Testing.h"
-#import "FBSDKAppEventsConfigurationProtocol.h"
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEventsUtility+Testing.h"
 #import "FBSDKAppLinkNavigation+Testing.h"

@@ -13,7 +13,6 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventName+Internal.h"
-#import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKSettings+Internal.h"
