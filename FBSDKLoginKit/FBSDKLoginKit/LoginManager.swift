@@ -67,9 +67,9 @@ public final class LoginManager: NSObject {
     static let safariViewController = "sfvc_auth"
   }
 
-  var configuredDependencies: InstanceDependencies?
+  var configuredDependencies: ObjectDependencies?
 
-  lazy var defaultDependencies: InstanceDependencies? = {
+  lazy var defaultDependencies: ObjectDependencies? = {
     let keychainStoreFactory = KeychainStoreFactory()
     guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
       fatalError("Unable to find main bundle identifier. Cannot create keychain service identifier")
@@ -80,7 +80,7 @@ public final class LoginManager: NSObject {
       accessGroup: nil
     )
 
-    return InstanceDependencies(
+    return ObjectDependencies(
       accessTokenWallet: AccessToken.self,
       authenticationTokenWallet: AuthenticationToken.self,
       errorFactory: _ErrorFactory(),
@@ -926,8 +926,8 @@ extension LoginManager: URLOpening {
 
 extension LoginManager: LoginProviding {}
 
-extension LoginManager: DependentAsInstance {
-  struct InstanceDependencies {
+extension LoginManager: DependentAsObject {
+  struct ObjectDependencies {
     var accessTokenWallet: _AccessTokenProviding.Type
     var authenticationTokenWallet: _AuthenticationTokenProviding.Type
     var errorFactory: ErrorCreating
