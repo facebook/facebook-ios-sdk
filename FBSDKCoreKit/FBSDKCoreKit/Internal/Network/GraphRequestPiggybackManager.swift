@@ -41,9 +41,9 @@ final class GraphRequestPiggybackManager: _GraphRequestPiggybackManaging {
 
   var lastRefreshTry = Date.distantPast
 
-  var configuredDependencies: InstanceDependencies?
+  var configuredDependencies: ObjectDependencies?
 
-  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+  var defaultDependencies: ObjectDependencies? = .init(
     tokenWallet: AccessToken.self,
     settings: Settings.shared,
     serverConfigurationProvider: _ServerConfigurationManager.shared,
@@ -277,8 +277,8 @@ final class GraphRequestPiggybackManager: _GraphRequestPiggybackManaging {
   }
 }
 
-extension GraphRequestPiggybackManager: DependentAsInstance {
-  struct InstanceDependencies {
+extension GraphRequestPiggybackManager: DependentAsObject {
+  struct ObjectDependencies {
     let tokenWallet: _AccessTokenProviding.Type
     let settings: SettingsProtocol
     let serverConfigurationProvider: _ServerConfigurationProviding

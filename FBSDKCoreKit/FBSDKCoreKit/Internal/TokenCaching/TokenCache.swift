@@ -17,8 +17,8 @@ final class TokenCache: TokenCaching {
     static let encodedToken = "tokenEncoded"
   }
 
-  var configuredDependencies: InstanceDependencies?
-  var defaultDependencies: InstanceDependencies?
+  var configuredDependencies: ObjectDependencies?
+  var defaultDependencies: ObjectDependencies?
 
   var accessToken: AccessToken? {
     get {
@@ -191,8 +191,8 @@ final class TokenCache: TokenCaching {
   }
 }
 
-extension TokenCache: DependentAsInstance {
-  struct InstanceDependencies {
+extension TokenCache: DependentAsObject {
+  struct ObjectDependencies {
     let settings: SettingsProtocol
     let keychainStore: KeychainStoreProtocol
     let dataStore: DataPersisting

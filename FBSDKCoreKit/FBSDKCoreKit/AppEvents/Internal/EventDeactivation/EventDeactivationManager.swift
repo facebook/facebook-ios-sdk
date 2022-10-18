@@ -23,9 +23,9 @@ final class EventDeactivationManager: _AppEventsParameterProcessing, _EventsProc
   private var deactivatedEvents = Set<String>()
   private var eventsWithDeactivatedParameters = [DeactivatedEvent]()
 
-  var configuredDependencies: InstanceDependencies?
+  var configuredDependencies: ObjectDependencies?
 
-  var defaultDependencies: InstanceDependencies? = InstanceDependencies(
+  var defaultDependencies: ObjectDependencies? = .init(
     serverConfigurationProvider: _ServerConfigurationManager.shared
   )
 
@@ -106,8 +106,8 @@ final class EventDeactivationManager: _AppEventsParameterProcessing, _EventsProc
   }
 }
 
-extension EventDeactivationManager: DependentAsInstance {
-  struct InstanceDependencies {
+extension EventDeactivationManager: DependentAsObject {
+  struct ObjectDependencies {
     var serverConfigurationProvider: _ServerConfigurationProviding
   }
 }
