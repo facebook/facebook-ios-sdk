@@ -83,6 +83,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKitVersions.h>
 #import <FBSDKCoreKit/FBSDKCrashObserver.h>
 #import <FBSDKCoreKit/FBSDKCrashShield.h>
+#import <FBSDKCoreKit/FBSDKDataProcessingOptionKey.h>
 #import <FBSDKCoreKit/FBSDKDeviceDialogView.h>
 #import <FBSDKCoreKit/FBSDKDeviceInformationProviding.h>
 #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>

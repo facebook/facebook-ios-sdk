@@ -1470,12 +1470,12 @@ final class SettingsTests: XCTestCase {
     let dataProcessingOptions = settings.persistableDataProcessingOptions
 
     XCTAssertEqual(
-      dataProcessingOptions?[DATA_PROCESSING_OPTIONS_COUNTRY] as! Int, // swiftlint:disable:this force_cast
+      dataProcessingOptions?[DataProcessingOptionKey.country.rawValue] as! Int, // swiftlint:disable:this force_cast
       0,
       "Country should default to zero when not provided"
     )
     XCTAssertEqual(
-      dataProcessingOptions?[DATA_PROCESSING_OPTIONS_STATE] as! Int, // swiftlint:disable:this force_cast
+      dataProcessingOptions?[DataProcessingOptionKey.state.rawValue] as! Int, // swiftlint:disable:this force_cast
       0,
       "State should default to zero when not provided"
     )
@@ -1530,17 +1530,17 @@ final class SettingsTests: XCTestCase {
     settings.setDataProcessingOptions([], country: Int32(countryCode), state: Int32(stateCode))
     let dataProcessingOptions = settings.persistableDataProcessingOptions
     XCTAssertEqual(
-      (settings.persistableDataProcessingOptions?[DATA_PROCESSING_OPTIONS] as? [Any])?.isEmpty,
+      (settings.persistableDataProcessingOptions?[DataProcessingOptionKey.options.rawValue] as? [Any])?.isEmpty,
       true,
       "Should use the provided array of processing options"
     )
     XCTAssertEqual(
-      dataProcessingOptions?[DATA_PROCESSING_OPTIONS_COUNTRY] as? Int,
+      dataProcessingOptions?[DataProcessingOptionKey.country.rawValue] as? Int,
       countryCode,
       "Should use the provided country code"
     )
     XCTAssertEqual(
-      dataProcessingOptions?[DATA_PROCESSING_OPTIONS_STATE] as? Int,
+      dataProcessingOptions?[DataProcessingOptionKey.state.rawValue] as? Int,
       stateCode,
       "Should use the provided state code"
     )

@@ -486,19 +486,19 @@ static NSMapTable *_transientObjects;
 {
   NSDictionary<NSString *, id> *dataProcessingOptions = self.settings.persistableDataProcessingOptions;
   if (dataProcessingOptions) {
-    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
+    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[FBSDKDataProcessingOptionKeyOptions];
     if (options && [options isKindOfClass:NSArray.class]) {
       NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
       [FBSDKTypeUtility dictionary:parameters
                          setObject:optionsString
-                            forKey:DATA_PROCESSING_OPTIONS];
+                            forKey:FBSDKDataProcessingOptionKeyOptions];
     }
     [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY]
-                          forKey:DATA_PROCESSING_OPTIONS_COUNTRY];
+                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyCountry]
+                          forKey:FBSDKDataProcessingOptionKeyCountry];
     [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE]
-                          forKey:DATA_PROCESSING_OPTIONS_STATE];
+                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyState]
+                          forKey:FBSDKDataProcessingOptionKeyState];
   }
 }
 

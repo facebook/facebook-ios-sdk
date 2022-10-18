@@ -363,9 +363,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
                            state:(int)state
 {
   NSDictionary<NSString *, id> *json = @{
-    DATA_PROCESSING_OPTIONS : options ?: @[],
-    DATA_PROCESSING_OPTIONS_COUNTRY : @(country),
-    DATA_PROCESSING_OPTIONS_STATE : @(state),
+    FBSDKDataProcessingOptionKeyOptions : options ?: @[],
+    FBSDKDataProcessingOptionKeyCountry : @(country),
+    FBSDKDataProcessingOptionKeyState : @(state),
   };
   self.persistableDataProcessingOptions = json;
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:json requiringSecureCoding:NO error:nil];
@@ -443,7 +443,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(
 - (BOOL)isDataProcessingRestricted
 {
   NSArray<NSString *> *options = [FBSDKTypeUtility dictionary:self.persistableDataProcessingOptions ?: @{}
-                                                 objectForKey:DATA_PROCESSING_OPTIONS
+                                                 objectForKey:FBSDKDataProcessingOptionKeyOptions
                                                        ofType:NSArray.class];
   for (NSString *option in options) {
     if ([@"ldu" isEqualToString:[[FBSDKTypeUtility coercedToStringValue:option] lowercaseString]]) {
