@@ -9,6 +9,7 @@
 #import <FBSDKCoreKit/FBSDKAppEventsConfigurationManager.h>
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <UIKit/UIKit.h>
 
 #import "FBSDKAppEventsConfiguration.h"
 #import "FBSDKGraphRequestConnecting.h"
