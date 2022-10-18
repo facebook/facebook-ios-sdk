@@ -328,12 +328,13 @@ private extension CoreKitConfigurator {
 
   @available(tvOS, unavailable)
   func configureModelManager() {
+    let settings = components.settings
     _ModelManager.shared.configure(
       featureChecker: components.featureChecker,
       graphRequestFactory: components.graphRequestFactory,
       fileManager: components.fileManager,
       store: components.defaultDataStore,
-      settings: components.settings,
+      getAppID: { [settings] in settings.appID ?? "" },
       dataExtractor: components.dataExtractor,
       gateKeeperManager: components.gateKeeperManager,
       suggestedEventsIndexer: components.suggestedEventsIndexer,

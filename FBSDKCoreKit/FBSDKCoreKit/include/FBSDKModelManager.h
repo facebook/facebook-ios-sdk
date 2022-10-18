@@ -51,12 +51,12 @@ NS_SWIFT_NAME(_ModelManager)
                 graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
                               store:(id<FBSDKDataPersisting>)store
-                           settings:(id<FBSDKSettings>)settings
+                           getAppID:(NSString * (^)(void))getAppID
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
              suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
                    featureExtractor:(Class<FBSDKFeatureExtracting>)featureExtractor
-NS_SWIFT_NAME(configure(featureChecker:graphRequestFactory:fileManager:store:settings:dataExtractor:gateKeeperManager:suggestedEventsIndexer:featureExtractor:));
+NS_SWIFT_NAME(configure(featureChecker:graphRequestFactory:fileManager:store:getAppID:dataExtractor:gateKeeperManager:suggestedEventsIndexer:featureExtractor:));
 
 @end
 

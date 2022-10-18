@@ -1194,7 +1194,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  func testConfiguringModelManager() {
+  func testConfiguringModelManager() throws {
     XCTAssertNil(
       _ModelManager.shared.featureChecker,
       "_ModelManager should not have a feature checker by default"
@@ -1212,8 +1212,8 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "_ModelManager should not have a data store by default"
     )
     XCTAssertNil(
-      _ModelManager.shared.settings,
-      "_ModelManager should not have a settings by default"
+      _ModelManager.shared.getAppID,
+      "_ModelManager should not have an app ID computer by default"
     )
     XCTAssertNil(
       _ModelManager.shared.dataExtractor,
@@ -1231,6 +1231,9 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _ModelManager.shared.featureExtractor,
       "_ModelManager should not have a feature extractor by default"
     )
+
+    let testSettings = try XCTUnwrap(components.settings as? TestSettings)
+    testSettings.appID = "test-app-id"
 
     configurator.performConfiguration()
 
@@ -1250,9 +1253,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _ModelManager.shared.store === components.defaultDataStore,
       "_ModelManager should be configured with the default data store"
     )
-    XCTAssertTrue(
-      _ModelManager.shared.settings === components.settings,
-      "_ModelManager should be configured with the settings"
+    XCTAssertEqual(
+      _ModelManager.shared.getAppID?(),
+      "test-app-id",
+      "_ModelManager should be configured with an app ID computer"
     )
     XCTAssertTrue(
       _ModelManager.shared.dataExtractor === components.dataExtractor,
