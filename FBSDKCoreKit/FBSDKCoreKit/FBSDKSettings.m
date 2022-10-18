@@ -19,14 +19,6 @@
 #import "FBSDKInternalUtility+Internal.h"
 
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(TYPE, PLIST_KEY, PROPERTY_NAME, SETTER, DEFAULT_VALUE, ENABLE_CACHE) \
-  + (TYPE *)PROPERTY_NAME \
-  { \
-    return self.sharedSettings.PROPERTY_NAME; \
-  } \
-\
-  + (void)SETTER:(TYPE *)value { \
-    [self.sharedSettings SETTER:value]; \
-  } \
   - (TYPE *)PROPERTY_NAME \
   { \
     if ((_ ## PROPERTY_NAME == nil) && ENABLE_CACHE) { \
