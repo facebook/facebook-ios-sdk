@@ -130,18 +130,18 @@ public final class AEMReporter: NSObject {
     completionBlocks = []
 
     dispatchOnQueue(serialQueue) {
-      minAggregationRequestTimestamp = _loadMinAggregationRequestTimestamp()
-      configurations = _loadConfigurations()
-      invocations = _loadReportData()
+      minAggregationRequestTimestamp = loadMinAggregationRequestTimestamp()
+      configurations = loadConfigurations()
+      invocations = loadReportData()
     }
 
-    _loadConfiguration(withRefreshForced: false) { error in
+    loadConfiguration(withRefreshForced: false) { error in
       if error != nil {
         return
       }
 
-      _sendAggregationRequest()
-      _clearCache()
+      sendAggregationRequest()
+      clearCache()
     }
 
     // If developers forget to call configureWithNetworker:appID:
@@ -208,12 +208,12 @@ public final class AEMReporter: NSObject {
     }
 
     guard !invocation.isTestMode else {
-      _sendDebuggingRequest(invocation)
+      sendDebuggingRequest(invocation)
       return
     }
 
-    _loadConfiguration(withRefreshForced: true, block: nil)
-    _appendAndSaveInvocation(invocation)
+    loadConfiguration(withRefreshForced: true, block: nil)
+    appendAndSaveInvocation(invocation)
   }
 
   static func parseURL(_ url: URL?) -> _AEMInvocation? {
@@ -253,7 +253,7 @@ public final class AEMReporter: NSObject {
       return
     }
 
-    _loadConfiguration(withRefreshForced: false) { _ in
+    loadConfiguration(withRefreshForced: false) { _ in
       if configurations.isEmpty || invocations.isEmpty {
         return
       }
@@ -262,20 +262,20 @@ public final class AEMReporter: NSObject {
       if isAdvertiserRuleMatchInServerEnabled,
          let businessID = businessIDs.first,
          !businessID.isEmpty {
-        self._loadRuleMatch(businessIDs, event: event, currency: currency, value: value, parameters: parameters)
+        self.loadRuleMatch(businessIDs, event: event, currency: currency, value: value, parameters: parameters)
       } else {
-        self._attributionV1WithEvent(event, currency: currency, value: value, parameters: parameters)
+        self.attributionV1WithEvent(event, currency: currency, value: value, parameters: parameters)
       }
     }
   }
 
-  private static func _attributionV1WithEvent(
+  private static func attributionV1WithEvent(
     _ event: String,
     currency: String?,
     value: NSNumber?,
     parameters: [String: Any]?
   ) {
-    guard let attributedInvocation = _attributedInvocation(
+    guard let attributedInvocation = attributedInvocation(
       invocations,
       event: event,
       currency: currency,
@@ -286,7 +286,7 @@ public final class AEMReporter: NSObject {
       return
     }
 
-    _attributionWithInvocation(
+    attributionWithInvocation(
       attributedInvocation,
       event: event,
       currency: currency,
@@ -297,7 +297,7 @@ public final class AEMReporter: NSObject {
   }
 
   // swiftlint:disable:next function_parameter_count
-  private static func _attributionWithInvocation(
+  private static func attributionWithInvocation(
     _ invocation: _AEMInvocation,
     event: String,
     currency: String?,
@@ -310,10 +310,10 @@ public final class AEMReporter: NSObject {
     // 2. invocation has catalog Any
     // 3. event is optimized
     // 4. event's content Any belongs to the catalog
-    if _shouldReportConversion(inCatalogLevel: invocation, event: event) {
+    if shouldReportConversion(inCatalogLevel: invocation, event: event) {
       let contentID = _AEMUtility.shared.getContentID(parameters)
-      _loadCatalogOptimization(with: invocation, contentID: contentID) {
-        self._updateAttributedInvocation(
+      loadCatalogOptimization(with: invocation, contentID: contentID) {
+        self.updateAttributedInvocation(
           invocation,
           event: event,
           currency: currency,
@@ -324,7 +324,7 @@ public final class AEMReporter: NSObject {
         )
       }
     } else {
-      _updateAttributedInvocation(
+      updateAttributedInvocation(
         invocation,
         event: event,
         currency: currency,
@@ -337,7 +337,7 @@ public final class AEMReporter: NSObject {
   }
 
   // swiftlint:disable:next function_parameter_count
-  private static func _updateAttributedInvocation(
+  private static func updateAttributedInvocation(
     _ invocation: _AEMInvocation,
     event: String,
     currency: String?,
@@ -361,14 +361,14 @@ public final class AEMReporter: NSObject {
       event: event,
       shouldBoostPriority: shouldBoostPriority
     ) {
-      _sendAggregationRequest()
+      sendAggregationRequest()
     }
 
-    _saveReportData()
+    saveReportData()
   }
 
   // swiftlint:disable:next function_parameter_count
-  static func _attributedInvocation(
+  static func attributedInvocation(
     _ invocations: [_AEMInvocation],
     event: String,
     currency: String?,
@@ -379,7 +379,7 @@ public final class AEMReporter: NSObject {
     var isGeneralInvocationVisited = false
     var attributedInvocation: _AEMInvocation?
     for invocation in invocations.reversed() {
-      if _isDoubleCounting(invocation, event: event) {
+      if isDoubleCounting(invocation, event: event) {
         break
       }
 
@@ -408,7 +408,7 @@ public final class AEMReporter: NSObject {
     return attributedInvocation
   }
 
-  static func _isDoubleCounting(
+  static func isDoubleCounting(
     _ invocation: _AEMInvocation,
     event: String
   ) -> Bool {
@@ -421,21 +421,21 @@ public final class AEMReporter: NSObject {
       && reporter?.isReportingEvent(event) == true
   }
 
-  private static func _appendAndSaveInvocation(_ invocation: _AEMInvocation) {
+  private static func appendAndSaveInvocation(_ invocation: _AEMInvocation) {
     dispatchOnQueue(serialQueue) {
       invocations.append(invocation)
-      _saveReportData()
+      saveReportData()
     }
   }
 
-  static func _loadConfiguration(withRefreshForced forced: Bool, block: FBAEMReporterBlock?) {
+  static func loadConfiguration(withRefreshForced forced: Bool, block: FBAEMReporterBlock?) {
     dispatchOnQueue(serialQueue) {
       if let block = block {
         completionBlocks.append(block)
       }
 
       // Executes blocks if there is cache
-      if !_shouldRefresh(withIsForced: forced) {
+      if !shouldRefresh(withIsForced: forced) {
         for executionBlock in completionBlocks {
           executionBlock(nil)
         }
@@ -451,7 +451,7 @@ public final class AEMReporter: NSObject {
 
       networker?.startGraphRequest(
         withGraphPath: "\(appID ?? nullAppID)/aem_conversion_configs",
-        parameters: _requestParameters(),
+        parameters: requestParameters(),
         tokenString: nil,
         httpMethod: FBAEMHTTPMethodGET
       ) { result, error in
@@ -468,7 +468,7 @@ public final class AEMReporter: NSObject {
           if let json = result as? [String: Any] {
             configRefreshTimestamp = Date()
             if let configurations = json["data"] as? [[String: Any]] {
-              self._addConfigurations(configurations)
+              self.addConfigurations(configurations)
             }
 
             for executionBlock in completionBlocks {
@@ -485,14 +485,14 @@ public final class AEMReporter: NSObject {
     }
   }
 
-  static func _loadCatalogOptimization(
+  static func loadCatalogOptimization(
     with invocation: _AEMInvocation,
     contentID: String?,
     block: @escaping () -> Void
   ) {
     networker?.startGraphRequest(
       withGraphPath: "\(appID ?? nullAppID)/aem_conversion_filter",
-      parameters: _catalogRequestParameters(invocation.catalogID, contentID: contentID),
+      parameters: catalogRequestParameters(invocation.catalogID, contentID: contentID),
       tokenString: nil,
       httpMethod: FBAEMHTTPMethodGET
     ) { result, error in
@@ -501,14 +501,14 @@ public final class AEMReporter: NSObject {
           return
         }
 
-        if self._isContentOptimized(result) {
+        if self.isContentOptimized(result) {
           block()
         }
       }
     }
   }
 
-  static func _loadRuleMatch(
+  static func loadRuleMatch(
     _ businessIDs: [String],
     event: String,
     currency potentialCurrency: String?,
@@ -518,7 +518,7 @@ public final class AEMReporter: NSObject {
     let content = _AEMUtility.shared.getContent(parameters)
     networker?.startGraphRequest(
       withGraphPath: "\(appID ?? nullAppID)/aem_attribution",
-      parameters: _ruleMatchRequestParameters(businessIDs, content: content),
+      parameters: ruleMatchRequestParameters(businessIDs, content: content),
       tokenString: nil,
       httpMethod: FBAEMHTTPMethodGET
     ) { result, error in
@@ -559,7 +559,7 @@ public final class AEMReporter: NSObject {
             value = inSegmentValue
           }
 
-          self._attributionWithInvocation(
+          self.attributionWithInvocation(
             matchedInvocation,
             event: event,
             currency: currency,
@@ -571,7 +571,7 @@ public final class AEMReporter: NSObject {
       } else {
         // Fall back to attribution v1 if fails
         dispatchOnQueue(serialQueue) {
-          self._attributionV1WithEvent(
+          self.attributionV1WithEvent(
             event,
             currency: potentialCurrency,
             value: potentialValue,
@@ -582,7 +582,7 @@ public final class AEMReporter: NSObject {
     }
   }
 
-  static func _shouldReportConversion(
+  static func shouldReportConversion(
     inCatalogLevel invocation: _AEMInvocation,
     event: String
   ) -> Bool {
@@ -592,7 +592,7 @@ public final class AEMReporter: NSObject {
       && invocation.isOptimizedEvent(event, configurations: configurations)
   }
 
-  static func _isContentOptimized(_ result: Any?) -> Bool {
+  static func isContentOptimized(_ result: Any?) -> Bool {
     let json = result as? [String: Any]
     let data = json?["data"] as? [Any]
     let catalogData = data?.first as? [String: Any]
@@ -600,7 +600,7 @@ public final class AEMReporter: NSObject {
     return isOptimized.boolValue
   }
 
-  static func _requestParameters() -> [String: Any] {
+  static func requestParameters() -> [String: Any] {
     var params: [String: Any] = [:]
     // append business ids to the request params
     var businessIDs: [String] = []
@@ -616,7 +616,7 @@ public final class AEMReporter: NSObject {
     return params
   }
 
-  static func _catalogRequestParameters(
+  static func catalogRequestParameters(
     _ catalogID: String?,
     contentID: String?
   ) -> [String: Any] {
@@ -626,7 +626,7 @@ public final class AEMReporter: NSObject {
     ].compactMapValues { $0 }
   }
 
-  static func _ruleMatchRequestParameters(
+  static func ruleMatchRequestParameters(
     _ businessIDs: [String],
     content: String?
   ) -> [String: Any] {
@@ -638,7 +638,7 @@ public final class AEMReporter: NSObject {
     ].compactMapValues { $0 }
   }
 
-  static func _isConfigRefreshTimestampValid() -> Bool {
+  static func isConfigRefreshTimestampValid() -> Bool {
     guard let timestamp = configRefreshTimestamp else {
       return false
     }
@@ -646,7 +646,7 @@ public final class AEMReporter: NSObject {
     return Date().timeIntervalSince(timestamp) < FB_AEM_CONFIG_TIME_OUT
   }
 
-  static func _shouldRefresh(withIsForced isForced: Bool) -> Bool {
+  static func shouldRefresh(withIsForced isForced: Bool) -> Bool {
     if isForced {
       return true
     }
@@ -657,10 +657,10 @@ public final class AEMReporter: NSObject {
     }
 
     // Refresh if timestamp is expired or cached configuration is empty
-    return !_isConfigRefreshTimestampValid() || configurations.isEmpty
+    return !isConfigRefreshTimestampValid() || configurations.isEmpty
   }
 
-  static func _shouldDelayAggregationRequest() -> Bool {
+  static func shouldDelayAggregationRequest() -> Bool {
     guard let timestamp = minAggregationRequestTimestamp else {
       return false
     }
@@ -669,9 +669,9 @@ public final class AEMReporter: NSObject {
 
   // MARK: - Deeplink debugging methods
 
-  static func _sendDebuggingRequest(_ invocation: _AEMInvocation) {
+  static func sendDebuggingRequest(_ invocation: _AEMInvocation) {
     var params: [[String: Any]] = []
-    params.append(_debuggingRequestParameters(invocation))
+    params.append(debuggingRequestParameters(invocation))
     if params.isEmpty {
       return
     }
@@ -695,7 +695,7 @@ public final class AEMReporter: NSObject {
     }
   }
 
-  static func _debuggingRequestParameters(_ invocation: _AEMInvocation) -> [String: Any] {
+  static func debuggingRequestParameters(_ invocation: _AEMInvocation) -> [String: Any] {
     [
       CAMPAIGN_ID_KEY: invocation.campaignID,
       CONVERSION_DATA_KEY: 0,
@@ -707,17 +707,17 @@ public final class AEMReporter: NSObject {
 
   // MARK: - Background methods
 
-  static func _loadMinAggregationRequestTimestamp() -> Date? {
+  static func loadMinAggregationRequestTimestamp() -> Date? {
     dataStore?.fb_object(forKey: FBAEMMINAggregationRequestTimestampKey) as? Date
   }
 
-  static func _updateAggregationRequestTimestamp(_ timeInterval: TimeInterval) {
+  static func updateAggregationRequestTimestamp(_ timeInterval: TimeInterval) {
     let newTimestamp = Date(timeIntervalSince1970: timeInterval)
     minAggregationRequestTimestamp = newTimestamp
     dataStore?.fb_setObject(newTimestamp, forKey: FBAEMMINAggregationRequestTimestampKey)
   }
 
-  static func _loadConfigurations() -> [String: [_AEMConfiguration]] {
+  static func loadConfigurations() -> [String: [_AEMConfiguration]] {
     guard let configFile = configFile else { return [:] }
 
     if let cachedConfiguration = try? NSData(contentsOfFile: configFile, options: .mappedIfSafe) {
@@ -741,7 +741,7 @@ public final class AEMReporter: NSObject {
     return [:]
   }
 
-  private static func _saveConfigurations() {
+  private static func saveConfigurations() {
     let cache = try? NSKeyedArchiver.archivedData(withRootObject: configurations, requiringSecureCoding: false)
     guard
       let cache = cache,
@@ -753,18 +753,18 @@ public final class AEMReporter: NSObject {
     (cache as NSData).write(toFile: configFile, atomically: true)
   }
 
-  static func _addConfigurations(_ configurations: [[String: Any]]) {
+  static func addConfigurations(_ configurations: [[String: Any]]) {
     if configurations.isEmpty {
       return
     }
 
     for configuration in configurations {
-      _addConfiguration(_AEMConfiguration(json: configuration))
+      addConfiguration(_AEMConfiguration(json: configuration))
     }
-    _saveConfigurations()
+    saveConfigurations()
   }
 
-  private static func _addConfiguration(_ configuration: _AEMConfiguration?) {
+  private static func addConfiguration(_ configuration: _AEMConfiguration?) {
     guard let configuration = configuration else { return }
 
     let _configurations = configurations[configuration.mode] ?? []
@@ -791,7 +791,7 @@ public final class AEMReporter: NSObject {
     configurations[configuration.mode] = newConfigurations
   }
 
-  static func _loadReportData() -> [_AEMInvocation] {
+  static func loadReportData() -> [_AEMInvocation] {
     guard let reportFile = reportFile else { return [] }
     if let cachedReportData = try? NSData(contentsOfFile: reportFile, options: .mappedIfSafe) {
       let cache = try? NSKeyedUnarchiver.unarchivedObject(
@@ -806,7 +806,7 @@ public final class AEMReporter: NSObject {
     return []
   }
 
-  static func _saveReportData() {
+  static func saveReportData() {
     let cache = try? NSKeyedArchiver.archivedData(withRootObject: invocations, requiringSecureCoding: false)
     if let cache = cache,
        let reportFile = reportFile {
@@ -814,12 +814,12 @@ public final class AEMReporter: NSObject {
     }
   }
 
-  static func _sendAggregationRequest() {
+  static func sendAggregationRequest() {
     var params: [[String: Any]] = []
     var aggregatedInvocations: [_AEMInvocation] = []
     for invocation in invocations {
       if !invocation.isAggregated {
-        params.append(_aggregationRequestParameters(invocation))
+        params.append(aggregationRequestParameters(invocation))
         aggregatedInvocations.append(invocation)
       }
     }
@@ -850,12 +850,12 @@ public final class AEMReporter: NSObject {
           for invocation in aggregatedInvocations {
             invocation.isAggregated = true
           }
-          _saveReportData()
+          saveReportData()
         }
       }
     }
 
-    if _shouldDelayAggregationRequest() {
+    if shouldDelayAggregationRequest() {
       var timestampDelay: TimeInterval = 0
       if let timestamp = minAggregationRequestTimestamp {
         timestampDelay = timestamp.timeIntervalSince1970 - Date().timeIntervalSince1970
@@ -868,7 +868,7 @@ public final class AEMReporter: NSObject {
     }
 
     let minAggregationRequestTimestampDelay = minAggregationRequestTimestamp?.timeIntervalSince1970 ?? 0
-    _updateAggregationRequestTimestamp(
+    updateAggregationRequestTimestamp(
       max(
         Date().timeIntervalSince1970 + FB_AEM_DELAY,
         minAggregationRequestTimestampDelay + FB_AEM_DELAY
@@ -876,7 +876,7 @@ public final class AEMReporter: NSObject {
     )
   }
 
-  static func _aggregationRequestParameters(_ invocation: _AEMInvocation) -> [String: Any] {
+  static func aggregationRequestParameters(_ invocation: _AEMInvocation) -> [String: Any] {
     let delay = 24 + arc4random_uniform(24)
     let enableConversionFiltering = invocation.isConversionFilteringEligible && isConversionFilteringEnabled
     return [
@@ -912,14 +912,14 @@ public final class AEMReporter: NSObject {
     }
   }
 
-  static func _clearCache() {
+  static func clearCache() {
     // step 1: clear aggregated invocations that are outside attribution window
-    _clearInvocations()
+    clearInvocations()
     // step 2: clear old configurations that are not used anymore and keep the most recent configuration
-    _clearConfigurations()
+    clearConfigurations()
   }
 
-  static func _clearConfigurations() {
+  static func clearConfigurations() {
     var shouldSaveCache = false
     if !configurations.isEmpty {
       var newConfigurationsDict: [String: [_AEMConfiguration]] = [:]
@@ -936,7 +936,7 @@ public final class AEMReporter: NSObject {
         }
 
         for oldConfiguration in oldConfigurations {
-          if !_isUsingConfiguration(oldConfiguration, forInvocations: invocations) {
+          if !isUsingConfiguration(oldConfiguration, forInvocations: invocations) {
             shouldSaveCache = true
             continue
           }
@@ -951,11 +951,11 @@ public final class AEMReporter: NSObject {
       configurations = newConfigurationsDict
     }
     if shouldSaveCache {
-      _saveConfigurations()
+      saveConfigurations()
     }
   }
 
-  private static func _clearInvocations() {
+  private static func clearInvocations() {
     var isInvocationCacheUpdated = false
     if !invocations.isEmpty {
       var newInvocations: [_AEMInvocation] = []
@@ -970,11 +970,11 @@ public final class AEMReporter: NSObject {
     }
 
     if isInvocationCacheUpdated {
-      _saveReportData()
+      saveReportData()
     }
   }
 
-  private static func _isUsingConfiguration(
+  private static func isUsingConfiguration(
     _ configuration: _AEMConfiguration,
     forInvocations invocations: [_AEMInvocation]
   ) -> Bool {
@@ -1003,7 +1003,7 @@ public final class AEMReporter: NSObject {
     appID = nil
     reporter = nil
     dataStore = nil
-    _clearCache()
+    clearCache()
   }
 
   #endif
