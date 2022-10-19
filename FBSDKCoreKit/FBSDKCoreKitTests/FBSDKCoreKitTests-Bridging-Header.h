@@ -8,7 +8,6 @@
 
 #import <AdSupport/AdSupport.h>
 
-#import <FBAEMKit/FBAEMKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 @import TestTools;
@@ -17,7 +16,6 @@
 
 #import "AppEventsATEPublisher+Testing.h"
 #import "CodelessIndexer+Testing.h"
-#import "FBAEMReporter+Testing.h"
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessToken+Testing.h"
 #import "FBSDKAdvertisingTrackingStatus.h"
