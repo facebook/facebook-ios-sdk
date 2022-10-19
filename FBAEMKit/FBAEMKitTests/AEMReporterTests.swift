@@ -80,16 +80,16 @@ final class AEMReporterTests: XCTestCase {
       store: userDefaultsSpy
     )
     // Actual queue doesn't matter as long as it's not the same as the designated queue name in the class
-    AEMReporter.queue = DispatchQueue(label: name, qos: .background)
-    AEMReporter.isEnabled = true
-    AEMReporter.reportFilePath = reportFilePath
+    AEMReporter.serialQueue = DispatchQueue(label: name, qos: .background)
+    AEMReporter.isAEMReportEnabled = true
+    AEMReporter.reportFile = reportFilePath
   }
 
   func testEnable() {
-    AEMReporter.isEnabled = false
+    AEMReporter.isAEMReportEnabled = false
     AEMReporter.enable()
 
-    XCTAssertTrue(AEMReporter.isEnabled, "AEM Report should be enabled")
+    XCTAssertTrue(AEMReporter.isAEMReportEnabled, "AEM Report should be enabled")
   }
 
   func testConversionFilteringDefaultConfigure() {
@@ -144,7 +144,7 @@ final class AEMReporterTests: XCTestCase {
     )
     XCTAssertEqual(
       userDefaultsSpy,
-      AEMReporter.store as? UserDefaultsSpy,
+      AEMReporter.dataStore as? UserDefaultsSpy,
       "Should configure with the expected data store"
     )
     XCTAssertEqual(
@@ -335,7 +335,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testIsConfigRefreshTimestampValid() {
-    AEMReporter.timestamp = Date()
+    AEMReporter.configRefreshTimestamp = Date()
     XCTAssertTrue(
       AEMReporter._isConfigRefreshTimestampValid(),
       "Timestamp should be valid"
@@ -343,7 +343,7 @@ final class AEMReporterTests: XCTestCase {
 
     guard let date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
     else { return XCTFail("Date Creation Error") }
-    AEMReporter.timestamp = date
+    AEMReporter.configRefreshTimestamp = date
     XCTAssertFalse(
       AEMReporter._isConfigRefreshTimestampValid(),
       "Timestamp should not be valid"
@@ -352,7 +352,7 @@ final class AEMReporterTests: XCTestCase {
 
   func testShouldEnforceRefresh() {
     AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
-    AEMReporter.timestamp = Date()
+    AEMReporter.configRefreshTimestamp = Date()
     AEMReporter.configurations = [
       Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
@@ -365,7 +365,7 @@ final class AEMReporterTests: XCTestCase {
 
   func testShouldRefreshWithoutBusinessID1() {
     AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
-    AEMReporter.timestamp = Date()
+    AEMReporter.configRefreshTimestamp = Date()
     AEMReporter.configurations = [
       Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
@@ -380,7 +380,7 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
     guard let date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
     else { return XCTFail("Date Creation Error") }
-    AEMReporter.timestamp = date
+    AEMReporter.configRefreshTimestamp = date
     AEMReporter.configurations = [
       Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
@@ -395,7 +395,7 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter.invocations = [SampleAEMData.invocationWithoutAdvertiserID]
     guard let date = Calendar.current.date(byAdding: .day, value: -2, to: Date())
     else { return XCTFail("Date Creation Error") }
-    AEMReporter.timestamp = date
+    AEMReporter.configRefreshTimestamp = date
     AEMReporter.configurations = [:]
 
     XCTAssertTrue(
@@ -409,7 +409,7 @@ final class AEMReporterTests: XCTestCase {
       SampleAEMData.invocationWithoutAdvertiserID,
       SampleAEMData.invocationWithAdvertiserID1,
     ]
-    AEMReporter.timestamp = Date()
+    AEMReporter.configRefreshTimestamp = Date()
     AEMReporter.configurations = [
       Values.defaultMode: [SampleAEMConfigurations.createConfigurationWithoutBusinessID()],
     ]
@@ -543,7 +543,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testRecordAndUpdateEvents() {
-    AEMReporter.timestamp = Date()
+    AEMReporter.configRefreshTimestamp = Date()
     guard let invocation = _AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
@@ -593,8 +593,8 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testRecordAndUpdateEventsWithAEMDisabled() {
-    AEMReporter.isEnabled = false
-    AEMReporter.timestamp = date
+    AEMReporter.isAEMReportEnabled = false
+    AEMReporter.configRefreshTimestamp = date
 
     AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
     XCTAssertNil(
@@ -604,7 +604,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testRecordAndUpdateEventsWithEmptyEvent() {
-    AEMReporter.timestamp = date
+    AEMReporter.configRefreshTimestamp = date
 
     AEMReporter.recordAndUpdate(event: "", currency: Values.USD, value: 100, parameters: nil)
 
@@ -619,7 +619,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testRecordAndUpdateEventsWithEmptyConfigurations() throws {
-    AEMReporter.timestamp = date
+    AEMReporter.configRefreshTimestamp = date
     AEMReporter.invocations = [testInvocation]
 
     AEMReporter.recordAndUpdate(event: Values.purchase, currency: Values.USD, value: 100, parameters: nil)
@@ -638,7 +638,7 @@ final class AEMReporterTests: XCTestCase {
   func testLoadConfigurationWithRefreshEnforced() {
     guard let configuration = _AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
-    AEMReporter.timestamp = Date()
+    AEMReporter.configRefreshTimestamp = Date()
     AEMReporter.configurations = [Values.defaultMode: [configuration]]
 
     AEMReporter.isLoadingConfiguration = false
@@ -655,7 +655,7 @@ final class AEMReporterTests: XCTestCase {
     guard let configuration = _AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
     var blockCall = 0
-    AEMReporter.timestamp = Date()
+    AEMReporter.configRefreshTimestamp = Date()
     AEMReporter.configurations = [Values.defaultMode: [configuration]]
 
     AEMReporter._loadConfiguration(withRefreshForced: false) { _ in
@@ -669,7 +669,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testLoadConfigurationWithoutBlock() {
-    AEMReporter.timestamp = date
+    AEMReporter.configRefreshTimestamp = date
 
     AEMReporter.isLoadingConfiguration = false
     AEMReporter._loadConfiguration(withRefreshForced: false, block: nil)
