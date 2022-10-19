@@ -7,7 +7,7 @@
  */
 
 #if !os(tvOS)
-import FBAEMKit
+@testable import FBAEMKit
 #endif
 
 final class CoreKitConfigurator: CoreKitConfiguring {

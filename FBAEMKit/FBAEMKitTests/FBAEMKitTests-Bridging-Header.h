@@ -7,5 +7,3 @@
  */
 
 // Import internal ObjC types here to use them in Swift tests
-
-#import "FBAEMReporter+Testing.h"
