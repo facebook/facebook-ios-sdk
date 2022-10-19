@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
+#import "FBSDKCoreKitTests-Swift.h"
 #import "FBSDKCoreKitTests-Bridging-Header.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -43,29 +43,37 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation FBSDKAppLinkNavigationTests
 
+
 - (void)setUp {
   [super setUp];
+  
+  if (@available(iOS 13, *)) {
+    [FBSDKAppLinkNavigation setTestTypeDependencies];
+    FBSDKAppLinkNavigation.testURLOpener.openAlwaysSucceeds = YES;
+  }
+  
   self.url = [NSURL URLWithString:@"https://www.example.com"];
   self.appLink = [[FBSDKAppLink alloc] initWithSourceURL:self.url targets:@[] webURL:nil];
-  self.settings = FBSDKSettings.sharedSettings;
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:self.appLink
                                                                   extras:@{} appLinkData:@{}
                                                                 settings:self.settings];
-  [FBSDKAppLinkNavigation configureWithSettings:FBSDKSettings.sharedSettings
-                                      urlOpener:[FBSDKTestURLOpener new]
-                             appLinkEventPoster:[FBSDKMeasurementEvent new]
-                                appLinkResolver:[FBSDKWebViewAppLinkResolver sharedInstance]];
+#pragma clang diagnostic pop
 }
 
 - (void)tearDown {
-    
+  
   self.url = nil;
   self.appLink = nil;
   self.extras = nil;
   self.appLinkData = nil;
   self.settings = nil;
   self.appLinkNavigation = nil;
-  [FBSDKAppLinkNavigation reset];
+  if (@available(iOS 13, *)) {
+    [FBSDKAppLinkNavigation resetTestTypeDependencies];
+  }
   [super tearDown];
 }
 
@@ -78,10 +86,13 @@ NS_ASSUME_NONNULL_BEGIN
                                                        targets:@[appLinkTarget]
                                                         webURL:nil];
   NSMutableDictionary *appLinkData = [NSMutableDictionary dictionaryWithDictionary:@{@"Bad input": [NSDate date]}];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:link
                                                                   extras:@{}
                                                              appLinkData:appLinkData
                                                                 settings:self.settings];
+#pragma clang diagnostic pop
   NSError *error;
   
   FBSDKAppLinkNavigationType navigationType = [self.appLinkNavigation navigate:&error];
@@ -98,10 +109,14 @@ NS_ASSUME_NONNULL_BEGIN
                                                        targets:@[appLinkTarget]
                                                         webURL:self.url];
   NSMutableDictionary *appLinkData = [NSMutableDictionary dictionaryWithDictionary:@{@"Bad input": [NSDate date]}];
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:link
                                                                   extras:@{}
                                                              appLinkData:appLinkData
                                                                 settings:self.settings];
+#pragma clang diagnostic pop
   NSError *error;
   
   FBSDKAppLinkNavigationType navigationType = [self.appLinkNavigation navigate:&error];
@@ -113,10 +128,14 @@ NS_ASSUME_NONNULL_BEGIN
   
   FBSDKAppLink *link = [[FBSDKAppLink alloc] initWithSourceURL:self.url targets:@[] webURL:self.url];
   NSMutableDictionary *appLinkData = [NSMutableDictionary dictionaryWithDictionary:@{@"Bad input": [NSDate date]}];
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:link
                                                                   extras:@{}
                                                              appLinkData:appLinkData
                                                                 settings:self.settings];
+#pragma clang diagnostic pop
   NSError *error;
   
   FBSDKAppLinkNavigationType navigationType = [self.appLinkNavigation navigate:&error];
@@ -127,11 +146,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)testNavigateWithErrorNilAndNavigationTypeFailure {
   
   FBSDKAppLink *link = [[FBSDKAppLink alloc] initWithSourceURL:self.url targets:@[] webURL:nil];
-
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:link
                                                                   extras:@{}
                                                              appLinkData:@{}
                                                                 settings:self.settings];
+#pragma clang diagnostic pop
+  
   NSError *error;
   
   FBSDKAppLinkNavigationType navigationType = [self.appLinkNavigation navigate:&error];
@@ -145,11 +168,15 @@ NS_ASSUME_NONNULL_BEGIN
                                                                    appStoreId:@"13434"
                                                                       appName:@"appName"];
   FBSDKAppLink *link = [[FBSDKAppLink alloc] initWithSourceURL:self.url targets:@[appLinkTarget] webURL:nil];
-
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:link
                                                                   extras:@{}
                                                              appLinkData:@{}
                                                                 settings:self.settings];
+#pragma clang diagnostic pop
+  
   NSError *error;
   
   FBSDKAppLinkNavigationType navigationType = [self.appLinkNavigation navigate:&error];
@@ -160,11 +187,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)testNavigateWithErrorNilAndNavigationTypeBrowser {
   
   FBSDKAppLink *link = [[FBSDKAppLink alloc] initWithSourceURL:self.url targets:@[] webURL:self.url];
-
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:link
                                                                   extras:@{}
                                                              appLinkData:@{}
                                                                 settings:self.settings];
+#pragma clang diagnostic pop
+
   NSError *error;
   
   FBSDKAppLinkNavigationType navigationType = [self.appLinkNavigation navigate:&error];

@@ -18,6 +18,6 @@ typedef NS_ENUM(NSInteger, FBSDKAppLinkNavigationType) {
   FBSDKAppLinkNavigationTypeBrowser,
   /// Indicates that the navigation succeeded by opening the URL in an app on the device
   FBSDKAppLinkNavigationTypeApp,
-} NS_SWIFT_NAME(AppLinkNavigation.Type);
+} NS_SWIFT_NAME(AppLinkNavigationType);
 
 #endif

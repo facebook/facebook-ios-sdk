@@ -10,8 +10,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Changed 
+- The enum `AppLinkNavigation.Type` type has been renamed tp `AppLinkNavigationType`.
+- The initializer `init(appLink:extras:appLinkData:settings:)` in `AppLinkNavigation` ignores the `settings` argument if one is passed.
+- The method `navigation(with:extras:appLinkData:settings:)` in `AppLinkNavigation` ignores the `settings` argument if one is passed.
+
 ### Deprecated
 
+- The `navigation(with:extras:appLinkData:settings:)` method in `AppLinkNavigation` is deprecated in favor of the `init(appLink:extras:appLinkData:)` designated init.
+- The `init(appLink:extras:appLinkData:settings:)` initializer in `AppLinkNavigation` is deprecated in favor of the `init(appLink:extras:appLinkData:)` designated init.
 - The `Profile.enableUpdatesOnAccessTokenChange(_:)` method is deprecated in favor of the `Profile.isUpdatedWithAccessTokenChange` property.
 - `SettingsProtocol.codelessDebugLogEnabled` is deprecated in favor of `SettingsProtocol.isCodelessDebugLogEnabled`.
 - `SettingsProtocol.advertiserIDCollectionEnabled` is deprecated in favor of `SettingsProtocol.isAdvertiserIDCollectionEnabled`.
