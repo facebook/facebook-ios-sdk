@@ -26,74 +26,73 @@ final class AppLinkNavigationTests: XCTestCase {
     }
   }
 
+  // swiftlint:disable implicitly_unwrapped_optional
   var error: NSError?
-
-  let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: "123", appName: "ExampleApp")
-  let emptyAppLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
-  let eventPoster = TestMeasurementEvent()
-  let resolver = TestAppLinkResolver()
-  let settings = Settings.shared
-
-  lazy var navigation = AppLinkNavigation(
-    appLink: emptyAppLink,
-    extras: [:],
-    appLinkData: [:],
-    settings: settings
-  )
-
-  override class func setUp() {
-    super.setUp()
-
-    AppLinkNavigation.reset()
-  }
+  var target: AppLinkTarget!
+  var emptyAppLink: AppLink!
+  var eventPoster: TestMeasurementEvent!
+  var resolver: TestAppLinkResolver!
+  var settings: TestSettings!
+  var urlOpener: TestInternalURLOpener!
+  var navigation: AppLinkNavigation!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
-    AppLinkNavigation.default = resolver
+    target = AppLinkTarget(url: SampleURLs.valid, appStoreId: "123", appName: "ExampleApp")
+    emptyAppLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
+    eventPoster = TestMeasurementEvent()
+    resolver = TestAppLinkResolver()
+    settings = TestSettings()
+    settings.sdkVersion = "15.0.0"
+    urlOpener = TestInternalURLOpener(canOpenURL: true)
+    AppLinkNavigation.defaultResolver = resolver
+
+    AppLinkNavigation.setDependencies(
+      .init(
+        settings: settings,
+        urlOpener: urlOpener,
+        appLinkEventPoster: eventPoster,
+        appLinkResolver: resolver
+      )
+    )
+
+    navigation = AppLinkNavigation(
+      appLink: emptyAppLink,
+      extras: [:],
+      appLinkData: [:]
+    )
   }
 
-  override class func tearDown() {
+  override func tearDown() {
+    target = nil
+    emptyAppLink = nil
+    eventPoster = nil
+    resolver = nil
+    settings = nil
+    urlOpener = nil
+    navigation = nil
+
+    AppLinkNavigation.resetDependencies()
+
     super.tearDown()
-
-    AppLinkNavigation.reset()
-  }
-
-  func testDefaultClassDependencies() {
-    AppLinkNavigation.reset()
-
-    XCTAssertNil(
-      AppLinkNavigation.settings,
-      "Should not have a settings by default"
-    )
-    XCTAssertNil(
-      AppLinkNavigation.urlOpener,
-      "Should not have a url opener by default"
-    )
-    XCTAssertNil(
-      AppLinkNavigation.appLinkEventPoster,
-      "Should not have an event poster by default"
-    )
-    XCTAssertNil(
-      AppLinkNavigation.appLinkResolver,
-      "Should not have an app link resolver by default"
-    )
   }
 
   func testDefaultResolver() {
-    AppLinkNavigation.reset()
+    AppLinkNavigation.resetDependencies()
     XCTAssertTrue(
-      AppLinkNavigation.default === WebViewAppLinkResolver.shared,
+      AppLinkNavigation.defaultResolver === WebViewAppLinkResolver.shared,
       "Should use the shared webview app link resolver by default"
     )
   }
 
   func testSettingDefaultResolver() {
     let resolver = AppLinkResolver()
-    AppLinkNavigation.default = resolver
+    AppLinkNavigation.defaultResolver = resolver
 
     XCTAssertTrue(
-      AppLinkNavigation.default === resolver,
+      AppLinkNavigation.defaultResolver === resolver,
       "Should be able to set the default app link resolver"
     )
     XCTAssertTrue(
@@ -119,10 +118,35 @@ final class AppLinkNavigationTests: XCTestCase {
 
   // MARK: - Dependencies Configuration
 
-  func testDependenciesArePassed() {
-    XCTAssertNotNil(
-      navigation.settings,
-      "Settings dependency should not be nil"
+  func testDefaultTypeDependencies() throws {
+    AppLinkNavigation.resetDependencies()
+    XCTAssertThrowsError(try AppLinkNavigation.getDependencies())
+  }
+
+  func testCustomTypeDependencies() throws {
+    let dependencies = try AppLinkNavigation.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.settings as AnyObject,
+      settings,
+      .customDependency(for: "settings sharing")
+    )
+
+    XCTAssertIdentical(
+      dependencies.urlOpener as AnyObject,
+      urlOpener,
+      .customDependency(for: "opening urls")
+    )
+
+    XCTAssertTrue(
+      dependencies.appLinkEventPoster is TestMeasurementEvent,
+      .customDependency(for: "event posting")
+    )
+
+    XCTAssertIdentical(
+      dependencies.appLinkResolver as AnyObject,
+      resolver,
+      .customDependency(for: "resolving app links")
     )
   }
 
@@ -130,7 +154,7 @@ final class AppLinkNavigationTests: XCTestCase {
 
   func testAppLinkWithTargetUrl() {
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
+      let url = try XCTUnwrap(navigation.appLinkURL(targetURL: SampleURLs.valid))
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
@@ -148,10 +172,10 @@ final class AppLinkNavigationTests: XCTestCase {
   func testAppLinkWithTargetUrlWithValidStartingAppLink() {
     let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
-      appLink: appLink, extras: [:], appLinkData: [:], settings: settings
+      appLink: appLink, extras: [:], appLinkData: [:]
     )
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
+      let url = try XCTUnwrap(navigation.appLinkURL(targetURL: SampleURLs.valid))
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "FBSDK \(FBSDK_VERSION_STRING)")
@@ -168,11 +192,11 @@ final class AppLinkNavigationTests: XCTestCase {
 
   func testAppLinkWithTargetUrlWithInvalidStartingAppLinkData() {
     navigation = AppLinkNavigation(
-      appLink: emptyAppLink, extras: [:], appLinkData: ["foo": Any.self], settings: settings
+      appLink: emptyAppLink, extras: [:], appLinkData: ["foo": Any.self]
     )
 
     XCTAssertThrowsError(
-      try navigation.appLinkURL(withTargetURL: SampleURLs.valid),
+      try navigation.appLinkURL(targetURL: SampleURLs.valid),
       "An error is thrown when a valid url is passed but bad app link data is provided"
     )
   }
@@ -180,11 +204,11 @@ final class AppLinkNavigationTests: XCTestCase {
   func testAppLinkWithTargetUrlWithValidStartingAppLinkData() {
     let appLinkData = ["user_agent": "foo", "version": "bar"]
     navigation = AppLinkNavigation(
-      appLink: emptyAppLink, extras: ["some": "extra"], appLinkData: appLinkData, settings: settings
+      appLink: emptyAppLink, extras: ["some": "extra"], appLinkData: appLinkData
     )
 
     do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
+      let url = try XCTUnwrap(navigation.appLinkURL(targetURL: SampleURLs.valid))
       let payload = decodedPayload(url: url)
 
       XCTAssertEqual(payload?.userAgent, "foo")
@@ -196,41 +220,16 @@ final class AppLinkNavigationTests: XCTestCase {
         error,
         "Should not populate an error when creating an app link with a valid target url"
       )
-    }
-  }
-
-  func testAppLinkWithBadData() {
-    let unencodable = String(
-      bytes: [0xD8, 0x00] as [UInt8],
-      encoding: String.Encoding.utf16BigEndian
-    )! // swiftlint:disable:this force_unwrapping
-    let appLinkData = ["bad value": unencodable]
-    navigation = AppLinkNavigation(appLink: emptyAppLink, extras: [:], appLinkData: appLinkData, settings: settings)
-
-    do {
-      let url = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
-      let payload = decodedPayload(url: url)
-      XCTAssertEqual(payload?.userAgent, "foo")
-      XCTAssertEqual(payload?.version, "bar")
-      XCTAssertEqual(payload?.extras, ["some": "extra"])
-      XCTAssertNil(payload?.targetUrl)
-      XCTAssertNil(
-        error,
-        "Should not populate an error when creating an app link with a valid target url"
-      )
-    } catch {
-      print(error)
     }
   }
 
   // MARK: - Posting Navigation Events
 
   func testPostingNavigationEventWithTypeApp() {
-    navigation.postAppLinkNavigateEventNotification(
-      withTargetURL: nil,
+    navigation.postNavigateEventNotification(
+      targetURL: nil,
       error: nil,
-      type: .app,
-      eventPoster: eventPoster
+      navigationType: .app
     )
     XCTAssertEqual(
       eventPoster.capturedEventName,
@@ -245,11 +244,10 @@ final class AppLinkNavigationTests: XCTestCase {
   }
 
   func testPostingNavigationEventWithTypeBrowser() {
-    navigation.postAppLinkNavigateEventNotification(
-      withTargetURL: nil,
+    navigation.postNavigateEventNotification(
+      targetURL: nil,
       error: nil,
-      type: .browser,
-      eventPoster: eventPoster
+      navigationType: .browser
     )
     XCTAssertEqual(
       eventPoster.capturedEventName,
@@ -264,11 +262,10 @@ final class AppLinkNavigationTests: XCTestCase {
   }
 
   func testPostingNavigationEventWithTypeFailure() {
-    navigation.postAppLinkNavigateEventNotification(
-      withTargetURL: nil,
+    navigation.postNavigateEventNotification(
+      targetURL: nil,
       error: nil,
-      type: .failure,
-      eventPoster: eventPoster
+      navigationType: .failure
     )
     XCTAssertEqual(
       eventPoster.capturedEventName,
@@ -285,14 +282,13 @@ final class AppLinkNavigationTests: XCTestCase {
   func testPostingNavigationEventWithAppLink() {
     let appLink = AppLink(sourceURL: SampleURLs.valid, targets: [target], webURL: SampleURLs.valid)
     navigation = AppLinkNavigation(
-      appLink: appLink, extras: [:], appLinkData: [:], settings: settings
+      appLink: appLink, extras: [:], appLinkData: [:]
     )
 
-    navigation.postAppLinkNavigateEventNotification(
-      withTargetURL: nil,
+    navigation.postNavigateEventNotification(
+      targetURL: nil,
       error: nil,
-      type: .app,
-      eventPoster: eventPoster
+      navigationType: .app
     )
     XCTAssertEqual(
       eventPoster.capturedEventName,
@@ -317,11 +313,10 @@ final class AppLinkNavigationTests: XCTestCase {
   }
 
   func testPostingNavigationEventWithError() {
-    navigation.postAppLinkNavigateEventNotification(
-      withTargetURL: nil,
+    navigation.postNavigateEventNotification(
+      targetURL: nil,
       error: SampleError(),
-      type: .app,
-      eventPoster: eventPoster
+      navigationType: .app
     )
     XCTAssertEqual(
       eventPoster.capturedEventName,
@@ -343,14 +338,13 @@ final class AppLinkNavigationTests: XCTestCase {
   func testPostingNavigationEventWithBackToReferrer() {
     let appLink = AppLink(sourceURL: nil, targets: [], webURL: nil, isBackToReferrer: true)
     navigation = AppLinkNavigation(
-      appLink: appLink, extras: [:], appLinkData: [:], settings: settings
+      appLink: appLink, extras: [:], appLinkData: [:]
     )
 
-    navigation.postAppLinkNavigateEventNotification(
-      withTargetURL: nil,
+    navigation.postNavigateEventNotification(
+      targetURL: nil,
       error: nil,
-      type: .app,
-      eventPoster: eventPoster
+      navigationType: .app
     )
 
     XCTAssertEqual(
@@ -364,19 +358,19 @@ final class AppLinkNavigationTests: XCTestCase {
 
   func testNavigationTypeWithoutTarget() {
     XCTAssertEqual(
-      navigation.navigationType(for: [], urlOpener: TestInternalURLOpener(canOpenURL: true)),
+      navigation.navigationType(for: []),
       .failure,
       "The navigation type for an empty list of targets should be a failure"
     )
   }
 
   func testNavigationTypeWithInvalidTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: URL(string: "invalid url"), appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: false)),
+      navigation.navigationType(for: [target]),
       .failure,
       "The navigation type when there is an invalid target and no web url should be 'failure'"
     )
@@ -385,10 +379,10 @@ final class AppLinkNavigationTests: XCTestCase {
   func testNavigationTypeWithValidTargetWithoutWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: true)),
+      navigation.navigationType(for: [target]),
       .app,
       "The navigation type when there is a valid target and no web url should be 'app'"
     )
@@ -397,22 +391,22 @@ final class AppLinkNavigationTests: XCTestCase {
   func testNavigationTypeWithValidTargetWithWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: true)),
+      navigation.navigationType(for: [target]),
       .app,
       "The navigation type when there is a valid target and a web url should be 'app'"
     )
   }
 
   func testNavigationTypeWithInvalidTargetWithWebUrl() {
-    let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
+    let target = AppLinkTarget(url: URL(string: "invalid url"), appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     XCTAssertEqual(
-      navigation.navigationType(for: [target], urlOpener: TestInternalURLOpener(canOpenURL: false)),
+      navigation.navigationType(for: [target]),
       .browser,
       "The navigation type when there is an invalid target and a web url should be 'browser'"
     )
@@ -423,26 +417,22 @@ final class AppLinkNavigationTests: XCTestCase {
   func testSuccessfullyNavigatingWithTargetWithoutWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
-    let opener = TestInternalURLOpener(canOpenURL: true)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     do {
-      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
+      let targetUrl = try XCTUnwrap(navigation.appLinkURL(targetURL: SampleURLs.valid))
 
-      opener.stubOpen(url: targetUrl, success: true)
+      urlOpener.stubOpen(url: targetUrl, success: true)
 
-      let result = navigation.navigate(
-        urlOpener: opener,
-        eventPoster: eventPoster,
-        error: &error
-      )
+      let result = try navigation.navigate()
       XCTAssertEqual(result, .app, "Should return the correct navigation type")
       XCTAssertNotNil(
-        opener.capturedOpenURL,
+        urlOpener.capturedOpenURL,
         "Should create an open a url for a valid target"
       )
       XCTAssertEqual(
-        opener.capturedOpenURL?.absoluteString,
+        urlOpener.capturedOpenURL?.absoluteString,
         eventPoster.capturedArgs["outputURL"],
         "Should post a notification with the url that was opened"
       )
@@ -454,28 +444,24 @@ final class AppLinkNavigationTests: XCTestCase {
   func testUnsuccessfullyNavigatingWithTargetWithWebUrl() {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: SampleURLs.valid(path: name))
-    let opener = TestInternalURLOpener(canOpenURL: true)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     do {
-      let targetUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid)
-      let webUrl = try navigation.appLinkURL(withTargetURL: SampleURLs.valid(path: name))
+      let targetUrl = try XCTUnwrap(navigation.appLinkURL(targetURL: SampleURLs.valid))
+      let webUrl = try XCTUnwrap(navigation.appLinkURL(targetURL: SampleURLs.valid(path: name)))
 
-      opener.stubOpen(url: targetUrl, success: false)
-      opener.stubOpen(url: webUrl, success: true)
+      urlOpener.stubOpen(url: targetUrl, success: false)
+      urlOpener.stubOpen(url: webUrl, success: true)
 
-      let result = navigation.navigate(
-        urlOpener: opener,
-        eventPoster: eventPoster,
-        error: &error
-      )
+      let result = try navigation.navigate()
       XCTAssertEqual(result, .browser, "Should return the correct navigation type")
       XCTAssertNotNil(
-        opener.capturedOpenURL,
+        urlOpener.capturedOpenURL,
         "Should create an open a url for a valid target"
       )
       XCTAssertEqual(
-        opener.capturedOpenURL?.absoluteString,
+        urlOpener.capturedOpenURL?.absoluteString,
         eventPoster.capturedArgs["outputURL"],
         "Should post a notification with the url that was opened"
       )
@@ -486,7 +472,7 @@ final class AppLinkNavigationTests: XCTestCase {
 
   func testUnsuccessfullyNavigatingWithoutTargetAndNoWebURL() {
     let appLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:], settings: settings)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
     do {
 
@@ -504,7 +490,7 @@ final class AppLinkNavigationTests: XCTestCase {
   func testUnsuccessfullyNavigatingWithoutTargetAndWebURL() {
     let appLink = AppLink(sourceURL: nil, targets: [], webURL: SampleURLs.valid)
     let appLinkData = ["bad link data": Date()]
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData, settings: settings)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData)
 
     XCTAssertThrowsError(
       try navigation.navigate(),
@@ -516,7 +502,7 @@ final class AppLinkNavigationTests: XCTestCase {
     let target = AppLinkTarget(url: SampleURLs.valid, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     let appLinkData = ["bad link data": Date()]
-    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData, settings: settings)
+    navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData)
 
     XCTAssertThrowsError(
       try navigation.navigate(),
@@ -541,7 +527,7 @@ final class AppLinkNavigationTests: XCTestCase {
 
   func testNavigatingToUrlWithAppLink() {
     let expectation = self.expectation(description: name)
-    var callbackNavigationType: AppLinkNavigation.`Type`?
+    var callbackNavigationType: AppLinkNavigationType?
     var callbackError: Error?
 
     AppLinkNavigation.navigate(to: SampleURLs.valid) { potentialNavigationType, potentialError in
@@ -565,7 +551,7 @@ final class AppLinkNavigationTests: XCTestCase {
 
   func testNavigatingToUrlWithError() {
     let expectation = self.expectation(description: name)
-    var callbackNavigationType: AppLinkNavigation.`Type`?
+    var callbackNavigationType: AppLinkNavigationType?
     var callbackError: Error?
 
     AppLinkNavigation.navigate(to: SampleURLs.valid) { potentialNavigationType, potentialError in
@@ -625,5 +611,18 @@ final class AppLinkNavigationTests: XCTestCase {
     }
 
     return payload
+  }
+}
+
+// MARK: - Assumptions
+
+// swiftformat:disable extensionaccesscontrol
+fileprivate extension String {
+  static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The AppLinkNavigationTests type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  static func customDependency(for type: String) -> String {
+    "The AppLinkNavigationTests type uses a custom \(type) dependency when provided"
   }
 }

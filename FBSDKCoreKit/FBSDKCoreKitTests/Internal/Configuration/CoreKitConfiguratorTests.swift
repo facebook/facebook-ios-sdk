@@ -59,7 +59,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
 
     // Non-tvOS
     AEMReporter.reset()
-    AppLinkNavigation.reset()
+    AppLinkNavigation.resetDependencies()
     AppLinkURL.reset()
     AppLinkUtility.reset()
     _AuthenticationStatusUtility.resetClassDependencies()
@@ -856,22 +856,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
   }
 
   func testConfiguringAppLinkNavigation() {
-    XCTAssertNil(
-      AppLinkNavigation.settings,
-      "AppLinkNavigation should not have settings by default"
-    )
-    XCTAssertNil(
-      AppLinkNavigation.urlOpener,
-      "AppLinkNavigation should not have an internal URL opener by default"
-    )
-    XCTAssertNil(
-      AppLinkNavigation.appLinkEventPoster,
-      "AppLinkNavigation should not have an app link event poster by default"
-    )
-    XCTAssertNil(
-      AppLinkNavigation.appLinkResolver,
-      "AppLinkNavigation should not have an app link resolver by default"
-    )
 
     configurator.performConfiguration()
 

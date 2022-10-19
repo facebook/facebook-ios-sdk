@@ -45,7 +45,6 @@
 #import <FBSDKCoreKit/FBSDKApplicationStateSetting.h>
 #import <FBSDKCoreKit/FBSDKAppLinkCreating.h>
 #import <FBSDKCoreKit/FBSDKAppLinkEventPosting.h>
-#import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
 #import <FBSDKCoreKit/FBSDKAppLinkNavigationBlock.h>
 #import <FBSDKCoreKit/FBSDKAppLinkNavigationType.h>
 #import <FBSDKCoreKit/FBSDKAppLinkProtocol.h>
@@ -56,6 +55,7 @@
 #import <FBSDKCoreKit/FBSDKAppLinkTargetProtocol.h>
 #import <FBSDKCoreKit/FBSDKAppLinkURL.h>
 #import <FBSDKCoreKit/FBSDKAppLinkURLCreating.h>
+#import <FBSDKCoreKit/FBSDKAppLinkURLKeys.h>
 #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
 #import <FBSDKCoreKit/FBSDKAppLinkVersion.h>
 #import <FBSDKCoreKit/FBSDKAppStoreReceiptProviding.h>

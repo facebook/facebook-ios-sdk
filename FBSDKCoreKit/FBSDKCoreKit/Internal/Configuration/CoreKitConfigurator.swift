@@ -248,11 +248,13 @@ private extension CoreKitConfigurator {
 
   @available(tvOS, unavailable)
   func configureAppLinkNavigation() {
-    AppLinkNavigation.configure(
-      settings: components.settings,
-      urlOpener: components.internalURLOpener,
-      appLinkEventPoster: components.appLinkEventPoster,
-      appLinkResolver: components.appLinkResolver
+    AppLinkNavigation.setDependencies(
+      .init(
+        settings: components.settings,
+        urlOpener: components.internalURLOpener,
+        appLinkEventPoster: components.appLinkEventPoster,
+        appLinkResolver: components.appLinkResolver
+      )
     )
   }
 
