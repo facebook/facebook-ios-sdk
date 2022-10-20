@@ -11,7 +11,7 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-final class AEMRule: NSObject, NSCopying, NSSecureCoding {
+final class AEMRule: NSObject, NSSecureCoding {
   let conversionValue: Int
   let priority: Int
   let events: [AEMEvent]
@@ -131,10 +131,6 @@ final class AEMRule: NSObject, NSCopying, NSSecureCoding {
     coder.encode(conversionValue, forKey: Keys.conversionValueKey)
     coder.encode(priority, forKey: Keys.priorityKey)
     coder.encode(events, forKey: Keys.eventsKey)
-  }
-
-  func copy(with zone: NSZone? = nil) -> Any {
-    self
   }
 
   override func isEqual(_ object: Any?) -> Bool {

@@ -10,7 +10,7 @@
 
 import Foundation
 
-final class AEMAdvertiserMultiEntryRule: NSObject, AEMAdvertiserRuleMatching, NSCopying, NSSecureCoding {
+final class AEMAdvertiserMultiEntryRule: NSObject, AEMAdvertiserRuleMatching, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
     case `operator`
@@ -66,12 +66,6 @@ final class AEMAdvertiserMultiEntryRule: NSObject, AEMAdvertiserRuleMatching, NS
   func encode(with coder: NSCoder) {
     coder.encode(`operator`.rawValue, forKey: CodingKeys.operator.rawValue)
     coder.encode(rules, forKey: CodingKeys.rules.rawValue)
-  }
-
-  // MARK: - NSCopying
-
-  func copy(with zone: NSZone? = nil) -> Any {
-    self
   }
 }
 
