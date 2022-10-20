@@ -11,40 +11,62 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-// swiftlint:disable:next swiftlint_disable_without_this_or_next
-// swiftlint:disable identifier_name
-
 typealias FBAEMReporterBlock = (NSError?) -> Void
-
-private let FB_AEM_CONFIG_TIME_OUT: TimeInterval = 86400
-private let FB_AEM_DELAY: TimeInterval = 3
-
-private let BUSINESS_ID_KEY = "advertiser_id"
-private let BUSINESS_IDS_KEY = "advertiser_ids"
-private let FB_CONTENT_DATA_KEY = "fb_content_data"
-private let AL_APPLINK_DATA_KEY = "al_applink_data"
-private let CAMPAIGN_ID_KEY = "campaign_id"
-private let CONVERSION_DATA_KEY = "conversion_data"
-private let CONSUMPTION_HOUR_KEY = "consumption_hour"
-private let TOKEN_KEY = "token"
-private let HMAC_KEY = "hmac"
-private let CONFIG_ID_KEY = "config_id"
-private let DELAY_FLOW_KEY = "delay_flow"
-private let IS_CONVERSION_FILTERING_KEY = "is_conversion_filtering"
-private let FB_CONTENT_IDS_KEY = "fb_content_ids"
-private let CATALOG_ID_KEY = "catalog_id"
-
-private let FBAEMConfigurationKey = "com.facebook.sdk:FBSDKAEMConfiguration"
-private let FBAEMReporterKey = "com.facebook.sdk:FBSDKAEMReporter"
-private let FBAEMMINAggregationRequestTimestampKey = "com.facebook.sdk:FBAEMMinAggregationRequestTimestamp"
-private let FBAEMReporterFileName = "FBSDKAEMReportData.report"
-private let FBAEMConfigFileName = "FBSDKAEMReportData.config"
-private let FBAEMHTTPMethodGET = "GET"
-private let FBAEMHTTPMethodPOST = "POST"
 
 @objcMembers
 @objc(FBAEMReporter)
 public final class AEMReporter: NSObject {
+  private enum Keys {
+    static let businessID = "advertiser_id"
+    static let businessIDs = "advertiser_ids"
+    static let fbContentData = "fb_content_data"
+    static let alApplinkData = "al_applink_data"
+    static let campaignId = "campaign_id"
+    static let conversionData = "conversion_data"
+    static let consumptionHour = "consumption_hour"
+    static let token = "token"
+    static let hmac = "hmac"
+    static let configId = "config_id"
+    static let delayFlow = "delay_flow"
+    static let isConversionFiltering = "is_conversion_filtering"
+    static let fbContentIds = "fb_content_ids"
+    static let catalogId = "catalog_id"
+    static let minAggregationRequestTimestamp = "com.facebook.sdk:FBAEMMinAggregationRequestTimestamp"
+    static let fields = "fields"
+    static let data = "data"
+    static let aemConversions = "aem_conversions"
+    static let success = "success"
+    static let isValidMatch = "is_valid_match"
+    static let matchedAdvertiserId = "matched_advertiser_id"
+    static let inSegmentValue = "in_segment_value"
+    static let contentIdBelongsToCatalogId = "content_id_belongs_to_catalog_id"
+  }
+
+  private enum DispatchQueueLabels {
+    static let appEvents = "com.facebook.appevents.AEM.FBAEMReporter"
+  }
+
+  private enum TimeIntervals {
+    static let aemConfigTimeout: TimeInterval = 86400
+    static let aemDelay: TimeInterval = 3
+  }
+
+  private enum FileNames {
+    static let aemReporter = "FBSDKAEMReportData.report"
+    static let aemConfig = "FBSDKAEMReportData.config"
+  }
+
+  private enum Paths {
+    static let aemConversionConfigs = "aem_conversion_configs"
+    static let aemConversionFilter = "aem_conversion_filter"
+    static let aemAttribution = "aem_attribution"
+  }
+
+  private enum HTTPMethods {
+    static let GET = "GET"
+    static let POST = "POST"
+  }
+
   static var networker: AEMNetworking?
   static var appID: String?
   static let nullAppID = "(null)" // Objective-C uses "(null)" if there are nil objects in an interpolated string
@@ -57,8 +79,7 @@ public final class AEMReporter: NSObject {
   static var isConversionFilteringEnabled = false
   static var isCatalogMatchingEnabled = false
   static var isAdvertiserRuleMatchInServerEnabled = false
-  static let dispatchQueueLabel = "com.facebook.appevents.AEM.FBAEMReporter"
-  static var serialQueue = DispatchQueue(label: dispatchQueueLabel)
+  static var serialQueue = DispatchQueue(label: DispatchQueueLabels.appEvents)
   static var reportFile: String?
   private static var configFile: String?
   static var configurations: [String: [AEMConfiguration]] = [:]
@@ -125,8 +146,8 @@ public final class AEMReporter: NSObject {
     isAEMReportEnabled = true
 
     AEMConfiguration.configure(withRuleProvider: AEMAdvertiserRuleFactory())
-    reportFile = BasicUtility.persistenceFilePath(FBAEMReporterFileName)
-    configFile = BasicUtility.persistenceFilePath(FBAEMConfigFileName)
+    reportFile = BasicUtility.persistenceFilePath(FileNames.aemReporter)
+    configFile = BasicUtility.persistenceFilePath(FileNames.aemConfig)
     completionBlocks = []
 
     dispatchOnQueue(serialQueue) {
@@ -222,7 +243,7 @@ public final class AEMReporter: NSObject {
     }
 
     let params = BasicUtility.dictionary(withQueryString: url.query ?? "")
-    guard let applinkDataString = params[AL_APPLINK_DATA_KEY] else {
+    guard let applinkDataString = params[Keys.alApplinkData] else {
       return nil
     }
 
@@ -450,10 +471,10 @@ public final class AEMReporter: NSObject {
       isLoadingConfiguration = true
 
       networker?.startGraphRequest(
-        withGraphPath: "\(appID ?? nullAppID)/aem_conversion_configs",
+        withGraphPath: "\(appID ?? nullAppID)/\(Paths.aemConversionConfigs)",
         parameters: requestParameters(),
         tokenString: nil,
-        httpMethod: FBAEMHTTPMethodGET
+        httpMethod: HTTPMethods.GET
       ) { result, error in
         dispatchOnQueue(serialQueue) {
           if let error = error {
@@ -467,7 +488,7 @@ public final class AEMReporter: NSObject {
 
           if let json = result as? [String: Any] {
             configRefreshTimestamp = Date()
-            if let configurations = json["data"] as? [[String: Any]] {
+            if let configurations = json[Keys.data] as? [[String: Any]] {
               self.addConfigurations(configurations)
             }
 
@@ -491,10 +512,10 @@ public final class AEMReporter: NSObject {
     block: @escaping () -> Void
   ) {
     networker?.startGraphRequest(
-      withGraphPath: "\(appID ?? nullAppID)/aem_conversion_filter",
+      withGraphPath: "\(appID ?? nullAppID)/\(Paths.aemConversionFilter)",
       parameters: catalogRequestParameters(invocation.catalogID, contentID: contentID),
       tokenString: nil,
-      httpMethod: FBAEMHTTPMethodGET
+      httpMethod: HTTPMethods.GET
     ) { result, error in
       dispatchOnQueue(serialQueue) {
         guard error == nil else {
@@ -517,10 +538,10 @@ public final class AEMReporter: NSObject {
   ) {
     let content = AEMUtility.shared.getContent(parameters)
     networker?.startGraphRequest(
-      withGraphPath: "\(appID ?? nullAppID)/aem_attribution",
+      withGraphPath: "\(appID ?? nullAppID)/\(Paths.aemAttribution)",
       parameters: ruleMatchRequestParameters(businessIDs, content: content),
       tokenString: nil,
-      httpMethod: FBAEMHTTPMethodGET
+      httpMethod: HTTPMethods.GET
     ) { result, error in
       if error != nil || result == nil {
         return
@@ -528,21 +549,21 @@ public final class AEMReporter: NSObject {
 
       guard
         let result = result as? [String: Any],
-        let data: [Any] = result["data"] as? [Any],
+        let data: [Any] = result[Keys.data] as? [Any],
         let json = data.first as? [String: Any]
       else {
         return
       }
 
-      guard let success = json["success"] as? NSNumber else { return }
+      guard let success = json[Keys.success] as? NSNumber else { return }
 
       if success.boolValue {
-        guard let isValidMatch = json["is_valid_match"] as? NSNumber else {
+        guard let isValidMatch = json[Keys.isValidMatch] as? NSNumber else {
           return
         }
 
-        let matchedBusinessID = json["matched_advertiser_id"] as? String
-        let inSegmentValue = json["in_segment_value"] as? NSNumber
+        let matchedBusinessID = json[Keys.matchedAdvertiserId] as? String
+        let inSegmentValue = json[Keys.inSegmentValue] as? NSNumber
         let matchedInvocation = AEMUtility.shared.getMatchedInvocation(invocations, businessID: matchedBusinessID)
         // Drop the conversion if not a valid match or no matched invocation
         if !isValidMatch.boolValue || matchedInvocation == nil {
@@ -594,9 +615,9 @@ public final class AEMReporter: NSObject {
 
   static func isContentOptimized(_ result: Any?) -> Bool {
     let json = result as? [String: Any]
-    let data = json?["data"] as? [Any]
+    let data = json?[Keys.data] as? [Any]
     let catalogData = data?.first as? [String: Any]
-    let isOptimized = catalogData?["content_id_belongs_to_catalog_id"] as? NSNumber ?? false
+    let isOptimized = catalogData?[Keys.contentIdBelongsToCatalogId] as? NSNumber ?? false
     return isOptimized.boolValue
   }
 
@@ -611,8 +632,8 @@ public final class AEMReporter: NSObject {
     }
 
     let businessIDsString = try? BasicUtility.jsonString(for: businessIDs)
-    params[BUSINESS_IDS_KEY] = businessIDsString
-    params["fields"] = ""
+    params[Keys.businessIDs] = businessIDsString
+    params[Keys.fields] = ""
     return params
   }
 
@@ -621,8 +642,8 @@ public final class AEMReporter: NSObject {
     contentID: String?
   ) -> [String: Any] {
     [
-      FB_CONTENT_IDS_KEY: contentID,
-      CATALOG_ID_KEY: catalogID,
+      Keys.fbContentIds: contentID,
+      Keys.catalogId: catalogID,
     ].compactMapValues { $0 }
   }
 
@@ -633,8 +654,8 @@ public final class AEMReporter: NSObject {
     let businessIDsString = try? BasicUtility.jsonString(for: businessIDs)
 
     return [
-      BUSINESS_IDS_KEY: businessIDsString,
-      FB_CONTENT_DATA_KEY: content,
+      Keys.businessIDs: businessIDsString,
+      Keys.fbContentData: content,
     ].compactMapValues { $0 }
   }
 
@@ -643,7 +664,7 @@ public final class AEMReporter: NSObject {
       return false
     }
 
-    return Date().timeIntervalSince(timestamp) < FB_AEM_CONFIG_TIME_OUT
+    return Date().timeIntervalSince(timestamp) < TimeIntervals.aemConfigTimeout
   }
 
   static func shouldRefresh(withIsForced isForced: Bool) -> Bool {
@@ -684,10 +705,10 @@ public final class AEMReporter: NSObject {
     }
 
     networker?.startGraphRequest(
-      withGraphPath: "\(appID ?? nullAppID)/aem_conversions",
-      parameters: ["aem_conversions": reports],
+      withGraphPath: "\(appID ?? nullAppID)/\(Keys.aemConversions)",
+      parameters: [Keys.aemConversions: reports],
       tokenString: nil,
-      httpMethod: FBAEMHTTPMethodPOST
+      httpMethod: HTTPMethods.POST
     ) { _, error in
       if let error = error {
         print("Fail to send AEM debugging request with error: \(error)")
@@ -697,24 +718,24 @@ public final class AEMReporter: NSObject {
 
   static func debuggingRequestParameters(_ invocation: AEMInvocation) -> [String: Any] {
     [
-      CAMPAIGN_ID_KEY: invocation.campaignID,
-      CONVERSION_DATA_KEY: 0,
-      CONSUMPTION_HOUR_KEY: 0,
-      TOKEN_KEY: invocation.acsToken,
-      DELAY_FLOW_KEY: "server",
+      Keys.campaignId: invocation.campaignID,
+      Keys.conversionData: 0,
+      Keys.consumptionHour: 0,
+      Keys.token: invocation.acsToken,
+      Keys.delayFlow: "server",
     ]
   }
 
   // MARK: - Background methods
 
   static func loadMinAggregationRequestTimestamp() -> Date? {
-    dataStore?.fb_object(forKey: FBAEMMINAggregationRequestTimestampKey) as? Date
+    dataStore?.fb_object(forKey: Keys.minAggregationRequestTimestamp) as? Date
   }
 
   static func updateAggregationRequestTimestamp(_ timeInterval: TimeInterval) {
     let newTimestamp = Date(timeIntervalSince1970: timeInterval)
     minAggregationRequestTimestamp = newTimestamp
-    dataStore?.fb_setObject(newTimestamp, forKey: FBAEMMINAggregationRequestTimestampKey)
+    dataStore?.fb_setObject(newTimestamp, forKey: Keys.minAggregationRequestTimestamp)
   }
 
   static func loadConfigurations() -> [String: [AEMConfiguration]] {
@@ -767,10 +788,10 @@ public final class AEMReporter: NSObject {
   private static func addConfiguration(_ configuration: AEMConfiguration?) {
     guard let configuration = configuration else { return }
 
-    let _configurations = configurations[configuration.mode] ?? []
+    let configurationsForMode = configurations[configuration.mode] ?? []
     // Remove the configuration in the array that has the same "validFrom" and "businessID" as the added configuration
     var newConfigurations: [AEMConfiguration] = []
-    for candidateConfiguration in _configurations {
+    for candidateConfiguration in configurationsForMode {
       if configuration.isSame(
         validFrom: candidateConfiguration.validFrom,
         businessID: candidateConfiguration.businessID
@@ -837,10 +858,10 @@ public final class AEMReporter: NSObject {
       }
 
       networker?.startGraphRequest(
-        withGraphPath: "\(appID ?? nullAppID)/aem_conversions",
-        parameters: ["aem_conversions": reports],
+        withGraphPath: "\(appID ?? nullAppID)/\(Keys.aemConversions)",
+        parameters: [Keys.aemConversions: reports],
         tokenString: nil,
-        httpMethod: FBAEMHTTPMethodPOST
+        httpMethod: HTTPMethods.POST
       ) { _, error in
         if error != nil {
           return
@@ -861,7 +882,7 @@ public final class AEMReporter: NSObject {
         timestampDelay = timestamp.timeIntervalSince1970 - Date().timeIntervalSince1970
       }
 
-      let delay = max(FB_AEM_DELAY, timestampDelay)
+      let delay = max(TimeIntervals.aemDelay, timestampDelay)
       dispatchOnQueue(serialQueue, delay: delay, block: block)
     } else {
       block()
@@ -870,8 +891,8 @@ public final class AEMReporter: NSObject {
     let minAggregationRequestTimestampDelay = minAggregationRequestTimestamp?.timeIntervalSince1970 ?? 0
     updateAggregationRequestTimestamp(
       max(
-        Date().timeIntervalSince1970 + FB_AEM_DELAY,
-        minAggregationRequestTimestampDelay + FB_AEM_DELAY
+        Date().timeIntervalSince1970 + TimeIntervals.aemDelay,
+        minAggregationRequestTimestampDelay + TimeIntervals.aemDelay
       )
     )
   }
@@ -880,15 +901,15 @@ public final class AEMReporter: NSObject {
     let delay = 24 + arc4random_uniform(24)
     let enableConversionFiltering = invocation.isConversionFilteringEligible && isConversionFilteringEnabled
     return [
-      CAMPAIGN_ID_KEY: invocation.campaignID,
-      CONVERSION_DATA_KEY: invocation.conversionValue,
-      CONSUMPTION_HOUR_KEY: delay,
-      TOKEN_KEY: invocation.acsToken,
-      DELAY_FLOW_KEY: "server",
-      CONFIG_ID_KEY: invocation.acsConfigurationID,
-      HMAC_KEY: invocation.getHMAC(delay: Int(delay)),
-      BUSINESS_ID_KEY: invocation.businessID,
-      IS_CONVERSION_FILTERING_KEY: enableConversionFiltering,
+      Keys.campaignId: invocation.campaignID,
+      Keys.conversionData: invocation.conversionValue,
+      Keys.consumptionHour: delay,
+      Keys.token: invocation.acsToken,
+      Keys.delayFlow: "server",
+      Keys.configId: invocation.acsConfigurationID,
+      Keys.hmac: invocation.getHMAC(delay: Int(delay)),
+      Keys.businessID: invocation.businessID,
+      Keys.isConversionFiltering: enableConversionFiltering,
     ].compactMapValues { $0 }
   }
 
@@ -899,7 +920,7 @@ public final class AEMReporter: NSObject {
   ) {
     guard let block = block else { return }
 
-    if queue.label == dispatchQueueLabel {
+    if queue.label == DispatchQueueLabels.appEvents {
       if let delay = delay {
         queue.asyncAfter(deadline: .now() + delay, execute: block)
       } else {
