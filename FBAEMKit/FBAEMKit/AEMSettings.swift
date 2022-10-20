@@ -10,14 +10,14 @@
 
 import Foundation
 
-final class _AEMSettings: NSObject {
+final class AEMSettings: NSObject {
   static func appID() -> String? {
     // swiftformat:disable:next redundantSelf
     self.bundle?.object(forInfoDictionaryKey: "FacebookAppID") as? String
   }
 }
 
-extension _AEMSettings: DependentAsType {
+extension AEMSettings: DependentAsType {
   struct TypeDependencies {
     var bundle: Bundle
   }

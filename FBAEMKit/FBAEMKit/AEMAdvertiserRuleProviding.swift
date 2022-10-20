@@ -13,11 +13,11 @@ import Foundation
 /**
  Describes anything that can provide instances of `AEMAdvertiserRuleMatching`
  */
-protocol _AEMAdvertiserRuleProviding {
+protocol AEMAdvertiserRuleProviding {
 
-  func createRule(json: String?) -> _AEMAdvertiserRuleMatching?
+  func createRule(json: String?) -> AEMAdvertiserRuleMatching?
 
-  func createRule(dictionary: [String: Any]) -> _AEMAdvertiserRuleMatching?
+  func createRule(dictionary: [String: Any]) -> AEMAdvertiserRuleMatching?
 }
 
 #endif

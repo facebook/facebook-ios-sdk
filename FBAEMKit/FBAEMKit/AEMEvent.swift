@@ -10,7 +10,7 @@
 
 import Foundation
 
-final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
+final class AEMEvent: NSObject, NSCopying, NSSecureCoding {
   enum CodingKeys: String, CodingKey {
     case eventName = "event_name"
     case values
@@ -83,7 +83,7 @@ final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
   // MARK: - NSObject
 
   override func isEqual(_ object: Any?) -> Bool {
-    guard let other = object as? _AEMEvent else { return false }
+    guard let other = object as? AEMEvent else { return false }
 
     return eventName == other.eventName
       && values == other.values

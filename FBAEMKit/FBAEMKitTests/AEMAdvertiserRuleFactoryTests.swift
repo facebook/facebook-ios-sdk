@@ -12,7 +12,7 @@ import XCTest
 
 final class AEMAdvertiserRuleFactoryTests: XCTestCase {
 
-  let factory = _AEMAdvertiserRuleFactory()
+  let factory = AEMAdvertiserRuleFactory()
 
   func testCreateRuleWithJson() {
     XCTAssertNil(
@@ -50,12 +50,12 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
       factory.createRule(dictionary: ["value": ["contains": 10]]),
       "Should not create valid Single Entry Rule with invalid dictionary"
     )
-    let multiEntryRule = factory.createRule(dictionary: ["and": [SampleAEMData.validAdvertiserSingleEntryRuleJson1]]) as? _AEMAdvertiserMultiEntryRule // swiftlint:disable:this line_length
+    let multiEntryRule = factory.createRule(dictionary: ["and": [SampleAEMData.validAdvertiserSingleEntryRuleJson1]]) as? AEMAdvertiserMultiEntryRule // swiftlint:disable:this line_length
     XCTAssertNotNil(
       multiEntryRule,
       "Should create expected Multi Entry Rule"
     )
-    let singleEntryRule = factory.createRule(dictionary: ["value": ["contains": "abc"]]) as? _AEMAdvertiserSingleEntryRule // swiftlint:disable:this line_length
+    let singleEntryRule = factory.createRule(dictionary: ["value": ["contains": "abc"]]) as? AEMAdvertiserSingleEntryRule // swiftlint:disable:this line_length
     XCTAssertNotNil(
       singleEntryRule,
       "Should create expected Single Entry Rule"
@@ -63,7 +63,7 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
   }
 
   func testCreateSingleEntryRuleWithValidDict() {
-    var rule: _AEMAdvertiserSingleEntryRule?
+    var rule: AEMAdvertiserSingleEntryRule?
     rule = factory.createSingleEntryRule(from: SampleAEMData.validAdvertiserSingleEntryRuleJson1)
     XCTAssertTrue(
       SampleAEMData.advertiserSingleEntryRule1.isEqual(rule),
@@ -107,9 +107,9 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
         .and,
         .or,
         .not,
-      ] as [_AEMAdvertiserRuleOperator]
+      ] as [AEMAdvertiserRuleOperator]
     ).forEach { opString, expectedOperator in
-      let rule: _AEMAdvertiserMultiEntryRule? = factory.createMultiEntryRule(
+      let rule: AEMAdvertiserMultiEntryRule? = factory.createMultiEntryRule(
         from: [opString: [SampleAEMData.validAdvertiserSingleEntryRuleJson1, SampleAEMData.validAdvertiserSingleEntryRuleJson2]]) // swiftlint:disable:this line_length
       XCTAssertNotNil(
         rule,
@@ -277,7 +277,7 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
       .and,
       .or,
       .not,
-    ] as [_AEMAdvertiserRuleOperator] {
+    ] as [AEMAdvertiserRuleOperator] {
       XCTAssertTrue(
         factory.isOperatorForMultiEntryRule(ruleOperator),
         "Should expect the operator for multi entry rule"
@@ -301,7 +301,7 @@ final class AEMAdvertiserRuleFactoryTests: XCTestCase {
       .caseInsensitiveIsNotAny,
       .isAny,
       .isNotAny,
-    ] as [_AEMAdvertiserRuleOperator] {
+    ] as [AEMAdvertiserRuleOperator] {
       XCTAssertFalse(
         factory.isOperatorForMultiEntryRule(ruleOperator),
         "Should expect the operator not for multi entry rule"

@@ -11,10 +11,10 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
+final class AEMRule: NSObject, NSCopying, NSSecureCoding {
   let conversionValue: Int
   let priority: Int
-  let events: [_AEMEvent]
+  let events: [AEMEvent]
 
   private enum Keys {
     static let conversionValueKey = "conversion_value"
@@ -25,7 +25,7 @@ final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   init?(json dict: [String: Any]) {
     let conversionValue = dict[Keys.conversionValueKey] as? NSNumber
     let priority = dict[Keys.priorityKey] as? NSNumber
-    let events = _AEMRule.parse(events: dict[Keys.eventsKey] as? [[String: Any]] ?? []) ?? []
+    let events = AEMRule.parse(events: dict[Keys.eventsKey] as? [[String: Any]] ?? []) ?? []
 
     guard let conversionValue = conversionValue,
           let priority = priority,
@@ -95,17 +95,17 @@ final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
     return false
   }
 
-  /// Parse json dictionary to collection of `_AEMEvent`
+  /// Parse json dictionary to collection of `AEMEvent`
   /// - Parameter events: Collection of dictionaries to parse
-  /// - Returns: Collection of `_AEMEvent` objects
+  /// - Returns: Collection of `AEMEvent` objects
   private static func parse(
     events: [[String: Any]]
-  ) -> [_AEMEvent]? {
+  ) -> [AEMEvent]? {
     guard !events.isEmpty else {
       return nil
     }
 
-    return events.compactMap(_AEMEvent.init(dict:))
+    return events.compactMap(AEMEvent.init(dict:))
   }
 
   // MARK: - NSCoding
@@ -117,10 +117,10 @@ final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   init?(coder: NSCoder) {
     let conversionValue = coder.decodeInteger(forKey: Keys.conversionValueKey)
     let priority = coder.decodeInteger(forKey: Keys.priorityKey)
-    let events: [_AEMEvent] = coder.decodeObject(
-      of: [NSArray.classForCoder(), _AEMEvent.classForCoder()],
+    let events: [AEMEvent] = coder.decodeObject(
+      of: [NSArray.classForCoder(), AEMEvent.classForCoder()],
       forKey: Keys.eventsKey
-    ) as? [_AEMEvent] ?? []
+    ) as? [AEMEvent] ?? []
 
     self.conversionValue = conversionValue
     self.priority = priority
@@ -138,7 +138,7 @@ final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   }
 
   override func isEqual(_ object: Any?) -> Bool {
-    guard let rule = object as? _AEMRule else {
+    guard let rule = object as? AEMRule else {
       return false
     }
 

@@ -11,7 +11,7 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
+final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
 
   enum Error: Swift.Error {
     case missingOperationQueue
@@ -68,7 +68,7 @@ final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
     request.httpShouldHandleCookies = false
 
     // add parameters to body
-    let body = _AEMRequestBody()
+    let body = AEMRequestBody()
 
     var params = parameters
     params["format"] = "json"
@@ -176,7 +176,7 @@ final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
 
   func appendAttachments(
     attachments: [String: Any],
-    toBody body: _AEMRequestBody,
+    toBody body: AEMRequestBody,
     addFormData: Bool
   ) {
     for (key, value) in attachments {

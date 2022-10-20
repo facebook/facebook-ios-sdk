@@ -11,9 +11,9 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, _AEMAdvertiserRuleMatching {
+final class AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, AEMAdvertiserRuleMatching {
 
-  var `operator`: _AEMAdvertiserRuleOperator
+  var `operator`: AEMAdvertiserRuleOperator
   let paramKey: String
   let linguisticCondition: String?
   let numericalCondition: Double?
@@ -35,7 +35,7 @@ final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, 
   // MRAK: - Init
 
   init(
-    operator: _AEMAdvertiserRuleOperator,
+    operator: AEMAdvertiserRuleOperator,
     paramKey: String,
     linguisticCondition: String?,
     numericalCondition: Double?,
@@ -50,7 +50,7 @@ final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, 
   }
 
   convenience init(
-    with operator: _AEMAdvertiserRuleOperator,
+    with operator: AEMAdvertiserRuleOperator,
     paramKey: String,
     linguisticCondition: String?,
     numericalCondition: NSNumber?,
@@ -65,7 +65,7 @@ final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, 
     )
   }
 
-  // MARK: - _AEMAdvertiserRuleMatching
+  // MARK: - AEMAdvertiserRuleMatching
 
   func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool {
     let paramPath = paramKey.components(separatedBy: Delimeter.param)
@@ -291,7 +291,7 @@ final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, 
 
   init?(coder: NSCoder) {
     let operatorValue = coder.decodeInteger(forKey: Keys.operator)
-    guard let `operator` = _AEMAdvertiserRuleOperator(rawValue: operatorValue),
+    guard let `operator` = AEMAdvertiserRuleOperator(rawValue: operatorValue),
           let paramKey = coder.decodeObject(of: NSString.self, forKey: Keys.param),
           let linguisticCondition = coder.decodeObject(of: NSString.self, forKey: Keys.stringValue),
           let numericalCondition = coder.decodeObject(of: NSNumber.self, forKey: Keys.numberValue) else {
@@ -322,7 +322,7 @@ final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, 
   }
 
   override func isEqual(_ object: Any?) -> Bool {
-    if let rule = object as? _AEMAdvertiserSingleEntryRule {
+    if let rule = object as? AEMAdvertiserSingleEntryRule {
       let isOpEqual = self.operator == rule.operator
       let isParamKeyEqual = paramKey == rule.paramKey
       let isLinguisticConditionEqual = linguisticCondition == rule.linguisticCondition

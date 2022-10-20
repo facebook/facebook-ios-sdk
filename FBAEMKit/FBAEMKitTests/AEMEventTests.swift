@@ -42,7 +42,7 @@ final class AEMEventTests: XCTestCase {
       ],
     ],
   ]
-  var validEventWithValues: _AEMEvent? = _AEMEvent(dict: [
+  var validEventWithValues: AEMEvent? = AEMEvent(dict: [
     Keys.eventName: Values.purchase,
     Keys.values: [
       [
@@ -56,7 +56,7 @@ final class AEMEventTests: XCTestCase {
     ],
   ])
 
-  var validEventWithoutValues: _AEMEvent? = _AEMEvent(dict: [
+  var validEventWithoutValues: AEMEvent? = AEMEvent(dict: [
     Keys.eventName: Values.purchase,
   ])
 
@@ -90,7 +90,7 @@ final class AEMEventTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(_AEMEvent(dict: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
     invalidData = [
       Keys.values: [
         [
@@ -103,7 +103,7 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(_AEMEvent(dict: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
     invalidData = [
       Keys.eventName: Values.purchase,
       Keys.values: [
@@ -117,7 +117,7 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(_AEMEvent(dict: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
     invalidData = [
       Keys.eventName: [Values.purchase, Values.subscribe],
       Keys.values: [
@@ -131,20 +131,20 @@ final class AEMEventTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(_AEMEvent(dict: invalidData))
+    XCTAssertNil(AEMEvent(dict: invalidData))
   }
 
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = _AEMEvent(dict: data)
+        _ = AEMEvent(dict: data)
       }
     }
   }
 
   func testSecureCoding() {
     XCTAssertTrue(
-      _AEMEvent.supportsSecureCoding,
+      AEMEvent.supportsSecureCoding,
       "AEM Events should support secure coding"
     )
   }

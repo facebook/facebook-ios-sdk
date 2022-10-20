@@ -22,7 +22,7 @@ final class AEMUtilityTests: XCTestCase {
   func testGetMatchedInvocationWithoutBusinessID() {
     let invocations = [SampleAEMInvocations.createGeneralInvocation1()]
     XCTAssertNil(
-      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
+      AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
       "Should not expect to get the matched invocation without matched business ID"
     )
   }
@@ -32,7 +32,7 @@ final class AEMUtilityTests: XCTestCase {
     let invocations = [invocation, SampleAEMInvocations.createInvocationWithBusinessID()]
     XCTAssertEqual(
       invocation,
-      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: nil),
+      AEMUtility.shared.getMatchedInvocation(invocations, businessID: nil),
       "Should expect to get the matched invocation without businessID"
     )
   }
@@ -41,7 +41,7 @@ final class AEMUtilityTests: XCTestCase {
     let invocationWithBusinessID = SampleAEMInvocations.createInvocationWithBusinessID()
     let invocations = [invocationWithBusinessID, SampleAEMInvocations.createGeneralInvocation1()]
     XCTAssertNil(
-      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
+      AEMUtility.shared.getMatchedInvocation(invocations, businessID: "123"),
       "Should not expect to get the matched invocation without matched business ID"
     )
   }
@@ -51,7 +51,7 @@ final class AEMUtilityTests: XCTestCase {
     let invocations = [invocationWithBusinessID, SampleAEMInvocations.createGeneralInvocation1()]
     XCTAssertEqual(
       invocationWithBusinessID,
-      _AEMUtility.shared.getMatchedInvocation(invocations, businessID: invocationWithBusinessID.businessID),
+      AEMUtility.shared.getMatchedInvocation(invocations, businessID: invocationWithBusinessID.businessID),
       "Should expect to get the matched invocation"
     )
   }
@@ -77,7 +77,7 @@ final class AEMUtilityTests: XCTestCase {
       ],
     ]
 
-    let value = _AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
+    let value = AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
     XCTAssertEqual(value.intValue, 320, "Didn't get the expected in-segment value")
   }
 
@@ -91,7 +91,7 @@ final class AEMUtilityTests: XCTestCase {
       ],
     ]
 
-    let value = _AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
+    let value = AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
     XCTAssertEqual(value.intValue, 0, "Didn't get the expected in-segment value")
   }
 
@@ -105,12 +105,12 @@ final class AEMUtilityTests: XCTestCase {
       ],
     ]
 
-    let value = _AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
+    let value = AEMUtility.shared.getInSegmentValue(parameters, matchingRule: SampleAEMMultiEntryRules.contentRule)
     XCTAssertEqual(value.intValue, 100, "Didn't get the expected in-segment value")
   }
 
   func testGetContent() {
-    let content = _AEMUtility.shared.getContent([
+    let content = AEMUtility.shared.getContent([
       Keys.content: getJsonString(object: [
         [Keys.identity: "123"],
         [Keys.identity: "456"],
@@ -120,7 +120,7 @@ final class AEMUtilityTests: XCTestCase {
   }
 
   func testGetContentWithoutData() {
-    let content = _AEMUtility.shared.getContent([
+    let content = AEMUtility.shared.getContent([
       Keys.contentID: getJsonString(object: [
         [Keys.identity: "123"],
         [Keys.identity: "456"],
@@ -130,7 +130,7 @@ final class AEMUtilityTests: XCTestCase {
   }
 
   func testGetContentWithIntID() {
-    let contentID = _AEMUtility.shared.getContentID([
+    let contentID = AEMUtility.shared.getContentID([
       Keys.content: getJsonString(object: [
         [Keys.identity: NSNumber(value: 123)],
         [Keys.identity: NSNumber(value: 456)],
@@ -140,7 +140,7 @@ final class AEMUtilityTests: XCTestCase {
   }
 
   func testGetContentWithStringID() {
-    let contentID = _AEMUtility.shared.getContentID([
+    let contentID = AEMUtility.shared.getContentID([
       Keys.content: getJsonString(object: [
         [Keys.identity: "123"],
         [Keys.identity: "456"],
@@ -150,19 +150,19 @@ final class AEMUtilityTests: XCTestCase {
   }
 
   func testGetContentFallback() {
-    let contentID = _AEMUtility.shared.getContentID([
+    let contentID = AEMUtility.shared.getContentID([
       Keys.contentID: #"["123","456"]"#,
     ])
     XCTAssertEqual(contentID, #"["123","456"]"#)
   }
 
   func testGetBusinessIDsInOrderWithoutInvocations() {
-    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder([])
+    let businessIDs = AEMUtility.shared.getBusinessIDsInOrder([])
     XCTAssertEqual(businessIDs, [])
   }
 
   func testGetBusinessIDsInOrderWithoutBusinessIDs() {
-    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder(
+    let businessIDs = AEMUtility.shared.getBusinessIDsInOrder(
       [
         SampleAEMInvocations.createGeneralInvocation1(),
         SampleAEMInvocations.createGeneralInvocation2(),
@@ -173,7 +173,7 @@ final class AEMUtilityTests: XCTestCase {
 
   func testGetBusinessIDsInOrderWithBusinessIDs() {
     let invocation = SampleAEMInvocations.createInvocationWithBusinessID()
-    let businessIDs = _AEMUtility.shared.getBusinessIDsInOrder(
+    let businessIDs = AEMUtility.shared.getBusinessIDsInOrder(
       [
         SampleAEMInvocations.createGeneralInvocation1(),
         SampleAEMInvocations.createGeneralInvocation2(),

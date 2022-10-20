@@ -10,8 +10,8 @@
 import Foundation
 
 final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
-  static func createGeneralInvocation1() -> _AEMInvocation {
-    _AEMInvocation(
+  static func createGeneralInvocation1() -> AEMInvocation {
+    AEMInvocation(
       campaignID: "test_campaign_1",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -24,8 +24,8 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createGeneralInvocation2() -> _AEMInvocation {
-    _AEMInvocation(
+  static func createGeneralInvocation2() -> AEMInvocation {
+    AEMInvocation(
       campaignID: "test_campaign_2",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -38,8 +38,8 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createDebuggingInvocation() -> _AEMInvocation {
-    _AEMInvocation(
+  static func createDebuggingInvocation() -> AEMInvocation {
+    AEMInvocation(
       campaignID: "debugging_campaign",
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",
@@ -52,8 +52,8 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createSKANOverlappedInvocation() -> _AEMInvocation {
-    _AEMInvocation(
+  static func createSKANOverlappedInvocation() -> AEMInvocation {
+    AEMInvocation(
       campaignID: "debugging_campaign",
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",
@@ -66,8 +66,8 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createCatalogOptimizedInvocation() -> _AEMInvocation {
-    _AEMInvocation(
+  static func createCatalogOptimizedInvocation() -> AEMInvocation {
+    AEMInvocation(
       campaignID: "81", // The campaign id mod 8 (catalog optimization modulus) modulus is 1
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",
@@ -80,8 +80,8 @@ final class SampleAEMInvocations { // swiftlint:disable:this convenience_type
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createInvocationWithBusinessID() -> _AEMInvocation {
-    _AEMInvocation(
+  static func createInvocationWithBusinessID() -> AEMInvocation {
+    AEMInvocation(
       campaignID: "81", // The campaign id mod 8 (catalog optimization modulus) modulus is 1
       acsToken: "debugging_token",
       acsSharedSecret: "debugging_shared_secret",

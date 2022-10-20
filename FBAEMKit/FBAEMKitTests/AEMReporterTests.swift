@@ -238,7 +238,7 @@ final class AEMReporterTests: XCTestCase {
     var configList = configurations[Values.defaultMode]
     XCTAssertEqual(configList?.count, 1, "Should have the expected number of configuration")
 
-    guard let invocation1 = _AEMInvocation(
+    guard let invocation1 = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -248,7 +248,7 @@ final class AEMReporterTests: XCTestCase {
       isTestMode: false,
       hasStoreKitAdNetwork: false,
       isConversionFilteringEligible: true
-    ), let invocation2 = _AEMInvocation(
+    ), let invocation2 = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -544,7 +544,7 @@ final class AEMReporterTests: XCTestCase {
 
   func testRecordAndUpdateEvents() {
     AEMReporter.configRefreshTimestamp = Date()
-    guard let invocation = _AEMInvocation(
+    guard let invocation = AEMInvocation(
       campaignID: "test_campaign_1234",
       acsToken: "test_token_1234567",
       acsSharedSecret: "test_shared_secret",
@@ -556,7 +556,7 @@ final class AEMReporterTests: XCTestCase {
       isConversionFilteringEligible: true
     )
     else { return XCTFail("Unwrapping Error") }
-    guard let configuration = _AEMConfiguration(json: SampleAEMData.validConfigData3)
+    guard let configuration = AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
 
     AEMReporter.configurations = [Values.defaultMode: [configuration]]
@@ -636,7 +636,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testLoadConfigurationWithRefreshEnforced() {
-    guard let configuration = _AEMConfiguration(json: SampleAEMData.validConfigData3)
+    guard let configuration = AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
     AEMReporter.configRefreshTimestamp = Date()
     AEMReporter.configurations = [Values.defaultMode: [configuration]]
@@ -652,7 +652,7 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testLoadConfigurationWithBlock() {
-    guard let configuration = _AEMConfiguration(json: SampleAEMData.validConfigData3)
+    guard let configuration = AEMConfiguration(json: SampleAEMData.validConfigData3)
     else { return XCTFail("Unwrapping Error") }
     var blockCall = 0
     AEMReporter.configRefreshTimestamp = Date()
