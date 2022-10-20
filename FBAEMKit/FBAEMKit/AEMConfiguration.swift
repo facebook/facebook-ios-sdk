@@ -10,7 +10,7 @@
 
 import Foundation
 
-final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
+final class AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
     case defaultCurrency = "default_currency"
@@ -30,14 +30,14 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
   private(set) var defaultCurrency: String
   private(set) var mode: String
   private(set) var businessID: String?
-  private(set) var matchingRule: _AEMAdvertiserRuleMatching?
-  private(set) var conversionValueRules: [_AEMRule]
+  private(set) var matchingRule: AEMAdvertiserRuleMatching?
+  private(set) var conversionValueRules: [AEMRule]
   private(set) var eventSet: Set<String>
   private(set) var currencySet: Set<String>
 
-  private(set) static var ruleProvider: _AEMAdvertiserRuleProviding?
+  private(set) static var ruleProvider: AEMAdvertiserRuleProviding?
 
-  static func configure(withRuleProvider ruleProvider: _AEMAdvertiserRuleProviding) {
+  static func configure(withRuleProvider ruleProvider: AEMAdvertiserRuleProviding) {
     self.ruleProvider = ruleProvider
   }
 
@@ -52,8 +52,8 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
 
     let businessID = dict[CodingKeys.advertiserID.rawValue] as? String
     let paramRuleJson = dict[CodingKeys.paramRule.rawValue] as? String
-    let matchingRule = _AEMConfiguration.ruleProvider?.createRule(json: paramRuleJson)
-    guard let rules = _AEMConfiguration.parseRules(dict[CodingKeys.conversionValueRules.rawValue] as? [[String: Any]]),
+    let matchingRule = AEMConfiguration.ruleProvider?.createRule(json: paramRuleJson)
+    guard let rules = AEMConfiguration.parseRules(dict[CodingKeys.conversionValueRules.rawValue] as? [[String: Any]]),
           !rules.isEmpty,
           businessID == nil || matchingRule != nil else { return nil }
 
@@ -65,8 +65,8 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     self.defaultCurrency = defaultCurrency
     self.mode = mode
     conversionValueRules = rules
-    eventSet = _AEMConfiguration.getEventSet(from: conversionValueRules)
-    currencySet = _AEMConfiguration.getCurrencySet(from: conversionValueRules)
+    eventSet = AEMConfiguration.getEventSet(from: conversionValueRules)
+    currencySet = AEMConfiguration.getCurrencySet(from: conversionValueRules)
   }
 
   private init(
@@ -75,8 +75,8 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     validFrom: Int,
     mode: String,
     businessID: String?,
-    matchingRule: _AEMAdvertiserRuleMatching?,
-    conversionValueRules: [_AEMRule]
+    matchingRule: AEMAdvertiserRuleMatching?,
+    conversionValueRules: [AEMRule]
   ) {
     self.defaultCurrency = defaultCurrency
     self.cutoffTime = cutoffTime
@@ -85,17 +85,17 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     self.businessID = businessID
     self.matchingRule = matchingRule
     self.conversionValueRules = conversionValueRules
-    eventSet = _AEMConfiguration.getEventSet(from: self.conversionValueRules)
-    currencySet = _AEMConfiguration.getCurrencySet(from: self.conversionValueRules)
+    eventSet = AEMConfiguration.getEventSet(from: self.conversionValueRules)
+    currencySet = AEMConfiguration.getCurrencySet(from: self.conversionValueRules)
   }
 
-  static func parseRules(_ rules: [[String: Any]]?) -> [_AEMRule]? {
+  static func parseRules(_ rules: [[String: Any]]?) -> [AEMRule]? {
     guard let rules = rules,
           !rules.isEmpty else { return nil }
 
-    var parsedRules: [_AEMRule] = []
+    var parsedRules: [AEMRule] = []
     for ruleEntry in rules {
-      guard let rule = _AEMRule(json: ruleEntry) else { return nil }
+      guard let rule = AEMRule(json: ruleEntry) else { return nil }
 
       parsedRules.append(rule)
     }
@@ -106,7 +106,7 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     return parsedRules
   }
 
-  static func getEventSet(from rules: [_AEMRule]) -> Set<String> {
+  static func getEventSet(from rules: [AEMRule]) -> Set<String> {
     var eventSet: Set<String> = []
     for rule in rules {
       for event in rule.events {
@@ -116,7 +116,7 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     return eventSet
   }
 
-  static func getCurrencySet(from rules: [_AEMRule]) -> Set<String> {
+  static func getCurrencySet(from rules: [AEMRule]) -> Set<String> {
     var currencySet: Set<String> = []
     for rule in rules {
       for event in rule.events {
@@ -162,13 +162,13 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     ) as String? ?? ""
     let businessID = coder.decodeObject(of: NSString.self, forKey: CodingKeys.businessID.rawValue) as String?
     let matchingRule = coder.decodeObject(
-      of: [NSArray.self, _AEMAdvertiserMultiEntryRule.self, _AEMAdvertiserSingleEntryRule.self],
+      of: [NSArray.self, AEMAdvertiserMultiEntryRule.self, AEMAdvertiserSingleEntryRule.self],
       forKey: CodingKeys.paramRule.rawValue
-    ) as? _AEMAdvertiserRuleMatching
+    ) as? AEMAdvertiserRuleMatching
     guard let rules = coder.decodeObject(
-      of: [NSArray.self, _AEMRule.self, _AEMEvent.self],
+      of: [NSArray.self, AEMRule.self, AEMEvent.self],
       forKey: CodingKeys.conversionValueRules.rawValue
-    ) as? [_AEMRule] else { return nil }
+    ) as? [AEMRule] else { return nil }
 
     self.init(
       defaultCurrency: defaultCurrency,

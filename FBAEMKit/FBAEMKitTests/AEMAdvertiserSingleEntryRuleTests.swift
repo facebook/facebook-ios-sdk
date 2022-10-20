@@ -22,7 +22,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsMatchedWithEventParameters() {
-    var rule = _AEMAdvertiserSingleEntryRule(
+    var rule = AEMAdvertiserSingleEntryRule(
       operator: .contains,
       paramKey: "fb_content.title",
       linguisticCondition: "hello",
@@ -60,7 +60,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
       "Should not expect the event parameter matched with the rule"
     )
 
-    rule = _AEMAdvertiserSingleEntryRule(
+    rule = AEMAdvertiserSingleEntryRule(
       operator: .greaterThan,
       paramKey: "fb_content.product1.quantity",
       linguisticCondition: nil,
@@ -78,7 +78,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsMatchedWithEventParametersForAsteriskOperator() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .contains,
       paramKey: "fb_content[*].id",
       linguisticCondition: "coffee",
@@ -101,7 +101,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsMatchedWithEventParametersAndAsterisk() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .contains,
       paramKey: "fb_content[*].title",
       linguisticCondition: "hello",
@@ -127,7 +127,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsMatchedWithAsteriskParam() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .contains,
       paramKey: "fb_content[*].title",
       linguisticCondition: "hello",
@@ -170,7 +170,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsMatchedWithStringComparision() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .contains,
       paramKey: "fb_content.title",
       linguisticCondition: "hello",
@@ -274,7 +274,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsMatchedWithNumberComparision() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .lessThan,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
@@ -338,7 +338,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsMatchedWithArrayComparision() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .isAny,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
@@ -374,7 +374,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsRegexMatch() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .isAny,
       paramKey: "fb_content.title",
       linguisticCondition: "eylea.us/support/?$|eylea.us/support/?",
@@ -392,7 +392,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsRegexMatchWithEmtpyString() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .isAny,
       paramKey: "fb_content.title",
       linguisticCondition: "",
@@ -406,7 +406,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsRegexMatchWithNullableString() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .isAny,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
@@ -420,7 +420,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
   }
 
   func testIsAnyOf() {
-    let rule = _AEMAdvertiserSingleEntryRule(
+    let rule = AEMAdvertiserSingleEntryRule(
       operator: .isAny,
       paramKey: "fb_content.title",
       linguisticCondition: nil,
@@ -451,7 +451,7 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
 
   func testSecureCoding() {
     XCTAssertTrue(
-      _AEMAdvertiserSingleEntryRule.supportsSecureCoding,
+      AEMAdvertiserSingleEntryRule.supportsSecureCoding,
       "AEM Advertiser Single Entry Rule should support secure coding"
     )
   }

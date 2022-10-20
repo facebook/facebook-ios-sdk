@@ -10,22 +10,22 @@
 
 import Foundation
 
-final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMatching, NSCopying, NSSecureCoding {
+final class AEMAdvertiserMultiEntryRule: NSObject, AEMAdvertiserRuleMatching, NSCopying, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
     case `operator`
     case rules
   }
 
-  let `operator`: _AEMAdvertiserRuleOperator
-  let rules: [_AEMAdvertiserRuleMatching]
+  let `operator`: AEMAdvertiserRuleOperator
+  let rules: [AEMAdvertiserRuleMatching]
 
-  init(with operator: _AEMAdvertiserRuleOperator, rules: [_AEMAdvertiserRuleMatching]) {
+  init(with operator: AEMAdvertiserRuleOperator, rules: [AEMAdvertiserRuleMatching]) {
     self.operator = `operator`
     self.rules = rules
   }
 
-  // MARK: - _AEMAdvertiserRuleMatching
+  // MARK: - AEMAdvertiserRuleMatching
 
   func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool {
     var isMatched = `operator` != .or
@@ -49,13 +49,13 @@ final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMatching, 
   static var supportsSecureCoding: Bool { true }
 
   convenience init?(coder: NSCoder) {
-    let `operator` = _AEMAdvertiserRuleOperator(rawValue: coder.decodeInteger(forKey: CodingKeys.operator.rawValue))
+    let `operator` = AEMAdvertiserRuleOperator(rawValue: coder.decodeInteger(forKey: CodingKeys.operator.rawValue))
     let classes = [
       NSArray.self,
-      _AEMAdvertiserMultiEntryRule.self,
-      _AEMAdvertiserSingleEntryRule.self,
+      AEMAdvertiserMultiEntryRule.self,
+      AEMAdvertiserSingleEntryRule.self,
     ]
-    let rules = coder.decodeObject(of: classes, forKey: CodingKeys.rules.rawValue) as? [_AEMAdvertiserRuleMatching]
+    let rules = coder.decodeObject(of: classes, forKey: CodingKeys.rules.rawValue) as? [AEMAdvertiserRuleMatching]
     guard let `operator` = `operator`,
           let rules = rules else {
       return nil

@@ -49,7 +49,7 @@ final class AEMRuleTests: XCTestCase {
     ],
   ]
 
-  var validRule = _AEMRule(json: [
+  var validRule = AEMRule(json: [
     Keys.conversionValue: 10,
     Keys.priority: 7,
     Keys.events: [
@@ -79,7 +79,7 @@ final class AEMRuleTests: XCTestCase {
       ],
     ]
 
-    guard let rule = _AEMRule(json: validData) else { return XCTFail("Unwraping Error") }
+    guard let rule = AEMRule(json: validData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(10, rule.priority)
     XCTAssertEqual(2, rule.events.count)
@@ -94,7 +94,7 @@ final class AEMRuleTests: XCTestCase {
   }
 
   func testValidCase2() {
-    guard let rule = _AEMRule(json: sampleData) else { return XCTFail("Unwraping Error") }
+    guard let rule = AEMRule(json: sampleData) else { return XCTFail("Unwraping Error") }
     XCTAssertEqual(2, rule.conversionValue)
     XCTAssertEqual(7, rule.priority)
     XCTAssertEqual(1, rule.events.count)
@@ -106,13 +106,13 @@ final class AEMRuleTests: XCTestCase {
 
   func testInvalidCases() {
     var invalidData: [String: Any] = [:]
-    XCTAssertNil(_AEMRule(json: invalidData))
+    XCTAssertNil(AEMRule(json: invalidData))
 
     invalidData = [Keys.conversionValue: 2]
-    XCTAssertNil(_AEMRule(json: invalidData))
+    XCTAssertNil(AEMRule(json: invalidData))
 
     invalidData = [Keys.priority: 7]
-    XCTAssertNil(_AEMRule(json: invalidData))
+    XCTAssertNil(AEMRule(json: invalidData))
 
     invalidData = [
       Keys.events: [
@@ -127,7 +127,7 @@ final class AEMRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(_AEMRule(json: invalidData))
+    XCTAssertNil(AEMRule(json: invalidData))
 
     invalidData = [
       Keys.conversionValue: 2,
@@ -143,7 +143,7 @@ final class AEMRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(_AEMRule(json: invalidData))
+    XCTAssertNil(AEMRule(json: invalidData))
 
     invalidData = [
       Keys.priority: 2,
@@ -159,13 +159,13 @@ final class AEMRuleTests: XCTestCase {
         ],
       ],
     ]
-    XCTAssertNil(_AEMRule(json: invalidData))
+    XCTAssertNil(AEMRule(json: invalidData))
   }
 
   func testParsing() {
     (1 ... 100).forEach { _ in
       if let data = (Fuzzer.randomize(json: self.sampleData) as? [String: Any]) {
-        _ = _AEMRule(json: data)
+        _ = AEMRule(json: data)
       }
     }
   }
@@ -185,7 +185,7 @@ final class AEMRuleTests: XCTestCase {
 
   func testSecureCoding() {
     XCTAssertTrue(
-      _AEMRule.supportsSecureCoding,
+      AEMRule.supportsSecureCoding,
       "AEM Rule should support secure coding"
     )
   }
@@ -205,7 +205,7 @@ final class AEMRuleTests: XCTestCase {
   }
 
   func testRuleMatch() {
-    guard let rule = _AEMRule(json: [
+    guard let rule = AEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [
@@ -257,7 +257,7 @@ final class AEMRuleTests: XCTestCase {
   }
 
   func testRuleMatchWithEventBundle() {
-    guard let rule = _AEMRule(json: [
+    guard let rule = AEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [
@@ -311,7 +311,7 @@ final class AEMRuleTests: XCTestCase {
   }
 
   func testRuleMatchWithoutValue() {
-    guard let rule = _AEMRule(json: [
+    guard let rule = AEMRule(json: [
       Keys.conversionValue: 10,
       Keys.priority: 7,
       Keys.events: [

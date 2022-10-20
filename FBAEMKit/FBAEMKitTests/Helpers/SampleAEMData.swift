@@ -100,7 +100,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     ],
   ]
 
-  static let validAdvertiserSingleEntryRule = _AEMAdvertiserSingleEntryRule(
+  static let validAdvertiserSingleEntryRule = AEMAdvertiserSingleEntryRule(
     with: .contains,
     paramKey: "test",
     linguisticCondition: "hello",
@@ -108,7 +108,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     arrayCondition: ["abv"]
   )
 
-  static let validAdvertiserMultiEntryRule = _AEMAdvertiserMultiEntryRule(
+  static let validAdvertiserMultiEntryRule = AEMAdvertiserMultiEntryRule(
     with: .and,
     rules: [validAdvertiserSingleEntryRule]
   )
@@ -119,7 +119,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
 
   static let validAdvertiserSingleEntryRuleJson3: [String: Any] = ["content": ["is_any": ["abc"]]]
 
-  static let advertiserSingleEntryRule1 = _AEMAdvertiserSingleEntryRule(
+  static let advertiserSingleEntryRule1 = AEMAdvertiserSingleEntryRule(
     with: .startsWith,
     paramKey: "content",
     linguisticCondition: "abc",
@@ -127,7 +127,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     arrayCondition: nil
   )
 
-  static let advertiserSingleEntryRule2 = _AEMAdvertiserSingleEntryRule(
+  static let advertiserSingleEntryRule2 = AEMAdvertiserSingleEntryRule(
     with: .lessThan,
     paramKey: "value",
     linguisticCondition: nil,
@@ -135,7 +135,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     arrayCondition: nil
   )
 
-  static let advertiserSingleEntryRule3 = _AEMAdvertiserSingleEntryRule(
+  static let advertiserSingleEntryRule3 = AEMAdvertiserSingleEntryRule(
     with: .isAny,
     paramKey: "content",
     linguisticCondition: nil,
@@ -143,7 +143,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     arrayCondition: ["abc"]
   )
 
-  static let invocationWithAdvertiserID1 = _AEMInvocation(
+  static let invocationWithAdvertiserID1 = AEMInvocation(
     campaignID: "test_campaign_1234",
     acsToken: "test_token_1234567",
     acsSharedSecret: "test_shared_secret",
@@ -155,7 +155,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
-  static let invocationWithAdvertiserID2 = _AEMInvocation(
+  static let invocationWithAdvertiserID2 = AEMInvocation(
     campaignID: "test_campaign_1235",
     acsToken: "test_token_2345678",
     acsSharedSecret: "test_shared_secret_124",
@@ -167,7 +167,7 @@ final class SampleAEMData { // swiftlint:disable:this convenience_type
     isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
 
-  static let invocationWithoutAdvertiserID = _AEMInvocation(
+  static let invocationWithoutAdvertiserID = AEMInvocation(
     campaignID: "test_campaign_4321",
     acsToken: "test_token_7654",
     acsSharedSecret: "test_shared_secret_123",

@@ -12,7 +12,7 @@ import CommonCrypto.CommonHMAC
 import FBSDKCoreKit_Basics
 import Foundation
 
-class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefer_final_classes
+class AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefer_final_classes
 
   var campaignID: String
   let acsToken: String
@@ -176,7 +176,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     currency potentialValueCurrency: String?,
     value potentialValue: NSNumber?,
     parameters: [String: Any]?,
-    configurations: [String: [_AEMConfiguration]]?,
+    configurations: [String: [AEMConfiguration]]?,
     shouldUpdateCache: Bool,
     isRuleMatchInServer: Bool
   ) -> Bool {
@@ -217,7 +217,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     if !isRuleMatchInServer {
       // Use in-segment value for CPAS
       if configuration.mode == ConfigurationMode.cpas.rawValue {
-        value = _AEMUtility.shared.getInSegmentValue(processedParameters, matchingRule: configuration.matchingRule)
+        value = AEMUtility.shared.getInSegmentValue(processedParameters, matchingRule: configuration.matchingRule)
       }
     }
 
@@ -240,7 +240,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
   }
 
   func updateConversionValue(
-    configurations: [String: [_AEMConfiguration]]?,
+    configurations: [String: [AEMConfiguration]]?,
     event: String,
     shouldBoostPriority: Bool
   ) -> Bool {
@@ -274,7 +274,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     return isConversionValueUpdated
   }
 
-  func isOptimizedEvent(_ event: String, configurations: [String: [_AEMConfiguration]]?) -> Bool {
+  func isOptimizedEvent(_ event: String, configurations: [String: [AEMConfiguration]]?) -> Bool {
     guard
       catalogID != nil,
       let configuration = findConfiguration(in: configurations)
@@ -283,7 +283,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     return isOptimizedEvent(event, configuration: configuration)
   }
 
-  private func isOptimizedEvent(_ event: String, configuration: _AEMConfiguration) -> Bool {
+  private func isOptimizedEvent(_ event: String, configuration: AEMConfiguration) -> Bool {
     // Look up conversion bit mapping to check if an event is optimized
     configuration.conversionValueRules.contains { rule in
       guard
@@ -295,7 +295,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     }
   }
 
-  func isOutOfWindow(configurations: [String: [_AEMConfiguration]]?) -> Bool {
+  func isOutOfWindow(configurations: [String: [AEMConfiguration]]?) -> Bool {
     isOutOfWindow(configuration: findConfiguration(in: configurations))
   }
 
@@ -362,7 +362,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     return processed
   }
 
-  private func isOutOfWindow(configuration: _AEMConfiguration?) -> Bool {
+  private func isOutOfWindow(configuration: AEMConfiguration?) -> Bool {
     guard let configuration = configuration else { return true }
 
     let cutoff = TimeInterval(configuration.cutoffTime * Self.secondsInDay)
@@ -377,7 +377,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     return isCutoff || isOverLastConversionWindow
   }
 
-  func findConfiguration(in configurations: [String: [_AEMConfiguration]]?) -> _AEMConfiguration? {
+  func findConfiguration(in configurations: [String: [AEMConfiguration]]?) -> AEMConfiguration? {
     let configurationMode = (businessID != nil) ? ConfigurationMode.brand : .default
     let configurationList = getConfigurationList(mode: configurationMode, configurations: configurations)
 
@@ -403,8 +403,8 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
 
   func getConfigurationList(
     mode: ConfigurationMode,
-    configurations: [String: [_AEMConfiguration]]?
-  ) -> [_AEMConfiguration] {
+    configurations: [String: [AEMConfiguration]]?
+  ) -> [AEMConfiguration] {
     guard let configurations = configurations else { return [] }
 
     if mode == .brand {
@@ -415,7 +415,7 @@ class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefe
     }
   }
 
-  func setConfiguration(_ configuration: _AEMConfiguration) {
+  func setConfiguration(_ configuration: AEMConfiguration) {
     configurationID = configuration.validFrom
     configurationMode = configuration.mode
   }

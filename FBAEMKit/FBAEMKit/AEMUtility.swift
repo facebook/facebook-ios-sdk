@@ -11,7 +11,7 @@ import Foundation
 
 #if !os(tvOS)
 
-final class _AEMUtility: NSObject {
+final class AEMUtility: NSObject {
   private enum Keys {
     static let content = "fb_content"
     static let contentID = "fb_content_id"
@@ -20,9 +20,9 @@ final class _AEMUtility: NSObject {
     static let quantity = "quantity"
   }
 
-  static let shared = _AEMUtility()
+  static let shared = AEMUtility()
 
-  func getMatchedInvocation(_ invocations: [_AEMInvocation], businessID: String?) -> _AEMInvocation? {
+  func getMatchedInvocation(_ invocations: [AEMInvocation], businessID: String?) -> AEMInvocation? {
     guard let businessID = businessID else {
       for invocation in invocations.reversed() where invocation.businessID == nil {
         return invocation
@@ -40,7 +40,7 @@ final class _AEMUtility: NSObject {
 
   func getInSegmentValue(
     _ parameters: [String: Any]?,
-    matchingRule: _AEMAdvertiserRuleMatching?
+    matchingRule: AEMAdvertiserRuleMatching?
   ) -> NSNumber {
     guard let parameters = parameters,
           let contentsData = parameters[Keys.content] as? [[String: Any]] else {
@@ -87,7 +87,7 @@ final class _AEMUtility: NSObject {
     } ?? (parameters[Keys.contentID] as? String)
   }
 
-  func getBusinessIDsInOrder(_ invocations: [_AEMInvocation]) -> [String] {
+  func getBusinessIDsInOrder(_ invocations: [AEMInvocation]) -> [String] {
     var res: [String] = []
 
     for invocation in invocations.reversed() {

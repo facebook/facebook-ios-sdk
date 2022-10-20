@@ -11,11 +11,11 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
+final class AEMAdvertiserRuleFactory: NSObject, AEMAdvertiserRuleProviding {
 
-  // MARK: - _AEMAdvertiserRuleProviding
+  // MARK: - AEMAdvertiserRuleProviding
 
-  func createRule(json: String?) -> _AEMAdvertiserRuleMatching? {
+  func createRule(json: String?) -> AEMAdvertiserRuleMatching? {
     guard let json = json,
           let data = json.data(using: .utf8)
     else {
@@ -31,7 +31,7 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
     }
   }
 
-  func createRule(dictionary: [String: Any]) -> _AEMAdvertiserRuleMatching? {
+  func createRule(dictionary: [String: Any]) -> AEMAdvertiserRuleMatching? {
     let `operator` = getOperator(from: dictionary)
 
     if isOperatorForMultiEntryRule(`operator`) {
@@ -43,7 +43,7 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
 
   // MARK: - Internal
 
-  func createMultiEntryRule(from dictionary: [String: Any]) -> _AEMAdvertiserMultiEntryRule? {
+  func createMultiEntryRule(from dictionary: [String: Any]) -> AEMAdvertiserMultiEntryRule? {
     guard !dictionary.isEmpty,
           let opString = primaryKey(for: dictionary)
     else {
@@ -57,7 +57,7 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
     }
 
     let subrules: [[String: Any]] = dictionary[opString] as? [[String: Any]] ?? []
-    var rules: [_AEMAdvertiserRuleMatching] = []
+    var rules: [AEMAdvertiserRuleMatching] = []
 
     for subrule in subrules {
       guard let entryRule = createRule(dictionary: subrule) else {
@@ -70,10 +70,10 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
       return nil
     }
 
-    return _AEMAdvertiserMultiEntryRule(with: `operator`, rules: rules)
+    return AEMAdvertiserMultiEntryRule(with: `operator`, rules: rules)
   }
 
-  func createSingleEntryRule(from dictionary: [String: Any]) -> _AEMAdvertiserSingleEntryRule? {
+  func createSingleEntryRule(from dictionary: [String: Any]) -> AEMAdvertiserSingleEntryRule? {
     guard let paramKey = primaryKey(for: dictionary) else {
       return nil
     }
@@ -84,7 +84,7 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
       return nil
     }
 
-    let `operator`: _AEMAdvertiserRuleOperator = getOperator(from: rawRule)
+    let `operator`: AEMAdvertiserRuleOperator = getOperator(from: rawRule)
 
     var linguisticCondition: String?
     var numericalCondition: NSNumber?
@@ -118,7 +118,7 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
     }
 
     if linguisticCondition != nil || numericalCondition != nil || arrayCondition?.isEmpty == false {
-      return _AEMAdvertiserSingleEntryRule(
+      return AEMAdvertiserSingleEntryRule(
         with: `operator`,
         paramKey: paramKey,
         linguisticCondition: linguisticCondition,
@@ -134,7 +134,7 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
     rule.keys.first
   }
 
-  func getOperator(from rule: [String: Any]) -> _AEMAdvertiserRuleOperator {
+  func getOperator(from rule: [String: Any]) -> AEMAdvertiserRuleOperator {
     guard let key = primaryKey(for: rule) else {
       return .unknown
     }
@@ -169,11 +169,11 @@ final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
       return .unknown
     }
 
-    return _AEMAdvertiserRuleOperator(rawValue: index) ?? .unknown
+    return AEMAdvertiserRuleOperator(rawValue: index) ?? .unknown
   }
 
-  func isOperatorForMultiEntryRule(_ operator: _AEMAdvertiserRuleOperator) -> Bool {
-    let operators: [_AEMAdvertiserRuleOperator] = [.and, .or, .not]
+  func isOperatorForMultiEntryRule(_ operator: AEMAdvertiserRuleOperator) -> Bool {
+    let operators: [AEMAdvertiserRuleOperator] = [.and, .or, .not]
     return operators.contains(`operator`)
   }
 }

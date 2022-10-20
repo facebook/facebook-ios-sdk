@@ -11,7 +11,7 @@ import XCTest
 
 final class AEMRequestBodyTests: XCTestCase {
   func testEmptyBody() throws {
-    let body = _AEMRequestBody()
+    let body = AEMRequestBody()
     XCTAssertNil(body.compressedData())
     XCTAssertEqual(body.data.count, 0)
 
@@ -20,7 +20,7 @@ final class AEMRequestBodyTests: XCTestCase {
   }
 
   func testAppendEmptyKeyWithEmptyValue() throws {
-    let body = _AEMRequestBody()
+    let body = AEMRequestBody()
     body.append(withKey: "", formValue: "")
     XCTAssertNotNil(body.compressedData())
 
@@ -34,7 +34,7 @@ final class AEMRequestBodyTests: XCTestCase {
   }
 
   func testAppendEmptyKeyWithNonEmptyValue() throws {
-    let body = _AEMRequestBody()
+    let body = AEMRequestBody()
     body.append(withKey: "", formValue: "value")
     XCTAssertNotNil(body.compressedData())
 
@@ -48,7 +48,7 @@ final class AEMRequestBodyTests: XCTestCase {
   }
 
   func testAppendNonEmptyKeyWithEmptyValue() throws {
-    let body = _AEMRequestBody()
+    let body = AEMRequestBody()
     body.append(withKey: "key", formValue: "")
     XCTAssertNotNil(body.compressedData())
 
@@ -62,7 +62,7 @@ final class AEMRequestBodyTests: XCTestCase {
   }
 
   func testAppendKeysAndValuesWithEscapedCharacters() throws {
-    let body = _AEMRequestBody()
+    let body = AEMRequestBody()
     body.append(withKey: "\u{F09F}\u{918D}", formValue: "\u{F09F}\u{918E}")
     body.append(withKey: "\0", formValue: "\0")
     XCTAssertNotNil(body.compressedData())

@@ -8,7 +8,7 @@
 
 #if !os(tvOS)
 
-enum _AEMAdvertiserRuleOperator: Int {
+enum AEMAdvertiserRuleOperator: Int {
   case unknown = 0
   // Multi Entry Rule Operator
   case and

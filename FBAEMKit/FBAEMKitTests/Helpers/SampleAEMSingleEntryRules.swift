@@ -11,7 +11,7 @@ import Foundation
 
 enum SampleAEMSingleEntryRules {
 
-  static let urlRule = _AEMAdvertiserSingleEntryRule(
+  static let urlRule = AEMAdvertiserSingleEntryRule(
     with: .caseInsensitiveContains,
     paramKey: "URL",
     linguisticCondition: "thankyou.do",
@@ -19,7 +19,7 @@ enum SampleAEMSingleEntryRules {
     arrayCondition: nil
   )
 
-  static let cardTypeRule1 = _AEMAdvertiserSingleEntryRule(
+  static let cardTypeRule1 = AEMAdvertiserSingleEntryRule(
     with: .equal,
     paramKey: "card_type",
     linguisticCondition: "platium",
@@ -27,7 +27,7 @@ enum SampleAEMSingleEntryRules {
     arrayCondition: nil
   )
 
-  static let cardTypeRule2 = _AEMAdvertiserSingleEntryRule(
+  static let cardTypeRule2 = AEMAdvertiserSingleEntryRule(
     with: .equal,
     paramKey: "card_type",
     linguisticCondition: "blue_credit",
@@ -35,7 +35,7 @@ enum SampleAEMSingleEntryRules {
     arrayCondition: nil
   )
 
-  static let cardTypeRule3 = _AEMAdvertiserSingleEntryRule(
+  static let cardTypeRule3 = AEMAdvertiserSingleEntryRule(
     with: .equal,
     paramKey: "card_type",
     linguisticCondition: "gold_charge",
@@ -43,7 +43,7 @@ enum SampleAEMSingleEntryRules {
     arrayCondition: nil
   )
 
-  static let contentCategoryRule = _AEMAdvertiserSingleEntryRule(
+  static let contentCategoryRule = AEMAdvertiserSingleEntryRule(
     with: .equal,
     paramKey: "content_category",
     linguisticCondition: "demand",
@@ -51,7 +51,7 @@ enum SampleAEMSingleEntryRules {
     arrayCondition: nil
   )
 
-  static let contentNameRule = _AEMAdvertiserSingleEntryRule(
+  static let contentNameRule = AEMAdvertiserSingleEntryRule(
     with: .startsWith,
     paramKey: "content_name",
     linguisticCondition: "exit",
@@ -59,7 +59,7 @@ enum SampleAEMSingleEntryRules {
     arrayCondition: nil
   )
 
-  static let valueRule = _AEMAdvertiserSingleEntryRule(
+  static let valueRule = AEMAdvertiserSingleEntryRule(
     with: .greaterThan,
     paramKey: "amount",
     linguisticCondition: nil,
