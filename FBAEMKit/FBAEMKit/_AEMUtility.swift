@@ -13,7 +13,7 @@ import Foundation
 
 @objcMembers
 @objc(FBAEMUtility)
-public final class _AEMUtility: NSObject {
+final class _AEMUtility: NSObject {
   private enum Keys {
     static let content = "fb_content"
     static let contentID = "fb_content_id"
@@ -22,9 +22,9 @@ public final class _AEMUtility: NSObject {
     static let quantity = "quantity"
   }
 
-  @objc(sharedUtility) public static let shared = _AEMUtility()
+  @objc(sharedUtility) static let shared = _AEMUtility()
 
-  public func getMatchedInvocation(_ invocations: [_AEMInvocation], businessID: String?) -> _AEMInvocation? {
+  func getMatchedInvocation(_ invocations: [_AEMInvocation], businessID: String?) -> _AEMInvocation? {
     guard let businessID = businessID else {
       for invocation in invocations.reversed() where invocation.businessID == nil {
         return invocation
@@ -40,7 +40,7 @@ public final class _AEMUtility: NSObject {
     return nil
   }
 
-  public func getInSegmentValue(
+  func getInSegmentValue(
     _ parameters: [String: Any]?,
     matchingRule: _AEMAdvertiserRuleMatching?
   ) -> NSNumber {
@@ -64,7 +64,7 @@ public final class _AEMUtility: NSObject {
     return NSNumber(value: value)
   }
 
-  public func getContent(_ parameters: [String: Any]?) -> String? {
+  func getContent(_ parameters: [String: Any]?) -> String? {
     guard let parameters = parameters else {
       return nil
     }
@@ -72,7 +72,7 @@ public final class _AEMUtility: NSObject {
     return parameters[Keys.content] as? String
   }
 
-  public func getContentID(_ parameters: [String: Any]?) -> String? {
+  func getContentID(_ parameters: [String: Any]?) -> String? {
     guard let parameters = parameters else {
       return nil
     }
@@ -89,7 +89,7 @@ public final class _AEMUtility: NSObject {
     } ?? (parameters[Keys.contentID] as? String)
   }
 
-  public func getBusinessIDsInOrder(_ invocations: [_AEMInvocation]) -> [String] {
+  func getBusinessIDsInOrder(_ invocations: [_AEMInvocation]) -> [String] {
     var res: [String] = []
 
     for invocation in invocations.reversed() {

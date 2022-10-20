@@ -12,34 +12,29 @@ import CommonCrypto.CommonHMAC
 import FBSDKCoreKit_Basics
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMInvocation)
-public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefer_final_classes
+class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefer_final_classes
 
-  public internal(set) var campaignID: String
-  public let acsToken: String
+  var campaignID: String
+  let acsToken: String
   var acsSharedSecret: String?
-  public internal(set) var acsConfigurationID: String?
-  public internal(set) var businessID: String?
-  public internal(set) var catalogID: String?
-  public let isTestMode: Bool
-  public var hasStoreKitAdNetwork: Bool
-  public var isConversionFilteringEligible: Bool
+  var acsConfigurationID: String?
+  var businessID: String?
+  var catalogID: String?
+  let isTestMode: Bool
+  var hasStoreKitAdNetwork: Bool
+  var isConversionFilteringEligible: Bool
   private(set) var timestamp: Date
   private(set) var configurationMode: String
   /// The unique identifier of the configuration, it's the same as configuration's validFrom
-  public internal(set) var configurationID: Int
+  var configurationID: Int
   var recordedEvents: Set<String>
   var recordedValues: [String: [String: Any]]
-  public internal(set) var conversionValue: Int
+  var conversionValue: Int
   var priority: Int
   var conversionTimestamp: Date?
-  public var isAggregated: Bool
+  var isAggregated: Bool
 
   private static let secondsInDay = 24 /* hours */ * 60 /* minutes */ * 60 /* seconds */
   private static let catalogOptimizationModulus = 8
@@ -74,7 +69,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     case cpas = "CPAS"
   }
 
-  public convenience init?(appLinkData: [AnyHashable: Any]?) {
+  convenience init?(appLinkData: [AnyHashable: Any]?) {
     guard
       let appLinkData = appLinkData,
       let campaignID = appLinkData[Key.campaignIdentifier.rawValue] as? String,
@@ -178,7 +173,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
 
   @discardableResult
   // swiftlint:disable:next function_parameter_count
-  public func attributeEvent(
+  func attributeEvent(
     _ event: String,
     currency potentialValueCurrency: String?,
     value potentialValue: NSNumber?,
@@ -246,7 +241,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     return isAttributed
   }
 
-  public func updateConversionValue(
+  func updateConversionValue(
     configurations: [String: [_AEMConfiguration]]?,
     event: String,
     shouldBoostPriority: Bool
@@ -281,7 +276,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     return isConversionValueUpdated
   }
 
-  public func isOptimizedEvent(_ event: String, configurations: [String: [_AEMConfiguration]]?) -> Bool {
+  func isOptimizedEvent(_ event: String, configurations: [String: [_AEMConfiguration]]?) -> Bool {
     guard
       catalogID != nil,
       let configuration = findConfiguration(in: configurations)
@@ -302,13 +297,13 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     }
   }
 
-  public func isOutOfWindow(configurations: [String: [_AEMConfiguration]]?) -> Bool {
+  func isOutOfWindow(configurations: [String: [_AEMConfiguration]]?) -> Bool {
     isOutOfWindow(configuration: findConfiguration(in: configurations))
   }
 
   // Second attempt
 
-  public func getHMAC(delay: Int) -> String? {
+  func getHMAC(delay: Int) -> String? {
     guard
       acsConfigurationID != nil,
       let secretKey = acsSharedSecret,
@@ -429,9 +424,9 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
 
   // MARK: - NSCoding
 
-  public static var supportsSecureCoding: Bool { true }
+  static var supportsSecureCoding: Bool { true }
 
-  public required init?(coder decoder: NSCoder) {
+  required init?(coder decoder: NSCoder) {
     guard
       let campaignID = decoder.decodeObject(of: NSString.self, forKey: Key.campaignIdentifier.rawValue),
       let acsToken = decoder.decodeObject(of: NSString.self, forKey: Key.acsToken.rawValue),
@@ -479,7 +474,7 @@ public class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:thi
     self.isConversionFilteringEligible = isConversionFilteringEligible
   }
 
-  public func encode(with encoder: NSCoder) {
+  func encode(with encoder: NSCoder) {
     encoder.encode(campaignID, forKey: Key.campaignIdentifier.rawValue)
     encoder.encode(acsToken, forKey: Key.acsToken.rawValue)
     encoder.encode(acsSharedSecret, forKey: Key.acsSharedSecret.rawValue)

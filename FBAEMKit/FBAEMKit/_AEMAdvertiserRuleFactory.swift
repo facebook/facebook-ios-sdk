@@ -11,19 +11,13 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMAdvertiserRuleFactory)
-public final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
+final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
 
   // MARK: - _AEMAdvertiserRuleProviding
 
-  public func createRule(json: String?) -> _AEMAdvertiserRuleMatching? {
+  func createRule(json: String?) -> _AEMAdvertiserRuleMatching? {
     guard let json = json,
           let data = json.data(using: .utf8)
     else {
@@ -39,7 +33,7 @@ public final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProvid
     }
   }
 
-  public func createRule(dictionary: [String: Any]) -> _AEMAdvertiserRuleMatching? {
+  func createRule(dictionary: [String: Any]) -> _AEMAdvertiserRuleMatching? {
     let `operator` = getOperator(from: dictionary)
 
     if isOperatorForMultiEntryRule(`operator`) {

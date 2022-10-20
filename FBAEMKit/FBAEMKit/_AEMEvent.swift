@@ -10,15 +10,9 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMEvent)
-public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
+final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
   enum CodingKeys: String, CodingKey {
     case eventName = "event_name"
     case values
@@ -26,11 +20,11 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
     case amount
   }
 
-  public private(set) var eventName: String
-  public private(set) var values: [String: Double]?
+  private(set) var eventName: String
+  private(set) var values: [String: Double]?
 
   @objc(initWithJSON:)
-  public init?(dict: [String: Any]?) {
+  init?(dict: [String: Any]?) {
     guard let dict = dict else { return nil }
 
     // Event name is a required field
@@ -65,11 +59,11 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
 
   // MARK: NSSecureCoding
 
-  public static var supportsSecureCoding: Bool {
+  static var supportsSecureCoding: Bool {
     true
   }
 
-  public convenience init?(coder: NSCoder) {
+  convenience init?(coder: NSCoder) {
     let decodedEventName = coder.decodeObject(of: NSString.self, forKey: CodingKeys.eventName.rawValue) as String? ?? ""
     let decodedValues = coder.decodeObject(
       of: [NSDictionary.self, NSNumber.self, NSString.self],
@@ -78,20 +72,20 @@ public final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
     self.init(eventName: decodedEventName, values: decodedValues)
   }
 
-  public func encode(with coder: NSCoder) {
+  func encode(with coder: NSCoder) {
     coder.encode(eventName, forKey: CodingKeys.eventName.rawValue)
     if values != nil {
       coder.encode(values, forKey: CodingKeys.values.rawValue)
     }
   }
 
-  public func copy(with zone: NSZone? = nil) -> Any {
+  func copy(with zone: NSZone? = nil) -> Any {
     self
   }
 
   // MARK: - NSObject
 
-  public override func isEqual(_ object: Any?) -> Bool {
+  override func isEqual(_ object: Any?) -> Bool {
     guard let other = object as? _AEMEvent else { return false }
 
     return eventName == other.eventName
