@@ -10,8 +10,6 @@
 
 import Foundation
 
-@objcMembers
-@objc(FBAEMConfiguration)
 final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
@@ -43,7 +41,6 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     self.ruleProvider = ruleProvider
   }
 
-  @objc(initWithJSON:)
   init?(json dict: [String: Any]?) {
     guard let dict = dict else { return nil }
 
@@ -133,7 +130,6 @@ final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     return currencySet
   }
 
-  @objc(isSameValidFrom:businessID:)
   func isSame(validFrom: Int, businessID: String?) -> Bool {
     (validFrom == self.validFrom) && isSameBusinessID(businessID)
   }

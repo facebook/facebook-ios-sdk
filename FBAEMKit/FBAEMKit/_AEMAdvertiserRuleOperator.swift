@@ -8,7 +8,6 @@
 
 #if !os(tvOS)
 
-@objc(FBAEMAdvertiserRuleOperator)
 enum _AEMAdvertiserRuleOperator: Int {
   case unknown = 0
   // Multi Entry Rule Operator

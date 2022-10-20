@@ -10,8 +10,6 @@
 
 import Foundation
 
-@objcMembers
-@objc(FBAEMSettings)
 final class _AEMSettings: NSObject {
   static func appID() -> String? {
     // swiftformat:disable:next redundantSelf

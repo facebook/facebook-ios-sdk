@@ -10,7 +10,6 @@
 
 import Foundation
 
-@objc
 protocol _AEMAdvertiserRuleMatching {
   func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool
 }
