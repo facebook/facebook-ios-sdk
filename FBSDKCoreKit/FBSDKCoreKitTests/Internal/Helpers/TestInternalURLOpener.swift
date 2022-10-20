@@ -13,17 +13,11 @@ import Foundation
 public final class TestInternalURLOpener: NSObject, _InternalURLOpener {
   var capturedOpenURL: URL?
   var capturedCanOpenURL: URL?
-  var openURLStubs = [URL: Bool]()
-  public var openAlwaysSucceeds = false
   var canOpenURL: Bool
   var capturedOpenURLCompletion: ((Bool) -> Void)?
 
   init(canOpenURL: Bool = false) {
     self.canOpenURL = canOpenURL
-  }
-
-  func stubOpen(url: URL, success: Bool) {
-    openURLStubs[url] = success
   }
 
   public func canOpen(_ url: URL) -> Bool {
@@ -33,16 +27,7 @@ public final class TestInternalURLOpener: NSObject, _InternalURLOpener {
 
   public func open(_ url: URL) -> Bool {
     capturedOpenURL = url
-
-    guard !openAlwaysSucceeds else {
-      return true
-    }
-
-    guard let didOpen = openURLStubs[url] else {
-      fatalError("Must stub whether \(url.absoluteString) can be opened")
-    }
-
-    return didOpen
+    return true
   }
 
   public func open(

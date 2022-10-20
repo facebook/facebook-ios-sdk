@@ -13,25 +13,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKTestURLOpener: NSObject <FBSDKInternalURLOpener>
-@end
-
-@implementation FBSDKTestURLOpener
-
-- (BOOL)canOpenURL:(nonnull NSURL *)url {
-  return true;
-}
-
-- (BOOL)openURL:(nonnull NSURL *)url {
-  return true;
-}
-
-- (void)openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<UIApplicationOpenExternalURLOptionsKey,id> *)options completionHandler:(nullable void (^)(BOOL))completion {
-  completion(true);
-}
-
-@end
-
 @interface FBSDKAppLinkNavigationTests : XCTestCase
 @property (nullable, nonatomic) FBSDKAppLinkNavigation *appLinkNavigation;
 @property (nullable, nonatomic) FBSDKAppLink *appLink;
@@ -49,16 +30,17 @@ NS_ASSUME_NONNULL_BEGIN
   
   if (@available(iOS 13, *)) {
     [FBSDKAppLinkNavigation setTestTypeDependencies];
-    FBSDKAppLinkNavigation.testURLOpener.openAlwaysSucceeds = YES;
+    [FBSDKAppLinkNavigation.testURLOpener stubOpenSuccessWithHost:@"host1.com" succeeds:true];
   }
   
-  self.url = [NSURL URLWithString:@"https://www.example.com"];
+  self.url = [NSURL URLWithString:@"https://host1.com"];
   self.appLink = [[FBSDKAppLink alloc] initWithSourceURL:self.url targets:@[] webURL:nil];
   
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   self.appLinkNavigation = [FBSDKAppLinkNavigation navigationWithAppLink:self.appLink
-                                                                  extras:@{} appLinkData:@{}
+                                                                  extras:@{}
+                                                             appLinkData:@{}
                                                                 settings:self.settings];
 #pragma clang diagnostic pop
 }
@@ -71,9 +53,11 @@ NS_ASSUME_NONNULL_BEGIN
   self.appLinkData = nil;
   self.settings = nil;
   self.appLinkNavigation = nil;
+
   if (@available(iOS 13, *)) {
     [FBSDKAppLinkNavigation resetTestTypeDependencies];
   }
+
   [super tearDown];
 }
 

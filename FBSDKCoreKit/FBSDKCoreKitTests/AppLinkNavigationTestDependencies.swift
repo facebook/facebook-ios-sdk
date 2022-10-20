@@ -9,21 +9,18 @@
 @testable import FBSDKCoreKit
 
 extension AppLinkNavigation {
-
   @available(iOS 13, *)
-  @objc
-  static var testURLOpener: TestInternalURLOpener? {
+  @objc static var testURLOpener: AppLinkNavigationTests.URLOpener? {
     // swiftformat:disable:next redundantSelf
-    self.urlOpener as? TestInternalURLOpener
+    self.urlOpener as? AppLinkNavigationTests.URLOpener
   }
 
   @available(iOS 13, *)
-  @objc
-  public static func setTestTypeDependencies() {
+  @objc public static func setTestTypeDependencies() {
     AppLinkNavigation.setDependencies(
       .init(
         settings: TestSettings(),
-        urlOpener: TestInternalURLOpener(),
+        urlOpener: AppLinkNavigationTests.URLOpener(canOpenURL: true),
         appLinkEventPoster: TestAppLinkEventPoster(),
         appLinkResolver: TestAppLinkResolver()
       )
@@ -31,8 +28,7 @@ extension AppLinkNavigation {
   }
 
   @available(iOS 13, *)
-  @objc
-  public static func resetTestTypeDependencies() {
+  @objc public static func resetTestTypeDependencies() {
     AppLinkNavigation.resetDependencies()
   }
 }
