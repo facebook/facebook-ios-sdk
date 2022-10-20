@@ -11,8 +11,6 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-@objcMembers
-@objc(FBAEMNetworker)
 final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
 
   enum Error: Swift.Error {

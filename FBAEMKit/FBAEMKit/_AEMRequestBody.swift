@@ -11,8 +11,6 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-@objcMembers
-@objc(FBAEMRequestBody)
 final class _AEMRequestBody: NSObject {
 
   /// Compressed version of `data`
@@ -51,7 +49,6 @@ final class _AEMRequestBody: NSObject {
   /// JSON Dictionary
   private var json = [String: Any]()
 
-  @objc(appendWithKey:formValue:)
   func append(withKey key: String?, formValue value: String?) {
     _append(with: key, filename: nil, contentType: nil) { [weak self] in
       guard let value = value else {

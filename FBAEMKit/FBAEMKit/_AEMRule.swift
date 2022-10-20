@@ -11,8 +11,6 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-@objcMembers
-@objc(FBAEMRule)
 final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   let conversionValue: Int
   let priority: Int
@@ -24,7 +22,6 @@ final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
     static let eventsKey = "events"
   }
 
-  @objc(initWithJSON:)
   init?(json dict: [String: Any]) {
     let conversionValue = dict[Keys.conversionValueKey] as? NSNumber
     let priority = dict[Keys.priorityKey] as? NSNumber
@@ -47,7 +44,6 @@ final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   /// Check if event contains target event with name
   /// - Parameter event: Event name to check for
   /// - Returns: Boolean
-  @objc(containsEvent:)
   func containsEvent(_ event: String) -> Bool {
     events.contains { $0.eventName == event }
   }
@@ -57,7 +53,6 @@ final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   ///   - recordedEvents: Recorded events to check
   ///   - recordedValues: Recorded values to check
   /// - Returns: Boolean
-  @objc(isMatchedWithRecordedEvents:recordedValues:)
   func isMatched(
     withRecordedEvents recordedEvents: Set<String>?,
     recordedValues: [String: [String: Any]]?

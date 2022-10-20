@@ -9,7 +9,6 @@
 @testable import FBAEMKit
 import Foundation
 
-@objcMembers
 final class TestInvocation: _AEMInvocation {
 
   var attributionCallCount = 0

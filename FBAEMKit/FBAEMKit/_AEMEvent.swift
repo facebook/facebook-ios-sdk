@@ -10,8 +10,6 @@
 
 import Foundation
 
-@objcMembers
-@objc(FBAEMEvent)
 final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
   enum CodingKeys: String, CodingKey {
     case eventName = "event_name"
@@ -23,7 +21,6 @@ final class _AEMEvent: NSObject, NSCopying, NSSecureCoding {
   private(set) var eventName: String
   private(set) var values: [String: Double]?
 
-  @objc(initWithJSON:)
   init?(dict: [String: Any]?) {
     guard let dict = dict else { return nil }
 

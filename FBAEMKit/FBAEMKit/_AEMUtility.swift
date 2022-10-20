@@ -11,8 +11,6 @@ import Foundation
 
 #if !os(tvOS)
 
-@objcMembers
-@objc(FBAEMUtility)
 final class _AEMUtility: NSObject {
   private enum Keys {
     static let content = "fb_content"
@@ -22,7 +20,7 @@ final class _AEMUtility: NSObject {
     static let quantity = "quantity"
   }
 
-  @objc(sharedUtility) static let shared = _AEMUtility()
+  static let shared = _AEMUtility()
 
   func getMatchedInvocation(_ invocations: [_AEMInvocation], businessID: String?) -> _AEMInvocation? {
     guard let businessID = businessID else {

@@ -11,8 +11,6 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-@objcMembers
-@objc(FBAEMAdvertiserSingleEntryRule)
 final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, _AEMAdvertiserRuleMatching {
 
   var `operator`: _AEMAdvertiserRuleOperator
@@ -51,7 +49,6 @@ final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, 
     super.init()
   }
 
-  @objc(initWithOperator:paramKey:linguisticCondition:numericalCondition:arrayCondition:)
   convenience init(
     with operator: _AEMAdvertiserRuleOperator,
     paramKey: String,

@@ -10,8 +10,6 @@
 
 import Foundation
 
-@objcMembers
-@objc(FBAEMAdvertiserMultiEntryRule)
 final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMatching, NSCopying, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
@@ -22,7 +20,6 @@ final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMatching, 
   let `operator`: _AEMAdvertiserRuleOperator
   let rules: [_AEMAdvertiserRuleMatching]
 
-  @objc(initWithOperator:rules:)
   init(with operator: _AEMAdvertiserRuleOperator, rules: [_AEMAdvertiserRuleMatching]) {
     self.operator = `operator`
     self.rules = rules

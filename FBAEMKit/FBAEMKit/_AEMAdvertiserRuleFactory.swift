@@ -11,8 +11,6 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-@objcMembers
-@objc(FBAEMAdvertiserRuleFactory)
 final class _AEMAdvertiserRuleFactory: NSObject, _AEMAdvertiserRuleProviding {
 
   // MARK: - _AEMAdvertiserRuleProviding

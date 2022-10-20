@@ -12,8 +12,6 @@ import CommonCrypto.CommonHMAC
 import FBSDKCoreKit_Basics
 import Foundation
 
-@objcMembers
-@objc(FBAEMInvocation)
 class _AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefer_final_classes
 
   var campaignID: String
