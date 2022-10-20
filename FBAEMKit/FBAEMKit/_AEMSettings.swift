@@ -10,16 +10,10 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMSettings)
-public final class _AEMSettings: NSObject {
-  public static func appID() -> String? {
+final class _AEMSettings: NSObject {
+  static func appID() -> String? {
     // swiftformat:disable:next redundantSelf
     self.bundle?.object(forInfoDictionaryKey: "FacebookAppID") as? String
   }

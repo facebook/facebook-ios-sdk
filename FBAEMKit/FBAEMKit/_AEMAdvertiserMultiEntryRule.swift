@@ -10,15 +10,9 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMAdvertiserMultiEntryRule)
-public final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMatching, NSCopying, NSSecureCoding {
+final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMatching, NSCopying, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
     case `operator`
@@ -29,14 +23,14 @@ public final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMat
   let rules: [_AEMAdvertiserRuleMatching]
 
   @objc(initWithOperator:rules:)
-  public init(with operator: _AEMAdvertiserRuleOperator, rules: [_AEMAdvertiserRuleMatching]) {
+  init(with operator: _AEMAdvertiserRuleOperator, rules: [_AEMAdvertiserRuleMatching]) {
     self.operator = `operator`
     self.rules = rules
   }
 
   // MARK: - _AEMAdvertiserRuleMatching
 
-  public func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool {
+  func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool {
     var isMatched = `operator` != .or
     for rule in rules {
       let doesSubruleMatch = rule.isMatchedEventParameters(eventParams)
@@ -55,9 +49,9 @@ public final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMat
 
   // MARK: - NSCoding
 
-  public static var supportsSecureCoding: Bool { true }
+  static var supportsSecureCoding: Bool { true }
 
-  public convenience init?(coder: NSCoder) {
+  convenience init?(coder: NSCoder) {
     let `operator` = _AEMAdvertiserRuleOperator(rawValue: coder.decodeInteger(forKey: CodingKeys.operator.rawValue))
     let classes = [
       NSArray.self,
@@ -72,14 +66,14 @@ public final class _AEMAdvertiserMultiEntryRule: NSObject, _AEMAdvertiserRuleMat
     self.init(with: `operator`, rules: rules)
   }
 
-  public func encode(with coder: NSCoder) {
+  func encode(with coder: NSCoder) {
     coder.encode(`operator`.rawValue, forKey: CodingKeys.operator.rawValue)
     coder.encode(rules, forKey: CodingKeys.rules.rawValue)
   }
 
   // MARK: - NSCopying
 
-  public func copy(with zone: NSZone? = nil) -> Any {
+  func copy(with zone: NSZone? = nil) -> Any {
     self
   }
 }

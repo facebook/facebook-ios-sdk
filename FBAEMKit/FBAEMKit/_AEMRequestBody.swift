@@ -11,17 +11,12 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMRequestBody)
-public final class _AEMRequestBody: NSObject {
+final class _AEMRequestBody: NSObject {
 
   /// Compressed version of `data`
-  public func compressedData() -> Data? {
+  func compressedData() -> Data? {
     if data.isEmpty {
       return nil
     }
@@ -29,7 +24,7 @@ public final class _AEMRequestBody: NSObject {
   }
 
   #if DEBUG
-  public var multipartData: Data {
+  var multipartData: Data {
     _data
   }
   #endif
@@ -42,7 +37,7 @@ public final class _AEMRequestBody: NSObject {
   /// Callback alias
   typealias AEMCodeBlock = () -> Void
 
-  public var data: Data {
+  var data: Data {
     var jsonData = Data()
     if !json.keys.isEmpty,
        let data = try? TypeUtility.data(withJSONObject: json, options: .sortedKeys) {
@@ -57,7 +52,7 @@ public final class _AEMRequestBody: NSObject {
   private var json = [String: Any]()
 
   @objc(appendWithKey:formValue:)
-  public func append(withKey key: String?, formValue value: String?) {
+  func append(withKey key: String?, formValue value: String?) {
     _append(with: key, filename: nil, contentType: nil) { [weak self] in
       guard let value = value else {
         return

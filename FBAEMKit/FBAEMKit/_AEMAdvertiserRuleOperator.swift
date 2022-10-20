@@ -8,14 +8,8 @@
 
 #if !os(tvOS)
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objc(FBAEMAdvertiserRuleOperator)
-public enum _AEMAdvertiserRuleOperator: Int {
+enum _AEMAdvertiserRuleOperator: Int {
   case unknown = 0
   // Multi Entry Rule Operator
   case and

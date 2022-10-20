@@ -11,15 +11,10 @@
 import Foundation
 
 /**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
-
  Describes anything that can provide instances of `AEMAdvertiserRuleMatching`
  */
 @objc(FBAEMAdvertiserRuleProviding)
-public protocol _AEMAdvertiserRuleProviding {
+protocol _AEMAdvertiserRuleProviding {
 
   @objc(createRuleWithJson:)
   func createRule(json: String?) -> _AEMAdvertiserRuleMatching?

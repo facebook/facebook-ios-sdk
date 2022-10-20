@@ -11,15 +11,9 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMNetworker)
-public final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
+final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
 
   enum Error: Swift.Error {
     case missingOperationQueue
@@ -39,7 +33,7 @@ public final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegat
     static let agent = "\(Values.userAgentBase).\(Values.versionString)"
   }
 
-  public var userAgentSuffix: String?
+  var userAgentSuffix: String?
 
   lazy var userAgent: String = {
     var agentWithSuffix = Values.agent
@@ -57,7 +51,7 @@ public final class _AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegat
 
   // MARK: - AEMNetworking
 
-  public func startGraphRequest(
+  func startGraphRequest(
     withGraphPath graphPath: String,
     parameters: [String: Any],
     tokenString: String?,

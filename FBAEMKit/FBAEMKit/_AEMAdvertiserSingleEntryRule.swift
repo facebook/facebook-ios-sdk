@@ -11,21 +11,15 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMAdvertiserSingleEntryRule)
-public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, _AEMAdvertiserRuleMatching {
+final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, _AEMAdvertiserRuleMatching {
 
-  public internal(set) var `operator`: _AEMAdvertiserRuleOperator
-  public let paramKey: String
-  public let linguisticCondition: String?
-  public let numericalCondition: Double?
-  public let arrayCondition: [String]?
+  var `operator`: _AEMAdvertiserRuleOperator
+  let paramKey: String
+  let linguisticCondition: String?
+  let numericalCondition: Double?
+  let arrayCondition: [String]?
 
   private enum Keys {
     static let `operator` = "operator"
@@ -42,7 +36,7 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
 
   // MRAK: - Init
 
-  public init(
+  init(
     operator: _AEMAdvertiserRuleOperator,
     paramKey: String,
     linguisticCondition: String?,
@@ -58,7 +52,7 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
   }
 
   @objc(initWithOperator:paramKey:linguisticCondition:numericalCondition:arrayCondition:)
-  public convenience init(
+  convenience init(
     with operator: _AEMAdvertiserRuleOperator,
     paramKey: String,
     linguisticCondition: String?,
@@ -76,7 +70,7 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
 
   // MARK: - _AEMAdvertiserRuleMatching
 
-  public func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool {
+  func isMatchedEventParameters(_ eventParams: [String: Any]?) -> Bool {
     let paramPath = paramKey.components(separatedBy: Delimeter.param)
     return isMatchedEventParameters(eventParams: eventParams, paramPath: paramPath)
   }
@@ -296,9 +290,9 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
 
   // MARK: - NSCoding
 
-  public static var supportsSecureCoding = true
+  static var supportsSecureCoding = true
 
-  public init?(coder: NSCoder) {
+  init?(coder: NSCoder) {
     let operatorValue = coder.decodeInteger(forKey: Keys.operator)
     guard let `operator` = _AEMAdvertiserRuleOperator(rawValue: operatorValue),
           let paramKey = coder.decodeObject(of: NSString.self, forKey: Keys.param),
@@ -316,7 +310,7 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
     super.init()
   }
 
-  public func encode(with coder: NSCoder) {
+  func encode(with coder: NSCoder) {
     coder.encode(`operator`.rawValue, forKey: Keys.operator)
     coder.encode(paramKey, forKey: Keys.param)
     coder.encode(linguisticCondition, forKey: Keys.stringValue)
@@ -326,11 +320,11 @@ public final class _AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureC
 
   // MARK: - NSCopying
 
-  public func copy(with zone: NSZone? = nil) -> Any {
+  func copy(with zone: NSZone? = nil) -> Any {
     self
   }
 
-  public override func isEqual(_ object: Any?) -> Bool {
+  override func isEqual(_ object: Any?) -> Bool {
     if let rule = object as? _AEMAdvertiserSingleEntryRule {
       let isOpEqual = self.operator == rule.operator
       let isParamKeyEqual = paramKey == rule.paramKey

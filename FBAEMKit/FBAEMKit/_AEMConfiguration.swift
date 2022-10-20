@@ -10,14 +10,9 @@
 
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMConfiguration)
-public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
+final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
     case defaultCurrency = "default_currency"
@@ -30,26 +25,26 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     case paramRule = "param_rule"
   }
 
-  public private(set) var cutoffTime: Int
+  private(set) var cutoffTime: Int
 
   /// The UNIX timestamp of configuration's valid date and works as a unqiue identifier of the configuration
-  public private(set) var validFrom: Int
-  public private(set) var defaultCurrency: String
-  public private(set) var mode: String
-  public private(set) var businessID: String?
-  public private(set) var matchingRule: _AEMAdvertiserRuleMatching?
-  public private(set) var conversionValueRules: [_AEMRule]
-  public private(set) var eventSet: Set<String>
-  public private(set) var currencySet: Set<String>
+  private(set) var validFrom: Int
+  private(set) var defaultCurrency: String
+  private(set) var mode: String
+  private(set) var businessID: String?
+  private(set) var matchingRule: _AEMAdvertiserRuleMatching?
+  private(set) var conversionValueRules: [_AEMRule]
+  private(set) var eventSet: Set<String>
+  private(set) var currencySet: Set<String>
 
-  public private(set) static var ruleProvider: _AEMAdvertiserRuleProviding?
+  private(set) static var ruleProvider: _AEMAdvertiserRuleProviding?
 
-  public static func configure(withRuleProvider ruleProvider: _AEMAdvertiserRuleProviding) {
+  static func configure(withRuleProvider ruleProvider: _AEMAdvertiserRuleProviding) {
     self.ruleProvider = ruleProvider
   }
 
   @objc(initWithJSON:)
-  public init?(json dict: [String: Any]?) {
+  init?(json dict: [String: Any]?) {
     guard let dict = dict else { return nil }
 
     guard let defaultCurrency = dict[CodingKeys.defaultCurrency.rawValue] as? String,
@@ -139,17 +134,17 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
   }
 
   @objc(isSameValidFrom:businessID:)
-  public func isSame(validFrom: Int, businessID: String?) -> Bool {
+  func isSame(validFrom: Int, businessID: String?) -> Bool {
     (validFrom == self.validFrom) && isSameBusinessID(businessID)
   }
 
-  public func isSameBusinessID(_ businessID: String?) -> Bool {
+  func isSameBusinessID(_ businessID: String?) -> Bool {
     businessID == self.businessID
   }
 
   // MARK: NSSecureCoding
 
-  public func encode(with coder: NSCoder) {
+  func encode(with coder: NSCoder) {
     coder.encode(defaultCurrency, forKey: CodingKeys.defaultCurrency.rawValue)
     coder.encode(cutoffTime, forKey: CodingKeys.cutoffTime.rawValue)
     coder.encode(validFrom, forKey: CodingKeys.validFrom.rawValue)
@@ -159,7 +154,7 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     coder.encode(conversionValueRules, forKey: CodingKeys.conversionValueRules.rawValue)
   }
 
-  public convenience init?(coder: NSCoder) {
+  convenience init?(coder: NSCoder) {
     let defaultCurrency = coder.decodeObject(
       of: NSString.self, forKey: CodingKeys.defaultCurrency.rawValue
     ) as String? ?? ""
@@ -190,11 +185,11 @@ public final class _AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
     )
   }
 
-  public static var supportsSecureCoding: Bool { true }
+  static var supportsSecureCoding: Bool { true }
 
   // MARK: NSCopying
 
-  public func copy(with zone: NSZone? = nil) -> Any {
+  func copy(with zone: NSZone? = nil) -> Any {
     self
   }
 }

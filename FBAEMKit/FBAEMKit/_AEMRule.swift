@@ -11,18 +11,12 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-/**
- Internal Type exposed to facilitate transition to Swift.
- API Subject to change or removal without warning. Do not use.
-
- @warning INTERNAL - DO NOT USE
- */
 @objcMembers
 @objc(FBAEMRule)
-public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
-  public let conversionValue: Int
-  public let priority: Int
-  public let events: [_AEMEvent]
+final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
+  let conversionValue: Int
+  let priority: Int
+  let events: [_AEMEvent]
 
   private enum Keys {
     static let conversionValueKey = "conversion_value"
@@ -31,7 +25,7 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   }
 
   @objc(initWithJSON:)
-  public init?(json dict: [String: Any]) {
+  init?(json dict: [String: Any]) {
     let conversionValue = dict[Keys.conversionValueKey] as? NSNumber
     let priority = dict[Keys.priorityKey] as? NSNumber
     let events = _AEMRule.parse(events: dict[Keys.eventsKey] as? [[String: Any]] ?? []) ?? []
@@ -54,7 +48,7 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   /// - Parameter event: Event name to check for
   /// - Returns: Boolean
   @objc(containsEvent:)
-  public func containsEvent(_ event: String) -> Bool {
+  func containsEvent(_ event: String) -> Bool {
     events.contains { $0.eventName == event }
   }
 
@@ -64,7 +58,7 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
   ///   - recordedValues: Recorded values to check
   /// - Returns: Boolean
   @objc(isMatchedWithRecordedEvents:recordedValues:)
-  public func isMatched(
+  func isMatched(
     withRecordedEvents recordedEvents: Set<String>?,
     recordedValues: [String: [String: Any]]?
   ) -> Bool {
@@ -121,11 +115,11 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
 
   // MARK: - NSCoding
 
-  public static var supportsSecureCoding: Bool {
+  static var supportsSecureCoding: Bool {
     true
   }
 
-  public init?(coder: NSCoder) {
+  init?(coder: NSCoder) {
     let conversionValue = coder.decodeInteger(forKey: Keys.conversionValueKey)
     let priority = coder.decodeInteger(forKey: Keys.priorityKey)
     let events: [_AEMEvent] = coder.decodeObject(
@@ -138,17 +132,17 @@ public final class _AEMRule: NSObject, NSCopying, NSSecureCoding {
     self.events = events
   }
 
-  public func encode(with coder: NSCoder) {
+  func encode(with coder: NSCoder) {
     coder.encode(conversionValue, forKey: Keys.conversionValueKey)
     coder.encode(priority, forKey: Keys.priorityKey)
     coder.encode(events, forKey: Keys.eventsKey)
   }
 
-  public func copy(with zone: NSZone? = nil) -> Any {
+  func copy(with zone: NSZone? = nil) -> Any {
     self
   }
 
-  public override func isEqual(_ object: Any?) -> Bool {
+  override func isEqual(_ object: Any?) -> Bool {
     guard let rule = object as? _AEMRule else {
       return false
     }
