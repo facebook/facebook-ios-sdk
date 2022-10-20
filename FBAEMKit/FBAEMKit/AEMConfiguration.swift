@@ -10,7 +10,7 @@
 
 import Foundation
 
-final class AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
+final class AEMConfiguration: NSObject, NSSecureCoding {
 
   enum CodingKeys: String, CodingKey {
     case defaultCurrency = "default_currency"
@@ -182,12 +182,6 @@ final class AEMConfiguration: NSObject, NSCopying, NSSecureCoding {
   }
 
   static var supportsSecureCoding: Bool { true }
-
-  // MARK: NSCopying
-
-  func copy(with zone: NSZone? = nil) -> Any {
-    self
-  }
 }
 
 #endif

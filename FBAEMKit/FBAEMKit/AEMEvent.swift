@@ -10,7 +10,7 @@
 
 import Foundation
 
-final class AEMEvent: NSObject, NSCopying, NSSecureCoding {
+final class AEMEvent: NSObject, NSSecureCoding {
   enum CodingKeys: String, CodingKey {
     case eventName = "event_name"
     case values
@@ -74,10 +74,6 @@ final class AEMEvent: NSObject, NSCopying, NSSecureCoding {
     if values != nil {
       coder.encode(values, forKey: CodingKeys.values.rawValue)
     }
-  }
-
-  func copy(with zone: NSZone? = nil) -> Any {
-    self
   }
 
   // MARK: - NSObject

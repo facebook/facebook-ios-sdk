@@ -11,7 +11,7 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-final class AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, AEMAdvertiserRuleMatching {
+final class AEMAdvertiserSingleEntryRule: NSObject, NSSecureCoding, AEMAdvertiserRuleMatching {
 
   var `operator`: AEMAdvertiserRuleOperator
   let paramKey: String
@@ -313,12 +313,6 @@ final class AEMAdvertiserSingleEntryRule: NSObject, NSCopying, NSSecureCoding, A
     coder.encode(linguisticCondition, forKey: Keys.stringValue)
     coder.encode(numericalCondition, forKey: Keys.numberValue)
     coder.encode(arrayCondition, forKey: Keys.arrayValue)
-  }
-
-  // MARK: - NSCopying
-
-  func copy(with zone: NSZone? = nil) -> Any {
-    self
   }
 
   override func isEqual(_ object: Any?) -> Bool {
