@@ -10,7 +10,7 @@
 
 import Foundation
 
-final class AEMSettings: NSObject {
+enum AEMSettings {
   static func appID() -> String? {
     // swiftformat:disable:next redundantSelf
     self.bundle?.object(forInfoDictionaryKey: "FacebookAppID") as? String
