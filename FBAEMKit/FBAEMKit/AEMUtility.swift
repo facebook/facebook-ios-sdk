@@ -11,7 +11,7 @@ import Foundation
 
 #if !os(tvOS)
 
-final class AEMUtility: NSObject {
+final class AEMUtility {
   private enum Keys {
     static let content = "fb_content"
     static let contentID = "fb_content_id"

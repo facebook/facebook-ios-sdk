@@ -11,7 +11,7 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-final class AEMRequestBody: NSObject {
+final class AEMRequestBody {
 
   /// Compressed version of `data`
   func compressedData() -> Data? {

@@ -116,8 +116,8 @@ final class AEMConfigurationTests: XCTestCase {
   }
 
   func testConfiguration() {
-    XCTAssertEqual(
-      AEMConfiguration.ruleProvider as! AEMAdvertiserRuleFactory, // swiftlint:disable:this force_cast
+    XCTAssertIdentical(
+      AEMConfiguration.ruleProvider as AnyObject,
       advertiserRuleFactory,
       "Should configure the AEMConfiguration correctly"
     )
