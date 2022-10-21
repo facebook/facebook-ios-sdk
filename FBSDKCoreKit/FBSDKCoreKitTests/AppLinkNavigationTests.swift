@@ -32,7 +32,7 @@ final class AppLinkNavigationTests: XCTestCase {
   var eventPoster: TestMeasurementEvent!
   var resolver: TestAppLinkResolver!
   var settings: TestSettings!
-  var urlOpener: URLOpener!
+  fileprivate var urlOpener: URLOpener!
   var navigation: AppLinkNavigation!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -633,8 +633,8 @@ fileprivate extension String {
 // MARK: - Custom Test Doubles
 
 extension AppLinkNavigationTests {
-  @objcMembers
-  @objc public final class URLOpener: NSObject, _InternalURLOpener {
+
+  fileprivate final class URLOpener: _InternalURLOpener {
     var capturedOpenURL: URL?
     var openSuccessStubsByHost = [String: Bool]()
     var canOpenURL: Bool
@@ -643,13 +643,13 @@ extension AppLinkNavigationTests {
       self.canOpenURL = canOpenURL
     }
 
-    public func stubOpenSuccess(host: String, succeeds: Bool) {
+    fileprivate func stubOpenSuccess(host: String, succeeds: Bool) {
       openSuccessStubsByHost[host] = succeeds
     }
 
-    public func canOpen(_ url: URL) -> Bool { canOpenURL }
+    fileprivate func canOpen(_ url: URL) -> Bool { canOpenURL }
 
-    public func open(_ url: URL) -> Bool {
+    fileprivate func open(_ url: URL) -> Bool {
       capturedOpenURL = url
 
       guard
@@ -662,7 +662,7 @@ extension AppLinkNavigationTests {
       return didOpen
     }
 
-    public func open(
+    fileprivate func open(
       _ url: URL,
       options: [UIApplication.OpenExternalURLOptionsKey: Any],
       completionHandler completion: ((Bool) -> Void)?
