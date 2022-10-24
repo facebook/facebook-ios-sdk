@@ -74,6 +74,8 @@ main() {
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
       "FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
+      "FBSDKCoreKit/FBSDKCoreKitTests/AppLinkNavigationTests.swift"
+      "FBAEMKit/FBAEMKit/AEMNetworker.swift"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
@@ -135,7 +137,7 @@ grep_for_old_version() {
   RED='\033[1;31m'
   RESET='\033[0m'
 
-  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|Package.swift|\bbuild/|\bdocs/)')
+  FILES_WITH_OLD_VERSION=$(grep -rF "$old_version" -- * | grep -Ev '(CHANGELOG.md|Package.swift|\bbuild/|\bdocs|\.podspec)')
   if [ -n "$FILES_WITH_OLD_VERSION" ]; then
     echo "${RED}ERROR: Grep found the old $old_version version in ${FILES_WITH_OLD_VERSION}${RESET}" 1>&2;
     exit 1
@@ -162,7 +164,7 @@ bump_version() {
 
   local version_change_files=(
     "${SDK_VERSION_FILES[@]}"
-    "${SDK_POD_SPECS[@]}"
+    "FBSDKTVOSKit.podspec"
   )
 
   # Replace the previous version to the new version in relative files
