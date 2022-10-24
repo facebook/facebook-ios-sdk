@@ -10,6 +10,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.1.0...HEAD)
+
+## 15.1.0
+
 ### Changed 
 - The enum `AppLinkNavigation.Type` type has been renamed tp `AppLinkNavigationType`.
 - The initializer `init(appLink:extras:appLinkData:settings:)` in `AppLinkNavigation` ignores the `settings` argument if one is passed.
@@ -38,7 +42,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - The documentation for the property list-backed value `Settings.isCodelessDebugLogEnabled` has been corrected to indicate that the default value is `false`.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.0.0...HEAD)
+[2022-10-24](https://github.com/facebook/facebook-ios-sdk/releases/tag/v15.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.0.0...v15.1.0)
 
 ## 15.0.0
 
