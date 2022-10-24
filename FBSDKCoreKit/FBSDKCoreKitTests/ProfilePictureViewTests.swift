@@ -127,7 +127,7 @@ final class ProfilePictureViewTests: XCTestCase {
       self.profilePictureView.updateImage(data: Data.redIconImage, state: state)
     }
 
-    waitForExpectations(timeout: 2)
+    waitForExpectations(timeout: 4)
     XCTAssertNotNil(profilePictureView.imageView.image, .updatesImageIfSameState)
   }
 
