@@ -51,7 +51,7 @@ Please report bugs or issues to our designated developer support team -- <https:
 
 You can also visit our [Facebook Developer Community Forum](https://developers.facebook.com/community/),
 join the [Facebook Developers Group on Facebook](https://www.facebook.com/groups/fbdevelopers/),
-ask questions on [Stack Overflow](http://facebook.stackoverflow.com),
+ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/facebook-ios-sdk),
 or open an issue in this repository.
 
 ## CONTRIBUTE
