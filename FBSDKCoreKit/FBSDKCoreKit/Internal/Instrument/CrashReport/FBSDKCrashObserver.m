@@ -33,8 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
     frameworks = @[@"FBSDKCoreKit",
                    @"FBSDKLoginKit",
                    @"FBSDKShareKit",
-                   @"FBSDKGamingServicesKit",
-                   @"FBSDKTVOSKit"];
+                   @"FBSDKGamingServicesKit"];
     _featureChecker = featureChecker;
     _graphRequestFactory = graphRequestFactory;
     _settings = settings;
