@@ -19,6 +19,7 @@
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME @"com-facebook-sdk-PersistedAnonymousID.json"
 #define FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY @"anon_id"
 #define FBSDK_APPEVENTSUTILITY_MAX_IDENTIFIER_LENGTH 40
+#define FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY @"com.facebook.sdk.campaignids"
 
 @interface FBSDKAppEventsUtility ()
 
@@ -55,12 +56,14 @@ static FBSDKAppEventsUtility *_shared;
                                            settings:(id<FBSDKSettings>)settings
                                     internalUtility:(id<FBSDKInternalUtility>)internalUtility
                                        errorFactory:(id<FBSDKErrorCreating>)errorFactory
+                                          dataStore:(id<FBSDKDataPersisting>)dataStore
 {
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
   self.deviceInformationProvider = deviceInformationProvider;
   self.settings = settings;
   self.internalUtility = internalUtility;
   self.errorFactory = errorFactory;
+  self.dataStore = dataStore;
 }
 
 - (NSMutableDictionary<NSString *, NSString *> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
@@ -97,6 +100,8 @@ static FBSDKAppEventsUtility *_shared;
   if (userID) {
     [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
+    
+  [FBSDKTypeUtility dictionary:parameters setObject:[self getCampaignIDs] forKey:@"campaign_ids"];
 
   [self.internalUtility extendDictionaryWithDataProcessingOptions:parameters];
 
@@ -203,6 +208,35 @@ static FBSDKAppEventsUtility *_shared;
     FBSDKAppEventNameAdImpression,
     FBSDKAppEventNameAdClick
   ];
+}
+
+- (void)saveCampaignIDs:(NSURL *)url
+{
+  if (!url) {
+    return;
+  }
+  NSDictionary<NSString *, NSString *> *params = [FBSDKBasicUtility dictionaryWithQueryString:url.query];
+  NSString *applinkDataString = params[@"al_applink_data"];
+  if (!applinkDataString) {
+    return;
+  }
+
+  NSDictionary<id, id> *applinkData = [FBSDKTypeUtility dictionaryValue:[FBSDKBasicUtility objectForJSONString:applinkDataString error:NULL]];
+  if (!applinkData) {
+    return;
+  }
+    
+  NSString *campaignIDs = [FBSDKTypeUtility dictionary:applinkData objectForKey:@"campaign_ids" ofType:NSString.class];
+  if (!campaignIDs) {
+    return;
+  }
+    
+  [self.dataStore fb_setObject:campaignIDs forKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY];
+}
+
+- (nullable NSString *)getCampaignIDs
+{
+    return [FBSDKTypeUtility stringValueOrNil:[self.dataStore fb_objectForKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY]];
 }
 
 #pragma mark - Internal, for testing
@@ -477,6 +511,7 @@ static FBSDKAppEventsUtility *_shared;
   self.settings = nil;
   self.internalUtility = nil;
   self.errorFactory = nil;
+  self.dataStore = nil;
   self.cachedAdvertiserIdentifierManager = nil;
 }
 

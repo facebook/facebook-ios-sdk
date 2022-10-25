@@ -273,6 +273,7 @@ public final class ApplicationDelegate: NSObject {
       }
     }
 
+    components.appEventsUtility.saveCampaignIDs(url)
     if handled {
       return true
     } else {

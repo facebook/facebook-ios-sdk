@@ -421,6 +421,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _AppEventsUtility.shared.errorFactory,
       "_AppEventsUtility should not have an error factory by default"
     )
+    XCTAssertNil(
+      _AppEventsUtility.shared.dataStore,
+      "_AppEventsUtility should not have an data store by default"
+    )
 
     configurator.performConfiguration()
 
@@ -444,6 +448,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _AppEventsUtility.shared.errorFactory,
       components.errorFactory,
       "_AppEventsUtility should be configured with the error factory"
+    )
+    XCTAssertTrue(
+      _AppEventsUtility.shared.dataStore === components.defaultDataStore,
+      "_AppEventsUtility should be configured with the data store"
     )
   }
 
