@@ -47,7 +47,6 @@ enum Platform: CaseIterable {
 //                .core,
 //                .login,
 //                .share,
-//                .tvoskit
 //            ]
         }
     }

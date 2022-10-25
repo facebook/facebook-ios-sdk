@@ -60,7 +60,6 @@ main() {
     SDK_KITS=(
       "${SDK_BASE_KITS[@]}"
       "$GAMING_SERVICES_KIT"
-      "FBSDKTVOSKit"
     )
 
     DOCUMENTATION_KITS=(
@@ -164,7 +163,6 @@ bump_version() {
 
   local version_change_files=(
     "${SDK_VERSION_FILES[@]}"
-    "FBSDKTVOSKit.podspec"
   )
 
   # Replace the previous version to the new version in relative files

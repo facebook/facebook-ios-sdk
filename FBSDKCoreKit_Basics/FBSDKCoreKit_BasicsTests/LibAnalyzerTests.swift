@@ -14,7 +14,7 @@ final class LibAnalyzerTests: XCTestCase {
 
   func testGetMethodsTableFromPrefixesAndFrameworks() {
     let prefixes = ["FBSDK", "_FBSDK"]
-    let frameworks = ["FBSDKCoreKit", "FBSDKLoginKit", "FBSDKShareKit", "FBSDKTVOSKit"]
+    let frameworks = ["FBSDKCoreKit", "FBSDKLoginKit", "FBSDKShareKit"]
     let result = LibAnalyzer.getMethodsTable(prefixes, frameworks: frameworks)
     XCTAssertFalse(result.isEmpty, "Should find at least one method declared in the provided frameworks")
   }

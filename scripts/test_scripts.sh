@@ -61,7 +61,6 @@ test_main_setup() {
     "FBSDKLoginKit"
     "FBSDKShareKit"
     "FBSDKMarketingKit"
-    "FBSDKTVOSKit"
   )
 
   local test_pod_specs=(
@@ -69,7 +68,6 @@ test_main_setup() {
     "FBSDKLoginKit.podspec"
     "FBSDKShareKit.podspec"
     "FBSDKMarketingKit.podspec"
-    "FBSDKTVOSKit.podspec"
     "FacebookSDK.podspec"
   )
 
@@ -77,7 +75,6 @@ test_main_setup() {
     "FBSDKCoreKit.podspec"
     "FBSDKLoginKit.podspec"
     "FBSDKShareKit.podspec"
-    "FBSDKTVOSKit.podspec"
   )
 
   local test_version_change_files=(

@@ -36,6 +36,5 @@ push_specs_and_update FBSDKCoreKit
 # 4. FBSDKLoginKit, FBSDKShareKit (dependencies: FBSDKCoreKit_Basics, FBSDKCoreKit)
 push_specs_and_update FBSDKLoginKit FBSDKShareKit
 
-# 5a. FBSDKTVOSKit (dependencies: FBSDKCoreKit_Basics, FBSDKLoginKit, FBSDKShareKit)
-# 5b. FBSDKGamingServicesKit (dependencies: FBSDKCoreKit_Basics, FBSDKCoreKit)
-push_specs_and_update FBSDKTVOSKit FBSDKGamingServicesKit
+# 5. FBSDKGamingServicesKit (dependencies: FBSDKCoreKit_Basics, FBSDKCoreKit)
+push_specs_and_update FBSDKGamingServicesKit

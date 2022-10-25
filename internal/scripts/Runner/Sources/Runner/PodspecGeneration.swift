@@ -9,21 +9,19 @@ struct GeneratePodspecs: ParsableCommand {
 
     mutating func run() throws {
         try Product.allCases
-//    TODO: Uncomment for release
-//      .filter { $0 != .tvoskit }
-                .forEach {
-                    let repository = TemplateRepository(bundle: Bundle.module)
-                    let template = try repository.template(named: "\($0.rawValue).podspec")
+            .forEach {
+                let repository = TemplateRepository(bundle: Bundle.module)
+                let template = try repository.template(named: "\($0.rawValue).podspec")
 
-                    let content = [
-                        "version": try Versioning.extract(useCurrentVersion: true),
-                        "sha": try generateSha(),
-                    ]
+                let content = [
+                    "version": try Versioning.extract(useCurrentVersion: true),
+                    "sha": try generateSha(),
+                ]
 
-                    let podspec = try template.render(content)
+                let podspec = try template.render(content)
 
-                    try replacePodspec(named: $0.rawValue, contents: podspec)
-                }
+                try replacePodspec(named: $0.rawValue, contents: podspec)
+            }
     }
 
     func generateSha() throws -> String {

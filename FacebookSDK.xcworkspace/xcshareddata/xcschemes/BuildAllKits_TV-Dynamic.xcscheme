@@ -62,20 +62,6 @@
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8117C2711D30303D00784D79"
-               BuildableName = "FBSDKTVOSKit.framework"
-               BlueprintName = "FBSDKTVOSKit_TV-Dynamic"
-               ReferencedContainer = "container:FBSDKTVOSKit/FBSDKTVOSKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

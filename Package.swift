@@ -51,9 +51,6 @@ let package = Package(
 
         // The Facebook Gaming Services SDK
         .gaming,
-
-        // The Facebook tvOS SDK.
-        .tv,
     ],
     targets: [
         // The kernel of the SDK
@@ -103,12 +100,6 @@ let package = Package(
 
         // The main Facebook Gaming Services module
         .gaming,
-
-        // The tvOS-specific SDK with an FBSDK-prefixed name.
-        .Prefixed.tv,
-
-        // The tvOS-specific SDK.
-        .tv,
     ],
     cxxLanguageStandard: .cxx11
 )
@@ -120,7 +111,6 @@ extension Product {
     static let share = library(name: .share, targets: [.share, .Prefixed.share])
     static let gaming = library(name: .gaming, targets: [.gaming, .Prefixed.gaming])
     static let aem = library(name: .aem, targets: [.aem, .Prefixed.aem])
-    static let tv = library(name: .tv, targets: [.tv])
 }
 
 extension Target {
@@ -168,8 +158,6 @@ extension Target {
 
     static let gaming = target(name: .gaming, dependencies: [.Prefixed.gaming])
 
-    static let tv = target(name: .tv, dependencies: [.Prefixed.tv])
-
     enum Prefixed {
         static let basics = binaryTarget(
             name: .Prefixed.basics,
@@ -200,11 +188,6 @@ extension Target {
             name: .Prefixed.gaming,
             remoteChecksum: "2e29e0527fb8e9d0220ead643a462cfa3af47a22fa0c89aa190e66a1cf4de799"
         )
-
-        static let tv = binaryTarget(
-            name: .Prefixed.tv,
-            remoteChecksum: "6ff409a1e64373ab158ca7ce4f00cc5cb629a3b968773df4f69827bb72a8b3e7"
-        )
     }
 }
 
@@ -219,7 +202,6 @@ extension Target.Dependency {
         static let login = byName(name: .Prefixed.login)
         static let share = byName(name: .Prefixed.share)
         static let gaming = byName(name: .Prefixed.gaming)
-        static let tv = byName(name: .Prefixed.tv)
     }
 }
 
@@ -248,7 +230,6 @@ extension String {
     static let login = "FacebookLogin"
     static let share = "FacebookShare"
     static let gaming = "FacebookGamingServices"
-    static let tv = "FacebookTV"
 
     enum Prefixed {
         static let aem = "FBAEMKit"
@@ -257,6 +238,5 @@ extension String {
         static let login = "FBSDKLoginKit"
         static let share = "FBSDKShareKit"
         static let gaming = "FBSDKGamingServicesKit"
-        static let tv = "FBSDKTVOSKit"
     }
 }

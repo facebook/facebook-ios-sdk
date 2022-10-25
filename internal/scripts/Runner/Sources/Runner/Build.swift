@@ -104,16 +104,14 @@ struct Build: ParsableCommand {
     // I figure this will be fixed in some future Xcode version and we can remove the workaround.
     private func fixStaticCatalystSlice() throws {
         try products
-//    TODO: Uncomment for release
-//            .filter { $0 != .tvoskit }
-                .forEach { product in
-                    try FileSystem.execute(from: .xcframeworks) {
-                        let frameworkPath = "$PWD/\(libraryType.rawValue.capitalized)/\(product.rawValue).xcframework/ios-arm64_x86_64-maccatalyst/\(product.rawValue).framework"
-                        try shellOut(to: "cd \(frameworkPath) && find . -type l -exec unlink {} \\;")
-                        try shellOut(to: "cd \(frameworkPath) && cp -rp Versions/A/* .")
-                        try shellOut(to: "rm -rf \(frameworkPath)/Versions")
-                    }
+            .forEach { product in
+                try FileSystem.execute(from: .xcframeworks) {
+                    let frameworkPath = "$PWD/\(libraryType.rawValue.capitalized)/\(product.rawValue).xcframework/ios-arm64_x86_64-maccatalyst/\(product.rawValue).framework"
+                    try shellOut(to: "cd \(frameworkPath) && find . -type l -exec unlink {} \\;")
+                    try shellOut(to: "cd \(frameworkPath) && cp -rp Versions/A/* .")
+                    try shellOut(to: "rm -rf \(frameworkPath)/Versions")
                 }
+            }
     }
 
     private func buildXCFramework(
