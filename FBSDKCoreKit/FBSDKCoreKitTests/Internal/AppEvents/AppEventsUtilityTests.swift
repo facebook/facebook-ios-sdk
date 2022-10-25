@@ -19,6 +19,7 @@ final class AppEventsUtilityTests: XCTestCase {
   var settings: TestSettings!
   var internalUtility: TestInternalUtility!
   var errorFactory: TestErrorFactory!
+  var dataStore: UserDefaultsSpy!
   var appEventsUtility: _AppEventsUtility!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -31,13 +32,15 @@ final class AppEventsUtilityTests: XCTestCase {
     settings = TestSettings()
     internalUtility = TestInternalUtility()
     errorFactory = TestErrorFactory()
+    dataStore = UserDefaultsSpy()
     appEventsUtility = _AppEventsUtility()
     appEventsUtility.configure(
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       deviceInformationProvider: deviceInformationProvider,
       settings: settings,
       internalUtility: internalUtility,
-      errorFactory: errorFactory
+      errorFactory: errorFactory,
+      dataStore: dataStore
     )
   }
 
@@ -932,5 +935,31 @@ final class AppEventsUtilityTests: XCTestCase {
       deviceInformationProvider.encodedDeviceInfo,
       "Should provide the information from the device information provider"
     )
+  }
+
+  func testSaveCampaignIDs() throws {
+    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")! // swiftlint:disable:this force_unwrapping
+    appEventsUtility.saveCampaignIDs(url)
+    let campaignIDs = try XCTUnwrap(
+      dataStore.capturedValues["com.facebook.sdk.campaignids"] as? String
+    )
+
+    XCTAssertEqual(campaignIDs, "123")
+  }
+
+  func testActivityParametersCampaignIDs() throws {
+    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")! // swiftlint:disable:this force_unwrapping
+    appEventsUtility.saveCampaignIDs(url)
+    let parameters = appEventsUtility.activityParametersDictionary(
+      forEvent: "event",
+      shouldAccessAdvertisingID: true,
+      userID: nil,
+      userData: nil
+    )
+
+    let campaignIDs = try XCTUnwrap(
+      parameters["campaign_ids"] as? String
+    )
+    XCTAssertEqual(campaignIDs, "123")
   }
 }

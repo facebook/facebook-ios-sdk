@@ -29,6 +29,7 @@ NS_SWIFT_NAME(_AppEventsUtilityProtocol)
 - (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
                       loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID;
 - (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason;
+- (void)saveCampaignIDs:(NSURL *)url;
 
 @end
 
