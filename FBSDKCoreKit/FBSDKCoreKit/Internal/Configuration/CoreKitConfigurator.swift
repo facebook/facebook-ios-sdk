@@ -119,7 +119,8 @@ private extension CoreKitConfigurator {
       deviceInformationProvider: components.deviceInformationProvider,
       settings: components.settings,
       internalUtility: components.internalUtility,
-      errorFactory: components.errorFactory
+      errorFactory: components.errorFactory,
+      dataStore: components.defaultDataStore
     )
   }
 

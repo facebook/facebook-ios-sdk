@@ -37,6 +37,7 @@ NS_SWIFT_NAME(_AppEventsUtility)
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 @property (nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
+@property (nullable, nonatomic) id<FBSDKDataPersisting> dataStore;
 
 - (BOOL)isSensitiveUserData:(NSString *)text;
 - (BOOL)isStandardEvent:(nullable NSString *)event;
@@ -47,7 +48,8 @@ NS_SWIFT_NAME(_AppEventsUtility)
                                            settings:(id<FBSDKSettings>)settings
                                     internalUtility:(id<FBSDKInternalUtility>)internalUtility
                                        errorFactory:(id<FBSDKErrorCreating>)errorFactory
-NS_SWIFT_NAME(configure(appEventsConfigurationProvider:deviceInformationProvider:settings:internalUtility:errorFactory:));
+                                          dataStore:(id<FBSDKDataPersisting>)dataStore
+NS_SWIFT_NAME(configure(appEventsConfigurationProvider:deviceInformationProvider:settings:internalUtility:errorFactory:dataStore:));
 // UNCRUSTIFY_FORMAT_ON
 
 #if DEBUG

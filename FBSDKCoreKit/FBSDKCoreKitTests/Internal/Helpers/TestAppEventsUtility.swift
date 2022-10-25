@@ -12,6 +12,7 @@ import XCTest
 @objcMembers
 // swiftlint:disable:next line_length
 final class TestAppEventsUtility: NSObject, _AppEventDropDetermining, _AppEventParametersExtracting, _AppEventsUtilityProtocol, _LoggingNotifying {
+
   var shouldDropAppEvents = false
   var unixTimeNow = TimeInterval(0)
   var stubbedIsIdentifierValid = false
@@ -47,4 +48,6 @@ final class TestAppEventsUtility: NSObject, _AppEventDropDetermining, _AppEventP
   func logAndNotify(_ message: String) {}
 
   func logAndNotify(_ message: String, allowLogAsDeveloperError: Bool) {}
+
+  func saveCampaignIDs(_ url: URL) {}
 }
