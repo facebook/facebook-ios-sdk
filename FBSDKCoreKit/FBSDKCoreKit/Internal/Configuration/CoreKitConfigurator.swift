@@ -19,6 +19,7 @@ final class CoreKitConfigurator: CoreKitConfiguring {
   }
 
   func performConfiguration() {
+    configureSettings()
     configureAccessToken()
     configureAppEvents()
     configureAppEventsConfigurationManager()
@@ -34,7 +35,6 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureInstrumentManager()
     configureInternalUtility()
     configureServerConfigurationManager()
-    configureSettings()
     configureCloudBridge()
 
     #if !os(tvOS)
