@@ -20,8 +20,8 @@ import Darwin.C
 let package = Package(
     name: "Facebook",
     platforms: [
-        .iOS(.v11),
-        .tvOS(.v11)
+        .iOS(.v12),
+        .tvOS(.v12)
     ],
     products: [
         // The Kernel of the SDK. Must be included as a runtime dependency.
