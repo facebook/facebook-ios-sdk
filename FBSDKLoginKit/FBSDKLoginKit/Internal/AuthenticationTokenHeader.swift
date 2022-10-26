@@ -8,8 +8,6 @@
 
 import FBSDKCoreKit_Basics
 
-#if !os(tvOS)
-
 final class AuthenticationTokenHeader {
 
   /// Key identifier used in identifying the key to be used to verify the signature.
@@ -35,5 +33,3 @@ final class AuthenticationTokenHeader {
     self.kid = kid
   }
 }
-
-#endif

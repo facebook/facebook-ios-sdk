@@ -42,11 +42,6 @@ my_job = [
                     "shell": "cd internal/testing/IntegrateXCFrameworksApp/iOS-Static && \
                         xcodebuild -sdk iphonesimulator",
                 },
-                # {
-                #     "name": "Build Sample Project - tvOS",
-                #     "shell": "cd internal/testing/IntegrateXCFrameworksApp/tvOS-Static && \
-                #         xcodebuild -sdk appletvsimulator",
-                # },
             ],
         },
     }

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import UIKit
 
@@ -817,5 +815,3 @@ open class FBTooltipView: UIView {
     Self.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismiss), object: nil)
   }
 }
-
-#endif

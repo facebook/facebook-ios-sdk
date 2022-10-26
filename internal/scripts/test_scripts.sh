@@ -90,11 +90,6 @@ test_internal_globals() {
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "$DOCS_CHANGELOG_TVOS_GUIDE_ID" != "1229880930358928" ]; then
-    test_failure "DOCS_CHANGELOG_TVOS_GUIDE_ID not correct"
-    ((TEST_FAILURES += 1))
-  fi
-
   if [ "$SDK_TEST_FB_APP_ID" != "414221181947517" ]; then
     test_failure "SDK_TEST_FB_APP_ID not correct"
     ((TEST_FAILURES += 1))

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 struct LoginCompleterFactory: LoginCompleterFactoryProtocol {
 
   func createLoginCompleter(
@@ -17,5 +15,3 @@ struct LoginCompleterFactory: LoginCompleterFactoryProtocol {
     LoginURLCompleter(urlParameters: parameters, appID: appID)
   }
 }
-
-#endif

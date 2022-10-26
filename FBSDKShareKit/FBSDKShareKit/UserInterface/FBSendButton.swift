@@ -9,8 +9,6 @@
 import FBSDKCoreKit
 import Foundation
 
-#if !os(tvOS)
-
 /**
  A button to send content through Messenger.
 
@@ -100,5 +98,3 @@ extension FBSendButton: DependentAsType {
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(internalUtility: InternalUtility.shared)
 }
-
-#endif

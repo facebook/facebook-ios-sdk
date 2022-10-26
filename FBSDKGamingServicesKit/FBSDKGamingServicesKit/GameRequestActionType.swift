@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 /// Additional context about the nature of the game request.
 @objc(FBSDKGameRequestActionType)
 public enum GameRequestActionType: UInt {
@@ -28,5 +26,3 @@ public enum GameRequestActionType: UInt {
   /// Invite action type: The user is inviting a friend.
   case invite
 }
-
-#endif

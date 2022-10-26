@@ -14,7 +14,6 @@ import Foundation
  See FBSendButton and FBShareButton
  */
 @objc(FBSDKSharingButton)
-@available(tvOS, unavailable)
 public protocol SharingButton {
   /// The content to be shared.
   var shareContent: SharingContent? { get set }

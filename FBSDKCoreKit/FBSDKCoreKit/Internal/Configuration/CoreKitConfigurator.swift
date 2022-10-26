@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
 @testable import FBAEMKit
-#endif
 
 final class CoreKitConfigurator: CoreKitConfiguring {
 
@@ -36,8 +34,6 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureInternalUtility()
     configureServerConfigurationManager()
     configureCloudBridge()
-
-    #if !os(tvOS)
     configureAEMReporter()
     configureNonTVOSAppEvents()
     configureAppLinkNavigation()
@@ -51,11 +47,8 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureModelManager()
     configureProfile()
     configureWebDialogView()
-    #endif
   }
 }
-
-// MARK: - All platforms
 
 // swiftformat:disable:next extensionaccesscontrol
 private extension CoreKitConfigurator {
@@ -220,11 +213,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  // MARK: - Non-tvOS
-
-  #if !os(tvOS)
-
-  @available(tvOS, unavailable)
   func configureAEMReporter() {
     if #available(iOS 14, *) {
       AEMReporter.configure(
@@ -235,7 +223,6 @@ private extension CoreKitConfigurator {
     }
   }
 
-  @available(tvOS, unavailable)
   func configureNonTVOSAppEvents() {
     AppEvents.shared.configureNonTVComponents(
       onDeviceMLModelManager: components.modelManager,
@@ -247,7 +234,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureAppLinkNavigation() {
     AppLinkNavigation.setDependencies(
       .init(
@@ -259,7 +245,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureAppLinkURL() {
     AppLinkURL.configure(
       settings: components.settings,
@@ -269,7 +254,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureAppLinkUtility() {
     AppLinkUtility.configure(
       graphRequestFactory: components.graphRequestFactory,
@@ -285,7 +269,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureAuthenticationStatusUtility() {
     _AuthenticationStatusUtility.configure(
       profileSetter: components.profileSetter,
@@ -295,7 +278,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureBridgeAPIRequest() {
     _BridgeAPIRequest.configure(
       internalURLOpener: components.internalURLOpener,
@@ -304,7 +286,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureCodelessIndexer() {
     _CodelessIndexer.configure(
       graphRequestFactory: components.graphRequestFactory,
@@ -317,7 +298,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureCrashShield() {
     _CrashShield.configure(
       settings: components.settings,
@@ -326,12 +306,10 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureFeatureExtractor() {
     _FeatureExtractor.configure(rulesFromKeyProvider: components.rulesFromKeyProvider)
   }
 
-  @available(tvOS, unavailable)
   func configureModelManager() {
     let settings = components.settings
     _ModelManager.shared.configure(
@@ -347,7 +325,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureProfile() {
     Profile.setDependencies(
       .init(
@@ -361,7 +338,6 @@ private extension CoreKitConfigurator {
     )
   }
 
-  @available(tvOS, unavailable)
   func configureWebDialogView() {
     FBWebDialogView.configure(
       webViewProvider: components.webViewProvider,
@@ -369,6 +345,4 @@ private extension CoreKitConfigurator {
       errorFactory: components.errorFactory
     )
   }
-
-  #endif
 }

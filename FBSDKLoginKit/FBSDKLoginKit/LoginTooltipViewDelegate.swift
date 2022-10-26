@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 /**
  The `LoginTooltipViewDelegate` protocol defines the methods used to receive event
  notifications from `FBLoginTooltipView` objects.
@@ -45,5 +43,3 @@ public protocol LoginTooltipViewDelegate {
   @objc(loginTooltipViewWillNotAppear:)
   optional func loginTooltipViewWillNotAppear(_ view: FBLoginTooltipView)
 }
-
-#endif

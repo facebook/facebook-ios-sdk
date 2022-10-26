@@ -9,8 +9,6 @@
 import FBSDKCoreKit_Basics
 import Foundation
 
-#if !os(tvOS)
-
 final class AEMUtility {
   private enum Keys {
     static let content = "fb_content"
@@ -120,5 +118,3 @@ final class AEMUtility {
     case invalidContentIDsJSONObject
   }
 }
-
-#endif

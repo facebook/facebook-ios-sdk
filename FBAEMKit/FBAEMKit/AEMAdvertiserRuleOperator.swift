@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 enum AEMAdvertiserRuleOperator: Int {
   case unknown = 0
   // Multi Entry Rule Operator
@@ -34,5 +32,3 @@ enum AEMAdvertiserRuleOperator: Int {
   case isAny
   case isNotAny
 }
-
-#endif

@@ -9,8 +9,6 @@
 import FBSDKCoreKit
 import Foundation
 
-#if !os(tvOS)
-
 @objcMembers
 @objc(FBSDKGameRequestURLProvider)
 public final class GameRequestURLProvider: NSObject {
@@ -88,5 +86,3 @@ extension GameRequestURLProvider: DependentAsType {
     appAvailabilityChecker: InternalUtility.shared
   )
 }
-
-#endif

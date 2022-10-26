@@ -519,7 +519,7 @@ static NSMapTable *_transientObjects;
   }
 
   // Find active key window from UIScene
-  if (@available(iOS 13.0, tvOS 13, *)) {
+  if (@available(iOS 13.0, *)) {
     NSSet<UIScene *> *scenes = [UIApplication.sharedApplication valueForKey:@"connectedScenes"];
     for (UIScene *scene in scenes) {
       id activationState = [scene valueForKeyPath:@"activationState"];

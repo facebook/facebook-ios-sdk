@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /// The protocol sdk dialogs must conform to and implement all the following methods.
@@ -35,5 +33,3 @@ public protocol ValidatableProtocol {
 
   func validate() throws
 }
-
-#endif

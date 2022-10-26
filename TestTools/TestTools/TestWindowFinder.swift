@@ -9,8 +9,6 @@
 import FBSDKCoreKit
 import Foundation
 
-#if !os(tvOS)
-
 @objcMembers
 public final class TestWindowFinder: NSObject, _WindowFinding {
   public var wasFindWindowCalled = false
@@ -27,5 +25,3 @@ public final class TestWindowFinder: NSObject, _WindowFinding {
     return window
   }
 }
-
-#endif

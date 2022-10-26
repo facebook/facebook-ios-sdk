@@ -19,7 +19,6 @@ enum Directory {
     case samples
     case scripts
     case sdk
-    case tv
     case vendorLib
     case vendoredFacebookSDK
     case xcframeworks
@@ -135,10 +134,6 @@ enum Directory {
         case .sdk:
             return Directory.initial
                 .appendingPathComponent("../../..")
-
-        case .tv:
-            return Directory.build.url
-                .appendingPathComponent("tv")
 
         case .vendorLib:
             return Directory.sdk.url

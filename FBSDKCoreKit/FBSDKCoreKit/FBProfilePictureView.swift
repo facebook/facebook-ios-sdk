@@ -11,7 +11,6 @@ import UIKit
 /// A view to display a profile picture.
 @objcMembers
 @objc(FBSDKProfilePictureView)
-@available(tvOS, unavailable)
 public final class FBProfilePictureView: UIView {
 
   /// The mode for the receiver to determine the aspect ratio of the source image.

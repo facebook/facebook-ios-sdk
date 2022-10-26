@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import UIKit
 
 protocol LoginProviding {
@@ -28,5 +26,3 @@ protocol LoginProviding {
 
   func logOut()
 }
-
-#endif

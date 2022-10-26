@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 /**
  A delegate for `FBSDKLoginButton`
  */
@@ -40,5 +38,3 @@ public protocol LoginButtonDelegate: NSObjectProtocol {
   @objc
   optional func loginButtonWillLogin(_ loginButton: FBLoginButton) -> Bool
 }
-
-#endif

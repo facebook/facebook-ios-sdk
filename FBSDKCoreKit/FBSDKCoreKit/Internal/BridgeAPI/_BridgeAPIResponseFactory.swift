@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 final class _BridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
   func createResponse(request: BridgeAPIRequestProtocol, error: Error) -> BridgeAPIResponse {
     BridgeAPIResponse(request: request, error: error)
@@ -29,5 +27,3 @@ final class _BridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
     BridgeAPIResponse(cancelledWith: request)
   }
 }
-
-#endif

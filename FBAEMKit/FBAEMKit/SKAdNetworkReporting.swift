@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 @objc(FBSKAdNetworkReporting)
@@ -21,5 +19,3 @@ public protocol SKAdNetworkReporting {
   @objc
   func checkAndRevokeTimer()
 }
-
-#endif

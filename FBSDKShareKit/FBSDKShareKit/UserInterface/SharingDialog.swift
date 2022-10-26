@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /// The common interface for dialogs that initiate sharing.
@@ -33,5 +31,3 @@ public protocol SharingDialog: Sharing {
   @discardableResult
   func show() -> Bool
 }
-
-#endif

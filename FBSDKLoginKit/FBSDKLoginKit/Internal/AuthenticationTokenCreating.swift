@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 
 typealias AuthenticationTokenBlock = (AuthenticationToken?) -> Void
@@ -20,5 +18,3 @@ protocol AuthenticationTokenCreating {
     completion: @escaping AuthenticationTokenBlock
   )
 }
-
-#endif

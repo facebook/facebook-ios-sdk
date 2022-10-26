@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import UIKit
 
@@ -528,5 +526,3 @@ public final class FBLoginButton: FBButton {
     delegate?.loginButtonDidLogOut(self)
   }
 }
-
-#endif

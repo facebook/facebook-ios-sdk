@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 final class AEMEvent: NSObject, NSSecureCoding {
@@ -85,5 +83,3 @@ final class AEMEvent: NSObject, NSSecureCoding {
       && values == other.values
   }
 }
-
-#endif

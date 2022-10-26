@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 struct MonotonicTimer {
@@ -28,5 +26,3 @@ struct MonotonicTimer {
     Double(getNanoseconds()) / 1_000_000_000.0
   }
 }
-
-#endif

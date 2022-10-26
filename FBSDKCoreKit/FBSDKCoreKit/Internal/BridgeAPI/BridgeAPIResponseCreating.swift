@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 protocol BridgeAPIResponseCreating {
   func createResponse(request: BridgeAPIRequestProtocol, error: Error) -> BridgeAPIResponse
 
@@ -19,5 +17,3 @@ protocol BridgeAPIResponseCreating {
 
   func createResponseCancelled(request: BridgeAPIRequestProtocol) -> BridgeAPIResponse
 }
-
-#endif

@@ -13,8 +13,6 @@ import XCTest
 final class DefaultCoreKitComponentsTests: XCTestCase {
   let components = CoreKitComponents.default
 
-  // MARK: - All Platforms
-
   func testAccessTokenExpirer() throws {
     let expirer = try XCTUnwrap(
       components.accessTokenExpirer as? _AccessTokenExpirer,
@@ -447,8 +445,6 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       "The default components should use an instance of UserDataStore as its user data store"
     )
   }
-
-  // MARK: - Non-tvOS
 
   @available(iOS 14, *)
   func testAEMNetworker() {

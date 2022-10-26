@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import CommonCrypto.CommonHMAC
 import FBSDKCoreKit_Basics
 import Foundation
@@ -510,5 +508,3 @@ class AEMInvocation: NSObject, NSSecureCoding { // swiftlint:disable:this prefer
   }
   #endif
 }
-
-#endif

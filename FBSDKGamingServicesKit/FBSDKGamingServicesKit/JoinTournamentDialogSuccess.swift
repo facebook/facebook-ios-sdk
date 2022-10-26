@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -27,5 +25,3 @@ public struct JoinTournamentDialogSuccess: GamingWebDialogSuccess {
     payload = dict[JoinTournamentDialog.Keys.payload] as? String
   }
 }
-
-#endif

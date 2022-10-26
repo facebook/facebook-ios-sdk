@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 /**
  Class responsible for generating the appropriate GraphRequest for a given set of urls
  */
@@ -61,5 +59,3 @@ final class AppLinkResolverRequestBuilder: NSObject, _AppLinkResolverRequestBuil
     }
   }
 }
-
-#endif

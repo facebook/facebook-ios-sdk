@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -304,5 +302,3 @@ extension _WebDialog: DependentAsType {
     windowFinder: InternalUtility.shared
   )
 }
-
-#endif

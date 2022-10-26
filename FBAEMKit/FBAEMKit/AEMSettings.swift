@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 enum AEMSettings {
@@ -26,5 +24,3 @@ extension AEMSettings: DependentAsType {
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(bundle: .main)
 }
-
-#endif

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import FBSDKShareKit
@@ -503,5 +501,3 @@ extension GameRequestDialog: DependentAsObject {
     var utility: GamingUtility.Type
   }
 }
-
-#endif

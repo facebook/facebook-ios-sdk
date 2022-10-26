@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import CommonCrypto
 import FBSDKCoreKit_Basics
 import Security
@@ -207,5 +205,3 @@ final class AuthenticationTokenFactory: AuthenticationTokenCreating {
     .fb_resume()
   }
 }
-
-#endif

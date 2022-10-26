@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 /// Filter for who can be displayed in the multi-friend selector.
 @objc(FBSDKGameRequestFilter)
 public enum GameRequestFilter: UInt {
@@ -25,5 +23,3 @@ public enum GameRequestFilter: UInt {
   /// All friends can be displayed if FB app is installed.
   case everybody
 }
-
-#endif

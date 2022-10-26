@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 final class AppLinkURLFactory: NSObject, _AppLinkURLCreating {
@@ -15,5 +13,3 @@ final class AppLinkURLFactory: NSObject, _AppLinkURLCreating {
     AppLinkURL(url: url)
   }
 }
-
-#endif

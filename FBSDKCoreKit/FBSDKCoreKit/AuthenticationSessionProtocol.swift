@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import AuthenticationServices
 
 typealias AuthenticationCompletionHandler = (URL?, Error?) -> Void
@@ -27,5 +25,3 @@ protocol AuthenticationSessionProtocol {
 }
 
 extension ASWebAuthenticationSession: AuthenticationSessionProtocol {}
-
-#endif

@@ -49,35 +49,6 @@ targets:
     configFiles:
       Debug: Configurations/FBAEMKit-Dynamic.xcconfig
       Release: Configurations/FBAEMKit-Dynamic.xcconfig
-  FBAEMKit_TV-Static:
-    templates:
-      - SwiftlintBuildPhaseTemplate
-    type: framework
-    platform: tvOS
-    productName: FBAEMKit
-    sources:
-      - path: FBAEMKit
-    dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
-        link: false
-    configFiles:
-      Debug: Configurations/FBAEMKit-tvOS-Static.xcconfig
-      Release: Configurations/FBAEMKit-tvOS-Static.xcconfig
-  FBAEMKit_TV-Dynamic:
-    templates:
-      - SwiftlintBuildPhaseTemplate
-    type: framework
-    platform: tvOS
-    productName: FBAEMKit
-    sources:
-      - path: FBAEMKit
-    dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
-      - sdk: UIKit.framework
-      - sdk: libz.tbd
-    configFiles:
-      Debug: Configurations/FBAEMKit-tvOS-Dynamic.xcconfig
-      Release: Configurations/FBAEMKit-tvOS-Dynamic.xcconfig
   FBAEMKitTests:
     type: bundle.unit-test
     platform: iOS
@@ -105,11 +76,3 @@ schemes:
       gatherCoverageData: true
       coverageTargets:
         - FBAEMKit-Dynamic
-  FBAEMKit_TV-Static:
-    build:
-      targets:
-        FBAEMKit_TV-Static: all
-  FBAEMKit_TV-Dynamic:
-    build:
-      targets:
-        FBAEMKit_TV-Dynamic: all

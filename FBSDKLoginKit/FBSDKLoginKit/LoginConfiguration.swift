@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import Foundation
 
@@ -270,5 +268,3 @@ public final class LoginConfiguration: NSObject {
     )
   }
 }
-
-#endif

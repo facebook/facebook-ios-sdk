@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -38,5 +36,3 @@ public protocol ContextDialogDelegate {
    */
   func contextDialogDidCancel(_ contextDialog: ContextWebDialog)
 }
-
-#endif

@@ -9,8 +9,6 @@
 import FBSDKCoreKit
 import Foundation
 
-#if !os(tvOS)
-
 /**
  A button to share content.
 
@@ -99,5 +97,3 @@ extension FBShareButton: DependentAsType {
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(stringProvider: InternalUtility.shared)
 }
-
-#endif

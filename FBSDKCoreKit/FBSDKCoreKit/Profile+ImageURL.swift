@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 extension Profile {
   /// Defines the aspect ratio mode for the source image of the profile picture.
   @objc(FBSDKProfilePictureMode)
@@ -110,5 +108,3 @@ extension Profile {
     }
   }
 }
-
-#endif

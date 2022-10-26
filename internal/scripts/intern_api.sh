@@ -13,7 +13,7 @@
 # --------------
 
 api_create_sitevar_diff() {
-  # $1="{\"$SDK_DOWNLOAD_IOS\": \"$HANDLER_IOS\", \"$SDK_DOWNLOAD_TVOS\": \"$HANDLER_TVOS\"}"
+  # $1="{\"$SDK_DOWNLOAD_IOS\": \"$HANDLER_IOS\"}"
   curl \
     -L \
     -X POST \
@@ -59,7 +59,6 @@ api_update_guide_doc() {
     -F upgrade_guide="$DOCS_UPGRADE_GUIDE_ID" \
     -F download_guide="$DOCS_DOWNLOAD_GUIDE_ID" \
     -F changelog_guide="$DOCS_CHANGELOG_GUIDE_ID" \
-    -F changelog_tvos_guide="$DOCS_CHANGELOG_TVOS_GUIDE_ID" \
     -F is_test_mode=0 \
     -F changelog="$1" \
     "$FB_INTERN_GRAPH_API/fbsdk/update_doc"

@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 extension Profile: ProfileProviding {
   /// The current profile.
   @objc(currentProfile)
@@ -177,5 +175,3 @@ extension Profile: NSSecureCoding {
     case gender
   }
 }
-
-#endif

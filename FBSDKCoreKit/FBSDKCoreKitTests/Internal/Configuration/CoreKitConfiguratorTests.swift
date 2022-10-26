@@ -56,8 +56,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     InternalUtility.reset()
     _ServerConfigurationManager.shared.reset()
     Settings.shared.reset()
-
-    // Non-tvOS
     AEMReporter.reset()
     AppLinkNavigation.resetDependencies()
     AppLinkURL.reset()
@@ -71,8 +69,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     _ModelManager.reset()
     Profile.resetDependencies()
   }
-
-  // MARK: - All Platforms
 
   func testConfiguringAccessToken() {
     XCTAssertNil(
@@ -827,8 +823,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "Settings should be configured with the event logger"
     )
   }
-
-  // MARK: - Non-tvOS
 
   @available(iOS 14.0, *)
   func testConfiguringAEMReporter() {

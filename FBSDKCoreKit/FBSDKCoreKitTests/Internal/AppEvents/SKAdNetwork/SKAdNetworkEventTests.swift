@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 @testable import FBSDKCoreKit
 
 import XCTest
@@ -73,5 +71,3 @@ final class SKAdNetworkEventTests: XCTestCase {
     XCTAssertNil(_SKAdNetworkEvent(json: invalidData))
   }
 }
-
-#endif

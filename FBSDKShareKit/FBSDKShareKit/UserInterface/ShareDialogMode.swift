@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 extension ShareDialog {
@@ -54,5 +52,3 @@ extension ShareDialog {
     }
   }
 }
-
-#endif

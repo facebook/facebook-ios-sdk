@@ -6,10 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 protocol BackgroundEventLogging {
   func logBackgroundRefreshStatus(_ status: UIBackgroundRefreshStatus)
 }
-
-#endif

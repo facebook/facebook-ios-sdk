@@ -253,23 +253,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                   restrictiveParams:restrictiveParams
                                                                                            AAMRules:AAMRules
                                                                              suggestedEventsSetting:suggestedEventsSetting];
-  #if TARGET_OS_TV
-    // don't download icons more than once a day.
-    static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
-
-    BOOL smartLoginEnabled = (smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled);
-    // for TVs go ahead and prime the images
-    if (smartLoginEnabled
-        && smartLoginMenuIconURL
-        && smartLoginBookmarkIconURL) {
-      [FBSDKImageDownloader.sharedInstance downloadImageWithURL:serverConfiguration.smartLoginBookmarkIconURL
-                                                            ttl:kSmartLoginIconsTTL
-                                                     completion:nil];
-      [FBSDKImageDownloader.sharedInstance downloadImageWithURL:serverConfiguration.smartLoginMenuIconURL
-                                                            ttl:kSmartLoginIconsTTL
-                                                     completion:nil];
-    }
-  #endif
     [self _didProcessConfigurationFromNetwork:serverConfiguration appID:appID error:nil];
   } @catch (NSException *exception) {}
 }
@@ -303,11 +286,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                 #endif
                                 #if DEBUG
                                   , FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD
-                                #endif
-                                #if TARGET_OS_TV
-                                  , FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD,
-                                  FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD,
-                                  FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD
                                 #endif
   ];
   NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : [fields componentsJoinedByString:@","],

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -40,5 +38,3 @@ public protocol Sharing {
   @objc(validateWithError:)
   func validate() throws
 }
-
-#endif

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -56,5 +54,3 @@ public final class _SKAdNetworkEvent: NSObject {
     self.values = values
   }
 }
-
-#endif

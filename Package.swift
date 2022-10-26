@@ -21,7 +21,6 @@ let package = Package(
     name: "Facebook",
     platforms: [
         .iOS(.v11),
-        .tvOS(.v11)
     ],
     products: [
         // The Kernel of the SDK. Must be included as a runtime dependency.

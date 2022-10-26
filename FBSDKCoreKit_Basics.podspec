@@ -42,9 +42,8 @@ Pod::Spec.new do |s|
   }
   s.author       = 'Facebook'
 
-  s.platform     = :ios, :tvos
+  s.platform     = :ios
   s.ios.deployment_target = '12.0'
-  s.tvos.deployment_target = '12.0'
   s.library = 'z'
 
   s.source = {

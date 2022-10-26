@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 /**
  * A container of arguments for a camera effect.
  * An argument is a `String` or `[String]` identified by a `String` key.
@@ -56,5 +54,3 @@ public final class CameraEffectArguments: NSObject {
     arguments[key] as? [String]
   }
 }
-
-#endif

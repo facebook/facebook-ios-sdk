@@ -8,8 +8,6 @@
 
 // swiftlint:disable:all prefer_final_classes
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import Foundation
 
@@ -101,5 +99,3 @@ public class GamingWebDialog<Success: GamingWebDialogSuccess>: WebDialogDelegate
     InternalUtility.shared.unregisterTransientObject(self)
   }
 }
-
-#endif

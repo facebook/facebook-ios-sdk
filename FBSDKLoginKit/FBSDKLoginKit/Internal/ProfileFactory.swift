@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 
 final class ProfileFactory: NSObject, ProfileCreating {
@@ -51,5 +49,3 @@ final class ProfileFactory: NSObject, ProfileCreating {
     )
   }
 }
-
-#endif

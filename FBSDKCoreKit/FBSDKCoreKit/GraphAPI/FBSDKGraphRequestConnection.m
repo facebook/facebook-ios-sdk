@@ -31,13 +31,8 @@ static NSString *const kBatchFileNamePrefix = @"file";
 static NSString *const kBatchEntryName = @"name";
 
 static NSString *const kAccessTokenKey = @"access_token";
-#if TARGET_OS_TV
-static NSString *const kSDK = @"tvos";
-static NSString *const kUserAgentBase = @"FBtvOSSDK";
-#else
 static NSString *const kSDK = @"ios";
 static NSString *const kUserAgentBase = @"FBiOSSDK";
-#endif
 static NSString *const kBatchRestMethodBaseURL = @"method/";
 
 static NSTimeInterval g_defaultTimeout = 60.0;
@@ -70,11 +65,7 @@ static FBSDKAccessToken *_Nullable _CreateExpiredAccessToken(FBSDKAccessToken *a
 // Private properties and methods
 
 @interface FBSDKGraphRequestConnection ()
-#if TARGET_OS_TV
-<NSURLSessionDataDelegate>
-#else
 <NSURLSessionDataDelegate, FBSDKGraphErrorRecoveryProcessorDelegate>
-#endif
 
 @property (class, nonatomic) BOOL hasBeenConfigured;
 

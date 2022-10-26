@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import UIKit
 
 /**
@@ -305,5 +303,3 @@ extension _BridgeAPIProtocolNativeV1: DependentAsType {
     internalUtility: InternalUtility.shared
   )
 }
-
-#endif

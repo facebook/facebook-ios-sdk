@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import Foundation
@@ -1157,5 +1155,3 @@ extension ShareDialog: WebDialogDelegate {
     Self.internalUtility?.unregisterTransientObject(self)
   }
 }
-
-#endif

@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 /**
  Represents an immutable Facebook profile.
 
@@ -351,5 +349,3 @@ extension Profile: DependentAsType {
 
   static var defaultDependencies: TypeDependencies?
 }
-
-#endif
