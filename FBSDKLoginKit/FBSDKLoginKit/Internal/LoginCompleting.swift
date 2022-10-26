@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 protocol LoginCompleting {
 
   /**
@@ -26,5 +24,3 @@ protocol LoginCompleting {
     handler: @escaping LoginCompletionParametersBlock
   )
 }
-
-#endif

@@ -17,10 +17,6 @@ projectReferences:
   TestTools:
     path: ../TestTools/TestTools.xcodeproj
 
-options:
-  deploymentTarget:
-    tvOS: '12.0'
-
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
   Release: Configurations/Shared/Configuration/Release.xcconfig
@@ -77,45 +73,6 @@ targets:
     settings:
       CLANG_ENABLE_MODULES: YES
       DEFINES_MODULE: YES
-  FBSDKShareKit_TV-Static:
-    templates:
-      - SwiftlintBuildPhaseTemplate
-    type: framework
-    platform: tvOS
-    productName: FBSDKShareKit
-    sources:
-      - path: FBSDKShareKit
-        headerVisibility: public
-    configFiles:
-      Debug: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
-      Release: Configurations/FBSDKShareKit-tvOS-Static.xcconfig
-    dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
-        link: false
-      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Static
-        link: false
-    settings:
-      DEFINES_MODULE: YES
-  FBSDKShareKit_TV-Dynamic:
-    templates:
-      - SwiftlintBuildPhaseTemplate
-    type: framework
-    platform: tvOS
-    productName: FBSDKShareKit
-    sources:
-      - path: FBSDKShareKit
-        headerVisibility: public
-    configFiles:
-      Debug: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
-      Release: Configurations/FBSDKShareKit-tvOS-Dynamic.xcconfig
-    dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
-      - target: FBSDKCoreKit/FBSDKCoreKit_TV-Dynamic
-      - sdk: UIKit.framework
-      - sdk: CoreGraphics.framework
-      - sdk: Photos.framework
-    settings:
-      DEFINES_MODULE: YES
   FBSDKShareKitTests:
     type: bundle.unit-test
     platform: iOS
@@ -147,11 +104,3 @@ schemes:
       gatherCoverageData: true
       coverageTargets:
         - FBSDKShareKit-Dynamic
-  FBSDKShareKit_TV-Static:
-    build:
-      targets:
-        FBSDKShareKit_TV-Static: all
-  FBSDKShareKit_TV-Dynamic:
-    build:
-      targets:
-        FBSDKShareKit_TV-Dynamic: all

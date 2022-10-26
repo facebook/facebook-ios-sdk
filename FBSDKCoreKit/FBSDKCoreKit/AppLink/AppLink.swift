@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -91,5 +89,3 @@ public final class AppLink: NSObject, _AppLinkProtocol {
     self.isBackToReferrer = isBackToReferrer
   }
 }
-
-#endif

@@ -9,8 +9,6 @@
 import FBSDKCoreKit
 import Foundation
 
-#if !os(tvOS)
-
 final class LoginRecoveryAttempter: ErrorRecoveryAttempting {
 
   func attemptRecovery(from error: Error, completion: @escaping (Bool) -> Void) {
@@ -52,5 +50,3 @@ extension LoginRecoveryAttempter: DependentAsType {
 
   static var configuredDependencies: TypeDependencies?
 }
-
-#endif

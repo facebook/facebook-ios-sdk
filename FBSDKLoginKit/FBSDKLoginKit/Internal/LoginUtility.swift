@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 
@@ -63,5 +61,3 @@ enum LoginUtility {
     return userID
   }
 }
-
-#endif

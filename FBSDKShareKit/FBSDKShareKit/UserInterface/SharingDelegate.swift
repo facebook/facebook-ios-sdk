@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -43,5 +41,3 @@ public protocol SharingDelegate {
   @objc(sharerDidCancel:)
   func sharerDidCancel(_ sharer: Sharing)
 }
-
-#endif

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import AuthenticationServices
 import SafariServices
 
@@ -518,5 +516,3 @@ extension _BridgeAPI: ASWebAuthenticationPresentationContextProviding {
     UIApplication.shared.keyWindow ?? ASPresentationAnchor()
   }
 }
-
-#endif

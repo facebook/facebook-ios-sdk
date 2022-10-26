@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 enum LoginManagerState: Int {
   case idle
 
@@ -17,5 +15,3 @@ enum LoginManagerState: Int {
   // We're calling out to the Facebook app or Safari to perform a log in
   case performingLogin
 }
-
-#endif

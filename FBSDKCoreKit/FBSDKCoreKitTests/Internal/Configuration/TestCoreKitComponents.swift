@@ -57,8 +57,6 @@ enum TestCoreKitComponents {
     urlSessionProxyFactory: _URLSessionProxyProviding = TestURLSessionProxyFactory(),
     userDataStore: _UserDataPersisting = TestUserDataStore(),
     capiReporter: CAPIReporter = TestCAPIReporter(),
-
-    // Non-tvOS
     aemNetworker: AEMNetworking? = TestAEMNetworker(),
     aemReporter: _AEMReporterProtocol.Type = TestAEMReporter.self,
     appEventParametersExtractor: _AppEventParametersExtracting = TestAppEventParametersExtractor(),
@@ -130,8 +128,6 @@ enum TestCoreKitComponents {
       tokenCache: tokenCache,
       urlSessionProxyFactory: urlSessionProxyFactory,
       userDataStore: userDataStore,
-
-      // Non-tvOS
       aemNetworker: aemNetworker,
       aemReporter: aemReporter,
       appEventParametersExtractor: appEventParametersExtractor,

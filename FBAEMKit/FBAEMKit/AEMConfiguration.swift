@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 final class AEMConfiguration: NSObject, NSSecureCoding {
@@ -183,5 +181,3 @@ final class AEMConfiguration: NSObject, NSSecureCoding {
 
   static var supportsSecureCoding: Bool { true }
 }
-
-#endif

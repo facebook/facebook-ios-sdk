@@ -21,7 +21,6 @@ public enum DialogConfigurationName {
 
  Internal Use Only
  */
-@available(tvOS, unavailable)
 public struct ShareDialogConfiguration {
 
   var configuredDependencies: ValueDependencies?
@@ -55,7 +54,6 @@ public struct ShareDialogConfiguration {
   }
 }
 
-@available(tvOS, unavailable)
 extension ShareDialogConfiguration: DependentAsValue {
   struct ValueDependencies {
     var serverConfigurationProvider: _ServerConfigurationProviding

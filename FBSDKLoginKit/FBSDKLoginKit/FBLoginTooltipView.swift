@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import UIKit
 
@@ -129,5 +127,3 @@ public final class FBLoginTooltipView: FBTooltipView {
     }
   }
 }
-
-#endif

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -27,5 +25,3 @@ public enum DefaultAudience: UInt {
   /// Indicates that all Facebook users are able to see posts made by the application
   case everyone
 }
-
-#endif

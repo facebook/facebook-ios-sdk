@@ -10,8 +10,6 @@ import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import Foundation
 
-#if !os(tvOS)
-
 final class GameRequestFrictionlessRecipientCache {
   private(set) var recipientIDs = Set<String>()
 
@@ -100,5 +98,3 @@ extension GameRequestFrictionlessRecipientCache: DependentAsObject {
     var accessTokenWallet: _AccessTokenProviding.Type
   }
 }
-
-#endif

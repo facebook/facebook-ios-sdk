@@ -27,11 +27,7 @@ enum DeviceRequestsHelper {
 
     static let header = "fbsdk"
 
-    #if !os(tvOS)
     static let flavor = "ios"
-    #else
-    static let flavor = "tvos"
-    #endif
 
     static let sdkVersion: String = {
       var sdkVersion = Settings.shared.sdkVersion.replacingOccurrences(of: ".", with: "|")

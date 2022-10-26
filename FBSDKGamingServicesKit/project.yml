@@ -19,10 +19,6 @@ projectReferences:
   TestTools:
     path: ../TestTools/TestTools.xcodeproj
 
-options:
-  deploymentTarget:
-    tvOS: '12.0'
-
 configFiles:
   Debug: Configurations/Shared/Configuration/Debug.xcconfig
   Release: Configurations/Shared/Configuration/Release.xcconfig

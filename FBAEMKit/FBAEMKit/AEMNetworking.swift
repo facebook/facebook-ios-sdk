@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 public typealias FBGraphRequestCompletion = (Any?, Error?) -> Void
@@ -23,5 +21,3 @@ public protocol AEMNetworking {
     completion: @escaping FBGraphRequestCompletion
   )
 }
-
-#endif

@@ -8,8 +8,6 @@
 
 import FBSDKCoreKit_Basics
 
-#if !os(tvOS)
-
 /**
  Internal Type exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
@@ -70,5 +68,3 @@ public final class FBPermission: NSObject {
     (object as? FBPermission)?.value == value
   }
 }
-
-#endif

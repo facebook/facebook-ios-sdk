@@ -11,8 +11,6 @@
 import TestTools
 import XCTest
 
-#if !os(tvOS)
-
 final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
 
   enum Keys {
@@ -202,5 +200,3 @@ final class AEMAdvertiserMultiEntryRuleTests: XCTestCase {
 extension String {
   fileprivate static let isCodable = "AEMAdvertiserMultiEntryRule should be encodable and decodable"
 }
-
-#endif

@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 extension Profile {
 
   private static let encodedDateFormat = "MM/dd/yyyy"
@@ -218,5 +216,3 @@ extension Profile {
     60 /* seconds */ * 60 /* minutes */ * 24 /* hours */
   ) /* one day in seconds */
 }
-
-#endif

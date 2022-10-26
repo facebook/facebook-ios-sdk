@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 
 /// Login Result Block
@@ -93,5 +91,3 @@ public enum LoginResult {
     }
   }
 }
-
-#endif

@@ -6,14 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
 import FBAEMKit
-#endif
 
 final class CoreKitComponents {
-
-  // MARK: - All Platforms
-
   let accessTokenExpirer: _AccessTokenExpiring
   let accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type
   let advertiserIDProvider: _AdvertiserIDProviding
@@ -59,96 +54,35 @@ final class CoreKitComponents {
   let tokenCache: TokenCaching
   let urlSessionProxyFactory: _URLSessionProxyProviding
   let userDataStore: _UserDataPersisting
-
-  // MARK: - Non-tvOS
-
-  #if !os(tvOS)
-
-  @available(tvOS, unavailable)
   let aemNetworker: AEMNetworking?
-
-  @available(tvOS, unavailable)
   let aemReporter: _AEMReporterProtocol.Type
-
-  @available(tvOS, unavailable)
   let appEventParametersExtractor: _AppEventParametersExtracting
-
-  @available(tvOS, unavailable)
   let appEventsDropDeterminer: _AppEventDropDetermining
-
-  @available(tvOS, unavailable)
   let appLinkEventPoster: _AppLinkEventPosting
-
-  @available(tvOS, unavailable)
   let appLinkFactory: _AppLinkCreating
-
-  @available(tvOS, unavailable)
   let appLinkResolver: AppLinkResolving
-
-  @available(tvOS, unavailable)
   let appLinkTargetFactory: _AppLinkTargetCreating
-
-  @available(tvOS, unavailable)
   let appLinkURLFactory: _AppLinkURLCreating
-
-  @available(tvOS, unavailable)
   let backgroundEventLogger: BackgroundEventLogging
-
-  @available(tvOS, unavailable)
   let codelessIndexer: _CodelessIndexing.Type
-
-  @available(tvOS, unavailable)
   let dataExtractor: _FileDataExtracting.Type
-
-  @available(tvOS, unavailable)
   let featureExtractor: _FeatureExtracting.Type
-
-  @available(tvOS, unavailable)
   let fileManager: _FileManaging
-
-  @available(tvOS, unavailable)
   let internalURLOpener: _InternalURLOpener
-
-  @available(tvOS, unavailable)
   let metadataIndexer: _MetadataIndexing
-
-  @available(tvOS, unavailable)
   let modelManager: _EventProcessing & _IntegrityParametersProcessorProvider
-
-  @available(tvOS, unavailable)
   let profileSetter: ProfileProviding.Type
-
-  @available(tvOS, unavailable)
   let rulesFromKeyProvider: _RulesFromKeyProvider
-
-  @available(tvOS, unavailable)
   let sessionDataTaskProvider: URLSessionProviding
-
-  @available(tvOS, unavailable)
   let skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
-
-  @available(tvOS, unavailable)
   let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol
-
-  @available(tvOS, unavailable)
   let swizzler: _Swizzling.Type
-
-  @available(tvOS, unavailable)
   let urlHoster: URLHosting
-
-  @available(tvOS, unavailable)
   let userIDProvider: _UserIDProviding
-
-  @available(tvOS, unavailable)
   let webViewProvider: _WebViewProviding
-
-  #endif
 
   // MARK: - Initializers
 
-  #if !os(tvOS)
-
-  @available(tvOS, unavailable)
   init(
     accessTokenExpirer: _AccessTokenExpiring,
     accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type,
@@ -293,101 +227,6 @@ final class CoreKitComponents {
     self.webViewProvider = webViewProvider
   }
 
-  #else
-
-  init(
-    accessTokenExpirer: _AccessTokenExpiring,
-    accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type,
-    advertiserIDProvider: _AdvertiserIDProviding,
-    appEvents: EventLogging & _AppEventsConfiguring & _ApplicationActivating & _ApplicationLifecycleObserving
-      & _ApplicationStateSetting & _SourceApplicationTracking,
-    appEventsConfigurationProvider: _AppEventsConfigurationProviding,
-    appEventsStateProvider: _AppEventsStateProviding,
-    appEventsStateStore: _AppEventsStatePersisting,
-    appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtilityProtocol
-      & _LoggingNotifying,
-    atePublisherFactory: _ATEPublisherCreating,
-    authenticationTokenWallet: _AuthenticationTokenProviding.Type,
-    capiReporter: CAPIReporter,
-    crashHandler: CrashHandlerProtocol,
-    crashObserver: CrashObserving,
-    defaultDataStore: DataPersisting,
-    deviceInformationProvider: _DeviceInformationProviding,
-    dialogConfigurationMapBuilder: _DialogConfigurationMapBuilding,
-    errorConfigurationProvider: _ErrorConfigurationProviding,
-    errorFactory: ErrorCreating,
-    errorReporter: ErrorReporting,
-    eventDeactivationManager: _AppEventsParameterProcessing & _EventsProcessing,
-    eventLogger: EventLogging,
-    featureChecker: FeatureChecking & _FeatureDisabling,
-    gateKeeperManager: _GateKeeperManaging.Type,
-    getApplicationActivationNotifier: @escaping () -> Any,
-    graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol,
-    graphRequestFactory: GraphRequestFactoryProtocol,
-    impressionLoggerFactory: _ImpressionLoggerFactoryProtocol,
-    infoDictionaryProvider: InfoDictionaryProviding,
-    internalUtility: InternalUtilityProtocol,
-    logger: Logging.Type,
-    loggerFactory: _LoggerCreating,
-    macCatalystDeterminator: _MacCatalystDetermining,
-    notificationCenter: _NotificationPosting & NotificationDelivering,
-    operatingSystemVersionComparer: _OperatingSystemVersionComparing,
-    paymentObserver: _PaymentObserving,
-    piggybackManager: _GraphRequestPiggybackManaging,
-    restrictiveDataFilterManager: _AppEventsParameterProcessing & _EventsProcessing,
-    serverConfigurationProvider: _ServerConfigurationProviding,
-    settings: SettingsLogging & SettingsProtocol,
-    timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
-    tokenCache: TokenCaching,
-    urlSessionProxyFactory: _URLSessionProxyProviding,
-    userDataStore: _UserDataPersisting
-  ) {
-    self.accessTokenExpirer = accessTokenExpirer
-    self.accessTokenWallet = accessTokenWallet
-    self.advertiserIDProvider = advertiserIDProvider
-    self.appEvents = appEvents
-    self.appEventsConfigurationProvider = appEventsConfigurationProvider
-    self.appEventsStateProvider = appEventsStateProvider
-    self.appEventsStateStore = appEventsStateStore
-    self.appEventsUtility = appEventsUtility
-    self.atePublisherFactory = atePublisherFactory
-    self.authenticationTokenWallet = authenticationTokenWallet
-    self.capiReporter = capiReporter
-    self.crashHandler = crashHandler
-    self.crashObserver = crashObserver
-    self.defaultDataStore = defaultDataStore
-    self.deviceInformationProvider = deviceInformationProvider
-    self.dialogConfigurationMapBuilder = dialogConfigurationMapBuilder
-    self.errorConfigurationProvider = errorConfigurationProvider
-    self.errorFactory = errorFactory
-    self.errorReporter = errorReporter
-    self.eventDeactivationManager = eventDeactivationManager
-    self.eventLogger = eventLogger
-    self.featureChecker = featureChecker
-    self.gateKeeperManager = gateKeeperManager
-    self.getApplicationActivationNotifier = getApplicationActivationNotifier
-    self.graphRequestConnectionFactory = graphRequestConnectionFactory
-    self.graphRequestFactory = graphRequestFactory
-    self.impressionLoggerFactory = impressionLoggerFactory
-    self.infoDictionaryProvider = infoDictionaryProvider
-    self.internalUtility = internalUtility
-    self.logger = logger
-    self.loggerFactory = loggerFactory
-    self.macCatalystDeterminator = macCatalystDeterminator
-    self.notificationCenter = notificationCenter
-    self.operatingSystemVersionComparer = operatingSystemVersionComparer
-    self.paymentObserver = paymentObserver
-    self.piggybackManager = piggybackManager
-    self.restrictiveDataFilterManager = restrictiveDataFilterManager
-    self.serverConfigurationProvider = serverConfigurationProvider
-    self.settings = settings
-    self.timeSpentRecorder = timeSpentRecorder
-    self.tokenCache = tokenCache
-    self.urlSessionProxyFactory = urlSessionProxyFactory
-    self.userDataStore = userDataStore
-  }
-  #endif
-
   // MARK: - Default components
 
   static let `default`: CoreKitComponents = {
@@ -490,7 +329,6 @@ final class CoreKitComponents {
     let settings: SettingsProtocol & SettingsLogging = Settings.shared
     let urlSessionProxyFactory: _URLSessionProxyProviding = _URLSessionProxyFactory()
 
-    #if !os(tvOS)
     var aemNetworker: AEMNetworking?
     if #available(iOS 14, *) {
       aemNetworker = AEMNetworker()
@@ -514,55 +352,7 @@ final class CoreKitComponents {
       eventProcessor: _ModelManager.shared
     )
     let backgroundEventLogger: BackgroundEventLogging = BackgroundEventLogger()
-    #endif
 
-    #if os(tvOS)
-    return CoreKitComponents(
-      accessTokenExpirer: accessTokenExpirer,
-      accessTokenWallet: accessTokenWallet,
-      advertiserIDProvider: advertiserIDProvider,
-      appEvents: appEvents,
-      appEventsConfigurationProvider: appEventsConfigurationProvider,
-      appEventsStateProvider: appEventsStateProvider,
-      appEventsStateStore: appEventsStateStore,
-      appEventsUtility: appEventsUtility,
-      atePublisherFactory: atePublisherFactory,
-      authenticationTokenWallet: authenticationTokenWallet,
-      capiReporter: capiReporter,
-      crashHandler: crashHandler,
-      crashObserver: crashObserver,
-      defaultDataStore: defaultDataStore,
-      deviceInformationProvider: deviceInformationProvider,
-      dialogConfigurationMapBuilder: dialogConfigurationMapBuilder,
-      errorConfigurationProvider: errorConfigurationProvider,
-      errorFactory: errorFactory,
-      errorReporter: errorReporter,
-      eventDeactivationManager: eventDeactivationManager,
-      eventLogger: eventLogger,
-      featureChecker: featureChecker,
-      gateKeeperManager: gateKeeperManager,
-      getApplicationActivationNotifier: getApplicationActivationNotifier,
-      graphRequestConnectionFactory: graphRequestConnectionFactory,
-      graphRequestFactory: graphRequestFactory,
-      impressionLoggerFactory: impressionLoggerFactory,
-      infoDictionaryProvider: infoDictionaryProvider,
-      internalUtility: internalUtility,
-      logger: logger,
-      loggerFactory: loggerFactory,
-      macCatalystDeterminator: macCatalystDeterminator,
-      notificationCenter: notificationCenter,
-      operatingSystemVersionComparer: operatingSystemVersionComparer,
-      paymentObserver: paymentObserver,
-      piggybackManager: piggybackManager,
-      restrictiveDataFilterManager: restrictiveDataFilterManager,
-      serverConfigurationProvider: serverConfigurationProvider,
-      settings: settings,
-      timeSpentRecorder: timeSpentRecorder,
-      tokenCache: tokenCache,
-      urlSessionProxyFactory: urlSessionProxyFactory,
-      userDataStore: userDataStore
-    )
-    #else
     return CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
       accessTokenWallet: accessTokenWallet,
@@ -634,6 +424,5 @@ final class CoreKitComponents {
       userIDProvider: AppEvents.shared,
       webViewProvider: _WebViewFactory()
     )
-    #endif
   }()
 }

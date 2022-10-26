@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -100,5 +98,3 @@ public final class _FBCloseIcon: NSObject {
     return image
   }
 }
-
-#endif

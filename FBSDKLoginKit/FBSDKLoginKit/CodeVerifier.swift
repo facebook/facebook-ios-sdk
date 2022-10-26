@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import CommonCrypto
 import FBSDKCoreKit
 import Foundation
@@ -87,5 +85,3 @@ public final class CodeVerifier: NSObject {
       .replacingOccurrences(of: "=", with: "")
   }
 }
-
-#endif

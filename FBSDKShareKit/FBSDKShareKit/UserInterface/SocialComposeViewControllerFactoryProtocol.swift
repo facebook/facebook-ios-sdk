@@ -6,12 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Social
 
 protocol SocialComposeViewControllerFactoryProtocol {
   func makeSocialComposeViewController() -> SLComposeViewController
 }
-
-#endif

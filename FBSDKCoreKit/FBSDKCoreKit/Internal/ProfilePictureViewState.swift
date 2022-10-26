@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(tvOS, unavailable)
 struct ProfilePictureViewState: Equatable {
   let profileID: String
   let size: CGSize

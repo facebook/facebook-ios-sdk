@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 struct BackgroundEventLogger: BackgroundEventLogging {
 
   private enum Keys {
@@ -56,5 +54,3 @@ extension BackgroundEventLogger: DependentAsType {
 extension AppEvents.ParameterName {
   fileprivate static let version = Self("version")
 }
-
-#endif

@@ -8,8 +8,6 @@
 
 import UIKit
 
-#if !os(tvOS)
-
 /**
  * A container of textures for a camera effect.
  * A texture for a camera effect is an UIImages identified by a NSString key.
@@ -40,5 +38,3 @@ public final class CameraEffectTextures: NSObject {
     textures[key]
   }
 }
-
-#endif

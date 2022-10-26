@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import Foundation
@@ -64,5 +62,3 @@ public final class LoginManagerLoginResult: NSObject {
     loggingExtras[key] = object
   }
 }
-
-#endif

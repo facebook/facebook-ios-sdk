@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import UIKit
 
 /**
@@ -17,7 +15,6 @@ import UIKit
  @warning INTERNAL - DO NOT USE
  */
 @objcMembers
-@available(tvOS, unavailable)
 @objc public final class CoreUIApplication: NSObject {
   public static let shared: _InternalURLOpener = {
     #if DEBUG
@@ -40,6 +37,4 @@ private final class TestUIApplication: _InternalURLOpener {
     completionHandler completion: ((Bool) -> Void)? = nil
   ) {}
 }
-#endif
-
 #endif

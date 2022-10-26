@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 final class AEMAdvertiserMultiEntryRule: NSObject, AEMAdvertiserRuleMatching, NSSecureCoding {
@@ -68,5 +66,3 @@ final class AEMAdvertiserMultiEntryRule: NSObject, AEMAdvertiserRuleMatching, NS
     coder.encode(rules, forKey: CodingKeys.rules.rawValue)
   }
 }
-
-#endif

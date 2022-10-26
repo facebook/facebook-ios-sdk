@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Social
 
 final class SocialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol {
@@ -17,5 +15,3 @@ final class SocialComposeViewControllerFactory: SocialComposeViewControllerFacto
     SLComposeViewController(forServiceType: Self.socialComposeServiceType)
   }
 }
-
-#endif

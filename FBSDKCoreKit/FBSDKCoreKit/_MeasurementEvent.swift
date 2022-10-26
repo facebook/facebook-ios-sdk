@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -43,5 +41,3 @@ public final class _MeasurementEvent: NSObject, _AppLinkEventPosting {
     notificationCenter.post(name: .MeasurementEvent, object: self, userInfo: userInfo)
   }
 }
-
-#endif

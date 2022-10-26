@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 final class SKAdNetworkConversionConfigurationTests: XCTestCase {
   func testInit() {
     // Init with nil
@@ -372,5 +370,3 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
     XCTAssertEqual(configuration?.currencySet, expected)
   }
 }
-
-#endif

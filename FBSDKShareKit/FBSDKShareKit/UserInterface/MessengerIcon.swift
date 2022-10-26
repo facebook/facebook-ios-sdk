@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 
 @objcMembers
@@ -65,5 +63,3 @@ final class MessengerIcon: FBIcon {
     return path
   }
 }
-
-#endif

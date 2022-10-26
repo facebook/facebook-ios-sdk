@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 final class AppLinkTargetFactory: _AppLinkTargetCreating {
@@ -15,5 +13,3 @@ final class AppLinkTargetFactory: _AppLinkTargetCreating {
     AppLinkTarget(url: url, appStoreId: appStoreId, appName: appName)
   }
 }
-
-#endif

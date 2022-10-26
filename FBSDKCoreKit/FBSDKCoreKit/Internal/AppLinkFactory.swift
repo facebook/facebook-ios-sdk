@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 final class AppLinkFactory: _AppLinkCreating {
   func createAppLink(
     sourceURL: URL?,
@@ -23,5 +21,3 @@ final class AppLinkFactory: _AppLinkCreating {
     )
   }
 }
-
-#endif

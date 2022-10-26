@@ -8,8 +8,6 @@
 
 import Foundation
 
-#if !os(tvOS)
-
 /**
  A delegate for `GameRequestDialog`.
 
@@ -48,5 +46,3 @@ public protocol GameRequestDialogDelegate: AnyObject {
    */
   func gameRequestDialogDidCancel(_ gameRequestDialog: GameRequestDialog)
 }
-
-#endif

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit_Basics
 import Foundation
 
@@ -147,5 +145,3 @@ final class AEMRule: NSObject, NSSecureCoding {
       && events == rule.events
   }
 }
-
-#endif

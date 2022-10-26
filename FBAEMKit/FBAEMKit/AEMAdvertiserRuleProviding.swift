@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 /**
@@ -19,5 +17,3 @@ protocol AEMAdvertiserRuleProviding {
 
   func createRule(dictionary: [String: Any]) -> AEMAdvertiserRuleMatching?
 }
-
-#endif

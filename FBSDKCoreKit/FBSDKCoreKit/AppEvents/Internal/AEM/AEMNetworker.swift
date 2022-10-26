@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import Foundation
 
 final class AEMNetworker: NSObject, AEMNetworking {
@@ -31,5 +29,3 @@ final class AEMNetworker: NSObject, AEMNetworking {
     }
   }
 }
-
-#endif

@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 final class SKAdNetworkRuleTests: XCTestCase {
   func testValidCase1() {
     let validData: [String: Any] = [
@@ -139,5 +137,3 @@ final class SKAdNetworkRuleTests: XCTestCase {
     )
   }
 }
-
-#endif
