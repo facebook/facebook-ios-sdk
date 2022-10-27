@@ -62,13 +62,13 @@ final class ApplicationDelegateTests: XCTestCase {
     )
     components = TestCoreKitComponents.makeComponents(
       appEvents: appEvents,
+      backgroundEventLogger: backgroundEventLogger,
       defaultDataStore: userDataStore,
       featureChecker: featureChecker,
       notificationCenter: notificationCenter,
       paymentObserver: paymentObserver,
       serverConfigurationProvider: serverConfigurationProvider,
-      settings: settings,
-      backgroundEventLogger: backgroundEventLogger
+      settings: settings
     )
     configurator = TestCoreKitConfigurator(components: components)
 

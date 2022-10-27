@@ -61,6 +61,16 @@ private extension CoreKitConfigurator {
     )
   }
 
+  func configureAEMReporter() {
+    if #available(iOS 14, *) {
+      AEMReporter.configure(
+        networker: components.aemNetworker,
+        appID: components.settings.appID,
+        reporter: components.skAdNetworkReporter
+      )
+    }
+  }
+
   func configureAppEvents() {
     AppEvents.shared.configure(
       gateKeeperManager: components.gateKeeperManager,
@@ -117,8 +127,60 @@ private extension CoreKitConfigurator {
     )
   }
 
+  func configureAppLinkNavigation() {
+    AppLinkNavigation.setDependencies(
+      .init(
+        settings: components.settings,
+        urlOpener: components.internalURLOpener,
+        appLinkEventPoster: components.appLinkEventPoster,
+        appLinkResolver: components.appLinkResolver
+      )
+    )
+  }
+
+  func configureAppLinkURL() {
+    AppLinkURL.configure(
+      settings: components.settings,
+      appLinkFactory: components.appLinkFactory,
+      appLinkTargetFactory: components.appLinkTargetFactory,
+      appLinkEventPoster: components.appLinkEventPoster
+    )
+  }
+
+  func configureAppLinkUtility() {
+    AppLinkUtility.configure(
+      graphRequestFactory: components.graphRequestFactory,
+      infoDictionaryProvider: components.infoDictionaryProvider,
+      settings: components.settings,
+      appEventsConfigurationProvider: components.appEventsConfigurationProvider,
+      advertiserIDProvider: components.advertiserIDProvider,
+      appEventsDropDeterminer: components.appEventsDropDeterminer,
+      appEventParametersExtractor: components.appEventParametersExtractor,
+      appLinkURLFactory: components.appLinkURLFactory,
+      userIDProvider: components.userIDProvider,
+      userDataStore: components.userDataStore
+    )
+  }
+
+  func configureAuthenticationStatusUtility() {
+    _AuthenticationStatusUtility.configure(
+      profileSetter: components.profileSetter,
+      sessionDataTaskProvider: components.sessionDataTaskProvider,
+      accessTokenWallet: components.accessTokenWallet,
+      authenticationTokenWallet: components.authenticationTokenWallet
+    )
+  }
+
   func configureAuthenticationToken() {
     AuthenticationToken.tokenCache = components.tokenCache
+  }
+
+  func configureBridgeAPIRequest() {
+    _BridgeAPIRequest.configure(
+      internalURLOpener: components.internalURLOpener,
+      internalUtility: components.internalUtility,
+      settings: components.settings
+    )
   }
 
   func configureButton() {
@@ -127,6 +189,37 @@ private extension CoreKitConfigurator {
       eventLogger: components.eventLogger,
       accessTokenProvider: components.accessTokenWallet
     )
+  }
+
+  func configureCloudBridge() {
+    FBSDKAppEventsCAPIManager.shared.configure(
+      factory: components.graphRequestFactory,
+      settings: components.settings
+    )
+  }
+
+  func configureCodelessIndexer() {
+    _CodelessIndexer.configure(
+      graphRequestFactory: components.graphRequestFactory,
+      serverConfigurationProvider: components.serverConfigurationProvider,
+      dataStore: components.defaultDataStore,
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory,
+      swizzler: components.swizzler,
+      settings: components.settings,
+      advertiserIDProvider: components.advertiserIDProvider
+    )
+  }
+
+  func configureCrashShield() {
+    _CrashShield.configure(
+      settings: components.settings,
+      graphRequestFactory: components.graphRequestFactory,
+      featureChecking: components.featureChecker
+    )
+  }
+
+  func configureFeatureExtractor() {
+    _FeatureExtractor.configure(rulesFromKeyProvider: components.rulesFromKeyProvider)
   }
 
   func configureGatekeeperManager() {
@@ -187,6 +280,32 @@ private extension CoreKitConfigurator {
     )
   }
 
+  func configureModelManager() {
+    let settings = components.settings
+    _ModelManager.shared.configure(
+      featureChecker: components.featureChecker,
+      graphRequestFactory: components.graphRequestFactory,
+      fileManager: components.fileManager,
+      store: components.defaultDataStore,
+      getAppID: { [settings] in settings.appID ?? "" },
+      dataExtractor: components.dataExtractor,
+      gateKeeperManager: components.gateKeeperManager,
+      suggestedEventsIndexer: components.suggestedEventsIndexer,
+      featureExtractor: components.featureExtractor
+    )
+  }
+
+  func configureNonTVOSAppEvents() {
+    AppEvents.shared.configureNonTVComponents(
+      onDeviceMLModelManager: components.modelManager,
+      metadataIndexer: components.metadataIndexer,
+      skAdNetworkReporter: components.skAdNetworkReporter,
+      codelessIndexer: components.codelessIndexer,
+      swizzler: components.swizzler,
+      aemReporter: components.aemReporter
+    )
+  }
+
   func configureServerConfigurationManager() {
     _ServerConfigurationManager.shared.configure(
       graphRequestFactory: components.graphRequestFactory,
@@ -203,125 +322,6 @@ private extension CoreKitConfigurator {
         eventLogger: components.eventLogger,
         infoDictionaryProvider: components.infoDictionaryProvider
       )
-    )
-  }
-
-  func configureCloudBridge() {
-    FBSDKAppEventsCAPIManager.shared.configure(
-      factory: components.graphRequestFactory,
-      settings: components.settings
-    )
-  }
-
-  func configureAEMReporter() {
-    if #available(iOS 14, *) {
-      AEMReporter.configure(
-        networker: components.aemNetworker,
-        appID: components.settings.appID,
-        reporter: components.skAdNetworkReporter
-      )
-    }
-  }
-
-  func configureNonTVOSAppEvents() {
-    AppEvents.shared.configureNonTVComponents(
-      onDeviceMLModelManager: components.modelManager,
-      metadataIndexer: components.metadataIndexer,
-      skAdNetworkReporter: components.skAdNetworkReporter,
-      codelessIndexer: components.codelessIndexer,
-      swizzler: components.swizzler,
-      aemReporter: components.aemReporter
-    )
-  }
-
-  func configureAppLinkNavigation() {
-    AppLinkNavigation.setDependencies(
-      .init(
-        settings: components.settings,
-        urlOpener: components.internalURLOpener,
-        appLinkEventPoster: components.appLinkEventPoster,
-        appLinkResolver: components.appLinkResolver
-      )
-    )
-  }
-
-  func configureAppLinkURL() {
-    AppLinkURL.configure(
-      settings: components.settings,
-      appLinkFactory: components.appLinkFactory,
-      appLinkTargetFactory: components.appLinkTargetFactory,
-      appLinkEventPoster: components.appLinkEventPoster
-    )
-  }
-
-  func configureAppLinkUtility() {
-    AppLinkUtility.configure(
-      graphRequestFactory: components.graphRequestFactory,
-      infoDictionaryProvider: components.infoDictionaryProvider,
-      settings: components.settings,
-      appEventsConfigurationProvider: components.appEventsConfigurationProvider,
-      advertiserIDProvider: components.advertiserIDProvider,
-      appEventsDropDeterminer: components.appEventsDropDeterminer,
-      appEventParametersExtractor: components.appEventParametersExtractor,
-      appLinkURLFactory: components.appLinkURLFactory,
-      userIDProvider: components.userIDProvider,
-      userDataStore: components.userDataStore
-    )
-  }
-
-  func configureAuthenticationStatusUtility() {
-    _AuthenticationStatusUtility.configure(
-      profileSetter: components.profileSetter,
-      sessionDataTaskProvider: components.sessionDataTaskProvider,
-      accessTokenWallet: components.accessTokenWallet,
-      authenticationTokenWallet: components.authenticationTokenWallet
-    )
-  }
-
-  func configureBridgeAPIRequest() {
-    _BridgeAPIRequest.configure(
-      internalURLOpener: components.internalURLOpener,
-      internalUtility: components.internalUtility,
-      settings: components.settings
-    )
-  }
-
-  func configureCodelessIndexer() {
-    _CodelessIndexer.configure(
-      graphRequestFactory: components.graphRequestFactory,
-      serverConfigurationProvider: components.serverConfigurationProvider,
-      dataStore: components.defaultDataStore,
-      graphRequestConnectionFactory: components.graphRequestConnectionFactory,
-      swizzler: components.swizzler,
-      settings: components.settings,
-      advertiserIDProvider: components.advertiserIDProvider
-    )
-  }
-
-  func configureCrashShield() {
-    _CrashShield.configure(
-      settings: components.settings,
-      graphRequestFactory: components.graphRequestFactory,
-      featureChecking: components.featureChecker
-    )
-  }
-
-  func configureFeatureExtractor() {
-    _FeatureExtractor.configure(rulesFromKeyProvider: components.rulesFromKeyProvider)
-  }
-
-  func configureModelManager() {
-    let settings = components.settings
-    _ModelManager.shared.configure(
-      featureChecker: components.featureChecker,
-      graphRequestFactory: components.graphRequestFactory,
-      fileManager: components.fileManager,
-      store: components.defaultDataStore,
-      getAppID: { [settings] in settings.appID ?? "" },
-      dataExtractor: components.dataExtractor,
-      gateKeeperManager: components.gateKeeperManager,
-      suggestedEventsIndexer: components.suggestedEventsIndexer,
-      featureExtractor: components.featureExtractor
     )
   }
 
