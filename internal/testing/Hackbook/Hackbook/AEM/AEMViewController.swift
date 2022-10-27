@@ -14,6 +14,7 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     "Value",
     "Event Parameter",
     "Record Event",
+    "Publish Install",
     "New Ads Click",
     "Generate Parameter",
     "ATE",
@@ -29,6 +30,7 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
   private let parameterTextView: UITextView = .init()
 
   private let recordEventButton: UIButton = .init()
+  private let publishInstallButton: UIButton = .init()
   private let resetButton: UIButton = .init()
   private let parameterGenerationButton: UIButton = .init()
   private let ATEToggle: UISwitch = .init()
@@ -97,6 +99,13 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     recordEventButton.layer.cornerRadius = 5.0
     recordEventButton.addTarget(self, action: #selector(AEMViewController.recordEvent), for: .touchUpInside)
     recordEventButton.accessibilityIdentifier = "button_record_event"
+
+    publishInstallButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
+    publishInstallButton.backgroundColor = .systemBlue
+    publishInstallButton.setTitle("Publish Install", for: .normal)
+    publishInstallButton.layer.cornerRadius = 5.0
+    publishInstallButton.addTarget(self, action: #selector(AEMViewController.publishInstall), for: .touchUpInside)
+    publishInstallButton.accessibilityIdentifier = "button_publish_install"
 
     resetButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     resetButton.backgroundColor = .systemBlue
@@ -185,17 +194,21 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     case 7:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      cell.accessoryView = resetButton
+      cell.accessoryView = publishInstallButton
     case 8:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
-      cell.accessoryView = parameterGenerationButton
+      cell.accessoryView = resetButton
     case 9:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      cell.accessoryView = parameterGenerationButton
+    case 10:
       cell.accessoryType = .disclosureIndicator
       cell.textLabel?.text = toggles[indexPath.row]
       cell.accessoryView = ATEToggle
       cell.accessibilityIdentifier = "cell_ate"
-    case 10:
+    case 11:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
       cell.accessoryView = deeplinkTypeSegmentedControl
@@ -230,6 +243,10 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
       eventParameter: parameterTextView.text,
       console: consoleView
     )
+  }
+
+  @objc func publishInstall() {
+    AEMTestUtils.publishInstall(consoleView)
   }
 
   @objc func swizzleReporter() {

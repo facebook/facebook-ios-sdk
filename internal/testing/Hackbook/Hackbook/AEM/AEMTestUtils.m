@@ -16,6 +16,12 @@ void extern dispatch_on_main_thread(dispatch_block_t block);
 
 @end
 
+@interface FBSDKAppEvents ()
+
+- (void)publishInstall;
+
+@end
+
 @implementation AEMTestUtils
 
 + (void) reset:(nonnull UITextView *)console
@@ -101,6 +107,13 @@ void extern dispatch_on_main_thread(dispatch_block_t block);
   [FBSDKAppEvents.shared logEvent:event
                        valueToSum:[value doubleValue]
                        parameters:parameters];
+}
+
++ (void)publishInstall:(UITextView *)console
+{
+  console.text = [console.text stringByAppendingFormat:@"Publish Install with ATE: %@\t\t", @([[FBSDKSettings sharedSettings] isAdvertiserTrackingEnabled])];
+  [[NSUserDefaults standardUserDefaults] removeObjectForKey:[NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", [[FBSDKSettings sharedSettings] appID]]];
+  [FBSDKAppEvents.shared publishInstall];
 }
 
 #pragma clang diagnostic push

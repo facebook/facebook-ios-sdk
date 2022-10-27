@@ -26,6 +26,8 @@ NS_SWIFT_NAME(AEMTestUtils)
               eventParameter:(nullable NSString *)eventParameter
                      console:(nonnull UITextView *)console;
 
++ (void)publishInstall:(UITextView *)console;
+
 + (void)swizzleReporterForConsole:(nonnull UITextView *)console;
 
 + (void)setLoggingBehaviorsForNetworkRuquest;
