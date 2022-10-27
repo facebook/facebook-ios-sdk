@@ -80,8 +80,8 @@ final class BridgeAPITests: XCTestCase {
       configuration: ServerConfigurationFixtures.defaultConfiguration
     )
     let components = TestCoreKitComponents.makeComponents(
-      serverConfigurationProvider: serverConfigurationProvider,
-      backgroundEventLogger: backgroundEventLogger
+      backgroundEventLogger: backgroundEventLogger,
+      serverConfigurationProvider: serverConfigurationProvider
     )
     let delegate = ApplicationDelegate(
       components: components,

@@ -12,18 +12,30 @@ final class CoreKitComponents {
   let accessTokenExpirer: _AccessTokenExpiring
   let accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type
   let advertiserIDProvider: _AdvertiserIDProviding
+  let aemNetworker: AEMNetworking?
+  let aemReporter: _AEMReporterProtocol.Type
+  let appEventParametersExtractor: _AppEventParametersExtracting
   let appEvents: _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
     & _ApplicationActivating & _ApplicationStateSetting & EventLogging
   let appEventsConfigurationProvider: _AppEventsConfigurationProviding
+  let appEventsDropDeterminer: _AppEventDropDetermining
   let appEventsStateProvider: _AppEventsStateProviding
   let appEventsStateStore: _AppEventsStatePersisting
   let appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting
     & _AppEventsUtilityProtocol & _LoggingNotifying
+  let appLinkEventPoster: _AppLinkEventPosting
+  let appLinkFactory: _AppLinkCreating
+  let appLinkResolver: AppLinkResolving
+  let appLinkTargetFactory: _AppLinkTargetCreating
+  let appLinkURLFactory: _AppLinkURLCreating
   let atePublisherFactory: _ATEPublisherCreating
   let authenticationTokenWallet: _AuthenticationTokenProviding.Type
+  let backgroundEventLogger: BackgroundEventLogging
   let capiReporter: CAPIReporter
+  let codelessIndexer: _CodelessIndexing.Type
   let crashHandler: CrashHandlerProtocol
   let crashObserver: CrashObserving
+  let dataExtractor: _FileDataExtracting.Type
   let defaultDataStore: DataPersisting
   let deviceInformationProvider: _DeviceInformationProviding
   let dialogConfigurationMapBuilder: _DialogConfigurationMapBuilding
@@ -33,51 +45,39 @@ final class CoreKitComponents {
   let eventDeactivationManager: _AppEventsParameterProcessing & _EventsProcessing
   let eventLogger: EventLogging
   let featureChecker: FeatureChecking & _FeatureDisabling
+  let featureExtractor: _FeatureExtracting.Type
+  let fileManager: _FileManaging
   let gateKeeperManager: _GateKeeperManaging.Type
   let getApplicationActivationNotifier: () -> Any
   let graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol
   let graphRequestFactory: GraphRequestFactoryProtocol
   let impressionLoggerFactory: _ImpressionLoggerFactoryProtocol
   let infoDictionaryProvider: InfoDictionaryProviding
+  let internalURLOpener: _InternalURLOpener
   let internalUtility: InternalUtilityProtocol
   let logger: Logging.Type
   let loggerFactory: _LoggerCreating
   let macCatalystDeterminator: _MacCatalystDetermining
+  let metadataIndexer: _MetadataIndexing
+  let modelManager: _EventProcessing & _IntegrityParametersProcessorProvider
   let notificationCenter: _NotificationPosting & NotificationDelivering
   let operatingSystemVersionComparer: _OperatingSystemVersionComparing
   let paymentObserver: _PaymentObserving
   let piggybackManager: _GraphRequestPiggybackManaging
-  let restrictiveDataFilterManager: _AppEventsParameterProcessing & _EventsProcessing
-  let serverConfigurationProvider: _ServerConfigurationProviding
-  let settings: SettingsProtocol & SettingsLogging
-  let timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording
-  let tokenCache: TokenCaching
-  let urlSessionProxyFactory: _URLSessionProxyProviding
-  let userDataStore: _UserDataPersisting
-  let aemNetworker: AEMNetworking?
-  let aemReporter: _AEMReporterProtocol.Type
-  let appEventParametersExtractor: _AppEventParametersExtracting
-  let appEventsDropDeterminer: _AppEventDropDetermining
-  let appLinkEventPoster: _AppLinkEventPosting
-  let appLinkFactory: _AppLinkCreating
-  let appLinkResolver: AppLinkResolving
-  let appLinkTargetFactory: _AppLinkTargetCreating
-  let appLinkURLFactory: _AppLinkURLCreating
-  let backgroundEventLogger: BackgroundEventLogging
-  let codelessIndexer: _CodelessIndexing.Type
-  let dataExtractor: _FileDataExtracting.Type
-  let featureExtractor: _FeatureExtracting.Type
-  let fileManager: _FileManaging
-  let internalURLOpener: _InternalURLOpener
-  let metadataIndexer: _MetadataIndexing
-  let modelManager: _EventProcessing & _IntegrityParametersProcessorProvider
   let profileSetter: ProfileProviding.Type
+  let restrictiveDataFilterManager: _AppEventsParameterProcessing & _EventsProcessing
   let rulesFromKeyProvider: _RulesFromKeyProvider
+  let serverConfigurationProvider: _ServerConfigurationProviding
   let sessionDataTaskProvider: URLSessionProviding
+  let settings: SettingsProtocol & SettingsLogging
   let skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
   let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol
   let swizzler: _Swizzling.Type
+  let timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording
+  let tokenCache: TokenCaching
   let urlHoster: URLHosting
+  let urlSessionProxyFactory: _URLSessionProxyProviding
+  let userDataStore: _UserDataPersisting
   let userIDProvider: _UserIDProviding
   let webViewProvider: _WebViewProviding
 
@@ -87,18 +87,28 @@ final class CoreKitComponents {
     accessTokenExpirer: _AccessTokenExpiring,
     accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type,
     advertiserIDProvider: _AdvertiserIDProviding,
-    appEvents: EventLogging & _AppEventsConfiguring & _ApplicationActivating & _ApplicationLifecycleObserving
-      & _ApplicationStateSetting & _SourceApplicationTracking,
+    aemNetworker: AEMNetworking?,
+    aemReporter: _AEMReporterProtocol.Type,
+    appEventParametersExtractor: _AppEventParametersExtracting,
+    appEvents: EventLogging & _AppEventsConfiguring & _ApplicationActivating & _ApplicationLifecycleObserving & _ApplicationStateSetting & _SourceApplicationTracking, // swiftlint:disable:this line_length
     appEventsConfigurationProvider: _AppEventsConfigurationProviding,
+    appEventsDropDeterminer: _AppEventDropDetermining,
     appEventsStateProvider: _AppEventsStateProviding,
     appEventsStateStore: _AppEventsStatePersisting,
-    appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtilityProtocol
-      & _LoggingNotifying,
+    appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtilityProtocol & _LoggingNotifying, // swiftlint:disable:this line_length
+    appLinkEventPoster: _AppLinkEventPosting,
+    appLinkFactory: _AppLinkCreating,
+    appLinkResolver: AppLinkResolving,
+    appLinkTargetFactory: _AppLinkTargetCreating,
+    appLinkURLFactory: _AppLinkURLCreating,
     atePublisherFactory: _ATEPublisherCreating,
     authenticationTokenWallet: _AuthenticationTokenProviding.Type,
+    backgroundEventLogger: BackgroundEventLogging,
     capiReporter: CAPIReporter,
+    codelessIndexer: _CodelessIndexing.Type,
     crashHandler: CrashHandlerProtocol,
     crashObserver: CrashObserving,
+    dataExtractor: _FileDataExtracting.Type,
     defaultDataStore: DataPersisting,
     deviceInformationProvider: _DeviceInformationProviding,
     dialogConfigurationMapBuilder: _DialogConfigurationMapBuilding,
@@ -108,67 +118,67 @@ final class CoreKitComponents {
     eventDeactivationManager: _AppEventsParameterProcessing & _EventsProcessing,
     eventLogger: EventLogging,
     featureChecker: FeatureChecking & _FeatureDisabling,
+    featureExtractor: _FeatureExtracting.Type,
+    fileManager: _FileManaging,
     gateKeeperManager: _GateKeeperManaging.Type,
     getApplicationActivationNotifier: @escaping () -> Any,
     graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol,
     graphRequestFactory: GraphRequestFactoryProtocol,
     impressionLoggerFactory: _ImpressionLoggerFactoryProtocol,
     infoDictionaryProvider: InfoDictionaryProviding,
+    internalURLOpener: _InternalURLOpener,
     internalUtility: InternalUtilityProtocol,
     logger: Logging.Type,
     loggerFactory: _LoggerCreating,
     macCatalystDeterminator: _MacCatalystDetermining,
+    metadataIndexer: _MetadataIndexing,
+    modelManager: _EventProcessing & _IntegrityParametersProcessorProvider,
     notificationCenter: _NotificationPosting & NotificationDelivering,
     operatingSystemVersionComparer: _OperatingSystemVersionComparing,
     paymentObserver: _PaymentObserving,
     piggybackManager: _GraphRequestPiggybackManaging,
-    restrictiveDataFilterManager: _AppEventsParameterProcessing & _EventsProcessing,
-    serverConfigurationProvider: _ServerConfigurationProviding,
-    settings: SettingsLogging & SettingsProtocol,
-    timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
-    tokenCache: TokenCaching,
-    urlSessionProxyFactory: _URLSessionProxyProviding,
-    userDataStore: _UserDataPersisting,
-    aemNetworker: AEMNetworking?,
-    aemReporter: _AEMReporterProtocol.Type,
-    appEventParametersExtractor: _AppEventParametersExtracting,
-    appEventsDropDeterminer: _AppEventDropDetermining,
-    appLinkEventPoster: _AppLinkEventPosting,
-    appLinkFactory: _AppLinkCreating,
-    appLinkResolver: AppLinkResolving,
-    appLinkTargetFactory: _AppLinkTargetCreating,
-    appLinkURLFactory: _AppLinkURLCreating,
-    backgroundEventLogger: BackgroundEventLogging,
-    codelessIndexer: _CodelessIndexing.Type,
-    dataExtractor: _FileDataExtracting.Type,
-    featureExtractor: _FeatureExtracting.Type,
-    fileManager: _FileManaging,
-    internalURLOpener: _InternalURLOpener,
-    metadataIndexer: _MetadataIndexing,
-    modelManager: _EventProcessing & _IntegrityParametersProcessorProvider,
     profileSetter: ProfileProviding.Type,
+    restrictiveDataFilterManager: _AppEventsParameterProcessing & _EventsProcessing,
     rulesFromKeyProvider: _RulesFromKeyProvider,
+    serverConfigurationProvider: _ServerConfigurationProviding,
     sessionDataTaskProvider: URLSessionProviding,
+    settings: SettingsLogging & SettingsProtocol,
     skAdNetworkReporter: (SKAdNetworkReporting & _AppEventsReporter)?,
     suggestedEventsIndexer: _SuggestedEventsIndexerProtocol,
     swizzler: _Swizzling.Type,
+    timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
+    tokenCache: TokenCaching,
     urlHoster: URLHosting,
+    urlSessionProxyFactory: _URLSessionProxyProviding,
+    userDataStore: _UserDataPersisting,
     userIDProvider: _UserIDProviding,
     webViewProvider: _WebViewProviding
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
     self.advertiserIDProvider = advertiserIDProvider
+    self.aemNetworker = aemNetworker
+    self.aemReporter = aemReporter
+    self.appEventParametersExtractor = appEventParametersExtractor
     self.appEvents = appEvents
     self.appEventsConfigurationProvider = appEventsConfigurationProvider
+    self.appEventsDropDeterminer = appEventsDropDeterminer
     self.appEventsStateProvider = appEventsStateProvider
     self.appEventsStateStore = appEventsStateStore
     self.appEventsUtility = appEventsUtility
+    self.appLinkEventPoster = appLinkEventPoster
+    self.appLinkFactory = appLinkFactory
+    self.appLinkResolver = appLinkResolver
+    self.appLinkTargetFactory = appLinkTargetFactory
+    self.appLinkURLFactory = appLinkURLFactory
     self.atePublisherFactory = atePublisherFactory
     self.authenticationTokenWallet = authenticationTokenWallet
+    self.backgroundEventLogger = backgroundEventLogger
     self.capiReporter = capiReporter
+    self.codelessIndexer = codelessIndexer
     self.crashHandler = crashHandler
     self.crashObserver = crashObserver
+    self.dataExtractor = dataExtractor
     self.defaultDataStore = defaultDataStore
     self.deviceInformationProvider = deviceInformationProvider
     self.dialogConfigurationMapBuilder = dialogConfigurationMapBuilder
@@ -178,51 +188,39 @@ final class CoreKitComponents {
     self.eventDeactivationManager = eventDeactivationManager
     self.eventLogger = eventLogger
     self.featureChecker = featureChecker
+    self.featureExtractor = featureExtractor
+    self.fileManager = fileManager
     self.gateKeeperManager = gateKeeperManager
     self.getApplicationActivationNotifier = getApplicationActivationNotifier
     self.graphRequestConnectionFactory = graphRequestConnectionFactory
     self.graphRequestFactory = graphRequestFactory
     self.impressionLoggerFactory = impressionLoggerFactory
     self.infoDictionaryProvider = infoDictionaryProvider
+    self.internalURLOpener = internalURLOpener
     self.internalUtility = internalUtility
     self.logger = logger
     self.loggerFactory = loggerFactory
     self.macCatalystDeterminator = macCatalystDeterminator
+    self.metadataIndexer = metadataIndexer
+    self.modelManager = modelManager
     self.notificationCenter = notificationCenter
     self.operatingSystemVersionComparer = operatingSystemVersionComparer
     self.paymentObserver = paymentObserver
     self.piggybackManager = piggybackManager
-    self.restrictiveDataFilterManager = restrictiveDataFilterManager
-    self.serverConfigurationProvider = serverConfigurationProvider
-    self.settings = settings
-    self.timeSpentRecorder = timeSpentRecorder
-    self.tokenCache = tokenCache
-    self.urlSessionProxyFactory = urlSessionProxyFactory
-    self.userDataStore = userDataStore
-    self.aemNetworker = aemNetworker
-    self.aemReporter = aemReporter
-    self.appEventParametersExtractor = appEventParametersExtractor
-    self.appEventsDropDeterminer = appEventsDropDeterminer
-    self.appLinkEventPoster = appLinkEventPoster
-    self.appLinkFactory = appLinkFactory
-    self.appLinkResolver = appLinkResolver
-    self.appLinkTargetFactory = appLinkTargetFactory
-    self.appLinkURLFactory = appLinkURLFactory
-    self.backgroundEventLogger = backgroundEventLogger
-    self.codelessIndexer = codelessIndexer
-    self.dataExtractor = dataExtractor
-    self.featureExtractor = featureExtractor
-    self.fileManager = fileManager
-    self.internalURLOpener = internalURLOpener
-    self.metadataIndexer = metadataIndexer
-    self.modelManager = modelManager
     self.profileSetter = profileSetter
+    self.restrictiveDataFilterManager = restrictiveDataFilterManager
     self.rulesFromKeyProvider = rulesFromKeyProvider
+    self.serverConfigurationProvider = serverConfigurationProvider
     self.sessionDataTaskProvider = sessionDataTaskProvider
+    self.settings = settings
     self.skAdNetworkReporter = skAdNetworkReporter
     self.suggestedEventsIndexer = suggestedEventsIndexer
     self.swizzler = swizzler
+    self.timeSpentRecorder = timeSpentRecorder
+    self.tokenCache = tokenCache
     self.urlHoster = urlHoster
+    self.urlSessionProxyFactory = urlSessionProxyFactory
+    self.userDataStore = userDataStore
     self.userIDProvider = userIDProvider
     self.webViewProvider = webViewProvider
   }
@@ -357,16 +355,28 @@ final class CoreKitComponents {
       accessTokenExpirer: accessTokenExpirer,
       accessTokenWallet: accessTokenWallet,
       advertiserIDProvider: advertiserIDProvider,
+      aemNetworker: aemNetworker,
+      aemReporter: AEMReporter.self,
+      appEventParametersExtractor: _AppEventsUtility.shared,
       appEvents: appEvents,
       appEventsConfigurationProvider: appEventsConfigurationProvider,
+      appEventsDropDeterminer: _AppEventsUtility.shared,
       appEventsStateProvider: appEventsStateProvider,
       appEventsStateStore: appEventsStateStore,
       appEventsUtility: appEventsUtility,
+      appLinkEventPoster: _MeasurementEvent(),
+      appLinkFactory: AppLinkFactory(),
+      appLinkResolver: WebViewAppLinkResolver.shared,
+      appLinkTargetFactory: AppLinkTargetFactory(),
+      appLinkURLFactory: AppLinkURLFactory(),
       atePublisherFactory: atePublisherFactory,
       authenticationTokenWallet: authenticationTokenWallet,
+      backgroundEventLogger: backgroundEventLogger,
       capiReporter: capiReporter,
+      codelessIndexer: _CodelessIndexer.self,
       crashHandler: crashHandler,
       crashObserver: crashObserver,
+      dataExtractor: NSData.self,
       defaultDataStore: defaultDataStore,
       deviceInformationProvider: deviceInformationProvider,
       dialogConfigurationMapBuilder: dialogConfigurationMapBuilder,
@@ -376,51 +386,39 @@ final class CoreKitComponents {
       eventDeactivationManager: eventDeactivationManager,
       eventLogger: eventLogger,
       featureChecker: featureChecker,
+      featureExtractor: _FeatureExtractor.self,
+      fileManager: FileManager.default,
       gateKeeperManager: gateKeeperManager,
       getApplicationActivationNotifier: getApplicationActivationNotifier,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       graphRequestFactory: graphRequestFactory,
       impressionLoggerFactory: impressionLoggerFactory,
       infoDictionaryProvider: infoDictionaryProvider,
+      internalURLOpener: CoreUIApplication.shared,
       internalUtility: internalUtility,
       logger: logger,
       loggerFactory: loggerFactory,
       macCatalystDeterminator: macCatalystDeterminator,
+      metadataIndexer: metaIndexer,
+      modelManager: _ModelManager.shared,
       notificationCenter: notificationCenter,
       operatingSystemVersionComparer: operatingSystemVersionComparer,
       paymentObserver: paymentObserver,
       piggybackManager: piggybackManager,
-      restrictiveDataFilterManager: restrictiveDataFilterManager,
-      serverConfigurationProvider: serverConfigurationProvider,
-      settings: settings,
-      timeSpentRecorder: timeSpentRecorder,
-      tokenCache: tokenCache,
-      urlSessionProxyFactory: urlSessionProxyFactory,
-      userDataStore: userDataStore,
-      aemNetworker: aemNetworker,
-      aemReporter: AEMReporter.self,
-      appEventParametersExtractor: _AppEventsUtility.shared,
-      appEventsDropDeterminer: _AppEventsUtility.shared,
-      appLinkEventPoster: _MeasurementEvent(),
-      appLinkFactory: AppLinkFactory(),
-      appLinkResolver: WebViewAppLinkResolver.shared,
-      appLinkTargetFactory: AppLinkTargetFactory(),
-      appLinkURLFactory: AppLinkURLFactory(),
-      backgroundEventLogger: backgroundEventLogger,
-      codelessIndexer: _CodelessIndexer.self,
-      dataExtractor: NSData.self,
-      featureExtractor: _FeatureExtractor.self,
-      fileManager: FileManager.default,
-      internalURLOpener: CoreUIApplication.shared,
-      metadataIndexer: metaIndexer,
-      modelManager: _ModelManager.shared,
       profileSetter: Profile.self,
+      restrictiveDataFilterManager: restrictiveDataFilterManager,
       rulesFromKeyProvider: _ModelManager.shared,
+      serverConfigurationProvider: serverConfigurationProvider,
       sessionDataTaskProvider: URLSession.shared,
+      settings: settings,
       skAdNetworkReporter: skAdNetworkReporter,
       suggestedEventsIndexer: suggestedEventsIndexer,
       swizzler: _Swizzler.self,
+      timeSpentRecorder: timeSpentRecorder,
+      tokenCache: tokenCache,
       urlHoster: InternalUtility.shared,
+      urlSessionProxyFactory: urlSessionProxyFactory,
+      userDataStore: userDataStore,
       userIDProvider: AppEvents.shared,
       webViewProvider: _WebViewFactory()
     )

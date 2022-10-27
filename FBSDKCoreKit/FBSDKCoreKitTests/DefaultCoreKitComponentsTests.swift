@@ -38,6 +38,21 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  @available(iOS 14, *)
+  func testAEMNetworker() {
+    XCTAssertNotNil(
+      components.aemNetworker as? AEMNetworker,
+      "The default components should use an instance of AEMNetworker as its AEM networker"
+    )
+  }
+
+  func testAppEventParametersExtractor() {
+    XCTAssertTrue(
+      components.appEventParametersExtractor === _AppEventsUtility.shared,
+      "The default components should use the shared AppEventsUtility as its app event parameters extractor"
+    )
+  }
+
   func testAppEvents() throws {
     XCTAssertTrue(
       components.appEvents === AppEvents.shared,
@@ -52,6 +67,13 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       The default components should use the shared \
       AppEventsConfigurationManager as its app events configuration provider
       """
+    )
+  }
+
+  func testAppEventsDropDeterminer() {
+    XCTAssertTrue(
+      components.appEventsDropDeterminer === _AppEventsUtility.shared,
+      "The default components should use the shared AppEventsUtility as its app events drop determiner"
     )
   }
 
@@ -73,6 +95,41 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     XCTAssertTrue(
       components.appEventsUtility === _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its app events utility"
+    )
+  }
+
+  func testAppLinkEventPoster() {
+    XCTAssertTrue(
+      components.appLinkEventPoster is _MeasurementEvent,
+      "The default components should use an instance of MeasurementEvent as its app link event poster"
+    )
+  }
+
+  func testAppLinkFactory() {
+    XCTAssertTrue(
+      components.appLinkFactory is AppLinkFactory,
+      "The default components should use an instance of AppLinkFactory as its app link factory"
+    )
+  }
+
+  func testAppLinkResolver() {
+    XCTAssertTrue(
+      components.appLinkResolver === WebViewAppLinkResolver.shared,
+      "The default components should use the shared WebViewAppLinkResolver as its app link resolver"
+    )
+  }
+
+  func testAppLinkTargetFactory() {
+    XCTAssertTrue(
+      components.appLinkTargetFactory is AppLinkTargetFactory,
+      "The default components should use an instance of AppLinkTargetFactory as its app link target factory"
+    )
+  }
+
+  func testAppLinkURLFactory() {
+    XCTAssertTrue(
+      components.appLinkURLFactory is AppLinkURLFactory,
+      "The default components should use an instance of AppLinkURLFactory as its app link URL factory"
     )
   }
 
@@ -113,6 +170,29 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testBackgroundEventLogger() throws {
+    XCTAssertTrue(
+      components.backgroundEventLogger is BackgroundEventLogger,
+      "The default components should use an instance of BackgroundEventLogger as its background event logger"
+    )
+    let dependencies = try BackgroundEventLogger.getDependencies()
+    XCTAssertTrue(
+      dependencies.infoDictionaryProvider === components.infoDictionaryProvider,
+      "The cache should use the components' info dictionary provider"
+    )
+    XCTAssertTrue(
+      dependencies.eventLogger === components.eventLogger,
+      "The cache should use the components' app events"
+    )
+  }
+
+  func testCodelessIndexer() {
+    XCTAssertTrue(
+      components.codelessIndexer === _CodelessIndexer.self,
+      "The default components should use the CodelessIndexer type as its codeless indexer"
+    )
+  }
+
   func testCrashHandler() {
     XCTAssertTrue(
       components.crashHandler === CrashHandler.shared,
@@ -140,6 +220,13 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     XCTAssertTrue(
       crashObserver.crashHandler === components.crashHandler,
       "The crash observer should use the components' crash handler"
+    )
+  }
+
+  func testDataExtractor() {
+    XCTAssertTrue(
+      components.dataExtractor === NSData.self,
+      "The default components should use the NSData type as its data extractor"
     )
   }
 
@@ -210,6 +297,20 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testFeatureExtractor() {
+    XCTAssertTrue(
+      components.featureExtractor === _FeatureExtractor.self,
+      "The default components should use the FeatureExtractor type as its feature extractor"
+    )
+  }
+
+  func testFileManager() {
+    XCTAssertTrue(
+      components.fileManager === FileManager.default,
+      "The default components should use the default FileManager as its file manager"
+    )
+  }
+
   func testGateKeeperManager() {
     XCTAssertTrue(
       components.gateKeeperManager === _GateKeeperManager.self,
@@ -264,6 +365,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testInternalURLOpener() {
+    XCTAssertIdentical(
+      components.internalURLOpener,
+      CoreUIApplication.shared,
+      "The default components should use the shared UIApplication as its internal URL opener"
+    )
+  }
+
   func testInternalUtility() {
     XCTAssertTrue(
       components.internalUtility === InternalUtility.shared,
@@ -289,6 +398,28 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     XCTAssertTrue(
       components.macCatalystDeterminator === ProcessInfo.processInfo,
       "The default components should use the default ProcessInfo as its Mac Catalyst determinator"
+    )
+  }
+
+  func testMetadataIndexer() throws {
+    let indexer = try XCTUnwrap(
+      components.metadataIndexer as? _MetadataIndexer,
+      "The default components should use an instance of MetadataIndexer as its metadata indexer"
+    )
+    XCTAssertTrue(
+      indexer.userDataStore === components.userDataStore,
+      "The indexer should use the components' user data store"
+    )
+    XCTAssertTrue(
+      indexer.swizzler === components.swizzler,
+      "The indexer should use the components' swizzler"
+    )
+  }
+
+  func testModelManager() {
+    XCTAssertTrue(
+      components.modelManager === _ModelManager.shared,
+      "The default components should use the shared ModelManager as its model manager"
     )
   }
 
@@ -362,6 +493,13 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testProfileSetter() {
+    XCTAssertTrue(
+      components.profileSetter === Profile.self,
+      "The default components should use the Profile type as its profile setter"
+    )
+  }
+
   func testRestrictiveDataFilterManager() throws {
     let manager = try XCTUnwrap(
       components.restrictiveDataFilterManager as? _RestrictiveDataFilterManager,
@@ -376,214 +514,6 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
-  func testServerConfigurationProvider() {
-    XCTAssertTrue(
-      components.serverConfigurationProvider === _ServerConfigurationManager.shared,
-      "The default components should use the shared ServerConfigurationManager as its server configuration provider"
-    )
-  }
-
-  func testSettings() {
-    XCTAssertTrue(
-      components.settings === Settings.shared,
-      "The default components should use the shared Settings as its settings"
-    )
-  }
-
-  func testTimeSpentRecorder() throws {
-    let recorder = try XCTUnwrap(
-      components.timeSpentRecorder as? _TimeSpentData,
-      "The default components should use an instance of TimeSpentData as its time spent recorder"
-    )
-    XCTAssertTrue(
-      recorder.eventLogger === components.eventLogger,
-      "The recorder should use the components' event logger"
-    )
-    XCTAssertTrue(
-      recorder.serverConfigurationProvider === components.serverConfigurationProvider,
-      "The recorder should use the components' server configuration provider"
-    )
-  }
-
-  func testTokenCache() throws {
-    let cache = try XCTUnwrap(
-      components.tokenCache as? TokenCache,
-      "The default components should use an instance of TokenCache as its token cache"
-    )
-    XCTAssertTrue(
-      cache.settings === components.settings,
-      "The cache should use the components' settings"
-    )
-
-    let store = try XCTUnwrap(
-      cache.keychainStore as? KeychainStore,
-      "The cache should use an instance of KeychainStore as its keychain store"
-    )
-
-    let identifier = try XCTUnwrap(Bundle.main.bundleIdentifier)
-    XCTAssertEqual(
-      store.service,
-      "\(DefaultKeychainServicePrefix).\(identifier)",
-      "The keychain store's service should be composed of the default prefix and the main bundle identifier"
-    )
-    XCTAssertNil(
-      store.accessGroup,
-      "The keychain store's access group should be nil"
-    )
-  }
-
-  func testURLSessionProxyFactory() {
-    XCTAssertTrue(
-      components.urlSessionProxyFactory is _URLSessionProxyFactory,
-      "The default components should use an instance of URLSessionProxyFactory as its URL session proxy factory"
-    )
-  }
-
-  func testUserDataStore() {
-    XCTAssertTrue(
-      components.userDataStore is _UserDataStore,
-      "The default components should use an instance of UserDataStore as its user data store"
-    )
-  }
-
-  @available(iOS 14, *)
-  func testAEMNetworker() {
-    XCTAssertNotNil(
-      components.aemNetworker as? AEMNetworker,
-      "The default components should use an instance of AEMNetworker as its AEM networker"
-    )
-  }
-
-  func testAppEventParametersExtractor() {
-    XCTAssertTrue(
-      components.appEventParametersExtractor === _AppEventsUtility.shared,
-      "The default components should use the shared AppEventsUtility as its app event parameters extractor"
-    )
-  }
-
-  func testAppEventsDropDeterminer() {
-    XCTAssertTrue(
-      components.appEventsDropDeterminer === _AppEventsUtility.shared,
-      "The default components should use the shared AppEventsUtility as its app events drop determiner"
-    )
-  }
-
-  func testAppLinkEventPoster() {
-    XCTAssertTrue(
-      components.appLinkEventPoster is _MeasurementEvent,
-      "The default components should use an instance of MeasurementEvent as its app link event poster"
-    )
-  }
-
-  func testAppLinkFactory() {
-    XCTAssertTrue(
-      components.appLinkFactory is AppLinkFactory,
-      "The default components should use an instance of AppLinkFactory as its app link factory"
-    )
-  }
-
-  func testAppLinkResolver() {
-    XCTAssertTrue(
-      components.appLinkResolver === WebViewAppLinkResolver.shared,
-      "The default components should use the shared WebViewAppLinkResolver as its app link resolver"
-    )
-  }
-
-  func testAppLinkTargetFactory() {
-    XCTAssertTrue(
-      components.appLinkTargetFactory is AppLinkTargetFactory,
-      "The default components should use an instance of AppLinkTargetFactory as its app link target factory"
-    )
-  }
-
-  func testAppLinkURLFactory() {
-    XCTAssertTrue(
-      components.appLinkURLFactory is AppLinkURLFactory,
-      "The default components should use an instance of AppLinkURLFactory as its app link URL factory"
-    )
-  }
-
-  func testBackgroundEventLogger() throws {
-    XCTAssertTrue(
-      components.backgroundEventLogger is BackgroundEventLogger,
-      "The default components should use an instance of BackgroundEventLogger as its background event logger"
-    )
-    let dependencies = try BackgroundEventLogger.getDependencies()
-    XCTAssertTrue(
-      dependencies.infoDictionaryProvider === components.infoDictionaryProvider,
-      "The cache should use the components' info dictionary provider"
-    )
-    XCTAssertTrue(
-      dependencies.eventLogger === components.eventLogger,
-      "The cache should use the components' app events"
-    )
-  }
-
-  func testCodelessIndexer() {
-    XCTAssertTrue(
-      components.codelessIndexer === _CodelessIndexer.self,
-      "The default components should use the CodelessIndexer type as its codeless indexer"
-    )
-  }
-
-  func testDataExtractor() {
-    XCTAssertTrue(
-      components.dataExtractor === NSData.self,
-      "The default components should use the NSData type as its data extractor"
-    )
-  }
-
-  func testFeatureExtractor() {
-    XCTAssertTrue(
-      components.featureExtractor === _FeatureExtractor.self,
-      "The default components should use the FeatureExtractor type as its feature extractor"
-    )
-  }
-
-  func testFileManager() {
-    XCTAssertTrue(
-      components.fileManager === FileManager.default,
-      "The default components should use the default FileManager as its file manager"
-    )
-  }
-
-  func testInternalURLOpener() {
-    XCTAssertIdentical(
-      components.internalURLOpener,
-      CoreUIApplication.shared,
-      "The default components should use the shared UIApplication as its internal URL opener"
-    )
-  }
-
-  func testMetadataIndexer() throws {
-    let indexer = try XCTUnwrap(
-      components.metadataIndexer as? _MetadataIndexer,
-      "The default components should use an instance of MetadataIndexer as its metadata indexer"
-    )
-    XCTAssertTrue(
-      indexer.userDataStore === components.userDataStore,
-      "The indexer should use the components' user data store"
-    )
-    XCTAssertTrue(
-      indexer.swizzler === components.swizzler,
-      "The indexer should use the components' swizzler"
-    )
-  }
-
-  func testModelManager() {
-    XCTAssertTrue(
-      components.modelManager === _ModelManager.shared,
-      "The default components should use the shared ModelManager as its model manager"
-    )
-  }
-
-  func testProfileSetter() {
-    XCTAssertTrue(
-      components.profileSetter === Profile.self,
-      "The default components should use the Profile type as its profile setter"
-    )
-  }
-
   func testRulesFromKeyProvider() {
     XCTAssertTrue(
       components.rulesFromKeyProvider === _ModelManager.shared,
@@ -591,10 +521,24 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testServerConfigurationProvider() {
+    XCTAssertTrue(
+      components.serverConfigurationProvider === _ServerConfigurationManager.shared,
+      "The default components should use the shared ServerConfigurationManager as its server configuration provider"
+    )
+  }
+
   func testSessionDataTaskProvider() {
     XCTAssertTrue(
       components.sessionDataTaskProvider === URLSession.shared,
       "The default components should use the shared URLSession as its session data task provider"
+    )
+  }
+
+  func testSettings() {
+    XCTAssertTrue(
+      components.settings === Settings.shared,
+      "The default components should use the shared Settings as its settings"
     )
   }
 
@@ -659,10 +603,66 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testTimeSpentRecorder() throws {
+    let recorder = try XCTUnwrap(
+      components.timeSpentRecorder as? _TimeSpentData,
+      "The default components should use an instance of TimeSpentData as its time spent recorder"
+    )
+    XCTAssertTrue(
+      recorder.eventLogger === components.eventLogger,
+      "The recorder should use the components' event logger"
+    )
+    XCTAssertTrue(
+      recorder.serverConfigurationProvider === components.serverConfigurationProvider,
+      "The recorder should use the components' server configuration provider"
+    )
+  }
+
+  func testTokenCache() throws {
+    let cache = try XCTUnwrap(
+      components.tokenCache as? TokenCache,
+      "The default components should use an instance of TokenCache as its token cache"
+    )
+    XCTAssertTrue(
+      cache.settings === components.settings,
+      "The cache should use the components' settings"
+    )
+
+    let store = try XCTUnwrap(
+      cache.keychainStore as? KeychainStore,
+      "The cache should use an instance of KeychainStore as its keychain store"
+    )
+
+    let identifier = try XCTUnwrap(Bundle.main.bundleIdentifier)
+    XCTAssertEqual(
+      store.service,
+      "\(DefaultKeychainServicePrefix).\(identifier)",
+      "The keychain store's service should be composed of the default prefix and the main bundle identifier"
+    )
+    XCTAssertNil(
+      store.accessGroup,
+      "The keychain store's access group should be nil"
+    )
+  }
+
   func testURLHoster() {
     XCTAssertTrue(
       components.urlHoster === InternalUtility.shared,
       "The default components should use the shared InternalUtility as its URL hoster"
+    )
+  }
+
+  func testURLSessionProxyFactory() {
+    XCTAssertTrue(
+      components.urlSessionProxyFactory is _URLSessionProxyFactory,
+      "The default components should use an instance of URLSessionProxyFactory as its URL session proxy factory"
+    )
+  }
+
+  func testUserDataStore() {
+    XCTAssertTrue(
+      components.userDataStore is _UserDataStore,
+      "The default components should use an instance of UserDataStore as its user data store"
     )
   }
 
