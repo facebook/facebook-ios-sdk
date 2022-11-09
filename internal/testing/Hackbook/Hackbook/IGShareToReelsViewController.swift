@@ -26,7 +26,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    section == 0 ? 3 : 1
+    section == 0 ? 4 : 1
   }
 
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -40,6 +40,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
       case 0: shareDemoVideo()
       case 1: selectVideoFromAssetLibrary()
       case 2: shareDemoVideoWithSticker()
+      case 3: shareDemoVideoFromMusicApp()
       default: break
       }
     case 1:
@@ -56,7 +57,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
     cell.selectionStyle = .none
     cell.accessoryType = .disclosureIndicator
 
-    let options = [["Video", "Video from Asset Library", "Video with Sticker"], ["Missing the Media"]]
+    let options = [["Video", "Video from Asset Library", "Video with Sticker", "Video from Music App"], ["Missing the Media"]]
     cell.textLabel?.text = options[indexPath.section][indexPath.row]
 
     return cell
@@ -126,6 +127,20 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
 
     let stickerImageData = stickerImage?.pngData()
     if shareToReels(appID: appID, backgroundVideo: videoData, stickerImage: stickerImageData) {
+      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
+    } else {
+      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
+    }
+  }
+
+  private func shareDemoVideoFromMusicApp() {
+    guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
+          let videoData = try? Data(contentsOf: videoUrl) as Data
+    else {
+      ConsoleReportBugWithFormattedMessage("process demo video failed")
+      return
+    }
+    if shareToReels(appID: "1233570620749979", backgroundVideo: videoData, stickerImage: nil) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
