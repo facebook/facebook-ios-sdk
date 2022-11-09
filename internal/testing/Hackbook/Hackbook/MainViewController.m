@@ -62,6 +62,7 @@ static const CGFloat marginYForBanner = 0;
   __weak IBOutlet UITextField *_graphAPIVersionEditorTextField;
   FBSDKLoginManager *_loginManager;
   UIView *_tableFooter;
+  NSURL *_deeplinkURL;
 }
 
 #pragma mark - View Management
@@ -69,7 +70,7 @@ static const CGFloat marginYForBanner = 0;
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-
+  
   UIView *tableHeader = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 80)];
   loginButton = [[FBSDKLoginButton alloc] initWithFrame:CGRectMake(0, 0, 220, 30)];
   [tableHeader addSubview:loginButton];
@@ -109,6 +110,9 @@ static const CGFloat marginYForBanner = 0;
   self.payloadObserver = [[FBSDKGamingPayloadObserver alloc] initWithDelegate:self];
   
   [self createDeepLinkBanner];
+  if (_deeplinkURL != nil) {
+    [self updateDeepLinkLabel:_deeplinkURL];
+  }
   
   if (![[NSUserDefaults standardUserDefaults] stringForKey:kCurrentSelectedApp]) {
     [[NSUserDefaults standardUserDefaults] setValue:@"Hackbook Default" forKey:kCurrentSelectedApp];
@@ -540,7 +544,12 @@ static const CGFloat marginYForBanner = 0;
 
 - (void)updateDeepLinkLabel:(NSURL *)url
 {
-  deepLinkURLLabel.text = url.absoluteString;
+  if (url != nil) {
+    _deeplinkURL = url;
+  }
+  if (_deeplinkURL != nil) {
+    deepLinkURLLabel.text = _deeplinkURL.absoluteString;
+  }
 }
 
 #pragma mark - FBSDKLoginButtonDelegate
