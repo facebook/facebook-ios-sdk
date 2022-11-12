@@ -23,3 +23,7 @@ targetTemplates:
         basedOnDependencyAnalysis: false
         showEnvVars: false
         script: ../scripts/build_phase_swiftlint.sh
+pod 'FBSDKCoreKit', '~> 8.0.0'
+pod 'FBSDKLoginKit', '~> 8.0.0'
+pod 'FBSDKShareKit', '~> 8.0.0'
+pod 'FBSDKGamingServiceKit', '~> 8.0.0'
