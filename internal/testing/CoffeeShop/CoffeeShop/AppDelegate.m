@@ -6,6 +6,8 @@
 
 #import "AEMTestUtils.h"
 // @lint-ignore CLANGTIDY
+#import <FBSDKBetaKit/FBSDKBetaAppDelegate.h>
+
 #import "CoffeeShop-Swift.h"
 #import "ProductDetailViewController.h"
 #import "SandboxViewController.h"
@@ -67,6 +69,8 @@ static NSInteger const kStatusBarViewTag = 10098;
 
   // register KVO - only used for status bar change when in sandbox environment
   [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:kSandboxOverrideKey options:NSKeyValueObservingOptionNew context:nil];
+
+  [FBSDKBetaAppDelegate setup];
 
   return YES;
 }
