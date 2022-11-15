@@ -23,6 +23,33 @@
       [FBAEMReporter enable];
       [FBAEMReporter handle:url];
     } named:@"AEMDeeplinkAutoSetup"];
+    
+    
+    [FBSDKBetaSwizzler swizzleSelector:@selector(application:continueUserActivity:restorationHandler:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSUserActivity *userActivity, id restorationHandler) {
+      [FBAEMReporter enable];
+      [FBAEMReporter handle:userActivity.webpageURL];
+    } named:@"AEMUniversallinkAutoSetup"];
+    
+    if (@available(iOS 13.0, *)) {
+      NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
+      for (UIScene* scene in scenes) {
+        id<UISceneDelegate> sceneDelegate = scene.delegate;
+        Class sceneClass = sceneDelegate.class;
+        [FBSDKBetaSwizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
+          [FBAEMReporter enable];
+          for(UIOpenURLContext* urlContext in urlContexts) {
+            [FBAEMReporter handle:urlContext.URL];
+          }
+        } named:@"AEMSceneDeeplinkAutoSetup"];
+        
+        [FBSDKBetaSwizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
+          [FBAEMReporter enable];
+          [FBAEMReporter handle:userActivity.webpageURL];
+        } named:@"AEMSceneUniversallinkAutoSetup"];
+      }
+      
+    }
+    
   });
 }
 
