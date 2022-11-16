@@ -48,7 +48,7 @@ final class GamingServiceController: NSObject {
     completionHandler?(
       false,
       nil,
-      ErrorFactory().error(
+      _ErrorFactory().error(
         code: CoreError.errorBridgeAPIInterruption.rawValue,
         userInfo: nil,
         message: "\(error != nil ? "Error" : "An unknown error") occured while interacting with Gaming Services",

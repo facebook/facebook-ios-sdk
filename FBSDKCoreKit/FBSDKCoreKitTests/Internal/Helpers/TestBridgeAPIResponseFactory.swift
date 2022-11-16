@@ -6,29 +6,28 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+@testable import FBSDKCoreKit
 
-@objcMembers
-final class TestBridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
+final class TestBridgeAPIResponseFactory: BridgeAPIResponseCreating {
 
   var capturedResponseURL: URL?
   var capturedSourceApplication: String?
   var stubbedResponse: BridgeAPIResponse?
   var shouldFailCreation = false
 
-  func createResponseCancelled(with request: BridgeAPIRequestProtocol) -> BridgeAPIResponse {
-    stubbedResponse ?? createResponse(request: request, cancelled: true)
+  func createResponseCancelled(request: BridgeAPIRequestProtocol) -> BridgeAPIResponse {
+    stubbedResponse ?? createResponse(withRequest: request, cancelled: true)
   }
 
   func createResponse(
-    with request: BridgeAPIRequestProtocol,
+    request: BridgeAPIRequestProtocol,
     error: Error
   ) -> BridgeAPIResponse {
-    stubbedResponse ?? createResponse(request: request, error: error)
+    stubbedResponse ?? createResponse(withRequest: request, error: error)
   }
 
   func createResponse(
-    with request: BridgeAPIRequestProtocol,
+    request: BridgeAPIRequestProtocol,
     responseURL: URL,
     sourceApplication: String?
   ) throws -> BridgeAPIResponse {
@@ -39,11 +38,11 @@ final class TestBridgeAPIResponseFactory: NSObject, BridgeAPIResponseCreating {
       throw CoreError(.errorBridgeAPIResponse)
     }
 
-    return stubbedResponse ?? createResponse(request: request)
+    return stubbedResponse ?? createResponse(withRequest: request)
   }
 
   private func createResponse(
-    request: BridgeAPIRequestProtocol,
+    withRequest request: BridgeAPIRequestProtocol,
     error: Error? = nil,
     cancelled: Bool = false
   ) -> BridgeAPIResponse {

@@ -102,8 +102,8 @@ final class CodelessIndexerTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertEqual(
-      _CodelessIndexer.graphRequestFactory as? TestGraphRequestFactory,
+    XCTAssertIdentical(
+      _CodelessIndexer.graphRequestFactory as AnyObject,
       graphRequestFactory,
       "Should be able to configure with a request provider"
     )
@@ -168,7 +168,7 @@ final class CodelessIndexerTests: XCTestCase {
       "Should not include a token string in the request"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       "Should not specify an http method when creating the request"
     )
     XCTAssertEqual(
@@ -468,7 +468,7 @@ final class CodelessIndexerTests: XCTestCase {
       "Should create a request with the expected graph path"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       .post,
       "Should create a request with the expected http method"
     )
@@ -485,9 +485,8 @@ final class CodelessIndexerTests: XCTestCase {
       ],
       "Should create a request with the expected parameters"
     )
-    XCTAssertEqual(
+    XCTAssertNil(
       graphRequestFactory.capturedFlags,
-      [],
       "Should create a request with the expected flags"
     )
   }
@@ -595,7 +594,7 @@ final class CodelessIndexerTests: XCTestCase {
       "Should request the session with the expected parameters"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       .post,
       "Should request the session with the expected http method"
     )

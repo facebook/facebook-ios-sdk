@@ -1185,6 +1185,8 @@ final class AEMInvocationTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {

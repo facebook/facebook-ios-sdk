@@ -56,7 +56,7 @@ final class AppInviteContentTests: XCTestCase {
 
     let dependencies = try AppInviteContent.getDependencies()
     XCTAssertTrue(dependencies.validator is _ShareUtility.Type, .usesShareUtilityByDefault)
-    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesErrorFactoryByDefault)
+    XCTAssertTrue(dependencies.errorFactory is _ErrorFactory, .usesErrorFactoryByDefault)
   }
 
   func testCustomDependencies() throws {
@@ -210,10 +210,12 @@ final class AppInviteContentTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {
-  static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete ErrorFactory"
+  static let usesErrorFactoryByDefault = "The default error factory dependency should be a concrete _ErrorFactory"
   static let usesShareUtilityByDefault = "The default share validator dependency should be the _ShareUtility type"
   static let usesCustomErrorFactory = "The error factory dependency should be configurable"
   static let usesCustomShareValidator = "The share validator dependency should be configurable"

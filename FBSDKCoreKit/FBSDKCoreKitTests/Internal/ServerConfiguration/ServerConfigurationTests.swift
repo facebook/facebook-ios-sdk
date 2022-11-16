@@ -216,7 +216,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithDefaultSessionTimeoutInterval() {
     XCTAssertEqual(
-      configuration.sessionTimoutInterval,
+      configuration.sessionTimeoutInterval,
       60,
       "Should set the correct default timeout interval"
     )
@@ -225,7 +225,7 @@ final class ServerConfigurationTests: XCTestCase {
   func testCreatingWithSessionTimeoutInterval() {
     configuration = Fixtures.configuration(withDictionary: ["sessionTimeoutInterval": 200])
     XCTAssertEqual(
-      configuration.sessionTimoutInterval,
+      configuration.sessionTimeoutInterval,
       200,
       "Should set the session timeout interval from the remote"
     )
@@ -511,8 +511,7 @@ final class ServerConfigurationTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
     let errorConfiguration = _ErrorConfiguration(dictionary: nil)
 
     configuration = Fixtures.configuration(withDictionary: [
@@ -530,7 +529,7 @@ final class ServerConfigurationTests: XCTestCase {
       "timestamp": Date(),
       "errorConfiguration": errorConfiguration,
       "sessionTimeoutInterval": 100,
-      "defaults": false,
+      "defaults": true,
       "loggingToken": "loggingToken",
       "smartLoginOptions": FBSDKServerConfigurationSmartLoginOptions.enabled.rawValue,
       "smartLoginBookmarkIconURL": exampleURL,
@@ -542,123 +541,53 @@ final class ServerConfigurationTests: XCTestCase {
       "suggestedEventsSetting": ["suggestedEventsSetting": "foo"],
     ])
 
-    configuration.encode(with: coder)
+    // Encode and Decode
+    let object = configuration
+    let decodedObject = try CodabilityTesting.encodeAndDecode(object)
 
-    XCTAssertEqual(coder.encodedObject["appID"] as? String, configuration.appID)
-    XCTAssertEqual(coder.encodedObject["appName"] as? String, configuration.appName)
-    XCTAssertEqual(coder.encodedObject["loginTooltipEnabled"] as? Bool, configuration.isLoginTooltipEnabled)
-    XCTAssertEqual(coder.encodedObject["loginTooltipText"] as? String, configuration.loginTooltipText)
-    XCTAssertEqual(coder.encodedObject["defaultShareMode"] as? String, configuration.defaultShareMode)
-    XCTAssertEqual(coder.encodedObject["advertisingIDEnabled"] as? Bool, configuration.isAdvertisingIDEnabled)
-    XCTAssertEqual(coder.encodedObject["implicitLoggingEnabled"] as? Bool, configuration.isImplicitLoggingSupported)
-    XCTAssertEqual(
-      coder.encodedObject["implicitPurchaseLoggingEnabled"] as? Bool,
-      configuration.isImplicitPurchaseLoggingSupported
-    )
-    XCTAssertEqual(coder.encodedObject["codelessEventsEnabled"] as? Bool, configuration.isCodelessEventsEnabled)
-    XCTAssertEqual(coder.encodedObject["trackAppUninstallEnabled"] as? Bool, configuration.isUninstallTrackingEnabled)
-    XCTAssertEqualDicts(coder.encodedObject["dialogFlows"] as? [String: Any], configuration.dialogFlows())
-    XCTAssertEqual(coder.encodedObject["timestamp"] as? Date, configuration.timestamp)
-    XCTAssertEqual(coder.encodedObject["errorConfigs"] as? _ErrorConfiguration, configuration.errorConfiguration)
-    XCTAssertEqual(coder.encodedObject["sessionTimeoutInterval"] as? TimeInterval, configuration.sessionTimoutInterval)
-    XCTAssertNil(
-      coder.encodedObject["defaults"],
+    // Test Objects
+    // XCTAssertEqual(decodedObject, object, .isCodable) // Doesn't work since isEqual not implemented
+    XCTAssertNotIdentical(decodedObject, object, .isCodable)
+
+    // Test Codable Properties
+    XCTAssertEqual(decodedObject.isAdvertisingIDEnabled, object.isAdvertisingIDEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.appID, object.appID, .isCodable)
+    XCTAssertEqual(decodedObject.appName, object.appName, .isCodable)
+    XCTAssertEqual(decodedObject.defaultShareMode, object.defaultShareMode, .isCodable)
+    XCTAssertEqualDicts(decodedObject.dialogFlows(), object.dialogFlows(), .isCodable)
+    XCTAssertEqualDicts(decodedObject.dialogConfigurations(), object.dialogConfigurations(), .isCodable)
+    // FBSDKErrorConfiguration does not implement isEqual: so just test for not nil
+    XCTAssertNotNil(decodedObject.errorConfiguration)
+    XCTAssertEqual(decodedObject.isImplicitLoggingSupported, object.isImplicitLoggingSupported, .isCodable)
+    XCTAssertEqual(decodedObject.isImplicitPurchaseLoggingSupported, object.isImplicitPurchaseLoggingSupported)
+    XCTAssertEqual(decodedObject.isCodelessEventsEnabled, object.isCodelessEventsEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.isLoginTooltipEnabled, object.isLoginTooltipEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.isUninstallTrackingEnabled, object.isUninstallTrackingEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.loginTooltipText, object.loginTooltipText, .isCodable)
+    XCTAssertEqual(decodedObject.timestamp, object.timestamp, .isCodable)
+    XCTAssertEqual(decodedObject.sessionTimeoutInterval, object.sessionTimeoutInterval, .isCodable)
+    XCTAssertEqual(decodedObject.loggingToken, object.loggingToken, .isCodable)
+    XCTAssertEqual(decodedObject.smartLoginOptions, object.smartLoginOptions, .isCodable)
+    XCTAssertEqual(decodedObject.smartLoginBookmarkIconURL, object.smartLoginBookmarkIconURL, .isCodable)
+    XCTAssertEqual(decodedObject.smartLoginMenuIconURL, object.smartLoginMenuIconURL, .isCodable)
+    XCTAssertEqual(decodedObject.updateMessage, object.updateMessage, .isCodable)
+    XCTAssertEqualDicts(decodedObject.restrictiveParams, object.restrictiveParams, .isCodable)
+    XCTAssertEqualDicts(decodedObject.aamRules, object.aamRules, .isCodable)
+    XCTAssertEqualDicts(decodedObject.suggestedEventsSetting, object.suggestedEventsSetting, .isCodable)
+    XCTAssertEqual(decodedObject.version, object.version, .isCodable)
+
+    // Event bindings is [[String: String]], i.e. an array of dicts
+    let objectEventBindings = try XCTUnwrap(object.eventBindings)
+    let decodedObjectEventBindings = try XCTUnwrap(decodedObject.eventBindings)
+    for (decodedDict, objectDict) in zip(objectEventBindings, decodedObjectEventBindings) {
+      XCTAssertEqualDicts(decodedDict, objectDict, .isCodable)
+    }
+
+    // isDefaults is not codable
+    XCTAssertFalse(
+      decodedObject.isDefaults, // was set to true
       "Should not encode whether default values were used to create server configuration"
     )
-    XCTAssertEqual(coder.encodedObject["loggingToken"] as? String, configuration.loggingToken)
-    XCTAssertEqual(coder.encodedObject["smartLoginEnabled"] as? UInt, configuration.smartLoginOptions.rawValue)
-    XCTAssertEqual(coder.encodedObject["smarstLoginBookmarkIconURL"] as? URL, configuration.smartLoginBookmarkIconURL)
-    XCTAssertEqual(coder.encodedObject["smarstLoginBookmarkMenuURL"] as? URL, configuration.smartLoginMenuIconURL)
-    XCTAssertEqual(coder.encodedObject["SDKUpdateMessage"] as? String, configuration.updateMessage)
-    XCTAssertEqual(
-      coder.encodedObject["eventBindings"] as? [[String: String]],
-      configuration.eventBindings as? [[String: String]]
-    )
-    XCTAssertEqualDicts(coder.encodedObject["restrictiveParams"] as? [String: Any], configuration.restrictiveParams)
-    XCTAssertEqualDicts(coder.encodedObject["AAMRules"] as? [String: Any], configuration.aamRules)
-    XCTAssertEqualDicts(
-      coder.encodedObject["suggestedEventsSetting"] as? [String: Any],
-      configuration.suggestedEventsSetting
-    )
-  }
-
-  func testDecoding() throws {
-    let decoder = TestCoder()
-    configuration = try XCTUnwrap(_ServerConfiguration(coder: decoder))
-
-    let dialogFlowsClasses = NSSet(array: [
-      NSDictionary.self,
-      NSNumber.self,
-      NSString.self,
-    ])
-
-    let dictionaryClasses = NSSet(array: [
-      NSArray.self,
-      NSData.self,
-      NSDictionary.self,
-      NSNumber.self,
-      NSString.self,
-    ])
-
-    XCTAssertTrue(decoder.decodedObject["appID"] is NSString.Type)
-    XCTAssertTrue(decoder.decodedObject["appName"] is NSString.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["loginTooltipEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode loginTooltipEnabled as a Bool"
-    )
-    XCTAssertTrue(decoder.decodedObject["loginTooltipText"] is NSString.Type)
-    XCTAssertTrue(decoder.decodedObject["defaultShareMode"] is NSString.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["advertisingIDEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode advertisingIDEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["implicitLoggingEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode implicitLoggingEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["implicitPurchaseLoggingEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode implicitPurchaseLoggingEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["codelessEventsEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode codelessEventsEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["trackAppUninstallEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode trackAppUninstallEnabled as a Bool"
-    )
-    XCTAssertEqual(decoder.decodedObject["dialogFlows"] as? NSSet, dialogFlowsClasses)
-    XCTAssertTrue(decoder.decodedObject["timestamp"] is NSDate.Type)
-    XCTAssertTrue(decoder.decodedObject["errorConfigs"] is _ErrorConfiguration.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["sessionTimeoutInterval"] as? String,
-      "decodeDoubleForKey",
-      "Should decode implicitLoggingEnabled as a Double"
-    )
-    XCTAssertNil(
-      decoder.decodedObject["defaults"],
-      "Should not encode whether default values were used to create server configuration"
-    )
-    XCTAssertTrue(decoder.decodedObject["loggingToken"] is NSString.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["smartLoginEnabled"] as? String,
-      "decodeIntegerForKey",
-      "Should decode smartLoginEnabled as an integer"
-    )
-    XCTAssertTrue(decoder.decodedObject["smarstLoginBookmarkIconURL"] is NSURL.Type)
-    XCTAssertTrue(decoder.decodedObject["smarstLoginBookmarkMenuURL"] is NSURL.Type)
-    XCTAssertTrue(decoder.decodedObject["SDKUpdateMessage"] is NSString.Type)
-    XCTAssertTrue(decoder.decodedObject["eventBindings"] is NSArray.Type)
-    XCTAssertEqual(decoder.decodedObject["restrictiveParams"] as? NSSet, dictionaryClasses)
-    XCTAssertEqual(decoder.decodedObject["AAMRules"] as? NSSet, dictionaryClasses)
-    XCTAssertEqual(decoder.decodedObject["suggestedEventsSetting"] as? NSSet, dictionaryClasses)
   }
 
   func testRetrievingInvalidDialogConfigurationForDialogName() {
@@ -2097,4 +2026,11 @@ final class ServerConfigurationTests: XCTestCase {
       XCTFail("RHS Dict is nil", file: file, line: line)
     }
   }
+}
+
+// MARK: - Assumptions
+
+// swiftformat:disable:next extensionaccesscontrol
+fileprivate extension String {
+  static let isCodable = "FBSDKServerConfiguration should be encodable and decodable"
 }

@@ -42,6 +42,9 @@ NS_SWIFT_NAME(URLOpening)
 - (BOOL)isAuthenticationURL:(NSURL *)url;
 
 @optional
+
++ (instancetype)makeOpener;
+
 - (BOOL)shouldStopPropagationOfURL:(NSURL *)url;
 
 @end

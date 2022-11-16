@@ -7,6 +7,7 @@
  */
 
 import FBAEMKit
+import Foundation
 
 public final class TestSKAdNetworkReporter: NSObject, SKAdNetworkReporting {
 

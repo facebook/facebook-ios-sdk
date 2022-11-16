@@ -455,7 +455,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   func testAddingRequestToBatchSetsMethod() {
     let postRequest = TestGraphRequest(
       graphPath: "me",
-      HTTPMethod: .post
+      httpMethod: .post
     )
     let metadata = GraphRequestMetadata(
       request: postRequest,
@@ -1297,7 +1297,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     let parameters: [String: Any] = [
       "first_key": "first_value",
     ]
-    let singleRequest = TestGraphRequest(graphPath: "activities", parameters: parameters, HTTPMethod: .post)
+    let singleRequest = TestGraphRequest(graphPath: "activities", parameters: parameters, httpMethod: .post)
     connection.add(singleRequest) { _, _, _ in }
     let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
     let request = connection.request(withBatch: requests, timeout: 0)
@@ -1325,7 +1325,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       graphPath: "me",
       parameters: ["fields": ""],
       tokenString: expectedToken,
-      HTTPMethod: .get,
+      httpMethod: .get,
       flags: []
     )
     let token = connection.accessToken(with: request)

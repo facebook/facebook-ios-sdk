@@ -14,10 +14,9 @@
 #import <WebKit/WebKit.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppLink.h"
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
 
@@ -70,7 +69,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 
 - (instancetype)init
 {
-  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  FBSDKErrorFactory *factory = [FBSDKErrorFactory new];
   return [self initWithSessionProvider:NSURLSession.sharedSession
                           errorFactory:factory];
 }
@@ -273,9 +272,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
         NSURL *url = urlString ? [NSURL URLWithString:urlString] : nil;
         NSString *appStoreId = [FBSDKTypeUtility array:appStoreIds objectAtIndex:i][FBSDKWebViewAppLinkResolverDictionaryValueKey];
         NSString *appName = [FBSDKTypeUtility array:appNames objectAtIndex:i][FBSDKWebViewAppLinkResolverDictionaryValueKey];
-        FBSDKAppLinkTarget *target = [FBSDKAppLinkTarget appLinkTargetWithURL:url
-                                                                   appStoreId:appStoreId
-                                                                      appName:appName];
+        FBSDKAppLinkTarget *target = [[FBSDKAppLinkTarget alloc] initWithURL:url appStoreId:appStoreId appName:appName];
         [FBSDKTypeUtility array:linkTargets addObject:target];
       }
     }
@@ -295,7 +292,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     webUrl = [NSURL URLWithString:webUrlString];
   }
 
-  return [FBSDKAppLink appLinkWithSourceURL:destination
+  return [[FBSDKAppLink alloc] initWithSourceURL:destination
                                     targets:linkTargets
                                      webURL:webUrl];
 }

@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
 @testable import FBSDKLoginKit
 
 import FBSDKCoreKit_Basics
@@ -163,7 +164,7 @@ final class LoginManagerTests: XCTestCase {
   }
 
   func resetClassDependencies() {
-    Profile.reset()
+    Profile.resetDependencies()
     AccessToken.resetClassDependencies()
     AccessToken.resetCurrentAccessTokenCache()
     AuthenticationToken.resetCurrentAuthenticationTokenCache()
@@ -241,7 +242,7 @@ final class LoginManagerTests: XCTestCase {
       .Dependencies.defaultDependency("AuthenticationToken", for: "authentication token wallet")
     )
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorFactory,
+      dependencies.errorFactory is _ErrorFactory,
       .Dependencies.defaultDependency("a concrete error factory", for: "error factory")
     )
     XCTAssertTrue(
@@ -1515,6 +1516,8 @@ final class LoginManagerTests: XCTestCase {
     )
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 

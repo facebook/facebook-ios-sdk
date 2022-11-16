@@ -52,6 +52,8 @@ schemes:
 
 targets:
   FBSDKGamingServicesKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKGamingServicesKit
@@ -66,14 +68,12 @@ targets:
       - target: FBSDKShareKit/FBSDKShareKit-Dynamic
       - sdk: UIKit.framework
       - sdk: CoreGraphics.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit FBSDKGamingServicesKitTests
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
     transitivelyLinkDependencies: true
   FBSDKGamingServicesKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKGamingServicesKit
@@ -89,10 +89,6 @@ targets:
         link: false
       - target: FBSDKShareKit/FBSDKShareKit-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh FBSDKGamingServicesKit
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
   FBSDKGamingServicesKitTests:

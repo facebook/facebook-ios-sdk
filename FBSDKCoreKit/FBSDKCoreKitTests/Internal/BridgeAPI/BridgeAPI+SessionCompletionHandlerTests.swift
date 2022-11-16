@@ -6,6 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
+@available(iOS 13.0, *)
 extension BridgeAPITests {
 
   // MARK: - Setting Session Completion Handler
@@ -19,7 +22,7 @@ extension BridgeAPITests {
     }
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
     api.authenticationSessionState = .started
-    api.setSessionCompletionHandlerFromHandler(handler)
+    api.setSessionCompletionHandler(calling: handler)
 
     api.authenticationSessionCompletionHandler?(sampleURL, nil)
 
@@ -52,7 +55,7 @@ extension BridgeAPITests {
     }
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
     api.authenticationSessionState = .started
-    api.setSessionCompletionHandlerFromHandler(handler)
+    api.setSessionCompletionHandler(calling: handler)
 
     api.authenticationSessionCompletionHandler?(url, nil)
 
@@ -82,7 +85,7 @@ extension BridgeAPITests {
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
     api.authenticationSessionState = .started
 
-    api.setSessionCompletionHandlerFromHandler(handler)
+    api.setSessionCompletionHandler(calling: handler)
     api.authenticationSessionCompletionHandler?(nil, nil)
 
     XCTAssertEqual(
@@ -110,7 +113,7 @@ extension BridgeAPITests {
     }
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
     api.authenticationSessionState = .started
-    api.setSessionCompletionHandlerFromHandler(handler)
+    api.setSessionCompletionHandler(calling: handler)
 
     api.authenticationSessionCompletionHandler?(sampleURL, SampleError())
 
@@ -141,7 +144,7 @@ extension BridgeAPITests {
     }
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
     api.authenticationSessionState = .started
-    api.setSessionCompletionHandlerFromHandler(handler)
+    api.setSessionCompletionHandler(calling: handler)
 
     api.authenticationSessionCompletionHandler?(url, SampleError())
 
@@ -170,7 +173,7 @@ extension BridgeAPITests {
     }
     api.authenticationSession = AuthenticationSessionSpy.makeDefaultSpy()
     api.authenticationSessionState = .started
-    api.setSessionCompletionHandlerFromHandler(handler)
+    api.setSessionCompletionHandler(calling: handler)
 
     api.authenticationSessionCompletionHandler?(nil, SampleError())
 

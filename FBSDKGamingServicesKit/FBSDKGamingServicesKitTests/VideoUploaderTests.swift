@@ -86,7 +86,7 @@ final class VideoUploaderTests: XCTestCase, VideoUploaderDelegate {
       graphRequestFactory.capturedGraphPath,
       "me/videos"
     )
-    XCTAssertNotNil(graphRequestFactory.capturedHttpMethod)
+    XCTAssertNotNil(graphRequestFactory.capturedHTTPMethod)
     XCTAssertNil(
       graphRequestFactory.capturedTokenString,
       "Request Provider should not be initialized with a token string"

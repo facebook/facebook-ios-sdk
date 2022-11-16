@@ -284,7 +284,7 @@ final class VideoUploader: VideoUploading {
   }
 
   private func errorWithMessage(_ message: String) -> Error {
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
     return errorFactory.error(
       domain: "com.facebook.sdk.gaming.videoupload",
       code: 0,

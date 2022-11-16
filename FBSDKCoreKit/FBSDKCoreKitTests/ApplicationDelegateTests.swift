@@ -41,10 +41,14 @@ final class ApplicationDelegateTests: XCTestCase {
     userDataStore = UserDefaultsSpy()
     observer = TestApplicationDelegateObserver()
     settings = TestSettings()
-    backgroundEventLogger = TestBackgroundEventLogger(
-      infoDictionaryProvider: TestBundle(),
-      eventLogger: TestAppEvents()
+
+    TestBackgroundEventLogger.setDependencies(
+      .init(
+        infoDictionaryProvider: TestBundle(),
+        eventLogger: TestAppEvents()
+      )
     )
+    backgroundEventLogger = TestBackgroundEventLogger()
     serverConfigurationProvider = TestServerConfigurationProvider()
     paymentObserver = TestPaymentObserver()
     profile = Profile(

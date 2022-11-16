@@ -8,6 +8,7 @@
 
 @testable import FBSDKShareKit
 
+import FBSDKCoreKit
 import TestTools
 import XCTest
 
@@ -131,6 +132,8 @@ final class FBSendButtonTests: XCTestCase {
     XCTAssertTrue(testDialog.wasShowCalled, .actionShowsDialog)
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 

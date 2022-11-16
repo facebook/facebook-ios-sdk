@@ -103,7 +103,7 @@ public final class GamingVideoUploader: NSObject {
     completion: @escaping GamingServiceResultCompletion,
     progressHandler: GamingServiceProgressHandler?
   ) {
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
 
     guard AccessToken.current != nil else {
       completion(
@@ -168,7 +168,7 @@ public final class GamingVideoUploader: NSObject {
 
     if !success,
        error == nil {
-      finalError = ErrorFactory().error(
+      finalError = _ErrorFactory().error(
         code: CoreError.errorUnknown.rawValue,
         userInfo: nil,
         message: "Video upload was unsuccessful, but no error was thrown.",

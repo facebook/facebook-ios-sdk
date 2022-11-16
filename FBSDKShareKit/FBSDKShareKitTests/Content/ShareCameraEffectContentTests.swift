@@ -50,7 +50,7 @@ final class ShareCameraEffectContentTests: XCTestCase {
 
     let dependencies = try ShareCameraEffectContent.getDependencies()
     XCTAssertIdentical(dependencies.internalUtility as AnyObject, InternalUtility.shared, .usesInternalUtilityByDefault)
-    XCTAssertTrue(dependencies.errorFactory is ErrorFactory, .usesConcreteErrorFactoryByDefault)
+    XCTAssertTrue(dependencies.errorFactory is _ErrorFactory, .usesConcreteErrorFactoryByDefault)
   }
 
   func testCustomDependencies() throws {
@@ -82,6 +82,8 @@ final class ShareCameraEffectContentTests: XCTestCase {
   }
 }
 
+// swiftformat:disable extensionaccesscontrol
+
 // MARK: - Assumptions
 
 fileprivate extension String {
@@ -89,7 +91,7 @@ fileprivate extension String {
     The default internal utility dependency should be the shared InternalUtility
     """
   static let usesConcreteErrorFactoryByDefault = """
-    The default error factory dependency should be a concrete ErrorFactory
+    The default error factory dependency should be a concrete _ErrorFactory
     """
   static let usesCustomInternalUtility = "The internal utility dependency should be configurable"
   static let usesCustomErrorFactory = "The error factory dependency should be configurable"

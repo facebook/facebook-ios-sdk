@@ -10,6 +10,8 @@
 
 #import "FBSDKAuthenticationStatusUtility.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 

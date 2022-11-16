@@ -27,9 +27,12 @@ settings:
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
+    DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING: YES
 
 targets:
   FBSDKCoreKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKCoreKit
@@ -56,15 +59,13 @@ targets:
         link: false
       - sdk: SafariServices.framework
       - sdk: WebKit.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
       CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKCoreKit
@@ -99,15 +100,13 @@ targets:
       - sdk: WebKit.framework
         weak: true
       - sdk: libz.tbd
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
       CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit_TV-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKCoreKit
@@ -133,14 +132,12 @@ targets:
         link: false
       - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
         link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
       CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit_TV-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: tvOS
     productName: FBSDKCoreKit
@@ -170,10 +167,6 @@ targets:
       - sdk: libz.tbd
       - sdk: StoreKit.framework
       - sdk: UIKit.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        showEnvVars: false
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
       CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h

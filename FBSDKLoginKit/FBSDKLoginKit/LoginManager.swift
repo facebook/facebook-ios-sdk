@@ -83,7 +83,7 @@ public final class LoginManager: NSObject {
     return InstanceDependencies(
       accessTokenWallet: AccessToken.self,
       authenticationTokenWallet: AuthenticationToken.self,
-      errorFactory: ErrorFactory(),
+      errorFactory: _ErrorFactory(),
       graphRequestFactory: GraphRequestFactory(),
       internalUtility: InternalUtility.shared,
       keychainStore: keychainStore,
@@ -377,7 +377,7 @@ public final class LoginManager: NSObject {
     switch state {
     case .start:
       if usedSafariSession {
-        // Using SFAuthenticationSession makes an interstitial dialog that blocks the app, but in certain situations
+        // Using safari makes an interstitial dialog that blocks the app, but in certain situations
         // such as screen lock it can be dismissed and have the control returned to the app without invoking the
         // completionHandler. In this case, the view controller has the control back and tried to reinvoke the login.
         // This is acceptable behavior and we should pop up the dialog again
@@ -650,7 +650,7 @@ public final class LoginManager: NSObject {
        parameters["redirect_uri"] != nil {
       do {
         authenticationURL = try dependencies.internalUtility.facebookURL(
-          withHostPrefix: "m.",
+          hostPrefix: "m.",
           path: Self.oAuthPath,
           queryParameters: parameters
         )
@@ -827,6 +827,11 @@ public final class LoginManager: NSObject {
 }
 
 extension LoginManager: URLOpening {
+
+  public static func makeOpener() -> LoginManager {
+    LoginManager()
+  }
+
   public func application(
     _ application: UIApplication?,
     open url: URL?,

@@ -94,9 +94,12 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSpentCredits;
 // MARK: - Internal
 
 /**
- Internal value exposed to facilitate transition to Swift.
+ Internal values exposed to facilitate transition to Swift.
  API Subject to change or removal without warning. Do not use.
 
  @warning INTERNAL - DO NOT USE
  */
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameInitializeSDK;
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusAvailable;
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusDenied;
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusRestricted;

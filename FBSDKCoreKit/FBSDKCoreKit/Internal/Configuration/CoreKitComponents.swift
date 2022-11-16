@@ -92,7 +92,7 @@ final class CoreKitComponents {
   let appLinkURLFactory: _AppLinkURLCreating
 
   @available(tvOS, unavailable)
-  let backgroundEventLogger: _BackgroundEventLogging
+  let backgroundEventLogger: BackgroundEventLogging
 
   @available(tvOS, unavailable)
   let codelessIndexer: _CodelessIndexing.Type
@@ -204,7 +204,7 @@ final class CoreKitComponents {
     appLinkResolver: AppLinkResolving,
     appLinkTargetFactory: _AppLinkTargetCreating,
     appLinkURLFactory: _AppLinkURLCreating,
-    backgroundEventLogger: _BackgroundEventLogging,
+    backgroundEventLogger: BackgroundEventLogging,
     codelessIndexer: _CodelessIndexing.Type,
     dataExtractor: _FileDataExtracting.Type,
     featureExtractor: _FeatureExtracting.Type,
@@ -430,12 +430,7 @@ final class CoreKitComponents {
       paymentQueue: SKPaymentQueue.default(),
       paymentProductRequestorFactory: paymentProductRequestorFactory
     )
-    let piggybackManager: _GraphRequestPiggybackManaging = _GraphRequestPiggybackManager(
-      tokenWallet: AccessToken.self,
-      settings: Settings.shared,
-      serverConfigurationProvider: _ServerConfigurationManager.shared,
-      graphRequestFactory: graphRequestFactory
-    )
+    let piggybackManager: _GraphRequestPiggybackManaging = GraphRequestPiggybackManager()
     let timeSpentRecorder: (_SourceApplicationTracking & _TimeSpentRecording) = _TimeSpentData(
       eventLogger: AppEvents.shared,
       serverConfigurationProvider: _ServerConfigurationManager.shared
@@ -447,7 +442,15 @@ final class CoreKitComponents {
       service: keychainService,
       accessGroup: nil
     )
-    let tokenCache: TokenCaching = _TokenCache(settings: Settings.shared, keychainStore: keychainStore)
+    var tokenCache = TokenCache()
+    tokenCache.setDependencies(
+      .init(
+        settings: Settings.shared,
+        keychainStore: keychainStore,
+        dataStore: UserDefaults.standard
+      )
+    )
+
     let userDataStore: _UserDataPersisting = _UserDataStore()
     let capiReporter: CAPIReporter = AppEventsCAPIManager.shared
 
@@ -457,7 +460,7 @@ final class CoreKitComponents {
     let appEvents: _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
       & _ApplicationActivating & _ApplicationStateSetting & EventLogging = AppEvents.shared
     let appEventsConfigurationProvider: _AppEventsConfigurationProviding = _AppEventsConfigurationManager.shared
-    let appEventsStateProvider: _AppEventsStateProviding = _AppEventsStateFactory()
+    let appEventsStateProvider: _AppEventsStateProviding = AppEventsStateFactory()
     let appEventsStateStore: _AppEventsStatePersisting = _AppEventsStateManager.shared
     let appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtility
       & _LoggingNotifying = _AppEventsUtility.shared
@@ -467,7 +470,7 @@ final class CoreKitComponents {
     let deviceInformationProvider: _DeviceInformationProviding = _AppEventsDeviceInfo.shared
     let dialogConfigurationMapBuilder: _DialogConfigurationMapBuilding = _DialogConfigurationMapBuilder()
     let errorConfigurationProvider: _ErrorConfigurationProviding = _ErrorConfigurationProvider()
-    let errorFactory: ErrorCreating = ErrorFactory(reporter: ErrorReporter.shared)
+    let errorFactory: ErrorCreating = _ErrorFactory()
     let errorReporter: ErrorReporting = ErrorReporter.shared
     let eventDeactivationManager: _AppEventsParameterProcessing & _EventsProcessing = EventDeactivationManager()
     let eventLogger: EventLogging = AppEvents.shared
@@ -490,7 +493,7 @@ final class CoreKitComponents {
     #if !os(tvOS)
     var aemNetworker: AEMNetworking?
     if #available(iOS 14, *) {
-      aemNetworker = __AEMNetworker()
+      aemNetworker = AEMNetworker()
     }
 
     var skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
@@ -510,10 +513,7 @@ final class CoreKitComponents {
       featureExtractor: _FeatureExtractor.self,
       eventProcessor: _ModelManager.shared
     )
-    let backgroundEventLogger: _BackgroundEventLogging = _BackgroundEventLogger(
-      infoDictionaryProvider: Bundle.main,
-      eventLogger: AppEvents.shared
-    )
+    let backgroundEventLogger: BackgroundEventLogging = BackgroundEventLogger()
     #endif
 
     #if os(tvOS)
@@ -612,10 +612,10 @@ final class CoreKitComponents {
       appEventParametersExtractor: _AppEventsUtility.shared,
       appEventsDropDeterminer: _AppEventsUtility.shared,
       appLinkEventPoster: _MeasurementEvent(),
-      appLinkFactory: _AppLinkFactory(),
+      appLinkFactory: AppLinkFactory(),
       appLinkResolver: WebViewAppLinkResolver.shared,
-      appLinkTargetFactory: _AppLinkTargetFactory(),
-      appLinkURLFactory: _AppLinkURLFactory(),
+      appLinkTargetFactory: AppLinkTargetFactory(),
+      appLinkURLFactory: AppLinkURLFactory(),
       backgroundEventLogger: backgroundEventLogger,
       codelessIndexer: _CodelessIndexer.self,
       dataExtractor: NSData.self,

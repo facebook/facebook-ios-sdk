@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  @warning INTERNAL - DO NOT USE
  */
 NS_SWIFT_NAME(BridgeAPIRequestOpening)
-@protocol FBSDKBridgeAPIRequestOpening <NSObject>
+@protocol FBSDKBridgeAPIRequestOpening
 
 - (void)openBridgeAPIRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
      useSafariViewController:(BOOL)useSafariViewController

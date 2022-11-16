@@ -11,20 +11,12 @@
 #import "FBSDKAppLinkNavigation+Internal.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKAppLink+Internal.h"
 #import "FBSDKMeasurementEventNames.h"
 #import "FBSDKWebViewAppLinkResolver.h"
-
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkTargetKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkUserAgentKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkExtrasKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersionKeyName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppLink;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppName;
-FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
+#import "FBSDKAppLinkURLKeys.h"
 
 @interface FBSDKAppLinkNavigation ()
 
@@ -144,25 +136,34 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
   }
   [FBSDKTypeUtility dictionary:appLinkData setObject:self.extras ?: @{} forKey:FBSDKAppLinkExtrasKeyName];
 
-  // JSON-ify the applink data
-  NSError *jsonError = nil;
-  NSData *jsonBlob = [FBSDKTypeUtility dataWithJSONObject:appLinkData options:0 error:&jsonError];
-  if (!jsonError) {
-    NSString *jsonString = [[NSString alloc] initWithData:jsonBlob encoding:NSUTF8StringEncoding];
-    NSString *encoded = [self stringByEscapingQueryString:jsonString];
+  if ([NSJSONSerialization isValidJSONObject: appLinkData]) {
+    
+    NSError *jsonError = nil;
 
-    NSString *endUrlString = [NSString stringWithFormat:@"%@%@%@=%@",
-                              targetUrl.absoluteString,
-                              targetUrl.query ? @"&" : @"?",
-                              FBSDKAppLinkDataParameterName,
-                              encoded];
+    // JSON-ify the applink data
+    NSData *jsonBlob = [NSJSONSerialization dataWithJSONObject:appLinkData options:0 error:&jsonError];
+    
+    if (!jsonError) {
+      NSString *jsonString = [[NSString alloc] initWithData:jsonBlob encoding:NSUTF8StringEncoding];
+      NSString *encoded = [self stringByEscapingQueryString:jsonString];
 
-    return [NSURL URLWithString:endUrlString];
+      NSString *endUrlString = [NSString stringWithFormat:@"%@%@%@=%@",
+                                targetUrl.absoluteString,
+                                targetUrl.query ? @"&" : @"?",
+                                FBSDKAppLinkDataParameterName,
+                                encoded];
+
+      return [NSURL URLWithString:endUrlString];
+    } else {
+      
+      // If there was an error encoding the app link data, fail hard.
+      return nil;
+    }
   } else {
     if (error) {
-      *error = jsonError;
+      *error = [[NSError alloc] initWithDomain:@"JSON object not valid" code:-1 userInfo:nil];
     }
-
+    
     // If there was an error encoding the app link data, fail hard.
     return nil;
   }
@@ -179,8 +180,6 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
                                         eventPoster:(id<FBSDKAppLinkEventPosting>)eventPoster
                                               error:(NSError *__autoreleasing *)error
 {
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   NSURL *openedURL = nil;
   NSError *encodingError = nil;
   FBSDKAppLinkNavigationType retType = FBSDKAppLinkNavigationTypeFailure;
@@ -213,7 +212,6 @@ static id<FBSDKAppLinkResolving> _appLinkResolver;
       openedURL = appLinkBrowserURL;
     }
   }
-  #pragma clang diagnostic pop
 
   [self postAppLinkNavigateEventNotificationWithTargetURL:openedURL
                                                     error:error ? *error : nil

@@ -59,7 +59,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppEventsStateProvider() {
     XCTAssertTrue(
-      components.appEventsStateProvider is _AppEventsStateFactory,
+      components.appEventsStateProvider is AppEventsStateFactory,
       "The default components should use an instance of AppEventsStateFactory as its app events state provider"
     )
   }
@@ -177,12 +177,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testErrorFactory() throws {
-    let factory = try XCTUnwrap(
-      components.errorFactory as? ErrorFactory,
-      "The default components should use an instance of ErrorFactory as its error factory"
-    )
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === components.errorReporter,
+      reporter === components.errorReporter,
       "The factory should use the components' error reporter"
     )
   }
@@ -358,33 +355,12 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testPiggybackManager() throws {
-    let manager = try XCTUnwrap(
-      components.piggybackManager as? _GraphRequestPiggybackManager,
+    XCTAssertNotNil(
+      components.piggybackManager as? GraphRequestPiggybackManager,
       """
       The default components should use an instance of GraphRequestPiggybackManager as \
       its graph request piggyback manager
       """
-    )
-    XCTAssertIdentical(
-      manager.tokenWallet,
-      components.accessTokenWallet,
-      "The piggyback manager should use the components' access token wallet"
-    )
-
-    XCTAssertIdentical(
-      manager.settings,
-      components.settings,
-      "The piggyback manager should use the components' settings"
-    )
-    XCTAssertIdentical(
-      manager.serverConfigurationProvider,
-      components.serverConfigurationProvider,
-      "The piggyback manager should use the components' server configuration provider"
-    )
-    XCTAssertIdentical(
-      manager.graphRequestFactory,
-      components.graphRequestFactory,
-      "The piggyback manager should use the components' graph request factory"
     )
   }
 
@@ -433,7 +409,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testTokenCache() throws {
     let cache = try XCTUnwrap(
-      components.tokenCache as? _TokenCache,
+      components.tokenCache as? TokenCache,
       "The default components should use an instance of TokenCache as its token cache"
     )
     XCTAssertTrue(
@@ -477,8 +453,8 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   @available(iOS 14, *)
   func testAEMNetworker() {
     XCTAssertNotNil(
-      components.aemNetworker as? __AEMNetworker,
-      "The default components should use an instance of __AEMNetworker as its AEM networker"
+      components.aemNetworker as? AEMNetworker,
+      "The default components should use an instance of AEMNetworker as its AEM networker"
     )
   }
 
@@ -505,7 +481,7 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppLinkFactory() {
     XCTAssertTrue(
-      components.appLinkFactory is _AppLinkFactory,
+      components.appLinkFactory is AppLinkFactory,
       "The default components should use an instance of AppLinkFactory as its app link factory"
     )
   }
@@ -519,29 +495,30 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testAppLinkTargetFactory() {
     XCTAssertTrue(
-      components.appLinkTargetFactory is _AppLinkTargetFactory,
+      components.appLinkTargetFactory is AppLinkTargetFactory,
       "The default components should use an instance of AppLinkTargetFactory as its app link target factory"
     )
   }
 
   func testAppLinkURLFactory() {
     XCTAssertTrue(
-      components.appLinkURLFactory is _AppLinkURLFactory,
+      components.appLinkURLFactory is AppLinkURLFactory,
       "The default components should use an instance of AppLinkURLFactory as its app link URL factory"
     )
   }
 
   func testBackgroundEventLogger() throws {
-    let logger = try XCTUnwrap(
-      components.backgroundEventLogger as? _BackgroundEventLogger,
+    XCTAssertTrue(
+      components.backgroundEventLogger is BackgroundEventLogger,
       "The default components should use an instance of BackgroundEventLogger as its background event logger"
     )
+    let dependencies = try BackgroundEventLogger.getDependencies()
     XCTAssertTrue(
-      logger.infoDictionaryProvider === components.infoDictionaryProvider,
+      dependencies.infoDictionaryProvider === components.infoDictionaryProvider,
       "The cache should use the components' info dictionary provider"
     )
     XCTAssertTrue(
-      logger.eventLogger === components.eventLogger,
+      dependencies.eventLogger === components.eventLogger,
       "The cache should use the components' app events"
     )
   }

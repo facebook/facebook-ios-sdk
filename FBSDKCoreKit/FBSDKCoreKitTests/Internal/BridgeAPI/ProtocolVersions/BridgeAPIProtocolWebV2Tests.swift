@@ -98,15 +98,13 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
       "Should use the expected default server configuration provider"
     )
     XCTAssertTrue(
-      bridge.nativeBridge is BridgeAPIProtocolNativeV1,
+      bridge.nativeBridge is _BridgeAPIProtocolNativeV1,
       "Should use the expected default native bridge"
     )
-    let factory = try XCTUnwrap(
-      bridge.errorFactory as? ErrorFactory,
-      "Should use the expected type of error factory by default"
-    )
+
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === ErrorReporter.shared,
+      reporter === ErrorReporter.shared,
       "The error factory should use the shared error reporter"
     )
     XCTAssertTrue(
@@ -124,7 +122,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutServerConfiguration() {
     XCTAssertNil(
       try? bridge.requestURL(
-        withActionID: "",
+        actionID: "",
         scheme: "",
         methodName: "",
         parameters: [:]
@@ -135,7 +133,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func testRequestURLWithoutDialog() {
     let url = try? bridge.requestURL(
-      withActionID: "",
+      actionID: "",
       scheme: "",
       methodName: "Foo",
       parameters: [:]
@@ -150,7 +148,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutMatchingDialogForMethodName() {
     stubServerConfigurationWithDialog(named: "Bar")
     let url = try? bridge.requestURL(
-      withActionID: "",
+      actionID: "",
       scheme: "",
       methodName: "Foo",
       parameters: [:]
@@ -166,7 +164,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     stubServerConfigurationWithDialog(named: Values.methodName)
     nativeBridge.stubbedRequestURLError = SampleError()
     let url = try? bridge.requestURL(
-      withActionID: "",
+      actionID: "",
       scheme: "",
       methodName: Values.methodName,
       parameters: [:]
@@ -192,7 +190,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     internalUtility.stubbedFacebookURL = urlWithParams
 
     _ = try? bridge.requestURL(
-      withActionID: Values.actionID,
+      actionID: Values.actionID,
       scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
       parameters: validQueryParameters
@@ -353,7 +351,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   func testResponseParameters() {
     var isCancelled = ObjCBool(false)
     _ = try? bridge.responseParameters(
-      forActionID: Values.actionID,
+      actionID: Values.actionID,
       queryParameters: validQueryParameters,
       cancelled: &isCancelled
     )

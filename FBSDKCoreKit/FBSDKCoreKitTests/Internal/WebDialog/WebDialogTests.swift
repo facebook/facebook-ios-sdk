@@ -48,7 +48,7 @@ final class WebDialogTests: XCTestCase, WebDialogDelegate {
     let dependencies = try _WebDialog.getDependencies()
 
     XCTAssertTrue(
-      dependencies.errorFactory is ErrorFactory,
+      dependencies.errorFactory is _ErrorFactory,
       .defaultDependency("the error factory", for: "creating errors")
     )
 
@@ -172,6 +172,8 @@ final class WebDialogTests: XCTestCase, WebDialogDelegate {
     webDialogDidCancelWasCalled = true
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 

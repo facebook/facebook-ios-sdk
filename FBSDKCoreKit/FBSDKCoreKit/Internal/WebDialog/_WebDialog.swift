@@ -27,6 +27,7 @@ public final class _WebDialog: NSObject {
   var parameters: [String: String]?
   var backgroundView: UIView?
   var dialogView: FBWebDialogView?
+  var path: String?
 
   private enum AnimationDuration {
     static let show = 0.2
@@ -50,11 +51,13 @@ public final class _WebDialog: NSObject {
   public init(
     name: String,
     parameters: [String: String]?,
-    webViewFrame: CGRect = .zero
+    webViewFrame: CGRect = .zero,
+    path: String? = nil
   ) {
     self.name = name
     self.parameters = parameters
     self.webViewFrame = webViewFrame
+    self.path = path
   }
 
   public convenience init(name: String) {
@@ -162,8 +165,8 @@ public final class _WebDialog: NSObject {
       urlParameters = parameters.merging(urlParameters) { _, last in last }
     }
     return try InternalUtility.shared.facebookURL(
-      withHostPrefix: "m",
-      path: "/dialog/\(name)",
+      hostPrefix: "m",
+      path: path ?? "/dialog/\(name)",
       queryParameters: urlParameters
     )
   }
@@ -297,7 +300,7 @@ extension _WebDialog: DependentAsType {
   static var configuredDependencies: TypeDependencies?
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
-    errorFactory: ErrorFactory(reporter: ErrorReporter.shared),
+    errorFactory: _ErrorFactory(),
     windowFinder: InternalUtility.shared
   )
 }

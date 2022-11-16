@@ -75,4 +75,8 @@ extension FBSDKLoginManager: URLOpening {
   public func isAuthenticationURL(_ url: URL) -> Bool {
     stubbedIsAuthenticationURL
   }
+
+  public static func makeOpener() -> FBSDKLoginManager {
+    FBSDKLoginManager()
+  }
 }

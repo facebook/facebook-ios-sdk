@@ -312,7 +312,7 @@ public final class FBProfilePictureView: UIView {
     if let profile = Profile.current {
       return profile.imageURL(forMode: pictureMode, size: state.size)
     } else {
-      return Profile.imageURL(profileID: state.profileID, pictureMode: pictureMode, size: state.size)
+      return Profile.getImageURL(profileID: state.profileID, pictureMode: pictureMode, size: state.size)
     }
   }
 

@@ -24,9 +24,9 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 @property (class, nonatomic) BOOL isConversionFilteringEnabled;
 @property (class, nonatomic) BOOL isCatalogMatchingEnabled;
 @property (class, nonatomic) BOOL isAdvertiserRuleMatchInServerEnabled;
-@property (class, nonatomic) NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *configurations;
-@property (class, nonatomic) NSMutableArray<FBAEMInvocation *> *invocations;
-@property (class, nonatomic) NSMutableArray<FBAEMReporterBlock> *completionBlocks;
+@property (class, nonatomic) NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *configurations;
+@property (class, nonatomic) NSArray<FBAEMInvocation *> *invocations;
+@property (class, nonatomic) NSArray<FBAEMReporterBlock> *completionBlocks;
 @property (class, nonatomic) NSString *reportFilePath;
 @property (class, nullable, nonatomic) NSDate *minAggregationRequestTimestamp;
 @property (class, nullable, nonatomic) id<FBAEMNetworking> networker;
@@ -38,7 +38,8 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
                          appID:(nullable NSString *)appID
                       reporter:(nullable id<FBSKAdNetworkReporting>)reporter
                 analyticsAppID:(nullable NSString *)analyticsAppID
-                         store:(nullable id<FBSDKDataPersisting>)store;
+                         store:(nullable id<FBSDKDataPersisting>)store
+NS_SWIFT_NAME(configure(networker:appID:reporter:analyticsAppID:store:));
 
 + (void)enable;
 
@@ -70,7 +71,7 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
                                            currency:(nullable NSString *)currency
                                               value:(nullable NSNumber *)value
                                          parameters:(nullable NSDictionary<NSString *, id> *)parameters
-                                     configurations:(NSDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)configurations;
+                                     configurations:(NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)configurations;
 
 + (BOOL)_isDoubleCounting:(FBAEMInvocation *)invocation
                     event:(NSString *)event;
@@ -92,11 +93,11 @@ typedef void (^FBAEMReporterBlock)(NSError *_Nullable);
 
 + (BOOL)_shouldRefreshWithIsForced:(BOOL)isForced;
 
-+ (NSMutableDictionary<NSString *, NSMutableArray<FBAEMConfiguration *> *> *)_loadConfigurations;
++ (NSDictionary<NSString *, NSArray<FBAEMConfiguration *> *> *)_loadConfigurations;
 
 + (void)_addConfigurations:(nullable NSArray<NSDictionary<NSString *, id> *> *)configurations;
 
-+ (NSMutableArray<FBAEMInvocation *> *)_loadReportData;
++ (NSArray<FBAEMInvocation *> *)_loadReportData;
 
 + (void)_saveReportData;
 

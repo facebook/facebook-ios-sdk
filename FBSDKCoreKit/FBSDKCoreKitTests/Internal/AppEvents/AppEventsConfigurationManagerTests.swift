@@ -84,8 +84,8 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
       settings,
       "Should be able to configure with custom settings"
     )
-    XCTAssertEqual(
-      manager.graphRequestFactory as? TestGraphRequestFactory,
+    XCTAssertIdentical(
+      manager.graphRequestFactory as AnyObject,
       graphRequestFactory,
       "Should be able to configure with a custom graph request provider"
     )
@@ -143,12 +143,11 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
       "Should not include a token string in the request"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       "Should not specify an http method when creating the request"
     )
-    XCTAssertEqual(
+    XCTAssertNil(
       graphRequestFactory.capturedFlags,
-      [],
       "Should not specify flags when creating the request"
     )
   }

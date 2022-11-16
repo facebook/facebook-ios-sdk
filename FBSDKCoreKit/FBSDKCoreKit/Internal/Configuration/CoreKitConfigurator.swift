@@ -27,7 +27,6 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureAppEventsUtility()
     configureAuthenticationToken()
     configureButton()
-    configureErrorFactory()
     configureGatekeeperManager()
     configureGraphRequest()
     configureGraphRequestConnection()
@@ -58,6 +57,7 @@ final class CoreKitConfigurator: CoreKitConfiguring {
 
 // MARK: - All platforms
 
+// swiftformat:disable:next extensionaccesscontrol
 private extension CoreKitConfigurator {
   func configureAccessToken() {
     AccessToken.configure(
@@ -133,10 +133,6 @@ private extension CoreKitConfigurator {
       eventLogger: components.eventLogger,
       accessTokenProvider: components.accessTokenWallet
     )
-  }
-
-  func configureErrorFactory() {
-    ErrorFactory.configure(defaultReporter: components.errorReporter)
   }
 
   func configureGatekeeperManager() {
@@ -347,12 +343,15 @@ private extension CoreKitConfigurator {
 
   @available(tvOS, unavailable)
   func configureProfile() {
-    Profile.configure(
-      dataStore: components.defaultDataStore,
-      accessTokenProvider: components.accessTokenWallet,
-      notificationCenter: components.notificationCenter,
-      settings: components.settings,
-      urlHoster: components.urlHoster
+    Profile.setDependencies(
+      .init(
+        accessTokenProvider: components.accessTokenWallet,
+        dataStore: components.defaultDataStore,
+        graphRequestFactory: components.graphRequestFactory,
+        notificationCenter: components.notificationCenter,
+        settings: components.settings,
+        urlHoster: components.urlHoster
+      )
     )
   }
 

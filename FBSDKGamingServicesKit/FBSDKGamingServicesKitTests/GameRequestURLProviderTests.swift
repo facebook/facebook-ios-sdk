@@ -8,6 +8,7 @@
 
 @testable import FBSDKGamingServicesKit
 
+import FBSDKCoreKit
 import TestTools
 import XCTest
 
@@ -201,6 +202,8 @@ final class GameRequestURLProviderTests: XCTestCase {
     )
   }
 }
+
+// swiftformat:disable extensionaccesscontrol
 
 // MARK: - Assumptions
 
