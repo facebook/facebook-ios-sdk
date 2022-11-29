@@ -9,12 +9,13 @@ NS_ASSUME_NONNULL_BEGIN
 extern NSString *const IGSDKPlatformSharingToReelsScheme; // Instagram's custom URL scheme
 extern NSString *const IGSDKPlatformSharingToReelsParamBackgroundVideo; // background video data
 extern NSString *const IGSDKPlatformSharingToReelsParamStickerImage; // sticker image data
-
+extern NSString *const IGSDKPlatformSharingToReelsParamContentURL; // content url data
 
 BOOL IGSDKPlatformSharingToReels(NSString *_Nullable appID,
                                  NSData *_Nullable backgroundVideo,
-                                 NSData *_Nullable stickerImage)
-NS_SWIFT_NAME(shareToReels(appID:backgroundVideo:stickerImage:));
+                                 NSData *_Nullable stickerImage,
+                                 NSString *_Nullable contentURL)
+NS_SWIFT_NAME(shareToReels(appID:backgroundVideo:stickerImage:contentURL:));
 
 BOOL IGSDKPlatformSharingToReelsCanOpen(void);
 

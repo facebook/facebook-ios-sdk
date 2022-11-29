@@ -26,7 +26,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    section == 0 ? 4 : 1
+    section == 0 ? 5 : 1
   }
 
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -41,6 +41,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
       case 1: selectVideoFromAssetLibrary()
       case 2: shareDemoVideoWithSticker()
       case 3: shareDemoVideoFromMusicApp()
+      case 4: shareDemoVideoWithContentURL()
       default: break
       }
     case 1:
@@ -57,7 +58,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
     cell.selectionStyle = .none
     cell.accessoryType = .disclosureIndicator
 
-    let options = [["Video", "Video from Asset Library", "Video with Sticker", "Video from Music App"], ["Missing the Media"]]
+    let options = [["Video", "Video from Asset Library", "Video with Sticker", "Video from Music App", "Video with Clickable Attribution"], ["Missing the Media"]]
     cell.textLabel?.text = options[indexPath.section][indexPath.row]
 
     return cell
@@ -74,7 +75,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
 
   private func share(video: Data) {
-    if shareToReels(appID: appID, backgroundVideo: video, stickerImage: nil) {
+    if shareToReels(appID: appID, backgroundVideo: video, stickerImage: nil, contentURL: nil) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
@@ -126,7 +127,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
     let stickerImage = imageFromURL(imageURL: stickerImageURL)
 
     let stickerImageData = stickerImage?.pngData()
-    if shareToReels(appID: appID, backgroundVideo: videoData, stickerImage: stickerImageData) {
+    if shareToReels(appID: appID, backgroundVideo: videoData, stickerImage: stickerImageData, contentURL: nil) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
@@ -140,7 +141,21 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
       ConsoleReportBugWithFormattedMessage("process demo video failed")
       return
     }
-    if shareToReels(appID: "1233570620749979", backgroundVideo: videoData, stickerImage: nil) {
+    if shareToReels(appID: "1233570620749979", backgroundVideo: videoData, stickerImage: nil, contentURL: nil) {
+      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
+    } else {
+      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
+    }
+  }
+
+  private func shareDemoVideoWithContentURL() {
+    guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
+          let videoData = try? Data(contentsOf: videoUrl) as Data
+    else {
+      ConsoleReportBugWithFormattedMessage("process demo video failed")
+      return
+    }
+    if shareToReels(appID: "1048133622404663", backgroundVideo: videoData, stickerImage: nil, contentURL: "https://mycompany.com/1234") {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
@@ -148,7 +163,7 @@ class IGShareToReelsViewController: UITableViewController, UIImagePickerControll
   }
 
   private func shareWithoutVideo() {
-    if shareToReels(appID: appID, backgroundVideo: nil, stickerImage: nil) {
+    if shareToReels(appID: appID, backgroundVideo: nil, stickerImage: nil, contentURL: nil) {
       ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
     } else {
       ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
