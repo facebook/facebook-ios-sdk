@@ -20,6 +20,7 @@ final class ApplicationDelegateTests: XCTestCase {
   var userDataStore: UserDefaultsSpy!
   var observer: TestApplicationDelegateObserver!
   var settings: TestSettings!
+  var aemManager: TestAEMManager!
   var backgroundEventLogger: TestBackgroundEventLogger!
   var serverConfigurationProvider: TestServerConfigurationProvider!
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
@@ -41,6 +42,7 @@ final class ApplicationDelegateTests: XCTestCase {
     userDataStore = UserDefaultsSpy()
     observer = TestApplicationDelegateObserver()
     settings = TestSettings()
+    aemManager = TestAEMManager()
 
     TestBackgroundEventLogger.setDependencies(
       .init(
@@ -68,7 +70,8 @@ final class ApplicationDelegateTests: XCTestCase {
       notificationCenter: notificationCenter,
       paymentObserver: paymentObserver,
       serverConfigurationProvider: serverConfigurationProvider,
-      settings: settings
+      settings: settings,
+      aemManager: aemManager
     )
     configurator = TestCoreKitConfigurator(components: components)
 
@@ -214,6 +217,24 @@ final class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       configurator.performConfigurationCalled,
       "Initializing the SDK should ask the configurator to perform downstream configuration"
+    )
+  }
+
+  func testInitializingAutoSetupWithFeatureEnabled() {
+    featureChecker.enable(feature: .aemAutoSetup)
+    delegate.initializeSDK()
+    XCTAssert(
+      aemManager.enabled,
+      "Initializing the SDK should have AEM Auto Setup feature enabled with feature enabled"
+    )
+  }
+
+  func testInitializingAutoSetupWithoutFeatureEnabled() {
+    featureChecker.disableFeature(.aemAutoSetup)
+    delegate.initializeSDK()
+    XCTAssert(
+      !aemManager.enabled,
+      "Initializing the SDK should not have AEM Auto Setup feature enabled without feature enabled"
     )
   }
 

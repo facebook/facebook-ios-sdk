@@ -10,7 +10,12 @@ import TestTools
 
 @objcMembers
 final class TestAEMManager: _AutoSetup {
+
+  var enabled = false
+
   func configure(swizzler: _Swizzling.Type, reporter aemReporter: FBSDKCoreKit._AEMReporterProtocol.Type) {}
 
-  func enable() {}
+  func enable() {
+    enabled = true
+  }
 }
