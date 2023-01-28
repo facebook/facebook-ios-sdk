@@ -100,6 +100,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .aemConversionFiltering,
       .aemCatalogMatching,
       .aemAdvertiserRuleMatchInServer,
+      .aemAutoSetup,
       .appEventsCloudbridge,
       .skAdNetwork,
       .skAdNetworkConversionValue:
@@ -150,6 +151,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .aemConversionFiltering: featureName = "AEMConversionFiltering"
     case .aemCatalogMatching: featureName = "AEMCatalogMatching"
     case .aemAdvertiserRuleMatchInServer: featureName = "AEMAdvertiserRuleMatchInServer"
+    case .aemAutoSetup: featureName = "AppAemAutoSetUp"
     case .appEventsCloudbridge: featureName = "AppEventsCloudbridge"
     case .login: featureName = "LoginKit"
     case .share: featureName = "ShareKit"

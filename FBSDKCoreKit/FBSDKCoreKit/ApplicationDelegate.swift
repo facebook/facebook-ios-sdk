@@ -80,6 +80,7 @@ public final class ApplicationDelegate: NSObject {
 
     logBackgroundRefreshStatus()
     initializeAppLink()
+    initializeAEMAutoSetup()
 
     configureSourceApplication(launchOptions: launchOptions)
   }
@@ -114,6 +115,14 @@ public final class ApplicationDelegate: NSObject {
     // Register Listener for App Link measurement events
     _MeasurementEventListener(eventLogger: components.appEvents, sourceApplicationTracker: components.appEvents)
       .registerForAppLinkMeasurementEvents()
+  }
+
+  private func initializeAEMAutoSetup() {
+    let flag = components.infoDictionaryProvider.fb_object(forInfoDictionaryKey: "FBSDKAemAutoSetupEnabled") as? Bool
+    let enabled = flag ?? true
+    if enabled, components.featureChecker.isEnabled(.aemAutoSetup) {
+      components.aemManager.enable()
+    }
   }
 
   private func logBackgroundRefreshStatus() {
