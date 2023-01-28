@@ -80,6 +80,7 @@ final class CoreKitComponents {
   let userDataStore: _UserDataPersisting
   let userIDProvider: _UserIDProviding
   let webViewProvider: _WebViewProviding
+  let aemManager: _AutoSetup
 
   // MARK: - Initializers
 
@@ -152,7 +153,8 @@ final class CoreKitComponents {
     urlSessionProxyFactory: _URLSessionProxyProviding,
     userDataStore: _UserDataPersisting,
     userIDProvider: _UserIDProviding,
-    webViewProvider: _WebViewProviding
+    webViewProvider: _WebViewProviding,
+    aemManager: _AutoSetup
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
@@ -223,6 +225,7 @@ final class CoreKitComponents {
     self.userDataStore = userDataStore
     self.userIDProvider = userIDProvider
     self.webViewProvider = webViewProvider
+    self.aemManager = aemManager
   }
 
   // MARK: - Default components
@@ -420,7 +423,8 @@ final class CoreKitComponents {
       urlSessionProxyFactory: urlSessionProxyFactory,
       userDataStore: userDataStore,
       userIDProvider: AppEvents.shared,
-      webViewProvider: _WebViewFactory()
+      webViewProvider: _WebViewFactory(),
+      aemManager: _AEMManager.shared
     )
   }()
 }

@@ -18,6 +18,7 @@
 #import "CodelessIndexer+Testing.h"
 #import "FBSDKAccessToken+Internal.h"
 #import "FBSDKAccessToken+Testing.h"
+#import "FBSDKAEMManager+Testing.h"
 #import "FBSDKAdvertisingTrackingStatus.h"
 #import "FBSDKAppEventName+Internal.h"
 #import "FBSDKAppEventParameterName+Internal.h"

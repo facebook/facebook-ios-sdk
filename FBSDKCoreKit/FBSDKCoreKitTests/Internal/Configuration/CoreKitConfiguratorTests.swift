@@ -68,6 +68,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     _FeatureExtractor.reset()
     _ModelManager.reset()
     Profile.resetDependencies()
+    _AEMManager.shared.reset()
   }
 
   func testConfiguringAccessToken() {
@@ -854,6 +855,30 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AEMReporter.reporter === components.skAdNetworkReporter,
       "AEMReporter should be configured with the SKAdNetwork reporter"
+    )
+  }
+
+  @available(iOS 14.0, *)
+  func testConfiguringAEMManager() {
+    XCTAssertNil(
+      _AEMManager.shared.swizzler,
+      "AEMManager should not have a swizzler by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.aemReporter,
+      "AEMManager should not have an AEM reporter by default"
+    )
+
+    components.settings.appID = "sample"
+    configurator.performConfiguration()
+
+    XCTAssertTrue(
+      _AEMManager.shared.swizzler === components.swizzler,
+      "AEMManager should be configured with the swizzler"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.aemReporter === components.aemReporter,
+      "AEMManager should be configured with the AEM reporter"
     )
   }
 

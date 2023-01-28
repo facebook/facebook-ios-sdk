@@ -8,19 +8,23 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol FBSDKSwizzling;
 @protocol FBSDKAEMReporter;
+@protocol FBSDKSwizzling;
 
 NS_ASSUME_NONNULL_BEGIN
 
-NS_SWIFT_NAME(AEMManager)
-@interface FBSDKAEMManager : NSObject
+/**
+ Internal Type exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
 
-+ (instancetype)new NS_UNAVAILABLE;
-- (instancetype)init NS_UNAVAILABLE;
+ @warning INTERNAL - DO NOT USE
+ */
+NS_SWIFT_NAME(_AutoSetup)
+@protocol FBSDKAutoSetup
 
 - (void)configureWithSwizzler:(nonnull Class<FBSDKSwizzling>)swizzler
-                  aemReporter:(nonnull Class<FBSDKAEMReporter>)aemReporter;
+                  aemReporter:(nonnull Class<FBSDKAEMReporter>)aemReporter
+NS_SWIFT_NAME(configure(swizzler:reporter:));
 
 - (void)enableAutoSetup;
 

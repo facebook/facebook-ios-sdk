@@ -13,6 +13,7 @@
 #import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKAdvertiserIDProviding.h>
 #import <FBSDKCoreKit/FBSDKAdvertisingTrackingStatus.h>
+#import <FBSDKCoreKit/FBSDKAEMManager.h>
 #import <FBSDKCoreKit/FBSDKAppAvailabilityChecker.h>
 #import <FBSDKCoreKit/FBSDKAppEventDropDetermining.h>
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
@@ -65,6 +66,7 @@
 #import <FBSDKCoreKit/FBSDKAuthenticationStatusUtility.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationToken.h>
 #import <FBSDKCoreKit/FBSDKAuthenticationTokenProviding.h>
+#import <FBSDKCoreKit/FBSDKAutoSetup.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIProtocol.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIProtocolType.h>
 #import <FBSDKCoreKit/FBSDKBridgeAPIRequest.h>
