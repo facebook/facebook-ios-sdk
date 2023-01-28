@@ -15,7 +15,7 @@
 
 @interface FBSDKAEMManager ()
 
-@property (nonnull, nonatomic) Class<FBSDKSwizzling> swizzler;
+@property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) Class<FBSDKAEMReporter> aemReporter;
 
 @end
@@ -76,5 +76,15 @@ static FBSDKAEMManager *_shared = nil;
     }
   });
 }
+
+#if DEBUG
+
+- (void)reset
+{
+  self.aemReporter = nil;
+  self.swizzler = nil;
+}
+
+#endif
 
 @end
