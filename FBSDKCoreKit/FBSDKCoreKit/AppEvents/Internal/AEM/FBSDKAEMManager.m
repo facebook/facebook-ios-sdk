@@ -20,6 +20,8 @@
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) Class<FBSDKAEMReporter> aemReporter;
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
+@property (nullable, nonatomic) id<FBSDKCrashHandler> crashHandler;
+@property (nullable, nonatomic) id<FBSDKFeatureDisabling> featureChecker;
 
 @end
 
@@ -39,10 +41,14 @@ static FBSDKAEMManager *_shared = nil;
 - (void)configureWithSwizzler:(nonnull Class<FBSDKSwizzling>)swizzler
                   aemReporter:(nonnull Class<FBSDKAEMReporter>)aemReporter
                   eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+                 crashHandler:(nonnull id<FBSDKCrashHandler>)crashHandler
+               featureChecker:(nonnull id<FBSDKFeatureDisabling>)featureChecker
 {
   self.swizzler = swizzler;
   self.aemReporter = aemReporter;
   self.eventLogger = eventLogger;
+  self.crashHandler = crashHandler;
+  self.featureChecker = featureChecker;
 }
 
 - (void)enableAutoSetup
@@ -50,48 +56,62 @@ static FBSDKAEMManager *_shared = nil;
   if (@available(iOS 14.0, *)) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-      Class clazz = [[UIApplication sharedApplication] delegate].class;
-      [self.swizzler swizzleSelector:@selector(application:openURL:options:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSURL *url, id options) {
-        [self.aemReporter enable];
-        [self.aemReporter handle:url];
-        [self logAutoSetupStatus:YES source:@"appdelegate_dl"];
-      } named:@"AEMDeeplinkAutoSetup"];
-      
-      
-      [self.swizzler swizzleSelector:@selector(application:continueUserActivity:restorationHandler:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSUserActivity *userActivity, id restorationHandler) {
-        [self.aemReporter enable];
-        [self.aemReporter handle:userActivity.webpageURL];
-        [self logAutoSetupStatus:YES source:@"appdelegate_ul"];
-      } named:@"AEMUniversallinkAutoSetup"];
-      
-      if (@available(iOS 13.0, *)) {
-        NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
-        for (UIScene* thisScene in scenes) {
-          Class sceneClass = thisScene.delegate.class;
-          [self.swizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
-            [self.aemReporter enable];
-            for(UIOpenURLContext* urlContext in urlContexts) {
-              [self.aemReporter handle:urlContext.URL];
-            }
-            [self logAutoSetupStatus:YES source:@"scenedelegate_dl"];
-          } named:@"AEMSceneDeeplinkAutoSetup"];
-          
-          [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
-            [self.aemReporter enable];
-            [self.aemReporter handle:userActivity.webpageURL];
-            [self logAutoSetupStatus:YES source:@"scenedelegate_ul"];
-          } named:@"AEMSceneUniversallinkAutoSetup"];
-          
-          [self.swizzler swizzleSelector:@selector(scene:willConnectToSession:options:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, UISceneSession *session, UISceneConnectionOptions *options) {
-            [self.aemReporter enable];
-            for(UIOpenURLContext* urlContext in options.URLContexts) {
-              [self.aemReporter handle:urlContext.URL];
-            }
-            [self logAutoSetupStatus:YES source:@"scenedelegate_coldstart"];
-          } named:@"AEMSceneColdStartAutoSetup"];
-        }
+      @try  {
+        [self setup];
+      } @catch (NSException *exception) {
+        // Disable Auto Setup and log event if exception happens
+        [self.featureChecker disableFeature:FBSDKFeatureAEMAutoSetup];
+        [self.eventLogger logEvent:@"fb_mobile_auto_setup_exception" parameters:nil];
+        fb_dispatch_on_default_thread(^{
+          [self.crashHandler saveException:exception];
+        });
       }
     });
+  }
+}
+
+- (void)setup
+{
+  Class clazz = [[UIApplication sharedApplication] delegate].class;
+  [self.swizzler swizzleSelector:@selector(application:openURL:options:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSURL *url, id options) {
+    [self.aemReporter enable];
+    [self.aemReporter handle:url];
+    [self logAutoSetupStatus:YES source:@"appdelegate_dl"];
+  } named:@"AEMDeeplinkAutoSetup"];
+  
+  
+  [self.swizzler swizzleSelector:@selector(application:continueUserActivity:restorationHandler:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSUserActivity *userActivity, id restorationHandler) {
+    [self.aemReporter enable];
+    [self.aemReporter handle:userActivity.webpageURL];
+    [self logAutoSetupStatus:YES source:@"appdelegate_ul"];
+  } named:@"AEMUniversallinkAutoSetup"];
+  
+  if (@available(iOS 13.0, *)) {
+    NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
+    for (UIScene* thisScene in scenes) {
+      Class sceneClass = thisScene.delegate.class;
+      [self.swizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
+        [self.aemReporter enable];
+        for(UIOpenURLContext* urlContext in urlContexts) {
+          [self.aemReporter handle:urlContext.URL];
+        }
+        [self logAutoSetupStatus:YES source:@"scenedelegate_dl"];
+      } named:@"AEMSceneDeeplinkAutoSetup"];
+      
+      [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
+        [self.aemReporter enable];
+        [self.aemReporter handle:userActivity.webpageURL];
+        [self logAutoSetupStatus:YES source:@"scenedelegate_ul"];
+      } named:@"AEMSceneUniversallinkAutoSetup"];
+      
+      [self.swizzler swizzleSelector:@selector(scene:willConnectToSession:options:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, UISceneSession *session, UISceneConnectionOptions *options) {
+        [self.aemReporter enable];
+        for(UIOpenURLContext* urlContext in options.URLContexts) {
+          [self.aemReporter handle:urlContext.URL];
+        }
+        [self logAutoSetupStatus:YES source:@"scenedelegate_coldstart"];
+      } named:@"AEMSceneColdStartAutoSetup"];
+    }
   }
 }
 
@@ -111,6 +131,8 @@ static FBSDKAEMManager *_shared = nil;
   self.aemReporter = nil;
   self.swizzler = nil;
   self.eventLogger = nil;
+  self.featureChecker = nil;
+  self.crashHandler = nil;
 }
 
 #endif

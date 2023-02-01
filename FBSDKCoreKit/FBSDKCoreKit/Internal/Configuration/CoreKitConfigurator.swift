@@ -77,7 +77,9 @@ private extension CoreKitConfigurator {
       _AEMManager.shared.configure(
         swizzler: components.swizzler,
         reporter: components.aemReporter,
-        eventLogger: components.eventLogger
+        eventLogger: components.eventLogger,
+        crashHandler: components.crashHandler,
+        featureChecker: components.featureChecker
       )
     }
   }

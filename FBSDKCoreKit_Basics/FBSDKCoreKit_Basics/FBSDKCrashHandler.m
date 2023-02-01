@@ -190,7 +190,7 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 static void FBSDKExceptionHandler(NSException *exception)
 {
-  [FBSDKCrashHandler.shared _saveException:exception];
+  [FBSDKCrashHandler.shared saveException:exception];
   if (previousExceptionHandler) {
     previousExceptionHandler(exception);
   }
@@ -198,7 +198,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 #pragma mark - Storage & Process
 
-- (void)_saveException:(NSException *)exception
+- (void)saveException:(NSException *)exception
 {
   if (exception.callStackSymbols && exception.name) {
     NSArray<NSString *> *stackSymbols = [NSArray arrayWithArray:exception.callStackSymbols];

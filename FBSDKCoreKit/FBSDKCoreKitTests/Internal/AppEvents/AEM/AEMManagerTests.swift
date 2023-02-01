@@ -16,11 +16,19 @@ final class AEMManagerTests: XCTestCase {
   let swizzler = TestSwizzler.self
   let aemReporter = TestAEMReporter.self
   let eventLogger = TestEventLogger()
+  let crashHandler = TestCrashHandler()
+  let featureChecker = TestFeatureManager()
 
   override func setUp() {
     super.setUp()
 
-    _AEMManager.shared.configure(swizzler: swizzler, reporter: aemReporter, eventLogger: eventLogger)
+    _AEMManager.shared.configure(
+      swizzler: swizzler,
+      reporter: aemReporter,
+      eventLogger: eventLogger,
+      crashHandler: crashHandler,
+      featureChecker: featureChecker
+    )
   }
 
   func testConfigure() {
@@ -38,6 +46,16 @@ final class AEMManagerTests: XCTestCase {
       eventLogger as AnyObject,
       _AEMManager.shared.eventLogger,
       "Should configure with the expected event logger"
+    )
+    XCTAssertIdentical(
+      crashHandler as AnyObject,
+      _AEMManager.shared.crashHandler,
+      "Should configure with the expected crash handler"
+    )
+    XCTAssertIdentical(
+      featureChecker as AnyObject,
+      _AEMManager.shared.featureChecker,
+      "Should configure with the expected feature checker"
     )
   }
 

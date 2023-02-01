@@ -34,7 +34,9 @@ NS_SWIFT_NAME(_AEMManager)
 - (void)configureWithSwizzler:(nonnull Class<FBSDKSwizzling>)swizzler
                   aemReporter:(nonnull Class<FBSDKAEMReporter>)aemReporter
                   eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
-NS_SWIFT_NAME(configure(swizzler:reporter:eventLogger:));
+                 crashHandler:(nonnull id<FBSDKCrashHandler>)crashHandler
+               featureChecker:(nonnull id<FBSDKFeatureDisabling>)featureChecker
+NS_SWIFT_NAME(configure(swizzler:reporter:eventLogger:crashHandler:featureChecker:));
 
 - (void)enableAutoSetup;
 
