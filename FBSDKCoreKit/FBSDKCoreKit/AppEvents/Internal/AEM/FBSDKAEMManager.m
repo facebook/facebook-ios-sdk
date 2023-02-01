@@ -22,6 +22,7 @@
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) id<FBSDKCrashHandler> crashHandler;
 @property (nullable, nonatomic) id<FBSDKFeatureDisabling> featureChecker;
+@property (nullable, nonatomic) id<FBSDKAppEventsUtility> appEventsUtility;
 
 @end
 
@@ -43,12 +44,14 @@ static FBSDKAEMManager *_shared = nil;
                   eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
                  crashHandler:(nonnull id<FBSDKCrashHandler>)crashHandler
                featureChecker:(nonnull id<FBSDKFeatureDisabling>)featureChecker
+             appEventsUtility:(nonnull id<FBSDKAppEventsUtility>)appEventsUtility
 {
   self.swizzler = swizzler;
   self.aemReporter = aemReporter;
   self.eventLogger = eventLogger;
   self.crashHandler = crashHandler;
   self.featureChecker = featureChecker;
+  self.appEventsUtility = appEventsUtility;
 }
 
 - (void)enableAutoSetup
@@ -76,6 +79,7 @@ static FBSDKAEMManager *_shared = nil;
   [self.swizzler swizzleSelector:@selector(application:openURL:options:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSURL *url, id options) {
     [self.aemReporter enable];
     [self.aemReporter handle:url];
+    [self.appEventsUtility saveCampaignIDs:url];
     [self logAutoSetupStatus:YES source:@"appdelegate_dl"];
   } named:@"AEMDeeplinkAutoSetup"];
   
@@ -83,6 +87,7 @@ static FBSDKAEMManager *_shared = nil;
   [self.swizzler swizzleSelector:@selector(application:continueUserActivity:restorationHandler:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSUserActivity *userActivity, id restorationHandler) {
     [self.aemReporter enable];
     [self.aemReporter handle:userActivity.webpageURL];
+    [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
     [self logAutoSetupStatus:YES source:@"appdelegate_ul"];
   } named:@"AEMUniversallinkAutoSetup"];
   
@@ -94,6 +99,7 @@ static FBSDKAEMManager *_shared = nil;
         [self.aemReporter enable];
         for(UIOpenURLContext* urlContext in urlContexts) {
           [self.aemReporter handle:urlContext.URL];
+          [self.appEventsUtility saveCampaignIDs:urlContext.URL];
         }
         [self logAutoSetupStatus:YES source:@"scenedelegate_dl"];
       } named:@"AEMSceneDeeplinkAutoSetup"];
@@ -101,6 +107,7 @@ static FBSDKAEMManager *_shared = nil;
       [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
         [self.aemReporter enable];
         [self.aemReporter handle:userActivity.webpageURL];
+        [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
         [self logAutoSetupStatus:YES source:@"scenedelegate_ul"];
       } named:@"AEMSceneUniversallinkAutoSetup"];
       
@@ -108,6 +115,7 @@ static FBSDKAEMManager *_shared = nil;
         [self.aemReporter enable];
         for(UIOpenURLContext* urlContext in options.URLContexts) {
           [self.aemReporter handle:urlContext.URL];
+          [self.appEventsUtility saveCampaignIDs:urlContext.URL];
         }
         [self logAutoSetupStatus:YES source:@"scenedelegate_coldstart"];
       } named:@"AEMSceneColdStartAutoSetup"];
@@ -133,6 +141,7 @@ static FBSDKAEMManager *_shared = nil;
   self.eventLogger = nil;
   self.featureChecker = nil;
   self.crashHandler = nil;
+  self.appEventsUtility = nil;
 }
 
 #endif

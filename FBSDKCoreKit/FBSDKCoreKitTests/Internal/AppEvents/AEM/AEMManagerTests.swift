@@ -18,6 +18,7 @@ final class AEMManagerTests: XCTestCase {
   let eventLogger = TestEventLogger()
   let crashHandler = TestCrashHandler()
   let featureChecker = TestFeatureManager()
+  let appEventsUtility = TestAppEventsUtility()
 
   override func setUp() {
     super.setUp()
@@ -27,7 +28,8 @@ final class AEMManagerTests: XCTestCase {
       reporter: aemReporter,
       eventLogger: eventLogger,
       crashHandler: crashHandler,
-      featureChecker: featureChecker
+      featureChecker: featureChecker,
+      appEventsUtility: appEventsUtility
     )
   }
 
@@ -56,6 +58,11 @@ final class AEMManagerTests: XCTestCase {
       featureChecker as AnyObject,
       _AEMManager.shared.featureChecker,
       "Should configure with the expected feature checker"
+    )
+    XCTAssertIdentical(
+      appEventsUtility as AnyObject,
+      _AEMManager.shared.appEventsUtility,
+      "Should configure with the expected app events utility"
     )
   }
 

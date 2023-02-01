@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKEventLogging> eventLogger;
 @property (nullable, nonatomic) id<FBSDKCrashHandler> crashHandler;
 @property (nullable, nonatomic) id<FBSDKFeatureDisabling> featureChecker;
+@property (nullable, nonatomic) id<FBSDKAppEventsUtility> appEventsUtility;
 
 - (void)reset;
 
