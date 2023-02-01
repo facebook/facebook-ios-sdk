@@ -33,9 +33,13 @@ NS_SWIFT_NAME(_AEMManager)
 
 - (void)configureWithSwizzler:(nonnull Class<FBSDKSwizzling>)swizzler
                   aemReporter:(nonnull Class<FBSDKAEMReporter>)aemReporter
-NS_SWIFT_NAME(configure(swizzler:reporter:));
+                  eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+NS_SWIFT_NAME(configure(swizzler:reporter:eventLogger:));
 
 - (void)enableAutoSetup;
+
+- (void)logAutoSetupStatus:(BOOL)optin
+                    source:(NSString *)source;
 
 @end
 

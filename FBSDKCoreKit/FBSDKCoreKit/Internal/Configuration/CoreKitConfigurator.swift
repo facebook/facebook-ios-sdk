@@ -76,7 +76,8 @@ private extension CoreKitConfigurator {
     if #available(iOS 14, *) {
       _AEMManager.shared.configure(
         swizzler: components.swizzler,
-        reporter: components.aemReporter
+        reporter: components.aemReporter,
+        eventLogger: components.eventLogger
       )
     }
   }

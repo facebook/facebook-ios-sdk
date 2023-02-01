@@ -26,3 +26,8 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNamePushTokenObtained;
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameActivatedApp;
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameDeactivatedApp;
+
+// MARK: - Auto Setup
+
+FOUNDATION_EXPORT FBSDKAppEventName const  FBSDKAppEventNameOptinAEMAutoSetup;
+FOUNDATION_EXPORT FBSDKAppEventName const  FBSDKAppEventNameOptoutAEMAutoSetup;

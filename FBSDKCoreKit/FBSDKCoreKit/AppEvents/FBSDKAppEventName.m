@@ -78,3 +78,10 @@ FBSDKAppEventName const FBSDKAppEventNamePushOpened = @"fb_mobile_push_opened";
 
 FBSDKAppEventName const FBSDKAppEventNameActivatedApp = @"fb_mobile_activate_app";
 FBSDKAppEventName const FBSDKAppEventNameDeactivatedApp = @"fb_mobile_deactivate_app";
+
+// MARK: - Auto Setup
+
+// Internal
+
+FBSDKAppEventName const FBSDKAppEventNameOptinAEMAutoSetup = @"fb_mobile_aem_auto_setup_opt_in";
+FBSDKAppEventName const FBSDKAppEventNameOptoutAEMAutoSetup = @"fb_mobile_aem_auto_setup_opt_out";
