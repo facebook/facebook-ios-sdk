@@ -118,8 +118,17 @@ public final class ApplicationDelegate: NSObject {
   }
 
   private func initializeAEMAutoSetup() {
+    guard
+      #available(iOS 14.0, *)
+    else {
+      return
+    }
+
     let flag = components.infoDictionaryProvider.fb_object(forInfoDictionaryKey: "FBSDKAemAutoSetupEnabled") as? Bool
     let enabled = flag ?? true
+    if !enabled {
+      components.aemManager.logAutoSetupStatus(false, source: "client_flag")
+    }
     if enabled, components.featureChecker.isEnabled(.aemAutoSetup) {
       components.aemManager.enable()
     }
