@@ -18,7 +18,9 @@ final class TestAEMManager: _AutoSetup {
   func configure(
     swizzler: _Swizzling.Type,
     reporter aemReporter: FBSDKCoreKit._AEMReporterProtocol.Type,
-    eventLogger: EventLogging
+    eventLogger: EventLogging,
+    crashHandler: CrashHandlerProtocol,
+    featureChecker: _FeatureDisabling
   ) {}
 
   func enable() {

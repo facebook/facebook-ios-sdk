@@ -27,6 +27,16 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       return true
     }
 
+    guard let dependencies = try? Self.getDependencies() else {
+      return false
+    }
+
+    // check if the feature is locally disabled by Crash Shield first
+    let version = dependencies.store.fb_string(forKey: storageKey(for: feature))
+    if version == dependencies.settings.sdkVersion {
+      return false
+    }
+
     guard let parentFeature = getParentFeature(for: feature) else {
       return false
     }

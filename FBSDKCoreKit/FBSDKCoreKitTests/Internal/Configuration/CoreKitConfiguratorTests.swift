@@ -868,6 +868,18 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _AEMManager.shared.aemReporter,
       "AEMManager should not have an AEM reporter by default"
     )
+    XCTAssertNil(
+      _AEMManager.shared.eventLogger,
+      "AEMManager should not have an event logger by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.crashHandler,
+      "AEMManager should not have a crash handler by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.featureChecker,
+      "AEMManager should not have a feature checker by default"
+    )
 
     components.settings.appID = "sample"
     configurator.performConfiguration()
@@ -879,6 +891,18 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       _AEMManager.shared.aemReporter === components.aemReporter,
       "AEMManager should be configured with the AEM reporter"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.eventLogger === components.eventLogger,
+      "AEMManager should be configured with the event logger"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.crashHandler === components.crashHandler,
+      "AEMManager should be configured with the crash handler"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.featureChecker === components.featureChecker,
+      "AEMManager should be configured with the feature checker"
     )
   }
 
