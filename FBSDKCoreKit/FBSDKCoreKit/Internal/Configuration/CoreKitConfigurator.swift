@@ -79,7 +79,8 @@ private extension CoreKitConfigurator {
         reporter: components.aemReporter,
         eventLogger: components.eventLogger,
         crashHandler: components.crashHandler,
-        featureChecker: components.featureChecker
+        featureChecker: components.featureChecker,
+        appEventsUtility: components.appEventsUtility
       )
     }
   }

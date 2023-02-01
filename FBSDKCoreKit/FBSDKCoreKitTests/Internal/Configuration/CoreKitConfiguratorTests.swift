@@ -880,6 +880,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _AEMManager.shared.featureChecker,
       "AEMManager should not have a feature checker by default"
     )
+    XCTAssertNil(
+      _AEMManager.shared.appEventsUtility,
+      "AEMManager should not have a app events utility by default"
+    )
 
     components.settings.appID = "sample"
     configurator.performConfiguration()
@@ -903,6 +907,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       _AEMManager.shared.featureChecker === components.featureChecker,
       "AEMManager should be configured with the feature checker"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.appEventsUtility === components.appEventsUtility,
+      "AEMManager should be configured with the app events utility"
     )
   }
 

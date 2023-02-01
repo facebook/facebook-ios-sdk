@@ -36,7 +36,8 @@ NS_SWIFT_NAME(_AEMManager)
                   eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
                  crashHandler:(nonnull id<FBSDKCrashHandler>)crashHandler
                featureChecker:(nonnull id<FBSDKFeatureDisabling>)featureChecker
-NS_SWIFT_NAME(configure(swizzler:reporter:eventLogger:crashHandler:featureChecker:));
+             appEventsUtility:(nonnull id<FBSDKAppEventsUtility>)appEventsUtility
+NS_SWIFT_NAME(configure(swizzler:reporter:eventLogger:crashHandler:featureChecker:appEventsUtility:));
 
 - (void)enableAutoSetup;
 

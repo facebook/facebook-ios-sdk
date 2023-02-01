@@ -15,12 +15,14 @@ final class TestAEMManager: _AutoSetup {
   var autoSetupStatus = false
   var source: String?
 
+  // swiftlint:disable:next function_parameter_count
   func configure(
     swizzler: _Swizzling.Type,
     reporter aemReporter: FBSDKCoreKit._AEMReporterProtocol.Type,
     eventLogger: EventLogging,
     crashHandler: CrashHandlerProtocol,
-    featureChecker: _FeatureDisabling
+    featureChecker: _FeatureDisabling,
+    appEventsUtility: _AppEventsUtilityProtocol
   ) {}
 
   func enable() {
