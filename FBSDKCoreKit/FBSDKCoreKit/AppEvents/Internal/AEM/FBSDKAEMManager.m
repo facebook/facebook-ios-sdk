@@ -95,32 +95,62 @@ static FBSDKAEMManager *_shared = nil;
     NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
     for (UIScene* thisScene in scenes) {
       Class sceneClass = thisScene.delegate.class;
-      [self.swizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
-        [self.aemReporter enable];
-        for(UIOpenURLContext* urlContext in urlContexts) {
-          [self.aemReporter handle:urlContext.URL];
-          [self.appEventsUtility saveCampaignIDs:urlContext.URL];
-        }
-        [self logAutoSetupStatus:YES source:@"scenedelegate_dl"];
-      } named:@"AEMSceneDeeplinkAutoSetup"];
-      
-      [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
-        [self.aemReporter enable];
-        [self.aemReporter handle:userActivity.webpageURL];
-        [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
-        [self logAutoSetupStatus:YES source:@"scenedelegate_ul"];
-      } named:@"AEMSceneUniversallinkAutoSetup"];
-      
-      [self.swizzler swizzleSelector:@selector(scene:willConnectToSession:options:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, UISceneSession *session, UISceneConnectionOptions *options) {
-        [self.aemReporter enable];
-        for(UIOpenURLContext* urlContext in options.URLContexts) {
-          [self.aemReporter handle:urlContext.URL];
-          [self.appEventsUtility saveCampaignIDs:urlContext.URL];
-        }
-        [self logAutoSetupStatus:YES source:@"scenedelegate_coldstart"];
-      } named:@"AEMSceneColdStartAutoSetup"];
+      [self setupScene:sceneClass];
+    }
+    NSSet<NSString *> *sceneDelegates = [self getSceneDelegates];
+    for (NSString *sceneDelegate in sceneDelegates) {
+      [self setupScene:NSClassFromString(sceneDelegate)];
     }
   }
+}
+
+- (void)setupScene:(Class)sceneClass
+{
+  if (sceneClass == nil) {
+    return;
+  }
+  if (@available(iOS 13.0, *)) {
+    [self.swizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
+      [self.aemReporter enable];
+      for(UIOpenURLContext* urlContext in urlContexts) {
+        [self.aemReporter handle:urlContext.URL];
+        [self.appEventsUtility saveCampaignIDs:urlContext.URL];
+      }
+      [self logAutoSetupStatus:YES source:@"scenedelegate_dl"];
+    } named:[NSString stringWithFormat:@"AEMSceneDeeplinkAutoSetup_%@", NSStringFromClass(sceneClass)]];
+    
+    [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
+      [self.aemReporter enable];
+      [self.aemReporter handle:userActivity.webpageURL];
+      [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
+      [self logAutoSetupStatus:YES source:@"scenedelegate_ul"];
+    } named:[NSString stringWithFormat:@"AEMSceneUniversallinkAutoSetup_%@", NSStringFromClass(sceneClass)]];
+    
+    [self.swizzler swizzleSelector:@selector(scene:willConnectToSession:options:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, UISceneSession *session, UISceneConnectionOptions *options) {
+      [self.aemReporter enable];
+      for(UIOpenURLContext* urlContext in options.URLContexts) {
+        [self.aemReporter handle:urlContext.URL];
+        [self.appEventsUtility saveCampaignIDs:urlContext.URL];
+      }
+      [self logAutoSetupStatus:YES source:@"scenedelegate_coldstart"];
+    } named:[NSString stringWithFormat:@"AEMSceneColdStartAutoSetup_%@", NSStringFromClass(sceneClass)]];
+  }
+}
+
+- (NSSet<NSString *> *)getSceneDelegates
+{
+  NSMutableSet<NSString *> *delegates = [NSMutableSet new];
+  NSDictionary<NSString *, id> *sceneManifest = [FBSDKTypeUtility dictionaryValue:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIApplicationSceneManifest"]];
+  NSDictionary<NSString *, id> *sceneConfigs = [FBSDKTypeUtility dictionaryValue:sceneManifest[@"UISceneConfigurations"]];
+  NSArray<id> *sceneSessionRoleApplicaiton = [FBSDKTypeUtility arrayValue:sceneConfigs[@"UIWindowSceneSessionRoleApplication"]];
+  for (id sceneSessionRole in sceneSessionRoleApplicaiton) {
+    NSDictionary<NSString *, id> *item = [FBSDKTypeUtility dictionaryValue:sceneSessionRole];
+    NSString *className = [FBSDKTypeUtility stringValueOrNil:item[@"UISceneDelegateClassName"]];
+    if (className) {
+      [delegates addObject:className];
+    }
+  }
+  return [delegates copy];
 }
 
 - (void)logAutoSetupStatus:(BOOL)optin
