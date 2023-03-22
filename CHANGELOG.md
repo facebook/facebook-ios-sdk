@@ -10,7 +10,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.0.1...HEAD)
+
+## 16.0.1
+
+### Changed
+- Flushed events if AEM Campaign ID is found
+
+[2023-03-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.0.0...v16.0.1)
 
 ## 16.0.0
 
