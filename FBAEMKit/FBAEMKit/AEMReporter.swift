@@ -86,7 +86,7 @@ public final class AEMReporter: NSObject {
   static var minAggregationRequestTimestamp: Date?
   static var completionBlocks: [FBAEMReporterBlock] = []
 
-  static func configure(
+  public static func configure(
     networker: AEMNetworking?,
     appID: String?,
     reporter: SKAdNetworkReporting?
@@ -114,7 +114,7 @@ public final class AEMReporter: NSObject {
     )
   }
 
-  static func configure(
+  public static func configure(
     networker: AEMNetworking?,
     appID: String?,
     reporter: SKAdNetworkReporting?,

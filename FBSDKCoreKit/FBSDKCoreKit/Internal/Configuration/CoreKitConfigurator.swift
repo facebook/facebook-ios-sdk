@@ -35,6 +35,7 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureServerConfigurationManager()
     configureCloudBridge()
     configureAEMReporter()
+    configureAEMManager()
     configureNonTVOSAppEvents()
     configureAppLinkNavigation()
     configureAppLinkURL()
@@ -67,6 +68,19 @@ private extension CoreKitConfigurator {
         networker: components.aemNetworker,
         appID: components.settings.appID,
         reporter: components.skAdNetworkReporter
+      )
+    }
+  }
+
+  func configureAEMManager() {
+    if #available(iOS 14, *) {
+      _AEMManager.shared.configure(
+        swizzler: components.swizzler,
+        reporter: components.aemReporter,
+        eventLogger: components.eventLogger,
+        crashHandler: components.crashHandler,
+        featureChecker: components.featureChecker,
+        appEventsUtility: components.appEventsUtility
       )
     }
   }

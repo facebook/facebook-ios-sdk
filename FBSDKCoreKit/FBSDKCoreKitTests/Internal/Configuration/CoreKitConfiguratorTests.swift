@@ -68,6 +68,7 @@ final class CoreKitConfiguratorTests: XCTestCase {
     _FeatureExtractor.reset()
     _ModelManager.reset()
     Profile.resetDependencies()
+    _AEMManager.shared.reset()
   }
 
   func testConfiguringAccessToken() {
@@ -854,6 +855,62 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AEMReporter.reporter === components.skAdNetworkReporter,
       "AEMReporter should be configured with the SKAdNetwork reporter"
+    )
+  }
+
+  @available(iOS 14.0, *)
+  func testConfiguringAEMManager() {
+    XCTAssertNil(
+      _AEMManager.shared.swizzler,
+      "AEMManager should not have a swizzler by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.aemReporter,
+      "AEMManager should not have an AEM reporter by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.eventLogger,
+      "AEMManager should not have an event logger by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.crashHandler,
+      "AEMManager should not have a crash handler by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.featureChecker,
+      "AEMManager should not have a feature checker by default"
+    )
+    XCTAssertNil(
+      _AEMManager.shared.appEventsUtility,
+      "AEMManager should not have a app events utility by default"
+    )
+
+    components.settings.appID = "sample"
+    configurator.performConfiguration()
+
+    XCTAssertTrue(
+      _AEMManager.shared.swizzler === components.swizzler,
+      "AEMManager should be configured with the swizzler"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.aemReporter === components.aemReporter,
+      "AEMManager should be configured with the AEM reporter"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.eventLogger === components.eventLogger,
+      "AEMManager should be configured with the event logger"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.crashHandler === components.crashHandler,
+      "AEMManager should be configured with the crash handler"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.featureChecker === components.featureChecker,
+      "AEMManager should be configured with the feature checker"
+    )
+    XCTAssertTrue(
+      _AEMManager.shared.appEventsUtility === components.appEventsUtility,
+      "AEMManager should be configured with the app events utility"
     )
   }
 

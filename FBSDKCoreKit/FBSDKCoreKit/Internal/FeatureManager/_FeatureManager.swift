@@ -27,6 +27,16 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       return true
     }
 
+    guard let dependencies = try? Self.getDependencies() else {
+      return false
+    }
+
+    // check if the feature is locally disabled by Crash Shield first
+    let version = dependencies.store.fb_string(forKey: storageKey(for: feature))
+    if version == dependencies.settings.sdkVersion {
+      return false
+    }
+
     guard let parentFeature = getParentFeature(for: feature) else {
       return false
     }
@@ -100,6 +110,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .aemConversionFiltering,
       .aemCatalogMatching,
       .aemAdvertiserRuleMatchInServer,
+      .aemAutoSetup,
       .appEventsCloudbridge,
       .skAdNetwork,
       .skAdNetworkConversionValue:
@@ -150,6 +161,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .aemConversionFiltering: featureName = "AEMConversionFiltering"
     case .aemCatalogMatching: featureName = "AEMCatalogMatching"
     case .aemAdvertiserRuleMatchInServer: featureName = "AEMAdvertiserRuleMatchInServer"
+    case .aemAutoSetup: featureName = "AppAemAutoSetUp"
     case .appEventsCloudbridge: featureName = "AppEventsCloudbridge"
     case .login: featureName = "LoginKit"
     case .share: featureName = "ShareKit"
