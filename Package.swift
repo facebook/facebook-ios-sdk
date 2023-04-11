@@ -153,7 +153,7 @@ extension Target {
 
     static let share = target(name: .share, dependencies: [.core, .Prefixed.share])
 
-    static let gaming = target(name: .gaming, dependencies: [.Prefixed.gaming])
+	static let gaming = target(name: .gaming, dependencies: [.core, .share, .Prefixed.gaming])
 
     enum Prefixed {
         static let basics = binaryTarget(
@@ -191,6 +191,7 @@ extension Target {
 extension Target.Dependency {
     static let aem = byName(name: .aem)
     static let core = byName(name: .core)
+	static let share = byName(name: .share)
 
     enum Prefixed {
         static let aem = byName(name: .Prefixed.aem)
