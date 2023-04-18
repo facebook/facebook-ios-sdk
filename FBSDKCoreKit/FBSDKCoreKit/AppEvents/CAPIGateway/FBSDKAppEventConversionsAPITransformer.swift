@@ -82,6 +82,7 @@ enum AppEventUserAndAppDataField: String {
   case installerPackage = "installer_package"
   case receiptData = "receipt_data"
   case urlSchemes = "url_schemes"
+  case campaignIds = "campaign_ids"
 }
 
 // MARK: ConversionsAPI parameters
@@ -134,6 +135,7 @@ enum ConversionsAPIUserAndAppDataField: String {
   case installerPackage = "installer_package"
   case receiptData = "receipt_data"
   case urlSchemes = "url_schemes"
+  case campaignIds = "campaign_ids"
 }
 
 enum ConversionsAPIEventName: String {
@@ -190,6 +192,7 @@ enum AppEventsConversionsAPITransformer {
     .installerPackage: .init(section: .appData, field: .installerPackage),
     .receiptData: .init(section: .appData, field: .receiptData),
     .urlSchemes: .init(section: .appData, field: .urlSchemes),
+    .campaignIds: .init(section: .appData, field: .campaignIds),
     .userData: .init(section: .userData, field: nil),
   ]
 

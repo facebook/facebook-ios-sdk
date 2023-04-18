@@ -147,9 +147,13 @@ final class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
       field: AppEventUserAndAppDataField.userData,
       value: "{\"fn\":\"1234567890\", \"em\":\"ABCDE\"}"
     )
+    AppEventsConversionsAPITransformer.transformAndUpdateAppAndUserData(
+      userData: &userData, appData: &appData, field: AppEventUserAndAppDataField.campaignIds, value: "testcampaignids"
+    )
 
     let ATE = try XCTUnwrap(appData[ConversionsAPIUserAndAppDataField.advTE.rawValue] as? Int)
     let extinfo = try XCTUnwrap(appData[ConversionsAPIUserAndAppDataField.extinfo.rawValue] as? [Any])
+    let campaignIds = try XCTUnwrap(appData[ConversionsAPIUserAndAppDataField.campaignIds.rawValue] as? String)
     let madid = try XCTUnwrap(userData[ConversionsAPIUserAndAppDataField.madid.rawValue] as? String)
     // swiftlint:disable:next identifier_name
     let fn = try XCTUnwrap(userData["fn"] as? String)
@@ -159,6 +163,7 @@ final class FBSDKAppEventsConversionsAPITransformerTests: XCTestCase {
     XCTAssertEqual(ATE, 1)
     XCTAssertEqual(extinfo.count, 1)
     XCTAssertEqual(extinfo[0] as? String, "i2")
+    XCTAssertEqual(campaignIds, "testcampaignids")
     XCTAssertEqual(madid, "ABCDE-12345")
     XCTAssertEqual(fn, "1234567890")
     XCTAssertEqual(em, "ABCDE")
