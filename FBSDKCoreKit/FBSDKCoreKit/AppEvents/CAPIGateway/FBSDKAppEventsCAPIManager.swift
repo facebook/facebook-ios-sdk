@@ -55,7 +55,10 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
     if isSDKGKEnabled {
       load { isCAPIGEnabled in
         if isCAPIGEnabled {
-          FBSDKTransformerGraphRequestFactory.shared.callCapiGatewayAPI(with: parameters)
+          FBSDKTransformerGraphRequestFactory.shared.callCapiGatewayAPI(
+            with: parameters,
+            userAgent: "FBiOSSDK.\(self.settings?.sdkVersion ?? "Unknown")"
+          )
         }
       }
     }

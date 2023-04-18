@@ -47,7 +47,7 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
     credentials = CapiGCredentials(accessKey: accessKey, capiGatewayURL: url, datasetID: datasetID)
   }
 
-  public func callCapiGatewayAPI(with parameters: [String: Any]) {
+  public func callCapiGatewayAPI(with parameters: [String: Any], userAgent: String) {
     serialQueue.async { [weak self] in
       guard let self = self,
             let cbEndpoint = self.capiGatewayEndpoint(),
@@ -74,6 +74,7 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
         request.setValue(self.contentType, forHTTPHeaderField: "Content-Type")
         request.httpShouldHandleCookies = false
         request.httpBody = jsonData
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
 
         URLSession.shared.dataTask(with: request) { _, response, error in
           self.serialQueue.async {
