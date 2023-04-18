@@ -26,32 +26,51 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
 
   public static let shared = FBSDKAppEventsCAPIManager()
 
-  internal var isEnabled = false
+  internal var isSDKGKEnabled = false
   internal var factory: GraphRequestFactoryProtocol?
   internal var settings: SettingsProtocol?
 
   public override init() {}
 
   public func configure(factory: GraphRequestFactoryProtocol, settings: SettingsProtocol) {
-    isEnabled = false
+    isSDKGKEnabled = false
     self.factory = factory
     self.settings = settings
   }
 
   public func enable() {
+    isSDKGKEnabled = true
+  }
+
+  public func recordEvent(_ parameters: [String: Any]) {
+    if isSDKGKEnabled {
+      load { isCAPIGEnabled in
+        if isCAPIGEnabled {
+          FBSDKTransformerGraphRequestFactory.shared.callCapiGatewayAPI(with: parameters)
+        }
+      }
+    }
+  }
+
+  private func load(withBlock block: @escaping (Bool) -> Void) {
     guard let appID = settings?.appID else {
-      print("App ID is not valid"); return
+      print("App ID is not valid")
+      block(false)
+      return
     }
     guard let graphRequest = factory?.createGraphRequest(
       withGraphPath: String(format: "%@/%@", appID, FBSDKAppEventsCAPIManager.settingsPath),
       parameters: [:] as [String: Any],
       flags: []
     ) else {
-      print("Fail to create CAPI Gateway Settings API request"); return
+      print("Fail to create CAPI Gateway Settings API request")
+      block(false)
+      return
     }
     graphRequest.start { _, result, error in
       if let error = error {
         print(error.localizedDescription)
+        block(false)
         return
       }
 
@@ -61,6 +80,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
         let configuration = data.first
       else {
         print("CAPI Gateway Settings API response is not a valid json")
+        block(false)
         return
       }
 
@@ -82,23 +102,19 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
         ) as? String
       else {
         print("CAPI Gateway Settings API response doesn't have valid data")
+        block(false)
         return
       }
 
       FBSDKTransformerGraphRequestFactory.shared.configure(datasetID: datasetID, url: url, accessKey: accessKey)
-      self.isEnabled = TypeUtility.boolValue(
+      let isCAPIGEnabled = TypeUtility.boolValue(
         TypeUtility.dictionary(
           configuration,
           objectForKey: SettingsAPIFields.enabled.rawValue,
           ofType: NSNumber.self
         ) ?? false
       )
-    }
-  }
-
-  public func recordEvent(_ parameters: [String: Any]) {
-    if isEnabled {
-      FBSDKTransformerGraphRequestFactory.shared.callCapiGatewayAPI(with: parameters)
+      block(isCAPIGEnabled)
     }
   }
 }

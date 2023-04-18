@@ -40,34 +40,32 @@ final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
     )
   }
 
-  func testEnableWithoutAppID() {
+  func testRecordEventWithoutAppID() {
     settings.appID = nil
 
     FBSDKAppEventsCAPIManager.shared.enable()
+    FBSDKAppEventsCAPIManager.shared.recordEvent([:])
     XCTAssertTrue(
       factory.capturedRequests.isEmpty,
       "Should not send graph request when app id is nil"
     )
   }
 
-  func testEnableWithNetworkError() {
+  func testEnable() {
     settings.appID = "123"
 
     FBSDKAppEventsCAPIManager.shared.enable()
-    guard let completion = factory.capturedRequests.first?.capturedCompletionHandler else {
-      return XCTFail("Should start a request with a completion handler")
-    }
-    completion(nil, nil, SampleError())
-    XCTAssertFalse(
-      FBSDKAppEventsCAPIManager.shared.isEnabled,
-      "CAPI should not be enabled when setting request fails"
+    XCTAssertTrue(
+      FBSDKAppEventsCAPIManager.shared.isSDKGKEnabled,
+      "CAPI should be enabled"
     )
   }
 
-  func testEnableWithoutNetworkError() {
+  func testRecordEventWithoutLoadingError() {
     settings.appID = "123"
 
     FBSDKAppEventsCAPIManager.shared.enable()
+    FBSDKAppEventsCAPIManager.shared.recordEvent([:])
     guard let completion = factory.capturedRequests.first?.capturedCompletionHandler else {
       return XCTFail("Should start a request with a completion handler")
     }
@@ -76,7 +74,7 @@ final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
       [
         "data": [
           [
-            "is_enabled": true,
+            "is_enabled": false,
             "access_key": Values.accessKey,
             "dataset_id": Values.datasetID,
             "endpoint": Values.capiGatewayURL,
@@ -99,10 +97,6 @@ final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
       FBSDKTransformerGraphRequestFactory.shared.credentials?.capiGatewayURL,
       Values.capiGatewayURL,
       "Credential's access key should be the same as that in the setting request"
-    )
-    XCTAssertTrue(
-      FBSDKAppEventsCAPIManager.shared.isEnabled,
-      "CAPI should be enabled when setting request succeeds"
     )
   }
 }
