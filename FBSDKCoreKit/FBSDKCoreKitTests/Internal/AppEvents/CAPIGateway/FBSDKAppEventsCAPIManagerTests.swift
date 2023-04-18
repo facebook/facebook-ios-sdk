@@ -99,4 +99,50 @@ final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
       "Credential's access key should be the same as that in the setting request"
     )
   }
+
+  func testExecuteBlocks() {
+    // swiftlint:disable:next discouraged_optional_boolean
+    var capturedIsEnabled: Bool?
+    FBSDKAppEventsCAPIManager.shared.completionBlocks.append { isEnabled in
+      capturedIsEnabled = isEnabled
+    }
+    FBSDKAppEventsCAPIManager.shared.executeBlocks(isEnabled: true)
+
+    XCTAssertTrue(
+      FBSDKAppEventsCAPIManager.shared.completionBlocks.isEmpty,
+      "Completion blocks should be cleared after execution"
+    )
+    XCTAssertTrue(
+      capturedIsEnabled == true,
+      "Should pass the expected isEnabled value to completion blocks"
+    )
+  }
+
+  func testIsRefreshTimestampValid() {
+    FBSDKAppEventsCAPIManager.shared.configRefreshTimestamp = nil
+    XCTAssertFalse(
+      FBSDKAppEventsCAPIManager.shared.isRefreshTimestampValid(),
+      "Refresh timestamp is not valid if it is nil"
+    )
+
+    FBSDKAppEventsCAPIManager.shared.configRefreshTimestamp = Calendar.current.date(
+      byAdding: .day,
+      value: -2,
+      to: Date()
+    )
+    XCTAssertFalse(
+      FBSDKAppEventsCAPIManager.shared.isRefreshTimestampValid(),
+      "Refresh timestamp is not valid if it is expired"
+    )
+
+    FBSDKAppEventsCAPIManager.shared.configRefreshTimestamp = Calendar.current.date(
+      byAdding: .hour,
+      value: -1,
+      to: Date()
+    )
+    XCTAssertTrue(
+      FBSDKAppEventsCAPIManager.shared.isRefreshTimestampValid(),
+      "Refresh timestamp is valid if it is not expired"
+    )
+  }
 }
