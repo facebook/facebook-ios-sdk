@@ -245,7 +245,7 @@ public final class LoginManager: NSObject {
    - parameter viewController: Optional view controller to present from. Default: topmost view controller.
    - parameter completion: Optional callback.
    */
-  func logIn(
+  public func logIn(
     permissions: [Permission] = [.publicProfile],
     viewController: UIViewController? = nil,
     completion: LoginResultBlock? = nil
