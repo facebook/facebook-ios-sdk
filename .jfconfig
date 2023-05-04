@@ -18,7 +18,7 @@
     {
       "command": "SandcastleUniversalCommand",
       "alias": "test-target-determinator",
-      "oncall": "platform_sdks",
+      "oncall": "fb_mobile_sdk_community_support",
       "description": "run determinator",
       "priority": 0,
       "scheduleType": "diff",

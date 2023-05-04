@@ -3,7 +3,7 @@
 import json
 from common import *
 
-ONCALL = 'platform_sdks'
+ONCALL = 'fb_mobile_sdk_community_support'
 
 def analyze(scheme, configuration, artifact_name):
     """

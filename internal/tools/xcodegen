@@ -13,7 +13,7 @@
 {
   "name": "xcodegen",
 
-  "oncall": "oncall+platform_sdks@xmail.facebook.com",
+  "oncall": "oncall+fb_mobile_sdk_community_support@xmail.facebook.com",
 
   "platforms": {
     "linux": {

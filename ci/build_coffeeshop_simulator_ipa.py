@@ -4,7 +4,7 @@
 import json
 from common import *
 
-ONCALL = 'platform_sdks'
+ONCALL = 'app_signals'
 
 my_job = [
     {
