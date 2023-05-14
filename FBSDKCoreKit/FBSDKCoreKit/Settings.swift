@@ -324,8 +324,6 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   /**
    Controls the advertiser tracking status of the data sent to Facebook.
-
-   The default value is `false`.
    */
   @available(
     *,
@@ -342,8 +340,6 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   /**
    Controls the advertiser tracking status of the data sent to Facebook.
-
-   The default value is `false`.
    */
   public var isAdvertiserTrackingEnabled: Bool {
     get { advertisingTrackingStatus == .allowed }
