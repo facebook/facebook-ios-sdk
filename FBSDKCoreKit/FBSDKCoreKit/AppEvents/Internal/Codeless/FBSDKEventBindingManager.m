@@ -410,9 +410,8 @@
             }
             targetView = targetView.superview;
           }
-          FBSDKEventBinding *eventBinding = self->_reactBindings[reactTag];
-          if (reactTag != nil && eventBinding != nil) {
-            [eventBinding trackEvent:nil];
+          if (reactTag != nil && self->_reactBindings[reactTag] != nil) {
+            [self->_reactBindings[reactTag] trackEvent:nil];
           }
         }
       }
