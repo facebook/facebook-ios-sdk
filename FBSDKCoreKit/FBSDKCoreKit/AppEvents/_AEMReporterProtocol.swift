@@ -33,7 +33,7 @@ public protocol _AEMReporterProtocol {
 
   static func setAdvertiserRuleMatchInServerEnabled(_ isEnabled: Bool)
 
-  static func handle(_ url: URL)
+  static func handle(_ url: URL?)
 }
 
 extension AEMReporter: _AEMReporterProtocol {}

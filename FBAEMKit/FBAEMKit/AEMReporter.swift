@@ -218,7 +218,7 @@ public final class AEMReporter: NSObject {
 
    This function should be called in `application(_:open:options:) `from ApplicationDelegate
    */
-  public static func handle(_ url: URL) {
+  public static func handle(_ url: URL?) {
     guard
       isAEMReportEnabled,
       let invocation = parseURL(url)
