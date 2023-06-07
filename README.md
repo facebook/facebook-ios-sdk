@@ -1,4 +1,5 @@
 # Facebook SDK for iOS
+<img width="540" alt="A448B959-3E4E-4326-8F3C-9CD49C9B1432" src="https://github.com/MarketingIQ/DM_Academy/assets/122065729/90ebc549-123c-41b9-93bd-be2544cb97a2">
 
 [![Platforms](https://img.shields.io/cocoapods/p/FBSDKCoreKit.svg)](https://cocoapods.org/pods/FBSDKCoreKit)
 [![circleci](https://circleci.com/gh/facebook/facebook-ios-sdk/tree/main.svg?style=shield)](https://circleci.com/gh/facebook/facebook-ios-sdk/tree/main)
