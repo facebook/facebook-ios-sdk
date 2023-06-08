@@ -9,6 +9,13 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
   // This is the url scheme that third party app will call
   private let urlScheme = "facebook-reels://share"
 
+  private enum ShareSettings {
+    static let spotifyAppID = "174829003346"
+    static let spotifyContentURL = "https://open.spotify.com/track/7iN1s7xHE4ifF5povM6A48?si=FbT3st_AbEoITqaTBG6Js-&utm_source=facebook"
+    static let demoAppID = "1048133622404663"
+    static let demoContentURL = "https://mycompany.com/abc"
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -81,6 +88,23 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
     }
   }
 
+  private func shareFrom(appID: String, contentURL: String? = nil, stickerImageURL: String? = nil) {
+    guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
+          let videoData = try? Data(contentsOf: videoUrl) as Data
+    else {
+      ConsoleReportBugWithFormattedMessage("process demo video failed")
+      return
+    }
+
+    let stickerImageData = stickerImageURL != nil ? imageFromURL(imageURL: stickerImageURL! as String)?.pngData() : nil
+
+    if FBSDKPlatformSharingToReels(appID, videoData, contentURL, stickerImageData) {
+      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
+    } else {
+      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
+    }
+  }
+
   private func shareDemoVideo() {
     guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
           let videoData = try? Data(contentsOf: videoUrl) as Data
@@ -111,66 +135,19 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
   }
 
   private func shareDemoVideoFromSpotify() {
-    guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
-          let videoData = try? Data(contentsOf: videoUrl) as Data
-    else {
-      ConsoleReportBugWithFormattedMessage("process demo video failed")
-      return
-    }
-    let contentURL = "https://open.spotify.com/track/7iN1s7xHE4ifF5povM6A48?si=FbT3st_AbEoITqaTBG6Js-&utm_source=facebook"
-    if FBSDKPlatformSharingToReels("174829003346", videoData, contentURL, nil) {
-      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
-    } else {
-      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
-    }
+    shareFrom(appID: ShareSettings.spotifyAppID, contentURL: ShareSettings.spotifyContentURL)
   }
 
   private func shareDemoVideoWithSticker() {
-    guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
-          let videoData = try? Data(contentsOf: videoUrl) as Data
-    else {
-      ConsoleReportBugWithFormattedMessage("process demo video failed")
-      return
-    }
-    let stickerImageURL = "https://i.scdn.co/image/920142fb308970e28aade4a288041a4d1b8f9519"
-    let stickerImage = imageFromURL(imageURL: stickerImageURL)
-
-    let stickerImageData = stickerImage?.pngData()
-    if FBSDKPlatformSharingToReels("174829003346", videoData, nil, stickerImageData) {
-      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
-    } else {
-      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
-    }
+    shareFrom(appID: ShareSettings.spotifyAppID, stickerImageURL: "https://i.scdn.co/image/920142fb308970e28aade4a288041a4d1b8f9519")
   }
 
   private func shareVideoFromTestParty() {
-    guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
-          let videoData = try? Data(contentsOf: videoUrl) as Data
-    else {
-      ConsoleReportBugWithFormattedMessage("process demo video failed")
-      return
-    }
-    let contentURL = "https://mycompany.com/abc"
-    if FBSDKPlatformSharingToReels("1048133622404663", videoData, contentURL, nil) {
-      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
-    } else {
-      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
-    }
+    shareFrom(appID: ShareSettings.demoAppID, contentURL: ShareSettings.demoContentURL)
   }
 
   private func shareWithoutFacebookAppID() {
-    guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
-          let videoData = try? Data(contentsOf: videoUrl) as Data
-    else {
-      ConsoleReportBugWithFormattedMessage("process demo video failed")
-      return
-    }
-
-    if FBSDKPlatformSharingToReels("", videoData, nil, nil) {
-      ConsoleSucceedWithFormattedMessage("openURL:\(urlScheme)")
-    } else {
-      ConsoleReportBugWithFormattedMessage("canOpenURL:\(urlScheme) returned false")
-    }
+    shareFrom(appID: "")
   }
 
   private func shareWithoutVideo() {
