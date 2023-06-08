@@ -14,7 +14,12 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
     static let spotifyContentURL = "https://open.spotify.com/track/7iN1s7xHE4ifF5povM6A48?si=FbT3st_AbEoITqaTBG6Js-&utm_source=facebook"
     static let demoAppID = "1048133622404663"
     static let demoContentURL = "https://mycompany.com/abc"
+    static let nonExistentAppID = "1111111111111111"
+    static let devModeAppID = "606023801621533"
+    static let enforcedAppID = "1695980867507755"
   }
+
+  let options = [["Video", "Video from Asset Library", "Video from Spotify", "Video from Test Party", "Video with Sticker"], ["Missing App ID", "Invalid App ID", "Non-existent App ID", "App on Dev Mode", "Enforced App", "Missing the Media"]]
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -27,11 +32,11 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
   // MARK: Table view data source
 
   override func numberOfSections(in tableView: UITableView) -> Int {
-    2
+    options.count
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    section == 0 ? 5 : 2
+    options[section].count
   }
 
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -51,8 +56,12 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
       }
     case 1:
       switch indexPath.row {
-      case 0: shareWithoutFacebookAppID()
-      case 1: shareWithoutVideo()
+      case 0: shareWithoutAppID()
+      case 1: shareWithInvalidAppID()
+      case 2: shareWithNonExistentAppID()
+      case 3: shareWithDevModeAppID()
+      case 4: shareWithEnforcedAppID()
+      case 5: shareWithoutVideo()
       default: break
       }
     default: break
@@ -63,8 +72,6 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
     let cell = tableView.dequeueReusableCell(withIdentifier: "ShareToReelsCell", for: indexPath)
     cell.selectionStyle = .none
     cell.accessoryType = .disclosureIndicator
-
-    let options = [["Video", "Video from Asset Library", "Video from Spotify", "Video from Test Party", "Video with Sticker"], ["Missing the App ID", "Missing the Media"]]
     cell.textLabel?.text = options[indexPath.section][indexPath.row]
 
     return cell
@@ -88,7 +95,7 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
     }
   }
 
-  private func shareFrom(appID: String, contentURL: String? = nil, stickerImageURL: String? = nil) {
+  private func shareFrom(appID: String?, contentURL: String? = nil, stickerImageURL: String? = nil) {
     guard let videoUrl = Bundle.main.url(forResource: "videoviewdemo", withExtension: "mp4"),
           let videoData = try? Data(contentsOf: videoUrl) as Data
     else {
@@ -146,8 +153,24 @@ class ShareToReelsViewController: UITableViewController, UIImagePickerController
     shareFrom(appID: ShareSettings.demoAppID, contentURL: ShareSettings.demoContentURL)
   }
 
-  private func shareWithoutFacebookAppID() {
-    shareFrom(appID: "")
+  private func shareWithoutAppID() {
+    shareFrom(appID: nil)
+  }
+
+  private func shareWithInvalidAppID() {
+    shareFrom(appID: "invalid_app_id")
+  }
+
+  private func shareWithNonExistentAppID() {
+    shareFrom(appID: ShareSettings.nonExistentAppID)
+  }
+
+  private func shareWithDevModeAppID() {
+    shareFrom(appID: ShareSettings.devModeAppID)
+  }
+
+  private func shareWithEnforcedAppID() {
+    shareFrom(appID: ShareSettings.enforcedAppID)
   }
 
   private func shareWithoutVideo() {
