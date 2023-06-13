@@ -400,12 +400,12 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
     ]
 
     let timeConfiguration = SKAdNetworkConversionConfiguration(json: timeData)
-    XCTAssertEqual(timeConfiguration?.lockWindowRules.count, 2)
-    XCTAssertEqual(timeConfiguration?.lockWindowRules[0].lockWindowType, "time")
-    XCTAssertEqual(timeConfiguration?.lockWindowRules[0].time, 36)
-    XCTAssertEqual(timeConfiguration?.lockWindowRules[0].postbackSequenceIndex, 1)
-    XCTAssertEqual(timeConfiguration?.lockWindowRules[1].time, 68)
-    XCTAssertEqual(timeConfiguration?.lockWindowRules[1].postbackSequenceIndex, 2)
+    XCTAssertEqual(timeConfiguration?.lockWindowRules?.count, 2)
+    XCTAssertEqual(timeConfiguration?.lockWindowRules?[0].lockWindowType, "time")
+    XCTAssertEqual(timeConfiguration?.lockWindowRules?[0].time, 36)
+    XCTAssertEqual(timeConfiguration?.lockWindowRules?[0].postbackSequenceIndex, 1)
+    XCTAssertEqual(timeConfiguration?.lockWindowRules?[1].time, 68)
+    XCTAssertEqual(timeConfiguration?.lockWindowRules?[1].postbackSequenceIndex, 2)
 
     let eventsData: [String: Any] = [
       "data": [
@@ -440,11 +440,11 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
     ]
 
     let eventsConfiguration = SKAdNetworkConversionConfiguration(json: eventsData)
-    XCTAssertEqual(eventsConfiguration?.lockWindowRules[0].lockWindowType, "event")
-    XCTAssertEqual(eventsConfiguration?.lockWindowRules[0].postbackSequenceIndex, 1)
-    XCTAssertEqual(eventsConfiguration?.lockWindowRules[0].events.count, 2)
-    XCTAssertEqual(eventsConfiguration?.lockWindowRules[0].events[0].eventName, "fb_mobile_purchase")
-    XCTAssertEqual(eventsConfiguration?.lockWindowRules[0].events[1].eventName, "fb_mobile_complete_registration")
+    XCTAssertEqual(eventsConfiguration?.lockWindowRules?[0].lockWindowType, "event")
+    XCTAssertEqual(eventsConfiguration?.lockWindowRules?[0].postbackSequenceIndex, 1)
+    XCTAssertEqual(eventsConfiguration?.lockWindowRules?[0].events.count, 2)
+    XCTAssertEqual(eventsConfiguration?.lockWindowRules?[0].events[0].eventName, "fb_mobile_purchase")
+    XCTAssertEqual(eventsConfiguration?.lockWindowRules?[0].events[1].eventName, "fb_mobile_complete_registration")
   }
 
   func testCoraseCvConfigs() {
@@ -509,17 +509,17 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
     ]
 
     let configuration = SKAdNetworkConversionConfiguration(json: data)
-    XCTAssertEqual(configuration?.coarseCvConfigs.count, 2)
-    XCTAssertEqual(configuration?.coarseCvConfigs[0].postbackSequenceIndex, 1)
-    XCTAssertEqual(configuration?.coarseCvConfigs[0].cvRules.count, 2)
-    XCTAssertEqual(configuration?.coarseCvConfigs[0].cvRules[0].coarseCvValue, "high")
-    XCTAssertEqual(configuration?.coarseCvConfigs[0].cvRules[0].events.count, 2)
-    XCTAssertEqual(configuration?.coarseCvConfigs[0].cvRules[0].events[0].eventName, "fb_mobile_purchase")
-    XCTAssertEqual(configuration?.coarseCvConfigs[0].cvRules[0].events[1].eventName, "fb_mobile_search")
-    XCTAssertEqual(configuration?.coarseCvConfigs[1].postbackSequenceIndex, 2)
-    XCTAssertEqual(configuration?.coarseCvConfigs[1].cvRules.count, 1)
-    XCTAssertEqual(configuration?.coarseCvConfigs[1].cvRules[0].coarseCvValue, "low")
-    XCTAssertEqual(configuration?.coarseCvConfigs[1].cvRules[0].events.count, 1)
-    XCTAssertEqual(configuration?.coarseCvConfigs[1].cvRules[0].events[0].eventName, "fb_mobile_level_up")
+    XCTAssertEqual(configuration?.coarseCvConfigs?.count, 2)
+    XCTAssertEqual(configuration?.coarseCvConfigs?[0].postbackSequenceIndex, 1)
+    XCTAssertEqual(configuration?.coarseCvConfigs?[0].cvRules.count, 2)
+    XCTAssertEqual(configuration?.coarseCvConfigs?[0].cvRules[0].coarseCvValue, "high")
+    XCTAssertEqual(configuration?.coarseCvConfigs?[0].cvRules[0].events.count, 2)
+    XCTAssertEqual(configuration?.coarseCvConfigs?[0].cvRules[0].events[0].eventName, "fb_mobile_purchase")
+    XCTAssertEqual(configuration?.coarseCvConfigs?[0].cvRules[0].events[1].eventName, "fb_mobile_search")
+    XCTAssertEqual(configuration?.coarseCvConfigs?[1].postbackSequenceIndex, 2)
+    XCTAssertEqual(configuration?.coarseCvConfigs?[1].cvRules.count, 1)
+    XCTAssertEqual(configuration?.coarseCvConfigs?[1].cvRules[0].coarseCvValue, "low")
+    XCTAssertEqual(configuration?.coarseCvConfigs?[1].cvRules[0].events.count, 1)
+    XCTAssertEqual(configuration?.coarseCvConfigs?[1].cvRules[0].events[0].eventName, "fb_mobile_level_up")
   }
 }
