@@ -98,13 +98,17 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
   self.appEventsUtility = appEventsUtility;
 }
 
-- (void)enableAutoSetup
+- (void)enableAutoSetup:(BOOL)proxyEnabled
 {
   if (@available(iOS 14.0, *)) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
       @try  {
-        [self setup];
+        if (proxyEnabled) {
+          [self setupWithProxy];
+        } else {
+          [self setup];
+        }
       } @catch (NSException *exception) {
         // Disable Auto Setup and log event if exception happens
         [self.featureChecker disableFeature:FBSDKFeatureAEMAutoSetup];
@@ -142,7 +146,7 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
   // ContinueUserActivity proxy
   SEL continueUserActivitySEL = @selector(application:continueUserActivity:restorationHandler:);
   if ([appDelegate respondsToSelector:continueUserActivitySEL]) {
-    Method m = class_getInstanceMethod(clazz, openURLOptionsSEL);
+    Method m = class_getInstanceMethod(clazz, continueUserActivitySEL);
     _originalAppDelegateContinueUserActivityIMP = method_getImplementation(m);
     method_setImplementation(m, (IMP)fbproxy_AppDelegateContinueUserActivity);
   }
