@@ -130,7 +130,9 @@ public final class ApplicationDelegate: NSObject {
       components.aemManager.logAutoSetupStatus(false, source: "client_flag")
     }
     if enabled, components.featureChecker.isEnabled(.aemAutoSetup) {
-      components.aemManager.enable()
+      components.aemManager.enable(
+        components.featureChecker.isEnabled(.aemAutoSetupProxy)
+      )
     }
   }
 

@@ -34,7 +34,7 @@ NS_SWIFT_NAME(_AutoSetup)
              appEventsUtility:(nonnull id<FBSDKAppEventsUtility>)appEventsUtility
 NS_SWIFT_NAME(configure(swizzler:reporter:eventLogger:crashHandler:featureChecker:appEventsUtility:));
 
-- (void)enableAutoSetup;
+- (void)enableAutoSetup:(BOOL)proxyEnabled;
 
 - (void)logAutoSetupStatus:(BOOL)optin
                     source:(NSString *)source;

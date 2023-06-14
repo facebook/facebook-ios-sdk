@@ -12,6 +12,7 @@ import TestTools
 final class TestAEMManager: _AutoSetup {
 
   var enabled = false
+  var proxyEnabled = false
   var autoSetupStatus = false
   var source: String?
 
@@ -25,8 +26,9 @@ final class TestAEMManager: _AutoSetup {
     appEventsUtility: _AppEventsUtilityProtocol
   ) {}
 
-  func enable() {
+  func enable(_ proxyEnabled: Bool) {
     enabled = true
+    self.proxyEnabled = proxyEnabled
   }
 
   func logAutoSetupStatus(_ optin: Bool, source: String) {
