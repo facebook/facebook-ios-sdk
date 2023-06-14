@@ -10,7 +10,17 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.1...HEAD)
+
+## 16.1.1
+
+### Fixed
+
+- Fix App AEM AutoSetup
+- Fix ATE status publishing issue
+
+[2023-06-13](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.1.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.0...v16.1.1)
 
 ## 16.1.0
 
