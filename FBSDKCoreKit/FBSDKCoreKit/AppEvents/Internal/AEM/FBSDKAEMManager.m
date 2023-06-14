@@ -15,6 +15,11 @@
 
 #import "FBSDKAppEventName+Internal.h"
 
+typedef BOOL (*AppDelegateOpenURLOptionsIMP)(
+    id, SEL, UIApplication *, NSURL *, NSDictionary<NSString *, id> *);
+typedef BOOL (*AppDelegateContinueUserActivityIMP)(
+    id, SEL, UIApplication *, NSUserActivity *, id);
+
 @interface FBSDKAEMManager ()
 
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
@@ -24,9 +29,48 @@
 @property (nullable, nonatomic) id<FBSDKFeatureDisabling> featureChecker;
 @property (nullable, nonatomic) id<FBSDKAppEventsUtility> appEventsUtility;
 
+@property (nullable, nonatomic, assign) IMP originalAppDelegateOpenURLIMP;
+@property (nullable, nonatomic, assign) IMP originalAppDelegateContinueUserActivityIMP;
+
 @end
 
 static FBSDKAEMManager *_shared = nil;
+
+#pragma - Proxy methods
+
+static BOOL fbproxy_AppDelegateOpenURL(id self, SEL _cmd, id application, NSURL *url, id options)
+{
+  FBSDKAEMManager *aemManager = FBSDKAEMManager.shared;
+  [aemManager.aemReporter enable];
+  [aemManager.aemReporter handle:url];
+  [aemManager.appEventsUtility saveCampaignIDs:url];
+  [aemManager logAutoSetupStatus:YES source:@"appdelegate_dl"];
+  
+  if (aemManager.originalAppDelegateOpenURLIMP) {
+    BOOL returnedValue =
+      ((AppDelegateOpenURLOptionsIMP)aemManager.originalAppDelegateOpenURLIMP)(self, _cmd, application, url, options);
+    return returnedValue;
+  }
+  return NO;
+}
+
+static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id application, NSUserActivity *userActivity, id restorationHandler)
+{
+  FBSDKAEMManager *aemManager = FBSDKAEMManager.shared;
+  [aemManager.aemReporter enable];
+  [aemManager.aemReporter handle:userActivity.webpageURL];
+  [aemManager.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
+  [aemManager logAutoSetupStatus:YES source:@"appdelegate_ul"];
+  
+  if (aemManager.originalAppDelegateContinueUserActivityIMP) {
+    BOOL returnedValue =
+      ((AppDelegateContinueUserActivityIMP)aemManager.originalAppDelegateContinueUserActivityIMP)(self, _cmd, application, userActivity, restorationHandler);
+    return returnedValue;
+  }
+  return NO;
+}
+
+#pragma - AEM Manager
 
 @implementation FBSDKAEMManager
 
@@ -73,6 +117,52 @@ static FBSDKAEMManager *_shared = nil;
   }
 }
 
+- (void)setupWithProxy
+{
+  [self setupAppDelegateProxy];
+  [self setupSceneDelegateProxies];
+}
+
+- (void)setupAppDelegateProxy
+{
+  id<UIApplicationDelegate> appDelegate =[UIApplication sharedApplication].delegate;
+  Class clazz = appDelegate.class;
+  if (nil == appDelegate || nil == clazz) {
+    return;
+  }
+
+  // OpenURL proxy
+  SEL openURLOptionsSEL = @selector(application:openURL:options:);
+  if ([appDelegate respondsToSelector:openURLOptionsSEL]) {
+    Method m = class_getInstanceMethod(clazz, openURLOptionsSEL);
+    _originalAppDelegateOpenURLIMP = method_getImplementation(m);
+    method_setImplementation(m, (IMP)fbproxy_AppDelegateOpenURL);
+  }
+
+  // ContinueUserActivity proxy
+  SEL continueUserActivitySEL = @selector(application:continueUserActivity:restorationHandler:);
+  if ([appDelegate respondsToSelector:continueUserActivitySEL]) {
+    Method m = class_getInstanceMethod(clazz, openURLOptionsSEL);
+    _originalAppDelegateContinueUserActivityIMP = method_getImplementation(m);
+    method_setImplementation(m, (IMP)fbproxy_AppDelegateContinueUserActivity);
+  }
+}
+
+- (void)setupSceneDelegateProxies
+{
+  if (@available(iOS 13.0, *)) {
+    NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
+    for (UIScene* thisScene in scenes) {
+      Class sceneClass = thisScene.delegate.class;
+      [self setupScene:sceneClass];
+    }
+    NSSet<NSString *> *sceneDelegates = [self getSceneDelegates];
+    for (NSString *sceneDelegate in sceneDelegates) {
+      [self setupScene:NSClassFromString(sceneDelegate)];
+    }
+  }
+}
+
 - (void)setup
 {
   Class clazz = [[UIApplication sharedApplication] delegate].class;
@@ -91,17 +181,7 @@ static FBSDKAEMManager *_shared = nil;
     [self logAutoSetupStatus:YES source:@"appdelegate_ul"];
   } named:@"AEMUniversallinkAutoSetup"];
   
-  if (@available(iOS 13.0, *)) {
-    NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
-    for (UIScene* thisScene in scenes) {
-      Class sceneClass = thisScene.delegate.class;
-      [self setupScene:sceneClass];
-    }
-    NSSet<NSString *> *sceneDelegates = [self getSceneDelegates];
-    for (NSString *sceneDelegate in sceneDelegates) {
-      [self setupScene:NSClassFromString(sceneDelegate)];
-    }
-  }
+  [self setupSceneDelegateProxies];
 }
 
 - (void)setupScene:(Class)sceneClass

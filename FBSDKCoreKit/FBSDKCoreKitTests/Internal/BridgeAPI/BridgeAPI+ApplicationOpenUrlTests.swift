@@ -518,7 +518,7 @@ extension BridgeAPITests {
       line: line
     )
 
-    if authSessionCompletionHandlerExists && expectAuthSessionCompletionHandlerInvoked {
+    if authSessionCompletionHandlerExists, expectAuthSessionCompletionHandlerInvoked {
       XCTAssertEqual(
         capturedAuthSessionCompletionHandlerURL,
         expectedAuthSessionCompletionHandlerUrl,
