@@ -805,6 +805,27 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testLogEventProcessParametersWithProtectedModeManager() {
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
+    appEvents.logEvent(
+      eventName,
+      valueToSum: NSNumber(value: purchaseAmount),
+      parameters: parameters,
+      isImplicitlyLogged: false,
+      accessToken: nil
+    )
+    XCTAssertEqual(
+      protectedModeManager.capturedEventName,
+      eventName,
+      "AppEvents instance should submit the event name to the protectedModeManager."
+    )
+    XCTAssertEqual(
+      protectedModeManager.capturedParameters as? [AppEvents.ParameterName: String],
+      parameters,
+      "AppEvents instance should submit the parameters to the protectedModeManager."
+    )
+  }
+
   // MARK: - Test for log push notification
 
   func testLogPushNotificationOpen() throws {
