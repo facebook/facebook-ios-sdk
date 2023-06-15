@@ -114,7 +114,8 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .aemAutoSetupProxy,
       .appEventsCloudbridge,
       .skAdNetwork,
-      .skAdNetworkConversionValue:
+      .skAdNetworkConversionValue,
+      .protectedMode:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -168,6 +169,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .login: featureName = "LoginKit"
     case .share: featureName = "ShareKit"
     case .gamingServices: featureName = "GamingServicesKit"
+    case .protectedMode: featureName = "ProtectedMode"
     @unknown default: featureName = "NONE"
     }
 

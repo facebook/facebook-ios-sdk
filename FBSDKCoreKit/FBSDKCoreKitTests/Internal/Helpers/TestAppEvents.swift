@@ -50,6 +50,7 @@ final class TestAppEvents: TestEventLogger,
   var capturedConfigureTimeSpentRecorder: (_SourceApplicationTracking & _TimeSpentRecording)?
   var capturedConfigureAppEventsStateStore: _AppEventsStatePersisting?
   var capturedConfigureEventDeactivationParameterProcessor: _AppEventsParameterProcessing?
+  var capturedConfigureProtectedModeManager: _AppEventsParameterProcessing?
   var capturedConfigureRestrictiveDataFilterParameterProcessor: _AppEventsParameterProcessing?
   var capturedConfigureATEPublisherFactory: _ATEPublisherCreating?
   var capturedConfigureAppEventsStateProvider: _AppEventsStateProviding?
@@ -87,7 +88,8 @@ final class TestAppEvents: TestEventLogger,
     // swiftlint:disable:next line_length
     appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtilityProtocol & _LoggingNotifying,
     internalUtility: InternalUtilityProtocol,
-    capiReporter: CAPIReporter
+    capiReporter: CAPIReporter,
+    protectedModeManager: _AppEventsParameterProcessing
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -109,6 +111,7 @@ final class TestAppEvents: TestEventLogger,
     capturedAppEventsUtility = appEventsUtility
     capturedInternalUtility = internalUtility
     capturedCAPIReporter = capiReporter
+    capturedConfigureProtectedModeManager = protectedModeManager
   }
 
   // swiftlint:disable:next function_parameter_count
