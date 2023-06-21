@@ -121,4 +121,151 @@ final class MACARuleMatchingManagerTests: XCTestCase {
       )
     )
   }
+
+  func testRuleMatchNotExistedDataValue() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"PageLoad"}}]}"#,
+        data: [:]
+      )
+    )
+  }
+
+  func testRuleMatchContains() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"contains":"xxxxx"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xxxxx.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchNotContains() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"contains":"xxxxx"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xxXxx.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchIContains() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"i_contains":"xxxxx"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xxXxx.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchINotContainsMatch() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"i_not_contains":"xxxxx"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xx.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchINotContainsNotMatch() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"i_not_contains":"xxxxx"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xxXxxww.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchRegexMatch() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"or":[{"URL":{"regex_match":"eylea.us/support/?$|eylea.us/support/?"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "eylea.us/support",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchRegexNotMatch() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"or":[{"URL":{"regex_match":"eylea.us/support/?$|eylea.us/support/?"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "eylea.us.support",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchEq() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"PageLoad"}}]}"#,
+        data: ["event": "PageLoad"]
+      )
+    )
+  }
+
+  func testRuleMatchNeq() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"neq":"PageLoad"}}]}"#,
+        data: ["event": "PageLoad"]
+      )
+    )
+  }
+
+  func testRuleMatchLt() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"lt":"30"}}]}"#,
+        data: ["value": 1]
+      )
+    )
+  }
+
+  func testRuleMatchLte() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"lte":"30"}}]}"#,
+        data: ["value": "30"]
+      )
+    )
+  }
+
+  func testRuleMatchGt() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"gt":"30"}}]}"#,
+        data: ["value": 31]
+      )
+    )
+  }
+
+  func testRuleMatchGte() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"gte":"30"}}]}"#,
+        data: ["value": "30"]
+      )
+    )
+  }
 }
