@@ -107,7 +107,8 @@ private extension CoreKitConfigurator {
       appEventsUtility: components.appEventsUtility,
       internalUtility: components.internalUtility,
       capiReporter: components.capiReporter,
-      protectedModeManager: components.protectedModeManager
+      protectedModeManager: components.protectedModeManager,
+      macaRuleMatchingManager: components.macaRuleMatchingManager
     )
   }
 
