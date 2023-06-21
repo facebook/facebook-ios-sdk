@@ -79,12 +79,56 @@ final class MACARuleMatchingManager: MACARuleMatching {
   }
 
   func doubleValueOf(_ value: Any?) -> Double {
-    if let num = value as? Double {
-      return num
+    if let num = value as? NSNumber {
+      return num.doubleValue
     } else if let str = value as? String,
               let doubleValue = Double(str) {
       return doubleValue
     }
     return 0
+  }
+
+  func isMatchCCRule(
+    _ rule: String?,
+    data: [String: Any]
+  ) -> Bool {
+    guard let ruleData = rule?.data(using: String.Encoding.utf8),
+          let ruleJson = try? JSONSerialization.jsonObject(
+            with: ruleData, options: .mutableContainers
+          ) as? [String: Any],
+          let thisOp = getKey(logic: ruleJson),
+          let values = ruleJson[thisOp]
+    else { return false }
+
+    if thisOp == "and" {
+      guard let values = values as? [Any] else { return false }
+
+      for ent in values {
+        let ruleString = try? BasicUtility.jsonString(for: ent)
+        let thisRes = isMatchCCRule(ruleString, data: data)
+        if !thisRes {
+          return false
+        }
+      }
+      return true
+    } else if thisOp == "or" {
+      guard let values = values as? [Any] else { return false }
+
+      for ent in values {
+        let ruleString = try? BasicUtility.jsonString(for: ent)
+        let thisRes = isMatchCCRule(ruleString, data: data)
+        if thisRes {
+          return true
+        }
+      }
+      return false
+    } else if thisOp == "not" {
+      let ruleString = try? BasicUtility.jsonString(for: values)
+      return !isMatchCCRule(ruleString, data: data)
+    } else {
+      guard let values = values as? [String: String] else { return false }
+
+      return stringComparison(variable: thisOp, values: values, data: data)
+    }
   }
 }
