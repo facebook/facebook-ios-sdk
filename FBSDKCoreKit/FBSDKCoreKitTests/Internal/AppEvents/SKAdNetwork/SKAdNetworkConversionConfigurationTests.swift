@@ -303,6 +303,75 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
     XCTAssertEqual(configuration?.eventSet, expected)
   }
 
+  func testEventSetWithCoraseValueSetup() {
+    let data: [String: Any] = [
+      "data": [
+        [
+          "timer_buckets": 1,
+          "timer_interval": 1000,
+          "cutoff_time": 2,
+          "default_currency": "usd",
+          "conversion_value_rules": [
+            [
+              "conversion_value": 3,
+              "events": [
+                [
+                  "event_name": "fb_mobile_purchase",
+                ],
+                [
+                  "event_name": "fb_mobile_search",
+                ],
+              ],
+            ],
+          ],
+          "coarse_cv_configs": [
+            [
+              "postback_sequence_index": 1,
+              "coarse_cv_rules": [
+                [
+                  "coarse_cv_value": "high",
+                  "events": [
+                    [
+                      "event_name": "fb_mobile_purchase",
+                    ],
+                  ],
+                ],
+                [
+                  "coarse_cv_value": "medium",
+                  "events": [
+                    [
+                      "event_name": "fb_mobile_add_to_cart",
+                    ],
+                    [
+                      "event_name": "fb_mobile_search",
+                    ],
+                  ],
+                ],
+              ],
+            ],
+            [
+              "postback_sequence_index": 2,
+              "coarse_cv_rules": [
+                [
+                  "coarse_cv_value": "low",
+                  "events": [
+                    [
+                      "event_name": "fb_mobile_level_up",
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ]
+
+    let configuration = SKAdNetworkConversionConfiguration(json: data)
+    let expected = Set(["fb_mobile_search", "fb_mobile_purchase", "fb_mobile_level_up", "fb_mobile_add_to_cart"])
+    XCTAssertEqual(configuration?.eventSet, expected)
+  }
+
   func testCurrencySet() {
     let data: [String: Any] = [
       "data": [
@@ -371,6 +440,102 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
 
     let configuration = SKAdNetworkConversionConfiguration(json: data)
     let expected = Set(["USD", "EU", "JPY"])
+    XCTAssertEqual(configuration?.currencySet, expected)
+  }
+
+  func testCurrencySetWithCoarseValueSetup() {
+    let data: [String: Any] = [
+      "data": [
+        [
+          "timer_buckets": 1,
+          "timer_interval": 1000,
+          "cutoff_time": 2,
+          "default_currency": "usd",
+          "conversion_value_rules": [
+            [
+              "conversion_value": 4,
+              "events": [
+                [
+                  "event_name": "fb_mobile_purchase",
+                  "values": [
+                    [
+                      "currency": "USD",
+                      "amount": 100.0,
+                    ],
+                  ],
+                ],
+                [
+                  "event_name": "fb_mobile_complete_registration",
+                  "values": [
+                    [
+                      "currency": "eu",
+                      "amount": 100.0,
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          "coarse_cv_configs": [
+            [
+              "postback_sequence_index": 1,
+              "coarse_cv_rules": [
+                [
+                  "coarse_cv_value": "high",
+                  "events": [
+                    [
+                      "event_name": "fb_mobile_purchase",
+                      "values": [
+                        [
+                          "currency": "jpy",
+                          "amount": 100.0,
+                        ],
+                      ],
+                    ],
+                  ],
+                ],
+                [
+                  "coarse_cv_value": "medium",
+                  "events": [
+                    [
+                      "event_name": "fb_mobile_search",
+                      "values": [
+                        [
+                          "currency": "sgd",
+                          "amount": 100.0,
+                        ],
+                      ],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+            [
+              "postback_sequence_index": 2,
+              "coarse_cv_rules": [
+                [
+                  "coarse_cv_value": "low",
+                  "events": [
+                    [
+                      "event_name": "fb_mobile_level_up",
+                      "values": [
+                        [
+                          "currency": "gbp",
+                          "amount": 100.0,
+                        ],
+                      ],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ]
+
+    let configuration = SKAdNetworkConversionConfiguration(json: data)
+    let expected = Set(["USD", "EU", "JPY", "GBP", "SGD"])
     XCTAssertEqual(configuration?.currencySet, expected)
   }
 
