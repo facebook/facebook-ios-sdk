@@ -82,6 +82,7 @@ final class CoreKitComponents {
   let webViewProvider: _WebViewProviding
   let aemManager: _AutoSetup
   let protectedModeManager: _AppEventsParameterProcessing
+  let macaRuleMatchingManager: MACARuleMatching
 
   // MARK: - Initializers
 
@@ -156,7 +157,8 @@ final class CoreKitComponents {
     userIDProvider: _UserIDProviding,
     webViewProvider: _WebViewProviding,
     aemManager: _AutoSetup,
-    protectedModeManager: _AppEventsParameterProcessing
+    protectedModeManager: _AppEventsParameterProcessing,
+    macaRuleMatchingManager: MACARuleMatching
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
@@ -229,6 +231,7 @@ final class CoreKitComponents {
     self.webViewProvider = webViewProvider
     self.aemManager = aemManager
     self.protectedModeManager = protectedModeManager
+    self.macaRuleMatchingManager = macaRuleMatchingManager
   }
 
   // MARK: - Default components
@@ -333,6 +336,7 @@ final class CoreKitComponents {
     let settings: SettingsProtocol & SettingsLogging = Settings.shared
     let urlSessionProxyFactory: _URLSessionProxyProviding = _URLSessionProxyFactory()
     let protectedModeManager: _AppEventsParameterProcessing = ProtectedModeManager()
+    let macaRuleMatchingManager: MACARuleMatching = MACARuleMatchingManager()
 
     var aemNetworker: AEMNetworking?
     if #available(iOS 14, *) {
@@ -429,7 +433,8 @@ final class CoreKitComponents {
       userIDProvider: AppEvents.shared,
       webViewProvider: _WebViewFactory(),
       aemManager: _AEMManager.shared,
-      protectedModeManager: protectedModeManager
+      protectedModeManager: protectedModeManager,
+      macaRuleMatchingManager: macaRuleMatchingManager
     )
   }()
 }

@@ -47,6 +47,7 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureIntelligentIntegrity = 0x01010402,
   FBSDKFeatureModelRequest = 0x01010403,
   FBSDKFeatureProtectedMode = 0x01010404,
+  FBSDKFeatureMACARuleMatching = 0x01010405,
   FBSDKFeatureEventDeactivation = 0x01010500,
   FBSDKFeatureSKAdNetwork = 0x01010600,
   FBSDKFeatureSKAdNetworkConversionValue = 0x01010601,

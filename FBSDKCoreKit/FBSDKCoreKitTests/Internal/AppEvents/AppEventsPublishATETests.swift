@@ -73,7 +73,8 @@ final class AppEventsPublishATETests: XCTestCase {
       appEventsUtility: TestAppEventsUtility(),
       internalUtility: TestInternalUtility(),
       capiReporter: TestCAPIReporter(),
-      protectedModeManager: TestAppEventsParameterProcessor()
+      protectedModeManager: TestAppEventsParameterProcessor(),
+      macaRuleMatchingManager: TestMACARuleMatchingManager()
     )
 
     appEvents.publishATE()
