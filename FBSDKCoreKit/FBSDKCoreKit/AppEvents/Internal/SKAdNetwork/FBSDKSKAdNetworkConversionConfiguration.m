@@ -35,11 +35,11 @@
       if (!_conversionValueRules || !_defaultCurrency) {
         return nil;
       }
-      _eventSet = [FBSDKSKAdNetworkConversionConfiguration getEventSetFromRules:_conversionValueRules];
-      _currencySet = [FBSDKSKAdNetworkConversionConfiguration getCurrencySetFromRules:_conversionValueRules];
       _lockWindowRules = [FBSDKSKAdNetworkConversionConfiguration parseLockWindowRules:conversionRules[@"lock_window_rules"]];
       _coarseCvConfigs = [FBSDKSKAdNetworkConversionConfiguration parseCoarseCvConfigs:conversionRules[@"coarse_cv_configs"]];
       _isCoarseCVAccumulative = [FBSDKTypeUtility boolValue:conversionRules[@"is_coarse_cv_accumulative"]];
+      _eventSet = [FBSDKSKAdNetworkConversionConfiguration getEventSetFromRules:_conversionValueRules andCoarseConfigs:_coarseCvConfigs];
+      _currencySet = [FBSDKSKAdNetworkConversionConfiguration getCurrencySetFromRules:_conversionValueRules andCoarseConfigs:_coarseCvConfigs];
     } @catch (NSException *exception) {
       return nil;
     }
@@ -47,7 +47,7 @@
   return self;
 }
 
-+ (NSSet<NSString *> *)getEventSetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules
++ (NSSet<NSString *> *)getEventSetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules andCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
 {
   NSMutableSet<NSString *> *eventSet = [NSMutableSet new];
   for (FBSDKSKAdNetworkRule *rule in rules) {
@@ -60,10 +60,24 @@
       }
     }
   }
+  if (configs) {
+    for (FBSDKSKAdNetworkCoarseCVConfig *config in configs) {
+      for (FBSDKSKAdNetworkCoarseCVRule *rule in config.cvRules) {
+        if (!rule) {
+          continue;
+        }
+        for (FBSDKSKAdNetworkEvent *event in rule.events) {
+          if (event.eventName) {
+            [eventSet addObject:event.eventName];
+          }
+        }
+      }
+    }
+  }
   return [eventSet copy];
 }
 
-+ (NSSet<NSString *> *)getCurrencySetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules
++ (NSSet<NSString *> *)getCurrencySetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules andCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
 {
   NSMutableSet<NSString *> *currencySet = [NSMutableSet new];
   for (FBSDKSKAdNetworkRule *rule in rules) {
@@ -73,6 +87,20 @@
     for (FBSDKSKAdNetworkEvent *event in rule.events) {
       for (NSString *currency in event.values) {
         [currencySet addObject:currency.uppercaseString];
+      }
+    }
+  }
+  if (configs) {
+    for (FBSDKSKAdNetworkCoarseCVConfig *config in configs) {
+      for (FBSDKSKAdNetworkCoarseCVRule *rule in config.cvRules) {
+        if (!rule) {
+          continue;
+        }
+        for (FBSDKSKAdNetworkEvent *event in rule.events) {
+          for (NSString *currency in event.values) {
+            [currencySet addObject:currency.uppercaseString];
+          }
+        }
       }
     }
   }
