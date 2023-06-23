@@ -39,6 +39,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING @"suggestedEventsSetting"
 #define FBSDK_SERVER_CONFIGURATION_VERSION_KEY @"version"
 #define FBSDK_SERVER_CONFIGURATION_TRACK_UNINSTALL_ENABLED_KEY @"trackAppUninstallEnabled"
+#define FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES @"protectedModeRules"
 
 #pragma mark - Dialog Names
 
@@ -96,6 +97,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
                         AAMRules:(NSDictionary<NSString *, id> *)AAMRules
           suggestedEventsSetting:(NSDictionary<NSString *, id> *)suggestedEventsSetting
+              protectedModeRules:(NSDictionary<NSString *, id> *)protectedModeRules
 {
   if ((self = [super init])) {
     _appID = [appID copy];
@@ -124,6 +126,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
     _AAMRules = AAMRules;
     _suggestedEventsSetting = suggestedEventsSetting;
     _version = FBSDKServerConfigurationVersion;
+    _protectedModeRules = protectedModeRules;
   }
   return self;
 }
@@ -170,6 +173,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                                 restrictiveParams:nil
                                                                          AAMRules:nil
                                                            suggestedEventsSetting:nil
+                                                               protectedModeRules:nil
     ];
   }
   return _defaultServerConfiguration;
@@ -266,6 +270,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSDictionary<NSString *, id> *AAMRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES]];
   NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING]];
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  NSDictionary<NSString *, id> *protectedModeRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES]];
+  
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
                                                                     appName:appName
                                                         loginTooltipEnabled:loginTooltipEnabled
@@ -291,6 +297,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                           restrictiveParams:restrictiveParams
                                                                    AAMRules:AAMRules
                                                      suggestedEventsSetting:suggestedEventsSetting
+                                                         protectedModeRules:protectedModeRules
   ];
   configuration->_version = version;
   return configuration;
@@ -326,6 +333,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   [encoder encodeObject:_AAMRules forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES];
   [encoder encodeObject:_suggestedEventsSetting forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING];
   [encoder encodeInteger:_version forKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  [encoder encodeObject:_protectedModeRules forKey:FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES];
 }
 
 #pragma mark - NSCopying

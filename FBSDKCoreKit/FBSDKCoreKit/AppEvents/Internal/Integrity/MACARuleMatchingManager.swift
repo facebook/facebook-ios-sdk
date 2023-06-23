@@ -10,9 +10,26 @@ import Foundation
 
 final class MACARuleMatchingManager: MACARuleMatching {
   private var isEnable = false
+  private var macaRules = [String]()
+
+  var configuredDependencies: ObjectDependencies?
+
+  var defaultDependencies: ObjectDependencies? = .init(
+    serverConfigurationProvider: _ServerConfigurationManager.shared
+  )
 
   func enable() {
-    isEnable = true
+    guard !isEnable,
+          let dependencies = try? getDependencies() else {
+      return
+    }
+
+    if let macaRulesFromServer = dependencies.serverConfigurationProvider
+      .cachedServerConfiguration()
+      .protectedModeRules?["maca_rules"] as? [String] {
+      macaRules = macaRulesFromServer
+      isEnable = true
+    }
   }
 
   func getKey(logic: [String: Any]) -> String? {
@@ -130,5 +147,11 @@ final class MACARuleMatchingManager: MACARuleMatching {
 
       return stringComparison(variable: thisOp, values: values, data: data)
     }
+  }
+}
+
+extension MACARuleMatchingManager: DependentAsObject {
+  struct ObjectDependencies {
+    var serverConfigurationProvider: _ServerConfigurationProviding
   }
 }
