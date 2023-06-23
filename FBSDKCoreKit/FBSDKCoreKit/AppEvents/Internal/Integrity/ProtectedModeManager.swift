@@ -10,7 +10,7 @@ import Foundation
 
 final class ProtectedModeManager: _AppEventsParameterProcessing {
   private var isEnabled = false
-  private let standardParameters: Set<String> = [
+  private let standardParametersDefault: Set<String> = [
     "_currency",
     "_valueToSum",
     "fb_availability",
@@ -147,8 +147,30 @@ final class ProtectedModeManager: _AppEventsParameterProcessing {
     "fb_search_string",
     "fb_success",
   ]
+  private var standardParameters: Set<String> = []
+
+  var configuredDependencies: ObjectDependencies?
+
+  var defaultDependencies: ObjectDependencies? = .init(
+    serverConfigurationProvider: _ServerConfigurationManager.shared
+  )
 
   func enable() {
+    guard let dependencies = try? getDependencies() else {
+      return
+    }
+
+    if let standardParamsList = dependencies.serverConfigurationProvider
+      .cachedServerConfiguration()
+      .protectedModeRules?["standard_params"] as? [String] {
+      if !standardParamsList.isEmpty {
+        standardParameters = Set(standardParamsList)
+      }
+    }
+
+    if standardParameters.isEmpty {
+      standardParameters = standardParametersDefault
+    }
     isEnabled = true
   }
 
@@ -171,5 +193,11 @@ final class ProtectedModeManager: _AppEventsParameterProcessing {
     }
 
     return params
+  }
+}
+
+extension ProtectedModeManager: DependentAsObject {
+  struct ObjectDependencies {
+    var serverConfigurationProvider: _ServerConfigurationProviding
   }
 }
