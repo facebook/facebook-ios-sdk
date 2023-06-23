@@ -87,6 +87,7 @@ final class ServerConfigurationFixtures: NSObject {
     let AAMRules = dict["aamRules"] as? [String: Any] ?? defaultConfiguration.aamRules
     // swiftlint:disable:next line_length
     let suggestedEventsSetting = dict["suggestedEventsSetting"] as? [String: Any] ?? defaultConfiguration.suggestedEventsSetting
+    let protectedModeRules = dict["protectedModeRules"] as? [String: Any] ?? defaultConfiguration.protectedModeRules
 
     return _ServerConfiguration(
       appID: appID,
@@ -113,7 +114,8 @@ final class ServerConfigurationFixtures: NSObject {
       eventBindings: eventBindings,
       restrictiveParams: restrictiveParams,
       aamRules: AAMRules,
-      suggestedEventsSetting: suggestedEventsSetting
+      suggestedEventsSetting: suggestedEventsSetting,
+      protectedModeRules: protectedModeRules
     )
   }
 }
