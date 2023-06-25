@@ -8,7 +8,8 @@
 
 import Foundation
 
-final class ProtectedModeManager: _AppEventsParameterProcessing {
+@objc(FBSDKProtectedModeManager)
+final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
   private var isEnabled = false
   private let standardParametersDefault: Set<String> = [
     "_currency",
@@ -146,6 +147,9 @@ final class ProtectedModeManager: _AppEventsParameterProcessing {
     "fb_registration_method",
     "fb_search_string",
     "fb_success",
+    "pm",
+    "_audiencePropertyIds",
+    "cs_maca",
   ]
   private var standardParameters: Set<String> = []
 
@@ -174,9 +178,9 @@ final class ProtectedModeManager: _AppEventsParameterProcessing {
     isEnabled = true
   }
 
-  func processParameters(
+  @objc func processParameters(
     _ parameters: [AppEvents.ParameterName: Any]?,
-    eventName: AppEvents.Name
+    eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
     guard isEnabled,
           let parameters = parameters,
@@ -191,7 +195,8 @@ final class ProtectedModeManager: _AppEventsParameterProcessing {
         params.removeValue(forKey: appEventsParameterName)
       }
     }
-
+    let pmKey = AppEvents.ParameterName(rawValue: "pm")
+    params[pmKey] = true
     return params
   }
 }

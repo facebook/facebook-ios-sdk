@@ -62,12 +62,13 @@ final class EventDeactivationManager: _AppEventsParameterProcessing, _EventsProc
 
   func processParameters(
     _ parameters: [AppEvents.ParameterName: Any]?,
-    eventName: AppEvents.Name
+    eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
     guard isEventDeactivationEnabled,
           let parameters = parameters,
           !parameters.isEmpty,
-          !eventsWithDeactivatedParameters.isEmpty
+          !eventsWithDeactivatedParameters.isEmpty,
+          let eventName = eventName
     else {
       return parameters
     }

@@ -1057,6 +1057,10 @@ static BOOL g_explicitEventsLoggedYet = NO;
   if (isImplicitlyLogged && self.serverConfiguration && !self.serverConfiguration.isImplicitLoggingSupported) {
     return;
   }
+  
+  if (self.macaRuleMatchingManager) {
+    parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
+  }
 
   if (!isImplicitlyLogged && !g_explicitEventsLoggedYet) {
     g_explicitEventsLoggedYet = YES;
@@ -1082,7 +1086,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
   // Filter out deactivated params
-  parameters = [self.eventDeactivationParameterProcessor processParameters:parameters eventName:eventName];
+  if (self.eventDeactivationParameterProcessor) {
+    parameters = [self.eventDeactivationParameterProcessor processParameters:parameters eventName:eventName];
+  }
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
@@ -1094,7 +1100,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
   parameters = [self.restrictiveDataFilterParameterProcessor processParameters:parameters
                                                                      eventName:eventName];
   // Filter out non-standard params
-  parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
+  if (self.protectedModeManager) {
+    parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
+  }
   
   NSMutableDictionary<FBSDKAppEventParameterName, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters ?: @{}];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterNameEventName];

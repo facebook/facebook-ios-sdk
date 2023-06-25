@@ -24,7 +24,7 @@ NS_SWIFT_NAME(_AppEventsParameterProcessing)
 
 - (void)enable;
 - (nullable NSDictionary<FBSDKAppEventParameterName, id> *)processParameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-                                                                   eventName:(FBSDKAppEventName)eventName;
+                                                                   eventName:(nullable FBSDKAppEventName)eventName;
 
 @end
 

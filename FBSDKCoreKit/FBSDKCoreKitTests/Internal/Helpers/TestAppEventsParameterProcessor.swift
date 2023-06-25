@@ -22,7 +22,7 @@ final class TestAppEventsParameterProcessor: NSObject, _AppEventsParameterProces
 
   func processParameters(
     _ parameters: [AppEvents.ParameterName: Any]?,
-    eventName: AppEvents.Name
+    eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
     capturedParameters = parameters
     capturedEventName = eventName

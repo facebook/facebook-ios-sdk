@@ -8,7 +8,8 @@
 
 import Foundation
 
-final class MACARuleMatchingManager: MACARuleMatching {
+@objc(FBSDKMACARuleMatchingManager)
+final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   private var isEnable = false
   private var macaRules = [String]()
 
@@ -147,6 +148,37 @@ final class MACARuleMatchingManager: MACARuleMatching {
 
       return stringComparison(variable: thisOp, values: values, data: data)
     }
+  }
+
+  func getMatchPropertyIDs(params: [String: Any]) -> String {
+    guard !macaRules.isEmpty else { return "[]" }
+
+    let res = NSMutableArray()
+    for entry in macaRules {
+      guard let json = try? BasicUtility.object(forJSONString: entry) as? [String: Any],
+            let pid = json["id"] as? Int64,
+            let rule = json["rule"] as? String
+      else { continue }
+      if isMatchCCRule(rule, data: params) {
+        res.add(pid)
+      }
+    }
+    let resString = try? BasicUtility.jsonString(for: res)
+    return resString ?? "[]"
+  }
+
+  @objc func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary? {
+    guard isEnable, let params = params, var res = params.mutableCopy() as? [String: Any]
+    else { return params }
+
+    if isEnable {
+      res["event"] = event ?? ""
+      res["cs_maca"] = true
+      res["_audiencePropertyIds"] = getMatchPropertyIDs(params: res)
+      res.removeValue(forKey: "event")
+    }
+
+    return res as NSDictionary
   }
 }
 

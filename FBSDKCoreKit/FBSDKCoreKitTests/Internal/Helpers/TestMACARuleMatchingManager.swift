@@ -16,4 +16,6 @@ final class TestMACARuleMatchingManager: MACARuleMatching {
   func enable() {
     enabledWasCalled = true
   }
+
+  func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary? { params }
 }
