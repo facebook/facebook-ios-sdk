@@ -29,7 +29,7 @@ final class ProtectedModeManagerTests: XCTestCase {
     protectedModeManager.enable()
     XCTAssertEqual(
       protectedModeManager.processParameters(sampleParameters, eventName: AppEvents.Name.addedToCart)?.count,
-      2,
+      3, // should also include PM flag
       "It should do the parameter filtering when enbaled"
     )
   }

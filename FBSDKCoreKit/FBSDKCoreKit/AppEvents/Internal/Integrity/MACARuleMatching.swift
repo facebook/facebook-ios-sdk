@@ -10,5 +10,6 @@ import Foundation
 
 @objc(FBSDKMACARuleMatching)
 public protocol MACARuleMatching {
-  func enable()
+  @objc func enable()
+  @objc func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary?
 }
