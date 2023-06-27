@@ -13,10 +13,28 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   private var isEnable = false
   private var macaRules = [String]()
 
+  private let keys = [
+    "event",
+    "_locale",
+    "_appVersion",
+    "_deviceOS",
+    "_platform",
+    "_deviceModel",
+    "_nativeAppID",
+    "_nativeAppShortVersion",
+    "_timezone",
+    "_carrier",
+    "_deviceOSTypeName",
+    "_deviceOSVersion",
+    "_remainingDiskGB",
+  ]
+
   var configuredDependencies: ObjectDependencies?
 
   var defaultDependencies: ObjectDependencies? = .init(
-    serverConfigurationProvider: _ServerConfigurationManager.shared
+    serverConfigurationProvider: _ServerConfigurationManager.shared,
+    deviceInformationProvider: _AppEventsDeviceInfo.shared,
+    settings: Settings.shared
   )
 
   func enable() {
@@ -172,18 +190,45 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
     else { return params }
 
     if isEnable {
-      res["event"] = event ?? ""
+      generateInfo(params: &res, event: event)
       res["cs_maca"] = true
       res["_audiencePropertyIds"] = getMatchPropertyIDs(params: res)
-      res.removeValue(forKey: "event")
+      removeGeneratedInfo(params: &res)
     }
 
     return res as NSDictionary
+  }
+
+  func generateInfo(params: inout [String: Any], event: String?) {
+    guard let dependencies = try? getDependencies() else {
+      return
+    }
+    params["event"] = event ?? ""
+    params["_locale"] = dependencies.deviceInformationProvider.language ?? ""
+    params["_appVersion"] = dependencies.deviceInformationProvider.shortVersion ?? ""
+    params["_deviceOS"] = "IOS"
+    params["_platform"] = "mobile"
+    params["_deviceModel"] = dependencies.deviceInformationProvider.machine ?? ""
+    params["_nativeAppID"] = dependencies.settings.appID ?? ""
+    params["_nativeAppShortVersion"] = dependencies.deviceInformationProvider.shortVersion ?? ""
+    params["_timezone"] = dependencies.deviceInformationProvider.timeZoneName ?? ""
+    params["_carrier"] = dependencies.deviceInformationProvider.carrierName ?? ""
+    params["_deviceOSTypeName"] = "IOS"
+    params["_deviceOSVersion"] = dependencies.deviceInformationProvider.sysVersion ?? ""
+    params["_remainingDiskGB"] = dependencies.deviceInformationProvider.remainingDiskSpaceGB
+  }
+
+  func removeGeneratedInfo(params: inout [String: Any]) {
+    for key in keys {
+      params.removeValue(forKey: key)
+    }
   }
 }
 
 extension MACARuleMatchingManager: DependentAsObject {
   struct ObjectDependencies {
     var serverConfigurationProvider: _ServerConfigurationProviding
+    var deviceInformationProvider: _DeviceInformationProviding
+    var settings: SettingsProtocol
   }
 }
