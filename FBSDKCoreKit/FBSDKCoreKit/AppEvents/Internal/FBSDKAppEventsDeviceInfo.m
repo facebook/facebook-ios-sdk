@@ -32,28 +32,6 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
 
 @interface FBSDKAppEventsDeviceInfo ()
 
-// Ephemeral data, may change during the lifetime of an app.  We collect them in different
-// 'group' frequencies - group1 may gets collected once every 30 minutes.
-
-// group1
-@property (nonatomic) NSString *carrierName;
-@property (nonatomic) NSString *timeZoneAbbrev;
-@property (nonatomic) unsigned long long remainingDiskSpaceGB;
-@property (nonatomic) NSString *timeZoneName;
-
-// Persistent data, but we maintain it to make rebuilding the device info as fast as possible.
-@property (nonatomic) NSString *bundleIdentifier;
-@property (nonatomic) NSString *longVersion;
-@property (nonatomic) NSString *shortVersion;
-@property (nonatomic) NSString *sysVersion;
-@property (nonatomic) NSString *machine;
-@property (nonatomic) NSString *language;
-@property (nonatomic) unsigned long long totalDiskSpaceGB;
-@property (nonatomic) unsigned long long coreCount;
-@property (nonatomic) CGFloat width;
-@property (nonatomic) CGFloat height;
-@property (nonatomic) CGFloat density;
-
 // Other state
 @property (nonatomic) long lastGroup1CheckTime;
 @property (nonatomic) BOOL isEncodingDirty;

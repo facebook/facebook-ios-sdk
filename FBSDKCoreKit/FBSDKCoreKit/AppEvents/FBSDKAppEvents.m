@@ -1059,7 +1059,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
   }
   
   if (self.macaRuleMatchingManager) {
-    parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
+    @try {
+        parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
+    } @catch(NSException *exception) {}
   }
 
   if (!isImplicitlyLogged && !g_explicitEventsLoggedYet) {
@@ -1101,7 +1103,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
                                                                      eventName:eventName];
   // Filter out non-standard params
   if (self.protectedModeManager) {
-    parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
+    @try {
+        parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
+    } @catch(NSException *exception) {}
   }
   
   NSMutableDictionary<FBSDKAppEventParameterName, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters ?: @{}];
