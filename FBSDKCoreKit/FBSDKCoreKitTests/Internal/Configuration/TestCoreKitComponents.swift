@@ -83,7 +83,9 @@ enum TestCoreKitComponents {
     userDataStore: _UserDataPersisting = TestUserDataStore(),
     userIDProvider: _UserIDProviding = TestUserIDProvider(),
     webViewProvider: _WebViewProviding = TestWebViewFactory(),
-    aemManager: _AutoSetup = TestAEMManager()
+    aemManager: _AutoSetup = TestAEMManager(),
+    protectedModeManager: _AppEventsParameterProcessing = TestAppEventsParameterProcessor(),
+    macaRuleMatchingManager: MACARuleMatching = TestMACARuleMatchingManager()
   ) -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
@@ -155,7 +157,9 @@ enum TestCoreKitComponents {
       userDataStore: userDataStore,
       userIDProvider: userIDProvider,
       webViewProvider: webViewProvider,
-      aemManager: aemManager
+      aemManager: aemManager,
+      protectedModeManager: protectedModeManager,
+      macaRuleMatchingManager: macaRuleMatchingManager
     )
   }
 }
