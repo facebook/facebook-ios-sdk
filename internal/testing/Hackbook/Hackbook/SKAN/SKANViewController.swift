@@ -76,6 +76,7 @@ class SKANViewController: UIViewController, UITableViewDelegate, UITableViewData
     SKANTestUtils.reset(consoleView)
     swizzleReporter()
 
+    navigationController?.navigationBar.backgroundColor = .white
     view.addSubview(consoleView)
     view.addSubview(tableView)
   }

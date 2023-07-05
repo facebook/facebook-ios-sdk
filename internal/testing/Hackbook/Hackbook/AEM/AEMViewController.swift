@@ -138,6 +138,7 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     AEMTestUtils.reset(consoleView)
     swizzleReporter()
 
+    navigationController?.navigationBar.backgroundColor = .white
     view.addSubview(consoleView)
     view.addSubview(tableView)
   }
