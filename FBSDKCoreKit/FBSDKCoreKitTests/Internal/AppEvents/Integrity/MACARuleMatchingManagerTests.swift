@@ -143,13 +143,25 @@ final class MACARuleMatchingManagerTests: XCTestCase {
     )
   }
 
-  func testRuleMatchNotContains() {
+  func testRuleMatchContainsNotValid() {
     XCTAssertFalse(
       macaRuleMatchingManager.isMatchCCRule(
         #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"contains":"xxxxx"}}]}]}"#,
         data: [
           "event": "Lead",
           "url": "www.xxXxx.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchNotContains() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"not_contains":"xxxxx"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xxxxx.com",
         ]
       )
     )
@@ -191,6 +203,138 @@ final class MACARuleMatchingManagerTests: XCTestCase {
     )
   }
 
+  func testRuleMatchStartsWith() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"starts_with":"ww"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xxXxxww.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchIStartsWith() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"i_starts_with":"ww"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "WWW.xxXxxww.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchIStrEq() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"i_str_eq":"WWW.xxXxxww.com"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "www.xxxxxww.com",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchIStrNeq() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"eq":"Lead"}},{"or":[{"URL":{"i_str_neq":"xxXxxww"}}]}]}"#,
+        data: [
+          "event": "Lead",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchIn() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"in":["fb_mobile_activate_app","fb_page_view","PixelInitialized","PageView"]}}]}"#,
+        data: [
+          "event": "fb_page_view",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"is_any":["fb_mobile_activate_app","fb_page_view","PixelInitialized","PageView"]}}]}"#,
+        data: [
+          "event": "fb_page_view",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchIStrIn() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"i_str_in":["fb_mobile_activate_app","fb_page_view","PixelInitialized","PageView"]}}]}"#,
+        data: [
+          "event": "FB_PAGE_VIEW",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"i_is_any":["fb_mobile_activate_app","fb_page_view","PixelInitialized","PageView"]}}]}"#,
+        data: [
+          "event": "PAGEView",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchNotIn() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"not_in":["fb_mobile_activate_app","fb_page_view","PixelInitialized","PageView"]}}]}"#,
+        data: [
+          "event": "fb_page_view",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"is_not_any":["fb_mobile_activate_app","fb_page_view","PixelInitialized","PageView"]}}]}"#,
+        data: [
+          "event": "fb_page_view",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+  }
+
+  func testRuleMatchIStrNotIn() {
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"i_str_not_in":["fb_mobile_activate_app","fb_page_view","PageView"]}}]}"#,
+        data: [
+          "event": "FB_PAGE_VIEW",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"i_is_not_any":["fb_mobile_activate_app","fb_page_view","PageView"]}}]}"#,
+        data: [
+          "event": "PAGEView",
+          "url": "XXXXXWW",
+        ]
+      )
+    )
+  }
+
   func testRuleMatchRegexMatch() {
     XCTAssertTrue(
       macaRuleMatchingManager.isMatchCCRule(
@@ -215,10 +359,61 @@ final class MACARuleMatchingManagerTests: XCTestCase {
     )
   }
 
+  func testRuleMatchExists() {
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"url":{"exists": true}}]}"#,
+        data: [
+          "event": "PageLoad",
+          "url": "eylea.us.support",
+        ]
+      )
+    )
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"url":{"exists": false}}]}"#,
+        data: [
+          "event": "PageLoad",
+          "url": "eylea.us.support",
+        ]
+      )
+    )
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"product":{"exists": false}}]}"#,
+        data: [
+          "event": "PageLoad",
+          "product": "eylea.us.support",
+        ]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"product":{"exists": false}}]}"#,
+        data: [
+          "event": "PageLoad",
+          "url": "eylea.us.support",
+        ]
+      )
+    )
+  }
+
   func testRuleMatchEq() {
     XCTAssertTrue(
       macaRuleMatchingManager.isMatchCCRule(
         #"{"and":[{"event":{"eq":"PageLoad"}}]}"#,
+        data: ["event": "PageLoad"]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"=":"PageLoad"}}]}"#,
+        data: ["event": "PageLoad"]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"==":"PageLoad"}}]}"#,
         data: ["event": "PageLoad"]
       )
     )
@@ -231,12 +426,30 @@ final class MACARuleMatchingManagerTests: XCTestCase {
         data: ["event": "PageLoad"]
       )
     )
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"ne":"PageLoad"}}]}"#,
+        data: ["event": "PageLoad"]
+      )
+    )
+    XCTAssertFalse(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"event":{"!=":"PageLoad"}}]}"#,
+        data: ["event": "PageLoad"]
+      )
+    )
   }
 
   func testRuleMatchLt() {
     XCTAssertTrue(
       macaRuleMatchingManager.isMatchCCRule(
         #"{"and":[{"value":{"lt":"30"}}]}"#,
+        data: ["value": 1]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"<":"30"}}]}"#,
         data: ["value": 1]
       )
     )
@@ -249,6 +462,18 @@ final class MACARuleMatchingManagerTests: XCTestCase {
         data: ["value": "30"]
       )
     )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"le":"30"}}]}"#,
+        data: ["value": "30"]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"<=":"30"}}]}"#,
+        data: ["value": "30"]
+      )
+    )
   }
 
   func testRuleMatchGt() {
@@ -258,12 +483,30 @@ final class MACARuleMatchingManagerTests: XCTestCase {
         data: ["value": 31]
       )
     )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{">":"30"}}]}"#,
+        data: ["value": 31]
+      )
+    )
   }
 
   func testRuleMatchGte() {
     XCTAssertTrue(
       macaRuleMatchingManager.isMatchCCRule(
         #"{"and":[{"value":{"gte":"30"}}]}"#,
+        data: ["value": "30"]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{"ge":"30"}}]}"#,
+        data: ["value": "30"]
+      )
+    )
+    XCTAssertTrue(
+      macaRuleMatchingManager.isMatchCCRule(
+        #"{"and":[{"value":{">=":"30"}}]}"#,
         data: ["value": "30"]
       )
     )
