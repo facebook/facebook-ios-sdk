@@ -58,47 +58,120 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   // swiftlint:disable:next cyclomatic_complexity
   func stringComparison(
     variable: String,
-    values: [String: String],
+    values: [String: Any],
     data: [String: Any]
   ) -> Bool {
     // swiftlint:disable:next identifier_name
     guard let op = getKey(logic: values),
-          let ruleValue = values[op],
-          let dataValue = data[variable.lowercased()] ?? data[variable]
+          let ruleValue = values[op]
     else { return false }
+
+    if op == "exists" {
+      // swiftlint:disable:next blank_line_after_single_line_guard
+      guard let ruleBoolValue = ruleValue as? Bool else { return false }
+      return data.keys.contains(variable) == ruleBoolValue
+    }
+
+    guard let dataValue = data[variable.lowercased()] ?? data[variable]
+    else { return false }
+
+    let ruleStringValue = ruleValue as? String
+    let ruleArrayValue = ruleValue as? [String]
 
     switch op {
     case "contains":
       // swiftlint:disable:next blank_line_after_single_line_guard
-      guard let dataValue = stringValueOf(dataValue) else { return false }
-      return dataValue.contains(ruleValue)
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue.contains(ruleStringValue)
     case "i_contains":
       // swiftlint:disable:next blank_line_after_single_line_guard
-      guard let dataValue = stringValueOf(dataValue) else { return false }
-      return dataValue.lowercased().contains(ruleValue.lowercased())
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue.lowercased().contains(ruleStringValue.lowercased())
+    case "not_contains":
+      // swiftlint:disable:next blank_line_after_single_line_guard
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return !dataValue.contains(ruleStringValue)
     case "i_not_contains":
       // swiftlint:disable:next blank_line_after_single_line_guard
-      guard let dataValue = stringValueOf(dataValue) else { return false }
-      return !dataValue.lowercased().contains(ruleValue.lowercased())
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return !dataValue.lowercased().contains(ruleStringValue.lowercased())
+    case "starts_with":
+      // swiftlint:disable:next blank_line_after_single_line_guard
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue.starts(with: ruleStringValue)
+    case "i_starts_with":
+      // swiftlint:disable:next blank_line_after_single_line_guard
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue.lowercased().starts(with: ruleStringValue.lowercased())
+    case "i_str_eq":
+      // swiftlint:disable:next blank_line_after_single_line_guard
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue.lowercased() == ruleStringValue.lowercased()
+    case "i_str_neq":
+      // swiftlint:disable:next blank_line_after_single_line_guard
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue.lowercased() != ruleStringValue.lowercased()
+    case "in", "is_any":
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleArrayValue = ruleArrayValue
+      else { return false }
+      return ruleArrayValue.contains(dataValue)
+    case "i_str_in", "i_is_any":
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleArrayValue = ruleArrayValue
+      else { return false }
+      return ruleArrayValue.contains(where: { $0.compare(dataValue, options: .caseInsensitive) == .orderedSame })
+    case "not_in", "is_not_any":
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleArrayValue = ruleArrayValue
+      else { return false }
+      return !ruleArrayValue.contains(dataValue)
+    case "i_str_not_in", "i_is_not_any":
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleArrayValue = ruleArrayValue
+      else { return false }
+      return !ruleArrayValue.contains(where: { $0.compare(dataValue, options: .caseInsensitive) == .orderedSame })
     case "regex_match":
       // swiftlint:disable:next blank_line_after_single_line_guard
-      guard let dataValue = stringValueOf(dataValue) else { return false }
-      return dataValue.range(of: ruleValue, options: .regularExpression, range: nil, locale: nil) != nil
-    case "eq":
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue.range(of: ruleStringValue, options: .regularExpression, range: nil, locale: nil) != nil
+    case "eq", "=", "==":
       // swiftlint:disable:next blank_line_after_single_line_guard
-      guard let dataValue = stringValueOf(dataValue) else { return false }
-      return dataValue == ruleValue
-    case "neq":
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue == ruleStringValue
+    case "neq", "ne", "!=":
       // swiftlint:disable:next blank_line_after_single_line_guard
-      guard let dataValue = stringValueOf(dataValue) else { return false }
-      return dataValue != ruleValue
-    case "lt":
+      guard let dataValue = stringValueOf(dataValue),
+            let ruleStringValue = ruleStringValue
+      else { return false }
+      return dataValue != ruleStringValue
+    case "lt", "<":
       return doubleValueOf(dataValue) < doubleValueOf(ruleValue)
-    case "lte":
+    case "lte", "le", "<=":
       return doubleValueOf(dataValue) <= doubleValueOf(ruleValue)
-    case "gt":
+    case "gt", ">":
       return doubleValueOf(dataValue) > doubleValueOf(ruleValue)
-    case "gte":
+    case "gte", "ge", ">=":
       return doubleValueOf(dataValue) >= doubleValueOf(ruleValue)
     default:
       return false
@@ -162,7 +235,7 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
       let ruleString = try? BasicUtility.jsonString(for: values)
       return !isMatchCCRule(ruleString, data: data)
     } else {
-      guard let values = values as? [String: String] else { return false }
+      guard let values = values as? [String: Any] else { return false }
 
       return stringComparison(variable: thisOp, values: values, data: data)
     }
