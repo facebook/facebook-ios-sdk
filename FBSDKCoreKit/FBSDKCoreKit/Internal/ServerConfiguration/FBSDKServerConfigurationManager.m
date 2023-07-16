@@ -39,6 +39,7 @@
 #define FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD @"aam_rules"
 #define FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD @"suggested_events_setting"
 #define FBSDK_SERVER_CONFIGURATION_MONITORING_CONFIG_FIELD @"monitoringConfiguration"
+#define FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES_FIELD @"protected_mode_rules"
 
 @interface FBSDKServerConfigurationManager ()
 
@@ -228,6 +229,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSDictionary<NSString *, id> *restrictiveParams = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD] error:nil];
     NSDictionary<NSString *, id> *AAMRules = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD] error:nil];
     NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD] error:nil];
+    NSDictionary<NSString *, id> *protectedModeRules = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES_FIELD]];
+    
     FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                                             appName:appName
                                                                                 loginTooltipEnabled:loginTooltipEnabled
@@ -252,7 +255,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                       eventBindings:eventBindings
                                                                                   restrictiveParams:restrictiveParams
                                                                                            AAMRules:AAMRules
-                                                                             suggestedEventsSetting:suggestedEventsSetting];
+                                                                             suggestedEventsSetting:suggestedEventsSetting
+                                                                                 protectedModeRules:protectedModeRules];
     [self _didProcessConfigurationFromNetwork:serverConfiguration appID:appID error:nil];
   } @catch (NSException *exception) {}
 }
@@ -280,7 +284,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                   FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
                                   FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD,
                                   FBSDK_SERVER_CONFIGURATION_AAM_RULES_FIELD,
-                                  FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD
+                                  FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING_FIELD,
+                                  FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES_FIELD
                                 #if !TARGET_OS_TV
                                   , FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
                                 #endif

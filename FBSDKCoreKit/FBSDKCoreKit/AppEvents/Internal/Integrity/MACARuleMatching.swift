@@ -6,5 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#define FBSDK_VERSION_STRING @"16.1.3"
-#define FBSDK_DEFAULT_GRAPH_API_VERSION @"v16.0"
+import Foundation
+
+@objc(FBSDKMACARuleMatching)
+public protocol MACARuleMatching {
+  @objc func enable()
+  @objc func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary?
+}

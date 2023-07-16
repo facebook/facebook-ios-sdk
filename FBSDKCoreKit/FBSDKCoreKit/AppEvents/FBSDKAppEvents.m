@@ -98,6 +98,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKAppEventsStatePersisting> appEventsStateStore;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> eventDeactivationParameterProcessor;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterParameterProcessor;
+@property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> protectedModeManager;
+@property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
 @property (nullable, nonatomic) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nullable, nonatomic) id<FBSDKATEPublishing> atePublisher;
 @property (nullable, nonatomic) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
@@ -636,6 +638,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
                          appEventsUtility:(nonnull id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
                           internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
+                     protectedModeManager:(nonnull id<FBSDKAppEventsParameterProcessing>)protectedModeManager
+                 macaRuleMatchingManager:(nonnull id<FBSDKMACARuleMatching>)macaRuleMatchingManager
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -657,7 +661,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.appEventsUtility = appEventsUtility;
   self.internalUtility = internalUtility;
   self.capiReporter = capiReporter;
-
+  self.protectedModeManager = protectedModeManager;
+  self.macaRuleMatchingManager = macaRuleMatchingManager;
+ 
   NSString *appID = self.appID;
   if (appID) {
     self.atePublisher = [atePublisherFactory createPublisherWithAppID:appID];
@@ -942,6 +948,16 @@ static BOOL g_explicitEventsLoggedYet = NO;
           [self.eventDeactivationParameterProcessor enable];
         }
       }];
+      [self.featureChecker checkFeature:FBSDKFeatureProtectedMode completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.protectedModeManager enable];
+        }
+      }];
+      [self.featureChecker checkFeature:FBSDKFeatureMACARuleMatching completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.macaRuleMatchingManager enable];
+        }
+      }];
       if (@available(iOS 14.0, *)) {
         __weak FBSDKAppEvents *weakSelf = self;
         [self.featureChecker checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
@@ -1041,6 +1057,12 @@ static BOOL g_explicitEventsLoggedYet = NO;
   if (isImplicitlyLogged && self.serverConfiguration && !self.serverConfiguration.isImplicitLoggingSupported) {
     return;
   }
+  
+  if (self.macaRuleMatchingManager) {
+    @try {
+        parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
+    } @catch(NSException *exception) {}
+  }
 
   if (!isImplicitlyLogged && !g_explicitEventsLoggedYet) {
     g_explicitEventsLoggedYet = YES;
@@ -1066,7 +1088,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
   // Filter out deactivated params
-  parameters = [self.eventDeactivationParameterProcessor processParameters:parameters eventName:eventName];
+  if (self.eventDeactivationParameterProcessor) {
+    parameters = [self.eventDeactivationParameterProcessor processParameters:parameters eventName:eventName];
+  }
 
 #if !TARGET_OS_TV
   // Filter out restrictive data with on-device ML
@@ -1077,7 +1101,13 @@ static BOOL g_explicitEventsLoggedYet = NO;
   // Filter out restrictive keys
   parameters = [self.restrictiveDataFilterParameterProcessor processParameters:parameters
                                                                      eventName:eventName];
-
+  // Filter out non-standard params
+  if (self.protectedModeManager) {
+    @try {
+        parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
+    } @catch(NSException *exception) {}
+  }
+  
   NSMutableDictionary<FBSDKAppEventParameterName, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters ?: @{}];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterNameEventName];
   if (!eventDictionary[FBSDKAppEventParameterNameLogTime]) {
@@ -1456,6 +1486,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.userDataStore = nil;
   self.appEventsUtility = nil;
   self.internalUtility = nil;
+  self.protectedModeManager = nil;
+  self.macaRuleMatchingManager = nil;
   // The actual setter on here has a check to see if the SDK is initialized
   // This is not a useful check for tests so we can just reset the underlying
   // static var.

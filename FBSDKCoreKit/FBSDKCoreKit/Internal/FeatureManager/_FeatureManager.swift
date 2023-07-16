@@ -111,9 +111,12 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .aemCatalogMatching,
       .aemAdvertiserRuleMatchInServer,
       .aemAutoSetup,
+      .aemAutoSetupProxy,
       .appEventsCloudbridge,
       .skAdNetwork,
-      .skAdNetworkConversionValue:
+      .skAdNetworkConversionValue,
+      .protectedMode,
+      .macaRuleMatching:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -162,10 +165,13 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .aemCatalogMatching: featureName = "AEMCatalogMatching"
     case .aemAdvertiserRuleMatchInServer: featureName = "AEMAdvertiserRuleMatchInServer"
     case .aemAutoSetup: featureName = "AppAemAutoSetUp"
+    case .aemAutoSetupProxy: featureName = "AppAemAutoSetUpProxy"
     case .appEventsCloudbridge: featureName = "AppEventsCloudbridge"
     case .login: featureName = "LoginKit"
     case .share: featureName = "ShareKit"
     case .gamingServices: featureName = "GamingServicesKit"
+    case .protectedMode: featureName = "ProtectedMode"
+    case .macaRuleMatching: featureName = "MACARuleMatching"
     @unknown default: featureName = "NONE"
     }
 

@@ -46,6 +46,8 @@ final class AppEventsTests: XCTestCase {
   var appEventsUtility: TestAppEventsUtility!
   var internalUtility: TestInternalUtility!
   var capiReporter: TestCAPIReporter!
+  var protectedModeManager: TestAppEventsParameterProcessor!
+  var macaRuleMatchingManager: TestMACARuleMatchingManager!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -72,6 +74,8 @@ final class AppEventsTests: XCTestCase {
     appEventsStateStore = TestAppEventsStateStore()
     eventDeactivationParameterProcessor = TestAppEventsParameterProcessor()
     restrictiveDataFilterParameterProcessor = TestAppEventsParameterProcessor()
+    protectedModeManager = TestAppEventsParameterProcessor()
+    macaRuleMatchingManager = TestMACARuleMatchingManager()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     appEventsStateProvider = TestAppEventsStateProvider()
     atePublisherFactory = TestATEPublisherFactory()
@@ -112,6 +116,8 @@ final class AppEventsTests: XCTestCase {
     appEventsConfigurationProvider = nil
     eventDeactivationParameterProcessor = nil
     restrictiveDataFilterParameterProcessor = nil
+    protectedModeManager = nil
+    macaRuleMatchingManager = nil
     appEventsStateProvider = nil
     advertiserIDProvider = nil
     skAdNetworkReporter = nil
@@ -154,7 +160,9 @@ final class AppEventsTests: XCTestCase {
       userDataStore: userDataStore,
       appEventsUtility: appEventsUtility,
       internalUtility: internalUtility,
-      capiReporter: capiReporter
+      capiReporter: capiReporter,
+      protectedModeManager: protectedModeManager,
+      macaRuleMatchingManager: macaRuleMatchingManager
     )
 
     appEvents.configureNonTVComponents(
@@ -798,6 +806,27 @@ final class AppEventsTests: XCTestCase {
       restrictiveDataFilterParameterProcessor.capturedParameters as? [AppEvents.ParameterName: String],
       parameters,
       "AppEvents instance should submit the parameters to the restrictive data filter parameters processor."
+    )
+  }
+
+  func testLogEventProcessParametersWithProtectedModeManager() {
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
+    appEvents.logEvent(
+      eventName,
+      valueToSum: NSNumber(value: purchaseAmount),
+      parameters: parameters,
+      isImplicitlyLogged: false,
+      accessToken: nil
+    )
+    XCTAssertEqual(
+      protectedModeManager.capturedEventName,
+      eventName,
+      "AppEvents instance should submit the event name to the protectedModeManager."
+    )
+    XCTAssertEqual(
+      protectedModeManager.capturedParameters as? [AppEvents.ParameterName: String],
+      parameters,
+      "AppEvents instance should submit the parameters to the protectedModeManager."
     )
   }
 
