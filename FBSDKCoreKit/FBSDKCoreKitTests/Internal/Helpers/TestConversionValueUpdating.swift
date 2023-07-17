@@ -18,6 +18,24 @@ final class TestConversionValueUpdating: NSObject, _ConversionValueUpdating {
     wasUpdateVersionValueCalled = true
   }
 
+  @available(iOS 15.4, *)
+  // swiftlint:disable:next line_length
+  static func updatePostbackConversionValue(_ conversionValue: Int, completionHandler completion: @escaping (Error) -> Void) {
+    wasUpdateVersionValueCalled = true
+  }
+
+  @available(iOS 16.0, *)
+  // swiftlint:disable:next line_length
+  static func updatePostbackConversionValue(_ fineValue: Int, coarseValue: SKAdNetwork.CoarseConversionValue, completionHandler completion: @escaping (Error) -> Void) {
+    wasUpdateVersionValueCalled = true
+  }
+
+  @available(iOS 16.0, *)
+  // swiftlint:disable:next line_length
+  static func updatePostbackConversionValue(_ fineValue: Int, coarseValue: SKAdNetwork.CoarseConversionValue, lockWindow: Bool, completionHandler completion: @escaping (Error) -> Void) {
+    wasUpdateVersionValueCalled = true
+  }
+
   static func reset() {
     wasUpdateVersionValueCalled = false
   }

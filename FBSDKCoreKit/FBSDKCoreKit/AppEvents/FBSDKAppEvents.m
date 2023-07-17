@@ -990,7 +990,12 @@ static BOOL g_explicitEventsLoggedYet = NO;
       if ([self.settings isSKAdNetworkReportEnabled]) {
         [self.featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
           if (SKAdNetworkEnabled) {
-            [SKAdNetwork registerAppForAdNetworkAttribution];
+            if (@available(iOS 15.4, *)) {
+              [SKAdNetwork updatePostbackConversionValue:0 completionHandler:nil];
+            } else {
+              // Fallback on earlier versions
+              [SKAdNetwork registerAppForAdNetworkAttribution];
+            }
             [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
               if (SKAdNetworkConversionValueEnabled) {
                 [self.skAdNetworkReporter enable];
