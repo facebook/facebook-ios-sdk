@@ -36,8 +36,10 @@
       _lockWindowRules = [FBSDKSKAdNetworkConversionConfiguration parseLockWindowRules:conversionRules[@"lock_window_rules"]];
       _coarseCvConfigs = [FBSDKSKAdNetworkConversionConfiguration parseCoarseCvConfigs:conversionRules[@"coarse_cv_configs"]];
       _isCoarseCVAccumulative = [FBSDKTypeUtility boolValue:conversionRules[@"is_coarse_cv_accumulative"]];
-      _eventSet = [FBSDKSKAdNetworkConversionConfiguration getEventSetFromRules:_conversionValueRules andCoarseConfigs:_coarseCvConfigs];
-      _currencySet = [FBSDKSKAdNetworkConversionConfiguration getCurrencySetFromRules:_conversionValueRules andCoarseConfigs:_coarseCvConfigs];
+      _eventSet = [FBSDKSKAdNetworkConversionConfiguration getEventSetFromRules:_conversionValueRules];
+      _currencySet = [FBSDKSKAdNetworkConversionConfiguration getCurrencySetFromRules:_conversionValueRules];
+      _coarseEventSet = [FBSDKSKAdNetworkConversionConfiguration getEventSetFromCoarseConfigs:_coarseCvConfigs];
+      _coarseCurrencySet = [FBSDKSKAdNetworkConversionConfiguration getCurrencySetFromCoarseConfigs:_coarseCvConfigs];
     } @catch (NSException *exception) {
       return nil;
     }
@@ -45,7 +47,7 @@
   return self;
 }
 
-+ (NSSet<NSString *> *)getEventSetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules andCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
++ (NSSet<NSString *> *)getEventSetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules
 {
   NSMutableSet<NSString *> *eventSet = [NSMutableSet new];
   for (FBSDKSKAdNetworkRule *rule in rules) {
@@ -58,6 +60,12 @@
       }
     }
   }
+  return [eventSet copy];
+}
+
++ (NSSet<NSString *> *)getEventSetFromCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
+{
+  NSMutableSet<NSString *> *eventSet = [NSMutableSet new];
   if (configs) {
     for (FBSDKSKAdNetworkCoarseCVConfig *config in configs) {
       for (FBSDKSKAdNetworkCoarseCVRule *rule in config.cvRules) {
@@ -75,7 +83,7 @@
   return [eventSet copy];
 }
 
-+ (NSSet<NSString *> *)getCurrencySetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules andCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
++ (NSSet<NSString *> *)getCurrencySetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules
 {
   NSMutableSet<NSString *> *currencySet = [NSMutableSet new];
   for (FBSDKSKAdNetworkRule *rule in rules) {
@@ -88,6 +96,12 @@
       }
     }
   }
+  return [currencySet copy];
+}
+
++ (NSSet<NSString *> *)getCurrencySetFromCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
+{
+  NSMutableSet<NSString *> *currencySet = [NSMutableSet new];
   if (configs) {
     for (FBSDKSKAdNetworkCoarseCVConfig *config in configs) {
       for (FBSDKSKAdNetworkCoarseCVRule *rule in config.cvRules) {

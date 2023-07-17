@@ -24,6 +24,8 @@ NS_SWIFT_NAME(SKAdNetworkConversionConfiguration)
 @property (nonatomic, readonly, copy) NSArray<FBSDKSKAdNetworkRule *> *conversionValueRules;
 @property (nonatomic, readonly, copy) NSSet<NSString *> *eventSet;
 @property (nonatomic, readonly, copy) NSSet<NSString *> *currencySet;
+@property (nonatomic, readonly, copy) NSSet<NSString *> *coarseEventSet;
+@property (nonatomic, readonly, copy) NSSet<NSString *> *coarseCurrencySet;
 @property (nullable, nonatomic, readonly, copy) NSArray<FBSDKSKAdNetworkLockWindowRule *> *lockWindowRules;
 @property (nullable, nonatomic, readonly, copy) NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *coarseCvConfigs;
 @property (nonatomic, readonly, assign) Boolean isCoarseCVAccumulative;
