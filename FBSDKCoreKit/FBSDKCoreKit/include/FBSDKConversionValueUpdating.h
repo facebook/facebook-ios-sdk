@@ -21,6 +21,15 @@ NS_SWIFT_NAME(_ConversionValueUpdating)
 @protocol FBSDKConversionValueUpdating
 
 + (void)updateConversionValue:(NSInteger)conversionValue;
++ (void)updatePostbackConversionValue:(NSInteger)conversionValue
+                    completionHandler:(void (^)(NSError *error))completion API_AVAILABLE(ios(15.4));
++ (void)updatePostbackConversionValue:(NSInteger)fineValue
+                          coarseValue:(SKAdNetworkCoarseConversionValue)coarseValue
+                    completionHandler:(void (^)(NSError *error))completion API_AVAILABLE(ios(16.0));
++ (void)updatePostbackConversionValue:(NSInteger)fineValue
+                          coarseValue:(SKAdNetworkCoarseConversionValue)coarseValue
+                           lockWindow:(BOOL)lockWindow
+                    completionHandler:(void (^)(NSError *error))completion API_AVAILABLE(ios(16.0));
 
 @end
 
