@@ -40,7 +40,11 @@ static NSMutableArray<NSString *> *logs;
 {
   UIWindow *window = [[UIApplication sharedApplication].delegate window];
   Class FBSDKCodelessIndexer = NSClassFromString(@"FBSDKCodelessIndexer");
-  NSDictionary *uiTree = [FBSDKCodelessIndexer performSelector:NSSelectorFromString(@"recursiveCaptureTree:")
+  SEL sel = @selector(recursiveCaptureTree:);
+  if(![FBSDKCodelessIndexer respondsToSelector:sel]){
+    return;
+  }
+  NSDictionary *uiTree = [FBSDKCodelessIndexer performSelector:sel
                                                     withObject:window];
 
   NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
