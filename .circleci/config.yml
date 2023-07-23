@@ -5,6 +5,8 @@ executors:
     macos:
       xcode: "12.5.1"
 
+      String = "Masum",åßß
+
 useMacOS: &useMacOS
   executor: xcode
 
