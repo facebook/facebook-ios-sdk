@@ -13,9 +13,14 @@ import XCTest
 final class TestConversionValueUpdating: NSObject, _ConversionValueUpdating {
 
   static var wasUpdateVersionValueCalled = false
+  static var wasUpdateVersionCoarseValueCalled = false
 
   static func updateConversionValue(_ conversionValue: Int) {
     wasUpdateVersionValueCalled = true
+  }
+
+  static func updateCoarseConversionValue(_ coarseConversionValue: String) {
+    wasUpdateVersionCoarseValueCalled = true
   }
 
   @available(iOS 15.4, *)
@@ -28,15 +33,18 @@ final class TestConversionValueUpdating: NSObject, _ConversionValueUpdating {
   // swiftlint:disable:next line_length
   static func updatePostbackConversionValue(_ fineValue: Int, coarseValue: SKAdNetwork.CoarseConversionValue, completionHandler completion: ((Error?) -> Void)? = nil) {
     wasUpdateVersionValueCalled = true
+    wasUpdateVersionCoarseValueCalled = true
   }
 
   @available(iOS 16.0, *)
   // swiftlint:disable:next line_length
   static func updatePostbackConversionValue(_ fineValue: Int, coarseValue: SKAdNetwork.CoarseConversionValue, lockWindow: Bool, completionHandler completion: ((Error?) -> Void)? = nil) {
     wasUpdateVersionValueCalled = true
+    wasUpdateVersionCoarseValueCalled = true
   }
 
   static func reset() {
     wasUpdateVersionValueCalled = false
+    wasUpdateVersionCoarseValueCalled = false
   }
 }
