@@ -23,6 +23,8 @@ NS_SWIFT_NAME(SKAdNetworkCoarseCVRule)
 + (instancetype)new NS_UNAVAILABLE;
 
 - (nullable instancetype)initWithJSON:(NSDictionary<NSString *, id> *)dict;
+- (BOOL)isMatchedWithRecordedCoarseEvents:(NSSet<NSString *> *)recordedCoarseEvents
+                     recordedCoarseValues:(NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)recordedCoarseValues;
 
 @end
 

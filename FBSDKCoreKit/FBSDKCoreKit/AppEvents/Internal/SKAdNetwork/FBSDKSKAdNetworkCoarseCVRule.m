@@ -33,6 +33,33 @@
   return self;
 }
 
+- (BOOL)isMatchedWithRecordedCoarseEvents:(NSSet<NSString *> *)recordedCoarseEvents
+                     recordedCoarseValues:(NSDictionary<NSString *, NSDictionary<NSString *, id> *> *)recordedCoarseValues
+{
+  for (FBSDKSKAdNetworkEvent *event in self.events) {
+    // Check if event name matches
+    if (![recordedCoarseEvents containsObject:event.eventName]) {
+      return NO;
+    }
+    // Check if event value matches when values is not nil
+    if (event.values) {
+      NSDictionary<NSString *, NSNumber *> *recordedCoarseEventValues = [FBSDKTypeUtility dictionary:recordedCoarseValues objectForKey:event.eventName ofType:NSDictionary.class];
+      if (!recordedCoarseEventValues) {
+        return NO;
+      }
+      for (NSString *currency in event.values) {
+        NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:event.values objectForKey:currency ofType:NSNumber.class];
+        NSNumber *value = [FBSDKTypeUtility dictionary:recordedCoarseEventValues objectForKey:currency ofType:NSNumber.class];
+        if (value != nil && valueInMapping != nil && value.doubleValue > valueInMapping.doubleValue) {
+          return YES;
+        }
+      }
+      return NO;
+    }
+  }
+  return YES;
+}
+
 @end
 
 #endif

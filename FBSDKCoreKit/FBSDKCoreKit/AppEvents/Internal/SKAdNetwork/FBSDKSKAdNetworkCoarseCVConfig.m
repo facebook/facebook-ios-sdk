@@ -45,6 +45,16 @@
     }
     [FBSDKTypeUtility array:parsedRules addObject:rule];
   }
+  NSArray *coarseCVs = @[@"none", @"low", @"medium", @"high"];
+  [parsedRules sortUsingComparator:^NSComparisonResult (FBSDKSKAdNetworkCoarseCVRule *obj1, FBSDKSKAdNetworkCoarseCVRule *obj2) {
+    if ([coarseCVs indexOfObject:obj1.coarseCvValue] > [coarseCVs indexOfObject:obj2.coarseCvValue]) {
+      return NSOrderedAscending;
+    }
+    if ([coarseCVs indexOfObject:obj1.coarseCvValue] < [coarseCVs indexOfObject:obj2.coarseCvValue]) {
+      return NSOrderedDescending;
+    }
+    return NSOrderedSame;
+  }];
   return [parsedRules copy];
 }
 
