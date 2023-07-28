@@ -20,7 +20,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
       [
         "timer_buckets": 1,
         "timer_interval": 1000,
-        "cutoff_time": 1,
+        "cutoff_time": 2,
         "default_currency": "usd",
         "conversion_value_rules": [],
       ],
@@ -59,14 +59,24 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let recordedEvents = NSMutableSet(set: set)
     let recordedValues: NSMutableDictionary = ["fb_mobile_purchase": ["USD": 10]]
 
+    let coarseEventSet = Set(["fb_mobile_add_to_cart"])
+    let recordedCoarseEvents = NSMutableSet(set: coarseEventSet)
+    let recordedCoarseValues: NSMutableDictionary = ["fb_mobile_add_to_cart": ["USD": 100]]
+
     let conversionValue = 10
     let timestamp = Date()
+    let coarseConversionValue = "high"
+    let coarseTimestamp = Date()
 
     try saveEvents(
       events: recordedEvents,
       values: recordedValues,
+      coarseEvents: recordedCoarseEvents,
+      coarseValues: recordedCoarseValues,
       conversionValue: conversionValue,
-      timestamp: timestamp
+      coarseConversionValue: coarseConversionValue,
+      timestamp: timestamp,
+      coarseCVTimestamp: coarseTimestamp
     )
 
     skAdNetworkReporter._loadReportData()
@@ -76,9 +86,19 @@ final class SKAdNetworkReporterTests: XCTestCase {
       "Should load the expected recorded events"
     )
     XCTAssertEqual(
+      recordedCoarseEvents,
+      skAdNetworkReporter.recordedCoarseEvents,
+      "Should load the expected coarse recorded events"
+    )
+    XCTAssertEqual(
       recordedValues,
       skAdNetworkReporter.recordedValues,
       "Should load the expected recorded values"
+    )
+    XCTAssertEqual(
+      recordedCoarseValues,
+      skAdNetworkReporter.recordedCoarseValues,
+      "Should load the expected coarse recorded values"
     )
     XCTAssertEqual(
       conversionValue,
@@ -86,9 +106,19 @@ final class SKAdNetworkReporterTests: XCTestCase {
       "Should load the expected conversion value"
     )
     XCTAssertEqual(
+      coarseConversionValue,
+      skAdNetworkReporter.coarseConversionValue,
+      "Should load the expected coarse conversion value"
+    )
+    XCTAssertEqual(
       timestamp.timeIntervalSince1970,
       skAdNetworkReporter.timestamp.timeIntervalSince1970,
       "Should load the expected timestamp"
+    )
+    XCTAssertEqual(
+      coarseTimestamp.timeIntervalSince1970,
+      skAdNetworkReporter.coarseCVUpdateTimestamp.timeIntervalSince1970,
+      "Should load the expected coarse timestamp"
     )
   }
 
@@ -240,7 +270,10 @@ final class SKAdNetworkReporterTests: XCTestCase {
   func testShouldCutoff() {
     skAdNetworkReporter.configuration = defaultConfiguration
     // Case 1: refresh install
-    Settings.shared.recordInstall()
+    userDefaultsSpy.set(
+      Date(),
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
     XCTAssertFalse(skAdNetworkReporter.shouldCutoff())
 
     // Case 2: timestamp is already expired
@@ -258,31 +291,6 @@ final class SKAdNetworkReporterTests: XCTestCase {
     userDefaultsSpy.removeObject(forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp")
   }
 
-  func testCutoffWhenTimeBucketIsAvailable() {
-    if #available(iOS 14.0, *) {
-      skAdNetworkReporter.configuration = defaultConfiguration
-      let today = Date()
-      let calendar = Calendar(identifier: .gregorian)
-      var addComponents = DateComponents()
-      addComponents.day = -2
-      let expiredDate = calendar.date(byAdding: addComponents, to: today)
-      userDefaultsSpy.set(
-        expiredDate,
-        forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
-      )
-
-      XCTAssertTrue(skAdNetworkReporter.shouldCutoff())
-      skAdNetworkReporter.checkAndRevokeTimer()
-      XCTAssertNil(
-        userDefaultsSpy.object(
-          forKey: "com.facebook.sdk:FBSDKSKAdNetworkReporter"
-        )
-      )
-      XCTAssertFalse(TestConversionValueUpdating.wasUpdateVersionValueCalled)
-      userDefaultsSpy.removeObject(forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp")
-    }
-  }
-
   func testIsReportingEventWithConfiguration() {
     skAdNetworkReporter.configuration = SKAdNetworkConversionConfiguration(
       json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
@@ -298,12 +306,67 @@ final class SKAdNetworkReporterTests: XCTestCase {
     )
   }
 
-  func testUpdateConversionValue() {
+  func testUpdateConversionValueWhenShouldNotCutoff() {
     skAdNetworkReporter.configuration = defaultConfiguration
+    userDefaultsSpy.set(
+      Date(),
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
     skAdNetworkReporter._updateConversionValue(2)
     XCTAssertTrue(
       TestConversionValueUpdating.wasUpdateVersionValueCalled,
       "Should call updateConversionValue when not cutoff"
+    )
+  }
+
+  func testUpdateConversionValueWhenShouldCutoff() {
+    skAdNetworkReporter.configuration = defaultConfiguration
+    // For v4, fine conversion value will not be updated for 2nd and 3rd postbacks
+    let calendar = Calendar(identifier: .gregorian)
+    var addComponents = DateComponents()
+    addComponents.day = -4
+
+    let expiredDate = calendar.date(byAdding: addComponents, to: Date())
+    userDefaultsSpy.set(
+      expiredDate,
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
+    skAdNetworkReporter._updateConversionValue(2)
+    XCTAssertFalse(
+      TestConversionValueUpdating.wasUpdateVersionValueCalled,
+      "Should not call updateConversionValue when cutoff"
+    )
+  }
+
+  func testUpdateCoarseConversionValueWhenShouldNoCutoff() {
+    skAdNetworkReporter.configuration = defaultConfiguration
+    userDefaultsSpy.set(
+      Date(),
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
+    skAdNetworkReporter._updateCoarseConversionValue("low")
+    XCTAssertTrue(
+      TestConversionValueUpdating.wasUpdateVersionCoarseValueCalled,
+      "Should call updateConversionValue when not cutoff"
+    )
+  }
+
+  func testUpdateCoarseConversionValueWhenShouldNotCutoff() {
+    skAdNetworkReporter.configuration = defaultConfiguration
+    // For v4, coarse conversion value will be updated for all postback windows
+    let calendar = Calendar(identifier: .gregorian)
+    var addComponents = DateComponents()
+    addComponents.day = -20
+
+    let expiredDate = calendar.date(byAdding: addComponents, to: Date())
+    userDefaultsSpy.set(
+      expiredDate,
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
+    skAdNetworkReporter._updateCoarseConversionValue("low")
+    XCTAssertTrue(
+      TestConversionValueUpdating.wasUpdateVersionCoarseValueCalled,
+      "Should call updateCoarseConversionValue when not cutoff"
     )
   }
 
@@ -388,17 +451,76 @@ final class SKAdNetworkReporterTests: XCTestCase {
     )
   }
 
+  func testGetCurrentPostbackWindow() {
+    // 1st postback window, 0-2 days
+    var addComponents = DateComponents()
+    addComponents.day = -1
+    addComponents.hour = -23
+    addComponents.minute = -59
+    addComponents.second = -59
+
+    let calendar = Calendar(identifier: .gregorian)
+    var expiredDate = calendar.date(byAdding: addComponents, to: Date())
+    userDefaultsSpy.set(
+      expiredDate,
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
+    XCTAssertEqual(
+      skAdNetworkReporter._getCurrentPostbackSequenceIndex(),
+      1
+    )
+
+    // 2nd postback window, 3-7 days
+    addComponents.day = -6
+    addComponents.hour = -23
+    addComponents.minute = -59
+    addComponents.second = -59
+    expiredDate = calendar.date(byAdding: addComponents, to: Date())
+    userDefaultsSpy.set(
+      expiredDate,
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
+    XCTAssertEqual(
+      skAdNetworkReporter._getCurrentPostbackSequenceIndex(),
+      2
+    )
+
+    // 3rd postback window, 8-35 days
+    addComponents.day = -34
+    addComponents.hour = -23
+    addComponents.minute = -59
+    addComponents.second = -59
+    expiredDate = calendar.date(byAdding: addComponents, to: Date())
+    userDefaultsSpy.set(
+      expiredDate,
+      forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
+    )
+    XCTAssertEqual(
+      skAdNetworkReporter._getCurrentPostbackSequenceIndex(),
+      3
+    )
+  }
+
+  // swiftlint:disable:next function_parameter_count
   func saveEvents(
     events: NSMutableSet,
     values: NSMutableDictionary,
+    coarseEvents: NSMutableSet,
+    coarseValues: NSMutableDictionary,
     conversionValue: NSInteger,
-    timestamp: Date
+    coarseConversionValue: String,
+    timestamp: Date,
+    coarseCVTimestamp: Date
   ) throws {
     let reportData: NSMutableDictionary = [:]
     reportData["conversion_value"] = conversionValue
+    reportData["coarse_conversion_value"] = coarseConversionValue
     reportData["timestamp"] = timestamp
+    reportData["coarse_cv_update_timestamp"] = coarseCVTimestamp
     reportData["recorded_events"] = events
     reportData["recorded_values"] = values
+    reportData["recorded_coarse_events"] = coarseEvents
+    reportData["recorded_coarse_values"] = coarseValues
     let cache = try NSKeyedArchiver.archivedData(
       withRootObject: reportData,
       requiringSecureCoding: true
