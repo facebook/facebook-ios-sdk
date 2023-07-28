@@ -174,7 +174,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if (!self.configuration) {
     return;
   }
-  if ([self shouldCutoff]) {
+  if ([self shouldCutoff] && [self _getCurrentPostbackSequenceIndex] == 1) {
     return;
   }
   [self _updateConversionValue:self.conversionValue];
@@ -188,7 +188,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if (!self.configuration) {
     return;
   }
-  if ([self shouldCutoff]) {
+  if ([self shouldCutoff] && [self _getCurrentPostbackSequenceIndex] == 1) {
     return;
   }
   BOOL isFineCVCacheUpdated = false;
@@ -288,7 +288,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 - (void)_updateCoarseConversionValue:(NSString *)coarseValue
 {
   if (@available(iOS 16.1, *)) {
-    if ([self shouldCutoff]) {
+    if ([self shouldCutoff] && [self _getCurrentPostbackSequenceIndex] == 1) {
       return;
     }
     if ([coarseValue isEqualToString:@"high"]) {
