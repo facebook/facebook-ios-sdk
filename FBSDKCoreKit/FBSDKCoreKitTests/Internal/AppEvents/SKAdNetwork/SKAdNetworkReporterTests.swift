@@ -97,7 +97,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     skAdNetworkReporter.completionBlocks = []
     skAdNetworkReporter.configRefreshTimestamp = Date()
     userDefaultsSpy.set(
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       forKey: "com.facebook.sdk:FBSDKSKAdNetworkConversionConfiguration"
     )
 
@@ -127,7 +127,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let request = graphRequestFactory.capturedRequests[0]
     request.capturedCompletionHandler?(
       nil,
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       nil
     )
     XCTAssertEqual(count, 1, "Should expect the execution block to be called once")
@@ -152,7 +152,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let request = graphRequestFactory.capturedRequests[0]
     request.capturedCompletionHandler?(
       nil,
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       SampleError()
     )
     XCTAssertEqual(
@@ -285,7 +285,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
 
   func testIsReportingEventWithConfiguration() {
     skAdNetworkReporter.configuration = SKAdNetworkConversionConfiguration(
-      json: SampleSKAdNetworkConversionConfiguration.configurationJson
+      json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
     )! // swiftlint:disable:this force_unwrapping
     XCTAssertTrue(
       skAdNetworkReporter.isReportingEvent("fb_test"),
@@ -307,10 +307,10 @@ final class SKAdNetworkReporterTests: XCTestCase {
     )
   }
 
-  func testRecord() throws {
+  func testFineCVRecord() throws {
     if #available(iOS 14.0, *) {
       let configuration = SKAdNetworkConversionConfiguration(
-        json: SampleSKAdNetworkConversionConfiguration.configurationJson
+        json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
       )! // swiftlint:disable:this force_unwrapping
       skAdNetworkReporter.configuration = configuration
       skAdNetworkReporter._recordAndUpdateEvent("fb_test", currency: nil, value: nil)
@@ -329,6 +329,34 @@ final class SKAdNetworkReporterTests: XCTestCase {
       let expectedEvents = Set(["fb_test", "fb_mobile_purchase"])
       XCTAssertTrue(expectedEvents == recordedEvents)
       let recordedValues = data?["recorded_values"] as? [String: [String: Int]]
+
+      let expectedValues = ["fb_mobile_purchase": ["USD": 301]]
+      XCTAssertTrue(expectedValues == recordedValues)
+    }
+  }
+
+  func testCoarseCVRecord() throws {
+    if #available(iOS 16.0, *) {
+      let configuration = SKAdNetworkConversionConfiguration(
+        json: SampleSKAdNetworkConversionConfiguration.coarseCVconfigurationJson
+      )! // swiftlint:disable:this force_unwrapping
+      skAdNetworkReporter.configuration = configuration
+      skAdNetworkReporter._recordAndUpdateEvent("fb_test", currency: nil, value: nil)
+      skAdNetworkReporter._recordAndUpdateEvent("fb_mobile_purchase", currency: "USD", value: 100)
+      skAdNetworkReporter._recordAndUpdateEvent("fb_mobile_purchase", currency: "USD", value: 201)
+      skAdNetworkReporter._recordAndUpdateEvent("test", currency: nil, value: nil)
+
+      let cache = try XCTUnwrap(userDefaultsSpy.object(forKey: "com.facebook.sdk:FBSDKSKAdNetworkReporter") as? Data)
+
+      let data = try? NSKeyedUnarchiver.unarchivedObject(
+        ofClasses: [NSDictionary.self, NSString.self, NSNumber.self, NSDate.self, NSSet.self],
+        from: cache
+      ) as? [String: Any]
+
+      let recordedEvents = data?["recorded_coarse_events"] as? Set<String>
+      let expectedEvents = Set(["fb_test", "fb_mobile_purchase"])
+      XCTAssertTrue(expectedEvents == recordedEvents)
+      let recordedValues = data?["recorded_coarse_values"] as? [String: [String: Int]]
 
       let expectedValues = ["fb_mobile_purchase": ["USD": 301]]
       XCTAssertTrue(expectedValues == recordedValues)
