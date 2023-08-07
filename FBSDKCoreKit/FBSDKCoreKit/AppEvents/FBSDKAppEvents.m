@@ -990,11 +990,14 @@ static BOOL g_explicitEventsLoggedYet = NO;
       if ([self.settings isSKAdNetworkReportEnabled]) {
         [self.featureChecker checkFeature:FBSDKFeatureSKAdNetwork completionBlock:^(BOOL SKAdNetworkEnabled) {
           if (SKAdNetworkEnabled) {
-            if (@available(iOS 15.4, *)) {
-              [SKAdNetwork updatePostbackConversionValue:0 completionHandler:nil];
-            } else {
-              // Fallback on earlier versions
-              [SKAdNetwork registerAppForAdNetworkAttribution];
+            if (![self.primaryDataStore fb_boolForKey:@"com.facebook.sdk:FBSDKIsSkAdNetworkInstallReported"]) {
+              if (@available(iOS 15.4, *)) {
+                [SKAdNetwork updatePostbackConversionValue:0 completionHandler:nil];
+              } else {
+                // Fallback on earlier versions
+                [SKAdNetwork registerAppForAdNetworkAttribution];
+              }
+              [self.primaryDataStore fb_setBool:true forKey:@"com.facebook.sdk:FBSDKIsSkAdNetworkInstallReported"];
             }
             [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
               if (SKAdNetworkConversionValueEnabled) {

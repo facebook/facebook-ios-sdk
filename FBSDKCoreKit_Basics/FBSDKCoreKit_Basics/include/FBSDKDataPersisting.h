@@ -24,6 +24,8 @@ NS_SWIFT_NAME(DataPersisting)
 - (NSInteger)fb_integerForKey:(NSString *)key;
 - (nullable NSString *)fb_stringForKey:(NSString *)key;
 - (nullable id)fb_objectForKey:(NSString *)key;
+- (BOOL)fb_boolForKey:(NSString *)key;
+- (void)fb_setBool:(BOOL)value forKey:(NSString *)key;
 - (void)fb_removeObjectForKey:(NSString *)key;
 
 @end
