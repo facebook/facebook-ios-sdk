@@ -68,12 +68,6 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
   if (@available(iOS 14.0, *)) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-      if (@available(iOS 15.4, *)) {
-        [SKAdNetwork updatePostbackConversionValue:0 completionHandler:nil];
-      } else {
-        // Fallback on earlier versions
-        [SKAdNetwork registerAppForAdNetworkAttribution];
-      }
       [self _loadReportData];
       self.completionBlocks = [NSMutableArray new];
       self.serialQueue = dispatch_queue_create(serialQueueLabel, DISPATCH_QUEUE_SERIAL);

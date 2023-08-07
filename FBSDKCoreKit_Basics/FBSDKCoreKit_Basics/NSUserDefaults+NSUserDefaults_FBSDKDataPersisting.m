@@ -48,6 +48,18 @@ FB_LINK_CATEGORY_IMPLEMENTATION(NSUserDefaults, DataPersisting)
   return [self dataForKey:key];
 }
 
+- (BOOL)fb_boolForKey:(NSString *)key
+{
+  return [self boolForKey:key];
+}
+
+- (void)fb_setBool:(BOOL)value
+              forKey:(NSString *)key
+{
+  [self setBool:value forKey:key];
+}
+
+
 - (void)fb_removeObjectForKey:(NSString *)key
 {
   [self removeObjectForKey:key];
