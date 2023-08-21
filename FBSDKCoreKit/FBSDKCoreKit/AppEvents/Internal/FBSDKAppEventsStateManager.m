@@ -6,13 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsStateManager.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKAppEventsState.h"
 #import "FBSDKLogger.h"
 #import "FBSDKUnarchiverProvider.h"
 
@@ -51,8 +48,6 @@
   self.canSkipDiskCheck = YES;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState
 {
   NSString *msg = [NSString stringWithFormat:@"FBSDKAppEvents Persist: Writing %lu events", (unsigned long)appEventsState.events.count];
@@ -62,16 +57,18 @@
   if (!appEventsState.events.count) {
     return;
   }
-  NSMutableArray *existingEvents = [NSMutableArray arrayWithArray:[self retrievePersistedAppEventsStates]];
+  NSMutableArray<FBSDKAppEventsState *> *existingEvents = [NSMutableArray arrayWithArray:[self retrievePersistedAppEventsStates]];
   [FBSDKTypeUtility array:existingEvents addObject:appEventsState];
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [NSKeyedArchiver archiveRootObject:existingEvents toFile:[self filePath]];
+#pragma clang diagnostic pop
   self.canSkipDiskCheck = NO;
 }
 
 - (NSArray<FBSDKAppEventsState *> *)retrievePersistedAppEventsStates;
 {
-  NSMutableArray *eventsStates = [NSMutableArray array];
+  NSMutableArray<FBSDKAppEventsState *> *eventsStates = [NSMutableArray array];
   if (!self.canSkipDiskCheck) {
     NSData *data = [[NSData alloc] initWithContentsOfFile:[self filePath] options:NSDataReadingMappedIfSafe error:NULL];
     id<FBSDKObjectDecoding> unarchiver = [FBSDKUnarchiverProvider createSecureUnarchiverFor:data];
@@ -94,7 +91,6 @@
   return eventsStates;
 }
 
-#pragma clang diagnostic pop
 
 #pragma mark - Private Helpers
 

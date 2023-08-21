@@ -56,7 +56,6 @@ body:
       - Login
       - Share
       - Gaming Services
-      - TVOS
       - Other / I don't know
   validations:
     required: true

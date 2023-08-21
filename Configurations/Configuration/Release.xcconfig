@@ -12,6 +12,8 @@ ONLY_ACTIVE_ARCH = NO
 // Deployment
 COPY_PHASE_STRIP = YES
 STRIP_INSTALLED_PRODUCT = YES
+STRIP_STYLE = non-global
+DEAD_CODE_STRIPPING = YES
 
 // Code Generation
 GCC_OPTIMIZATION_LEVEL = s
@@ -22,5 +24,10 @@ GCC_PREPROCESSOR_DEFINITIONS = $(inherited)
 // Swift Testability
 ENABLE_TESTABILITY = YES
 
+// Bitcode set to false for Xcode 13 builds. Can be removed when we build with Xcode 14.
+ENABLE_BITCODE = NO
+
 // MTL
 MTL_ENABLE_DEBUG_INFO = NO
+
+SWIFT_OPTIMIZATION_LEVEL = -O

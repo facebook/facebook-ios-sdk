@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAccessTokenProtocols.h>
+#import <FBSDKCoreKit/FBSDKAccessTokenProviding.h>
 #import <FBSDKCoreKit/FBSDKButton.h>
 #import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 
-#import "FBSDKEventLogging.h"
-#import "FBSDKIcon+Internal.h"
+#import <FBSDKCoreKit/FBSDKEventLogging.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,13 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic, readonly) id<FBSDKEventLogging> eventLogger;
 @property (class, nullable, nonatomic, readonly) Class<FBSDKAccessTokenProviding> accessTokenProvider;
 
-#if FBTEST && DEBUG
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
-
-+ (void)configureWithApplicationActivationNotifier:(id)applicationActivationNotifier
-                                       eventLogger:(id<FBSDKEventLogging>)eventLogger
-                               accessTokenProvider:(Class<FBSDKAccessTokenProviding>)accessTokenProvider;
 
 - (void)configureButton;
 - (void) configureWithIcon:(FBSDKIcon *)icon

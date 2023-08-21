@@ -12,15 +12,15 @@
 
 #pragma mark - Class Methods
 
-+ (nullable NSArray *)arrayValue:(nullable id)object
++ (nullable NSArray<id> *)arrayValue:(nullable id)object
 {
   if (!object) {
     return nil;
   }
-  return (NSArray *)[self _objectValue:object ofClass:NSArray.class];
+  return (NSArray<id> *)[self _objectValue:object ofClass:NSArray.class];
 }
 
-+ (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index
++ (nullable id)array:(NSArray<id> *)array objectAtIndex:(NSUInteger)index
 {
   if ([self arrayValue:array] && index < array.count) {
     return array[index];
@@ -33,17 +33,6 @@
 {
   if (object && [array isKindOfClass:NSMutableArray.class]) {
     [array addObject:object];
-  }
-}
-
-+ (void)array:(NSMutableArray *)array addObject:(nullable id)object atIndex:(NSUInteger)index
-{
-  if (object && [array isKindOfClass:NSMutableArray.class]) {
-    if (index < array.count) {
-      [array insertObject:object atIndex:index];
-    } else if (index == array.count) {
-      [array addObject:object];
-    }
   }
 }
 
@@ -181,11 +170,6 @@
   } else {
     return nil;
   }
-}
-
-+ (BOOL)isValidJSONObject:(id)obj
-{
-  return [NSJSONSerialization isValidJSONObject:obj];
 }
 
 + (NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError *__autoreleasing _Nullable *)error

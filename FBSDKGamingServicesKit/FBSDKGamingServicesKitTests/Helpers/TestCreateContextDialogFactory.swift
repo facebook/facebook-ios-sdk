@@ -10,7 +10,7 @@
 
 import FBSDKCoreKit
 
-class TestCreateContextDialogFactory: CreateContextDialogMaking {
+final class TestCreateContextDialogFactory: CreateContextDialogMaking {
   let dialog = TestShowable()
   var wasMakeCreateContextDialogCalled = false
   var capturedDelegate: ContextDialogDelegate?

@@ -10,10 +10,10 @@ import Foundation
 
 import FBSDKCoreKit
 
-/**
- A dialog to switch the current gaming context through a web view
- */
-public class SwitchContextDialog: ContextWebDialog, Showable {
+/// A dialog to switch the current gaming context through a web view
+@objcMembers
+@objc(FBSDKSwitchContextDialog)
+public final class SwitchContextDialog: ContextWebDialog, Showable {
 
   enum Keys {
     static let contextID = "context_id"
@@ -65,13 +65,13 @@ public class SwitchContextDialog: ContextWebDialog, Showable {
       return false
     }
 
-    currentWebDialog = WebDialog.createAndShow(
+    currentWebDialog = _WebDialog(
       name: "context",
       parameters: [Keys.contextID: content.contextTokenID],
-      frame: frame,
-      delegate: self,
-      windowFinder: windowFinder
+      webViewFrame: frame
     )
+    currentWebDialog?.delegate = self
+    currentWebDialog?.show()
 
     InternalUtility.shared.registerTransientObject(self)
 

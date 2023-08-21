@@ -1,5 +1,4 @@
 excluded:
-  - ads
   - internal
   - samples
   - testing
@@ -30,8 +29,15 @@ file_name:
     BridgeAPI+ApplicationOpenUrlTests.swift,
     BridgeAPI+SessionCompletionHandlerTests.swift,
     ShareAppEventNames.swift,
+    ShareAppEventParameters.swift,
     ShareDialogMode.swift,
+    LoginAppEventNames.swift,
+    FBSDKAppEventConversionsAPITransformer.swift,
+    AppLinkNavigationTestDependencies.swift,
+    ValueClamping.swift,
   ]
+trailing_comma:
+  mandatory_comma: true
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
   allowed_symbols: "_"
@@ -73,6 +79,9 @@ custom_rules:
   test_classes_should_be_final:
     regex: "(?<!final )class.*XCTestCase\\b"
     message: "Make test classes final"
+  prefer_final_classes:
+    regex: "(?<!(?:final|open) )class (?!func|var)[^\n]*\\{"
+    message: "Most classes should be declared as final even when not declared as open"
 
 only_rules:
   - array_init
@@ -108,7 +117,6 @@ only_rules:
   - empty_string
   - empty_xctest_method
   - explicit_init
-  - extension_access_modifier
   - fallthrough
   - fatal_error_message
   - file_header
@@ -162,7 +170,7 @@ only_rules:
   - overridden_super_call
   - override_in_extension
   - pattern_matching_keywords
-  - prefer_self_in_static_references
+# - prefer_self_in_static_references # prevent "'prefer_self_in_static_references' is not a valid rule identifier" warning in older version of swiftlint
   - private_action
   - private_outlet
   - private_over_fileprivate
@@ -188,11 +196,11 @@ only_rules:
   - sorted_first_last
   - sorted_imports
   - statement_position
-  - strict_fileprivate
   - superfluous_disable_command
   - switch_case_alignment
   - syntactic_sugar
   - trailing_closure
+  - trailing_comma
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace

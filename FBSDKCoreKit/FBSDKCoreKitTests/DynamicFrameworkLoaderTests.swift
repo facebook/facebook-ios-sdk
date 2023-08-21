@@ -6,15 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import AuthenticationServices
+@testable import FBSDKCoreKit
+
 import CoreTelephony
-import FBSDKCoreKit
 import SafariServices
 import Security
 import Social
 import XCTest
 
-@available(iOS 12.0, *)
 final class DynamicFrameworkLoaderTests: XCTestCase {
 
   #if BUCK
@@ -134,10 +133,10 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     let query = [
       kSecClass as String: kSecClassGenericPassword as String,
       kSecAttrService as String: name,
-      kSecAttrAccount as String: "key"
+      kSecAttrAccount as String: "key",
     ]
     let attributesToUpdate = [
-      kSecValueData as String: "foo".data(using: .utf8)
+      kSecValueData as String: "foo".data(using: .utf8),
     ]
     let status = fbsdkdfl_SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
 
@@ -151,7 +150,7 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
       kSecClass as String: kSecClassGenericPassword as String,
       kSecAttrService as String: name,
       kSecAttrAccount as String: "key",
-      kSecValueData as String: "foo".data(using: .utf8) as Any
+      kSecValueData as String: "foo".data(using: .utf8) as Any,
     ]
     let status = fbsdkdfl_SecItemAdd(query as CFDictionary, nil)
 
@@ -167,7 +166,7 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
       kSecAttrAccount as String: "key",
       kSecReturnData as String: kCFBooleanTrue,
       kSecReturnAttributes as String: kCFBooleanTrue,
-      kSecMatchLimit as String: kSecMatchLimitOne
+      kSecMatchLimit as String: kSecMatchLimitOne,
     ]
     var queryResult: AnyObject?
     let status = withUnsafeMutablePointer(to: &queryResult) {
@@ -183,28 +182,13 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     let query: [String: Any?] = [
       kSecClass as String: kSecClassGenericPassword as String,
       kSecAttrService as String: name,
-      kSecAttrAccount as String: "key"
+      kSecAttrAccount as String: "key",
     ]
     let status = fbsdkdfl_SecItemDelete(query as CFDictionary)
 
     guard status == expectedOSStatus else {
       return XCTFail("Failed to try and delete secure data")
     }
-  }
-
-  func testSLServiceTypeFacebook() {
-    XCTAssertEqual(
-      fbsdkdfl_SLServiceTypeFacebook(),
-      "com.apple.social.facebook",
-      "Should dynamically load the constant for the facebook service type"
-    )
-  }
-
-  func testSLComposeViewControllerClass() {
-    XCTAssertTrue(
-      fbsdkdfl_SLComposeViewControllerClass() is SLComposeViewController.Type,
-      "Should dynamically load the SLComposeViewController class"
-    )
   }
 
   func testCATransactionClass() {
@@ -253,20 +237,6 @@ final class DynamicFrameworkLoaderTests: XCTestCase {
     XCTAssertTrue(
       fbsdkdfl_SFSafariViewControllerClass() is SFSafariViewController.Type,
       "Should dynamically load the SFSafariViewController class"
-    )
-  }
-
-  func testSFAuthenticationSessionClass() {
-    XCTAssertTrue(
-      fbsdkdfl_SFAuthenticationSessionClass() is SFAuthenticationSession.Type,
-      "Should dynamically load the SFAuthenticationSession class"
-    )
-  }
-
-  func testASWebAuthenticationSessionClass() {
-    XCTAssertTrue(
-      fbsdkdfl_ASWebAuthenticationSessionClass() is ASWebAuthenticationSession.Type,
-      "Should dynamically load the ASWebAuthenticationSession class"
     )
   }
 

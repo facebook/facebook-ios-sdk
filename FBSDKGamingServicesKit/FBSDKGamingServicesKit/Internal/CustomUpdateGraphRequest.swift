@@ -13,9 +13,7 @@ struct ServerResult: Codable {
   var success: Bool
 }
 
-/**
- Errors representing a failure to send a custom update graph request
- */
+/// Errors representing a failure to send a custom update graph request
 public enum CustomUpdateGraphRequestError: Error {
   case server(Error)
   case invalidAccessToken
@@ -23,7 +21,7 @@ public enum CustomUpdateGraphRequestError: Error {
   case decoding
 }
 
-public class CustomUpdateGraphRequest {
+public final class CustomUpdateGraphRequest {
 
   public let graphRequestFactory: GraphRequestFactoryProtocol
   let graphPath = "me/custom_update"
@@ -116,7 +114,7 @@ public class CustomUpdateGraphRequest {
       with: encodedContent,
       options: .allowFragments
     ) as? [String: Any] else {
-      throw ErrorFactory().invalidArgumentError(
+      throw _ErrorFactory().invalidArgumentError(
         name: "CustomUpdateContent",
         value: content,
         message: "Custom Update Content is invalid please check parameters.",

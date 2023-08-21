@@ -13,9 +13,7 @@
 
 #import <dlfcn.h>
 
-#import "FBSDKDynamicSocialFrameworkLoader.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
 
 static NSString *const g_frameworkPathTemplate = @"/System/Library/Frameworks/%@.framework/%@";
 
@@ -88,12 +86,6 @@ static void fbsdkdfl_load_symbol_once(void *context)
 #define _fbsdkdfl_return_k(FRAMEWORK, SYMBOL) \
   NSCAssert(k != NULL, @"Failed to load constant %@ in the %@ framework", @#SYMBOL, @#FRAMEWORK); \
   return *k
-
-// convenience macro for getting a pointer to a named NSString, verifying it loaded correctly, and returning it
-#define _fbsdkdfl_get_and_return_NSString(LIBRARY, SYMBOL) \
-  _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, NSString **); \
-  NSCAssert([*k isKindOfClass:NSString.class], @"Loaded symbol %@ is not of type NSString *", @#SYMBOL); \
-  _fbsdkdfl_return_k(LIBRARY, SYMBOL)
 
 #pragma mark - Security Framework
 
@@ -233,28 +225,6 @@ OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query)
   return f(query);
 }
 
-#pragma mark - Social Constants
-
-_fbsdkdfl_load_framework_once_impl_(Social)
-_fbsdkdfl_handle_get_impl_(Social)
-
-#define _fbsdkdfl_Social_get_and_return_constant(SYMBOL) _fbsdkdfl_get_and_return_NSString(Social, SYMBOL)
-
-NSString *fbsdkdfl_SLServiceTypeFacebook(void)
-{
-  __weak _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeFacebook);
-}
-
-#pragma mark - Social Classes
-
-#define _fbsdkdfl_Social_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(Social, SYMBOL)
-
-Class fbsdkdfl_SLComposeViewControllerClass(void)
-{
-  _fbsdkdfl_Social_get_c(SLComposeViewController);
-  return c;
-}
-
 #pragma mark - QuartzCore Classes
 
 _fbsdkdfl_load_framework_once_impl_(QuartzCore)
@@ -316,24 +286,6 @@ _fbsdkdfl_handle_get_impl_(SafariServices)
 Class fbsdkdfl_SFSafariViewControllerClass(void)
 {
   _fbsdkdfl_SafariServices_get_c(SFSafariViewController);
-  return c;
-}
-
-Class fbsdkdfl_SFAuthenticationSessionClass(void)
-{
-  _fbsdkdfl_SafariServices_get_c(SFAuthenticationSession);
-  return c;
-}
-
-#pragma mark - Authentication Services
-_fbsdkdfl_load_framework_once_impl_(AuthenticationServices)
-_fbsdkdfl_handle_get_impl_(AuthenticationServices)
-
-#define _fbsdkdfl_AuthenticationServices_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(AuthenticationServices, SYMBOL);
-
-Class fbsdkdfl_ASWebAuthenticationSessionClass(void)
-{
-  _fbsdkdfl_AuthenticationServices_get_c(ASWebAuthenticationSession);
   return c;
 }
 

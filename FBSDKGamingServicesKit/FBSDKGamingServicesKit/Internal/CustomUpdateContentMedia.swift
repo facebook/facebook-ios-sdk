@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class CustomUpdateContentMedia {
+public final class CustomUpdateContentMedia {
 
   var message: String
   var media: URLMedia?

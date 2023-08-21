@@ -36,6 +36,7 @@ FBSDKAppEventName const FBSDKAppEventNameInitializeSDK = @"fb_sdk_initialize";
 FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusAvailable = @"fb_sdk_background_status_available";
 FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusDenied = @"fb_sdk_background_status_denied";
 FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusRestricted = @"fb_sdk_background_status_restricted";
+FBSDKAppEventName const FBSDKAppEventNameSDKSettingsChanged = @"fb_sdk_settings_changed";
 
 // MARK: - E-Commerce
 
@@ -77,3 +78,10 @@ FBSDKAppEventName const FBSDKAppEventNamePushOpened = @"fb_mobile_push_opened";
 
 FBSDKAppEventName const FBSDKAppEventNameActivatedApp = @"fb_mobile_activate_app";
 FBSDKAppEventName const FBSDKAppEventNameDeactivatedApp = @"fb_mobile_deactivate_app";
+
+// MARK: - Auto Setup
+
+// Internal
+
+FBSDKAppEventName const FBSDKAppEventNameOptinAEMAutoSetup = @"fb_mobile_aem_auto_setup_opt_in";
+FBSDKAppEventName const FBSDKAppEventNameOptoutAEMAutoSetup = @"fb_mobile_aem_auto_setup_opt_out";

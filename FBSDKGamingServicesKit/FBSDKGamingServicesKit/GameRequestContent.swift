@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import FBSDKShareKit
 import Foundation
@@ -15,7 +13,7 @@ import Foundation
 /// A model for a game request.
 @objcMembers
 @objc(FBSDKGameRequestContent)
-public final class GameRequestContent: NSObject, SharingValidation, NSSecureCoding {
+public final class GameRequestContent: NSObject, SharingValidatable, NSSecureCoding {
 
   /**
    Used when defining additional context about the nature of the request.
@@ -82,9 +80,9 @@ public final class GameRequestContent: NSObject, SharingValidation, NSSecureCodi
 
   @objc(validateWithOptions:error:)
   public func validate(options: ShareBridgeOptions = []) throws {
-    try _ShareUtility.validateRequiredValue(message, name: "message")
+    try _ShareUtility.validateRequiredValue(message, named: "message")
 
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
     let mustHaveObjectID = (actionType == .send) || (actionType == .askFor)
     let hasObjectID = !objectID.isEmpty
 
@@ -141,24 +139,16 @@ public final class GameRequestContent: NSObject, SharingValidation, NSSecureCodi
       )
     }
 
-    let validActionTypes = [GameRequestActionType.none, .send, .askFor, .turn, .invite]
-      .map(\.rawValue)
-      .map(NSNumber.init)
-
     try _ShareUtility.validateArgument(
-      withName: "actionType",
-      value: actionType.rawValue,
-      isIn: validActionTypes
+      actionType,
+      named: "actionType",
+      in: [.none, .send, .askFor, .turn, .invite]
     )
 
-    let validFilters = [GameRequestFilter.none, .appUsers, .appNonUsers, .everybody]
-      .map(\.rawValue)
-      .map(NSNumber.init)
-
     try _ShareUtility.validateArgument(
-      withName: "filters",
-      value: filters.rawValue,
-      isIn: validFilters
+      filters,
+      named: "filters",
+      in: [.none, .appUsers, .appNonUsers, .everybody]
     )
   }
 
@@ -230,5 +220,3 @@ public final class GameRequestContent: NSObject, SharingValidation, NSSecureCodi
     encoder.encode(recipients, forKey: CodingKeys.to.rawValue)
   }
 }
-
-#endif

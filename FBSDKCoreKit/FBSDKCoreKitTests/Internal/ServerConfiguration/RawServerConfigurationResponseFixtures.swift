@@ -10,7 +10,7 @@ import Foundation
 import TestTools
 
 @objcMembers
-class RawServerConfigurationResponseFixtures: NSObject {
+final class RawServerConfigurationResponseFixtures: NSObject {
 
   enum Keys {
     static let appEventsFeatureBitmask = "app_events_feature_bitmask"
@@ -57,7 +57,7 @@ class RawServerConfigurationResponseFixtures: NSObject {
       Keys.eventBindings: Fuzzer.random,
       Keys.suggestedEventsSetting: Fuzzer.random,
       Keys.monitoringConfiguration: Fuzzer.random,
-      Keys.implicitLoggingEnabled: Fuzzer.random
+      Keys.implicitLoggingEnabled: Fuzzer.random,
     ]
   }
 }

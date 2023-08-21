@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class ErrorFactoryTests: XCTestCase {
@@ -99,9 +100,8 @@ final class ErrorFactoryTests: XCTestCase {
   // MARK: - Test Fixture
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var factory: ErrorFactory!
+  var factory: _ErrorFactory!
   var reporter: TestErrorReporter!
-  var defaultReporter: TestErrorReporter!
   var error: Error!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -110,19 +110,16 @@ final class ErrorFactoryTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    ErrorFactory.resetClassDependencies()
-
     reporter = TestErrorReporter()
-    defaultReporter = TestErrorReporter()
-    factory = ErrorFactory(reporter: reporter)
+    _ErrorFactory.setDependencies(.init(reporter: reporter))
+    factory = _ErrorFactory()
   }
 
   override func tearDown() {
     reporter = nil
-    defaultReporter = nil
     error = nil
     factory = nil
-
+    _ErrorFactory.resetDependencies()
     super.tearDown()
   }
 
@@ -130,32 +127,25 @@ final class ErrorFactoryTests: XCTestCase {
 
   // MARK: Dependencies
 
-  func testClassDependencies() {
-    XCTAssertNil(
-      ErrorFactory.defaultReporter,
-      Assumptions.noDefaultClassReporter
-    )
-
-    ErrorFactory.configure(defaultReporter: defaultReporter)
+  func testDefaultTypeDependencies() throws {
+    _ErrorFactory.resetDependencies()
+    let dependencies = try _ErrorFactory.getDependencies()
 
     XCTAssertIdentical(
-      ErrorFactory.defaultReporter,
-      defaultReporter,
-      Assumptions.defaultClassReporter
+      dependencies.reporter as AnyObject,
+      ErrorReporter.shared,
+      .defaultDependency("an error reporter", for: "error reporting")
     )
   }
 
-  func testNullaryInitialization() {
-    factory = ErrorFactory()
+  func testCustomTypeDependencies() throws {
+    let dependencies = try _ErrorFactory.getDependencies()
 
-    XCTAssertNil(
-      factory.reporter,
-      Assumptions.noDefaultInstanceReporter
+    XCTAssertIdentical(
+      dependencies.reporter as AnyObject,
+      reporter,
+      .customDependency(for: "error reporting")
     )
-  }
-
-  func testInitializationWithDependencies() {
-    XCTAssertTrue(factory.reporter === reporter, Assumptions.errorReporter)
   }
 
   // MARK: General Errors
@@ -495,17 +485,17 @@ final class ErrorFactoryTests: XCTestCase {
 
   func testUsingDefaultErrorReporter() throws {
     // Creating a factory without a reporter or a default reporter
-    factory = ErrorFactory()
+    factory = _ErrorFactory()
 
     // Adding the default reporter after the fact
-    ErrorFactory.configure(defaultReporter: defaultReporter)
+    _ErrorFactory.setDependencies(.init(reporter: reporter))
 
     error = factory.unknownError(
       message: Values.message,
       userInfo: Values.userInfo
     )
     try checkReporting(
-      reporter: defaultReporter,
+      reporter: reporter,
       domain: ErrorDomain,
       code: CoreError.errorUnknown.rawValue,
       message: Values.message,
@@ -526,7 +516,7 @@ final class ErrorFactoryTests: XCTestCase {
     static let userInfoKey = "userInfoKey"
     static let userInfoValue = "userInfoValue"
     static let userInfo: [String: Any] = [
-      userInfoKey: userInfoValue
+      userInfoKey: userInfoValue,
     ]
   }
 
@@ -556,7 +546,7 @@ final class ErrorFactoryTests: XCTestCase {
     var expectedMessage: String {
       switch self {
       case .invalid:
-        return "Invalid value for \(name): \(value ?? "(null)")"
+        return "Invalid value for \(name): \(String(describing: value))"
       case .required:
         return "Value for \(name) is required."
       }
@@ -597,5 +587,17 @@ final class ErrorFactoryTests: XCTestCase {
       file: file,
       line: line
     )
+  }
+}
+
+// MARK: - Assumptions
+
+extension String {
+  fileprivate static func defaultDependency(_ dependency: String, for type: String) -> String {
+    "The _ErrorFactory type uses \(dependency) as its \(type) dependency by default"
+  }
+
+  fileprivate static func customDependency(for type: String) -> String {
+    "The _ErrorFactory type uses a custom \(type) dependency when provided"
   }
 }

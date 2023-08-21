@@ -15,9 +15,7 @@ public enum TournamentDecodingError: Error {
 
 public struct Tournament: Codable {
 
-  /**
-   The unique ID that is associated with this tournament.
-   */
+  /// The unique ID that is associated with this tournament.
   public internal(set) var identifier: String
 
   /**
@@ -26,22 +24,18 @@ public struct Tournament: Codable {
    */
   public internal(set) var endTime: Date?
 
-  /**
-   Title of the tournament provided upon the creation of the tournament.
-   */
+  /// Title of the tournament provided upon the creation of the tournament.
   public internal(set) var title: String?
 
-  /**
-   Payload of the tournament provided upon the creation of the tournament.
-   */
+  /// Payload of the tournament provided upon the creation of the tournament.
   public var payload: String?
 
   init(
     identifier: String,
-    config: TournamentConfig
+    configuration: TournamentConfig
   ) {
-    self.init(identifier: identifier, title: config.title, payload: config.payload)
-    if let expirationTimeStamp = config.endTime {
+    self.init(identifier: identifier, title: configuration.title, payload: configuration.payload)
+    if let expirationTimeStamp = configuration.endTime {
       endTime = Date(timeIntervalSince1970: expirationTimeStamp)
     }
   }

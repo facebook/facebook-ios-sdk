@@ -8,16 +8,14 @@
 
 #import "FBSDKCrashObserver+Internal.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKCrashShield.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
 #import "FBSDKGraphRequestHTTPMethod.h"
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKSettings+Internal.h"
-#import "FBSDKSettingsProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -35,8 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
     frameworks = @[@"FBSDKCoreKit",
                    @"FBSDKLoginKit",
                    @"FBSDKShareKit",
-                   @"FBSDKGamingServicesKit",
-                   @"FBSDKTVOSKit"];
+                   @"FBSDKGamingServicesKit"];
     _featureChecker = featureChecker;
     _graphRequestFactory = graphRequestFactory;
     _settings = settings;

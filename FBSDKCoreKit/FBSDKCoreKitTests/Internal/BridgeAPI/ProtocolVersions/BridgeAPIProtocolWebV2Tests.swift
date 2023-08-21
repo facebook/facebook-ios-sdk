@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -29,7 +31,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   var bridge: BridgeAPIProtocolWebV2!
-  var serverConfigurationProvider: ServerConfigurationProviding!
+  var serverConfigurationProvider: _ServerConfigurationProviding!
   var nativeBridge: TestBridgeAPIProtocol!
   var errorFactory: ErrorCreating!
   var internalUtility: TestInternalUtility!
@@ -44,7 +46,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     errorFactory = TestErrorFactory()
     internalUtility = TestInternalUtility()
     bundle = TestBundle()
-    bundle.bundleIdentifier = Values.bundleIdentifier
+    bundle.fb_bundleIdentifier = Values.bundleIdentifier
     bridge = BridgeAPIProtocolWebV2(
       serverConfigurationProvider: serverConfigurationProvider,
       nativeBridge: nativeBridge,
@@ -92,19 +94,17 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     bridge = BridgeAPIProtocolWebV2()
 
     XCTAssertTrue(
-      bridge.serverConfigurationProvider is ServerConfigurationManager,
+      bridge.serverConfigurationProvider is _ServerConfigurationManager,
       "Should use the expected default server configuration provider"
     )
     XCTAssertTrue(
-      bridge.nativeBridge is BridgeAPIProtocolNativeV1,
+      bridge.nativeBridge is _BridgeAPIProtocolNativeV1,
       "Should use the expected default native bridge"
     )
-    let factory = try XCTUnwrap(
-      bridge.errorFactory as? ErrorFactory,
-      "Should use the expected type of error factory by default"
-    )
+
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === ErrorReporter.shared,
+      reporter === ErrorReporter.shared,
       "The error factory should use the shared error reporter"
     )
     XCTAssertTrue(
@@ -122,7 +122,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutServerConfiguration() {
     XCTAssertNil(
       try? bridge.requestURL(
-        withActionID: "",
+        actionID: "",
         scheme: "",
         methodName: "",
         parameters: [:]
@@ -133,7 +133,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
   func testRequestURLWithoutDialog() {
     let url = try? bridge.requestURL(
-      withActionID: "",
+      actionID: "",
       scheme: "",
       methodName: "Foo",
       parameters: [:]
@@ -148,7 +148,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   func testRequestURLWithoutMatchingDialogForMethodName() {
     stubServerConfigurationWithDialog(named: "Bar")
     let url = try? bridge.requestURL(
-      withActionID: "",
+      actionID: "",
       scheme: "",
       methodName: "Foo",
       parameters: [:]
@@ -164,7 +164,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     stubServerConfigurationWithDialog(named: Values.methodName)
     nativeBridge.stubbedRequestURLError = SampleError()
     let url = try? bridge.requestURL(
-      withActionID: "",
+      actionID: "",
       scheme: "",
       methodName: Values.methodName,
       parameters: [:]
@@ -190,7 +190,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     internalUtility.stubbedFacebookURL = urlWithParams
 
     _ = try? bridge.requestURL(
-      withActionID: Values.actionID,
+      actionID: Values.actionID,
       scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
       parameters: validQueryParameters
@@ -216,7 +216,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
     XCTAssertEqual(
       queryParameters[Keys.iosBundleID],
-      bundle.bundleIdentifier,
+      bundle.fb_bundleIdentifier,
       "Should add the bundle ID to the query parameters"
     )
     XCTAssertEqual(
@@ -317,7 +317,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     internalUtility.stubbedFacebookURL = facebookURL
 
     let url = try XCTUnwrap(URL(string: "/"))
-    let configuration = DialogConfiguration(name: UUID().uuidString, url: url, appVersions: [])
+    let configuration = _DialogConfiguration(name: UUID().uuidString, url: url, appVersions: [])
     let requestURL = try? bridge._requestURL(for: configuration)
 
     let message = """
@@ -332,7 +332,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   }
 
   func testRequestURLForDialogConfigurationWithScheme() {
-    let configuration = DialogConfiguration(
+    let configuration = _DialogConfiguration(
       name: name,
       url: SampleURLs.valid(path: name),
       appVersions: []
@@ -351,7 +351,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   func testResponseParameters() {
     var isCancelled = ObjCBool(false)
     _ = try? bridge.responseParameters(
-      forActionID: Values.actionID,
+      actionID: Values.actionID,
       queryParameters: validQueryParameters,
       cancelled: &isCancelled
     )
@@ -379,12 +379,12 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     named name: String,
     url: URL = SampleURLs.valid
   ) {
-    let dialogConfiguration = DialogConfiguration(
+    let dialogConfiguration = _DialogConfiguration(
       name: name,
       url: url,
       appVersions: []
     )
-    let configuration = ServerConfigurationFixtures.config(
+    let configuration = ServerConfigurationFixtures.configuration(
       withDictionary: ["dialogConfigurations": [name: dialogConfiguration]]
     )
     serverConfigurationProvider = TestServerConfigurationProvider(configuration: configuration)

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class CustomUpdateGraphAPIContentRemote: Codable {
+final class CustomUpdateGraphAPIContentRemote: Codable {
 
   var contextTokenID: String
   var text: CustomUpdateLocalizedText

@@ -11,7 +11,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKGamingImageUploader)
-public class GamingImageUploader: NSObject {
+public final class GamingImageUploader: NSObject {
 
   private var progressHandler: GamingServiceProgressHandler?
 
@@ -103,7 +103,7 @@ public class GamingImageUploader: NSObject {
     completion completionHandler: @escaping GamingServiceResultCompletion,
     andProgressHandler progressHandler: GamingServiceProgressHandler?
   ) {
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
 
     if AccessToken.current == nil {
       completionHandler(
@@ -147,7 +147,7 @@ public class GamingImageUploader: NSObject {
         graphPath: "me/photos",
         parameters: [
           "caption": configuration.caption ?? "",
-          "picture": imageData
+          "picture": imageData,
         ],
         httpMethod: .post
       )

@@ -67,7 +67,7 @@ enum SampleUnparsedAppLinkURLs {
     var components = try XCTUnwrap(URLComponents(url: SampleURLs.valid, resolvingAgainstBaseURL: false))
 
     components.queryItems = [
-      URLQueryItem(name: AppLinkKeys.data, value: json)
+      URLQueryItem(name: AppLinkKeys.data, value: json),
     ]
 
     return try XCTUnwrap(components.url)

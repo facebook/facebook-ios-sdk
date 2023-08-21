@@ -14,7 +14,7 @@
  Specifies when `FBSDKAppEvents` sends log events to the server.
  */
 typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushBehavior) {
-  /** Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation. */
+  /// Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation.
   FBSDKAppEventsFlushBehaviorAuto = 0,
 
   /** Only flush when the `flush` method is called. When an app is moved to background/terminated, the

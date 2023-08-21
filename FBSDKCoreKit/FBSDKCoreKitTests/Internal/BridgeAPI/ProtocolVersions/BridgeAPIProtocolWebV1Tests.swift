@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class BridgeAPIProtocolWebV1Tests: XCTestCase {
@@ -48,7 +50,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
     static func validWithErrorCode(_ code: Int) -> [String: Any] {
       [
         Keys.errorCode: code,
-        Keys.bridgeArgs: jsonString(actionID: Values.actionID)
+        Keys.bridgeArgs: jsonString(actionID: Values.actionID),
       ]
     }
   }
@@ -91,12 +93,10 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
 
   func testDefaultDependencies() throws {
     bridge = BridgeAPIProtocolWebV1()
-    let factory = try XCTUnwrap(
-      bridge.errorFactory as? ErrorFactory,
-      "The class should have an error factory by default"
-    )
+
+    let reporter = try _ErrorFactory.getDependencies().reporter
     XCTAssertTrue(
-      factory.reporter === ErrorReporter.shared,
+      reporter === ErrorReporter.shared,
       "The default factory should use the shared error reporter"
     )
     XCTAssertTrue(
@@ -117,7 +117,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
     let queryParameters = ["a": "b"]
 
     let url = try bridge.requestURL(
-      withActionID: Values.actionID,
+      actionID: Values.actionID,
       scheme: URLScheme.https.rawValue,
       methodName: Values.methodName,
       parameters: queryParameters
@@ -159,7 +159,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
   func testResponseParametersWithUnknownErrorCode() {
     XCTAssertNil(
       try? bridge.responseParameters(
-        forActionID: Values.actionID,
+        actionID: Values.actionID,
         queryParameters: QueryParameters.validWithErrorCode(123),
         cancelled: nil
       ),
@@ -170,7 +170,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
   func testResponseParametersWithoutBridgeParameters() {
     XCTAssertNil(
       try? bridge.responseParameters(
-        forActionID: Values.actionID,
+        actionID: Values.actionID,
         queryParameters: QueryParameters.withoutBridgeArgs,
         cancelled: nil
       ),
@@ -181,7 +181,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
   func testResponseParametersWithoutActionID() {
     XCTAssertNil(
       try? bridge.responseParameters(
-        forActionID: Values.actionID,
+        actionID: Values.actionID,
         queryParameters: QueryParameters.withEmptyBridgeArgs,
         cancelled: nil
       ),
@@ -192,7 +192,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
   func testResponseParametersWithMismatchedResponseActionID() {
     XCTAssertNil(
       try? bridge.responseParameters(
-        forActionID: Values.actionID,
+        actionID: Values.actionID,
         queryParameters: QueryParameters.withBridgeArgs(responseActionID: "foo"),
         cancelled: nil
       ),
@@ -202,7 +202,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
 
   func testResponseParametersWithMatchingResponseActionID() {
     guard let response = try? bridge.responseParameters(
-      forActionID: Values.actionID,
+      actionID: Values.actionID,
       queryParameters: QueryParameters.valid,
       cancelled: nil
     ) else {
@@ -218,7 +218,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
 
   func testResponseParametersWithCancellationErrorCode() {
     guard let response = try? bridge.responseParameters(
-      forActionID: Values.actionID,
+      actionID: Values.actionID,
       queryParameters: QueryParameters.validWithErrorCode(Values.cancellationErrorCode),
       cancelled: nil
     ) else {

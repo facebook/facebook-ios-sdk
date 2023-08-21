@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestTokenCache: NSObject, TokenCaching {
+final class TestTokenCache: NSObject, TokenCaching {
   var accessToken: AccessToken?
   var authenticationToken: AuthenticationToken?
 

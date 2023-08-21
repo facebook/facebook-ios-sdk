@@ -8,11 +8,11 @@
 
 #import "FBSDKErrorConfiguration.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKGraphRequestProtocol.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKSettings.h"
 
 static NSString *const kErrorCategoryOther = @"other";
 static NSString *const kErrorCategoryTransient = @"transient";
@@ -62,7 +62,7 @@ static NSString *const kErrorCategoryLogin = @"login";
         @"ErrorRecovery.Login.Suggestion",
         @"FacebookSDK",
         [FBSDKInternalUtility.sharedUtility bundleForStrings],
-        @"Please log into this app again to reconnect your Facebook account.",
+        @"Please log in to this app again to reconnect your Facebook account.",
         @"The fallback message to display to recover invalidated tokens"
       );
       NSArray<NSDictionary<NSString *, id> *> *fallbackArray = @[
@@ -122,7 +122,7 @@ static NSString *const kErrorCategoryLogin = @"login";
       NSString *suggestion = dictionary[@"recovery_message"];
       NSArray<NSString *> *options = dictionary[@"recovery_options"];
 
-      NSArray *validItems = [FBSDKTypeUtility dictionary:dictionary objectForKey:@"items" ofType:NSArray.class];
+      NSArray<NSDictionary<NSString *, id> *> *validItems = [FBSDKTypeUtility dictionary:dictionary objectForKey:@"items" ofType:NSArray.class];
       for (NSDictionary<NSString *, id> *codeSubcodesDictionary in validItems) {
         NSDictionary<NSString *, id> *validCodeSubcodesDictionary = [FBSDKTypeUtility dictionaryValue:codeSubcodesDictionary];
         if (!validCodeSubcodesDictionary) {
@@ -141,7 +141,7 @@ static NSString *const kErrorCategoryLogin = @"login";
           [FBSDKTypeUtility dictionary:self->_configurationDictionary setObject:currentSubcodes forKey:code];
         }
 
-        NSArray *validSubcodes = [FBSDKTypeUtility dictionary:validCodeSubcodesDictionary objectForKey:@"subcodes" ofType:NSArray.class];
+        NSArray<NSNumber *> *validSubcodes = [FBSDKTypeUtility dictionary:validCodeSubcodesDictionary objectForKey:@"subcodes" ofType:NSArray.class];
         if (validSubcodes.count > 0) {
           for (NSNumber *subcodeNumber in validSubcodes) {
             NSNumber *validSubcodeNumber = [FBSDKTypeUtility numberValue:subcodeNumber];

@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestURLOpener: NSObject, URLOpener {
+public final class TestURLOpener: NSObject, URLOpener {
 
   public var capturedRequests = [SuccessBlock]()
   public var capturedURL: URL?
@@ -30,13 +30,13 @@ public class TestURLOpener: NSObject, URLOpener {
 
   public func openURLWithSafariViewController(
     url: URL,
-    sender: URLOpening,
-    from fromViewController: UIViewController,
+    sender: URLOpening?,
+    from viewController: UIViewController?,
     handler: @escaping SuccessBlock
   ) {
     capturedURL = url
     capturedRequests.append(handler)
     wasOpenURLWithSVCCalled = true
-    viewController = fromViewController
+    self.viewController = viewController
   }
 }

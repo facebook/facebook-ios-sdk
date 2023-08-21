@@ -12,10 +12,10 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit/FBSDKConstants.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKErrorFactory+Internal.h"
 #import "FBSDKErrorReporter.h"
 #import "FBSDKInternalUtility+Internal.h"
 
@@ -28,7 +28,7 @@
 
 - (instancetype)init
 {
-  FBSDKErrorFactory *factory = [[FBSDKErrorFactory alloc] initWithReporter:FBSDKErrorReporter.shared];
+  FBSDKErrorFactory *factory = [FBSDKErrorFactory new];
   return [self initWithErrorFactory:factory internalUtility:FBSDKInternalUtility.sharedUtility];
 }
 
@@ -125,7 +125,7 @@
   if (![responseActionID isEqualToString:actionID]) {
     return nil;
   }
-  NSMutableDictionary<NSString *, id> *resultParameters = [queryParameters mutableCopy];
+  NSMutableDictionary<NSString *, id> *resultParameters = queryParameters.mutableCopy;
   [resultParameters removeObjectForKey:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY];
   resultParameters[@"didComplete"] = @YES;
   return resultParameters;

@@ -8,14 +8,10 @@
 
 #import "FBSDKGraphRequestBody.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKConstants.h"
-#import "FBSDKGraphRequestDataAttachment.h"
-#import "FBSDKLogger.h"
 #import "FBSDKLogger+Internal.h"
-#import "FBSDKRandom.h"
-#import "FBSDKSettings.h"
 
 #define kNewline @"\r\n"
 
@@ -132,7 +128,7 @@
            contentType:(NSString *)contentType
           contentBlock:(FBSDKCodeBlock)contentBlock
 {
-  NSMutableArray *disposition = [NSMutableArray new];
+  NSMutableArray<NSString *> *disposition = [NSMutableArray new];
   [FBSDKTypeUtility array:disposition addObject:@"Content-Disposition: form-data"];
   if (key) {
     [FBSDKTypeUtility array:disposition addObject:[[NSString alloc] initWithFormat:@"name=\"%@\"", key]];

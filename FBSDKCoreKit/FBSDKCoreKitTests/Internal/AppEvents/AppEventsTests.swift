@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import FBAEMKit
-import FBSDKCoreKit
 import TestTools
 import XCTest
 
@@ -44,6 +45,9 @@ final class AppEventsTests: XCTestCase {
   var userDataStore: TestUserDataStore!
   var appEventsUtility: TestAppEventsUtility!
   var internalUtility: TestInternalUtility!
+  var capiReporter: TestCAPIReporter!
+  var protectedModeManager: TestAppEventsParameterProcessor!
+  var macaRuleMatchingManager: TestMACARuleMatchingManager!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -70,6 +74,8 @@ final class AppEventsTests: XCTestCase {
     appEventsStateStore = TestAppEventsStateStore()
     eventDeactivationParameterProcessor = TestAppEventsParameterProcessor()
     restrictiveDataFilterParameterProcessor = TestAppEventsParameterProcessor()
+    protectedModeManager = TestAppEventsParameterProcessor()
+    macaRuleMatchingManager = TestMACARuleMatchingManager()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     appEventsStateProvider = TestAppEventsStateProvider()
     atePublisherFactory = TestATEPublisherFactory()
@@ -77,11 +83,12 @@ final class AppEventsTests: XCTestCase {
     advertiserIDProvider = TestAdvertiserIDProvider()
     skAdNetworkReporter = TestAppEventsReporter()
     serverConfigurationProvider = TestServerConfigurationProvider(
-      configuration: ServerConfigurationFixtures.defaultConfig
+      configuration: ServerConfigurationFixtures.defaultConfiguration
     )
     userDataStore = TestUserDataStore()
     appEventsUtility = TestAppEventsUtility()
     internalUtility = TestInternalUtility()
+    capiReporter = TestCAPIReporter()
     appEventsUtility.stubbedIsIdentifierValid = true
 
     // Must be stubbed before the configure method is called
@@ -109,6 +116,8 @@ final class AppEventsTests: XCTestCase {
     appEventsConfigurationProvider = nil
     eventDeactivationParameterProcessor = nil
     restrictiveDataFilterParameterProcessor = nil
+    protectedModeManager = nil
+    macaRuleMatchingManager = nil
     appEventsStateProvider = nil
     advertiserIDProvider = nil
     skAdNetworkReporter = nil
@@ -116,6 +125,7 @@ final class AppEventsTests: XCTestCase {
     userDataStore = nil
     appEventsUtility = nil
     internalUtility = nil
+    capiReporter = nil
 
     resetTestHelpers()
 
@@ -131,7 +141,7 @@ final class AppEventsTests: XCTestCase {
 
   func configureAppEvents() {
     appEvents.configure(
-      withGateKeeperManager: TestGateKeeperManager.self,
+      gateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       serverConfigurationProvider: serverConfigurationProvider,
       graphRequestFactory: graphRequestFactory,
@@ -149,7 +159,10 @@ final class AppEventsTests: XCTestCase {
       advertiserIDProvider: advertiserIDProvider,
       userDataStore: userDataStore,
       appEventsUtility: appEventsUtility,
-      internalUtility: internalUtility
+      internalUtility: internalUtility,
+      capiReporter: capiReporter,
+      protectedModeManager: protectedModeManager,
+      macaRuleMatchingManager: macaRuleMatchingManager
     )
 
     appEvents.configureNonTVComponents(
@@ -333,7 +346,7 @@ final class AppEventsTests: XCTestCase {
       .init("fb_product_mpn"): "BLUE MOUNTAIN",
       .init("fb_product_price_amount"): "1.000",
       .init("fb_product_price_currency"): "USD",
-      .init("fb_product_title"): "title"
+      .init("fb_product_title"): "title",
     ]
 
     let capturedParameters = try XCTUnwrap(
@@ -557,7 +570,7 @@ final class AppEventsTests: XCTestCase {
       """
     )
 
-    // The publish call happens after both configs are fetched
+    // The publish call happens after both configurations are fetched
     appEventsConfigurationProvider.firstCapturedBlock?()
     appEventsConfigurationProvider.lastCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
@@ -568,6 +581,7 @@ final class AppEventsTests: XCTestCase {
       request.parameters["event"] as? String,
       "MOBILE_APP_INSTALL"
     )
+    XCTAssertNotNil(capiReporter.capturedEvent)
   }
 
   func testApplicationBecomingActiveRestoresTimeSpentRecording() {
@@ -688,7 +702,7 @@ final class AppEventsTests: XCTestCase {
       { self.appEvents.sendEventBindingsToUnity() },
       { self.appEvents.activateApp() },
       { _ = self.appEvents.userID },
-      { self.appEvents.userID = foo }
+      { self.appEvents.userID = foo },
     ]
 
     exceptionRaisingClosures.forEach { closure in
@@ -792,6 +806,27 @@ final class AppEventsTests: XCTestCase {
       restrictiveDataFilterParameterProcessor.capturedParameters as? [AppEvents.ParameterName: String],
       parameters,
       "AppEvents instance should submit the parameters to the restrictive data filter parameters processor."
+    )
+  }
+
+  func testLogEventProcessParametersWithProtectedModeManager() {
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
+    appEvents.logEvent(
+      eventName,
+      valueToSum: NSNumber(value: purchaseAmount),
+      parameters: parameters,
+      isImplicitlyLogged: false,
+      accessToken: nil
+    )
+    XCTAssertEqual(
+      protectedModeManager.capturedEventName,
+      eventName,
+      "AppEvents instance should submit the event name to the protectedModeManager."
+    )
+    XCTAssertEqual(
+      protectedModeManager.capturedParameters as? [AppEvents.ParameterName: String],
+      parameters,
+      "AppEvents instance should submit the parameters to the protectedModeManager."
     )
   }
 
@@ -965,7 +1000,7 @@ final class AppEventsTests: XCTestCase {
       "Should include the access token in the request when there is one available"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedParameters["udid"],
+      graphRequestFactory.capturedParameters?["udid"],
       "Should not include the udid in the request when there is none available"
     )
   }
@@ -988,7 +1023,7 @@ final class AppEventsTests: XCTestCase {
       "Should include the access token in the request when there is one available"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedParameters["udid"],
+      graphRequestFactory.capturedParameters?["udid"],
       "Should not include the udid in the request when there is an access token available"
     )
     XCTAssertEqual(
@@ -997,7 +1032,7 @@ final class AppEventsTests: XCTestCase {
       "Should use the expected graph path for the request"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       .get,
       "Should use the expected http method for the request"
     )
@@ -1188,19 +1223,17 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testLogEventWillRecordAndUpdateWithSKAdNetworkReporter() {
-    if #available(iOS 11.3, *) {
-      appEvents.logEvent(eventName, valueToSum: purchaseAmount)
-      XCTAssertEqual(
-        eventName.rawValue,
-        skAdNetworkReporter.capturedEvent,
-        "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
-      )
-      XCTAssertEqual(
-        purchaseAmount,
-        skAdNetworkReporter.capturedValue?.doubleValue,
-        "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
-      )
-    }
+    appEvents.logEvent(eventName, valueToSum: purchaseAmount)
+    XCTAssertEqual(
+      eventName.rawValue,
+      skAdNetworkReporter.capturedEvent,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
+    )
+    XCTAssertEqual(
+      purchaseAmount,
+      skAdNetworkReporter.capturedValue?.doubleValue,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
+    )
     validateAEMReporterCalled(
       eventName: eventName,
       currency: nil,
@@ -1258,7 +1291,7 @@ final class AppEventsTests: XCTestCase {
   // MARK: - Test for Server Configuration
 
   func testFetchServerConfiguration() {
-    let configuration = AppEventsConfiguration(json: [:])
+    let configuration = _AppEventsConfiguration(json: [:])
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
     var didRunCallback = false
@@ -1382,7 +1415,7 @@ final class AppEventsTests: XCTestCase {
 
   func testFetchingConfigurationStartsPaymentObservingIfConfigurationAllowed() {
     settings.isAutoLogAppEventsEnabled = true
-    let serverConfiguration = ServerConfigurationFixtures.config(
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": true]
     )
     appEvents.fetchServerConfiguration(nil)
@@ -1400,7 +1433,9 @@ final class AppEventsTests: XCTestCase {
 
   func testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed() {
     settings.isAutoLogAppEventsEnabled = true
-    let serverConfiguration = ServerConfigurationFixtures.config(withDictionary: ["implicitPurchaseLoggingEnabled": 0])
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": 0]
+    )
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
@@ -1416,7 +1451,7 @@ final class AppEventsTests: XCTestCase {
 
   func testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled() {
     settings.isAutoLogAppEventsEnabled = false
-    let serverConfiguration = ServerConfigurationFixtures.config(
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": true]
     )
     appEvents.fetchServerConfiguration(nil)
@@ -1448,23 +1483,21 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-    if #available(iOS 11.3, *) {
-      featureManager.completeCheck(
-        forFeature: .skAdNetwork,
-        with: true
-      )
-      featureManager.completeCheck(
-        forFeature: .skAdNetworkConversionValue,
-        with: true
-      )
-      XCTAssertTrue(
-        skAdNetworkReporter.enableWasCalled,
-        """
-        Fetching a configuration should enable SKAdNetworkReporter when SKAdNetworkReport \
-        and SKAdNetworkConversionValue are enabled
-        """
-      )
-    }
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: true
+    )
+    XCTAssertTrue(
+      skAdNetworkReporter.enableWasCalled,
+      """
+      Fetching a configuration should enable SKAdNetworkReporter when SKAdNetworkReport \
+      and SKAdNetworkConversionValue are enabled
+      """
+    )
   }
 
   func testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabled() {
@@ -1472,20 +1505,18 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-    if #available(iOS 11.3, *) {
-      featureManager.completeCheck(
-        forFeature: .skAdNetwork,
-        with: true
-      )
-      featureManager.completeCheck(
-        forFeature: .skAdNetworkConversionValue,
-        with: false
-      )
-      XCTAssertFalse(
-        skAdNetworkReporter.enableWasCalled,
-        "Fetching a configuration should NOT enable SKAdNetworkReporter if SKAdNetworkConversionValue is disabled"
-      )
-    }
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: false
+    )
+    XCTAssertFalse(
+      skAdNetworkReporter.enableWasCalled,
+      "Fetching a configuration should NOT enable SKAdNetworkReporter if SKAdNetworkConversionValue is disabled"
+    )
   }
 
   func testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabled() {
@@ -1552,6 +1583,42 @@ final class AppEventsTests: XCTestCase {
         "AEM Catalog Matching should be enabled"
       )
     }
+  }
+
+  func testFetchingConfigurationIncludingAEMAdvertiserRuleMatchInServer() {
+    if #available(iOS 14.0, *) {
+      featureManager.enable(feature: .aemAdvertiserRuleMatchInServer)
+      appEvents.fetchServerConfiguration(nil)
+      appEventsConfigurationProvider.firstCapturedBlock?()
+      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+      featureManager.completeCheck(
+        forFeature: .AEM,
+        with: true
+      )
+      XCTAssertTrue(
+        TestAEMReporter.setAdvertiserRuleMatchInServerEnabledWasCalled,
+        "Should enable or disable the AEM Advertiser Rule Match in server"
+      )
+      XCTAssertTrue(
+        TestAEMReporter.capturedAdvertiserRuleMatchInServerEnabled,
+        "AEM Advertiser Rule Match in server should be enabled"
+      )
+    }
+  }
+
+  func testFetchingConfigurationIncludingCloudBridge() {
+    featureManager.enable(feature: .appEventsCloudbridge)
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .appEventsCloudbridge,
+      with: true
+    )
+    XCTAssertTrue(
+      capiReporter.enabledWasCalled,
+      "Should enable the CloudBridge"
+    )
   }
 
   func testFetchingConfigurationIncludingPrivacyProtection() {

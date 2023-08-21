@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 @objcMembers
-class ViewControllerSpy: UIViewController {
+final class ViewControllerSpy: UIViewController {
 
   var capturedDismissCompletion: (() -> Void)?
   var dismissWasCalled = false

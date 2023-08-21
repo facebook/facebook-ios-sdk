@@ -9,7 +9,7 @@
 import FacebookLogin
 import UIKit
 
-class LoginButtonViewController: LoginViewController {
+final class LoginButtonViewController: LoginViewController {
 
     @IBOutlet private weak var loginButton: FBLoginButton!
     @IBOutlet private weak var useLimitedLoginSwitch: UISwitch!

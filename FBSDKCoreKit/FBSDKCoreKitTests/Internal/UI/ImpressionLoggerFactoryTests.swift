@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
 final class ImpressionLoggerFactoryTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var factory: ImpressionLoggerFactory!
+  var factory: _ImpressionLoggerFactory!
   var graphRequestFactory: TestGraphRequestFactory!
   var eventLogger: TestEventLogger!
   var notificationCenter: TestNotificationCenter!
@@ -27,7 +29,7 @@ final class ImpressionLoggerFactoryTests: XCTestCase {
     notificationCenter = TestNotificationCenter()
     accessTokenWallet = TestAccessTokenWallet.self
 
-    factory = ImpressionLoggerFactory(
+    factory = _ImpressionLoggerFactory(
       graphRequestFactory: graphRequestFactory,
       eventLogger: eventLogger,
       notificationCenter: notificationCenter,
@@ -68,7 +70,7 @@ final class ImpressionLoggerFactoryTests: XCTestCase {
     let logger = factory.makeImpressionLogger(withEventName: .adClick)
 
     XCTAssertTrue(
-      logger is ViewImpressionLogger,
+      logger is _ViewImpressionLogger,
       "Should make the correct type of impression logger"
     )
   }

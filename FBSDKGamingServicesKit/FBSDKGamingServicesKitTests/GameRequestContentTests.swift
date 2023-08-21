@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKGamingServicesKit
+
 import FBSDKCoreKit
-import FBSDKGamingServicesKit
 import XCTest
 
 final class GameRequestContentTests: XCTestCase {
@@ -30,10 +31,10 @@ final class GameRequestContentTests: XCTestCase {
     XCTAssertEqual(contentCopy, content)
   }
 
-  func testCoding() {
+  func testCoding() throws {
     let content = Self.contentWithAllProperties()
-    let data = NSKeyedArchiver.archivedData(withRootObject: content)
-    let unarchiver = NSKeyedUnarchiver(forReadingWith: data)
+    let data = try NSKeyedArchiver.archivedData(withRootObject: content, requiringSecureCoding: true)
+    let unarchiver = try NSKeyedUnarchiver(forReadingFrom: data)
     unarchiver.requiresSecureCoding = true
     let unarchivedObject = unarchiver.decodeObject(
       of: GameRequestContent.self,

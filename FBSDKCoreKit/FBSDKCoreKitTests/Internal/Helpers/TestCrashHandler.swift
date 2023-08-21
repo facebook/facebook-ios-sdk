@@ -10,10 +10,12 @@ import FBSDKCoreKit
 import XCTest
 
 @objcMembers
-class TestCrashHandler: NSObject, CrashHandlerProtocol {
+final class TestCrashHandler: NSObject, CrashHandlerProtocol {
+
   var wasAddObserverCalled = false
   var observer: CrashObserving?
   var wasClearCrashReportFilesCalled = false
+  var wasSaveExceptionCalled = false
 
   func addObserver(_ observer: CrashObserving) {
     wasAddObserverCalled = true
@@ -22,5 +24,9 @@ class TestCrashHandler: NSObject, CrashHandlerProtocol {
 
   func clearCrashReportFiles() {
     wasClearCrashReportFilesCalled = true
+  }
+
+  func save(_ exception: NSException) {
+    wasSaveExceptionCalled = true
   }
 }

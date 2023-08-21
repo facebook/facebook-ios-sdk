@@ -6,17 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import Foundation
 
-/**
- A model for an instant games switchAsync cross play request.
- */
+/// A model for an instant games switchAsync cross play request.
 @objcMembers
 @objc(FBSDKSwitchContextContent)
-public class SwitchContextContent: NSObject, ValidatableProtocol {
+public final class SwitchContextContent: NSObject, ValidatableProtocol {
 
   /**
    The context token of the existing context for which this request is being made.
@@ -41,7 +37,7 @@ public class SwitchContextContent: NSObject, ValidatableProtocol {
       !contextTokenID.isEmpty
     else {
       let message = "The contextToken is required."
-      let errorFactory = ErrorFactory()
+      let errorFactory = _ErrorFactory()
       throw errorFactory.requiredArgumentError(
         name: "contextToken",
         message: message,
@@ -50,5 +46,3 @@ public class SwitchContextContent: NSObject, ValidatableProtocol {
     }
   }
 }
-
-#endif

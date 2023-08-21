@@ -6,12 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 
 final class AppEventsConfigurationManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  var manager: AppEventsConfigurationManager!
+  var manager: _AppEventsConfigurationManager!
   var store: UserDefaultsSpy!
   var settings: TestSettings!
   var graphRequestFactory: TestGraphRequestFactory!
@@ -30,7 +32,7 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
     connection = TestGraphRequestConnection()
     graphRequestConnectionFactory = TestGraphRequestConnectionFactory.create(withStubbedConnection: connection)
 
-    manager = AppEventsConfigurationManager()
+    manager = _AppEventsConfigurationManager()
     manager.configure(
       store: store,
       settings: settings,
@@ -82,8 +84,8 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
       settings,
       "Should be able to configure with custom settings"
     )
-    XCTAssertEqual(
-      manager.graphRequestFactory as? TestGraphRequestFactory,
+    XCTAssertIdentical(
+      manager.graphRequestFactory as AnyObject,
       graphRequestFactory,
       "Should be able to configure with a custom graph request provider"
     )
@@ -141,12 +143,11 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
       "Should not include a token string in the request"
     )
     XCTAssertNil(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       "Should not specify an http method when creating the request"
     )
-    XCTAssertEqual(
+    XCTAssertNil(
       graphRequestFactory.capturedFlags,
-      [],
       "Should not specify flags when creating the request"
     )
   }

@@ -18,6 +18,11 @@
  #import <FBSDKCoreKit/FBSDKURLHosting.h>
 #endif
 
+@protocol FBSDKErrorCreating;
+@protocol FBSDKInfoDictionaryProviding;
+@protocol FBSDKSettings;
+@protocol __FBSDKLoggerCreating;
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(InternalUtility)
@@ -28,7 +33,7 @@ NS_SWIFT_NAME(InternalUtility)
   <FBSDKAppAvailabilityChecker, FBSDKAppURLSchemeProviding, FBSDKInternalUtility>
 #endif
 
-#if !FBTEST
+#if !DEBUG
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 #endif
@@ -60,24 +65,16 @@ NS_SWIFT_NAME(InternalUtility)
  */
 - (BOOL)object:(id)object isEqualToObject:(id)other;
 
-/**
- Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
- */
+/// Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
 - (nullable UIViewController *)viewControllerForView:(UIView *)view;
 
-/**
- returns true if the url scheme is registered in the CFBundleURLTypes
- */
+/// returns true if the url scheme is registered in the CFBundleURLTypes
 - (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
-/**
- returns currently displayed top view controller.
- */
+/// returns currently displayed top view controller.
 - (nullable UIViewController *)topMostViewController;
 
-/**
- returns the current key window
- */
+/// returns the current key window
 - (nullable UIWindow *)findWindow;
 
 #pragma mark - FB Apps Installed
@@ -85,6 +82,18 @@ NS_SWIFT_NAME(InternalUtility)
 @property (nonatomic, readonly, assign) BOOL isMessengerAppInstalled;
 
 - (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+- (void)configureWithInfoDictionaryProvider:(id<FBSDKInfoDictionaryProviding>)infoDictionaryProvider
+                              loggerFactory:(id<__FBSDKLoggerCreating>)loggerFactory
+                                   settings:(id<FBSDKSettings>)settings
+                               errorFactory:(id<FBSDKErrorCreating>)errorFactory
+NS_SWIFT_NAME(configure(infoDictionaryProvider:loggerFactory:settings:errorFactory:));
 
 @end
 

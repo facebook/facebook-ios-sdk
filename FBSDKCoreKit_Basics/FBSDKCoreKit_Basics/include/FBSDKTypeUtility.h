@@ -17,14 +17,14 @@ NS_SWIFT_NAME(TypeUtility)
 + (instancetype)new NS_UNAVAILABLE;
 
 /// Returns an NSArray if the provided object is an NSArray, otherwise returns nil.
-+ (nullable NSArray *)arrayValue:(nullable id)object;
++ (nullable NSArray<id> *)arrayValue:(nullable id)object;
 
 /**
  Return an object at a given index if the index is valid, otherwise return nil
  @param array The array to retrieve the object from.
  @param index The index to retrieve the object from.
  */
-+ (nullable id)array:(NSArray *)array objectAtIndex:(NSUInteger)index;
++ (nullable id)array:(NSArray<id> *)array objectAtIndex:(NSUInteger)index;
 
 /**
  Adds an object to an array if it is not nil.
@@ -32,15 +32,6 @@ NS_SWIFT_NAME(TypeUtility)
  @param object The object to add to the array.
  */
 + (void)array:(NSMutableArray *)array addObject:(nullable id)object;
-
-/**
- Adds an object to an array at a given index if the object is not nil and the index is available.
- Will override objects if  they exist.
- @param array The array to add the object to.
- @param object The object to add to the array.
- @param index The index to try and insert the object into
- */
-+ (void)array:(NSMutableArray *)array addObject:(nullable id)object atIndex:(NSUInteger)index;
 
 /// Returns a BOOL if the provided object is a BOOL, otherwise returns nil.
 + (BOOL)boolValue:(id)object;
@@ -90,14 +81,6 @@ NS_SWIFT_NAME(TypeUtility)
 
 /// Returns an NSURL if the provided object is an NSURL; will attempt to create an NSURL if the object is an NSString; returns nil otherwise.
 + (nullable NSURL *)coercedToURLValue:(id)object;
-
-/*
- Lightweight wrapper around Foundation's isValidJSONObject:
-
- Returns YES if the given object can be converted to JSON data, NO otherwise.
- Calling this method or attempting a conversion are the definitive ways to tell if a given object can be converted to JSON data.
- */
-+ (BOOL)isValidJSONObject:(id)obj;
 
 /*
  Lightweight safety wrapper around Foundation's NSJSONSerialization:dataWithJSONObject:options:error:

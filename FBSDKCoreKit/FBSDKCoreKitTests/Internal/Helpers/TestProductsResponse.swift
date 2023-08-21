@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestProductsResponse: SKProductsResponse {
+final class TestProductsResponse: SKProductsResponse {
   private let stubbedProducts: [SKProduct]
   private let stubbedInvalidProductIdentifiers: [String]
 

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestASIdentifierManager: ASIdentifierManager {
+final class TestASIdentifierManager: ASIdentifierManager {
   var stubbedAdvertisingIdentifier: UUID
 
   init(stubbedAdvertisingIdentifier: UUID) {

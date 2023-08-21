@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestTouch: UITouch {
+final class TestTouch: UITouch {
   var stubbedView: UIView?
 
   override var view: UIView? {

@@ -12,10 +12,10 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 
-#import "FBSDKAppEventsUtility.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKSafeCast.h"
 #import "FBSDKUtility.h"
@@ -29,13 +29,13 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
 @implementation FBSDKViewHierarchy
 
-+ (nullable NSArray *)getChildren:(NSObject *)obj
++ (nullable NSArray<NSObject *> *)getChildren:(NSObject *)obj
 {
   if ([obj isKindOfClass:UIControl.class]) {
     return nil;
   }
 
-  NSMutableArray *children = [NSMutableArray array];
+  NSMutableArray<NSObject *> *children = [NSMutableArray array];
 
   // children of window should be viewcontroller
   if ([obj isKindOfClass:UIWindow.class]) {
@@ -186,7 +186,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
 
   NSObject *parent = [FBSDKViewHierarchy getParent:obj];
   if (parent) {
-    NSArray *parentPath = [FBSDKViewHierarchy getPath:parent limit:limit - 1];
+    NSArray<FBSDKCodelessPathComponent *> *parentPath = [FBSDKViewHierarchy getPath:parent limit:limit - 1];
     path = [NSMutableArray arrayWithArray:parentPath];
   } else {
     path = [NSMutableArray array];
@@ -228,7 +228,7 @@ _Nullable id getVariableFromInstance(NSObject *instance, NSString *variableName)
   }
 
   if (parent != nil) {
-    NSArray *children = [FBSDKViewHierarchy getChildren:parent];
+    NSArray<NSObject *> *children = [FBSDKViewHierarchy getChildren:parent];
     NSUInteger index = [children indexOfObject:obj];
     if (index != NSNotFound) {
       [FBSDKTypeUtility dictionary:componentInfo setObject:@(index) forKey:CODELESS_MAPPING_INDEX_KEY];
@@ -343,7 +343,7 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
   } else if ([obj isKindOfClass:UIPickerView.class]) {
     UIPickerView *picker = (UIPickerView *)obj;
     NSInteger sections = picker.numberOfComponents;
-    NSMutableArray *titles = [NSMutableArray array];
+    NSMutableArray<NSString *> *titles = [NSMutableArray array];
 
     for (NSInteger i = 0; i < sections; i++) {
       NSInteger numberOfRow = [picker numberOfRowsInComponent:i];
@@ -377,12 +377,12 @@ id getVariableFromInstance(NSObject *instance, NSString *variableName)
   } else if ([obj isKindOfClass:objc_lookUpClass("RCTTextView")]) {
     NSTextStorage *const textStorage = _FBSDKCastToClassOrNilUnsafeInternal(getVariableFromInstance(obj, @"_textStorage"), NSTextStorage.class);
     if (textStorage) {
-      text = [textStorage string];
+      text = textStorage.string;
     }
   } else if ([obj isKindOfClass:objc_lookUpClass("RCTBaseTextInputView")]) {
     NSAttributedString *const attributedText = _FBSDKCastToClassOrNilUnsafeInternal(getVariableFromInstance(obj, @"attributedText"), NSAttributedString.class);
     if (attributedText) {
-      text = [attributedText string];
+      text = attributedText.string;
     }
   }
 

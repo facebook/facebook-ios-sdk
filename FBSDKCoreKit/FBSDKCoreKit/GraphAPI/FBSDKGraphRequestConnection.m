@@ -8,24 +8,14 @@
 
 #import "FBSDKGraphRequestConnection+Internal.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
-#import "FBSDKAccessToken.h"
-#import "FBSDKAuthenticationToken.h"
-#import "FBSDKCoreKitVersions.h"
-#import "FBSDKErrorConfigurationProvider.h"
 #import "FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
-#import "FBSDKGraphRequestConnectionFactoryProtocol.h"
-#import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger+Internal.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
 #import "FBSDKSafeCast.h"
-#import "FBSDKSettingsProtocol.h"
-#import "FBSDKURLSessionProxying.h"
 
 NSString *const FBSDKNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
 
@@ -41,13 +31,8 @@ static NSString *const kBatchFileNamePrefix = @"file";
 static NSString *const kBatchEntryName = @"name";
 
 static NSString *const kAccessTokenKey = @"access_token";
-#if TARGET_OS_TV
-static NSString *const kSDK = @"tvos";
-static NSString *const kUserAgentBase = @"FBtvOSSDK";
-#else
 static NSString *const kSDK = @"ios";
 static NSString *const kUserAgentBase = @"FBiOSSDK";
-#endif
 static NSString *const kBatchRestMethodBaseURL = @"method/";
 
 static NSTimeInterval g_defaultTimeout = 60.0;
@@ -80,11 +65,7 @@ static FBSDKAccessToken *_Nullable _CreateExpiredAccessToken(FBSDKAccessToken *a
 // Private properties and methods
 
 @interface FBSDKGraphRequestConnection ()
-#if TARGET_OS_TV
-<NSURLSessionDataDelegate>
-#else
 <NSURLSessionDataDelegate, FBSDKGraphErrorRecoveryProcessorDelegate>
-#endif
 
 @property (class, nonatomic) BOOL hasBeenConfigured;
 
@@ -109,7 +90,6 @@ static id<FBSDKEventLogging> _eventLogger;
 static id<FBSDKOperatingSystemVersionComparing> _operatingSystemVersionComparer;
 static id<FBSDKMacCatalystDetermining> _macCatalystDeterminator;
 static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
-static Class<FBSDKAccessTokenSetting> _accessTokenSetter;
 static id<FBSDKErrorCreating> _errorFactory;
 static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
@@ -213,16 +193,6 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   _accessTokenProvider = accessTokenProvider;
 }
 
-+ (nullable Class<FBSDKAccessTokenSetting>)accessTokenSetter
-{
-  return _accessTokenSetter;
-}
-
-+ (void)setAccessTokenSetter:(nullable Class<FBSDKAccessTokenSetting>)accessTokenSetter
-{
-  _accessTokenSetter = accessTokenSetter;
-}
-
 + (nullable id<FBSDKErrorCreating>)errorFactory
 {
   return _errorFactory;
@@ -252,7 +222,6 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
              operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
                     macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
                         accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
-                          accessTokenSetter:(nonnull Class<FBSDKAccessTokenSetting>)accessTokenSetter
                                errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
                 authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider
 {
@@ -269,14 +238,13 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   self.operatingSystemVersionComparer = operatingSystemVersionComparer;
   self.macCatalystDeterminator = macCatalystDeterminator;
   self.accessTokenProvider = accessTokenProvider;
-  self.accessTokenSetter = accessTokenSetter;
   self.errorFactory = errorFactory;
   self.authenticationTokenProvider = authenticationTokenProvider;
 
   self.hasBeenConfigured = YES;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {
@@ -290,7 +258,6 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   self.operatingSystemVersionComparer = nil;
   self.macCatalystDeterminator = nil;
   self.accessTokenProvider = nil;
-  self.accessTokenSetter = nil;
   self.errorFactory = nil;
   self.authenticationTokenProvider = nil;
 }
@@ -452,7 +419,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // attachments dictionary.
 //
 - (void)addRequest:(FBSDKGraphRequestMetadata *)metadata
-           toBatch:(NSMutableArray *)batch
+           toBatch:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)batch
        attachments:(NSMutableDictionary<NSString *, id> *)attachments
         batchToken:(NSString *)batchToken
 {
@@ -474,7 +441,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   [FBSDKTypeUtility dictionary:requestElement setObject:urlString forKey:kBatchRelativeURLKey];
   [FBSDKTypeUtility dictionary:requestElement setObject:metadata.request.HTTPMethod forKey:kBatchMethodKey];
 
-  NSMutableArray *attachmentNames = [NSMutableArray array];
+  NSMutableArray<NSString *> *attachmentNames = [NSMutableArray array];
 
   [FBSDKTypeUtility dictionary:metadata.request.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
     if ([FBSDKGraphRequest isAttachment:value]) {
@@ -525,12 +492,12 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // All the requests are serialized into JSON, with any binary attachments
 // named and referenced by name in the JSON.
 //
-- (void)appendJSONRequests:(NSArray *)requests
+- (void)appendJSONRequests:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                     toBody:(FBSDKGraphRequestBody *)body
         andNameAttachments:(NSMutableDictionary<NSString *, id> *)attachments
                     logger:(FBSDKLogger *)logger
 {
-  NSMutableArray *batch = [NSMutableArray new];
+  NSMutableArray<NSMutableDictionary<NSString *, id> *> *batch = [NSMutableArray new];
   NSString *batchToken = nil;
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     NSString *individualToken = [self accessTokenWithRequest:metadata.request];
@@ -571,7 +538,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 }
 
 // Validate that all GET requests after v2.4 have a "fields" param
-- (void)_validateFieldsParamForGetRequests:(NSArray *)requests
+- (void)_validateFieldsParamForGetRequests:(NSArray<FBSDKGraphRequestMetadata *> *)requests
 {
   for (FBSDKGraphRequestMetadata *metadata in requests) {
     id<FBSDKGraphRequest> request = metadata.request;
@@ -591,7 +558,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // options on the request.  Chooses between URL-based request for a single
 // request and JSON-based request for batches.
 //
-- (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
+- (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                                   timeout:(NSTimeInterval)timeout
 {
   FBSDKGraphRequestBody *body = [FBSDKGraphRequestBody new];
@@ -761,7 +728,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
     self.state = FBSDKGraphRequestConnectionStateCompleted;
   }
 
-  NSArray *results = nil;
+  NSArray<NSDictionary<NSString *, id> *> *results = nil;
   _urlResponse = (NSHTTPURLResponse *)response;
   if (response) {
     NSAssert(
@@ -829,14 +796,14 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 // The NSArray looks just like the multiple request case except the body
 // value is converted from a string to parsed JSON.
 //
-- (NSArray *)parseJSONResponse:(NSData *)data
-                         error:(NSError **)error
-                    statusCode:(NSInteger)statusCode
+- (NSArray<NSDictionary<NSString *, id> *> *)parseJSONResponse:(NSData *)data
+                                                         error:(NSError **)error
+                                                    statusCode:(NSInteger)statusCode
 {
   // Graph API can return "true" or "false", which is not valid JSON.
   // Translate that before asking JSON parser to look at it.
   NSString *responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-  NSMutableArray *_Nonnull results = [NSMutableArray new];
+  NSMutableArray<NSDictionary<NSString *, id> *> *_Nonnull results = [NSMutableArray new];
   id response = [self parseJSONOrOtherwise:responseUTF8 error:error];
 
   if (responseUTF8 == nil) {
@@ -941,7 +908,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   return parsed;
 }
 
-- (void)_completeWithResults:(NSArray *)results
+- (void)_completeWithResults:(NSArray<NSDictionary<NSString *, id> *> *)results
                 networkError:(NSError *)networkError
 {
   NSUInteger count = self.requests.count;
@@ -1011,9 +978,9 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
       return;
     }
     if (errorSubcode == 493) {
-      [self.class.accessTokenSetter setCurrentAccessToken:_CreateExpiredAccessToken([self.class.accessTokenProvider currentAccessToken])];
+      [self.class.accessTokenProvider setCurrentAccessToken:_CreateExpiredAccessToken([self.class.accessTokenProvider currentAccessToken])];
     } else {
-      [self.class.accessTokenSetter setCurrentAccessToken:nil];
+      [self.class.accessTokenProvider setCurrentAccessToken:nil];
     }
   };
 
@@ -1034,7 +1001,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 - (void)processResultDebugDictionary:(NSDictionary<NSString *, id> *)dict
 {
-  NSArray *messages = [FBSDKTypeUtility arrayValue:dict[@"messages"]];
+  NSArray<NSDictionary<NSString *, id> *> *messages = [FBSDKTypeUtility arrayValue:dict[@"messages"]];
   if (!messages.count) {
     return;
   }
@@ -1267,7 +1234,8 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   [self raiseExceptionIfMissingClientToken];
 
   NSString *token = request.tokenString ?: request.parameters[kAccessTokenKey];
-  if (!token && [self.class.settings.clientToken length] > 0) {
+  FBSDKGraphRequestFlags flags = [request flags];
+  if (!token && !(flags & FBSDKGraphRequestFlagSkipClientToken) && [self.class.settings.clientToken length] > 0) {
     NSString *baseTokenString = [NSString stringWithFormat:@"%@|%@", self.class.settings.appID, self.class.settings.clientToken];
     if ([[[self.class.authenticationTokenProvider currentAuthenticationToken] graphDomain] isEqualToString:@"gaming"]) {
       return [@"GG|" stringByAppendingString:baseTokenString];
@@ -1317,7 +1285,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
     agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.class.settings.userAgentSuffix];
   }
   if (@available(iOS 13.0, *)) {
-    if (self.class.macCatalystDeterminator.isMacCatalystApp) {
+    if (self.class.macCatalystDeterminator.fb_isMacCatalystApp) {
       return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
     }
   }
@@ -1397,7 +1365,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 // MARK: - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 /// Resets the default connection timeout to 60 seconds
 + (void)resetDefaultConnectionTimeout

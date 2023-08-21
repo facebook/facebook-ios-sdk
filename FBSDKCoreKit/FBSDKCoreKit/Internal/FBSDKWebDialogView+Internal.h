@@ -10,7 +10,6 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import "FBSDKInternalURLOpener.h"
 #import "FBSDKWebViewProviding.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,13 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (class, nullable, nonatomic) id<FBSDKWebViewProviding> webViewProvider;
 @property (class, nullable, nonatomic) id<FBSDKInternalURLOpener> urlOpener;
 @property (class, nullable, nonatomic) id<FBSDKErrorCreating> errorFactory;
-
-// UNCRUSTIFY_FORMAT_OFF
-+ (void)configureWithWebViewProvider:(id<FBSDKWebViewProviding>)webViewProvider
-                           urlOpener:(id<FBSDKInternalURLOpener>)urlOpener
-                        errorFactory:(id<FBSDKErrorCreating>)errorFactory
-NS_SWIFT_NAME(configure(webViewProvider:urlOpener:errorFactory:));
-// UNCRUSTIFY_FORMAT_ON
 
 @end
 

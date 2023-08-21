@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
 @testable import FBSDKGamingServicesKit
 
-import FBSDKCoreKit
 import XCTest
 
 final class GamingRequestPayloadObserverTests: XCTestCase {
@@ -127,7 +127,7 @@ final class GamingRequestPayloadObserverTests: XCTestCase {
   }
 }
 
-class GameRequestPayloadObserverDelegate: NSObject, GamingPayloadDelegate {
+final class GameRequestPayloadObserverDelegate: NSObject, GamingPayloadDelegate {
   var wasGameRequestDelegateCalled = false
   var capturedGameRequestID: String?
   var capturedPayload: GamingPayload?

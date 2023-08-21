@@ -10,10 +10,8 @@
 
 #import "FBSDKIntegrityManager.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKGateKeeperManaging.h"
-#import "FBSDKIntegrityProcessing.h"
 
 @interface FBSDKIntegrityManager ()
 
@@ -52,7 +50,7 @@
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
   NSMutableDictionary<NSString *, id> *restrictiveParams = [NSMutableDictionary dictionary];
 
-  for (NSString *key in [parameters keyEnumerator]) {
+  for (NSString *key in parameters.keyEnumerator) {
     NSString *valueString = [FBSDKTypeUtility coercedToStringValue:parameters[key]];
     BOOL shouldFilter = [self.integrityProcessor processIntegrity:key] || [self.integrityProcessor processIntegrity:valueString];
     if (shouldFilter) {
@@ -60,7 +58,7 @@
       [params removeObjectForKey:key];
     }
   }
-  if ([restrictiveParams count] > 0) {
+  if (restrictiveParams.count > 0) {
     NSString *restrictiveParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictiveParams
                                                                              error:NULL
                                                               invalidObjectHandler:NULL];

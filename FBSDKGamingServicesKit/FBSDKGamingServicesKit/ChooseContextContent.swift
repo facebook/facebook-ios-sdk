@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import Foundation
 
@@ -32,26 +30,18 @@ public enum ChooseContextFilter: Int, CaseIterable {
   }
 }
 
-/**
- A model for an instant games choose context app switch dialog
- */
+/// A model for an instant games choose context app switch dialog
 @objcMembers
 @objc(FBSDKChooseContextContent)
-public class ChooseContextContent: NSObject, ValidatableProtocol {
+public final class ChooseContextContent: NSObject, ValidatableProtocol {
 
-  /**
-   This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
-   */
+  /// This sets the filter which determines which context will show when the user is app switched to the choose context dialog.
   public var filter = ChooseContextFilter.none
 
-  /**
-   This sets the maximum number of participants that the suggested context(s) shown in the dialog should have.
-   */
+  /// This sets the maximum number of participants that the suggested context(s) shown in the dialog should have.
   public var maxParticipants = 0
 
-  /**
-   This sets the minimum number of participants that the suggested context(s) shown in the dialog should have.
-   */
+  /// This sets the minimum number of participants that the suggested context(s) shown in the dialog should have.
   public var minParticipants = 0
 
   public static func filtersName(forFilters filter: ChooseContextFilter) -> String {
@@ -77,7 +67,7 @@ public class ChooseContextContent: NSObject, ValidatableProtocol {
     let minimumGreaterThanMaximum = minParticipants > maxParticipants
     if minimumGreaterThanMaximum, maxParticipants != 0 {
       let message = "The minimum size cannot be greater than the maximum size"
-      throw ErrorFactory().requiredArgumentError(
+      throw _ErrorFactory().requiredArgumentError(
         name: "minParticipants",
         message: message,
         underlyingError: nil
@@ -94,5 +84,3 @@ public class ChooseContextContent: NSObject, ValidatableProtocol {
       && maxParticipants == contentObject?.maxParticipants
   }
 }
-
-#endif

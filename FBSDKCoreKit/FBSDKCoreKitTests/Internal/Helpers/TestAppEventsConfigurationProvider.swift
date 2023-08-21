@@ -9,13 +9,13 @@
 import Foundation
 
 @objcMembers
-class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProviding {
-  var stubbedConfiguration: AppEventsConfigurationProtocol?
+final class TestAppEventsConfigurationProvider: NSObject, _AppEventsConfigurationProviding {
+  var stubbedConfiguration: _AppEventsConfigurationProtocol?
   var didRetrieveCachedConfiguration = false
-  var firstCapturedBlock: AppEventsConfigurationProvidingBlock?
-  var lastCapturedBlock: AppEventsConfigurationProvidingBlock?
+  var firstCapturedBlock: _AppEventsConfigurationProvidingBlock?
+  var lastCapturedBlock: _AppEventsConfigurationProvidingBlock?
 
-  var cachedAppEventsConfiguration: AppEventsConfigurationProtocol {
+  var cachedAppEventsConfiguration: _AppEventsConfigurationProtocol {
     guard let configuration = stubbedConfiguration else {
       fatalError("A cached configuration is required")
     }
@@ -23,7 +23,7 @@ class TestAppEventsConfigurationProvider: NSObject, AppEventsConfigurationProvid
     return configuration
   }
 
-  func loadAppEventsConfiguration(_ block: @escaping AppEventsConfigurationProvidingBlock) {
+  func loadAppEventsConfiguration(_ block: @escaping _AppEventsConfigurationProvidingBlock) {
     if firstCapturedBlock == nil {
       firstCapturedBlock = block
     }

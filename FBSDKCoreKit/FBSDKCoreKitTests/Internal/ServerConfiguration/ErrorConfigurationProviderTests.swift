@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
 
 final class ErrorConfigurationProviderTests: XCTestCase {
 
   func testErrorConfigurationRecoveryProvider() {
     XCTAssertTrue(
-      ErrorConfigurationProvider().errorConfiguration() is ErrorConfiguration,
+      _ErrorConfigurationProvider().errorConfiguration() is _ErrorConfiguration,
       "The default error configuration provider should provide the expected concrete type"
     )
   }

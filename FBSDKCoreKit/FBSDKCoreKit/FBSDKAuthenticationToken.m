@@ -10,8 +10,7 @@
 #import "FBSDKAuthenticationToken+Internal.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKAuthenticationTokenClaims+Internal.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 static FBSDKAuthenticationToken *g_currentAuthenticationToken;
 static id<FBSDKTokenCaching> g_tokenCache;
@@ -68,7 +67,7 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
     return nil;
   }
   NSString *encodedClaims = [FBSDKTypeUtility array:segments objectAtIndex:1];
-  return [FBSDKAuthenticationTokenClaims claimsFromEncodedString:encodedClaims nonce:_nonce];
+  return [[FBSDKAuthenticationTokenClaims alloc] initWithEncodedClaims:encodedClaims nonce:_nonce];
 }
 
 #pragma mark - Storage
@@ -123,7 +122,7 @@ NSString *const FBSDKAuthenticationTokenGraphDomainCodingKey = @"FBSDKAuthentica
 
 #pragma mark - Test methods
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetCurrentAuthenticationTokenCache
 {

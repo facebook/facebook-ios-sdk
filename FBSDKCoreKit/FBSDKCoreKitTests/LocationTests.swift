@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 // MARK: Creation
@@ -43,32 +45,26 @@ final class LocationTests: XCTestCase {
     XCTAssertNil(Location(from: [:]), "Should not be able to create Location from empty dictionary")
   }
 
-  func testEncoding() throws {
+  func testEncodingAndDecoding() throws {
     let dict = ["id": "110843418940484", "name": "Seattle, Washington"]
     let location = try XCTUnwrap(Location(from: dict))
 
-    let coder = TestCoder()
-    location.encode(with: coder)
+    let decodedObject = try CodabilityTesting.encodeAndDecode(location)
 
-    XCTAssertEqual(
-      coder.encodedObject["FBSDKLocationIdCodingKey"] as? String,
-      location.id,
-      "Should encode the expected id value"
-    )
+    // Test Objects
+    XCTAssertNotIdentical(location, decodedObject, .isCodable)
+    XCTAssertEqual(location, decodedObject, .isCodable)
+
+    // Test Properties
+    XCTAssertEqual(location.id, decodedObject.id, .isCodable)
+    XCTAssertEqual(location.name, decodedObject.name, .isCodable)
   }
+}
 
-  func testDecoding() {
-    let coder = TestCoder()
-    let location = Location(coder: coder)
+// swiftformat:disable extensionaccesscontrol
 
-    XCTAssertNotNil(location)
-    XCTAssertTrue(
-      coder.decodedObject["FBSDKLocationIdCodingKey"] as? Any.Type == NSString.self,
-      "Should decode a string for the id key"
-    )
-    XCTAssertTrue(
-      coder.decodedObject["FBSDKLocationNameCodingKey"] as? Any.Type == NSString.self,
-      "Should decode a string for the name key"
-    )
-  }
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let isCodable = "Location should be encodable and decodable"
 }

@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import XCTest
 
 @objcMembers
-class TestLogger: NSObject, Logging {
+final class TestLogger: NSObject, Logging {
   var contents = ""
 
   var loggingBehavior: LoggingBehavior

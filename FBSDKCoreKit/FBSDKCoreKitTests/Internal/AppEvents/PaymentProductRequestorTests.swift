@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -179,7 +181,7 @@ final class PaymentProductRequestorTests: XCTestCase {
     )
     XCTAssertEqual(
       eventLogger.capturedFlushReason,
-      AppEventsUtility.FlushReason.eagerlyFlushingEvent.rawValue,
+      AppEvents.FlushReason.eagerlyFlushingEvent,
       "Should capture the flush reason"
     )
   }
@@ -547,7 +549,7 @@ final class PaymentProductRequestorTests: XCTestCase {
         .deferred,
         nil,
         "Should not log an event for a subscription deferral"
-      )
+      ),
     ]
 
     testData.forEach {
@@ -604,7 +606,7 @@ final class PaymentProductRequestorTests: XCTestCase {
     let response = TestProductsResponse(
       products: [
         SampleProducts.createValid(),
-        SampleProducts.createValidSubscription()
+        SampleProducts.createValidSubscription(),
       ],
       invalidProductIdentifiers: []
     )

@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
+public final class TestBridgeAPIRequestOpener: NSObject, BridgeAPIRequestOpening {
 
   public var capturedURL: URL?
   public var capturedHandler: SuccessBlock?

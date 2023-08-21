@@ -7,8 +7,9 @@
  */
 
 import FBAEMKit
+import Foundation
 
-public class TestSKAdNetworkReporter: NSObject, SKAdNetworkReporting {
+public final class TestSKAdNetworkReporter: NSObject, SKAdNetworkReporting {
 
   public var cutOff = false
   public var reportingEvents: Set<String> = []

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestCrashObserver: CrashObserving {
+final class TestCrashObserver: CrashObserving {
   var wasEnableCalled = false
   var prefixes = [String]()
   var frameworks: [String]?

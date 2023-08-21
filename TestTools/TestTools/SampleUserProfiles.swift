@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class SampleUserProfiles: NSObject {
+public final class SampleUserProfiles: NSObject {
 
   public static let defaultName = "John Smith"
   public static let defaultImageURL = URL(string: "http://www.example.com/image.jpg")

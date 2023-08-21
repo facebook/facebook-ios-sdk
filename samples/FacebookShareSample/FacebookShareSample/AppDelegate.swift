@@ -10,7 +10,7 @@ import UIKit
 import FacebookCore
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+final class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(
         _ application: UIApplication,
@@ -29,7 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         sourceApplication: String?,
         annotation: Any
     ) -> Bool {
-
         return ApplicationDelegate.shared.application(
             application, open: url,
             sourceApplication: sourceApplication,
@@ -40,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(
         _ app: UIApplication,
         open url: URL,
-        options: [UIApplication.OpenURLOptionsKey : Any] = [:]
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
         return ApplicationDelegate.shared.application(
             app,
@@ -48,5 +47,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             options: options
         )
     }
-
 }

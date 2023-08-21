@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class NetworkErrorCheckerTests: XCTestCase {
@@ -45,7 +47,7 @@ final class NetworkErrorCheckerTests: XCTestCase {
     .notConnectedToInternet,
     .internationalRoamingOff,
     .callIsActive,
-    .dataNotAllowed
+    .dataNotAllowed,
   ]
 
   // MARK: - Test Fixture

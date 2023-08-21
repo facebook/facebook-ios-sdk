@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class EventDeactivationTests: XCTestCase {
@@ -21,18 +23,52 @@ final class EventDeactivationTests: XCTestCase {
   let rawConfiguration = [
     "restrictiveParams": [
       "fb_mobile_catalog_update": [
-        "restrictive_param": ["first_name": "6"]
+        "restrictive_param": ["first_name": "6"],
       ],
       "manual_initiated_checkout": [
-        "deprecated_param": ["deprecated_3"]
-      ]
-    ]
+        "deprecated_param": ["deprecated_3"],
+      ],
+    ],
   ]
-  lazy var serverConfiguration = ServerConfigurationFixtures.config(withDictionary: rawConfiguration)
-  lazy var provider = TestServerConfigurationProvider(configuration: serverConfiguration)
-  lazy var eventDeactivationManager = EventDeactivationManager(
-    serverConfigurationProvider: provider
-  )
+
+  lazy var serverConfiguration = ServerConfigurationFixtures.configuration(withDictionary: rawConfiguration)
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  var provider: TestServerConfigurationProvider!
+  var eventDeactivationManager: EventDeactivationManager!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  override func setUp() {
+    super.setUp()
+
+    provider = TestServerConfigurationProvider(configuration: serverConfiguration)
+    eventDeactivationManager = EventDeactivationManager()
+    eventDeactivationManager.configuredDependencies = .init(
+      serverConfigurationProvider: provider
+    )
+  }
+
+  override func tearDown() {
+    super.tearDown()
+
+    provider = nil
+    eventDeactivationManager = nil
+  }
+
+  func testDefaultDependencies() throws {
+    eventDeactivationManager.resetDependencies()
+    XCTAssertTrue(
+      eventDeactivationManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
+      "Should use the shared server configuration manger by default"
+    )
+  }
+
+  func testConfiguringDependencies() {
+    XCTAssertTrue(
+      eventDeactivationManager.serverConfigurationProvider === provider,
+      "Should be able to create with a server configuration provider"
+    )
+  }
 
   func testProcessParameters() throws {
     eventDeactivationManager.enable()

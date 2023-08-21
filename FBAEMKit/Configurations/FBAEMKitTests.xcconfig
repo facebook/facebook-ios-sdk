@@ -15,8 +15,6 @@ INFOPLIST_FILE = $(SRCROOT)/FBAEMKitTests/Info.plist
 HEADER_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
 LIBRARY_SEARCH_PATHS = $(inherited) $(BUILT_PRODUCTS_DIR)
 
-SWIFT_OBJC_BRIDGING_HEADER = FBAEMKitTests/FBAEMKitTests-Bridging-Header.h
-
 // These were overridden at the project level. Keeping them
 // here until we know if we need them specified this way.
 CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES

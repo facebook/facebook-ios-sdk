@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -17,7 +19,8 @@ final class AppEventsUtilityTests: XCTestCase {
   var settings: TestSettings!
   var internalUtility: TestInternalUtility!
   var errorFactory: TestErrorFactory!
-  var appEventsUtility: AppEventsUtility!
+  var dataStore: UserDefaultsSpy!
+  var appEventsUtility: _AppEventsUtility!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -29,13 +32,15 @@ final class AppEventsUtilityTests: XCTestCase {
     settings = TestSettings()
     internalUtility = TestInternalUtility()
     errorFactory = TestErrorFactory()
-    appEventsUtility = AppEventsUtility()
+    dataStore = UserDefaultsSpy()
+    appEventsUtility = _AppEventsUtility()
     appEventsUtility.configure(
       appEventsConfigurationProvider: appEventsConfigurationProvider,
       deviceInformationProvider: deviceInformationProvider,
       settings: settings,
       internalUtility: internalUtility,
-      errorFactory: errorFactory
+      errorFactory: errorFactory,
+      dataStore: dataStore
     )
   }
 
@@ -139,7 +144,7 @@ final class AppEventsUtilityTests: XCTestCase {
     let testCity = "menlopark"
     let testState = "test_s"
     let testExternalId = "facebook123"
-    let store = UserDataStore()
+    let store = _UserDataStore()
 
     store.setUserData(testEmail, forType: .email)
     store.setUserData(testFirstName, forType: .firstName)
@@ -168,7 +173,7 @@ final class AppEventsUtilityTests: XCTestCase {
       "ge": Utility.sha256Hash(testGender as NSObject),
       "ct": Utility.sha256Hash(testCity as NSObject),
       "st": Utility.sha256Hash(testState as NSObject),
-      "external_id": Utility.sha256Hash(testExternalId as NSObject)
+      "external_id": Utility.sha256Hash(testExternalId as NSObject),
     ]
 
     let udParam = parameters["ud"] as? String
@@ -438,7 +443,7 @@ final class AppEventsUtilityTests: XCTestCase {
     [
       AdvertisingTrackingStatus.allowed,
       .disallowed,
-      .unspecified
+      .unspecified,
     ]
       .shuffled()
       .forEach { status in
@@ -523,7 +528,7 @@ final class AppEventsUtilityTests: XCTestCase {
       "SubmitApplication",
       "Subscribe",
       "AdImpression",
-      "AdClick"
+      "AdClick",
     ]
 
     for event in standardEvents {
@@ -930,5 +935,31 @@ final class AppEventsUtilityTests: XCTestCase {
       deviceInformationProvider.encodedDeviceInfo,
       "Should provide the information from the device information provider"
     )
+  }
+
+  func testSaveCampaignIDs() throws {
+    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")! // swiftlint:disable:this force_unwrapping
+    appEventsUtility.saveCampaignIDs(url)
+    let campaignIDs = try XCTUnwrap(
+      dataStore.capturedValues["com.facebook.sdk.campaignids"] as? String
+    )
+
+    XCTAssertEqual(campaignIDs, "123")
+  }
+
+  func testActivityParametersCampaignIDs() throws {
+    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")! // swiftlint:disable:this force_unwrapping
+    appEventsUtility.saveCampaignIDs(url)
+    let parameters = appEventsUtility.activityParametersDictionary(
+      forEvent: "event",
+      shouldAccessAdvertisingID: true,
+      userID: nil,
+      userData: nil
+    )
+
+    let campaignIDs = try XCTUnwrap(
+      parameters["campaign_ids"] as? String
+    )
+    XCTAssertEqual(campaignIDs, "123")
   }
 }

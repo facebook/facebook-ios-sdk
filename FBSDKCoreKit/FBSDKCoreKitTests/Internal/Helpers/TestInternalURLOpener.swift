@@ -10,10 +10,9 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestInternalURLOpener: NSObject, InternalURLOpener {
+public final class TestInternalURLOpener: NSObject, _InternalURLOpener {
   var capturedOpenURL: URL?
   var capturedCanOpenURL: URL?
-  var openURLStubs = [URL: Bool]()
   var canOpenURL: Bool
   var capturedOpenURLCompletion: ((Bool) -> Void)?
 
@@ -21,26 +20,19 @@ class TestInternalURLOpener: NSObject, InternalURLOpener {
     self.canOpenURL = canOpenURL
   }
 
-  func stubOpen(url: URL, success: Bool) {
-    openURLStubs[url] = success
-  }
-
-  func canOpen(_ url: URL) -> Bool {
+  public func canOpen(_ url: URL) -> Bool {
     capturedCanOpenURL = url
     return canOpenURL
   }
 
-  func open(_ url: URL) -> Bool {
+  public func open(_ url: URL) -> Bool {
     capturedOpenURL = url
-    guard let didOpen = openURLStubs[url] else {
-      fatalError("Must stub whether \(url.absoluteString) can be opened")
-    }
-    return didOpen
+    return true
   }
 
-  func open(
+  public func open(
     _ url: URL,
-    options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
+    options: [UIApplication.OpenExternalURLOptionsKey: Any],
     completionHandler completion: ((Bool) -> Void)?
   ) {
     capturedOpenURL = url

@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class SampleAccessTokens: NSObject {
+public final class SampleAccessTokens: NSObject {
 
   public static let defaultTokenString = "token123"
   public static let defaultAppID = "appID123"

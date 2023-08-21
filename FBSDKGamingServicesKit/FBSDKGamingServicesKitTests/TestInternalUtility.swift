@@ -9,7 +9,7 @@
 import FBSDKCoreKit
 import TestTools
 
-class TestInternalUtility: InternalUtilityProtocol {
+final class TestInternalUtility: InternalUtilityProtocol {
   var scheme: String?
   var host: String?
   var path: String?
@@ -39,7 +39,7 @@ class TestInternalUtility: InternalUtilityProtocol {
   }
 
   func facebookURL(
-    withHostPrefix hostPrefix: String,
+    hostPrefix: String,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
@@ -78,6 +78,12 @@ class TestInternalUtility: InternalUtilityProtocol {
   func parameters(fromFBURL url: URL) -> [String: Any] {
     [:]
   }
+
+  var bundleForStrings: Bundle { .main }
+
+  var stubbedTopMostViewController: UIViewController?
+
+  func topMostViewController() -> UIViewController? { stubbedTopMostViewController }
 }
 
 enum URLConstants {

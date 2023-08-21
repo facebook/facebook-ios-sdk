@@ -8,12 +8,12 @@
 
 #import "FBSDKInstrumentManager.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKErrorReporting.h"
 #import "FBSDKFeatureChecking.h"
 #import "FBSDKGraphRequestFactoryProtocol.h"
-#import "FBSDKSettingsProtocol.h"
 
 @interface FBSDKInstrumentManager ()
 
@@ -68,7 +68,7 @@ static dispatch_once_t sharedInstanceNonce;
   }];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

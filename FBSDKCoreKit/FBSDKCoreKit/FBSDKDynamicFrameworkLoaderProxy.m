@@ -13,7 +13,7 @@
 @implementation FBSDKDynamicFrameworkLoaderProxy
 + (CFTypeRef)loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
 {
-  return [FBSDKDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
+  return FBSDKDynamicFrameworkLoader.loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly;
 }
 
 @end

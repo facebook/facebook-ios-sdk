@@ -61,12 +61,6 @@ fastlane/screenshots/**/*.png
 fastlane/test_output
 
 # Custom
-internal/testing/Hackbook/Hackbook.xcodeproj/project.pbxproj
-internal/testing/Hackbook/Hackbook.xcworkspace/buck-project.meta.json
-internal/testing/Hackbook/Hackbook.xcworkspace/contents.xcworkspacedata
-internal/testing/Hackbook/Hackbook.xcworkspace/xcshareddata/xcschemes/Hackbook.xcscheme
-internal/testing/Hackbook/Hackbook.xcworkspace/xcshareddata/xcschemes/ios-sdk.xcscheme
-internal/testing/Hackbook/Hackbook.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 samples/LoginSample/Pods
 samples/LoginSample/LoginSample.xcworkspace
 lib/
@@ -93,4 +87,6 @@ buck-out/
 infer-out
 
 # Swift Package Manager
-scripts/Runner/Package.resolved
+internal/scripts/Runner/Package.resolved
+internal/scripts/Runner/.build
+internal/scripts/Runner/.swiftpm

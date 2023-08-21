@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 
 final class AppEventsPublishATETests: XCTestCase {
@@ -51,7 +53,7 @@ final class AppEventsPublishATETests: XCTestCase {
     settings.appID = name
 
     appEvents.configure(
-      withGateKeeperManager: TestGateKeeperManager.self,
+      gateKeeperManager: TestGateKeeperManager.self,
       appEventsConfigurationProvider: TestAppEventsConfigurationProvider(),
       serverConfigurationProvider: TestServerConfigurationProvider(),
       graphRequestFactory: TestGraphRequestFactory(),
@@ -69,7 +71,10 @@ final class AppEventsPublishATETests: XCTestCase {
       advertiserIDProvider: TestAdvertiserIDProvider(),
       userDataStore: TestUserDataStore(),
       appEventsUtility: TestAppEventsUtility(),
-      internalUtility: TestInternalUtility()
+      internalUtility: TestInternalUtility(),
+      capiReporter: TestCAPIReporter(),
+      protectedModeManager: TestAppEventsParameterProcessor(),
+      macaRuleMatchingManager: TestMACARuleMatchingManager()
     )
 
     appEvents.publishATE()

@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-public class Fuzzer: NSObject {
+public final class Fuzzer: NSObject {
 
   private static let values: [Any] = [
     // Booleans
@@ -57,7 +57,7 @@ public class Fuzzer: NSObject {
     ["": [1, 2, 3]],
     ["Foo": true],
     ["Foo": ["Bar": "Baz"]],
-    ["Foo": ["a", 1, [:]]]
+    ["Foo": ["a", 1, [:]]],
   ]
 
   public class var random: AnyObject {

@@ -7,7 +7,7 @@
  */
 
 @available(iOS 12.2, *)
-class TestPaymentTransaction: SKPaymentTransaction {
+final class TestPaymentTransaction: SKPaymentTransaction {
   private let stubbedTransactionIdentifier: String?
   private let stubbedTransactionState: SKPaymentTransactionState
   private let stubbedTransactionDate: Date?

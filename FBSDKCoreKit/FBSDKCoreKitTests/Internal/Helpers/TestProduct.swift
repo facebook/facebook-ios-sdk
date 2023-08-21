@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@available(iOS 11.2, *)
-class TestProduct: SKProduct {
+final class TestProduct: SKProduct {
   static let title = "Product title"
   static let productDescription = "Some description"
 

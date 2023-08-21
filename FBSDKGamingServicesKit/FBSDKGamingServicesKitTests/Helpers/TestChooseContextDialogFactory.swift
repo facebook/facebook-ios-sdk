@@ -8,7 +8,7 @@
 
 @testable import FBSDKGamingServicesKit
 
-class TestChooseContextDialogFactory: ChooseContextDialogMaking {
+final class TestChooseContextDialogFactory: ChooseContextDialogMaking {
   let dialog = TestShowable()
   var wasMakeChooseContextDialogCalled = false
   var capturedDelegate: ContextDialogDelegate?

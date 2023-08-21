@@ -10,44 +10,273 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-### Changed
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.3...HEAD)
 
-- The minimum supported version of iOS is now 11.0.
-- Client tokens are now required for making Graph requests. An exception is now raised when running apps without a client token. Visit https://developers.facebook.com/docs/ios/getting-started#configure-your-project for more information on how to add your app's client token.
-- Replaced more `AppEvents.Name` and `AppEvents.ParameterName` types in method signatures
-- Renamed `frictionlessRequestsEnabled` property on `FBSDKGameRequestDialog` in Objective-C; use `isFrictionlessRequestsEnabled` and `setIsFrictionlessRequestsEnabled:` instead.
-- Corrected nullability of `contentURL` in protocol `SharingContent`
-- The `AppInviteDestination` enumeration has been renamed to `AppInviteContent.Destination`
+## 16.1.3
+
+[2023-07-10](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.1.3) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.2...v16.1.3)
+
+## 16.1.2
+
+[2023-06-23](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.1.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.1...v16.1.2)
+
+## 16.1.1
+
+### Fixed
+
+- Fix App AEM AutoSetup
+- Fix ATE status publishing issue
+
+[2023-06-13](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.1.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.0...v16.1.1)
+
+## 16.1.0
+
+### Fixed
+
+- Fix CAPI-G module
+
+[2023-04-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.0.1...v16.1.0)
+
+## 16.0.1
+
+### Changed
+- Flushed events if AEM Campaign ID is found
+
+[2023-03-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.0.0...v16.0.1)
+
+## 16.0.0
+
+### Added
+
+- Added AEM Auto Setup
+
+[2023-02-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.1.0...v16.0.0)
+
+## 15.1.0
+
+### Changed
+- The enum `AppLinkNavigation.Type` type has been renamed tp `AppLinkNavigationType`.
+- The initializer `init(appLink:extras:appLinkData:settings:)` in `AppLinkNavigation` ignores the `settings` argument if one is passed.
+- The method `navigation(with:extras:appLinkData:settings:)` in `AppLinkNavigation` ignores the `settings` argument if one is passed.
 
 ### Deprecated
 
-- The `FacebookGamingServices` CocoaPod has been deprecated. Please use the `FBSDKGamingServicesKit` pod instead. SPM users should continue to use `FacebookGamingServices`.
+- The `navigation(with:extras:appLinkData:settings:)` method in `AppLinkNavigation` is deprecated in favor of the `init(appLink:extras:appLinkData:)` designated init.
+- The `init(appLink:extras:appLinkData:settings:)` initializer in `AppLinkNavigation` is deprecated in favor of the `init(appLink:extras:appLinkData:)` designated init.
+- The `Profile.enableUpdatesOnAccessTokenChange(_:)` method is deprecated in favor of the `Profile.isUpdatedWithAccessTokenChange` property.
+- `SettingsProtocol.codelessDebugLogEnabled` is deprecated in favor of `SettingsProtocol.isCodelessDebugLogEnabled`.
+- `SettingsProtocol.advertiserIDCollectionEnabled` is deprecated in favor of `SettingsProtocol.isAdvertiserIDCollectionEnabled`.
+- `SettingsProtocol.advertiserTrackingEnabled` is deprecated in favor of `SettingsProtocol.isAdvertiserTrackingEnabled`.
+- `SettingsProtocol.graphAPIDebugParamValue` is deprecated in favor of its new name `SettingsProtocol.graphAPIDebugParameterValue`
+- `Settings.autoLogAppEventsEnabled` is deprecated in favor of `Settings.isAutoLogAppEventsEnabled`.
+
+### Renamed
+
+- `SettingsProtocol.graphAPIDebugParamValue` has been renamed to `SettingsProtocol.graphAPIDebugParameterValue`
 
 ### Removed
 
-- Removed `NSSecureCoding` conformance from multiple types in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from Objective-C-centric practices.
-- Removed `NSCopying` conformance from multiple types and the `copy` attributes of numerous properties in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from unnecessary Objective-C-centric practices.
-- Removed custom hashing and `isEqual...` implementations from content types in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from unnecessary Objective-C-centric practices.
-- Removed `NSObjectProtocol` conformance/inheritance from multiple types in ShareKit. As part of the iOS SDK's conversion to Swift, we are gradually extricating types from Objective-C-centric practices.
+- `Profile` conformance to `NSCopying` has been removed as well as custom hashability and equatability.
+
+### Fixed
+
+- The documentation for the property list-backed value `Settings.isCodelessDebugLogEnabled` has been corrected to indicate that the default value is `false`.
+
+[2022-10-24](https://github.com/facebook/facebook-ios-sdk/releases/tag/v15.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v15.0.0...v15.1.0)
+
+## 15.0.0
+
+### Changed
+
+- The minimum supported version of iOS and tvOS is now 12.0.
+
+### Deprecated
+
+- Support for tvOS is now deprecated and will be removed in Version 16.
+
+### Removed
+
+- Support for bitcode. Bitcode is no longer needed or supported by Apple as of Xcode 14 - https://developer.apple.com/documentation/xcode-release-notes/xcode-14-release-notes
+
+### Improved
+
+- Binary artifact sizes are now smaller.
+
+[2022-09-19](https://github.com/facebook/facebook-ios-sdk/releases/tag/v15.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.1.0...v15.0.0)
+
+## 14.1.0
+
+### Fixed
+
+- Fixed GitHub Issue #2082.
+
+### Added
+
+- Added server-side AEM rule matching
+
+[2022-06-28](https://github.com/facebook/facebook-ios-sdk/releases/tag/v14.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v14.0.0...v14.1.0)
+
+## 14.0.0
+
+### Removed
+
+- Removed deprecated `AEMReporter.configure(networker:appID:)` method.
+- Removed deprecated `ContextDialogPresenter.showCreateContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.showSwitchContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.showChooseContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.showChooseContextDialog(with:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.createContextDialog(withContent:delegate:)` method.
+- Removed deprecated `ContextDialogPresenter.switchContextDialog(withContent:delegate:)` method.
+- Removed deprecated `SwitchContextDialog.dialog(content:windowFinder:delegate:)` method.
+- Removed deprecated `LoginConfiguration.authType(for:)` method.
+- Removed internal `AuthenticationTokenSettings` protocol.
+
+### Changed
+
+- Made `LoginManagerLoginResult.token` immutable.
+- Made `LoginManagerLoginResult.authenticationToken` immutable.
+- Made `LoginManagerLoginResult.isCancelled` immutable.
+- Made `LoginManagerLoginResult.grantedPermissions` immutable.
+- Made `LoginManagerLoginResult.declinedPermissions` immutable.
+- Made `AccessToken.currentAccessToken` use a Swift name of `current`.
+- Made `AuthenticationToken.currentAuthenticationToken` use a Swift name of `current`.
+- Renamed `SharingValidation` protocol to `SharingValidatable`.
+- Corrected type definition for `FBSDKUserIdentifier` to be `NSString *` instead of `NSString` for Swift compatibility.
+
+[2022-06-03](https://github.com/facebook/facebook-ios-sdk/releases/tag/v14.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.2.0...v14.0.0)
+
+## 13.2.0
+
+### Fixed
+
+* Fixed an issue in native sharing where hashtags are not automatically added to a post.
+
+[2022-04-15](https://github.com/facebook/facebook-ios-sdk/releases/tag/v13.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.1.0...v13.2.0)
+
+## 13.1.0
+
+[2022-03-14](https://github.com/facebook/facebook-ios-sdk/releases/tag/v13.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v13.0.0...v13.1.0)
+
+## 13.0.0
+
+### Notable Changes
+
+#### Supported platform versions have been updated
+
+The minimum supported version of iOS is now 11.0 for all frameworks. The minimum supported version of tvOS is now 11.0 for all frameworks. The XCFramework binaries are now built with Xcode 13 so Xcode 12 is no longer supported.
+
+#### Client Tokens are now required
+
+Starting with the v13.0 release, client tokens must be included in apps for Graph API calls. An exception is now raised when running apps without a client token. [See the instructions](https://developers.facebook.com/docs/ios/getting-started#configure-your-project) for more information.
+
+#### Swift conversions
+
+A number of types have been converted from Objective-C to Swift. As a consequence, developers may need to use modular import statements when using GamingServicesKit and a majority of ShareKit in order to avoid encountering compilation errors in Objective-C.
+
+```
+// When importing a framework in this form:
+#import <FBSDKShareKit/FBSDKShareKit.h>
+
+// You may be need to update to this form when unknown symbol warnings appear:
+@import FBSDKShareKit;
+```
+
+#### Reduced use of Objective-C value-type practices
+
+We have further reduced the use of Objective-C value-type practices in ShareKit. ShareKit content types will no longer implement the following behaviors:
+* conformance to the `NSCopying` protocol
+* custom hashability and equatability
+* conformance to `NSSecureCoding`
+
+#### Additional strong typing of app event reporting methods
+
+More app event reporting interfaces now use formal app event names and parameter names. Developers working in Swift code are required to use `AppEvents.Name` and `AppEvents.ParameterName` instances to represent app event names and app event parameter names, respectively.
+
+The example below works without changes in Objective-C:
+
+```objc
+NSDictionary<NSString *, id> *parameters = @{
+  FBSDKAppEventParameterNameNumItems: @5,
+  @"custom_parameter": @"special info"
+};
+
+[FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased
+              parameters:parameters];
+```
+
+This next example is how it would look in Swift for an updated API:
+
+```swift
+let parameters: [AppEvents.ParameterName: Any] = [
+  .numItems: 5,
+  .init("custom_parameter"): "special info"
+]
+
+AppEvents.logEvent(.purchased, parameters: parameters)
+```
+
+### Changed
+
+- Renamed `frictionlessRequestsEnabled` property on `GameRequestDialog` in Objective-C; use `isFrictionlessRequestsEnabled` and `setIsFrictionlessRequestsEnabled:` instead.
+- Corrected nullability of `contentURL` in protocol `SharingContent`
+- Renamed `AppInviteDestination` to `AppInviteContent.Destination`
+- Renamed `userGenerated` property on `SharePhoto` in Objective-C; use `isUserGenerated` and `setIsUserGenerated:` instead.
+
+### Deprecated
+
+- Deprecated the `FacebookGamingServices` CocoaPod; please use the `FBSDKGamingServicesKit` pod instead. SPM users should continue to use `FacebookGamingServices`.
+
+### Moved
+
+A few types have been moved from FBSDKShareKit to FBSDKGamingServicesKit. If you were using any of these you will have to add `@import FBSDKGamingServicesKit` in order to access these:
+
+- GameRequestActionType
+- GameRequestContent
+- GameRequestDialog
+- GameRequestDialogDelegate
+- GameRequestFilter
+- GameRequestFrictionlessRecipientCache
+- GameRequestURLProvider
+
+### Removed
+
+- Removed `NSObjectProtocol` conformance/inheritance from multiple types in ShareKit.
 - Removed deprecated `SDKError` type; `ErrorFactory` and/or `NetworkErrorChecker` should be used instead.
-- Removed deprecated `FBSDKReferralCode`, `FBSDKReferralManager`, `FBSDKReferralManagerResult` and related classes.
-- Removed unused `FBSDKAppGroupContent` class, `FBSDKAppGroupPrivacy` enum and `NSStringFromFBSDKAppGroupPrivacy` function.
+- Removed deprecated `ReferralCode`, `ReferralManager`, `ReferralManagerResult` and related classes.
+- Removed unused `AppGroupContent` class, `AppGroupPrivacy` enum and `NSStringFromFBSDKAppGroupPrivacy` function.
 - Removed `SharingScheme` protocol from ShareKit
-- Removed deprecated `logInWithURL:handler` from `FBSDKLoginManager`
+- Removed deprecated `logInWithURL:handler` from `LoginManager`
 - Removed deprecated `init` and `new` methods from `AppInviteContent`
-- Removed deprecated `FBSDKAppLinkResolverRequestBuilder`
+- Removed deprecated `AppLinkResolverRequestBuilder`
 - Removed deprecated URL schemes `.facebookApp`, `.facebookShareExtension` and `.masqueradePlayer`; use `.facebookAPI` instead.
-- Removed deprecated `init` and `new` methods from `FBSDKCrashHandler`
+- Removed deprecated `init` and `new` methods from `CrashHandler`
 - Removed `init` and `new` methods from `MessageDialog`; use `init(content:delegate:)` instead.
-- Removed deprecated `init` and `new` methods from `FBSDKLogger`
+- Removed deprecated `init` and `new` methods from `Logger`
 - Removed deprecated `init` and `new` methods from `FBSDKURLSession`
 - Removed `init` and `new` methods from `ShareDialog`; use `init(viewController:content:delegate:)` instead.
-- Removed `GraphRequestFlag.skipClientToken` since a client token is now required
 - Removed `init` and `new` from `ShareCameraEffectContent`; use `init(effectID:contentURL:)` instead.
 - Removed deprecated `init(appLink:extras:appLinkData:)` from `AppLinkNavigation`; use `init(appLink:extras:appLinkData:settings:)` instead".
+- Removed class-based factory methods for `SharePhoto`:
+`+photoWithImage:userGenerated:`, `+photoWithImageURL:userGenerated:`, `+photoWithPhotoAsset:userGenerated:`. Also removed `init` and `new`; use the new convenience initializers instead.
+- Removed class-based factory methods for `ShareVideo`: `+videoWithData:`, `+videoWithData:previewPhoto:`, `+videoWithVideoAsset:`, `+videoWithVideoAsset:previewPhoto:`, `+videoWithVideoURL:`, `+videoWithVideoURL:previewPhoto:`. Also removed `init` and `new`; use the new convenience initializers instead.
+- Removed `videoURL` property from `PHAsset`.
+- Removed `isEqualToHashtag:` and `hashtagWithString:` methods from Hashtag. Use `isEqual:` and `initWithString:` instead.
 
 #### AppEvents deprecations
-TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many class methods and properties in AppEvents have been deprecated in favor of their instance-based equivalents.)
+
+Use `AppEvents.shared` in places where `AppEvents` was used before. (Many class methods and properties in AppEvents have been deprecated in favor of their instance-based equivalents.)
 
 - Removed deprecated `AppEvents.flushBehavior` (use `AppEvents.shared.flushBehavior` instead)
 - Removed deprecated `AppEvents.loggingOverrideAppID` (use `AppEvents.shared.loggingOverrideAppID` instead)
@@ -78,8 +307,9 @@ TL;DR: Use `AppEvents.shared` in places where `AppEvents` was used before. (Many
 - Removed deprecated `AppEvents.setUserData(_:forType:)` (use `AppEvents.shared.setUserData(_:forType:)` instead)
 - Removed deprecated `AppEvents.clearUserDataForType(_:)` (use `AppEvents.shared.clearUserDataForType(_:)` instead)
 
-#### FBSDKSettings deprecations
-TL;DR: Use `FBSDKSettings.sharedSettings` in places where `FBSDKSettings` was used before. (Many class methods and properties in FBSDKSettings have been deprecated in favor of their instance-based equivalents.)
+#### Settings deprecations
+
+Use `Settings.shared` in places where `Settings` was used before. (Many class methods and properties in FBSDKSettings have been deprecated in favor of their instance-based equivalents.)
 
 - Removed deprecated `Settings.sdkVersion` (use `Settings.shared.sdkVersion` instead")
 - Removed deprecated `Settings.defaultGraphAPIVersion` (use `Settings.shared.defaultGraphAPIVersion` instead")
@@ -105,7 +335,8 @@ TL;DR: Use `FBSDKSettings.sharedSettings` in places where `FBSDKSettings` was us
 - Removed deprecated `Settings.enableLoggingBehavior()` (use `Settings.shared.enableLoggingBehavior()` instead")
 - Removed deprecated `Settings.disableLoggingBehavior()` (use `Settings.shared.disableLoggingBehavior()` instead")
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.2...HEAD)
+[2022-02-15](https://github.com/facebook/facebook-ios-sdk/releases/tag/v13.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v12.3.2...v13.0.0)
 
 ## 12.3.2
 

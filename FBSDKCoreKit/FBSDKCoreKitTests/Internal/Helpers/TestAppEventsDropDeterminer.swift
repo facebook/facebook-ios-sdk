@@ -8,7 +8,6 @@
 
 import FBSDKCoreKit
 
-class TestAppEventsDropDeterminer: AppEventDropDetermining {
-
+final class TestAppEventsDropDeterminer: _AppEventDropDetermining {
   var shouldDropAppEvents = false
 }

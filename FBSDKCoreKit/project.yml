@@ -27,10 +27,12 @@ settings:
     # We need to explicitly set them to maintain parity with
     # the project file being replaced
     CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER: NO
-    SWIFT_OPTIMIZATION_LEVEL: -O
+    DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING: YES
 
 targets:
   FBSDKCoreKit-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKCoreKit
@@ -43,7 +45,6 @@ targets:
         excludes:
           - include
           - FBSDKCoreKit.modulemap
-          - Device/*.[h,m]
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
@@ -58,15 +59,13 @@ targets:
         link: false
       - sdk: SafariServices.framework
       - sdk: WebKit.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      FB_BITCODE_FLAG[sdk=iphoneos11.0]: -fembed-bitcode
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
       CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKit-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKCoreKit
@@ -77,10 +76,8 @@ targets:
         headerVisibility: project
         createIntermediateGroups: true
         excludes:
-          - Device/*.[h,m]
           - include
           - FBSDKCoreKit.modulemap
-          - FBSDKDeviceViewControllerBase.m
           - Info.plist
       - path: FBSDKCoreKit/Info.plist
         group: FBSDKCoreKit/Supporting Files
@@ -103,223 +100,8 @@ targets:
       - sdk: WebKit.framework
         weak: true
       - sdk: libz.tbd
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       CLANG_WARN_STRICT_PROTOTYPES: NO
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
-      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
-  FBSDKCoreKit_TV-Static:
-    type: framework
-    platform: tvOS
-    productName: FBSDKCoreKit
-    sources:
-      - path: FBSDKCoreKit/AppEvents
-        headerVisibility: project
-        createIntermediateGroups: true
-        excludes:
-          - Internal/AAM
-          - Internal/AEM
-          - Internal/Codeless
-          - Internal/SKAdNetwork
-          - Internal/SuggestedEvents
-          - Internal/Integrity/FBSDKIntegrityManager*
-          - Internal/Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
-          - Internal/ML
-          - Internal/Codeless
-          - Internal/ViewHierarchy
-          - Internal/FBSDKFeatureExtracting*
-          - Internal/FBSDKHybridAppEventsScriptMessageHandler*
-          - Internal/FBSDKAppEventsNumberParser*
-      - path: FBSDKCoreKit/GraphAPI
-        createIntermediateGroups: true
-        excludes:
-          - FBSDKGraphErrorRecoveryProcessor*
-      - path: FBSDKCoreKit/Internal
-        createIntermediateGroups: true
-        headerVisibility: project
-        excludes:
-          - FBSDKAuthenticationStatusUtility*
-          - FBSDKBackgroundEventLogger*
-          - FBSDKContainerViewController*
-          - FBSDKInternalUtility+WindowFinding*
-          - FBSDKRulesFromKeyProvider.h
-          - FBSDKProfile+Internal*
-          - FBSDKProfile+ProfileProtocols*
-          - FBSDKProfilePictureView+Internal*
-          - FBSDKProfileProtocols*
-          - FBSDKMeasurementEvent*
-          - FBSDKMacCatalystDetermining*
-          - FBSDKURL_Internal.h
-          - FBSDKAppLink*
-          - UIApplication+URLOpener.h
-          - BridgeAPI
-          - UI/FBSDKCloseIcon*
-          - UI/FBSDKHumanSilhouette*
-          - WebDialog
-      - path: FBSDKCoreKit
-        headerVisibility: project
-        excludes:
-          - AppEvents
-          - AppLink
-          - BridgeAPI
-          - GraphAPI
-          - Internal
-          - include
-          - FBSDKBridgeAPI*
-          - FBSDKMeasurementEvent*
-          - FBSDKMutableCopying*
-          - FBSDKProfile*
-          - FBSDKShareDialogConfiguration*
-          - FBSDKURL.*
-          - FBSDKURLHosting*
-          - FBSDKURLOpen*
-          - FBSDKWebDialog*
-          - FBSDKCoreKit.modulemap
-          - Info.plist
-      - path: FBSDKCoreKit/include
-        headerVisibility: public
-        excludes:
-          - FBSDKAppLink*
-          - FBSDKBridgeAPI*
-          - FBSDKGraphErrorRecoveryProcessor*
-          - FBSDKBridgeAPI*
-          - FBSDKMeasurementEvent*
-          - FBSDKMutableCopying*
-          - FBSDKProfile*
-          - FBSDKShareDialogConfiguration*
-          - FBSDKURL.*
-          - FBSDKURLHosting*
-          - FBSDKURLOpen*
-          - FBSDKWebDialog*
-          - FBSDKWebViewAppLinkResolver*
-          - FBSDKWindowFinding*
-          - FBSDKInternalUtility+URLHosting*
-      - path: FBSDKCoreKit/Info.plist
-        group: FBSDKCoreKit/Supporting Files
-        createIntermediateGroups: true
-    configFiles:
-      Debug: Configurations/FBSDKCoreKit-tvOS-Static.xcconfig
-      Release: Configurations/FBSDKCoreKit-tvOS-Static.xcconfig
-    dependencies:
-      - target: FBAEMKit/FBAEMKit_TV-Static
-        link: false
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Static
-        link: false
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
-    settings:
-      GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
-      CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
-  FBSDKCoreKit_TV-Dynamic:
-    type: framework
-    platform: tvOS
-    productName: FBSDKCoreKit
-    sources:
-      - path: FBSDKCoreKit/AppEvents
-        headerVisibility: project
-        createIntermediateGroups: true
-        excludes:
-          - Internal/AAM
-          - Internal/AEM
-          - Internal/Codeless
-          - Internal/SKAdNetwork
-          - Internal/SuggestedEvents
-          - Internal/Integrity/FBSDKIntegrityManager*
-          - Internal/Integrity/FBSDKIntegrityManager+AppEventsParametersProcessing.h
-          - Internal/ML
-          - Internal/Codeless
-          - Internal/ViewHierarchy
-          - Internal/FBSDKFeatureExtracting*
-          - Internal/FBSDKHybridAppEventsScriptMessageHandler*
-          - Internal/FBSDKAppEventsNumberParser*
-      - path: FBSDKCoreKit/GraphAPI
-        createIntermediateGroups: true
-        excludes:
-          - FBSDKGraphErrorRecoveryProcessor*
-      - path: FBSDKCoreKit/Internal
-        createIntermediateGroups: true
-        headerVisibility: project
-        excludes:
-          - FBSDKAuthenticationStatusUtility*
-          - FBSDKBackgroundEventLogger*
-          - FBSDKContainerViewController*
-          - FBSDKInternalUtility+WindowFinding*
-          - FBSDKRulesFromKeyProvider.h
-          - FBSDKProfile+Internal*
-          - FBSDKProfile+ProfileProtocols*
-          - FBSDKProfilePictureView+Internal*
-          - FBSDKProfileProtocols*
-          - FBSDKMeasurementEvent*
-          - FBSDKMacCatalystDetermining*
-          - FBSDKURL_Internal.h
-          - FBSDKAppLink*
-          - UIApplication+URLOpener.h
-          - BridgeAPI
-          - UI/FBSDKCloseIcon*
-          - UI/FBSDKHumanSilhouette*
-          - WebDialog
-      - path: FBSDKCoreKit
-        headerVisibility: project
-        excludes:
-          - AppEvents
-          - AppLink
-          - BridgeAPI
-          - GraphAPI
-          - Internal
-          - include
-          - FBSDKBridgeAPI*
-          - FBSDKCoreKit.modulemap
-          - FBSDKMeasurementEvent*
-          - FBSDKMutableCopying*
-          - FBSDKProfile*
-          - FBSDKShareDialogConfiguration*
-          - FBSDKURL.*
-          - FBSDKURLHosting*
-          - FBSDKURLOpen*
-          - FBSDKWebDialog*
-          - FBSDKWindowFinding*
-          - Info.plist
-      - path: FBSDKCoreKit/include
-        headerVisibility: public
-        excludes:
-          - FBSDKAppLink*
-          - FBSDKBridgeAPI*
-          - FBSDKGraphErrorRecoveryProcessor*
-          - FBSDKBridgeAPI*
-          - FBSDKMeasurementEvent*
-          - FBSDKMutableCopying*
-          - FBSDKProfile*
-          - FBSDKShareDialogConfiguration*
-          - FBSDKURL.*
-          - FBSDKURLHosting*
-          - FBSDKURLOpen*
-          - FBSDKWebDialog*
-          - FBSDKWebViewAppLinkResolver*
-          - FBSDKWindowFinding*
-          - Info.plist
-          - FBSDKInternalUtility+URLHosting*
-      - path: FBSDKCoreKit/Info.plist
-        group: FBSDKCoreKit/Supporting Files
-        createIntermediateGroups: true
-    configFiles:
-      Debug: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
-      Release: Configurations/FBSDKCoreKit-tvOS-Dynamic.xcconfig
-    dependencies:
-      - target: FBSDKCoreKit_Basics/FBSDKCoreKit_Basics_TV-Dynamic
-      - target: FBAEMKit/FBAEMKit_TV-Dynamic
-      - sdk: AdSupport.framework
-      - sdk: CoreGraphics.framework
-      - sdk: CoreImage.framework
-      - sdk: libz.tbd
-      - sdk: StoreKit.framework
-      - sdk: UIKit.framework
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
-    settings:
       GCC_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
       CPP_PREFIX_HEADER: $(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit-Prefix-Header.h
   FBSDKCoreKitTests:
@@ -355,13 +137,6 @@ schemes:
     test:
       targets:
         - FBSDKCoreKitTests
+      gatherCoverageData: true
       coverageTargets:
         - FBSDKCoreKit-Dynamic
-  FBSDKCoreKit_TV-Static:
-    build:
-      targets:
-        FBSDKCoreKit_TV-Static: all
-  FBSDKCoreKit_TV-Dynamic:
-    build:
-      targets:
-        FBSDKCoreKit_TV-Dynamic: all

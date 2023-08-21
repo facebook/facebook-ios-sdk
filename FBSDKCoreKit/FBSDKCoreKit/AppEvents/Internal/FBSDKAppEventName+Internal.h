@@ -8,13 +8,6 @@
 
 #import "FBSDKAppEventName.h"
 
-// MARK: - Application Lifecycle
-
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameInitializeSDK;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusAvailable;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusDenied;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameBackgroundStatusRestricted;
-
 // MARK: - E-Commerce
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameProductCatalogUpdate;
@@ -33,3 +26,8 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNamePushTokenObtained;
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameActivatedApp;
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameDeactivatedApp;
+
+// MARK: - Auto Setup
+
+FOUNDATION_EXPORT FBSDKAppEventName const  FBSDKAppEventNameOptinAEMAutoSetup;
+FOUNDATION_EXPORT FBSDKAppEventName const  FBSDKAppEventNameOptoutAEMAutoSetup;

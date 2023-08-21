@@ -8,18 +8,14 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKSuggestedEventsIndexer.h"
-
-#import <UIKit/UIKit.h>
-
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <objc/runtime.h>
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
+#import <UIKit/UIKit.h>
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKAppEventsUtility.h"
-#import "FBSDKFeatureExtracting.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelUtility.h"
@@ -185,7 +181,7 @@ static dispatch_once_t setupNonce;
     void (^block)(id, SEL, id, id) = ^(id target, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
       UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
       [self predictEventWithUIResponder:cell
-                                   text:[self getTextFromContentView:[cell contentView]]];
+                                   text:[self getTextFromContentView:cell.contentView]];
     };
     [self.swizzler swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
                            onClass:[delegate class]
@@ -196,7 +192,7 @@ static dispatch_once_t setupNonce;
     void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
       UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
       [self predictEventWithUIResponder:cell
-                                   text:[self getTextFromContentView:[cell contentView]]];
+                                   text:[self getTextFromContentView:cell.contentView]];
     };
     [self.swizzler swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
                            onClass:[delegate class]
@@ -242,7 +238,7 @@ static dispatch_once_t setupNonce;
 
     __weak typeof(self) weakSelf = self;
     dispatch_block_t predictAndLogBlock = ^{
-      NSMutableDictionary<NSString *, id> *viewTreeCopy = [viewTree mutableCopy];
+      NSMutableDictionary<NSString *, id> *viewTreeCopy = viewTree.mutableCopy;
       float *denseData = [weakSelf.featureExtractor getDenseFeatures:viewTree];
       NSString *textFeature = [FBSDKModelUtility normalizedText:[weakSelf.featureExtractor getTextFeature:text withScreenName:viewTreeCopy[@"screenname"]]];
       NSString *event = [weakSelf.eventProcessor processSuggestedEvents:textFeature denseData:denseData];
@@ -260,7 +256,7 @@ static dispatch_once_t setupNonce;
       free(denseData);
     };
 
-  #if FBTEST
+  #if DEBUG
     predictAndLogBlock();
   #else
     fb_dispatch_on_default_thread(predictAndLogBlock);
@@ -271,7 +267,7 @@ static dispatch_once_t setupNonce;
 - (NSString *)getDenseFeaure:(float *)denseData
 {
   // Get dense feature string
-  NSMutableArray *denseDataArray = [NSMutableArray array];
+  NSMutableArray<NSNumber *> *denseDataArray = [NSMutableArray array];
   for (int i = 0; i < 30; i++) {
     [FBSDKTypeUtility array:denseDataArray addObject:@(denseData[i])];
   }
@@ -281,7 +277,7 @@ static dispatch_once_t setupNonce;
 - (NSString *)getTextFromContentView:(UIView *)contentView
 {
   NSMutableArray<NSString *> *textArray = [NSMutableArray array];
-  for (UIView *subView in [contentView subviews]) {
+  for (UIView *subView in contentView.subviews) {
     NSString *label = [FBSDKViewHierarchy getText:subView];
     if (label.length > 0) {
       [FBSDKTypeUtility array:textArray addObject:label];
@@ -317,7 +313,7 @@ static dispatch_once_t setupNonce;
 
 #pragma mark - Testability
 
-#if FBTEST
+#if DEBUG
 
 + (void)reset
 {

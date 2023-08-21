@@ -17,132 +17,15 @@ import Glibc
 import Darwin.C
 #endif
 
-enum BinarySource {
-    case local, remote
-
-    static var current: Self {
-        if getenv("USE_LOCAL_FB_BINARIES") != nil {
-            return .local
-        } else {
-            return .remote
-        }
-    }
-}
-
-struct BinaryTargets {
-    let source: BinarySource
-
-    var aem: Target {
-        switch source {
-        case .local:
-            return .binaryTarget(
-                name: "FBAEMKit",
-                path: "build/XCFrameworks/Static/FBAEMKit.xcframework"
-            )
-        case .remote:
-            return .binaryTarget(
-                name: "FBAEMKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.3.1/FBAEMKit-Static_XCFramework.zip",
-                checksum: "3ec0add385cfb6f8fee6ec1a6b87e14d8acb12bd7a52ff86717384b5fbc94b20"
-            )
-        }
-    }
-
-    var basics: Target {
-        switch source {
-        case .local:
-            return .binaryTarget(
-                name: "FBSDKCoreKit_Basics",
-                path: "build/XCFrameworks/Static/FBSDKCoreKit_Basics.xcframework"
-            )
-        case .remote:
-            return .binaryTarget(
-                name: "FBSDKCoreKit_Basics",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.3.1/FBSDKCoreKit_Basics-Static_XCFramework.zip",
-                checksum: "d844db7fb9ebc7b11107062a7202741877a641f7713c2e290ad90165b19571ea"
-            )
-        }
-    }
-
-    var core: Target {
-        switch source {
-        case .local:
-            return .binaryTarget(
-                name: "FBSDKCoreKit",
-                path: "build/XCFrameworks/Static/FBSDKCoreKit.xcframework"
-            )
-        case .remote:
-            return .binaryTarget(
-                name: "FBSDKCoreKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.3.1/FBSDKCoreKit-Static_XCFramework.zip",
-                checksum: "41b25386d988f15aaee2b518fd6f2217fe89de709d0b6d4f1a82d1a80a5ec7f5"
-            )
-        }
-    }
-
-    var login: Target {
-        switch source {
-        case .local:
-            return .binaryTarget(
-                name: "FBSDKLoginKit",
-                path: "build/XCFrameworks/Static/FBSDKLoginKit.xcframework"
-            )
-        case .remote:
-            return .binaryTarget(
-                name: "FBSDKLoginKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.3.1/FBSDKLoginKit-Static_XCFramework.zip",
-                checksum: "c2ab6467bde31cfdbafdb970859da45f9f079ee9fbd591dc667ca75df4ce869d"
-            )
-        }
-    }
-
-    var share: Target {
-        switch source {
-        case .local:
-            return .binaryTarget(
-                name: "FBSDKShareKit",
-                path: "build/XCFrameworks/Static/FBSDKShareKit.xcframework"
-            )
-        case .remote:
-            return .binaryTarget(
-                name: "FBSDKShareKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.3.1/FBSDKShareKit-Static_XCFramework.zip",
-                checksum: "2459ff510766894a718bf2bb5c1507bff07d020f030020b886fb864a50b154f1"
-            )
-        }
-    }
-
-    var gamingServices: Target {
-        switch source {
-        case .local:
-            return .binaryTarget(
-                name: "FBSDKGamingServicesKit",
-                path: "build/XCFrameworks/Static/FBSDKGamingServicesKit.xcframework"
-            )
-        case .remote:
-            return .binaryTarget(
-                name: "FBSDKGamingServicesKit",
-                url: "https://github.com/facebook/facebook-ios-sdk/releases/download/v12.3.1/FBSDKGamingServicesKit-Static_XCFramework.zip",
-                checksum: "e40b1aa4169955d52d2c2ee799e39979fdca5cd3768737c806d330b20e2670df"
-            )
-        }
-    }
-}
-
-let targets = BinaryTargets(source: .current)
-
 let package = Package(
     name: "Facebook",
-    platforms: [
-        .iOS(.v10),
-        .tvOS(.v10)
-    ],
+    platforms: [.iOS(.v12)],
     products: [
-         // The Kernel of the SDK. Must be included as a runtime dependency.
-        .library(
-            name: "FacebookBasics",
-            targets: ["FBSDKCoreKit_Basics"]
-        ),
+        // The Kernel of the SDK. Must be included as a runtime dependency.
+        .basics,
+
+        // The Facebook AEM Kit
+        .aem,
 
         /*
           The Core SDK library that provides two importable modules:
@@ -154,103 +37,203 @@ let package = Package(
               that will be used to maintain backwards compatibility with
               types that have been converted to Swift.
               This will not contain interfaces for new features written in Swift.
-        */
-        .library(
-            name: "FacebookCore",
-            targets: ["FacebookCore", "FBSDKCoreKit"]
-        ),
+         */
+        .core,
 
-        //  The Facebook Login SDK
-        .library(
-            name: "FacebookLogin",
-            targets: ["FacebookLogin"]
-        ),
+        // The Facebook Login SDK
+        .login,
 
-        //  The Facebook Share SDK
-        .library(
-            name: "FacebookShare",
-            targets: ["FBSDKShareKit", "FacebookShare"]
-        ),
+        // The Facebook Share SDK
+        .share,
 
-        //  The Facebook Gaming Services SDK
-        .library(
-            name: "FacebookGamingServices",
-            targets: ["FacebookGamingServices", "FBSDKGamingServicesKit"]
-        ),
-
-        // The Facebook AEM Kit
-        .library(
-            name: "FacebookAEM",
-            targets: ["FBAEMKit", "FacebookAEM"]
-        )
+        // The Facebook Gaming Services SDK
+        .gaming,
     ],
     targets: [
         // The kernel of the SDK
-        targets.basics,
+        .Prefixed.basics,
 
         /*
           The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
-        targets.aem,
+        .Prefixed.aem,
 
         // The main AEM module
-        .target(
-          name: "FacebookAEM",
-          dependencies: ["FBAEMKit"]
-        ),
+        .aem,
 
         /*
           The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
-        targets.core,
+        .Prefixed.core,
 
         // The main Core SDK module
-        .target(
-            name: "FacebookCore",
-            dependencies: ["FacebookAEM", "FBSDKCoreKit_Basics", "FBSDKCoreKit"],
-            linkerSettings: [
-                .linkedLibrary("c++"),
-                .linkedLibrary("z"),
-                .linkedFramework("Accelerate")
-            ]
-        ),
+        .core,
 
         /*
           The legacy Objective-C implementation that will be converted to Swift.
           This will not contain interfaces for new features written in Swift.
         */
-        targets.login,
+        .Prefixed.login,
 
         // The main Login SDK module
-        .target(
-            name: "FacebookLogin",
-            dependencies: ["FacebookCore", "FBSDKLoginKit"]
-        ),
-
-        /*
-          The legacy Objective-C implementation that will be converted to Swift.
-          This will not contain interfaces for new features written in Swift.
-        */
-        targets.share,
-
-        // The main Share SDK module
-        .target(
-            name: "FacebookShare",
-            dependencies: ["FacebookCore", "FBSDKShareKit"]
-        ),
+        .login,
 
         /*
           The legacy Objective-C implementation that has been converted to Swift.
+          This will not contain interfaces for new features written in Swift.
         */
-        targets.gamingServices,
+        .Prefixed.share,
+
+        // The main Share SDK module
+        .share,
+
+        /*
+          The legacy Objective-C implementation that has been converted to Swift.
+          This will not contain interfaces for new features written in Swift.
+        */
+        .Prefixed.gamingServices,
 
         // The main Facebook Gaming Services module
-        .target(
-            name: "FacebookGamingServices",
-            dependencies: ["FBSDKGamingServicesKit"]
-        ),
+        .gaming,
     ],
-    cxxLanguageStandard: CXXLanguageStandard.cxx11
+    cxxLanguageStandard: .cxx11
 )
+
+extension Product {
+    static let basics = library(name: .basics, targets: [.Prefixed.basics])
+    static let core = library(name: .core, targets: [.core, .Prefixed.core])
+    static let login = library(name: .login, targets: [.login])
+    static let share = library(name: .share, targets: [.share, .Prefixed.share])
+    static let gaming = library(name: .gaming, targets: [.gaming, .Prefixed.gaming])
+    static let aem = library(name: .aem, targets: [.aem, .Prefixed.aem])
+}
+
+extension Target {
+    static let binarySource = BinarySource()
+
+    static func binaryTarget(name: String, remoteChecksum: String) -> Target {
+        switch binarySource {
+        case .local:
+            return .binaryTarget(
+                name: name,
+                path: localBinaryPath(for: name)
+            )
+        case .remote:
+            return .binaryTarget(
+                name: name,
+                url: remoteBinaryURLString(for: name),
+                checksum: remoteChecksum
+            )
+        }
+    }
+
+    static func localBinaryPath(for targetName: String) -> String {
+        "build/XCFrameworks/Static/\(targetName).xcframework"
+    }
+
+    static func remoteBinaryURLString(for targetName: String) -> String {
+        "https://github.com/facebook/facebook-ios-sdk/releases/download/v16.1.3/\(targetName)-Static_XCFramework.zip"
+    }
+
+    static let aem = target(name: .aem, dependencies: [.Prefixed.aem])
+
+    static let core = target(
+        name: .core,
+        dependencies: [.aem, .Prefixed.basics, .Prefixed.core],
+        linkerSettings: [
+            .cPlusPlusLibrary,
+            .zLibrary,
+            .accelerateFramework,
+        ]
+    )
+
+    static let login = target(name: .login, dependencies: [.core, .Prefixed.login])
+
+    static let share = target(name: .share, dependencies: [.core, .Prefixed.share])
+
+    static let gaming = target(name: .gaming, dependencies: [.Prefixed.gaming])
+
+    enum Prefixed {
+        static let basics = binaryTarget(
+            name: .Prefixed.basics,
+            remoteChecksum: "eadaa16330035fcf06f71db7b89312b9d020f947fbde0bb55446a28bc59ca18c"
+        )
+
+        static let aem = binaryTarget(
+            name: .Prefixed.aem,
+            remoteChecksum: "8c2460b6dd2834aad78b40a2e6b51316c6489d4f84c975794a53e3dfb5841a0a"
+        )
+
+        static let core = binaryTarget(
+            name: .Prefixed.core,
+            remoteChecksum: "47a23bbc85881781505d871ee9f43790bf1e57942081cbeea96689fc86c22dac"
+        )
+
+        static let login = binaryTarget(
+            name: .Prefixed.login,
+            remoteChecksum: "5ff84e9262a1a7fbe84ae9b32deeaeb0e6ec1aa2c68ac9cc7a39e85147053569"
+        )
+
+        static let share = binaryTarget(
+            name: .Prefixed.share,
+            remoteChecksum: "bf0e61b865d948725f67a87bdcba7e445373d9aab8bf9c27f592bd101107aba6"
+        )
+
+        static let gamingServices = binaryTarget(
+            name: .Prefixed.gaming,
+            remoteChecksum: "3d8460ca8d0011066835cd02fff9510e8c4d496c4f0e3597cad7f4d7ec490d2e"
+        )
+    }
+}
+
+extension Target.Dependency {
+    static let aem = byName(name: .aem)
+    static let core = byName(name: .core)
+
+    enum Prefixed {
+        static let aem = byName(name: .Prefixed.aem)
+        static let basics = byName(name: .Prefixed.basics)
+        static let core = byName(name: .Prefixed.core)
+        static let login = byName(name: .Prefixed.login)
+        static let share = byName(name: .Prefixed.share)
+        static let gaming = byName(name: .Prefixed.gaming)
+    }
+}
+
+extension LinkerSetting {
+    static let cPlusPlusLibrary = linkedLibrary("c++")
+    static let zLibrary = linkedLibrary("z")
+    static let accelerateFramework = linkedFramework("Accelerate")
+}
+
+enum BinarySource {
+    case local, remote
+
+    init() {
+        if getenv("USE_LOCAL_FB_BINARIES") != nil {
+            self = .local
+        } else {
+            self = .remote
+        }
+    }
+}
+
+extension String {
+    static let aem = "FacebookAEM"
+    static let basics = "FacebookBasics"
+    static let core = "FacebookCore"
+    static let login = "FacebookLogin"
+    static let share = "FacebookShare"
+    static let gaming = "FacebookGamingServices"
+
+    enum Prefixed {
+        static let aem = "FBAEMKit"
+        static let basics = "FBSDKCoreKit_Basics"
+        static let core = "FBSDKCoreKit"
+        static let login = "FBSDKLoginKit"
+        static let share = "FBSDKShareKit"
+        static let gaming = "FBSDKGamingServicesKit"
+    }
+}

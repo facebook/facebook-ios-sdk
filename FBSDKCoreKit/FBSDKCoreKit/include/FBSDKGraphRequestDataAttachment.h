@@ -10,9 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/**
- A container class for data attachments so that additional metadata can be provided about the attachment.
- */
+/// A container class for data attachments so that additional metadata can be provided about the attachment.
 NS_SWIFT_NAME(GraphRequestDataAttachment)
 @interface FBSDKGraphRequestDataAttachment : NSObject
 
@@ -30,19 +28,13 @@ NS_SWIFT_NAME(GraphRequestDataAttachment)
                  contentType:(NSString *)contentType
   NS_DESIGNATED_INITIALIZER;
 
-/**
- The content type for the attachment.
- */
+/// The content type for the attachment.
 @property (nonatomic, readonly, copy) NSString *contentType;
 
-/**
- The attachment data.
- */
+/// The attachment data.
 @property (nonatomic, readonly, strong) NSData *data;
 
-/**
- The filename for the attachment.
- */
+/// The filename for the attachment.
 @property (nonatomic, readonly, copy) NSString *filename;
 
 @end

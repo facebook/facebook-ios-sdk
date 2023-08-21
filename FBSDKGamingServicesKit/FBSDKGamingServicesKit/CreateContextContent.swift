@@ -6,17 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import Foundation
 
-/**
- A model for an instant games createAsync cross play request.
- */
+/// A model for an instant games createAsync cross play request.
 @objcMembers
 @objc(FBSDKCreateContextContent)
-public class CreateContextContent: NSObject, ValidatableProtocol {
+public final class CreateContextContent: NSObject, ValidatableProtocol {
 
   /**
    The ID of the player that is being challenged.
@@ -43,7 +39,7 @@ public class CreateContextContent: NSObject, ValidatableProtocol {
   public func validate() throws {
     let hasPlayerID = !playerID.isEmpty
     guard hasPlayerID else {
-      throw ErrorFactory().requiredArgumentError(
+      throw _ErrorFactory().requiredArgumentError(
         name: "playerID",
         message: "The playerID is required.",
         underlyingError: nil
@@ -51,5 +47,3 @@ public class CreateContextContent: NSObject, ValidatableProtocol {
     }
   }
 }
-
-#endif

@@ -8,7 +8,7 @@
 
 import TestTools
 
-class TestAppLinkResolverRequestBuilder: AppLinkResolverRequestBuilding {
+final class TestAppLinkResolverRequestBuilder: _AppLinkResolverRequestBuilding {
 
   var stubbedGraphRequest = TestGraphRequest()
   var stubbedIdiomSpecificField: String?

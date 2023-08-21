@@ -6,11 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBAEMKit
+@testable import FBAEMKit
+
 import TestTools
 import XCTest
-
-#if !os(tvOS)
 
 final class AEMConfigurationTests: XCTestCase {
 
@@ -18,7 +17,7 @@ final class AEMConfigurationTests: XCTestCase {
     static let defaultCurrency = "default_currency"
     static let cutoffTime = "cutoff_time"
     static let validFrom = "valid_from"
-    static let configMode = "config_mode"
+    static let mode = "config_mode"
     static let advertiserID = "advertiser_id"
     static let businessID = "business_id"
     static let paramRule = "param_rule"
@@ -46,7 +45,7 @@ final class AEMConfigurationTests: XCTestCase {
     Keys.defaultCurrency: Values.USD,
     Keys.cutoffTime: 1,
     Keys.validFrom: 10000,
-    Keys.configMode: Values.defaultMode,
+    Keys.mode: Values.defaultMode,
     Keys.advertiserID: Values.coffeeBrand,
     Keys.paramRule: Values.paramRule,
     Keys.conversionValueRules: [
@@ -61,8 +60,8 @@ final class AEMConfigurationTests: XCTestCase {
             Keys.eventName: Values.donate,
           ],
         ],
-      ]
-    ]
+      ],
+    ],
   ]
 
   var rulesData = [
@@ -75,13 +74,13 @@ final class AEMConfigurationTests: XCTestCase {
           Keys.values: [
             [
               Keys.currency: Values.USD,
-              Keys.amount: 100
+              Keys.amount: 100.0,
             ],
             [
               Keys.currency: Values.JPY,
-              Keys.amount: 1000
-            ]
-          ]
+              Keys.amount: 1000.0,
+            ],
+          ],
         ],
         [
           Keys.eventName: Values.donate,
@@ -105,7 +104,7 @@ final class AEMConfigurationTests: XCTestCase {
           Keys.eventName: Values.purchase,
         ],
       ],
-    ]
+    ],
   ]
 
   let advertiserRuleFactory = AEMAdvertiserRuleFactory()
@@ -117,43 +116,43 @@ final class AEMConfigurationTests: XCTestCase {
   }
 
   func testConfiguration() {
-    XCTAssertEqual(
-      AEMConfiguration.ruleProvider() as! AEMAdvertiserRuleFactory, // swiftlint:disable:this force_cast
+    XCTAssertIdentical(
+      AEMConfiguration.ruleProvider as AnyObject,
       advertiserRuleFactory,
       "Should configure the AEMConfiguration correctly"
     )
   }
 
   func testValidCases() {
-    let config = AEMConfiguration(json: sampleData)
+    let configuration = AEMConfiguration(json: sampleData)
 
     XCTAssertEqual(
-      config?.defaultCurrency,
+      configuration?.defaultCurrency,
       Values.USD,
       "Should parse the expected default_currency with the correct value"
     )
     XCTAssertEqual(
-      config?.cutoffTime,
+      configuration?.cutoffTime,
       1,
       "Should parse the expected cutoff_time with the correct value"
     )
     XCTAssertEqual(
-      config?.validFrom,
+      configuration?.validFrom,
       10000,
       "Should parse the expected valid_from with the correct value"
     )
     XCTAssertEqual(
-      config?.configMode,
+      configuration?.mode,
       Values.defaultMode,
       "Should parse the expected config_mode with the correct value"
     )
     XCTAssertEqual(
-      config?.businessID,
+      configuration?.businessID,
       Values.coffeeBrand,
       "Should parse the expected business_id with the correct value"
     )
     XCTAssertEqual(
-      config?.conversionValueRules.count,
+      configuration?.conversionValueRules.count,
       1,
       "Should parse the expected conversion_value_rules with the correct value"
     )
@@ -166,7 +165,7 @@ final class AEMConfigurationTests: XCTestCase {
       Keys.defaultCurrency: 100,
       Keys.cutoffTime: 1,
       Keys.validFrom: 10000,
-      Keys.configMode: Values.defaultMode,
+      Keys.mode: Values.defaultMode,
       Keys.conversionValueRules: [
         [
           Keys.conversionValue: 2,
@@ -179,28 +178,28 @@ final class AEMConfigurationTests: XCTestCase {
               Keys.eventName: Values.donate,
             ],
           ],
-        ]
-      ]
+        ],
+      ],
     ]
     XCTAssertNil(
       AEMConfiguration(json: invalidData),
-      "Should not consider the config json valid with unexpected type for default_currency"
+      "Should not consider the configuration json valid with unexpected type for default_currency"
     )
     invalidData = [
       Keys.defaultCurrency: Values.USD,
       Keys.cutoffTime: 1,
       Keys.validFrom: 10000,
-      Keys.configMode: Values.defaultMode
+      Keys.mode: Values.defaultMode,
     ]
     XCTAssertNil(
       AEMConfiguration(json: invalidData),
-      "Should not consider the config json valid without any conversion value rules"
+      "Should not consider the configuration json valid without any conversion value rules"
     )
     invalidData = [
       Keys.defaultCurrency: Values.USD,
       Keys.cutoffTime: 1,
       Keys.validFrom: 10000,
-      Keys.configMode: Values.defaultMode,
+      Keys.mode: Values.defaultMode,
       Keys.conversionValueRules: [
         [
           Keys.conversionValue: "2",
@@ -213,31 +212,31 @@ final class AEMConfigurationTests: XCTestCase {
               Keys.eventName: Values.donate,
             ],
           ],
-        ]
-      ]
+        ],
+      ],
     ]
     XCTAssertNil(
       AEMConfiguration(json: invalidData),
-      "Should not consider the config json valid with invalid conversion value rule"
+      "Should not consider the configuration json valid with invalid conversion value rule"
     )
   }
 
   func testGetEventSet() {
-    guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [AEMRule] = AEMConfiguration.parseRules(rulesData)
     else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getEventSet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.purchase, Values.donate], "Should get the expected event set")
   }
 
   func testGetCurrencySet() {
-    guard let parsedRules: [FBAEMRule] = AEMConfiguration.parseRules(rulesData)
+    guard let parsedRules: [AEMRule] = AEMConfiguration.parseRules(rulesData)
     else { return XCTFail("Unwrapping Error") }
     let eventSet = AEMConfiguration.getCurrencySet(from: parsedRules)
     XCTAssertEqual(eventSet, [Values.USD, Values.JPY], "Should get the expected event set")
   }
 
   func testParseRules() {
-    let parsedRules: [FBAEMRule]? = AEMConfiguration.parseRules(rulesData)
+    let parsedRules: [AEMRule]? = AEMConfiguration.parseRules(rulesData)
     XCTAssertEqual(
       parsedRules?[0].priority, 15, "Shoule parse the rules in descending priority order"
     )
@@ -258,8 +257,8 @@ final class AEMConfigurationTests: XCTestCase {
   }
 
   func testIsSameBusinessID() {
-    let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
-    let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
+    let configWithBusinessID = SampleAEMConfigurations.createConfigurationWithBusinessID()
+    let configWithoutBusinessID = SampleAEMConfigurations.createConfigurationWithoutBusinessID()
 
     XCTAssertTrue(
       configWithBusinessID.isSameBusinessID("test_advertiserid_123") == true,
@@ -271,50 +270,50 @@ final class AEMConfigurationTests: XCTestCase {
     )
     XCTAssertFalse(
       configWithBusinessID.isSameBusinessID(nil) == true,
-      "Should return false for nil business ID if the config has business ID"
+      "Should return false for nil business ID if the configuration has business ID"
     )
 
     XCTAssertTrue(
       configWithoutBusinessID.isSameBusinessID(nil) == true,
-      "Should return true for nil business ID if the config doesn't have business ID"
+      "Should return true for nil business ID if the configuration doesn't have business ID"
     )
     XCTAssertFalse(
       configWithoutBusinessID.isSameBusinessID("test_advertiserid_123") == true,
-      "Should return false for non-nil business ID if the config has business ID"
+      "Should return false for non-nil business ID if the configuration has business ID"
     )
   }
 
   func testIsSameValidFromAndBusinessID() {
-    let configWithBusinessID = SampleAEMConfigurations.createConfigWithBusinessID()
-    let configWithoutBusinessID = SampleAEMConfigurations.createConfigWithoutBusinessID()
+    let configWithBusinessID = SampleAEMConfigurations.createConfigurationWithBusinessID()
+    let configWithoutBusinessID = SampleAEMConfigurations.createConfigurationWithoutBusinessID()
 
     XCTAssertTrue(
-      configWithBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_123") == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123") == true,
       "Should return true for the same validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_6666") == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_6666") == true,
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameValid(from: 10001, businessID: "test_advertiserid_123") == true,
+      configWithBusinessID.isSame(validFrom: 10001, businessID: "test_advertiserid_123") == true,
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameValid(from: 10000, businessID: nil) == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: nil) == true,
       "Should return false for the unexpected validFrom and business ID"
     )
 
     XCTAssertTrue(
-      configWithoutBusinessID.isSameValid(from: 10000, businessID: nil) == true,
-      "Should return true for nil business ID if the config doesn't have business ID"
+      configWithoutBusinessID.isSame(validFrom: 10000, businessID: nil) == true,
+      "Should return true for nil business ID if the configuration doesn't have business ID"
     )
     XCTAssertFalse(
-      configWithoutBusinessID.isSameValid(from: 10000, businessID: "test_advertiserid_123") == true,
+      configWithoutBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123") == true,
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithoutBusinessID.isSameValid(from: 10001, businessID: nil) == true,
+      configWithoutBusinessID.isSame(validFrom: 10001, businessID: nil) == true,
       "Should return false for the unexpected validFrom and business ID"
     )
   }
@@ -326,86 +325,31 @@ final class AEMConfigurationTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
-    let coder = TestCoder()
-    let config = AEMConfiguration(json: sampleData)
-    config?.encode(with: coder)
+  func testEncodingAndDecoding() throws {
+    // swiftlint:disable:next force_unwrapping
+    let configuration = AEMConfiguration(json: sampleData)!
+    let decodedObject = try CodabilityTesting.encodeAndDecode(configuration)
 
-    XCTAssertEqual(
-      coder.encodedObject[Keys.defaultCurrency] as? String,
-      config?.defaultCurrency,
-      "Should encode the expected default_currency with the correct key"
-    )
-    let cutoffTime = coder.encodedObject[Keys.cutoffTime] as? NSNumber
-    XCTAssertEqual(
-      cutoffTime?.intValue,
-      config?.cutoffTime,
-      "Should encode the expected cutoff_time with the correct key"
-    )
-    let validFrom = coder.encodedObject[Keys.validFrom] as? NSNumber
-    XCTAssertEqual(
-      validFrom?.intValue,
-      config?.validFrom,
-      "Should encode the expected valid_from with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.configMode] as? String,
-      config?.configMode,
-      "Should encode the expected config_mode with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.businessID] as? String,
-      config?.businessID,
-      "Should encode the expected business_id with the correct key"
-    )
-    XCTAssertTrue(
-      coder.encodedObject[Keys.paramRule] is FBAEMAdvertiserRuleMatching,
-      "Should encode the expected param_rule with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.conversionValueRules] as? [FBAEMRule],
-      config?.conversionValueRules,
-      "Should encode the expected conversion_value_rules with the correct key"
-    )
-  }
+    // Test Object
+    XCTAssertNotIdentical(configuration, decodedObject)
+    XCTAssertNotEqual(configuration, decodedObject) // isEqual method not added yet
 
-  func testDecoding() {
-    let decoder = TestCoder()
-    _ = AEMConfiguration(coder: decoder)
-
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.defaultCurrency] is NSString.Type,
-      "Should decode the expected type for the default_currency key"
-    )
+    // Test Properties
+    XCTAssertEqual(configuration.defaultCurrency, decodedObject.defaultCurrency, .isCodable)
+    XCTAssertEqual(configuration.cutoffTime, decodedObject.cutoffTime, .isCodable)
+    XCTAssertEqual(configuration.validFrom, decodedObject.validFrom, .isCodable)
+    XCTAssertEqual(configuration.mode, decodedObject.mode, .isCodable)
+    XCTAssertEqual(configuration.businessID, decodedObject.businessID, .isCodable)
     XCTAssertEqual(
-      decoder.decodedObject[Keys.cutoffTime] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the cutoff_time key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.validFrom] as? String,
-      "decodeIntegerForKey",
-      "Should decode the expected type for the valid_from key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.configMode] is NSString.Type,
-      "Should decode the expected type for the config_mode key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject[Keys.businessID] is NSString.Type,
-      "Should decode the expected type for the business_id key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.paramRule] as? NSSet,
-      [NSArray.self, AEMAdvertiserMultiEntryRule.self, AEMAdvertiserSingleEntryRule.self],
-      "Should decode the expected type for the param_rule key"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject[Keys.conversionValueRules] as? NSSet,
-      [NSArray.self, FBAEMEvent.self, FBAEMRule.self],
-      "Should decode the expected type for the conversion_value_rules key"
+      configuration.conversionValueRules,
+      decodedObject.conversionValueRules,
+      .isCodable
     )
   }
 }
 
-#endif
+// MARK: - Assumptions
+
+extension String {
+  fileprivate static let isCodable = "AEMConfiguration should be encodable and decodable"
+}

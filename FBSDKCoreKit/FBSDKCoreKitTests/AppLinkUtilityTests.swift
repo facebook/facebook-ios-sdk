@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 
 final class AppLinkUtilityTests: XCTestCase {
@@ -143,9 +144,9 @@ final class AppLinkUtilityTests: XCTestCase {
     let bundleDict = [
       "CFBundleURLTypes": [
         [
-          "CFBundleURLSchemes": ["fb123"]
-        ]
-      ]
+          "CFBundleURLSchemes": ["fb123"],
+        ],
+      ],
     ]
     bundle = TestBundle(infoDictionary: bundleDict)
 
@@ -161,7 +162,7 @@ final class AppLinkUtilityTests: XCTestCase {
     appEventsConfigurationProvider.firstCapturedBlock?()
 
     XCTAssertEqual(graphRequestFactory.capturedGraphPath, "(null)/activities")
-    XCTAssertEqual(graphRequestFactory.capturedHttpMethod, HTTPMethod(rawValue: "POST"))
+    XCTAssertEqual(graphRequestFactory.capturedHTTPMethod, .post)
   }
 
   func testValidatingConfiguration() {

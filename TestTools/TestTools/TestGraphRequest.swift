@@ -7,110 +7,35 @@
  */
 
 @testable import FBSDKCoreKit
-import Foundation
 
-@objcMembers
-public class TestGraphRequest: NSObject, GraphRequestProtocol {
+public final class TestGraphRequest: GraphRequestProtocol {
   public var isGraphErrorRecoveryDisabled = false
-  public var hasAttachments = false
-  public var parameters: [String: Any] = [:]
-  public var tokenString: String?
-  public var graphPath: String = ""
-  public var httpMethod = HTTPMethod.get
-  public var version: String = ""
-  public var flags: GraphRequestFlags = []
+  public let hasAttachments = false
+  public var parameters: [String: Any]
+  public let tokenString: String?
+  public let graphPath: String
+  public let httpMethod: HTTPMethod
+  public let version: String
+  public let flags: GraphRequestFlags
   public var stubbedConnection = TestGraphRequestConnection()
   public var capturedCompletionHandler: GraphRequestCompletion?
   public var startCallCount = 0
   public var cancelCallCount = 0
 
-  public convenience init(
-    graphPath: String,
-    HTTPMethod: HTTPMethod
+  public init(
+    graphPath: String = "",
+    parameters: [String: Any]? = nil,
+    tokenString: String? = nil,
+    httpMethod: HTTPMethod? = nil,
+    version: String? = nil,
+    flags: GraphRequestFlags? = nil
   ) {
-    self.init()
-
     self.graphPath = graphPath
-    httpMethod = HTTPMethod
-  }
-
-  public convenience init(
-    graphPath: String,
-    parameters: [String: Any]
-  ) {
-    self.init()
-
-    self.graphPath = graphPath
-    self.parameters = parameters
-  }
-
-  public convenience init(
-    graphPath: String,
-    parameters: [String: Any],
-    HTTPMethod: HTTPMethod
-  ) {
-    self.init()
-
-    self.graphPath = graphPath
-    self.parameters = parameters
-    httpMethod = HTTPMethod
-  }
-
-  public convenience init(
-    graphPath: String,
-    parameters: [String: Any],
-    flags: GraphRequestFlags
-  ) {
-    self.init()
-
-    self.graphPath = graphPath
-    self.parameters = parameters
-    self.flags = flags
-  }
-
-  public convenience init(
-    graphPath: String,
-    parameters: [String: Any],
-    tokenString: String?
-  ) {
-    self.init()
-
-    self.graphPath = graphPath
-    self.parameters = parameters
+    self.parameters = parameters ?? [:]
     self.tokenString = tokenString
-  }
-
-  public convenience init(
-    graphPath: String,
-    parameters: [String: Any],
-    tokenString: String?,
-    HTTPMethod: HTTPMethod,
-    flags: GraphRequestFlags
-  ) {
-    self.init()
-
-    self.graphPath = graphPath
-    self.parameters = parameters
-    self.tokenString = tokenString
-    self.graphPath = graphPath
-    httpMethod = HTTPMethod
-    self.flags = flags
-  }
-
-  public convenience init(
-    graphPath: String,
-    parameters: [String: Any],
-    tokenString: String?,
-    HTTPMethod: HTTPMethod,
-    version: String
-  ) {
-    self.init()
-
-    self.parameters = parameters
-    self.tokenString = tokenString
-    self.graphPath = graphPath
-    httpMethod = HTTPMethod
-    self.version = version
+    self.httpMethod = httpMethod ?? .get
+    self.version = version ?? ""
+    self.flags = flags ?? []
   }
 
   public func start(completion handler: GraphRequestCompletion? = nil) -> GraphRequestConnecting {

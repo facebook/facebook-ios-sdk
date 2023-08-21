@@ -8,7 +8,7 @@
 
 import WebKit
 
-class TestWebKitNavigationAction: WKNavigationAction {
+final class TestWebKitNavigationAction: WKNavigationAction {
   let stubbedRequest: URLRequest
   let stubbedNavigationType: WKNavigationType
 

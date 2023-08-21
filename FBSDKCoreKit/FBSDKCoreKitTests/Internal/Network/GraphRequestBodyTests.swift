@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class GraphRequestBodyTests: XCTestCase {

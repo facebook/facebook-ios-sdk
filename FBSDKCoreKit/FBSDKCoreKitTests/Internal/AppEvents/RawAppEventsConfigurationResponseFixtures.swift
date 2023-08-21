@@ -10,7 +10,7 @@ import Foundation
 import TestTools
 
 @objcMembers
-class RawAppEventsConfigurationResponseFixtures: NSObject {
+final class RawAppEventsConfigurationResponseFixtures: NSObject {
 
   enum Keys {
     static let defaultATEStatus = "default_ate_status"
@@ -24,8 +24,8 @@ class RawAppEventsConfigurationResponseFixtures: NSObject {
       Keys.topLevel: [
         Keys.defaultATEStatus: 1,
         Keys.advertiserIDCollectionEnabled: false,
-        Keys.eventCollectionEnabled: true
-      ]
+        Keys.eventCollectionEnabled: true,
+      ],
     ]
   }
 
@@ -42,8 +42,8 @@ class RawAppEventsConfigurationResponseFixtures: NSObject {
       Keys.topLevel: [
         Keys.defaultATEStatus: "foo",
         Keys.advertiserIDCollectionEnabled: "bar",
-        Keys.eventCollectionEnabled: "baz"
-      ]
+        Keys.eventCollectionEnabled: "baz",
+      ],
     ]
   }
 
@@ -54,7 +54,7 @@ class RawAppEventsConfigurationResponseFixtures: NSObject {
         Keys.defaultATEStatus: Fuzzer.random,
         Keys.advertiserIDCollectionEnabled: Fuzzer.random,
         Keys.eventCollectionEnabled: Fuzzer.random,
-      ]
+      ],
     ]
     return Fuzzer.randomize(json: response)
   }

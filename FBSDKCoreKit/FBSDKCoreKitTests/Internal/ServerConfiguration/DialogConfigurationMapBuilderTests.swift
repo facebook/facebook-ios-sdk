@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class DialogConfigurationMapBuilderTests: XCTestCase {
@@ -22,7 +24,7 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     static let url = URL(string: urlString)! // swiftlint:disable:this force_unwrapping
   }
 
-  let builder = DialogConfigurationMapBuilder()
+  let builder = _DialogConfigurationMapBuilder()
 
   func testBuildingWithEmptyRawConfigurations() {
     XCTAssertTrue(
@@ -51,8 +53,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     let rawConfigurations = [
       [
         Keys.name: name,
-        Keys.url: Values.empty
-      ]
+        Keys.url: Values.empty,
+      ],
     ]
     XCTAssertTrue(
       builder.buildDialogConfigurationMap(from: rawConfigurations).isEmpty,
@@ -64,8 +66,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
     let rawConfigurations = [
       [
         Keys.name: name,
-        Keys.url: Values.urlString
-      ]
+        Keys.url: Values.urlString,
+      ],
     ]
     XCTAssertTrue(
       builder.buildDialogConfigurationMap(from: rawConfigurations).isEmpty,
@@ -78,8 +80,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
       [
         Keys.name: name,
         Keys.url: Values.urlString,
-        Keys.versions: []
-      ]
+        Keys.versions: [],
+      ],
     ]
     XCTAssertTrue(
       builder.buildDialogConfigurationMap(from: rawConfigurations).isEmpty,
@@ -92,19 +94,19 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
       [
         Keys.name: name,
         Keys.url: Values.urlString,
-        Keys.versions: ["1", "2"]
-      ]
+        Keys.versions: ["1", "2"],
+      ],
     ]
     let configurationMap = builder.buildDialogConfigurationMap(from: rawConfigurations)
 
     let actual = try XCTUnwrap(configurationMap[name], "Should map dialog configurations to their name")
-    let expected = DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
+    let expected = _DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
     assertEqualConfigurations(actual, expected)
   }
 
   func testBuildingWithDuplicateConfigurations() throws {
-    let configuration = DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
-    let otherConfiguration = DialogConfiguration(
+    let configuration = _DialogConfiguration(name: name, url: Values.url, appVersions: ["1", "2"])
+    let otherConfiguration = _DialogConfiguration(
       name: name,
       url: Values.url.appendingPathComponent("foo"),
       appVersions: [3]
@@ -114,13 +116,13 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
       [
         Keys.name: configuration.name,
         Keys.url: configuration.url.absoluteString,
-        Keys.versions: configuration.appVersions
+        Keys.versions: configuration.appVersions,
       ],
       [
         Keys.name: otherConfiguration.name,
         Keys.url: otherConfiguration.url.absoluteString,
-        Keys.versions: otherConfiguration.appVersions
-      ]
+        Keys.versions: otherConfiguration.appVersions,
+      ],
     ]
     let configurationMap = builder.buildDialogConfigurationMap(from: rawConfigurations)
 
@@ -131,8 +133,8 @@ final class DialogConfigurationMapBuilderTests: XCTestCase {
   // MARK: - Helpers
 
   func assertEqualConfigurations(
-    _ actual: DialogConfiguration,
-    _ expected: DialogConfiguration,
+    _ actual: _DialogConfiguration,
+    _ expected: _DialogConfiguration,
     _ file: StaticString = #file,
     _ line: UInt = #line
   ) {

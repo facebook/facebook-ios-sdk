@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestLogger: Logger {
+final class TestLogger: _Logger {
   static var capturedLoggingBehavior: LoggingBehavior?
   /// The most recent log entry
   static var capturedLogEntry: String?

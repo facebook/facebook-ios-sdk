@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class TestApplicationDelegate: NSObject, UIApplicationDelegate {
+final class TestApplicationDelegate: NSObject, UIApplicationDelegate {
 
   var applicationOpenURLCallCount = 0
 

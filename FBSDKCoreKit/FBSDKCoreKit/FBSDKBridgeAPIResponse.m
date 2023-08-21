@@ -10,13 +10,12 @@
 
 #import "FBSDKBridgeAPIResponse.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKBridgeAPIRequest+Private.h"
 #import "FBSDKConstants.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKOperatingSystemVersionComparing.h"
-#import "NSProcessInfo+Protocols.h"
 
 @interface FBSDKBridgeAPIResponse ()
 - (instancetype)initWithRequest:(id<FBSDKBridgeAPIRequest>)request
@@ -30,7 +29,8 @@
 
 #pragma mark - Class Methods
 
-+ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequest>)request error:(NSError *)error
++ (instancetype)bridgeAPIResponseWithRequest:(id<FBSDKBridgeAPIRequest>)request
+                                       error:(nullable NSError *)error
 {
   return [[self alloc] initWithRequest:request
                     responseParameters:nil
@@ -58,7 +58,7 @@
 {
   FBSDKBridgeAPIProtocolType protocolType = request.protocolType;
   NSOperatingSystemVersion iOS13Version = { .majorVersion = 13, .minorVersion = 0, .patchVersion = 0 };
-  if ([comparer isOperatingSystemAtLeastVersion:iOS13Version]) {
+  if ([comparer fb_isOperatingSystemAtLeastVersion:iOS13Version]) {
     // SourceApplication is not available in iOS 13.
     // https://forums.developer.apple.com/thread/119118
   } else {
@@ -123,7 +123,7 @@
 - (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
              responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
-                          error:(NSError *)error
+                          error:(nullable NSError *)error
 {
   if ((self = [super init])) {
     _request = [request copy];

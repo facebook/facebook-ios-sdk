@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@available(iOS 11.2, *)
-class TestProductDiscount: SKProductDiscount {
+final class TestProductDiscount: SKProductDiscount {
   let stubbedIdentifier: String
   let stubbedPaymentMode: PaymentMode
   let stubbedPrice: NSDecimalNumber

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -31,7 +33,7 @@ final class GraphErrorRecoveryProcessorTests: XCTestCase {
         code: recoverableCode,
         userInfo: [
           Keys.errorKey: recoverableCode,
-          NSRecoveryAttempterErrorKey: attempter
+          NSRecoveryAttempterErrorKey: attempter,
         ]
       )
     }

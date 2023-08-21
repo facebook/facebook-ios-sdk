@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TestCollectionView: UICollectionView {
+final class TestCollectionView: UICollectionView {
   var stubbedWindow: UIWindow?
   var stubbedCellMap = [IndexPath: UICollectionViewCell]()
 

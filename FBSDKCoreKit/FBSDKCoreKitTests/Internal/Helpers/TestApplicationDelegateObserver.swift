@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+import FBSDKCoreKit
+import UIKit
 
 @objcMembers
-class TestApplicationDelegateObserver: NSObject, FBSDKApplicationObserving {
+final class TestApplicationDelegateObserver: NSObject, FBSDKApplicationObserving {
   var didFinishLaunchingCallCount = 0
   var capturedLaunchOptions: [UIApplication.LaunchOptionsKey: Any]?
   var wasWillResignActiveCalled = false

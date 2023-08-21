@@ -9,7 +9,7 @@
 import XCTest
 
 @objcMembers
-class TestUserDataStore: NSObject, UserDataPersisting {
+final class TestUserDataStore: NSObject, _UserDataPersisting {
 
   var wasGetUserDataCalled = false
   var wasClearUserDataCalled = false

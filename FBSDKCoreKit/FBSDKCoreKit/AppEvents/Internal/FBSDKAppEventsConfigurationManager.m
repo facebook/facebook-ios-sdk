@@ -6,15 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "FBSDKAppEventsConfigurationManager.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
-
-#import "FBSDKAppEventsConfiguration.h"
-#import "FBSDKGraphRequestConnecting.h"
-#import "FBSDKGraphRequestConnectionFactory.h"
-#import "FBSDKGraphRequestFactoryProtocol.h"
-#import "FBSDKSettingsProtocol.h"
+#import <UIKit/UIKit.h>
 
 static NSString *const FBSDKAppEventsConfigurationKey = @"com.facebook.sdk:FBSDKAppEventsConfiguration";
 static NSString *const FBSDKAppEventsConfigurationTimestampKey = @"com.facebook.sdk:FBSDKAppEventsConfigurationTimestamp";
@@ -30,7 +24,7 @@ static const NSTimeInterval kTimeout = 4.0;
 @property (nonatomic) BOOL isLoadingConfiguration;
 @property (nonatomic) BOOL hasRequeryFinishedForAppStart;
 @property (nullable, nonatomic) NSDate *timestamp;
-@property (nullable, nonatomic) NSMutableArray *completionBlocks;
+@property (nullable, nonatomic) NSMutableArray<FBSDKAppEventsConfigurationManagerBlock> *completionBlocks;
 
 @end
 
@@ -62,24 +56,17 @@ static FBSDKAppEventsConfigurationManager *_shared;
   self.settings = settings;
   self.graphRequestFactory = graphRequestFactory;
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
-  id data = [self.store objectForKey:FBSDKAppEventsConfigurationKey];
+  id data = [self.store fb_objectForKey:FBSDKAppEventsConfigurationKey];
 
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   if ([data isKindOfClass:NSData.class]) {
-    if (@available(iOS 11.0, tvOS 11.0, *)) {
-      self.configuration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKAppEventsConfiguration.class fromData:data error:nil];
-    } else {
-      self.configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    }
+    self.configuration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKAppEventsConfiguration.class fromData:data error:nil];
   }
-  #pragma clang diagnostic pop
 
   if (!self.configuration) {
-    self.configuration = [FBSDKAppEventsConfiguration defaultConfiguration];
+    self.configuration = FBSDKAppEventsConfiguration.defaultConfiguration;
   }
   self.completionBlocks = [NSMutableArray new];
-  self.timestamp = [self.store objectForKey:FBSDKAppEventsConfigurationTimestampKey];
+  self.timestamp = [self.store fb_objectForKey:FBSDKAppEventsConfigurationTimestampKey];
 }
 
 - (id<FBSDKAppEventsConfiguration>)cachedAppEventsConfiguration
@@ -105,7 +92,7 @@ static FBSDKAppEventsConfigurationManager *_shared;
     self.isLoadingConfiguration = true;
     id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:appID
                                                                                    parameters:@{
-                                       @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", [UIDevice currentDevice].systemVersion]
+                                       @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", UIDevice.currentDevice.systemVersion]
                                      }];
     id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
     requestConnection.timeout = kTimeout;
@@ -116,8 +103,6 @@ static FBSDKAppEventsConfigurationManager *_shared;
   }
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)_processResponse:(id)response
                    error:(NSError *)error
 {
@@ -139,19 +124,17 @@ static FBSDKAppEventsConfigurationManager *_shared;
     }
     [self.completionBlocks removeAllObjects];
   }
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.configuration];
-  [self.store setObject:data forKey:FBSDKAppEventsConfigurationKey];
-  [self.store setObject:date forKey:FBSDKAppEventsConfigurationTimestampKey];
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.configuration requiringSecureCoding:NO error:nil];
+  [self.store fb_setObject:data forKey:FBSDKAppEventsConfigurationKey];
+  [self.store fb_setObject:date forKey:FBSDKAppEventsConfigurationTimestampKey];
 }
-
-#pragma clang diagnostic pop
 
 - (BOOL)_isTimestampValid
 {
   return self.timestamp && [[NSDate date] timeIntervalSinceDate:self.timestamp] < 3600;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 - (void)resetDependencies
 {

@@ -36,7 +36,8 @@ NS_SWIFT_NAME(BridgeAPIResponse)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-+ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request error:(NSError *)error;
++ (instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
+                                       error:(nullable NSError *)error;
 + (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
                                           responseURL:(NSURL *)responseURL
                                     sourceApplication:(nullable NSString *)sourceApplication

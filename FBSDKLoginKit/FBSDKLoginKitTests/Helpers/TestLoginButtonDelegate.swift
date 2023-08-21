@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestLoginButtonDelegate: NSObject, LoginButtonDelegate {
+final class TestLoginButtonDelegate: NSObject, LoginButtonDelegate {
   var didLoggedOut = false
   var willLogin = false
   var capturedResult: LoginManagerLoginResult?

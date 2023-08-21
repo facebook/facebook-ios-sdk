@@ -11,13 +11,15 @@ import UIKit
 
 // swiftformat:disable indent
 @objcMembers
-class TestAEMReporter: NSObject, AEMReporterProtocol {
+final class TestAEMReporter: NSObject, _AEMReporterProtocol {
 
   static var enableWasCalled = false
   static var setConversionFilteringEnabledWasCalled = false
   static var capturedConversionFilteringEnabled = false
   static var setCatalogMatchingEnabledWasCalled = false
   static var capturedCatalogMatchingEnabled = false
+  static var setAdvertiserRuleMatchInServerEnabledWasCalled = false
+  static var capturedAdvertiserRuleMatchInServerEnabled = false
   static var capturedEvent: String?
   static var capturedCurrency: String?
   static var capturedValue: NSNumber?
@@ -48,6 +50,13 @@ class TestAEMReporter: NSObject, AEMReporterProtocol {
     setCatalogMatchingEnabledWasCalled = true
     capturedCatalogMatchingEnabled = enabled
   }
+
+  static func setAdvertiserRuleMatchInServerEnabled(_ enabled: Bool) {
+    setAdvertiserRuleMatchInServerEnabledWasCalled = true
+    capturedAdvertiserRuleMatchInServerEnabled = enabled
+  }
+
+  static func handle(_ url: URL?) {}
 
   static func reset() {
     enableWasCalled = false

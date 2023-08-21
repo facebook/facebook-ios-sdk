@@ -10,13 +10,14 @@ import FBSDKCoreKit
 import FBSDKCoreKit_Basics
 import Foundation
 
+// swiftformat:disable indent
 @objcMembers
-public class TestInternalUtility: NSObject,
-  AppAvailabilityChecker,
-  URLHosting,
-  AppURLSchemeProviding,
-  InternalUtilityProtocol {
-
+public final class TestInternalUtility: NSObject,
+                                        AppAvailabilityChecker,
+                                        URLHosting,
+                                        AppURLSchemeProviding,
+                                        InternalUtilityProtocol {
+  // swiftformat:enable indent
   public var validateURLSchemesCalled = false
   public var isFacebookAppInstalled = false
   public var isMessengerAppInstalled = false
@@ -53,7 +54,7 @@ public class TestInternalUtility: NSObject,
   }
 
   public func facebookURL(
-    withHostPrefix hostPrefix: String,
+    hostPrefix: String,
     path: String,
     queryParameters: [String: String]
   ) throws -> URL {
@@ -80,7 +81,11 @@ public class TestInternalUtility: NSObject,
 
   public func registerTransientObject(_ object: Any) {}
 
-  public func unregisterTransientObject(_ object: Any) {}
+  public var unregisterTransientObjectObject: Any?
+
+  public func unregisterTransientObject(_ object: Any) {
+    unregisterTransientObjectObject = object
+  }
 
   public func checkRegisteredCanOpenURLScheme(_ urlScheme: String) {}
 
@@ -137,4 +142,8 @@ public class TestInternalUtility: NSObject,
   public func parameters(fromFBURL url: URL) -> [String: Any] {
     stubbedFBURLParameters ?? [:]
   }
+
+  public var bundleForStrings: Bundle { .main }
+
+  public func topMostViewController() -> UIViewController? { nil }
 }

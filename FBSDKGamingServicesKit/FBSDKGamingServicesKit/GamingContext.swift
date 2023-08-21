@@ -12,19 +12,13 @@ import Foundation
 @objc(FBSDKGamingContext)
 public final class GamingContext: NSObject {
 
-  /**
-   A shared object that holds data about the current user's game instance which could be solo game or multiplayer game with other users.
-   */
+  /// A shared object that holds data about the current user's game instance which could be solo game or multiplayer game with other users.
   @objc(currentContext) public static var current: GamingContext?
 
-  /**
-   A unique identifier for the current game context. This represents a specific game instance that the user is playing in.
-   */
+  /// A unique identifier for the current game context. This represents a specific game instance that the user is playing in.
   public let identifier: String
 
-  /**
-   The number of players in the current user's game instance
-   */
+  /// The number of players in the current user's game instance
   public let size: Int
 
   public init?(identifier: String, size: Int) {

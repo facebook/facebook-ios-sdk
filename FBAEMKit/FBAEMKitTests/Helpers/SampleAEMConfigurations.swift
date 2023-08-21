@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBAEMKit
+@testable import FBAEMKit
 import Foundation
 
 enum SampleAEMConfigurations {
@@ -15,7 +15,7 @@ enum SampleAEMConfigurations {
     static let defaultCurrency = "default_currency"
     static let cutoffTime = "cutoff_time"
     static let validFrom = "valid_from"
-    static let configMode = "config_mode"
+    static let mode = "config_mode"
     static let conversionValueRules = "conversion_value_rules"
     static let conversionValue = "conversion_value"
     static let priority = "priority"
@@ -44,7 +44,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
+        Keys.mode: Values.defaultMode,
         Keys.conversionValueRules: [
           [
             Keys.conversionValue: 4,
@@ -55,10 +55,10 @@ enum SampleAEMConfigurations {
                 Keys.values: [
                   [
                     Keys.currency: Values.USD,
-                    Keys.amount: 100
-                  ]
-                ]
-              ]
+                    Keys.amount: 100.0,
+                  ],
+                ],
+              ],
             ],
           ],
           [
@@ -70,10 +70,10 @@ enum SampleAEMConfigurations {
                 Keys.values: [
                   [
                     Keys.currency: Values.USD,
-                    Keys.amount: 0
-                  ]
-                ]
-              ]
+                    Keys.amount: 0.0,
+                  ],
+                ],
+              ],
             ],
           ],
           [
@@ -82,7 +82,7 @@ enum SampleAEMConfigurations {
             Keys.events: [
               [
                 Keys.eventName: Values.addToCart,
-              ]
+              ],
             ],
           ],
           [
@@ -91,15 +91,15 @@ enum SampleAEMConfigurations {
             Keys.events: [
               [
                 Keys.eventName: Values.donate,
-              ]
+              ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithBusinessID() -> AEMConfiguration {
+  static func createConfigurationWithBusinessID() -> AEMConfiguration {
     let advertiserRuleFactory = AEMAdvertiserRuleFactory()
 
     AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -109,7 +109,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
+        Keys.mode: Values.defaultMode,
         Keys.businessID: "test_advertiserid_123",
         Keys.paramRule: #"{"and": [{"value": {"contains": "abc"}}]}"#,
         Keys.conversionValueRules: [
@@ -124,13 +124,13 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.donate,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithBusinessIDAndContentRule() -> AEMConfiguration {
+  static func createConfigurationWithBusinessIDAndContentRule() -> AEMConfiguration {
     let advertiserRuleFactory = AEMAdvertiserRuleFactory()
 
     AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -140,7 +140,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.brandMode,
+        Keys.mode: Values.brandMode,
         Keys.businessID: "test_advertiserid_content_test",
         Keys.paramRule: #"{"or": [{"fb_content[*].id": {"eq": "abc"}}]}"#,
         Keys.conversionValueRules: [
@@ -152,13 +152,13 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.purchase,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createConfigWithoutBusinessID() -> AEMConfiguration {
+  static func createConfigurationWithoutBusinessID() -> AEMConfiguration {
     let advertiserRuleFactory = AEMAdvertiserRuleFactory()
 
     AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -168,7 +168,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.defaultMode,
+        Keys.mode: Values.defaultMode,
         Keys.conversionValueRules: [
           [
             Keys.conversionValue: 2,
@@ -181,13 +181,13 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.donate,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
 
-  static func createCpasConfig() -> AEMConfiguration {
+  static func createCpasConfiguration() -> AEMConfiguration {
     let advertiserRuleFactory = AEMAdvertiserRuleFactory()
 
     AEMConfiguration.configure(withRuleProvider: advertiserRuleFactory)
@@ -197,7 +197,7 @@ enum SampleAEMConfigurations {
         Keys.defaultCurrency: Values.USD,
         Keys.cutoffTime: 1,
         Keys.validFrom: 10000,
-        Keys.configMode: Values.cpasMode,
+        Keys.mode: Values.cpasMode,
         Keys.businessID: "test_advertiserid_cpas",
         Keys.paramRule: #"{"or": [{"fb_content[*].id": {"eq": "abc"}}]}"#,
         Keys.conversionValueRules: [
@@ -209,8 +209,8 @@ enum SampleAEMConfigurations {
                 Keys.eventName: Values.purchase,
               ],
             ],
-          ]
-        ]
+          ],
+        ],
       ]
     )! // swiftlint:disable:this force_unwrapping
   }

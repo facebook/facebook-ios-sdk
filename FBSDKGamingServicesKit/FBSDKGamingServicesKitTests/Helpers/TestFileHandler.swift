@@ -9,20 +9,20 @@
 @testable import FBSDKGamingServicesKit
 import Foundation
 
-class TestFileHandler: FileHandling {
+final class TestFileHandler: FileHandling {
   var stubbedReadData = Data()
   var stubbedSeekToEndOfFile: UInt64 = 0
   var capturedFileOffset: UInt64 = 0
 
-  func seekToEndOfFile() -> UInt64 {
+  func fb_seekToEndOfFile() -> UInt64 {
     stubbedSeekToEndOfFile
   }
 
-  func seek(toFileOffset offset: UInt64) {
+  func fb_seek(toFileOffset offset: UInt64) {
     capturedFileOffset = offset
   }
 
-  func readData(ofLength length: Int) -> Data {
+  func fb_readData(ofLength length: Int) -> Data {
     stubbedReadData
   }
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class SampleAppEvents: NSObject {
+final class SampleAppEvents: NSObject {
 
   static var validEvent: [String: String] {
     ["_eventName": "event1"]

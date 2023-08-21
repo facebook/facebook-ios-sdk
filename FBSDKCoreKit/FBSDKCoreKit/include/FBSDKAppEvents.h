@@ -14,18 +14,25 @@
 
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
-#import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
+#import <FBSDKCoreKit/FBSDKAppEventsConfiguring.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
+#import <FBSDKCoreKit/FBSDKAppEventUserDataType.h>
+#import <FBSDKCoreKit/FBSDKApplicationActivating.h>
+#import <FBSDKCoreKit/FBSDKApplicationLifecycleObserving.h>
+#import <FBSDKCoreKit/FBSDKApplicationStateSetting.h>
+#import <FBSDKCoreKit/FBSDKEventLogging.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 #import <FBSDKCoreKit/FBSDKProductAvailability.h>
 #import <FBSDKCoreKit/FBSDKProductCondition.h>
+#import <FBSDKCoreKit/FBSDKSourceApplicationTracking.h>
+#import <FBSDKCoreKit/FBSDKUserIDProviding.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKAccessToken;
 
-/**  Optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID` */
+/// Optional plist key ("FacebookLoggingOverrideAppID") for setting `loggingOverrideAppID`
 FOUNDATION_EXPORT NSString *const FBSDKAppEventsOverrideAppIDBundleKey
 NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
 
@@ -74,19 +81,23 @@ NS_SWIFT_NAME(AppEventsOverrideAppIDBundleKey);
  + The length of each parameter value can be no more than on the order of 100 characters.
  */
 NS_SWIFT_NAME(AppEvents)
-@interface FBSDKAppEvents : NSObject
+@interface FBSDKAppEvents : NSObject <
+  FBSDKEventLogging,
+  FBSDKAppEventsConfiguring,
+  FBSDKApplicationActivating,
+  FBSDKApplicationLifecycleObserving,
+  FBSDKApplicationStateSetting,
+  FBSDKSourceApplicationTracking,
+  FBSDKUserIDProviding
+>
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-/**
- The shared instance of AppEvents.
- */
+/// The shared instance of AppEvents.
 @property (class, nonatomic, readonly, strong) FBSDKAppEvents *shared;
 
-/**
- Control over event batching/flushing
- */
+/// Control over event batching/flushing
 
 /// The current event flushing behavior specifying when events are sent back to Facebook servers.
 @property (nonatomic) FBSDKAppEventsFlushBehavior flushBehavior;
@@ -446,14 +457,10 @@ NS_SWIFT_NAME(requestForCustomAudienceThirdPartyID(accessToken:));
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:));
 // UNCRUSTIFY_FORMAT_ON
 
-/**
- Returns the set user data else nil
- */
+/// Returns the set user data else nil
 - (nullable NSString *)getUserData;
 
-/**
- Clears the current user data
- */
+/// Clears the current user data
 - (void)clearUserData;
 
 /**
@@ -468,9 +475,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
 - (void)setUserData:(nullable NSString *)data
             forType:(FBSDKAppEventUserDataType)type;
 
-/**
- Clears the current user data of certain type
- */
+/// Clears the current user data of certain type
 - (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
 
 #if !TARGET_OS_TV
@@ -497,9 +502,7 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
  */
 - (void)setIsUnityInitialized:(BOOL)isUnityInitialized;
 
-/**
- Send event bindings to Unity
- */
+/// Send event bindings to Unity
 - (void)sendEventBindingsToUnity;
 
 /*
@@ -527,6 +530,8 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
               parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(nullable FBSDKAccessToken *)accessToken;
+
+- (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 
 @end
 

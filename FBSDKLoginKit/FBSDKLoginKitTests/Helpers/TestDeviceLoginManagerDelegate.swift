@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestDeviceLoginManagerDelegate: NSObject, DeviceLoginManagerDelegate {
+final class TestDeviceLoginManagerDelegate: NSObject, DeviceLoginManagerDelegate {
   var capturedLoginManager: DeviceLoginManager?
   var capturedCodeInfo: DeviceLoginCodeInfo?
   var capturedResult: DeviceLoginManagerResult?

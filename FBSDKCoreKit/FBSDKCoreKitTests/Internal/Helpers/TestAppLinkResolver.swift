@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-class TestAppLinkResolver: NSObject, AppLinkResolving {
+final class TestAppLinkResolver: NSObject, AppLinkResolving {
   var capturedURL: URL?
   var capturedCompletion: AppLinkBlock?
 

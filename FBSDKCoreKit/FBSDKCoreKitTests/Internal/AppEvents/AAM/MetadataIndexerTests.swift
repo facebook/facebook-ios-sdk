@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
-import FBSDKCoreKit_Basics
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class MetadataIndexerTests: XCTestCase {
@@ -18,7 +18,7 @@ final class MetadataIndexerTests: XCTestCase {
   var pwdField = UITextField()
   var pwdView = UITextView()
   var userDataStore = TestUserDataStore()
-  lazy var metadataIndexer = MetadataIndexer(
+  lazy var metadataIndexer = _MetadataIndexer(
     userDataStore: userDataStore,
     swizzler: TestSwizzler.self
   )

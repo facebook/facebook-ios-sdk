@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestControl: UIControl {
+final class TestControl: UIControl {
   var capturedAction: Selector?
   var stubbedWindow: UIWindow?
 

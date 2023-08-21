@@ -17,9 +17,9 @@
 #define FBSDK_SERVER_CONFIGURATION_ADVERTISING_ID_ENABLED_KEY @"advertisingIDEnabled"
 #define FBSDK_SERVER_CONFIGURATION_APP_ID_KEY @"appID"
 #define FBSDK_SERVER_CONFIGURATION_APP_NAME_KEY @"appName"
-#define FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY @"dialogConfigs"
+#define FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_KEY @"dialogConfigs"
 #define FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY @"dialogFlows"
-#define FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY @"errorConfigs"
+#define FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATIONS_KEY @"errorConfigs"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY @"implicitLoggingEnabled"
 #define FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_KEY @"defaultShareMode"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY @"implicitPurchaseLoggingEnabled"
@@ -39,6 +39,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING @"suggestedEventsSetting"
 #define FBSDK_SERVER_CONFIGURATION_VERSION_KEY @"version"
 #define FBSDK_SERVER_CONFIGURATION_TRACK_UNINSTALL_ENABLED_KEY @"trackAppUninstallEnabled"
+#define FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES @"protectedModeRules"
 
 #pragma mark - Dialog Names
 
@@ -96,6 +97,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
                         AAMRules:(NSDictionary<NSString *, id> *)AAMRules
           suggestedEventsSetting:(NSDictionary<NSString *, id> *)suggestedEventsSetting
+              protectedModeRules:(NSDictionary<NSString *, id> *)protectedModeRules
 {
   if ((self = [super init])) {
     _appID = [appID copy];
@@ -112,7 +114,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
     _dialogFlows = [dialogFlows copy];
     _timestamp = [timestamp copy];
     _errorConfiguration = [errorConfiguration copy];
-    _sessionTimoutInterval = sessionTimeoutInterval ?: DEFAULT_SESSION_TIMEOUT_INTERVAL;
+    _sessionTimeoutInterval = sessionTimeoutInterval ?: DEFAULT_SESSION_TIMEOUT_INTERVAL;
     _defaults = defaults;
     _loggingToken = loggingToken;
     _smartLoginOptions = smartLoginOptions;
@@ -124,6 +126,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
     _AAMRules = AAMRules;
     _suggestedEventsSetting = suggestedEventsSetting;
     _version = FBSDKServerConfigurationVersion;
+    _protectedModeRules = protectedModeRules;
   }
   return self;
 }
@@ -170,6 +173,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                                 restrictiveParams:nil
                                                                          AAMRules:nil
                                                            suggestedEventsSetting:nil
+                                                               protectedModeRules:nil
     ];
   }
   return _defaultServerConfiguration;
@@ -235,7 +239,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                FBSDKDialogConfiguration.class,
                                                nil];
   NSDictionary<NSString *, id> *dialogConfigurations = [decoder decodeObjectOfClasses:dialogConfigurationsClasses
-                                                                               forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY];
+                                                                               forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_KEY];
   NSSet<Class> *dialogFlowsClasses = [[NSSet alloc] initWithObjects:
                                       [NSDictionary<NSString *, id> class],
                                       NSString.class,
@@ -243,13 +247,18 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                       nil];
   NSDictionary<NSString *, id> *dialogFlows = [decoder decodeObjectOfClasses:dialogFlowsClasses
                                                                       forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
-  FBSDKErrorConfiguration *errorConfiguration = [decoder decodeObjectOfClass:FBSDKErrorConfiguration.class forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY];
+  FBSDKErrorConfiguration *errorConfiguration = [decoder decodeObjectOfClass:FBSDKErrorConfiguration.class forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATIONS_KEY];
   NSTimeInterval sessionTimeoutInterval = [decoder decodeDoubleForKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
   NSString *loggingToken = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SERVER_CONFIGURATION_LOGGING_TOKEN];
   NSURL *smartLoginBookmarkIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
   NSURL *smartLoginMenuIconURL = [decoder decodeObjectOfClass:NSURL.class forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
   NSString *updateMessage = [decoder decodeObjectOfClass:NSString.class forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
-  NSArray<NSDictionary<NSString *, id> *> *eventBindings = [decoder decodeObjectOfClass:NSArray.class forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
+  NSSet<Class> *eventBindingsClasses = [[NSSet alloc] initWithObjects:
+                                        [NSDictionary<NSString *, id> class],
+                                        NSString.class,
+                                        NSArray.class,
+                                        nil];
+  NSArray<NSDictionary<NSString *, id> *> *eventBindings = [decoder decodeObjectOfClasses:eventBindingsClasses forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
   NSSet<Class> *dictionaryClasses = [NSSet setWithObjects:
                                      [NSDictionary<NSString *, id> class],
                                      NSArray.class,
@@ -261,6 +270,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSDictionary<NSString *, id> *AAMRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES]];
   NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING]];
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  NSDictionary<NSString *, id> *protectedModeRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES]];
+  
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
                                                                     appName:appName
                                                         loginTooltipEnabled:loginTooltipEnabled
@@ -286,6 +297,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                           restrictiveParams:restrictiveParams
                                                                    AAMRules:AAMRules
                                                      suggestedEventsSetting:suggestedEventsSetting
+                                                         protectedModeRules:protectedModeRules
   ];
   configuration->_version = version;
   return configuration;
@@ -297,9 +309,9 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   [encoder encodeObject:_appID forKey:FBSDK_SERVER_CONFIGURATION_APP_ID_KEY];
   [encoder encodeObject:_appName forKey:FBSDK_SERVER_CONFIGURATION_APP_NAME_KEY];
   [encoder encodeObject:_defaultShareMode forKey:FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_KEY];
-  [encoder encodeObject:_dialogConfigurations forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_KEY];
+  [encoder encodeObject:_dialogConfigurations forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGURATIONS_KEY];
   [encoder encodeObject:_dialogFlows forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
-  [encoder encodeObject:_errorConfiguration forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY];
+  [encoder encodeObject:_errorConfiguration forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATIONS_KEY];
   [encoder encodeBool:_implicitLoggingEnabled forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY];
   [encoder encodeBool:_implicitPurchaseLoggingEnabled
                forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY];
@@ -310,7 +322,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                forKey:FBSDK_SERVER_CONFIGURATION_TRACK_UNINSTALL_ENABLED_KEY];
   [encoder encodeObject:_loginTooltipText forKey:FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_KEY];
   [encoder encodeObject:_timestamp forKey:FBSDK_SERVER_CONFIGURATION_TIMESTAMP_KEY];
-  [encoder encodeDouble:_sessionTimoutInterval forKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
+  [encoder encodeDouble:_sessionTimeoutInterval forKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
   [encoder encodeObject:_loggingToken forKey:FBSDK_SERVER_CONFIGURATION_LOGGING_TOKEN];
   [encoder encodeInteger:_smartLoginOptions forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
   [encoder encodeObject:_smartLoginBookmarkIconURL forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
@@ -321,6 +333,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   [encoder encodeObject:_AAMRules forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES];
   [encoder encodeObject:_suggestedEventsSetting forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING];
   [encoder encodeInteger:_version forKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  [encoder encodeObject:_protectedModeRules forKey:FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES];
 }
 
 #pragma mark - NSCopying

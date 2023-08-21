@@ -6,17 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if !os(tvOS)
-
 import FBSDKCoreKit
 import Foundation
 
-/**
- A dialog for the choose context through app switch
- */
+/// A dialog for the choose context through app switch
 @objcMembers
 @objc(FBSDKChooseContextDialog)
-public class ChooseContextDialog: ContextWebDialog, URLOpening {
+public final class ChooseContextDialog: ContextWebDialog, URLOpening {
 
   private enum Constants {
     static let contextKey = "context_id"
@@ -59,7 +55,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
       return false
     }
 
-    BridgeAPI.shared.open(
+    _BridgeAPI.shared.open(
       dialogURL,
       sender: self
     ) { [weak self] success, bridgeError in
@@ -68,7 +64,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
       }
 
       if !success, bridgeError != nil {
-        let sdkError = ErrorFactory().error(
+        let sdkError = _ErrorFactory().error(
           code: CoreError.errorBridgeAPIInterruption.rawValue,
           userInfo: nil,
           message: "Error occurred while interacting with Gaming Services, Failed to open bridge.",
@@ -82,7 +78,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
 
   public override func validate() throws {
     guard Settings.shared.appID != nil else {
-      throw ErrorFactory().error(
+      throw _ErrorFactory().error(
         code: CoreError.errorUnknown.rawValue,
         userInfo: nil,
         message: "App ID is not set in settings",
@@ -116,7 +112,7 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
         contextSize = size
       }
       if queryItem.name == Constants.errorMessage, let errorMessage = queryItem.value {
-        throw ErrorFactory().unknownError(message: errorMessage, userInfo: nil)
+        throw _ErrorFactory().unknownError(message: errorMessage, userInfo: nil)
       }
     }
 
@@ -171,7 +167,10 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
     guard let appID = Settings.shared.appID else {
       return false
     }
-    return url.scheme?.hasPrefix("fb\(appID)") ?? false
+    let isCorrectScheme = url.scheme?.hasPrefix("fb\(appID)") ?? false
+    let isCorrectHost = url.host?.elementsEqual("gaming") ?? false
+    let isCorrectPath = url.path.elementsEqual("/contextchoose")
+    return isCorrectScheme && isCorrectHost && isCorrectPath
   }
 
   public func applicationDidBecomeActive(_ application: UIApplication) {
@@ -182,5 +181,3 @@ public class ChooseContextDialog: ContextWebDialog, URLOpening {
     false
   }
 }
-
-#endif

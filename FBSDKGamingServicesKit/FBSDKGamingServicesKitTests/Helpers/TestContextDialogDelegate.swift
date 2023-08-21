@@ -9,16 +9,10 @@
 import FBSDKGamingServicesKit
 import XCTest
 
-class TestContextDialogDelegate: NSObject, ContextDialogDelegate {
-  func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {
-    XCTFail("This should not be invoked")
-  }
+final class TestContextDialogDelegate: NSObject, ContextDialogDelegate {
+  func contextDialogDidComplete(_ contextDialog: ContextWebDialog) {}
 
-  func contextDialog(_ contextDialog: ContextWebDialog, didFailWithError error: Error) {
-    XCTFail("This should not be invoked")
-  }
+  func contextDialog(_ contextDialog: ContextWebDialog, didFailWithError error: Error) {}
 
-  func contextDialogDidCancel(_ contextDialog: ContextWebDialog) {
-    XCTFail("This should not be invoked")
-  }
+  func contextDialogDidCancel(_ contextDialog: ContextWebDialog) {}
 }

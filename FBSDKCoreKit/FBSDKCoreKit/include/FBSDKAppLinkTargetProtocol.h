@@ -23,13 +23,13 @@ NS_SWIFT_NAME(AppLinkTargetProtocol)
 NS_SWIFT_NAME(init(url:appStoreId:appName:));
 // UNCRUSTIFY_FORMAT_ON
 
-/** The URL prefix for this app link target */
+/// The URL prefix for this app link target
 @property (nullable, nonatomic, readonly) NSURL *URL;
 
-/** The app ID for the app store */
+/// The app ID for the app store
 @property (nullable, nonatomic, readonly, copy) NSString *appStoreId;
 
-/** The name of the app */
+/// The name of the app
 @property (nonatomic, readonly, copy) NSString *appName;
 
 @end

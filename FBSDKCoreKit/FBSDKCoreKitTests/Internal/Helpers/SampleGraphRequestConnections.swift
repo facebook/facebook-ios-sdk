@@ -12,7 +12,7 @@ import TestTools
 @testable import FBSDKCoreKit
 
 @objcMembers
-class SampleGraphRequestConnections: NSObject {
+final class SampleGraphRequestConnections: NSObject {
 
   static var empty: GraphRequestConnecting {
     TestGraphRequestConnection()
@@ -24,20 +24,5 @@ class SampleGraphRequestConnections: NSObject {
       connection.add($0) { _, _, _ in }
     }
     return connection
-  }
-}
-
-@objc
-extension TestGraphRequestConnection: _FBSDKGraphRequestConnecting {
-  public var requests: NSMutableArray {
-    NSMutableArray(
-      array: graphRequests.compactMap {
-        GraphRequestMetadata(
-          request: $0.request,
-          completionHandler: $0.completion,
-          batchParameters: nil
-        )
-      }
-    )
   }
 }

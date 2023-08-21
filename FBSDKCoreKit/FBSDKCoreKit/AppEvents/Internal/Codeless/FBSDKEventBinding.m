@@ -10,12 +10,12 @@
 
 #import "FBSDKEventBinding.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKEventLogging.h"
 #import "FBSDKInternalUtility+Internal.h"
-#import "FBSDKSwizzler.h"
 #import "FBSDKUtility.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"
@@ -105,7 +105,7 @@ static id<FBSDKNumberParsing> _numberParser;
   [self.eventLogger logEvent:_eventName parameters:[params copy]];
 }
 
-+ (BOOL)matchAnyView:(NSArray *)views
++ (BOOL)matchAnyView:(NSArray<NSObject *> *)views
        pathComponent:(FBSDKCodelessPathComponent *)component
 {
   for (NSObject *view in views) {
@@ -220,7 +220,7 @@ static id<FBSDKNumberParsing> _numberParser;
   return YES;
 }
 
-+ (nullable NSObject *)findViewByPath:(NSArray *)path parent:(NSObject *)parent level:(int)level
++ (nullable NSObject *)findViewByPath:(NSArray<FBSDKCodelessPathComponent *> *)path parent:(NSObject *)parent level:(int)level
 {
   if (level >= path.count) {
     return nil;
@@ -237,7 +237,7 @@ static id<FBSDKNumberParsing> _numberParser;
     return parent;
   }
 
-  NSArray *children;
+  NSArray<NSObject *> *children;
   if (parent) {
     children = [FBSDKViewHierarchy getChildren:parent];
   } else {
@@ -312,7 +312,7 @@ static id<FBSDKNumberParsing> _numberParser;
 }
 
 // MARK: - find event parameters via relative path
-+ (nullable NSString *)findParameterOfPath:(NSArray *)path
++ (nullable NSString *)findParameterOfPath:(NSArray<FBSDKCodelessPathComponent *> *)path
                                   pathType:(NSString *)pathType
                                 sourceView:(UIView *)sourceView
 {

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -29,7 +31,7 @@ final class AccessTokenTests: XCTestCase {
     graphRequestPiggybackManager = TestGraphRequestPiggybackManager()
 
     AccessToken.configure(
-      withTokenCache: tokenCache,
+      tokenCache: tokenCache,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       graphRequestPiggybackManager: graphRequestPiggybackManager,
       errorFactory: TestErrorFactory()
@@ -148,98 +150,27 @@ final class AccessTokenTests: XCTestCase {
     )
   }
 
-  func testEncoding() {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
+    // Encode and Decode
     let token = SampleAccessTokens.validToken
-    token.encode(with: coder)
+    let decodedToken = try XCTUnwrap(CodabilityTesting.encodeAndDecode(token))
 
-    XCTAssertEqual(
-      coder.encodedObject["tokenString"] as? String,
-      SampleAccessTokens.validToken.tokenString,
-      "Should encode the expected tokenString with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["permissions"] as? Set<Permission>,
-      SampleAccessTokens.validToken.permissions,
-      "Should encode the expected permissions with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["declinedPermissions"] as? Set<Permission>,
-      SampleAccessTokens.validToken.declinedPermissions,
-      "Should encode the expected declinedPermissions with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["expiredPermissions"] as? Set<Permission>,
-      SampleAccessTokens.validToken.expiredPermissions,
-      "Should encode the expected expiredPermissions with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["appID"] as? String,
-      SampleAccessTokens.validToken.appID,
-      "Should encode the expected appID with the correct key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["userID"] as? String,
-      SampleAccessTokens.validToken.userID,
-      "Should encode the expected userID with the correct key"
-    )
-    XCTAssertEqual(
-      (coder.encodedObject["refreshDate"] as? Date)?.timeIntervalSince1970,
-      token.refreshDate.timeIntervalSince1970,
-      "Should encode the expected refreshDate with the correct key"
-    )
-    XCTAssertEqual(
-      (coder.encodedObject["expirationDate"] as? Date)?.timeIntervalSince1970,
-      SampleAccessTokens.validToken.expirationDate.timeIntervalSince1970,
-      "Should encode the expected expirationDate with the correct key"
-    )
-    XCTAssertEqual(
-      (coder.encodedObject["dataAccessExpirationDate"] as? Date)?.timeIntervalSince1970,
-      SampleAccessTokens.validToken.dataAccessExpirationDate.timeIntervalSince1970,
-      "Should encode the expected dataAccessExpirationDate with the correct key"
-    )
-  }
+    // Test Objects
+    XCTAssertEqual(decodedToken, token, .isCodable)
+    XCTAssertNotIdentical(decodedToken, token, .isCodable)
 
-  func testDecoding() {
-    let decoder = TestCoder()
-    _ = AccessToken(coder: decoder)
-
-    XCTAssertTrue(
-      decoder.decodedObject["tokenString"] is NSString.Type,
-      "Should decode the expected type for the tokenString key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["permissions"] is NSSet.Type,
-      "Should decode the expected type for the permissions key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["declinedPermissions"] is NSSet.Type,
-      "Should decode the expected type for the declinedPermissions key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["expiredPermissions"] is NSSet.Type,
-      "Should decode the expected type for the expiredPermissions key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["appID"] is NSString.Type,
-      "Should decode the expected type for the appID key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["userID"] is NSString.Type,
-      "Should decode the expected type for the userID key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["refreshDate"] is NSDate.Type,
-      "Should decode the expected type for the refreshDate key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["expirationDate"] is NSDate.Type,
-      "Should decode the expected type for the expirationDate key"
-    )
-    XCTAssertTrue(
-      decoder.decodedObject["dataAccessExpirationDate"] is NSDate.Type,
-      "Should decode the expected type for the dataAccessExpirationDate key"
-    )
+    // Test Properties
+    XCTAssertEqual(decodedToken.tokenString, token.tokenString, .isCodable)
+    XCTAssertEqual(decodedToken.appID, token.appID, .isCodable)
+    XCTAssertEqual(decodedToken.appID, token.appID, .isCodable)
+    XCTAssertEqual(decodedToken.declinedPermissions, token.declinedPermissions, .isCodable)
+    XCTAssertEqual(decodedToken.expiredPermissions, token.expiredPermissions, .isCodable)
+    XCTAssertEqual(decodedToken.permissions, token.permissions, .isCodable)
+    XCTAssertEqual(decodedToken.tokenString, token.tokenString, .isCodable)
+    XCTAssertEqual(decodedToken.userID, token.userID, .isCodable)
+    XCTAssertEqual(decodedToken.expirationDate, token.expirationDate, .isCodable)
+    XCTAssertEqual(decodedToken.refreshDate, token.refreshDate, .isCodable)
+    XCTAssertEqual(decodedToken.dataAccessExpirationDate, token.dataAccessExpirationDate, .isCodable)
   }
 
   func testEquatability() {
@@ -279,4 +210,12 @@ final class AccessTokenTests: XCTestCase {
     let token = SampleAccessTokens.create(withPermissions: [name])
     XCTAssertTrue(token.hasGranted(Permission(stringLiteral: name)))
   }
+}
+
+// swiftformat:disable extensionaccesscontrol
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let isCodable = "AccessToken should be encodable and decodable"
 }

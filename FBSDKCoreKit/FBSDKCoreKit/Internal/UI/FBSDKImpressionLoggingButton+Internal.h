@@ -6,11 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <UIKit/UIKit.h>
-
-#import <FBSDKCoreKit/FBSDKImpressionLoggingButton.h>
-
-#import "FBSDKImpressionLoggerFactoryProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,10 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (class, nullable, nonatomic, readonly) id<FBSDKImpressionLoggerFactory> impressionLoggerFactory;
 
-+ (void)configureWithImpressionLoggerFactory     :(id<FBSDKImpressionLoggerFactory>)impressionLoggerFactory
-  NS_SWIFT_NAME(configure(impressionLoggerFactory:));
-
-#if DEBUG && FBTEST
+#if DEBUG
 + (void)resetClassDependencies;
 #endif
 

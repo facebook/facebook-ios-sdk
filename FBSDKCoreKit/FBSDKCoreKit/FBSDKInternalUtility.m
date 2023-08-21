@@ -8,12 +8,10 @@
 
 #import "FBSDKInternalUtility+Internal.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <mach-o/dyld.h>
 #import <sys/time.h>
-
-#import "FBSDKSettings+Internal.h"
 
 typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionMask) {
   FBSDKInternalUtilityMajorVersionMask = 0xFFFF0000,
@@ -142,7 +140,7 @@ static FBSDKInternalUtility *_shared;
                    declinedPermissions:(NSMutableSet<NSString *> *)declinedPermissions
                     expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions
 {
-  NSArray *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
+  NSArray<NSDictionary<NSString *, id> *> *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
   if (resultData.count > 0) {
     for (NSDictionary<NSString *, id> *permissionsDictionary in resultData) {
       NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
@@ -486,19 +484,19 @@ static NSMapTable *_transientObjects;
 {
   NSDictionary<NSString *, id> *dataProcessingOptions = self.settings.persistableDataProcessingOptions;
   if (dataProcessingOptions) {
-    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[DATA_PROCESSING_OPTIONS];
+    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[FBSDKDataProcessingOptionKeyOptions];
     if (options && [options isKindOfClass:NSArray.class]) {
       NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
       [FBSDKTypeUtility dictionary:parameters
                          setObject:optionsString
-                            forKey:DATA_PROCESSING_OPTIONS];
+                            forKey:FBSDKDataProcessingOptionKeyOptions];
     }
     [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_COUNTRY]
-                          forKey:DATA_PROCESSING_OPTIONS_COUNTRY];
+                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyCountry]
+                          forKey:FBSDKDataProcessingOptionKeyCountry];
     [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[DATA_PROCESSING_OPTIONS_STATE]
-                          forKey:DATA_PROCESSING_OPTIONS_STATE];
+                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyState]
+                          forKey:FBSDKDataProcessingOptionKeyState];
   }
 }
 
@@ -521,7 +519,7 @@ static NSMapTable *_transientObjects;
   }
 
   // Find active key window from UIScene
-  if (@available(iOS 13.0, tvOS 13, *)) {
+  if (@available(iOS 13.0, *)) {
     NSSet<UIScene *> *scenes = [UIApplication.sharedApplication valueForKey:@"connectedScenes"];
     for (UIScene *scene in scenes) {
       id activationState = [scene valueForKeyPath:@"activationState"];
@@ -598,9 +596,9 @@ static NSMapTable *_transientObjects;
 {
   [self validateConfiguration];
 
-  static NSArray *urlTypes = nil;
+  static NSArray<NSDictionary<NSString *, id> *> *urlTypes = nil;
   dispatch_once(&fetchUrlSchemesToken, ^{
-    urlTypes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"CFBundleURLTypes"];
+    urlTypes = [self.infoDictionaryProvider.fb_infoDictionary valueForKey:@"CFBundleURLTypes"];
   });
   for (NSDictionary<NSString *, id> *urlType in urlTypes) {
     NSArray<NSString *> *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
@@ -637,7 +635,7 @@ static NSMapTable *_transientObjects;
 {
   static NSArray<NSString *> *schemes = nil;
   dispatch_once(&fetchApplicationQuerySchemesToken, ^{
-    schemes = [self.infoDictionaryProvider.infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
+    schemes = [self.infoDictionaryProvider.fb_infoDictionary valueForKey:@"LSApplicationQueriesSchemes"];
   });
 
   return [schemes containsObject:urlScheme];
@@ -676,7 +674,7 @@ static NSMapTable *_transientObjects;
 
 #pragma mark - Testability
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

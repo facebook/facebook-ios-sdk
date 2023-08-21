@@ -9,11 +9,11 @@
 import Foundation
 
 @objcMembers
-class SampleRawRemoteEventBindings: NSObject {
+final class SampleRawRemoteEventBindings: NSObject {
 
   static var sampleDictionary: [String: Any] {
     [
-      "event_bindings": bindings
+      "event_bindings": bindings,
     ]
   }
 
@@ -25,25 +25,25 @@ class SampleRawRemoteEventBindings: NSObject {
         "app_version": "1.2",
         "path": [
           [
-            "class_name": "UIWindow"
+            "class_name": "UIWindow",
           ],
           [
-            "class_name": "UITabBarController"
+            "class_name": "UITabBarController",
           ],
           [
-            "class_name": "UINavigationController"
+            "class_name": "UINavigationController",
           ],
           [
-            "class_name": "UIViewController"
+            "class_name": "UIViewController",
           ],
           [
-            "class_name": "UIStackView"
+            "class_name": "UIStackView",
           ],
           [
-            "class_name": "UIStackView"
+            "class_name": "UIStackView",
           ],
           [
-            "class_name": "UIStepper"
+            "class_name": "UIStepper",
           ],
         ],
       ],
@@ -53,10 +53,10 @@ class SampleRawRemoteEventBindings: NSObject {
         "app_version": "1.2",
         "path": [
           [
-            "class_name": "UIViewController"
+            "class_name": "UIViewController",
           ],
           [
-            "class_name": "UIStackView"
+            "class_name": "UIStackView",
           ],
           [
             "class_name": "UIButton",
@@ -69,15 +69,15 @@ class SampleRawRemoteEventBindings: NSObject {
             "path_type": "relative",
             "path": [
               [
-                "class_name": ".."
+                "class_name": "..",
               ],
               [
                 "class_name": "UILabel",
                 "index": 2,
-              ]
-            ]
-          ]
-        ]
+              ],
+            ],
+          ],
+        ],
       ],
       [
         "event_name": "Purchase",
@@ -85,19 +85,19 @@ class SampleRawRemoteEventBindings: NSObject {
         "app_version": "1.2",
         "path": [
           [
-            "class_name": "UIWindow"
+            "class_name": "UIWindow",
           ],
           [
-            "class_name": "UITabBarController"
+            "class_name": "UITabBarController",
           ],
           [
-            "class_name": "UINavigationController"
+            "class_name": "UINavigationController",
           ],
           [
-            "class_name": "UIViewController"
+            "class_name": "UIViewController",
           ],
           [
-            "class_name": "UIStackView"
+            "class_name": "UIStackView",
           ],
           [
             "class_name": "UIButton",
@@ -110,10 +110,10 @@ class SampleRawRemoteEventBindings: NSObject {
             "path_type": "relative",
             "path": [
               [
-                "class_name": ".."
+                "class_name": "..",
               ],
               [
-                "class_name": "UIStackView"
+                "class_name": "UIStackView",
               ],
               [
                 "class_name": "UILabel",
@@ -126,12 +126,12 @@ class SampleRawRemoteEventBindings: NSObject {
             "path_type": "relative",
             "path": [
               [
-                "class_name": "."
-              ]
-            ]
-          ]
-        ]
-      ]
+                "class_name": ".",
+              ],
+            ],
+          ],
+        ],
+      ],
     ]
   }
 
@@ -142,9 +142,9 @@ class SampleRawRemoteEventBindings: NSObject {
       "app_version": "1.2",
       "path": [
         [
-          "class_name": "UIWindow"
-        ]
-      ]
+          "class_name": "UIWindow",
+        ],
+      ],
     ]
   }
 }

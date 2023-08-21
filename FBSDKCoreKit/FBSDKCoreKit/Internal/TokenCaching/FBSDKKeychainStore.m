@@ -27,11 +27,9 @@
   return self;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)setDictionary:(NSDictionary<NSString *, id> *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
-  NSData *data = value == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:value];
+  NSData *data = value == nil ? nil : [NSKeyedArchiver archivedDataWithRootObject:value requiringSecureCoding:NO error:nil];
   return [self setData:data forKey:key accessibility:accessibility];
 }
 
@@ -51,8 +49,6 @@
   }
   return dict;
 }
-
-#pragma clang diagnostic pop
 
 - (BOOL)setString:(NSString *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility
 {
@@ -88,18 +84,18 @@
   OSStatus status;
   if (value) {
     NSMutableDictionary<NSString *, id> *attributesToUpdate = [NSMutableDictionary dictionary];
-    [attributesToUpdate setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
+    [attributesToUpdate setObject:value forKey:FBSDKDynamicFrameworkLoader.loadkSecValueData];
 
     status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
     if (status == errSecItemNotFound) {
     #if !TARGET_OS_TV
       if (@available(macOS 10.9, iOS 8, *)) {
         if (accessibility) {
-          [query setObject:(__bridge id)(accessibility) forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessible]];
+          [query setObject:(__bridge id)(accessibility) forKey:FBSDKDynamicFrameworkLoader.loadkSecAttrAccessible];
         }
       }
     #endif
-      [query setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
+      [query setObject:value forKey:FBSDKDynamicFrameworkLoader.loadkSecValueData];
 
       status = fbsdkdfl_SecItemAdd((__bridge CFDictionaryRef)query, NULL);
     }
@@ -126,8 +122,8 @@
   return [NSUserDefaults.standardUserDefaults dataForKey:key];
 #else
   NSMutableDictionary<NSString *, id> *query = [self queryForKey:key];
-  [query setObject:(id)kCFBooleanTrue forKey:[FBSDKDynamicFrameworkLoader loadkSecReturnData]];
-  [query setObject:[FBSDKDynamicFrameworkLoader loadkSecMatchLimitOne] forKey:[FBSDKDynamicFrameworkLoader loadkSecMatchLimit]];
+  [query setObject:(id)kCFBooleanTrue forKey:FBSDKDynamicFrameworkLoader.loadkSecReturnData];
+  [query setObject:FBSDKDynamicFrameworkLoader.loadkSecMatchLimitOne forKey:FBSDKDynamicFrameworkLoader.loadkSecMatchLimit];
 
   CFTypeRef data = nil;
   OSStatus status = fbsdkdfl_SecItemCopyMatching((__bridge CFDictionaryRef)query, &data);
@@ -149,12 +145,12 @@
 - (NSMutableDictionary<NSString *, id> *)queryForKey:(NSString *)key
 {
   NSMutableDictionary<NSString *, id> *query = [NSMutableDictionary dictionary];
-  [FBSDKTypeUtility dictionary:query setObject:[FBSDKDynamicFrameworkLoader loadkSecClassGenericPassword] forKey:[FBSDKDynamicFrameworkLoader loadkSecClass]];
-  [FBSDKTypeUtility dictionary:query setObject:_service forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrService]];
-  [FBSDKTypeUtility dictionary:query setObject:key forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccount]];
+  [FBSDKTypeUtility dictionary:query setObject:FBSDKDynamicFrameworkLoader.loadkSecClassGenericPassword forKey:FBSDKDynamicFrameworkLoader.loadkSecClass];
+  [FBSDKTypeUtility dictionary:query setObject:_service forKey:FBSDKDynamicFrameworkLoader.loadkSecAttrService];
+  [FBSDKTypeUtility dictionary:query setObject:key forKey:FBSDKDynamicFrameworkLoader.loadkSecAttrAccount];
 #if !TARGET_OS_SIMULATOR
   if (_accessGroup) {
-    [query setObject:_accessGroup forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessGroup]];
+    [query setObject:_accessGroup forKey:FBSDKDynamicFrameworkLoader.loadkSecAttrAccessGroup];
   }
 #endif
 

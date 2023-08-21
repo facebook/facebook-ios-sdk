@@ -6,10 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+@testable import FBSDKCoreKit
 
 // swiftlint:disable:next swiftlint_disable_without_this_or_next
 // swiftlint:disable line_length
+@available(iOS 13.0, *)
 extension BridgeAPITests {
 
   // MARK: - URL Opening
@@ -19,7 +20,7 @@ extension BridgeAPITests {
     urlOpener.stubShouldStopPropagationOfURL(sampleURL, withValue: true)
     urlOpener.stubbedCanOpenURL = true
 
-    api.pendingURLOpen = urlOpener
+    api.pendingURLOpener = urlOpener
 
     XCTAssertTrue(
       api.application(
@@ -468,7 +469,7 @@ extension BridgeAPITests {
     urlOpener.stubShouldStopPropagationOfURL(sampleURL, withValue: false)
     urlOpener.stubbedCanOpenURL = pendingUrlCanOpenUrl
 
-    api.pendingURLOpen = urlOpener
+    api.pendingURLOpener = urlOpener
 
     if hasSafariViewController {
       api.safariViewController = TestSafariViewController(url: sampleURL)
@@ -517,7 +518,7 @@ extension BridgeAPITests {
       line: line
     )
 
-    if authSessionCompletionHandlerExists && expectAuthSessionCompletionHandlerInvoked {
+    if authSessionCompletionHandlerExists, expectAuthSessionCompletionHandlerInvoked {
       XCTAssertEqual(
         capturedAuthSessionCompletionHandlerURL,
         expectedAuthSessionCompletionHandlerUrl,
@@ -661,14 +662,14 @@ extension BridgeAPITests {
 
     if expectedPendingUrlOpenExists {
       XCTAssertNotNil(
-        api.pendingURLOpen,
+        api.pendingURLOpener,
         "The reference to the url opener should not be nil",
         file: file,
         line: line
       )
     } else {
       XCTAssertNil(
-        api.pendingURLOpen,
+        api.pendingURLOpener,
         "The reference to the url opener should be nil",
         file: file,
         line: line
@@ -704,8 +705,8 @@ extension BridgeAPITests {
     canHandleBridgeApiResponse ? validBridgeResponseURL : sampleURL
   }
 
-  func makeSampleBridgeAPIRequest() -> BridgeAPIRequest {
-    BridgeAPIRequest(
+  func makeSampleBridgeAPIRequest() -> _BridgeAPIRequest {
+    _BridgeAPIRequest(
       protocolType: .web,
       scheme: .https,
       methodName: nil,

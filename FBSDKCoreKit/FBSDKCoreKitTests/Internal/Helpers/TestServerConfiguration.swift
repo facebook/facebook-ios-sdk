@@ -12,7 +12,7 @@ import Foundation
 // Future work should update ServerConfigurationProvider to return
 // a true abstraction instead of a concrete ServerConfiguration and this
 // type should simply conform to that abstraction.
-class TestServerConfiguration: ServerConfiguration {
+final class TestServerConfiguration: _ServerConfiguration {
   var capturedUseNativeDialogName: String?
   var capturedUseSafariControllerName: String?
   var stubbedDefaultShareMode: String?
@@ -47,7 +47,8 @@ class TestServerConfiguration: ServerConfiguration {
       eventBindings: nil,
       restrictiveParams: nil,
       aamRules: nil,
-      suggestedEventsSetting: nil
+      suggestedEventsSetting: nil,
+      protectedModeRules: nil
     )
   }
 

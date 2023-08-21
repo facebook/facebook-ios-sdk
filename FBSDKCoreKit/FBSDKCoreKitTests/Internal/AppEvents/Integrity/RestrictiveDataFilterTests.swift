@@ -7,27 +7,27 @@
  */
 
 final class RestrictiveDataFilterTests: XCTestCase {
-  var restrictiveDataFilterManager: RestrictiveDataFilterManager = createTestRestrictiveDataFilterManager()
+  var restrictiveDataFilterManager: _RestrictiveDataFilterManager = createTestRestrictiveDataFilterManager()
 
-  private static func createTestRestrictiveDataFilterManager() -> RestrictiveDataFilterManager {
+  private static func createTestRestrictiveDataFilterManager() -> _RestrictiveDataFilterManager {
     let params = [
       "test_event_name": [
         "restrictive_param": [
           "first name": "6",
-          "last name": "7"
-        ]
+          "last name": "7",
+        ],
       ],
       "restrictive_event_name": [
         "restrictive_param": [
-          "dob": 4
-        ]
-      ]
+          "dob": 4,
+        ],
+      ],
     ]
-    let config = ServerConfigurationFixtures.config(withDictionary: [
-      "restrictiveParams": params
+    let configuration = ServerConfigurationFixtures.configuration(withDictionary: [
+      "restrictiveParams": params,
     ])
-    let serverConfigProider = TestServerConfigurationProvider(configuration: config)
-    let restrictiveDataFilterManager = RestrictiveDataFilterManager(serverConfigurationProvider: serverConfigProider)
+    let serverConfigProider = TestServerConfigurationProvider(configuration: configuration)
+    let restrictiveDataFilterManager = _RestrictiveDataFilterManager(serverConfigurationProvider: serverConfigProider)
     restrictiveDataFilterManager.enable()
     return restrictiveDataFilterManager
   }
@@ -35,17 +35,17 @@ final class RestrictiveDataFilterTests: XCTestCase {
   func testFilterByParams() throws {
     let eventName = AppEvents.Name("restrictive_event_name")
     let parameters1: [AppEvents.ParameterName: Any] = [
-      .init("dob"): "06-29-2019"
+      .init("dob"): "06-29-2019",
     ]
     let expected1: [AppEvents.ParameterName: String] = [
-      .init("_restrictedParams"): #"{"dob":"4"}"#
+      .init("_restrictedParams"): #"{"dob":"4"}"#,
     ]
     let processedParameters1 = restrictiveDataFilterManager.processParameters(parameters1, eventName: eventName)
 
     XCTAssertEqual(processedParameters1 as? [AppEvents.ParameterName: String], expected1)
 
     let parameters2: [AppEvents.ParameterName: Any] = [
-      .init("test_key"): 66666
+      .init("test_key"): 66666,
     ]
     let processedParameters2 = try XCTUnwrap(
       restrictiveDataFilterManager.processParameters(
@@ -81,7 +81,7 @@ final class RestrictiveDataFilterTests: XCTestCase {
 
   func testProcessEventCanHandleMissingKeys() {
     let event = [
-      "some_event": [:]
+      "some_event": [:],
     ]
     XCTAssertNoThrow(
       restrictiveDataFilterManager.processEvents([event]),
@@ -92,8 +92,8 @@ final class RestrictiveDataFilterTests: XCTestCase {
   func testProcessEventDoesntReplaceEventNameIfNotRestricted() {
     let event = [
       "event": [
-        "_eventName": NSNull()
-      ]
+        "_eventName": NSNull(),
+      ],
     ]
     restrictiveDataFilterManager.processEvents([event])
     XCTAssertEqual(

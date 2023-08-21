@@ -19,7 +19,9 @@ struct CustomUpdateMedia: Codable, Equatable {
       return
     }
 
-    guard let gif = media as? FacebookGIF, self.video == nil else {
+    guard let gif = media as? FacebookGIF,
+          video == nil
+    else {
       return nil
     }
     self.gif = gif

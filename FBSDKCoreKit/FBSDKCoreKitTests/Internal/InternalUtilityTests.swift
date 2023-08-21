@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -64,7 +65,7 @@ final class InternalUtilityTests: XCTestCase {
 
   func configureInternalUtility() {
     internalUtility.configure(
-      withInfoDictionaryProvider: bundle,
+      infoDictionaryProvider: bundle,
       loggerFactory: loggerFactory,
       settings: settings,
       errorFactory: errorFactory
@@ -117,7 +118,7 @@ final class InternalUtilityTests: XCTestCase {
     var urlString = ""
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "",
+      hostPrefix: "",
       path: "",
       queryParameters: [:]
     ).absoluteString
@@ -125,35 +126,35 @@ final class InternalUtilityTests: XCTestCase {
     XCTAssertEqual(urlString, "https://facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m.",
+      hostPrefix: "m.",
       path: "",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "/dialog/share",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "dialog/share",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://m.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/dialog/share")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "dialog/share",
       queryParameters: ["key": "value"]
     ).absoluteString
@@ -163,7 +164,7 @@ final class InternalUtilityTests: XCTestCase {
     )
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "/v1.0/dialog/share",
       queryParameters: [:]
     ).absoluteString
@@ -186,7 +187,7 @@ final class InternalUtilityTests: XCTestCase {
     XCTAssertEqual(urlString, "https://m.facebook.com/v1.0/dialog/share")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "m",
+      hostPrefix: "m",
       path: "/v987654321.2/dialog/share",
       queryParameters: [:]
     ).absoluteString
@@ -237,14 +238,14 @@ final class InternalUtilityTests: XCTestCase {
     AuthenticationToken.current = authToken
 
     var urlString = try internalUtility.facebookURL(
-      withHostPrefix: "graph",
+      hostPrefix: "graph",
       path: "",
       queryParameters: [:]
     ).absoluteString
     XCTAssertEqual(urlString, "https://graph.fb.gg/\(FBSDK_DEFAULT_GRAPH_API_VERSION)")
 
     urlString = try internalUtility.facebookURL(
-      withHostPrefix: "graph-video",
+      hostPrefix: "graph-video",
       path: "",
       queryParameters: [:]
     ).absoluteString
@@ -353,7 +354,7 @@ final class InternalUtilityTests: XCTestCase {
       "#@%(*&#$(^#@!$",
       "////foo",
       "foo: ",
-      "foo: /"
+      "foo: /",
     ]
       .forEach { invalidScheme in
         internalUtility._canOpenURLScheme(invalidScheme)
@@ -371,7 +372,7 @@ final class InternalUtilityTests: XCTestCase {
       "FOO",
       "foo+bar",
       "foo-bar",
-      "foo.bar"
+      "foo.bar",
     ]
       .forEach { validScheme in
         internalUtility._canOpenURLScheme(validScheme)
@@ -587,7 +588,7 @@ final class InternalUtilityTests: XCTestCase {
     let expectedParameters = [
       "foo": "bar",
       "param1": "value1",
-      "param2": "value2"
+      "param2": "value2",
     ]
 
     XCTAssertEqual(
@@ -718,7 +719,7 @@ final class InternalUtilityTests: XCTestCase {
 
     XCTAssertTrue(internalUtility.isRegisteredCanOpenURLScheme(name), "Sanity check")
 
-    bundle.infoDictionary = [:]
+    bundle.fb_infoDictionary = [:]
 
     XCTAssertTrue(
       internalUtility.isRegisteredCanOpenURLScheme(name),
@@ -855,7 +856,7 @@ final class InternalUtilityTests: XCTestCase {
   func testIsBrowserURLWithNonBrowserURL() {
     [
       URL(string: "file://foo")!, // swiftlint:disable:this force_unwrapping
-      URL(string: "example://bar")! // swiftlint:disable:this force_unwrapping
+      URL(string: "example://bar")!, // swiftlint:disable:this force_unwrapping
     ]
       .forEach { url in
         XCTAssertFalse(
@@ -870,7 +871,7 @@ final class InternalUtilityTests: XCTestCase {
       URL(string: "HTTPS://example.com"),
       URL(string: "HTTP://example.com"),
       URL(string: "https://example.com"),
-      URL(string: "http://example.com")
+      URL(string: "http://example.com"),
     ]
       .compactMap { $0 }
       .forEach { url in
@@ -887,7 +888,7 @@ final class InternalUtilityTests: XCTestCase {
       "",
       "foo",
       "com.foo.bar",
-      "com.facebook"
+      "com.facebook",
     ]
       .forEach { identifier in
         XCTAssertFalse(
@@ -902,7 +903,7 @@ final class InternalUtilityTests: XCTestCase {
       "com.facebook.",
       "com.facebook.foo",
       ".com.facebook.",
-      ".com.facebook.foo"
+      ".com.facebook.foo",
     ]
       .forEach { identifier in
         XCTAssertTrue(
@@ -916,7 +917,7 @@ final class InternalUtilityTests: XCTestCase {
     [
       "",
       " ",
-      "com.foo"
+      "com.foo",
     ]
       .forEach { identifier in
         XCTAssertFalse(
@@ -929,7 +930,7 @@ final class InternalUtilityTests: XCTestCase {
   func testSafariBundleIdentifiers() {
     [
       "com.apple.mobilesafari",
-      "com.apple.SafariViewService"
+      "com.apple.SafariViewService",
     ]
       .forEach { identifier in
         XCTAssertTrue(
@@ -1129,7 +1130,7 @@ final class InternalUtilityTests: XCTestCase {
     settings.persistableDataProcessingOptions = [
       "data_processing_options": ["LDU"],
       "data_processing_options_country": 10,
-      "data_processing_options_state": 100
+      "data_processing_options_state": 100,
     ]
 
     let parameters = NSMutableDictionary()
@@ -1160,7 +1161,7 @@ final class InternalUtilityTests: XCTestCase {
       "manageSomething",
       "ads_management",
       "create_event",
-      "rsvp_event"
+      "rsvp_event",
     ]
       .forEach { permission in
         XCTAssertTrue(internalUtility.isPublishPermission(permission))
@@ -1169,7 +1170,7 @@ final class InternalUtilityTests: XCTestCase {
     [
       "",
       "email",
-      "_publish"
+      "_publish",
     ]
       .forEach { permission in
         XCTAssertFalse(internalUtility.isPublishPermission(permission))
@@ -1256,7 +1257,7 @@ final class InternalUtilityTests: XCTestCase {
         .originURL: url,
         .path: url.path,
         .name: name,
-        .value: "Is good"
+        .value: "Is good",
       ]
     )! // swiftlint:disable:this force_unwrapping
   }
@@ -1265,8 +1266,8 @@ final class InternalUtilityTests: XCTestCase {
     TestBundle(
       infoDictionary: [
         "CFBundleURLTypes": [
-          ["CFBundleURLSchemes": registeredUrlSchemes]
-        ]
+          ["CFBundleURLSchemes": registeredUrlSchemes],
+        ],
       ]
     )
   }

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class TestReactNativeView: UIView {
+final class TestReactNativeView: UIView {
   @objc var reactTag = NSNumber(value: 5)
   var capturedAction: Selector?
   var stubbedWindow: UIWindow?

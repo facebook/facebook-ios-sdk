@@ -9,9 +9,9 @@
 import Foundation
 
 @objcMembers
-class SampleSKAdNetworkConversionConfiguration: NSObject {
+final class SampleSKAdNetworkConversionConfiguration: NSObject {
 
-  static var configJson: [String: Any] {
+  static var fineCVconfigurationJson: [String: Any] {
     [
       "data": [
         [
@@ -24,13 +24,44 @@ class SampleSKAdNetworkConversionConfiguration: NSObject {
               "conversion_value": 2,
               "events": [
                 [
-                  "event_name": "fb_test"
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
+                  "event_name": "fb_test",
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ]
+  }
+
+  static var coarseCVconfigurationJson: [String: Any] {
+    [
+      "data": [
+        [
+          "timer_buckets": 1,
+          "timer_interval": 1000,
+          "cutoff_time": 1,
+          "default_currency": "USD",
+          "isCoarseCVAccumulative": false,
+          "conversion_value_rules": [],
+          "coarse_cv_configs": [
+            [
+              "postback_sequence_index": 1,
+              "coarse_cv_rules":
+                [
+                  [
+                    "coarse_cv_value": "medium",
+                    "events": [
+                      [
+                        "event_name": "fb_test",
+                      ],
+                    ],
+                  ],
+                ],
+            ],
+          ],
+        ],
+      ],
     ]
   }
 }

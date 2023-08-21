@@ -9,7 +9,7 @@
 @testable import FBSDKGamingServicesKit
 import Foundation
 
-class TestFileHandleFactory: FileHandleCreating {
+final class TestFileHandleFactory: FileHandleCreating {
 
   var stubbedFileHandle = TestFileHandler()
   var capturedURL: URL?

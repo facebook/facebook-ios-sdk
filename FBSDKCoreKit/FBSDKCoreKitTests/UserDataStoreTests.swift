@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class UserDataStoreTests: XCTestCase {
 
-  let store = UserDataStore()
+  let store = _UserDataStore()
   let email = "apptest@fb.com"
 
   override func setUp() {

@@ -4,7 +4,5 @@
 // This source code is licensed under the license found in the
 // LICENSE file in the root directory of this source tree.
 
-// The versions for FBSDK and Messenger SDK.
-FBSDK_PROJECT_VERSION=12.3.1
-MNSDK_PROJECT_VERSION=TODO_SUPPORT_MNSDK
-
+// The version for FBSDK
+FBSDK_PROJECT_VERSION=16.1.3

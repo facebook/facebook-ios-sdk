@@ -8,10 +8,8 @@
 
 #if !TARGET_OS_TV
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <Foundation/Foundation.h>
-
-#import "FBSDKFeatureExtractor.h"
-#import "FBSDKRulesFromKeyProvider.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,10 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable float *)getDenseFeatures:(NSDictionary<NSString *, id> *)viewHierarchy;
 
 + (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node
-         siblings:(NSMutableArray *)siblings;
+         siblings:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)siblings;
 
 + (float *)nonparseFeatures:(NSMutableDictionary<NSString *, id> *)node
-                   siblings:(NSMutableArray *)siblings
+                   siblings:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)siblings
                  screenname:(NSString *)screenname
              viewTreeString:(NSString *)viewTreeString;
 
@@ -35,8 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
           text:(NSMutableString *)buttonTextString
           hint:(NSMutableString *)buttonHintString;
 
-+ (BOOL)foundIndicators:(NSArray *)indicators
-               inValues:(NSArray *)values;
++ (BOOL)foundIndicators:(NSArray<NSString *> *)indicators
+               inValues:(NSArray<NSString *> *)values;
 
 + (float)regextMatch:(NSString *)pattern
                 text:(NSString *)text;

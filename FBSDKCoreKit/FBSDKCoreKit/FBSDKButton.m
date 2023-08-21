@@ -9,7 +9,7 @@
 #import "FBSDKButton+Internal.h"
 
 #import "FBSDKApplicationLifecycleNotifications.h"
-#import "FBSDKLogo.h"
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 
 #define HEIGHT_TO_FONT_SIZE 0.47
 #define HEIGHT_TO_MARGIN 0.27
@@ -68,7 +68,7 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
   self.accessTokenProvider = accessTokenProvider;
 }
 
-#if FBTEST && DEBUG
+#if DEBUG
 + (void)resetClassDependencies
 {
   self.applicationActivationNotifier = nil;
@@ -356,12 +356,7 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
   CGContextFillPath(context);
   UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();
-#if TARGET_OS_TV
-  return [image resizableImageWithCapInsets:UIEdgeInsetsMake(cornerRadius, cornerRadius, cornerRadius, cornerRadius)
-                               resizingMode:UIImageResizingModeStretch];
-#else
   return [image stretchableImageWithLeftCapWidth:cornerRadius topCapHeight:cornerRadius];
-#endif
 }
 
 - (void)_configureWithIcon:(FBSDKIcon *)icon
@@ -402,14 +397,11 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
 
   BOOL forceSizeToFit = CGRectIsEmpty(self.bounds);
 
-  CGFloat scale = [UIScreen mainScreen].scale;
+  CGFloat scale = UIScreen.mainScreen.scale;
   UIImage *backgroundImage;
 
   backgroundImage = [self _backgroundImageWithColor:backgroundColor cornerRadius:3.0 scale:scale];
   [self setBackgroundImage:backgroundImage forState:UIControlStateNormal];
-#if TARGET_OS_TV
-  [self setBackgroundImage:backgroundImage forState:UIControlStateFocused];
-#endif
 
   backgroundImage = [self _backgroundImageWithColor:highlightedColor cornerRadius:3.0 scale:scale];
   [self setBackgroundImage:backgroundImage forState:UIControlStateHighlighted];
@@ -425,24 +417,15 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
   if (selectedHighlightedColor) {
     backgroundImage = [self _backgroundImageWithColor:selectedHighlightedColor cornerRadius:3.0 scale:scale];
     [self setBackgroundImage:backgroundImage forState:UIControlStateSelected | UIControlStateHighlighted];
-  #if TARGET_OS_TV
-    [self setBackgroundImage:backgroundImage forState:UIControlStateSelected | UIControlStateFocused];
-  #endif
   }
 
   [self setTitleColor:UIColor.whiteColor forState:UIControlStateNormal];
   [self setTitleColor:[self highlightedContentColor] forState:UIControlStateHighlighted | UIControlStateSelected];
 
   [self setTitle:title forState:UIControlStateNormal];
-#if TARGET_OS_TV
-  [self setTitle:title forState:UIControlStateFocused];
-#endif
   if (selectedTitle) {
     [self setTitle:selectedTitle forState:UIControlStateSelected];
     [self setTitle:selectedTitle forState:UIControlStateSelected | UIControlStateHighlighted];
-  #if TARGET_OS_TV
-    [self setTitle:selectedTitle forState:UIControlStateSelected | UIControlStateFocused];
-  #endif
   }
 
   UILabel *titleLabel = self.titleLabel;
@@ -454,9 +437,6 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
   UIImage *image = [icon imageWithSize:imageSize];
   image = [image resizableImageWithCapInsets:UIEdgeInsetsZero resizingMode:UIImageResizingModeStretch];
   [self setImage:image forState:UIControlStateNormal];
-#if TARGET_OS_TV
-  [self setImage:image forState:UIControlStateFocused];
-#endif
 
   if (selectedIcon) {
     UIImage *selectedImage = [selectedIcon imageWithSize:imageSize];
@@ -464,9 +444,6 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
                                                   resizingMode:UIImageResizingModeStretch];
     [self setImage:selectedImage forState:UIControlStateSelected];
     [self setImage:selectedImage forState:UIControlStateSelected | UIControlStateHighlighted];
-  #if TARGET_OS_TV
-    [self setImage:selectedImage forState:UIControlStateSelected | UIControlStateFocused];
-  #endif
   }
 
   if (forceSizeToFit) {

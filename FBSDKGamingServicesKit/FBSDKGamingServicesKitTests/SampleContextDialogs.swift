@@ -7,6 +7,8 @@
  */
 
 @testable import FBSDKGamingServicesKit
+
+import FBSDKCoreKit
 import TestTools
 
 enum SampleContextDialogs {

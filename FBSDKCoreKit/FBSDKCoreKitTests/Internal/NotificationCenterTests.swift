@@ -1,0 +1,103 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+@testable import FBSDKCoreKit
+import Foundation
+import XCTest
+
+final class NotificationCenterTests: XCTestCase {
+  // swiftlint:disable implicitly_unwrapped_optional
+  var notificationCenter: NotificationCenter!
+  var notificationObject: AnyObject!
+  var observer: Any!
+  // swiftlint:enable implicitly_unwrapped_optional
+
+  let userInfo = ["key": "value"]
+  var observedNotification: Notification?
+
+  override func setUp() {
+    super.setUp()
+
+    notificationCenter = NotificationCenter.default
+    notificationObject = NSObject()
+  }
+
+  override func tearDown() {
+    removeObserver()
+
+    notificationCenter = nil
+    notificationObject = nil
+    observer = nil
+
+    super.tearDown()
+  }
+
+  func testPostingNotification() throws {
+    addObserver()
+
+    notificationCenter.fb_post(
+      name: .sample,
+      object: notificationObject,
+      userInfo: userInfo
+    )
+
+    try validateNotification(message: .postNotification)
+  }
+
+  // MARK: - Helpers
+
+  @objc
+  private func handleNotification(_ notification: Notification) {
+    observedNotification = notification
+  }
+
+  private func addObserver() {
+    observer = notificationCenter.addObserver(
+      forName: .sample,
+      object: notificationObject,
+      queue: nil
+    ) { [self] notification in
+      observedNotification = notification
+    }
+  }
+
+  private func removeObserver() {
+    guard let observer = observer else { return }
+
+    notificationCenter.removeObserver(observer)
+  }
+
+  private func postNotification() {
+    notificationCenter.post(
+      name: .sample,
+      object: notificationObject,
+      userInfo: userInfo
+    )
+  }
+
+  private func validateNotification(message: String, file: StaticString = #file, line: UInt = #line) throws {
+    let notification = try XCTUnwrap(observedNotification, message, file: file, line: line)
+    XCTAssertEqual(notification.name, .sample, message, file: file, line: line)
+    XCTAssertIdentical(notification.object as AnyObject, notificationObject, message, file: file, line: line)
+    XCTAssertEqual(notification.userInfo as? [String: String], userInfo, message, file: file, line: line)
+  }
+}
+
+// swiftformat:disable extensionaccesscontrol
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let postNotification = "A notification center can publish a notification through an internal abstraction"
+}
+
+// MARK: - Test Values
+
+fileprivate extension Notification.Name {
+  static let sample = Self("sample-notification")
+}

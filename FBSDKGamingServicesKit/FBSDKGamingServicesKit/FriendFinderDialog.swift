@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objc(FBSDKFriendFinderDialog)
-public class FriendFinderDialog: NSObject {
+public final class FriendFinderDialog: NSObject {
 
   let factory: GamingServiceControllerCreating
 
@@ -33,7 +33,7 @@ public class FriendFinderDialog: NSObject {
 
   func launch(completionHandler: @escaping GamingServiceCompletionHandler) {
     guard let appID = Settings.shared.appID ?? AccessToken.current?.appID else {
-      let error = ErrorFactory().error(
+      let error = _ErrorFactory().error(
         code: CoreError.errorAccessTokenRequired.rawValue,
         userInfo: nil,
         message: "A valid access token is required to launch the Friend Finder",

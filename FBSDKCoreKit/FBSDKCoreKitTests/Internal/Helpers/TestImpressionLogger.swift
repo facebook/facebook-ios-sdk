@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class TestImpressionLogger: ImpressionLogging {
+final class TestImpressionLogger: ImpressionLogging {
 
   var capturedIdentifier: String?
   var capturedParameters: [AppEvents.ParameterName: Any]?

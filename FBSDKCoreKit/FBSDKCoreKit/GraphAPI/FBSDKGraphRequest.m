@@ -8,16 +8,15 @@
 
 #import "FBSDKGraphRequest+Internal.h"
 
-#import <UIKit/UIKit.h>
-
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
+#import <UIKit/UIKit.h>
 
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettingsProtocol.h"
 #import "FBSDKTokenStringProviding.h"
 
 // constants
@@ -246,7 +245,7 @@ static id<FBSDKGraphRequestConnectionFactory> class_graphRequestConnectionFactor
 
 + (NSDictionary<NSString *, id> *)preprocessParams:(NSDictionary<NSString *, id> *)params
 {
-  NSString *debugValue = self.settings.graphAPIDebugParamValue;
+  NSString *debugValue = self.settings.graphAPIDebugParameterValue;
   if (debugValue) {
     NSMutableDictionary<NSString *, id> *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
     [FBSDKTypeUtility dictionary:mutableParams setObject:debugValue forKey:@"debug"];
@@ -295,7 +294,7 @@ static id<FBSDKGraphRequestConnectionFactory> class_graphRequestConnectionFactor
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

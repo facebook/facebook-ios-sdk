@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class SampleAuthenticationToken: NSObject {
+public final class SampleAuthenticationToken: NSObject {
 
   public static var validToken: AuthenticationToken {
     AuthenticationToken(

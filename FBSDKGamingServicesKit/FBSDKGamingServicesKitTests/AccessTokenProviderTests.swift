@@ -14,7 +14,7 @@ import XCTest
 
 final class AccessTokenProviderTests: XCTestCase {
 
-  class TestTokenCache: NSObject, TokenCaching {
+  final class TestTokenCache: NSObject, TokenCaching {
     var accessToken: AccessToken?
     var authenticationToken: AuthenticationToken?
   }
@@ -40,7 +40,7 @@ final class AccessTokenProviderTests: XCTestCase {
     AccessToken.current = token
 
     XCTAssertTrue(
-      AccessTokenProvider.currentAccessToken === token,
+      AccessTokenProvider.current === token,
       "The current access token should match that on the AccessToken singleton"
     )
   }

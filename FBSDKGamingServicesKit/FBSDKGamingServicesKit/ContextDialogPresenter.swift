@@ -12,28 +12,32 @@ import FBSDKCoreKit
  A dialog presenter responsible for creating and showing all the dialogs that create, switch,
  choose and otherwise manipulate the gaming context.
  */
-public class ContextDialogPresenter {
+@objcMembers
+@objc(FBSDKContextDialogPresenter)
+public final class ContextDialogPresenter: NSObject {
 
   private(set) var createContextDialogFactory: CreateContextDialogMaking
   private(set) var switchContextDialogFactory: SwitchContextDialogMaking
   private(set) var chooseContextDialogFactory: ChooseContextDialogMaking
 
-  public init() {
-    createContextDialogFactory = CreateContextDialogFactory(tokenProvider: AccessTokenProvider.self)
-    switchContextDialogFactory = SwitchContextDialogFactory(tokenProvider: AccessTokenProvider.self)
-    chooseContextDialogFactory = ChooseContextDialogFactory()
+  public override convenience init() {
+    self.init(
+      createContextDialogFactory: CreateContextDialogFactory(tokenProvider: AccessTokenProvider.self),
+      switchContextDialogFactory: SwitchContextDialogFactory(tokenProvider: AccessTokenProvider.self),
+      chooseContextDialogFactory: ChooseContextDialogFactory()
+    )
   }
 
-  convenience init(
+  init(
     createContextDialogFactory: CreateContextDialogMaking,
     switchContextDialogFactory: SwitchContextDialogMaking,
     chooseContextDialogFactory: ChooseContextDialogMaking
   ) {
-    self.init()
-
     self.createContextDialogFactory = createContextDialogFactory
     self.switchContextDialogFactory = switchContextDialogFactory
     self.chooseContextDialogFactory = chooseContextDialogFactory
+
+    super.init()
   }
 
   /**
@@ -47,7 +51,11 @@ public class ContextDialogPresenter {
     content: CreateContextContent,
     delegate: ContextDialogDelegate
   ) throws {
-    guard let dialog = try makeCreateContextDialog(content: content, delegate: delegate)
+    guard let dialog = try createContextDialogFactory.makeCreateContextDialog(
+      content: content,
+      windowFinder: InternalUtility.shared,
+      delegate: delegate
+    )
     else {
       throw ContextDialogPresenterError.showCreateContext
     }
@@ -66,7 +74,11 @@ public class ContextDialogPresenter {
     content: SwitchContextContent,
     delegate: ContextDialogDelegate
   ) throws {
-    guard let dialog = try makeSwitchContextDialog(content: content, delegate: delegate)
+    guard let dialog = try switchContextDialogFactory.makeSwitchContextDialog(
+      content: content,
+      windowFinder: InternalUtility.shared,
+      delegate: delegate
+    )
     else {
       throw ContextDialogPresenterError.showSwitchContext
     }
@@ -85,52 +97,10 @@ public class ContextDialogPresenter {
     content: ChooseContextContent,
     delegate: ContextDialogDelegate
   ) {
-    _ = makeChooseContextDialog(content: content, delegate: delegate)
-      .show()
-  }
-
-  @available(*, deprecated, message: "showChooseContextDialog is deprecated. Please use the instance method `makeAndShowChooseContextDialog` instead") // swiftlint:disable:this line_length
-  open class func showChooseContextDialog( // swiftlint:disable:this lower_acl_than_parent
-    with content: ChooseContextContent,
-    delegate: ContextDialogDelegate
-  ) -> ChooseContextDialog {
-    let dialog = ContextDialogPresenter().makeChooseContextDialog(content: content, delegate: delegate)
-    _ = dialog.show()
-
-    return dialog as? ChooseContextDialog ?? ChooseContextDialog(content: content, delegate: delegate)
-  }
-
-  // MARK: - Dialog factory methods
-
-  func makeCreateContextDialog(
-    content: CreateContextContent,
-    delegate: ContextDialogDelegate
-  ) throws -> Showable? {
-    try createContextDialogFactory.makeCreateContextDialog(
-      content: content,
-      windowFinder: InternalUtility.shared,
-      delegate: delegate
-    )
-  }
-
-  func makeSwitchContextDialog(
-    content: SwitchContextContent,
-    delegate: ContextDialogDelegate
-  ) throws -> Showable? {
-    try switchContextDialogFactory.makeSwitchContextDialog(
-      content: content,
-      windowFinder: InternalUtility.shared,
-      delegate: delegate
-    )
-  }
-
-  func makeChooseContextDialog(
-    content: ChooseContextContent,
-    delegate: ContextDialogDelegate
-  ) -> Showable {
-    chooseContextDialogFactory.makeChooseContextDialog(
+    _ = chooseContextDialogFactory.makeChooseContextDialog(
       content: content,
       delegate: delegate
     )
+    .show()
   }
 }

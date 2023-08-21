@@ -19,6 +19,8 @@ configFiles:
 
 targets:
   FBSDKCoreKit_Basics-Static:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     platform: iOS
     productName: FBSDKCoreKit_Basics
@@ -32,12 +34,11 @@ targets:
     configFiles:
       Debug: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
       Release: Configurations/FBSDKCoreKit_Basics-Static.xcconfig
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
     settings:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
   FBSDKCoreKit_Basics-Dynamic:
+    templates:
+      - SwiftlintBuildPhaseTemplate
     type: framework
     dependencies:
       - sdk: UIKit.framework
@@ -56,50 +57,6 @@ targets:
       Release: Configurations/FBSDKCoreKit_Basics-Dynamic.xcconfig
     settings:
       GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
-  FBSDKCoreKit_Basics_TV-Static:
-    type: framework
-    platform: tvOS
-    productName: FBSDKCoreKit_Basics
-    sources:
-      - path: FBSDKCoreKit_Basics/include
-        headerVisibility: public
-      - path: FBSDKCoreKit_Basics
-        headerVisibility: project
-        excludes:
-          - include
-    configFiles:
-      Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
-      Release: Configurations/FBSDKCoreKit_Basics-tvOS-Static.xcconfig
-    settings:
-      GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
-  FBSDKCoreKit_Basics_TV-Dynamic:
-    type: framework
-    dependencies:
-      - sdk: UIKit.framework
-      - sdk: libz.tbd
-    platform: tvOS
-    productName: FBSDKCoreKit_Basics
-    sources:
-      - path: FBSDKCoreKit_Basics/include
-        headerVisibility: public
-      - path: FBSDKCoreKit_Basics
-        headerVisibility: project
-        excludes:
-          - include
-    configFiles:
-      Debug: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
-      Release: Configurations/FBSDKCoreKit_Basics-tvOS-Dynamic.xcconfig
-    settings:
-      GCC_PREFIX_HEADER: FBSDKCoreKit_Basics/FBSDKCoreKitBasics-Prefix-Header.h
-    preBuildScripts:
-      - name: Run Swiftlint
-        script: ../scripts/build_phase_swiftlint.sh
   FBSDKCoreKit_BasicsTests:
     type: bundle.unit-test
     platform: iOS
@@ -125,13 +82,6 @@ schemes:
         FBSDKCoreKit_Basics-Dynamic: all
     test:
       targets: [FBSDKCoreKit_BasicsTests]
+      gatherCoverageData: true
       coverageTargets:
         - FBSDKCoreKit_Basics-Dynamic
-  FBSDKCoreKit_Basics_TV-Static:
-    build:
-      targets:
-        FBSDKCoreKit_Basics_TV-Static: all
-  FBSDKCoreKit_Basics_TV-Dynamic:
-    build:
-      targets:
-        FBSDKCoreKit_Basics_TV-Dynamic: all

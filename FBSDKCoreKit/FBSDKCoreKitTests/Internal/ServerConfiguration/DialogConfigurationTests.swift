@@ -6,12 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 
 final class DialogConfigurationTests: XCTestCase {
-
-  let coder = TestCoder()
   let versions = ["1", "2", "3"]
 
   enum Keys {
@@ -22,51 +21,38 @@ final class DialogConfigurationTests: XCTestCase {
 
   func testSecureCoding() {
     XCTAssertTrue(
-      DialogConfiguration.supportsSecureCoding,
+      _DialogConfiguration.supportsSecureCoding,
       "Should support secure coding"
     )
   }
 
-  func testEncoding() {
-    let dialog = DialogConfiguration(
+  func testEncodingAndDecoding() throws {
+    let dialog = _DialogConfiguration(
       name: name,
       url: SampleURLs.valid,
       appVersions: versions
     )
+    let decodedObject = try CodabilityTesting.encodeAndDecode(dialog)
 
-    dialog.encode(with: coder)
+    // Test Objects
+    XCTAssertNotIdentical(decodedObject, dialog, .isCodable)
+    XCTAssertNotEqual(decodedObject, dialog, .isCodable) // isEqual method not set yet
 
+    // Test Properties
+    XCTAssertEqual(decodedObject.name, dialog.name, .isCodable)
+    XCTAssertEqual(decodedObject.url, dialog.url, .isCodable)
     XCTAssertEqual(
-      coder.encodedObject[Keys.name] as? String,
-      name,
-      "Should encode the dialog name with the expected key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.url] as? URL,
-      SampleURLs.valid,
-      "Should encode the dialog url with the expected key"
-    )
-    XCTAssertEqual(
-      coder.encodedObject[Keys.versions] as? [String],
-      versions,
-      "Should encode the dialog app versions with the expected key"
+      decodedObject.appVersions as? [String],
+      dialog.appVersions as? [String],
+      .isCodable
     )
   }
+}
 
-  func testDecoding() {
-    _ = DialogConfiguration(coder: coder)
+// swiftformat:disable extensionaccesscontrol
 
-    XCTAssertTrue(
-      coder.decodedObject[Keys.name] is NSString.Type,
-      "Should attempt to decode the name as a string"
-    )
-    XCTAssertTrue(
-      coder.decodedObject[Keys.url] is NSURL.Type,
-      "Should attempt to decode the url as a URL"
-    )
-    XCTAssertTrue(
-      coder.decodedObject[Keys.versions] is NSSet,
-      "Should attempt to decode the versions as a set of strings"
-    )
-  }
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let isCodable = "DialogConfiguration should be encodable and decodable"
 }

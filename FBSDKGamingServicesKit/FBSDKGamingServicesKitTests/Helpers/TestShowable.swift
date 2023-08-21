@@ -8,7 +8,7 @@
 
 import FBSDKGamingServicesKit
 
-class TestShowable: Showable {
+final class TestShowable: Showable {
   var wasShowCalled = false
   var canShow = false
 

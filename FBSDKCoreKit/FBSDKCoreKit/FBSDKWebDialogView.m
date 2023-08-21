@@ -12,10 +12,10 @@
 
 #import <WebKit/WebKit.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
-#import "FBSDKCloseIcon.h"
-#import "FBSDKInternalURLOpener.h"
 #import "FBSDKSafeCast.h"
 #import "FBSDKWebViewProviding.h"
 
@@ -259,7 +259,7 @@ static id<FBSDKErrorCreating> _errorFactory;
   [self.delegate webDialogViewDidFinishLoad:self];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

@@ -10,11 +10,9 @@ import Foundation
 
 import FBSDKCoreKit
 
-/**
- A super class type for the context dialogs classes that show an in-app webview to display content.
- */
+/// A super class type for the context dialogs classes that show an in-app webview to display content.
 @objcMembers
-@objc(FBSDKContextWebDialog)
+@objc(FBSDKContextWebDialog) // swiftlint:disable:next prefer_final_classes
 public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
 
   private enum Keys {
@@ -26,7 +24,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
 
   public var delegate: ContextDialogDelegate?
   public var dialogContent: ValidatableProtocol?
-  public var currentWebDialog: WebDialog?
+  public var currentWebDialog: _WebDialog?
 
   init(delegate: ContextDialogDelegate?, dialogContent: ValidatableProtocol?) {
     super.init()
@@ -42,7 +40,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
 
   // MARK: - WebDialogDelegate
 
-  public func webDialog(_ webDialog: WebDialog, didCompleteWithResults results: [String: Any]) {
+  public func webDialog(_ webDialog: _WebDialog, didCompleteWithResults results: [String: Any]) {
     if currentWebDialog != webDialog {
       return
     }
@@ -50,7 +48,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     InternalUtility.shared.unregisterTransientObject(self)
   }
 
-  public func webDialog(_ webDialog: WebDialog, didFailWithError error: Error) {
+  public func webDialog(_ webDialog: _WebDialog, didFailWithError error: Error) {
     guard let delegate = delegate, currentWebDialog == webDialog else {
       return
     }
@@ -58,7 +56,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     InternalUtility.shared.unregisterTransientObject(self)
   }
 
-  public func webDialogDidCancel(_ webDialog: WebDialog) {
+  public func webDialogDidCancel(_ webDialog: _WebDialog) {
     guard let delegate = delegate, currentWebDialog == webDialog else {
       return
     }
@@ -66,9 +64,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     InternalUtility.shared.unregisterTransientObject(self)
   }
 
-  /**
-   Depending on the content size within the browser, this method allows for the resizing of web dialog
-   */
+  /// Depending on the content size within the browser, this method allows for the resizing of web dialog
   public func createWebDialogFrame(
     withWidth width: CGFloat,
     height: CGFloat,
@@ -94,7 +90,7 @@ public class ContextWebDialog: NSObject, WebDialogDelegate, DialogProtocol {
     if
       let errorCode = results[Keys.errorCode] as? Int,
       let errorMessage = results[Keys.errorMessage] as? String {
-      let errorFactory = ErrorFactory()
+      let errorFactory = _ErrorFactory()
       let error = errorFactory.error(
         code: errorCode,
         userInfo: nil,

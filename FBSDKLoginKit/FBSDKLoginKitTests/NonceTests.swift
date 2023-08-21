@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKLoginKit
+
 import XCTest
 
 final class NonceTests: XCTestCase {
@@ -13,10 +15,10 @@ final class NonceTests: XCTestCase {
   func testInvalidNonces() {
     [
       "",
-      "foo bar"
+      "foo bar",
     ].forEach { nonce in
       XCTAssertFalse(
-        Nonce.isValidNonce(nonce),
+        NonceValidator.isValid(nonce: nonce),
         "Should not consider: \(nonce) to be a valid nonce"
       )
     }
@@ -26,10 +28,10 @@ final class NonceTests: XCTestCase {
     [
       "123",
       "foo",
-      "asdfasdfasdfasdfasdfasdfasdf"
+      "asdfasdfasdfasdfasdfasdfasdf",
     ].forEach { nonce in
       XCTAssertTrue(
-        Nonce.isValidNonce(nonce),
+        NonceValidator.isValid(nonce: nonce),
         "Should consider: \(nonce) to be a valid nonce"
       )
     }

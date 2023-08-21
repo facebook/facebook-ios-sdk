@@ -10,7 +10,7 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestProfileProvider: NSObject, ProfileProviding {
+public final class TestProfileProvider: NSObject, ProfileProviding {
 
   public static var current: Profile?
   public static var stubbedCachedProfile: Profile?

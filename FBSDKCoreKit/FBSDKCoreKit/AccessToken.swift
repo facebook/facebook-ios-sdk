@@ -8,28 +8,20 @@
 
 import Foundation
 
-/**
- AccessToken Extension
- */
-public extension AccessToken {
-  /**
-   Returns the known granted permissions.
-   */
-  var permissions: Set<Permission> {
+/// AccessToken Extension
+extension AccessToken {
+  /// Returns the known granted permissions.
+  public var permissions: Set<Permission> {
     Set(__permissions.map { Permission(stringLiteral: $0) })
   }
 
-  /**
-   Returns the known declined permissions.
-   */
-  var declinedPermissions: Set<Permission> {
+  /// Returns the known declined permissions.
+  public var declinedPermissions: Set<Permission> {
     Set(__declinedPermissions.map { Permission(stringLiteral: $0) })
   }
 
-  /**
-   Returns the known expired permissions.
-   */
-  var expiredPermissions: Set<Permission> {
+  /// Returns the known expired permissions.
+  public var expiredPermissions: Set<Permission> {
     Set(__expiredPermissions.map { Permission(stringLiteral: $0) })
   }
 
@@ -37,7 +29,7 @@ public extension AccessToken {
    Convenience getter to determine if a permission has been granted
    - parameter permission: The permission to check
    */
-  func hasGranted(_ permission: Permission) -> Bool {
+  public func hasGranted(_ permission: Permission) -> Bool {
     hasGranted(permission: permission.name)
   }
 }

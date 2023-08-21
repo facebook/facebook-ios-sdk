@@ -9,7 +9,7 @@
 import FacebookShare
 import UIKit
 
-class ShareViewController: UITableViewController {
+final class ShareViewController: UITableViewController {
 
     @IBAction func shareLink() {
         guard let url = URL(string: "https://newsroom.fb.com/") else {
@@ -23,14 +23,22 @@ class ShareViewController: UITableViewController {
         dialog(withContent: content).show()
     }
 
+    private var isSimulator: Bool {
+#if targetEnvironment(simulator)
+        return true
+#else
+        return false
+#endif
+    }
+
     @IBAction func sharePhoto() {
-        #if targetEnvironment(simulator)
-        presentAlert(
-            title: "Error",
-            message: "Sharing an image will not work on a simulator. Please build to a device and try again."
-        )
-        return
-        #endif
+        guard !isSimulator else {
+            presentAlert(
+                title: "Error",
+                message: "Sharing an image will not work on a simulator. Please build to a device and try again."
+            )
+            return
+        }
 
         guard let image = UIImage(named: "puppy") else {
             presentAlert(
@@ -78,6 +86,4 @@ extension ShareViewController: SharingDelegate {
     func sharerDidCancel(_ sharer: Sharing) {
         presentAlert(title: "Cancelled", message: "Sharing cancelled")
     }
-
-
 }

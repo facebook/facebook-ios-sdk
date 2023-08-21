@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import XCTest
 
 final class TimeSpentDataTests: XCTestCase {
 
   let applicationName = "someApplication"
   let eventLogger = TestEventLogger()
-  lazy var timeSpentData = TimeSpentData(
+  lazy var timeSpentData = _TimeSpentData(
     eventLogger: eventLogger,
     serverConfigurationProvider: TestServerConfigurationProvider()
   )

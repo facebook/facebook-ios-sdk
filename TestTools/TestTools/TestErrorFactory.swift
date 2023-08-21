@@ -6,17 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
 import Foundation
 
 @objcMembers
 public final class TestErrorFactory: NSObject, ErrorCreating {
+  public var stubbedError: TestSDKError?
+
   public func error(
     code: Int,
     userInfo: [String: Any]? = nil,
     message: String?,
     underlyingError: Error?
   ) -> Error {
-    TestSDKError(
+    stubbedError ?? TestSDKError(
       type: .general,
       code: code,
       userInfo: userInfo,
@@ -32,7 +35,7 @@ public final class TestErrorFactory: NSObject, ErrorCreating {
     message: String?,
     underlyingError: Error?
   ) -> Error {
-    TestSDKError(
+    stubbedError ?? TestSDKError(
       type: .general,
       domain: domain,
       code: code,
@@ -48,7 +51,7 @@ public final class TestErrorFactory: NSObject, ErrorCreating {
     message: String?,
     underlyingError: Error?
   ) -> Error {
-    TestSDKError(
+    stubbedError ?? TestSDKError(
       type: .invalidArgument,
       name: name,
       value: value,
@@ -64,7 +67,7 @@ public final class TestErrorFactory: NSObject, ErrorCreating {
     message: String?,
     underlyingError: Error?
   ) -> Error {
-    TestSDKError(
+    stubbedError ?? TestSDKError(
       type: .invalidArgument,
       domain: domain,
       name: name,
@@ -79,7 +82,7 @@ public final class TestErrorFactory: NSObject, ErrorCreating {
     message: String?,
     underlyingError: Error?
   ) -> Error {
-    TestSDKError(
+    stubbedError ?? TestSDKError(
       type: .requiredArgument,
       name: name,
       message: message,
@@ -93,7 +96,7 @@ public final class TestErrorFactory: NSObject, ErrorCreating {
     message: String?,
     underlyingError: Error?
   ) -> Error {
-    TestSDKError(
+    stubbedError ?? TestSDKError(
       type: .requiredArgument,
       domain: domain,
       name: name,
@@ -103,6 +106,6 @@ public final class TestErrorFactory: NSObject, ErrorCreating {
   }
 
   public func unknownError(message: String?, userInfo: [String: Any]? = nil) -> Error {
-    TestSDKError(type: .unknown, userInfo: userInfo, message: message)
+    stubbedError ?? TestSDKError(type: .unknown, userInfo: userInfo, message: message)
   }
 }

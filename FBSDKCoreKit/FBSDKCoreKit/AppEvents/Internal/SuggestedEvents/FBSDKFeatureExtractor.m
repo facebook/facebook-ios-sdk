@@ -8,12 +8,10 @@
 
 #if !TARGET_OS_TV
 
-#import "FBSDKFeatureExtractor.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 #import "FBSDKModelManager.h"
-#import "FBSDKRulesFromKeyProvider.h"
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"
 
@@ -121,7 +119,7 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
   }
 
   NSString *viewTreeString;
-  if ([FBSDKTypeUtility isValidJSONObject:viewTree]) {
+  if ([NSJSONSerialization isValidJSONObject:viewTree]) {
     viewTreeString = [[NSString alloc] initWithData:[FBSDKTypeUtility dataWithJSONObject:viewTree options:0 error:nil] encoding:NSUTF8StringEncoding];
   }
 
@@ -133,7 +131,8 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
 }
 
 #pragma mark - Helper functions
-+ (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node siblings:(NSMutableArray *)siblings
++ (BOOL)pruneTree:(NSMutableDictionary<NSString *, id> *)node
+         siblings:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)siblings
 {
   // If it's interacted, don't prune away the children and just return.
   BOOL isInteracted = [[FBSDKTypeUtility dictionary:node
@@ -162,7 +161,7 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
     [siblings addObjectsFromArray:childviews];
   } else {
     for (NSMutableDictionary<NSString *, id> *c in childviews) {
-      NSMutableDictionary<NSString *, id> *child = [c mutableCopy];
+      NSMutableDictionary<NSString *, id> *child = c.mutableCopy;
       if ([self pruneTree:child siblings:siblings]) {
         isDescendantInteracted = YES;
         [FBSDKTypeUtility array:newChildren addObject:child];
@@ -175,7 +174,7 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
 }
 
 + (float *)nonparseFeatures:(NSMutableDictionary<NSString *, id> *)node
-                   siblings:(NSMutableArray *)siblings
+                   siblings:(NSMutableArray<NSMutableDictionary<NSString *, id> *> *)siblings
                  screenname:(NSString *)screenname
              viewTreeString:(NSString *)viewTreeString
 {
@@ -240,9 +239,9 @@ static id<FBSDKRulesFromKeyProvider> _rulesFromKeyProvider;
   NSString *validHint = [FBSDKTypeUtility coercedToStringValue:node[VIEW_HIERARCHY_HINT_KEY]];
   NSString *validClassName = [FBSDKTypeUtility coercedToStringValue:node[VIEW_HIERARCHY_CLASS_NAME_KEY]];
 
-  NSString *text = [validText lowercaseString] ?: @"";
-  NSString *hint = [validHint lowercaseString] ?: @"";
-  NSString *className = [validClassName lowercaseString] ?: @"";
+  NSString *text = validText.lowercaseString ?: @"";
+  NSString *hint = validHint.lowercaseString ?: @"";
+  NSString *className = validClassName.lowercaseString ?: @"";
 
   if ([self foundIndicators:[@"$,amount,price,total" componentsSeparatedByString:@","]
                    inValues:@[text, hint]]) {
@@ -388,7 +387,7 @@ void sum(float *val0, float *val1)
   return [self regextMatch:pattern text:matchText];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {

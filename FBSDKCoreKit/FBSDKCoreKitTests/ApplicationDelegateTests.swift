@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -19,6 +20,7 @@ final class ApplicationDelegateTests: XCTestCase {
   var userDataStore: UserDefaultsSpy!
   var observer: TestApplicationDelegateObserver!
   var settings: TestSettings!
+  var aemManager: TestAEMManager!
   var backgroundEventLogger: TestBackgroundEventLogger!
   var serverConfigurationProvider: TestServerConfigurationProvider!
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
@@ -40,10 +42,15 @@ final class ApplicationDelegateTests: XCTestCase {
     userDataStore = UserDefaultsSpy()
     observer = TestApplicationDelegateObserver()
     settings = TestSettings()
-    backgroundEventLogger = TestBackgroundEventLogger(
-      infoDictionaryProvider: TestBundle(),
-      eventLogger: TestAppEvents()
+    aemManager = TestAEMManager()
+
+    TestBackgroundEventLogger.setDependencies(
+      .init(
+        infoDictionaryProvider: TestBundle(),
+        eventLogger: TestAppEvents()
+      )
     )
+    backgroundEventLogger = TestBackgroundEventLogger()
     serverConfigurationProvider = TestServerConfigurationProvider()
     paymentObserver = TestPaymentObserver()
     profile = Profile(
@@ -57,13 +64,14 @@ final class ApplicationDelegateTests: XCTestCase {
     )
     components = TestCoreKitComponents.makeComponents(
       appEvents: appEvents,
+      backgroundEventLogger: backgroundEventLogger,
       defaultDataStore: userDataStore,
       featureChecker: featureChecker,
       notificationCenter: notificationCenter,
       paymentObserver: paymentObserver,
       serverConfigurationProvider: serverConfigurationProvider,
       settings: settings,
-      backgroundEventLogger: backgroundEventLogger
+      aemManager: aemManager
     )
     configurator = TestCoreKitConfigurator(components: components)
 
@@ -102,7 +110,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func resetTestDependencies() {
-    ApplicationDelegate.reset()
+    ApplicationDelegate.shared.resetHasInitializeBeenCalled()
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
     TestGateKeeperManager.reset()
@@ -113,8 +121,8 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate = ApplicationDelegate()
 
     XCTAssertIdentical(
-      delegate.components,
-      CoreKitComponents.default,
+      delegate.components as AnyObject,
+      CoreKitComponents.default as AnyObject,
       "An application delegate should be created with the default components by default"
     )
 
@@ -123,8 +131,8 @@ final class ApplicationDelegateTests: XCTestCase {
       "An application delegate should be created with a concrete configurator by default"
     )
     XCTAssertIdentical(
-      configurator.components,
-      CoreKitComponents.default,
+      configurator.components as AnyObject,
+      CoreKitComponents.default as AnyObject,
       "The configurator should be created with the default components by default"
     )
 
@@ -141,12 +149,12 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate = ApplicationDelegate(components: components, configurator: configurator)
 
     XCTAssertIdentical(
-      delegate.components,
-      components,
+      delegate.components as AnyObject,
+      components as AnyObject,
       "An application delegate should be created with the provided components"
     )
     XCTAssertIdentical(
-      delegate.configurator,
+      delegate.configurator as AnyObject,
       configurator,
       "An application delegate should be created with the provided configurator"
     )
@@ -163,7 +171,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK()
 
     XCTAssertTrue(
-      delegate.applicationObservers.contains(BridgeAPI.shared),
+      delegate.applicationObservers.contains(_BridgeAPI.shared),
       "Should add the shared bridge api instance to the application observers"
     )
   }
@@ -212,6 +220,24 @@ final class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializingAutoSetupWithFeatureEnabled() {
+    featureChecker.enable(feature: .aemAutoSetup)
+    delegate.initializeSDK()
+    XCTAssert(
+      aemManager.enabled,
+      "Initializing the SDK should have AEM Auto Setup feature enabled with feature enabled"
+    )
+  }
+
+  func testInitializingAutoSetupWithoutFeatureEnabled() {
+    featureChecker.disableFeature(.aemAutoSetup)
+    delegate.initializeSDK()
+    XCTAssert(
+      !aemManager.enabled,
+      "Initializing the SDK should not have AEM Auto Setup feature enabled without feature enabled"
+    )
+  }
+
   func testDidFinishLaunchingLaunchedApp() {
     delegate.isAppLaunched = true
 
@@ -232,14 +258,14 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertEqual(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       expected,
       "Should set the current access token to the cached access token when it exists"
     )
   }
 
   func testDidFinishLaunchingSetsCurrentAccessTokenWithoutCache() {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     TestAccessTokenWallet.tokenCache = TestTokenCache(
       accessToken: nil,
       authenticationToken: nil
@@ -248,7 +274,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertNil(
-      TestAccessTokenWallet.currentAccessToken,
+      TestAccessTokenWallet.current,
       "Should set the current access token to nil access token when there isn't a cached token"
     )
   }
@@ -262,7 +288,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertEqual(
-      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      TestAuthenticationTokenWallet.current,
       expected,
       "Should set the current authentication token to the cached access token when it exists"
     )
@@ -277,14 +303,14 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
     XCTAssertNil(
-      TestAuthenticationTokenWallet.currentAuthenticationToken,
+      TestAuthenticationTokenWallet.current,
       "Should set the current authentication token to nil access token when there isn't a cached token"
     )
   }
 
   func testDidFinishLaunchingWithAutoLogEnabled() {
     settings.isAutoLogAppEventsEnabled = true
-    userDataStore.set(1, forKey: bitmaskKey)
+    userDataStore.set(0, forKey: bitmaskKey)
 
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
@@ -380,7 +406,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testSettingApplicationState() {
-    delegate.setApplicationState(.background)
+    delegate.applicationState = .background
     XCTAssertEqual(
       appEvents.capturedApplicationState,
       .background,
@@ -398,9 +424,10 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingSDKLogsAppEvent() {
-    userDataStore.setValue(1, forKey: bitmaskKey)
+    settings.isAutoLogAppEventsEnabled = true
+    userDataStore.setValue(0, forKey: bitmaskKey)
 
-    delegate._logSDKInitialize()
+    delegate.logSDKInitialize()
 
     XCTAssertEqual(
       appEvents.capturedEventName,
@@ -451,7 +478,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(
       launchOptions: [
         UIApplication.LaunchOptionsKey.sourceApplication: name,
-        .url: SampleURLs.valid
+        .url: SampleURLs.valid,
       ]
     )
 
@@ -522,6 +549,47 @@ final class ApplicationDelegateTests: XCTestCase {
       options: [:]
     )
     XCTAssertTrue(
+      featureChecker.capturedFeaturesContains(.AEM),
+      "Opening a deep link should check if the AEM feature is enabled"
+    )
+  }
+
+  func testOpeningUniversalLinkChecksAEMFeatureAvailabilityWithRawStringValue() {
+    // See https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app
+    let userActivity = NSUserActivity(activityType: "NSUserActivityTypeBrowsingWeb")
+    userActivity.webpageURL = SampleURLs.validUniversalLink
+    delegate.application(
+      UIApplication.shared,
+      continue: userActivity
+    )
+    XCTAssertTrue(
+      featureChecker.capturedFeaturesContains(.AEM),
+      "Opening a deep link should check if the AEM feature is enabled"
+    )
+  }
+
+  func testOpeningUniversalLinkChecksAEMFeatureAvailability() {
+    // See https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app
+    let userActivity = NSUserActivity(activityType: NSUserActivityTypeBrowsingWeb)
+    userActivity.webpageURL = SampleURLs.validUniversalLink
+    delegate.application(
+      UIApplication.shared,
+      continue: userActivity
+    )
+    XCTAssertTrue(
+      featureChecker.capturedFeaturesContains(.AEM),
+      "Opening a deep link should check if the AEM feature is enabled"
+    )
+  }
+
+  func testOpeningUniversalLinkNonBrowsingWebDoesNotCheckAEMAvailability() {
+    let userActivity = NSUserActivity(activityType: "Example")
+    userActivity.webpageURL = SampleURLs.validUniversalLink
+    delegate.application(
+      UIApplication.shared,
+      continue: userActivity
+    )
+    XCTAssertFalse(
       featureChecker.capturedFeaturesContains(.AEM),
       "Opening a deep link should check if the AEM feature is enabled"
     )

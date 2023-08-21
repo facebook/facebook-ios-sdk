@@ -41,14 +41,10 @@ final class VideoUploader: VideoUploading {
     "\(graphNode)/\(Keys.videoUploaderEdge)"
   }
 
-  /**
-   The graph node to which video should be uploaded
-   */
+  /// The graph node to which video should be uploaded
   var graphNode = Keys.videoUploaderDefaultGraphNode
 
-  /**
-   Receiver's delegate
-   */
+  /// Receiver's delegate
   weak var delegate: VideoUploaderDelegate?
 
   /**
@@ -87,9 +83,7 @@ final class VideoUploader: VideoUploading {
     self.graphRequestFactory = graphRequestFactory
   }
 
-  /**
-   Start the upload process
-   */
+  /// Start the upload process
   func start() {
     guard videoSize != 0 else {
       let uploadError = errorWithMessage("Invalid video size: \(videoSize)")
@@ -170,7 +164,7 @@ final class VideoUploader: VideoUploading {
 
   func postFinishRequest() {
     var parameters: [String: Any] = [
-      Keys.videoUploadPhase: Keys.videoUploadPhaseFinish
+      Keys.videoUploadPhase: Keys.videoUploadPhaseFinish,
     ]
     if let uploadSessionID = uploadSessionID {
       parameters[Keys.videoUploadSessionID] = uploadSessionID
@@ -238,7 +232,7 @@ final class VideoUploader: VideoUploading {
 
     let shareResults: [String: Any] = [
       Keys.videoStartOffset: startNum,
-      Keys.videoEndOffset: endNum
+      Keys.videoEndOffset: endNum,
     ]
 
     return shareResults
@@ -290,7 +284,7 @@ final class VideoUploader: VideoUploading {
   }
 
   private func errorWithMessage(_ message: String) -> Error {
-    let errorFactory = ErrorFactory()
+    let errorFactory = _ErrorFactory()
     return errorFactory.error(
       domain: "com.facebook.sdk.gaming.videoupload",
       code: 0,

@@ -9,48 +9,48 @@
 import Foundation
 
 @objcMembers
-class ServerConfigurationFixtures: NSObject {
+final class ServerConfigurationFixtures: NSObject {
   /// A default configuration with valid inputs. This is the same default configuration used in production code
-  static var defaultConfig: ServerConfiguration {
-    ServerConfiguration.defaultServerConfiguration(forAppID: "1.0")
+  static var defaultConfiguration: _ServerConfiguration {
+    _ServerConfiguration.defaultServerConfiguration(forAppID: "1.0")
   }
 
   /// A default configuration with custom values passed by dictionary.
   /// To use: Include a dictionary with the keys and values you want to override on the default configuration
-  class func config( // swiftlint:disable:this cyclomatic_complexity
+  class func configuration( // swiftlint:disable:this cyclomatic_complexity
     withDictionary dict: [String: Any]
-  ) -> ServerConfiguration {
-    var loginTooltipEnabled = defaultConfig.isLoginTooltipEnabled
+  ) -> _ServerConfiguration {
+    var loginTooltipEnabled = defaultConfiguration.isLoginTooltipEnabled
     if dict["loginTooltipEnabled"] != nil {
       loginTooltipEnabled = dict["loginTooltipEnabled"] as? Int != 0
     }
-    var advertisingIDEnabled = defaultConfig.isAdvertisingIDEnabled
+    var advertisingIDEnabled = defaultConfiguration.isAdvertisingIDEnabled
     if dict["advertisingIDEnabled"] != nil {
       advertisingIDEnabled = dict["advertisingIDEnabled"] as? Int != 0
     }
-    var implicitLoggingEnabled = defaultConfig.isImplicitLoggingSupported
+    var implicitLoggingEnabled = defaultConfiguration.isImplicitLoggingSupported
     if dict["implicitLoggingEnabled"] != nil {
       implicitLoggingEnabled = dict["implicitLoggingEnabled"] as? Int != 0
     }
-    var implicitPurchaseLoggingEnabled = defaultConfig.isImplicitPurchaseLoggingSupported
+    var implicitPurchaseLoggingEnabled = defaultConfiguration.isImplicitPurchaseLoggingSupported
     if dict["implicitPurchaseLoggingEnabled"] != nil {
       implicitPurchaseLoggingEnabled = dict["implicitPurchaseLoggingEnabled"] as? Int != 0
     }
-    var codelessEventsEnabled = defaultConfig.isCodelessEventsEnabled
+    var codelessEventsEnabled = defaultConfiguration.isCodelessEventsEnabled
     if dict["codelessEventsEnabled"] != nil {
       codelessEventsEnabled = dict["codelessEventsEnabled"] as? Int != 0
     }
-    var uninstallTrackingEnabled = defaultConfig.isUninstallTrackingEnabled
+    var uninstallTrackingEnabled = defaultConfiguration.isUninstallTrackingEnabled
     if dict["uninstallTrackingEnabled"] != nil {
       uninstallTrackingEnabled = dict["uninstallTrackingEnabled"] as? Int != 0
     }
 
-    var smartLoginOptions = defaultConfig.smartLoginOptions
+    var smartLoginOptions = defaultConfiguration.smartLoginOptions
     if let rawValue = dict["smartLoginOptions"] as? UInt {
       smartLoginOptions = FBSDKServerConfigurationSmartLoginOptions(rawValue: rawValue)
     }
 
-    var defaults = defaultConfig.isDefaults
+    var defaults = defaultConfiguration.isDefaults
     if let dictDefaults = dict["defaults"] {
       if let intDefaults = dictDefaults as? Int {
         defaults = intDefaults != 0
@@ -59,33 +59,37 @@ class ServerConfigurationFixtures: NSObject {
       }
     }
 
-    let appID = dict["appID"] as? String ?? defaultConfig.appID
-    let appName = dict["appName"] as? String ?? defaultConfig.appName
-    let loginTooltipText = dict["loginTooltipText"] as? String ?? defaultConfig.loginTooltipText
-    let defaultShareMode = dict["defaultShareMode"] as? String ?? defaultConfig.defaultShareMode
-    let dialogConfigurations = defaultConfig.dialogConfigurations() ?? dict["dialogConfigurations"] as? [String: Any]
-    let dialogFlows = dict["dialogFlows"] as? [String: Any] ?? defaultConfig.dialogFlows()
-    let timestamp = dict["timestamp"] as? Date ?? defaultConfig.timestamp
-    let errorConfiguration = dict["errorConfiguration"] as? ErrorConfiguration ?? defaultConfig.errorConfiguration
+    let appID = dict["appID"] as? String ?? defaultConfiguration.appID
+    let appName = dict["appName"] as? String ?? defaultConfiguration.appName
+    let loginTooltipText = dict["loginTooltipText"] as? String ?? defaultConfiguration.loginTooltipText
+    let defaultShareMode = dict["defaultShareMode"] as? String ?? defaultConfiguration.defaultShareMode
+    let dialogConfigurations = defaultConfiguration.dialogConfigurations()
+      ?? (dict["dialogConfigurations"] as? [String: Any])
+    let dialogFlows = dict["dialogFlows"] as? [String: Any] ?? defaultConfiguration.dialogFlows()
+    let timestamp = dict["timestamp"] as? Date ?? defaultConfiguration.timestamp
+    let errorConfiguration = dict["errorConfiguration"] as? _ErrorConfiguration
+      ?? defaultConfiguration.errorConfiguration
 
-    var sessionTimeoutInterval = defaultConfig.sessionTimoutInterval
+    var sessionTimeoutInterval = defaultConfiguration.sessionTimeoutInterval
     if let intInterval = dict["sessionTimeoutInterval"] as? Int {
       sessionTimeoutInterval = TimeInterval(Double(intInterval))
     } else if let doubleInterval = dict["sessionTimeoutInterval"] as? Double {
       sessionTimeoutInterval = TimeInterval(doubleInterval)
     }
 
-    let loggingToken = dict["loggingToken"] as? String ?? defaultConfig.loggingToken
-    let smartLoginBookmarkIconURL = dict["smartLoginBookmarkIconURL"] as? URL ?? defaultConfig.smartLoginBookmarkIconURL
-    let smartLoginMenuIconURL = dict["smartLoginMenuIconURL"] as? URL ?? defaultConfig.smartLoginMenuIconURL
-    let updateMessage = dict["updateMessage"] as? String ?? defaultConfig.updateMessage
-    let eventBindings = dict["eventBindings"] as? [[String: Any]] ?? defaultConfig.eventBindings
-    let restrictiveParams = dict["restrictiveParams"] as? [String: Any] ?? defaultConfig.restrictiveParams
-    let AAMRules = dict["aamRules"] as? [String: Any] ?? defaultConfig.aamRules
+    let loggingToken = dict["loggingToken"] as? String ?? defaultConfiguration.loggingToken
+    let smartLoginBookmarkIconURL = (dict["smartLoginBookmarkIconURL"] as? URL)
+      ?? defaultConfiguration.smartLoginBookmarkIconURL
+    let smartLoginMenuIconURL = dict["smartLoginMenuIconURL"] as? URL ?? defaultConfiguration.smartLoginMenuIconURL
+    let updateMessage = dict["updateMessage"] as? String ?? defaultConfiguration.updateMessage
+    let eventBindings = dict["eventBindings"] as? [[String: Any]] ?? defaultConfiguration.eventBindings
+    let restrictiveParams = dict["restrictiveParams"] as? [String: Any] ?? defaultConfiguration.restrictiveParams
+    let AAMRules = dict["aamRules"] as? [String: Any] ?? defaultConfiguration.aamRules
     // swiftlint:disable:next line_length
-    let suggestedEventsSetting = dict["suggestedEventsSetting"] as? [String: Any] ?? defaultConfig.suggestedEventsSetting
+    let suggestedEventsSetting = dict["suggestedEventsSetting"] as? [String: Any] ?? defaultConfiguration.suggestedEventsSetting
+    let protectedModeRules = dict["protectedModeRules"] as? [String: Any] ?? defaultConfiguration.protectedModeRules
 
-    return ServerConfiguration(
+    return _ServerConfiguration(
       appID: appID,
       appName: appName,
       loginTooltipEnabled: loginTooltipEnabled,
@@ -110,7 +114,8 @@ class ServerConfigurationFixtures: NSObject {
       eventBindings: eventBindings,
       restrictiveParams: restrictiveParams,
       aamRules: AAMRules,
-      suggestedEventsSetting: suggestedEventsSetting
+      suggestedEventsSetting: suggestedEventsSetting,
+      protectedModeRules: protectedModeRules
     )
   }
 }

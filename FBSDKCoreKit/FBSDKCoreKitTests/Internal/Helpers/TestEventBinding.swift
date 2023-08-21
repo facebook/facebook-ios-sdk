@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-class TestEventBinding: EventBinding {
+final class TestEventBinding: EventBinding {
   var trackEventWasCalled = false
   var stubbedPath = [Any]()
   let stubbedEventLogger = TestEventLogger()

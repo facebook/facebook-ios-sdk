@@ -10,7 +10,7 @@ import Foundation
 
 @objcMembers
 @objc(FBSDKLoginManager) // for NSClassFromString(@"FBSDKLoginManager")
-class FBSDKLoginManager: NSObject {
+final class FBSDKLoginManager: NSObject {
   static var capturedOpenURL: URL?
   static var capturedSourceApplication: String?
   static var capturedAnnotation: String?
@@ -74,5 +74,9 @@ extension FBSDKLoginManager: URLOpening {
 
   public func isAuthenticationURL(_ url: URL) -> Bool {
     stubbedIsAuthenticationURL
+  }
+
+  public static func makeOpener() -> FBSDKLoginManager {
+    FBSDKLoginManager()
   }
 }

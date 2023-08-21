@@ -10,13 +10,13 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenSetting, TokenStringProviding {
+public final class TestAccessTokenWallet: NSObject, _AccessTokenProviding, _TokenStringProviding {
 
   public static var tokenCache: TokenCaching?
   public static var stubbedCurrentAccessToken: AccessToken?
   public static var wasTokenRead = false
 
-  public static var currentAccessToken: AccessToken? {
+  public static var current: AccessToken? {
     get {
       wasTokenRead = true
       return stubbedCurrentAccessToken
@@ -27,12 +27,12 @@ public class TestAccessTokenWallet: NSObject, AccessTokenProviding, AccessTokenS
   }
 
   public static var tokenString: String? {
-    currentAccessToken?.tokenString
+    current?.tokenString
   }
 
   public static func reset() {
     tokenCache = nil
-    currentAccessToken = nil
+    current = nil
     wasTokenRead = false
   }
 }

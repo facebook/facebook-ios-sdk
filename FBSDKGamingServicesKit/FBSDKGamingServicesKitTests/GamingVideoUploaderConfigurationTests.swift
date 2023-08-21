@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKGamingServicesKit
+@testable import FBSDKGamingServicesKit
+
 import XCTest
 
 final class GamingVideoUploaderConfigurationTests: XCTestCase {
@@ -15,7 +16,7 @@ final class GamingVideoUploaderConfigurationTests: XCTestCase {
   let caption = "Cool Video"
   lazy var configuration = GamingVideoUploaderConfiguration(videoURL: url, caption: caption)
 
-  func testValuesAreSavedToConfig() {
+  func testValuesAreSavedToConfiguration() {
     XCTAssertEqual(configuration.caption, caption)
     XCTAssertEqual(configuration.videoURL, url)
   }

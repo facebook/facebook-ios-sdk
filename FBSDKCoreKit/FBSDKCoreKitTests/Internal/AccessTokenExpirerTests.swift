@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#if BUCK
-import FacebookCore
-#endif
+@testable import FBSDKCoreKit
 
 import TestTools
 import XCTest
@@ -16,7 +14,7 @@ import XCTest
 final class AccessTokenExpirerTests: XCTestCase {
 
   let center = TestNotificationCenter()
-  lazy var expirer = AccessTokenExpirer(notificationCenter: center)
+  lazy var expirer = _AccessTokenExpirer(notificationCenter: center)
 
   override class func setUp() {
     super.setUp()
@@ -27,7 +25,7 @@ final class AccessTokenExpirerTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    expirer = AccessTokenExpirer(notificationCenter: center)
+    expirer = _AccessTokenExpirer(notificationCenter: center)
   }
 
   override func tearDown() {
@@ -42,7 +40,7 @@ final class AccessTokenExpirerTests: XCTestCase {
         TestNotificationCenter.ObserverEvidence(
           observer: expirer as Any,
           name: .AccessTokenDidChange,
-          selector: #selector(expirer._checkAccessTokenExpirationDate),
+          selector: #selector(expirer.checkAccessTokenExpirationDate),
           object: nil
         )
       ),
@@ -53,7 +51,7 @@ final class AccessTokenExpirerTests: XCTestCase {
         TestNotificationCenter.ObserverEvidence(
           observer: expirer as Any,
           name: .FBSDKApplicationDidBecomeActive,
-          selector: #selector(expirer._checkAccessTokenExpirationDate),
+          selector: #selector(expirer.checkAccessTokenExpirationDate),
           object: nil
         )
       ),
@@ -64,7 +62,7 @@ final class AccessTokenExpirerTests: XCTestCase {
   func testTimerFiring() throws {
     AccessToken.current = SampleAccessTokens.validToken
 
-    expirer._timerDidFire()
+    expirer.timerDidFire()
 
     let userInfo = try XCTUnwrap(center.capturedPostUserInfos.first)
 

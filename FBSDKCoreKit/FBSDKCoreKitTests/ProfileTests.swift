@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -16,6 +17,7 @@ final class ProfileTests: XCTestCase {
   var notificationCenter: TestNotificationCenter!
   var settings: TestSettings!
   var urlHoster: TestURLHoster!
+  var graphRequestFactory: TestGraphRequestFactory!
   var profile: Profile!
   var testGraphRequest: TestGraphRequest!
   var result: [String: Any]!
@@ -40,8 +42,10 @@ final class ProfileTests: XCTestCase {
     notificationCenter = TestNotificationCenter()
     settings = TestSettings()
     urlHoster = TestURLHoster(url: stubbedURL)
+    graphRequestFactory = TestGraphRequestFactory()
     profile = SampleUserProfiles.createValid()
     testGraphRequest = TestGraphRequest()
+    graphRequestFactory.stubbedGraphRequest = testGraphRequest
 
     result = [
       "id": profile.userID,
@@ -50,27 +54,39 @@ final class ProfileTests: XCTestCase {
       "last_name": profile.lastName as Any,
       "name": profile.name as Any,
       "link": profile.linkURL as Any,
-      "email": profile.email as Any
+      "email": profile.email as Any,
     ]
 
     Settings.shared.graphAPIVersion = sdkVersion
     TestAccessTokenWallet.reset()
-    Profile.resetCurrentProfileCache()
-    Profile.configure(
-      dataStore: dataStore,
-      accessTokenProvider: TestAccessTokenWallet.self,
-      notificationCenter: notificationCenter,
-      settings: settings,
-      urlHoster: urlHoster
+    Profile.current = nil
+    Profile.setDependencies(
+      .init(
+        accessTokenProvider: TestAccessTokenWallet.self,
+        dataStore: dataStore,
+        graphRequestFactory: graphRequestFactory,
+        notificationCenter: notificationCenter,
+        settings: settings,
+        urlHoster: urlHoster
+      )
     )
   }
 
   override func tearDown() {
     super.tearDown()
 
-    Profile.reset()
+    testGraphRequest = nil
+    dataStore = nil
+    notificationCenter = nil
+    settings = nil
+    urlHoster = nil
+    graphRequestFactory = nil
+
+    Profile.resetDependencies()
     TestAccessTokenWallet.reset()
-    Profile.resetCurrentProfileCache()
+    Profile.current = nil
+
+    profile = nil
   }
 
   private func makeImageURL(
@@ -85,6 +101,50 @@ final class ProfileTests: XCTestCase {
     )
   }
 
+  // MARK: - Type Dependencies
+
+  func testDefaultDependencies() {
+    Profile.resetDependencies()
+    XCTAssertThrowsError(try Profile.getDependencies(), .defaultDependencies)
+  }
+
+  func testCustomDependencies() throws {
+    let dependencies = try Profile.getDependencies()
+
+    XCTAssertIdentical(
+      dependencies.accessTokenProvider,
+      TestAccessTokenWallet.self,
+      .customDependency(for: "access token provider")
+    )
+    XCTAssertIdentical(
+      dependencies.dataStore,
+      dataStore,
+      .customDependency(for: "data store")
+    )
+    XCTAssertIdentical(
+      dependencies.graphRequestFactory,
+      graphRequestFactory,
+      .customDependency(for: "graph request factory")
+    )
+    XCTAssertIdentical(
+      dependencies.notificationCenter,
+      notificationCenter,
+      .customDependency(for: "notification center")
+    )
+    XCTAssertIdentical(
+      dependencies.settings,
+      settings,
+      .customDependency(for: "settings")
+    )
+    XCTAssertIdentical(
+      dependencies.urlHoster,
+      urlHoster,
+      .customDependency(for: "url hoster")
+    )
+  }
+
+  // MARK: - Creating Image URL
+
   func testCreatingImageURL() throws {
     try makeImageURL()
     XCTAssertEqual(urlHoster.capturedHostPrefix, "graph")
@@ -92,8 +152,6 @@ final class ProfileTests: XCTestCase {
     XCTAssertNotNil(urlHoster.capturedQueryParameters)
     XCTAssertEqual(imageURL, urlHoster.stubbedURL)
   }
-
-  // MARK: - Creating Image URL
 
   func testCreatingImageURLWithNoAccessTokenNoClientToken() throws {
     try makeImageURL()
@@ -143,7 +201,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingImageURLWithAccessTokenNoClientToken() throws {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     try makeImageURL()
 
     let queryItems = try XCTUnwrap(urlHoster.capturedQueryParameters)
@@ -170,7 +228,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testCreatingImageURLWithAccessTokenAndClientToken() throws {
-    TestAccessTokenWallet.currentAccessToken = SampleAccessTokens.validToken
+    TestAccessTokenWallet.current = SampleAccessTokens.validToken
     settings.clientToken = validClientToken
     try makeImageURL()
 
@@ -349,78 +407,76 @@ final class ProfileTests: XCTestCase {
   // MARK: - Profile Loading
 
   func testGraphPathForProfileLoadWithLinkPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,link",
-      permissions: ["user_link"]
+    verifyGraphParameters(
+      permissions: ["user_link"],
+      expectedFields: "id,first_name,middle_name,last_name,name,link"
     )
   }
 
   func testGraphPathForProfileLoadWithNoPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name",
-      permissions: []
+    verifyGraphParameters(
+      permissions: [],
+      expectedFields: "id,first_name,middle_name,last_name,name"
     )
   }
 
   func testGraphPathForProfileLoadWithEmailPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,email",
-      permissions: ["email"]
+    verifyGraphParameters(
+      permissions: ["email"],
+      expectedFields: "id,first_name,middle_name,last_name,name,email"
     )
   }
 
   func testGraphPathForProfileLoadWithFriendsPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,friends",
-      permissions: ["user_friends"]
+    verifyGraphParameters(
+      permissions: ["user_friends"],
+      expectedFields: "id,first_name,middle_name,last_name,name,friends"
     )
   }
 
   func testGraphPathForProfileLoadWithBirthdayPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,birthday",
-      permissions: ["user_birthday"]
+    verifyGraphParameters(
+      permissions: ["user_birthday"],
+      expectedFields: "id,first_name,middle_name,last_name,name,birthday"
     )
   }
 
   func testGraphPathForProfileLoadWithAgeRangePermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,age_range",
-      permissions: ["user_age_range"]
+    verifyGraphParameters(
+      permissions: ["user_age_range"],
+      expectedFields: "id,first_name,middle_name,last_name,name,age_range"
     )
   }
 
   func testGraphPathForProfileLoadWithHometownPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,hometown",
-      permissions: ["user_hometown"]
+    verifyGraphParameters(
+      permissions: ["user_hometown"],
+      expectedFields: "id,first_name,middle_name,last_name,name,hometown"
     )
   }
 
   func testGraphPathForProfileLoadWithLocationPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,location",
-      permissions: ["user_location"]
+    verifyGraphParameters(
+      permissions: ["user_location"],
+      expectedFields: "id,first_name,middle_name,last_name,name,location"
     )
   }
 
   func testGraphPathForProfileLoadWithGenderPermission() {
-    verfiyGraphPath(
-      expectedPath: "me?fields=id,first_name,middle_name,last_name,name,gender",
-      permissions: ["user_gender"]
+    verifyGraphParameters(
+      permissions: ["user_gender"],
+      expectedFields: "id,first_name,middle_name,last_name,name,gender"
     )
   }
 
   func testLoadingProfile() throws {
     let formatter = DateFormatter()
     formatter.dateFormat = "MM/dd/yyyy"
+    graphRequestFactory.stubbedGraphRequest = testGraphRequest
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -454,10 +510,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -473,10 +526,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: nil,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: nil) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -494,10 +544,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -514,10 +561,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -534,10 +578,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -554,10 +595,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -574,10 +612,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -594,10 +629,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -614,10 +646,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -634,10 +663,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: nil,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: nil) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -665,10 +691,7 @@ final class ProfileTests: XCTestCase {
     var capturedProfile: Profile?
     var capturedError: Error?
 
-    Profile.load(
-      token: nil,
-      request: testGraphRequest
-    ) {
+    Profile.loadProfile(accessToken: nil) {
       capturedProfile = $0
       capturedError = $1
     }
@@ -689,15 +712,11 @@ final class ProfileTests: XCTestCase {
 
   func testLoadingProfileWithLimitedProfileWithToken() {
     Profile.current = SampleUserProfiles.validLimited
-    let request = TestGraphRequest()
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
     XCTAssertEqual(
-      request.startCallCount,
+      testGraphRequest.startCallCount,
       1,
       "Should fetch a profile if it is limited and there is an access token"
     )
@@ -706,15 +725,11 @@ final class ProfileTests: XCTestCase {
   func testLoadingProfileWithExpiredNonLimitedProfileWithToken() {
     let expected = SampleUserProfiles.createValid(isExpired: true)
     Profile.current = expected
-    let request = TestGraphRequest()
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
     XCTAssertEqual(
-      request.startCallCount,
+      testGraphRequest.startCallCount,
       1,
       "Should fetch a profile if it is expired and there is an access token"
     )
@@ -723,19 +738,12 @@ final class ProfileTests: XCTestCase {
   func testLoadingProfileWithCurrentlyLoadingProfile() {
     let expected = SampleUserProfiles.createValid(isExpired: true)
     Profile.current = expected
-    let request = TestGraphRequest()
     let connection = TestGraphRequestConnection()
-    request.stubbedConnection = connection
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    testGraphRequest.stubbedConnection = connection
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
-    Profile.load(
-      token: SampleAccessTokens.validToken,
-      request: request
-    ) { _, _ in
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
       XCTFail("Should not invoke the completion")
     }
     XCTAssertEqual(
@@ -745,47 +753,9 @@ final class ProfileTests: XCTestCase {
     )
   }
 
-  func testProfileParseBlockInvokedOnSuccessfulGraphRequest() throws {
-    let result: [String: String] = [:]
-    var capturedProfileRef: AutoreleasingUnsafeMutablePointer<Profile>?
-    var capturedResult: Any?
-    Profile.load(
-      with: SampleAccessTokens.validToken,
-      graphRequest: testGraphRequest,
-      completion: { _, _ in },
-      parseBlock: {
-        capturedResult = $0
-        capturedProfileRef = $1
-      }
-    )
-    let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
-    completion(nil, result, nil)
-    XCTAssertNotNil(capturedProfileRef)
-    XCTAssertNotNil(capturedResult)
-  }
-
-  func testProfileParseBlockShouldHaveNonNullPointer() throws {
-    let result: [String: String] = [:]
-    var capturedProfileRef: AutoreleasingUnsafeMutablePointer<Profile>?
-    var capturedResult: Any?
-    Profile.load(
-      with: SampleAccessTokens.validToken,
-      graphRequest: testGraphRequest,
-      completion: { _, _ in },
-      parseBlock: {
-        capturedResult = $0
-        capturedProfileRef = $1
-      }
-    )
-    let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
-    completion(nil, result, nil)
-    XCTAssertNotNil(capturedProfileRef)
-    XCTAssertNotNil(capturedResult)
-  }
-
   func testProfileParseBlockReturnsNilIfResultIsEmpty() throws {
     let result: [String: String] = [:]
-    Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken, completion: nil)
 
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
     completion(nil, result, nil)
@@ -797,9 +767,9 @@ final class ProfileTests: XCTestCase {
       "first_name": "firstname",
       "middle_name": "middlename",
       "last_name": "lastname",
-      "name": "name"
+      "name": "name",
     ]
-    Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken, completion: nil)
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
     completion(nil, result, nil)
     XCTAssertNil(Profile.current)
@@ -807,7 +777,7 @@ final class ProfileTests: XCTestCase {
 
   func testProfileParseBlockReturnsNilIfResultHasEmptyID() throws {
     result["id"] = ""
-    Profile.load(token: SampleAccessTokens.validToken, request: testGraphRequest, completion: nil)
+    Profile.loadProfile(accessToken: SampleAccessTokens.validToken, completion: nil)
     let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
     completion(nil, result, nil)
     XCTAssertNil(Profile.current)
@@ -817,10 +787,7 @@ final class ProfileTests: XCTestCase {
     for _ in 0 ..< 100 {
       let randomizedResult = Fuzzer.randomize(json: sampleGraphResult())
       var completed = false
-      Profile.load(
-        token: SampleAccessTokens.validToken,
-        request: testGraphRequest
-      ) { _, _ in
+      Profile.loadProfile(accessToken: SampleAccessTokens.validToken) { _, _ in
         completed = true
       }
       let completion = try XCTUnwrap(testGraphRequest.capturedCompletionHandler)
@@ -832,7 +799,7 @@ final class ProfileTests: XCTestCase {
   // MARK: Update Notifications
 
   func testClearingMissingProfile() {
-    Profile.setCurrent(nil, shouldPostNotification: true)
+    Profile.current = nil
     XCTAssertTrue(
       notificationCenter.capturedPostNames.isEmpty,
       "Clearing an empty current profile should not post a notification"
@@ -840,10 +807,10 @@ final class ProfileTests: XCTestCase {
   }
 
   func testClearingProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: false)
+    Profile.current = profile
     notificationCenter.capturedPostNames = []
 
-    Profile.setCurrent(nil, shouldPostNotification: true)
+    Profile.current = nil
 
     XCTAssertFalse(
       notificationCenter.capturedPostNames.isEmpty,
@@ -852,7 +819,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testSettingProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
 
     XCTAssertFalse(
       notificationCenter.capturedPostNames.isEmpty,
@@ -861,10 +828,10 @@ final class ProfileTests: XCTestCase {
   }
 
   func testSettingSameProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
     notificationCenter.capturedPostNames = []
 
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
 
     XCTAssertTrue(
       notificationCenter.capturedPostNames.isEmpty,
@@ -873,7 +840,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testUpdatingProfile() {
-    Profile.setCurrent(profile, shouldPostNotification: true)
+    Profile.current = profile
     notificationCenter.capturedPostNames = []
 
     let newProfile = SampleUserProfiles.createValid(
@@ -883,7 +850,7 @@ final class ProfileTests: XCTestCase {
       isExpired: true,
       isLimited: true
     )
-    Profile.setCurrent(newProfile, shouldPostNotification: true)
+    Profile.current = newProfile
 
     XCTAssertFalse(
       notificationCenter.capturedPostNames.isEmpty,
@@ -893,198 +860,30 @@ final class ProfileTests: XCTestCase {
 
   // MARK: Storage
 
-  func testEncoding() {
-    let coder = TestCoder()
+  func testEncodingAndDecoding() throws {
     let profile = SampleUserProfiles.validLimited
-    profile.encode(with: coder)
+    let decodedObject = try CodabilityTesting.encodeAndDecode(profile)
+    // Test Properties
 
-    XCTAssertEqual(
-      coder.encodedObject["userID"] as? String,
-      profile.userID,
-      "Should encode the expected user identifier"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["firstName"] as? String,
-      profile.firstName,
-      "Should encode the expected first name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["middleName"] as? String,
-      profile.middleName,
-      "Should encode the expected middle name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["lastName"] as? String,
-      profile.lastName,
-      "Should encode the expected last name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["name"] as? String,
-      profile.name,
-      "Should encode the expected name"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["linkURL"] as? URL,
-      profile.linkURL,
-      "Should encode the expected link URL"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["refreshDate"] as? Date,
-      profile.refreshDate,
-      "Should encode the expected refresh date"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["imageURL"] as? URL,
-      profile.imageURL,
-      "Should encode the expected image URL"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["email"] as? String,
-      profile.email,
-      "Should encode the expected email address"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["friendIDs"] as? [String],
-      profile.friendIDs,
-      "Should encode the expected list of friend identifiers"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["birthday"] as? Date,
-      profile.birthday,
-      "Should encode the expected user birthday"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["ageRange"] as? UserAgeRange,
-      profile.ageRange,
-      "Should encode the expected user age range"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["hometown"] as? Location,
-      profile.hometown,
-      "Should encode the expected user hometown"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["location"] as? Location,
-      profile.location,
-      "Should encode the expected user location"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["gender"] as? String,
-      profile.gender,
-      "Should encode the expected user gender"
-    )
-    XCTAssertEqual(
-      coder.encodedObject["isLimited"] as? Bool,
-      true,
-      "isLimited should be true"
-    )
-  }
-
-  func testDecodingEntryWithMethodName() {
-    let coder = TestCoder()
-    _ = Profile(coder: coder)
-
-    decodeObjectCheck(
-      decodedObject: "userID",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the userID key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "firstName",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the firstName key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "middleName",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the middleName key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "lastName",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the lastName key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "name",
-      objectType: NSString.self,
-      failureMessage:
-      "Should decode a string for the name key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "linkURL",
-      objectType: NSURL.self,
-      failureMessage: "Should decode a url for the linkURL key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "refreshDate",
-      objectType: NSDate.self,
-      failureMessage: "Should decode a date for the refreshDate key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "imageURL",
-      objectType: NSURL.self,
-      failureMessage: "Should decode a url for the imageURL key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "email",
-      objectType: NSString.self,
-      failureMessage: "Should decode a string for the email key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "friendIDs",
-      objectType: NSArray.self,
-      failureMessage: "Should decode an array for the friendIDs key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "birthday",
-      objectType: NSDate.self,
-      failureMessage: "Should decode a date for the birthday key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "ageRange",
-      objectType: UserAgeRange.self,
-      failureMessage:
-      "Should decode a UserAgeRange object for the ageRange key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "hometown",
-      objectType: Location.self,
-      failureMessage: "Should decode a Location object for the hometown key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "location",
-      objectType: Location.self,
-      failureMessage: "Should decode a Location object for the location key"
-    )
-
-    decodeObjectCheck(
-      decodedObject: "gender",
-      objectType: NSString.self,
-      failureMessage:
-      "Should decode a string for the gender key"
-    )
-    XCTAssertEqual(
-      coder.decodedObject["isLimited"] as? String,
-      "decodeBoolForKey",
-      "Should decode a boolean for the isLimited key"
-    )
+    XCTAssertEqual(decodedObject.userID, profile.userID, .isCodable)
+    XCTAssertEqual(decodedObject.firstName, profile.firstName, .isCodable)
+    XCTAssertEqual(decodedObject.middleName, profile.middleName, .isCodable)
+    XCTAssertEqual(decodedObject.lastName, profile.lastName, .isCodable)
+    XCTAssertEqual(decodedObject.name, profile.name, .isCodable)
+    XCTAssertEqual(decodedObject.linkURL, profile.linkURL, .isCodable)
+    XCTAssertEqual(decodedObject.refreshDate, profile.refreshDate, .isCodable)
+    XCTAssertEqual(decodedObject.imageURL, profile.imageURL, .isCodable)
+    XCTAssertEqual(decodedObject.email, profile.email, .isCodable)
+    XCTAssertEqual(decodedObject.friendIDs, profile.friendIDs, .isCodable)
+    XCTAssertEqual(decodedObject.birthday, profile.birthday, .isCodable)
+    XCTAssertEqual(decodedObject.ageRange, profile.ageRange, .isCodable)
+    XCTAssertEqual(decodedObject.hometown, profile.hometown, .isCodable)
+    XCTAssertEqual(decodedObject.location, profile.location, .isCodable)
+    XCTAssertEqual(decodedObject.gender, profile.gender, .isCodable)
   }
 
   func testDefaultDataStore() {
-    Profile.reset()
+    Profile.resetDependencies()
     XCTAssertNil(
       Profile.dataStore,
       "Should not have a default data store"
@@ -1106,7 +905,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testDefaultAccessTokenProvider() {
-    Profile.reset()
+    Profile.resetDependencies()
     XCTAssertNil(
       Profile.accessTokenProvider,
       "Should not have a default access token provider"
@@ -1121,7 +920,7 @@ final class ProfileTests: XCTestCase {
   }
 
   func testDefaultSettings() {
-    Profile.reset()
+    Profile.resetDependencies()
     XCTAssertNil(
       Profile.settings,
       "Should not have default settings"
@@ -1174,55 +973,51 @@ final class ProfileTests: XCTestCase {
         "data": [
           [
             "name": "user1",
-            "id": profile.friendIDs?[0]
+            "id": profile.friendIDs?[0],
           ],
           [
             "name": "user2",
-            "id": profile.friendIDs?[1]
-          ]
-        ]
+            "id": profile.friendIDs?[1],
+          ],
+        ],
       ],
       "birthday": "01/01/1990",
       "age_range": [
-        "min": profile.ageRange?.min
+        "min": profile.ageRange?.min,
       ],
       "hometown": [
         "id": profile.hometown?.id,
-        "name": profile.hometown?.name
+        "name": profile.hometown?.name,
       ],
       "location": [
         "id": profile.location?.id,
-        "name": profile.location?.name
+        "name": profile.location?.name,
       ],
-      "gender": profile.gender as Any
+      "gender": profile.gender as Any,
     ]
   }
 
-  func verfiyGraphPath(
-    expectedPath: String,
+  func verifyGraphParameters(
     permissions: [String],
+    expectedFields: String,
     file: StaticString = #file,
     line: UInt = #line
   ) {
     let token = SampleAccessTokens.create(withPermissions: permissions)
-    let graphPath = Profile.graphPath(for: token)
-    XCTAssertEqual(graphPath, expectedPath, file: file, line: line)
+    let parameters = Profile.makeGraphRequestParameters(token: token)
+    XCTAssertEqual(parameters["fields"], expectedFields, file: file, line: line)
   }
+}
 
-  func decodeObjectCheck(
-    decodedObject: String,
-    objectType: Any,
-    failureMessage: String,
-    file: StaticString = #file,
-    line: UInt = #line
-  ) {
-    let coder = TestCoder()
-    _ = Profile(coder: coder)
-    XCTAssertTrue(
-      coder.decodedObject[decodedObject].self as? Any.Type == objectType as? Any.Type,
-      failureMessage,
-      file: file,
-      line: line
-    )
+// swiftformat:disable extensionaccesscontrol
+
+// MARK: - Assumptions
+
+fileprivate extension String {
+  static let isCodable = "Profile should be encodable and decodable"
+  static let defaultDependencies = "The Profile type does not have any default dependencies"
+
+  static func customDependency(for type: String) -> String {
+    "The Profile type uses a custom \(type) dependency when provided"
   }
 }

@@ -14,9 +14,6 @@
       location = "group:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:FBSDKTVOSKit/FBSDKTVOSKit.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:FBSDKShareKit/FBSDKShareKit.xcodeproj">
    </FileRef>
    <FileRef

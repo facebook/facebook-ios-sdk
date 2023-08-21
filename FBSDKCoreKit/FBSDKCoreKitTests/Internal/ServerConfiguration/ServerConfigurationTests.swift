@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
 final class ServerConfigurationTests: XCTestCase {
 
-  var config = Fixtures.defaultConfig
+  var configuration = Fixtures.defaultConfiguration
 
   typealias Fixtures = ServerConfigurationFixtures
 
@@ -21,20 +22,20 @@ final class ServerConfigurationTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
-    config = Fixtures.defaultConfig
+    configuration = Fixtures.defaultConfiguration
   }
 
   func testUsingDefaults() {
-    XCTAssertTrue(config.isDefaults, "Should assume defaults are being used unless otherwise expressed")
+    XCTAssertTrue(configuration.isDefaults, "Should assume defaults are being used unless otherwise expressed")
 
-    config = Fixtures.config(withDictionary: ["defaults": false])
-    XCTAssertFalse(config.isDefaults, "Should store whether or not defaults are being used")
+    configuration = Fixtures.configuration(withDictionary: ["defaults": false])
+    XCTAssertFalse(configuration.isDefaults, "Should store whether or not defaults are being used")
   }
 
   func testCreatingWithEmptyAppID() {
-    config = Fixtures.config(withDictionary: ["appID": ""])
+    configuration = Fixtures.configuration(withDictionary: ["appID": ""])
     XCTAssertEqual(
-      config.appID,
+      configuration.appID,
       "",
       "Should use the given app identifier regardless of value"
     )
@@ -42,96 +43,96 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithDefaultAdvertisingIdEnabled() {
     XCTAssertFalse(
-      config.isAdvertisingIDEnabled,
+      configuration.isAdvertisingIDEnabled,
       "Advertising identifier enabled should default to false"
     )
   }
 
   func testCreatingWithKnownAdvertisingIdEnabled() {
-    config = Fixtures.config(withDictionary: ["advertisingIDEnabled": true])
+    configuration = Fixtures.configuration(withDictionary: ["advertisingIDEnabled": true])
     XCTAssertTrue(
-      config.isAdvertisingIDEnabled,
+      configuration.isAdvertisingIDEnabled,
       "Advertising identifier enabled should be settable"
     )
   }
 
   func testCreatingWithDefaultImplicitPurchaseLoggingEnabled() {
     XCTAssertFalse(
-      config.isImplicitPurchaseLoggingSupported,
+      configuration.isImplicitPurchaseLoggingSupported,
       "Implicit purchase logging enabled should default to false"
     )
   }
 
   func testCreatingWithKnownImplicitPurchaseLoggingEnabled() {
-    config = Fixtures.config(withDictionary: ["implicitPurchaseLoggingEnabled": true])
+    configuration = Fixtures.configuration(withDictionary: ["implicitPurchaseLoggingEnabled": true])
     XCTAssertTrue(
-      config.isImplicitPurchaseLoggingSupported,
+      configuration.isImplicitPurchaseLoggingSupported,
       "Implicit purchase logging enabled should be settable"
     )
   }
 
   func testCreatingWithDefaultImplicitLoggingEnabled() {
     XCTAssertFalse(
-      config.isImplicitLoggingSupported,
+      configuration.isImplicitLoggingSupported,
       "Implicit logging enabled should default to false"
     )
   }
 
   func testCreatingWithKnownImplicitLoggingEnabled() {
-    config = Fixtures.config(withDictionary: ["implicitLoggingEnabled": true])
+    configuration = Fixtures.configuration(withDictionary: ["implicitLoggingEnabled": true])
     XCTAssertTrue(
-      config.isImplicitLoggingSupported,
+      configuration.isImplicitLoggingSupported,
       "Implicit logging enabled should be settable"
     )
   }
 
   func testCreatingWithDefaultCodelessEventsEnabled() {
     XCTAssertFalse(
-      config.isCodelessEventsEnabled,
+      configuration.isCodelessEventsEnabled,
       "Codeless events enabled should default to false"
     )
   }
 
   func testCreatingWithKnownCodelessEventsEnabled() {
-    config = Fixtures.config(withDictionary: ["codelessEventsEnabled": true])
+    configuration = Fixtures.configuration(withDictionary: ["codelessEventsEnabled": true])
     XCTAssertTrue(
-      config.isCodelessEventsEnabled,
+      configuration.isCodelessEventsEnabled,
       "Codeless events enabled should be settable"
     )
   }
 
   func testCreatingWithDefaultUninstallTrackingEnabled() {
     XCTAssertFalse(
-      config.isUninstallTrackingEnabled,
+      configuration.isUninstallTrackingEnabled,
       "Uninstall tracking enabled should default to false"
     )
   }
 
   func testCreatingWithKnownUninstallTrackingEnabled() {
-    config = Fixtures.config(withDictionary: ["uninstallTrackingEnabled": true])
+    configuration = Fixtures.configuration(withDictionary: ["uninstallTrackingEnabled": true])
     XCTAssertTrue(
-      config.isUninstallTrackingEnabled,
+      configuration.isUninstallTrackingEnabled,
       "Uninstall tracking enabled should be settable"
     )
   }
 
   func testCreatingWithoutAppName() {
-    XCTAssertNil(config.appName, "Should not use a default value for app name")
+    XCTAssertNil(configuration.appName, "Should not use a default value for app name")
   }
 
   func testCreatingWithEmptyAppName() {
-    config = Fixtures.config(withDictionary: ["appName": ""])
+    configuration = Fixtures.configuration(withDictionary: ["appName": ""])
     XCTAssertEqual(
-      config.appName,
+      configuration.appName,
       "",
       "Should use the given app name regardless of value"
     )
   }
 
   func testCreatingWithKnownAppName() {
-    config = Fixtures.config(withDictionary: ["appName": "foo"])
+    configuration = Fixtures.configuration(withDictionary: ["appName": "foo"])
     XCTAssertEqual(
-      config.appName,
+      configuration.appName,
       "foo",
       "App name should be settable"
     )
@@ -139,24 +140,24 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutDefaultShareMode() {
     XCTAssertNil(
-      config.defaultShareMode,
+      configuration.defaultShareMode,
       "Should not provide a default for the default share mode"
     )
   }
 
   func testCreatingWithKnownDefaultShareMode() {
-    config = Fixtures.config(withDictionary: ["defaultShareMode": "native"])
+    configuration = Fixtures.configuration(withDictionary: ["defaultShareMode": "native"])
     XCTAssertEqual(
-      config.defaultShareMode,
+      configuration.defaultShareMode,
       "native",
       "Default share mode should be settable"
     )
   }
 
   func testCreatingWithEmptyDefaultShareMode() {
-    config = Fixtures.config(withDictionary: ["defaultShareMode": ""])
+    configuration = Fixtures.configuration(withDictionary: ["defaultShareMode": ""])
     XCTAssertEqual(
-      config.defaultShareMode,
+      configuration.defaultShareMode,
       "",
       "Should use the given share mode regardless of value"
     )
@@ -164,50 +165,50 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithDefaultLoginTooltipEnabled() {
     XCTAssertFalse(
-      config.isLoginTooltipEnabled,
+      configuration.isLoginTooltipEnabled,
       "Login tooltip enabled should default to false"
     )
   }
 
   func testCreatingWithKnownLoginTooltipEnabled() {
-    config = Fixtures.config(withDictionary: ["loginTooltipEnabled": true])
+    configuration = Fixtures.configuration(withDictionary: ["loginTooltipEnabled": true])
     XCTAssertTrue(
-      config.isLoginTooltipEnabled,
+      configuration.isLoginTooltipEnabled,
       "Login tooltip enabled should be settable"
     )
   }
 
   func testCreatingWithoutLoginTooltipText() {
-    XCTAssertNil(config.loginTooltipText, "Should not use a default value for the login tooltip text")
+    XCTAssertNil(configuration.loginTooltipText, "Should not use a default value for the login tooltip text")
   }
 
   func testCreatingWithEmptyLoginTooltipText() {
-    config = Fixtures.config(withDictionary: ["loginTooltipText": ""])
+    configuration = Fixtures.configuration(withDictionary: ["loginTooltipText": ""])
     XCTAssertEqual(
-      config.loginTooltipText,
+      configuration.loginTooltipText,
       "",
       "Should use the given login tooltip text regardless of value"
     )
   }
 
   func testCreatingWithKnownLoginTooltipText() {
-    config = Fixtures.config(withDictionary: ["loginTooltipText": "foo"])
+    configuration = Fixtures.configuration(withDictionary: ["loginTooltipText": "foo"])
     XCTAssertEqual(
-      config.loginTooltipText,
+      configuration.loginTooltipText,
       "foo",
       "Login tooltip text should be settable"
     )
   }
 
   func testCreatingWithoutTimestamp() {
-    XCTAssertNil(config.timestamp, "Should not have a timestamp by default")
+    XCTAssertNil(configuration.timestamp, "Should not have a timestamp by default")
   }
 
   func testCreatingWithTimestamp() {
     let date = Date()
-    config = Fixtures.config(withDictionary: ["timestamp": date])
+    configuration = Fixtures.configuration(withDictionary: ["timestamp": date])
     XCTAssertEqual(
-      config.timestamp,
+      configuration.timestamp,
       date,
       "Should use the timestamp given during creation"
     )
@@ -215,16 +216,16 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithDefaultSessionTimeoutInterval() {
     XCTAssertEqual(
-      config.sessionTimoutInterval,
+      configuration.sessionTimeoutInterval,
       60,
       "Should set the correct default timeout interval"
     )
   }
 
   func testCreatingWithSessionTimeoutInterval() {
-    config = Fixtures.config(withDictionary: ["sessionTimeoutInterval": 200])
+    configuration = Fixtures.configuration(withDictionary: ["sessionTimeoutInterval": 200])
     XCTAssertEqual(
-      config.sessionTimoutInterval,
+      configuration.sessionTimeoutInterval,
       200,
       "Should set the session timeout interval from the remote"
     )
@@ -232,24 +233,24 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutLoggingToken() {
     XCTAssertNil(
-      config.loggingToken,
+      configuration.loggingToken,
       "Should not provide a default for the logging token"
     )
   }
 
   func testCreatingWithEmptyLoggingToken() {
-    config = Fixtures.config(withDictionary: ["loggingToken": ""])
+    configuration = Fixtures.configuration(withDictionary: ["loggingToken": ""])
     XCTAssertEqual(
-      config.loggingToken,
+      configuration.loggingToken,
       "",
       "Should use the logging token given during creation"
     )
   }
 
   func testCreatingWithKnownLoggingToken() {
-    config = Fixtures.config(withDictionary: ["loggingToken": "foo"])
+    configuration = Fixtures.configuration(withDictionary: ["loggingToken": "foo"])
     XCTAssertEqual(
-      config.loggingToken,
+      configuration.loggingToken,
       "foo",
       "Should use the logging token given during creation"
     )
@@ -257,24 +258,24 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutSmartLoginBookmarkUrl() {
     XCTAssertNil(
-      config.smartLoginBookmarkIconURL,
+      configuration.smartLoginBookmarkIconURL,
       "Should not provide a default url for the smart login bookmark icon"
     )
   }
 
   func testCreatingWithInvalidSmartLoginBookmarkUrl() {
-    config = Fixtures.config(withDictionary: ["smartLoginBookmarkIconURL": exampleURL])
+    configuration = Fixtures.configuration(withDictionary: ["smartLoginBookmarkIconURL": exampleURL])
     XCTAssertEqual(
-      config.smartLoginBookmarkIconURL,
+      configuration.smartLoginBookmarkIconURL,
       exampleURL,
       "Should use the url given during creation"
     )
   }
 
   func testCreatingWithValidSmartBookmarkUrl() {
-    config = Fixtures.config(withDictionary: ["smartLoginBookmarkIconURL": exampleURL])
+    configuration = Fixtures.configuration(withDictionary: ["smartLoginBookmarkIconURL": exampleURL])
     XCTAssertEqual(
-      config.smartLoginBookmarkIconURL,
+      configuration.smartLoginBookmarkIconURL,
       exampleURL,
       "Should use the url given during creation"
     )
@@ -282,58 +283,58 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithSmartLoginOptionsDefault() {
     XCTAssertEqual(
-      config.smartLoginOptions,
+      configuration.smartLoginOptions,
       [],
       "Should default smart login options to unknown"
     )
   }
 
   func testCreatingWithSmartLoginOptionsEnabled() {
-    config = Fixtures.config(
+    configuration = Fixtures.configuration(
       withDictionary: ["smartLoginOptions": FBSDKServerConfigurationSmartLoginOptions.enabled.rawValue]
     )
     XCTAssertEqual(
-      config.smartLoginOptions,
+      configuration.smartLoginOptions,
       FBSDKServerConfigurationSmartLoginOptions.enabled,
       "Should use the smartLoginOptions given during creation"
     )
   }
 
   func testCreatingWithoutErrorConfiguration() {
-    XCTAssertNil(config.errorConfiguration, "Should not have an error configuration by default")
+    XCTAssertNil(configuration.errorConfiguration, "Should not have an error configuration by default")
   }
 
   func testCreatingWithErrorConfiguration() {
-    let errorConfig = ErrorConfiguration(dictionary: nil)
-    config = Fixtures.config(withDictionary: ["errorConfiguration": errorConfig])
+    let errorConfiguration = _ErrorConfiguration(dictionary: nil)
+    configuration = Fixtures.configuration(withDictionary: ["errorConfiguration": errorConfiguration])
 
     XCTAssertEqual(
-      config.errorConfiguration,
-      errorConfig,
+      configuration.errorConfiguration,
+      errorConfiguration,
       "Error configuration should be settable"
     )
   }
 
   func testCreatingWithoutSmartLoginMenuUrl() {
     XCTAssertNil(
-      config.smartLoginMenuIconURL,
+      configuration.smartLoginMenuIconURL,
       "Should not provide a default url for the smart login menu icon"
     )
   }
 
   func testCreatingWithInvalidSmartLoginMenuUrl() {
-    config = Fixtures.config(withDictionary: ["smartLoginMenuIconURL": exampleURL])
+    configuration = Fixtures.configuration(withDictionary: ["smartLoginMenuIconURL": exampleURL])
     XCTAssertEqual(
-      config.smartLoginMenuIconURL,
+      configuration.smartLoginMenuIconURL,
       exampleURL,
       "Should use the url given during creation"
     )
   }
 
   func testCreatingWithValidSmartLoginMenuUrl() {
-    config = Fixtures.config(withDictionary: ["smartLoginMenuIconURL": exampleURL])
+    configuration = Fixtures.configuration(withDictionary: ["smartLoginMenuIconURL": exampleURL])
     XCTAssertEqual(
-      config.smartLoginMenuIconURL,
+      configuration.smartLoginMenuIconURL,
       exampleURL,
       "Should use the url given during creation"
     )
@@ -341,24 +342,24 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutUpdateMessage() {
     XCTAssertNil(
-      config.updateMessage,
+      configuration.updateMessage,
       "Should not provide a default for the update message"
     )
   }
 
   func testCreatingWithEmptyUpdateMessage() {
-    config = Fixtures.config(withDictionary: ["updateMessage": ""])
+    configuration = Fixtures.configuration(withDictionary: ["updateMessage": ""])
     XCTAssertEqual(
-      config.updateMessage,
+      configuration.updateMessage,
       "",
       "Should use the update message given during creation"
     )
   }
 
   func testCreatingWithKnownUpdateMessage() {
-    config = Fixtures.config(withDictionary: ["updateMessage": "foo"])
+    configuration = Fixtures.configuration(withDictionary: ["updateMessage": "foo"])
     XCTAssertEqual(
-      config.updateMessage,
+      configuration.updateMessage,
       "foo",
       "Should use the update message given during creation"
     )
@@ -366,16 +367,16 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutEventBindings() {
     XCTAssertNil(
-      config.eventBindings,
+      configuration.eventBindings,
       "Should not provide default event bindings"
     )
   }
 
   func testCreatingWithEmptyEventBindings() {
-    config = Fixtures.config(withDictionary: ["eventBindings": []])
-    XCTAssertNotNil(config.eventBindings, "Should use the empty list of event bindings it was created with")
+    configuration = Fixtures.configuration(withDictionary: ["eventBindings": []])
+    XCTAssertNotNil(configuration.eventBindings, "Should use the empty list of event bindings it was created with")
     XCTAssertEqual(
-      config.eventBindings?.isEmpty,
+      configuration.eventBindings?.isEmpty,
       true,
       "Should use the empty list of event bindings it was created with"
     )
@@ -383,10 +384,10 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithEventBindings() {
     let bindings = [["a": "b"]]
-    config = Fixtures.config(withDictionary: ["eventBindings": bindings])
+    configuration = Fixtures.configuration(withDictionary: ["eventBindings": bindings])
 
     XCTAssertEqual(
-      config.eventBindings as? [[String: String]],
+      configuration.eventBindings as? [[String: String]],
       bindings,
       "Event binding should be settable"
     )
@@ -394,7 +395,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutDialogConfigurations() {
     XCTAssertNil(
-      config.dialogConfigurations(),
+      configuration.dialogConfigurations(),
       "Should not have dialog configurations by default"
     )
   }
@@ -402,12 +403,12 @@ final class ServerConfigurationTests: XCTestCase {
   func testCreatingWithDialogConfigurations() {
     let dialogConfigurations = [
       "dialog": "Hello",
-      "dialog2": "World"
+      "dialog2": "World",
     ]
 
-    config = Fixtures.config(withDictionary: ["dialogConfigurations": dialogConfigurations])
+    configuration = Fixtures.configuration(withDictionary: ["dialogConfigurations": dialogConfigurations])
     XCTAssertEqual(
-      config.dialogConfigurations() as? [String: String],
+      configuration.dialogConfigurations() as? [String: String],
       dialogConfigurations,
       "Should set the exact dialog configurations it was created with"
     )
@@ -415,20 +416,20 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutDialogFlows() {
     // Need to recreate with a new appID to invalidate cache of default configuration
-    config = ServerConfiguration.defaultServerConfiguration(forAppID: name)
+    configuration = _ServerConfiguration.defaultServerConfiguration(forAppID: name)
 
     let expectedDefaultDialogFlows = [
       FBSDKDialogConfigurationNameDefault: [
         FBSDKDialogConfigurationFeatureUseNativeFlow: false,
-        FBSDKDialogConfigurationFeatureUseSafariViewController: true
+        FBSDKDialogConfigurationFeatureUseSafariViewController: true,
       ],
-      FBSDKDialogConfigurationNameMessage: [
-        FBSDKDialogConfigurationFeatureUseNativeFlow: true
-      ]
+      DialogConfigurationName.message: [
+        FBSDKDialogConfigurationFeatureUseNativeFlow: true,
+      ],
     ]
 
     XCTAssertEqual(
-      config.dialogFlows() as? [String: [String: Bool]],
+      configuration.dialogFlows() as? [String: [String: Bool]],
       expectedDefaultDialogFlows,
       "Should use the expected default dialog flow"
     )
@@ -438,17 +439,17 @@ final class ServerConfigurationTests: XCTestCase {
     let dialogFlows = [
       "foo": [
         FBSDKDialogConfigurationFeatureUseNativeFlow: true,
-        FBSDKDialogConfigurationFeatureUseSafariViewController: true
+        FBSDKDialogConfigurationFeatureUseSafariViewController: true,
       ],
       "bar": [
-        FBSDKDialogConfigurationFeatureUseNativeFlow: false
-      ]
+        FBSDKDialogConfigurationFeatureUseNativeFlow: false,
+      ],
     ]
 
-    config = Fixtures.config(withDictionary: ["dialogFlows": dialogFlows])
+    configuration = Fixtures.configuration(withDictionary: ["dialogFlows": dialogFlows])
 
     XCTAssertEqual(
-      config.dialogFlows() as? [String: [String: Bool]],
+      configuration.dialogFlows() as? [String: [String: Bool]],
       dialogFlows,
       "Should set the exact dialog flows it was created with"
     )
@@ -456,7 +457,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutAAMRules() {
     XCTAssertNil(
-      config.aamRules,
+      configuration.aamRules,
       "Should not have aam rules by default"
     )
   }
@@ -464,10 +465,10 @@ final class ServerConfigurationTests: XCTestCase {
   func testCreatingWithAAMRules() {
     let rules = ["foo": "bar"]
 
-    config = Fixtures.config(withDictionary: ["aamRules": rules])
+    configuration = Fixtures.configuration(withDictionary: ["aamRules": rules])
 
     XCTAssertEqual(
-      config.aamRules as? [String: String],
+      configuration.aamRules as? [String: String],
       rules,
       "Should set the exact aam rules it was created with"
     )
@@ -475,7 +476,7 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutRestrictiveParams() {
     XCTAssertNil(
-      config.restrictiveParams,
+      configuration.restrictiveParams,
       "Should not have restrictive params by default"
     )
   }
@@ -483,10 +484,10 @@ final class ServerConfigurationTests: XCTestCase {
   func testCreatingWithRestrictiveParams() {
     let params = ["foo": "bar"]
 
-    config = Fixtures.config(withDictionary: ["restrictiveParams": params])
+    configuration = Fixtures.configuration(withDictionary: ["restrictiveParams": params])
 
     XCTAssertEqual(
-      config.restrictiveParams as? [String: String],
+      configuration.restrictiveParams as? [String: String],
       params,
       "Should set the exact restrictive params it was created with"
     )
@@ -494,27 +495,26 @@ final class ServerConfigurationTests: XCTestCase {
 
   func testCreatingWithoutSuggestedEventSetting() {
     XCTAssertNil(
-      config.suggestedEventsSetting,
+      configuration.suggestedEventsSetting,
       "Should not have a suggested events setting by default"
     )
   }
 
   func testCreatingWithSuggestedEventSetting() {
     let setting = ["foo": "bar"]
-    config = Fixtures.config(withDictionary: ["suggestedEventsSetting": setting])
+    configuration = Fixtures.configuration(withDictionary: ["suggestedEventsSetting": setting])
 
     XCTAssertEqual(
-      config.suggestedEventsSetting as? [String: String],
+      configuration.suggestedEventsSetting as? [String: String],
       setting,
       "Should set the exact suggested events setting it was created with"
     )
   }
 
-  func testEncoding() {
-    let coder = TestCoder()
-    let errorConfig = ErrorConfiguration(dictionary: nil)
+  func testEncodingAndDecoding() throws {
+    let errorConfiguration = _ErrorConfiguration(dictionary: nil)
 
-    config = Fixtures.config(withDictionary: [
+    configuration = Fixtures.configuration(withDictionary: [
       "appID": "appID",
       "appName": "appName",
       "loginTooltipEnabled": true,
@@ -527,9 +527,9 @@ final class ServerConfigurationTests: XCTestCase {
       "uninstallTrackingEnabled": true,
       "dialogFlows": ["foo": "Bar"],
       "timestamp": Date(),
-      "errorConfiguration": errorConfig,
+      "errorConfiguration": errorConfiguration,
       "sessionTimeoutInterval": 100,
-      "defaults": false,
+      "defaults": true,
       "loggingToken": "loggingToken",
       "smartLoginOptions": FBSDKServerConfigurationSmartLoginOptions.enabled.rawValue,
       "smartLoginBookmarkIconURL": exampleURL,
@@ -541,152 +541,85 @@ final class ServerConfigurationTests: XCTestCase {
       "suggestedEventsSetting": ["suggestedEventsSetting": "foo"],
     ])
 
-    config.encode(with: coder)
+    // Encode and Decode
+    let object = configuration
+    let decodedObject = try CodabilityTesting.encodeAndDecode(object)
 
-    XCTAssertEqual(coder.encodedObject["appID"] as? String, config.appID)
-    XCTAssertEqual(coder.encodedObject["appName"] as? String, config.appName)
-    XCTAssertEqual(coder.encodedObject["loginTooltipEnabled"] as? Bool, config.isLoginTooltipEnabled)
-    XCTAssertEqual(coder.encodedObject["loginTooltipText"] as? String, config.loginTooltipText)
-    XCTAssertEqual(coder.encodedObject["defaultShareMode"] as? String, config.defaultShareMode)
-    XCTAssertEqual(coder.encodedObject["advertisingIDEnabled"] as? Bool, config.isAdvertisingIDEnabled)
-    XCTAssertEqual(coder.encodedObject["implicitLoggingEnabled"] as? Bool, config.isImplicitLoggingSupported)
-    XCTAssertEqual(
-      coder.encodedObject["implicitPurchaseLoggingEnabled"] as? Bool,
-      config.isImplicitPurchaseLoggingSupported
-    )
-    XCTAssertEqual(coder.encodedObject["codelessEventsEnabled"] as? Bool, config.isCodelessEventsEnabled)
-    XCTAssertEqual(coder.encodedObject["trackAppUninstallEnabled"] as? Bool, config.isUninstallTrackingEnabled)
-    XCTAssertEqualDicts(coder.encodedObject["dialogFlows"] as? [String: Any], config.dialogFlows())
-    XCTAssertEqual(coder.encodedObject["timestamp"] as? Date, config.timestamp)
-    XCTAssertEqual(coder.encodedObject["errorConfigs"] as? ErrorConfiguration, config.errorConfiguration)
-    XCTAssertEqual(coder.encodedObject["sessionTimeoutInterval"] as? TimeInterval, config.sessionTimoutInterval)
-    XCTAssertNil(
-      coder.encodedObject["defaults"],
+    // Test Objects
+    // XCTAssertEqual(decodedObject, object, .isCodable) // Doesn't work since isEqual not implemented
+    XCTAssertNotIdentical(decodedObject, object, .isCodable)
+
+    // Test Codable Properties
+    XCTAssertEqual(decodedObject.isAdvertisingIDEnabled, object.isAdvertisingIDEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.appID, object.appID, .isCodable)
+    XCTAssertEqual(decodedObject.appName, object.appName, .isCodable)
+    XCTAssertEqual(decodedObject.defaultShareMode, object.defaultShareMode, .isCodable)
+    XCTAssertEqualDicts(decodedObject.dialogFlows(), object.dialogFlows(), .isCodable)
+    XCTAssertEqualDicts(decodedObject.dialogConfigurations(), object.dialogConfigurations(), .isCodable)
+    // FBSDKErrorConfiguration does not implement isEqual: so just test for not nil
+    XCTAssertNotNil(decodedObject.errorConfiguration)
+    XCTAssertEqual(decodedObject.isImplicitLoggingSupported, object.isImplicitLoggingSupported, .isCodable)
+    XCTAssertEqual(decodedObject.isImplicitPurchaseLoggingSupported, object.isImplicitPurchaseLoggingSupported)
+    XCTAssertEqual(decodedObject.isCodelessEventsEnabled, object.isCodelessEventsEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.isLoginTooltipEnabled, object.isLoginTooltipEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.isUninstallTrackingEnabled, object.isUninstallTrackingEnabled, .isCodable)
+    XCTAssertEqual(decodedObject.loginTooltipText, object.loginTooltipText, .isCodable)
+    XCTAssertEqual(decodedObject.timestamp, object.timestamp, .isCodable)
+    XCTAssertEqual(decodedObject.sessionTimeoutInterval, object.sessionTimeoutInterval, .isCodable)
+    XCTAssertEqual(decodedObject.loggingToken, object.loggingToken, .isCodable)
+    XCTAssertEqual(decodedObject.smartLoginOptions, object.smartLoginOptions, .isCodable)
+    XCTAssertEqual(decodedObject.smartLoginBookmarkIconURL, object.smartLoginBookmarkIconURL, .isCodable)
+    XCTAssertEqual(decodedObject.smartLoginMenuIconURL, object.smartLoginMenuIconURL, .isCodable)
+    XCTAssertEqual(decodedObject.updateMessage, object.updateMessage, .isCodable)
+    XCTAssertEqualDicts(decodedObject.restrictiveParams, object.restrictiveParams, .isCodable)
+    XCTAssertEqualDicts(decodedObject.aamRules, object.aamRules, .isCodable)
+    XCTAssertEqualDicts(decodedObject.suggestedEventsSetting, object.suggestedEventsSetting, .isCodable)
+    XCTAssertEqual(decodedObject.version, object.version, .isCodable)
+
+    // Event bindings is [[String: String]], i.e. an array of dicts
+    let objectEventBindings = try XCTUnwrap(object.eventBindings)
+    let decodedObjectEventBindings = try XCTUnwrap(decodedObject.eventBindings)
+    for (decodedDict, objectDict) in zip(objectEventBindings, decodedObjectEventBindings) {
+      XCTAssertEqualDicts(decodedDict, objectDict, .isCodable)
+    }
+
+    // isDefaults is not codable
+    XCTAssertFalse(
+      decodedObject.isDefaults, // was set to true
       "Should not encode whether default values were used to create server configuration"
     )
-    XCTAssertEqual(coder.encodedObject["loggingToken"] as? String, config.loggingToken)
-    XCTAssertEqual(coder.encodedObject["smartLoginEnabled"] as? UInt, config.smartLoginOptions.rawValue)
-    XCTAssertEqual(coder.encodedObject["smarstLoginBookmarkIconURL"] as? URL, config.smartLoginBookmarkIconURL)
-    XCTAssertEqual(coder.encodedObject["smarstLoginBookmarkMenuURL"] as? URL, config.smartLoginMenuIconURL)
-    XCTAssertEqual(coder.encodedObject["SDKUpdateMessage"] as? String, config.updateMessage)
-    XCTAssertEqual(
-      coder.encodedObject["eventBindings"] as? [[String: String]],
-      config.eventBindings as? [[String: String]]
-    )
-    XCTAssertEqualDicts(coder.encodedObject["restrictiveParams"] as? [String: Any], config.restrictiveParams)
-    XCTAssertEqualDicts(coder.encodedObject["AAMRules"] as? [String: Any], config.aamRules)
-    XCTAssertEqualDicts(coder.encodedObject["suggestedEventsSetting"] as? [String: Any], config.suggestedEventsSetting)
-  }
-
-  func testDecoding() throws {
-    let decoder = TestCoder()
-    config = try XCTUnwrap(ServerConfiguration(coder: decoder))
-
-    let dialogFlowsClasses = NSSet(array: [
-      NSDictionary.self,
-      NSNumber.self,
-      NSString.self,
-    ])
-
-    let dictionaryClasses = NSSet(array: [
-      NSArray.self,
-      NSData.self,
-      NSDictionary.self,
-      NSNumber.self,
-      NSString.self,
-    ])
-
-    XCTAssertTrue(decoder.decodedObject["appID"] is NSString.Type)
-    XCTAssertTrue(decoder.decodedObject["appName"] is NSString.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["loginTooltipEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode loginTooltipEnabled as a Bool"
-    )
-    XCTAssertTrue(decoder.decodedObject["loginTooltipText"] is NSString.Type)
-    XCTAssertTrue(decoder.decodedObject["defaultShareMode"] is NSString.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["advertisingIDEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode advertisingIDEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["implicitLoggingEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode implicitLoggingEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["implicitPurchaseLoggingEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode implicitPurchaseLoggingEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["codelessEventsEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode codelessEventsEnabled as a Bool"
-    )
-    XCTAssertEqual(
-      decoder.decodedObject["trackAppUninstallEnabled"] as? String,
-      "decodeBoolForKey",
-      "Should decode trackAppUninstallEnabled as a Bool"
-    )
-    XCTAssertEqual(decoder.decodedObject["dialogFlows"] as? NSSet, dialogFlowsClasses)
-    XCTAssertTrue(decoder.decodedObject["timestamp"] is NSDate.Type)
-    XCTAssertTrue(decoder.decodedObject["errorConfigs"] is ErrorConfiguration.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["sessionTimeoutInterval"] as? String,
-      "decodeDoubleForKey",
-      "Should decode implicitLoggingEnabled as a Double"
-    )
-    XCTAssertNil(
-      decoder.decodedObject["defaults"],
-      "Should not encode whether default values were used to create server configuration"
-    )
-    XCTAssertTrue(decoder.decodedObject["loggingToken"] is NSString.Type)
-    XCTAssertEqual(
-      decoder.decodedObject["smartLoginEnabled"] as? String,
-      "decodeIntegerForKey",
-      "Should decode smartLoginEnabled as an integer"
-    )
-    XCTAssertTrue(decoder.decodedObject["smarstLoginBookmarkIconURL"] is NSURL.Type)
-    XCTAssertTrue(decoder.decodedObject["smarstLoginBookmarkMenuURL"] is NSURL.Type)
-    XCTAssertTrue(decoder.decodedObject["SDKUpdateMessage"] is NSString.Type)
-    XCTAssertTrue(decoder.decodedObject["eventBindings"] is NSArray.Type)
-    XCTAssertEqual(decoder.decodedObject["restrictiveParams"] as? NSSet, dictionaryClasses)
-    XCTAssertEqual(decoder.decodedObject["AAMRules"] as? NSSet, dictionaryClasses)
-    XCTAssertEqual(decoder.decodedObject["suggestedEventsSetting"] as? NSSet, dictionaryClasses)
   }
 
   func testRetrievingInvalidDialogConfigurationForDialogName() {
-    config = Fixtures.config(withDictionary: [
+    configuration = Fixtures.configuration(withDictionary: [
       "dialogConfigurations": [
-        "foo": "bar"
-      ]
+        "foo": "bar",
+      ],
     ])
 
     XCTAssertEqual(
-      config.dialogConfigurations()?["foo"] as? String,
+      configuration.dialogConfigurations()?["foo"] as? String,
       "bar",
       "Should be able to retrieve an invalid dialog configuration by name"
     )
   }
 
   func testRetrievingValidDialogConfigurationForDialogName() {
-    let fooConfig = DialogConfiguration(
+    let fooConfiguration = _DialogConfiguration(
       name: "foo",
       url: exampleURL,
       appVersions: ["1", "2"]
     )
 
-    config = Fixtures.config(withDictionary: [
+    configuration = Fixtures.configuration(withDictionary: [
       "dialogConfigurations": [
-        "foo": fooConfig
-      ]
+        "foo": fooConfiguration,
+      ],
     ])
 
     XCTAssertEqual(
-      config.dialogConfiguration(forDialogName: "foo"),
-      fooConfig,
+      configuration.dialogConfiguration(forDialogName: "foo"),
+      fooConfiguration,
       "Should be able to retrieve a valid dialog configuration by name"
     )
   }
@@ -2003,21 +1936,21 @@ final class ServerConfigurationTests: XCTestCase {
     var dialogFlows: [String: Any] = [:]
     if featureValue != nil {
       dialogFlows[name] = [
-        flowKey: featureValue
+        flowKey: featureValue,
       ]
     }
     if sharingValue != nil {
       dialogFlows["sharing"] = [
-        flowKey: sharingValue
+        flowKey: sharingValue,
       ]
     }
     if defaultValue != nil {
       dialogFlows["default"] = [
-        flowKey: defaultValue
+        flowKey: defaultValue,
       ]
     }
 
-    config = Fixtures.config(withDictionary: ["dialogFlows": dialogFlows])
+    configuration = Fixtures.configuration(withDictionary: ["dialogFlows": dialogFlows])
   }
 
   func assertSafariVcIs(
@@ -2036,7 +1969,7 @@ final class ServerConfigurationTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      config.useSafariViewController(forDialogName: name),
+      configuration.useSafariViewController(forDialogName: name),
       expected,
       """
       Use safari view controller for dialog name: \(name),
@@ -2063,7 +1996,7 @@ final class ServerConfigurationTests: XCTestCase {
     )
 
     XCTAssertEqual(
-      config.useNativeDialog(forDialogName: name),
+      configuration.useNativeDialog(forDialogName: name),
       expected,
       """
       Use native dialog for dialog name: \(name),
@@ -2093,4 +2026,11 @@ final class ServerConfigurationTests: XCTestCase {
       XCTFail("RHS Dict is nil", file: file, line: line)
     }
   }
+}
+
+// MARK: - Assumptions
+
+// swiftformat:disable:next extensionaccesscontrol
+fileprivate extension String {
+  static let isCodable = "FBSDKServerConfiguration should be encodable and decodable"
 }

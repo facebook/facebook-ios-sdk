@@ -6,13 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBAEMKit
+@testable import FBAEMKit
 import Foundation
 
 enum SampleAEMSingleEntryRules {
 
   static let urlRule = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorI_Contains,
+    with: .caseInsensitiveContains,
     paramKey: "URL",
     linguisticCondition: "thankyou.do",
     numericalCondition: nil,
@@ -20,7 +20,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let cardTypeRule1 = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "card_type",
     linguisticCondition: "platium",
     numericalCondition: nil,
@@ -28,7 +28,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let cardTypeRule2 = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "card_type",
     linguisticCondition: "blue_credit",
     numericalCondition: nil,
@@ -36,7 +36,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let cardTypeRule3 = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "card_type",
     linguisticCondition: "gold_charge",
     numericalCondition: nil,
@@ -44,7 +44,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let contentCategoryRule = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorEqual,
+    with: .equal,
     paramKey: "content_category",
     linguisticCondition: "demand",
     numericalCondition: nil,
@@ -52,7 +52,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let contentNameRule = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorStartsWith,
+    with: .startsWith,
     paramKey: "content_name",
     linguisticCondition: "exit",
     numericalCondition: nil,
@@ -60,7 +60,7 @@ enum SampleAEMSingleEntryRules {
   )
 
   static let valueRule = AEMAdvertiserSingleEntryRule(
-    with: AEMAdvertiserRuleOperator.FBAEMAdvertiserRuleOperatorGreaterThan,
+    with: .greaterThan,
     paramKey: "amount",
     linguisticCondition: nil,
     numericalCondition: NSNumber(value: 10),

@@ -7,60 +7,47 @@
  */
 
 import FBSDKCoreKit
-import Foundation
 
-@objcMembers
-public class TestGraphRequestFactory: NSObject, GraphRequestFactoryProtocol {
+public final class TestGraphRequestFactory: GraphRequestFactoryProtocol {
+
+  public var stubbedGraphRequest: TestGraphRequest?
 
   public var capturedGraphPath: String?
-  public var capturedParameters = [String: Any]()
+  public var capturedParameters: [String: Any]?
   public var capturedTokenString: String?
-  public var capturedHttpMethod: HTTPMethod?
-  public var capturedFlags: GraphRequestFlags = []
+  public var capturedHTTPMethod: HTTPMethod?
+  public var capturedFlags: GraphRequestFlags?
+  public var capturedVersion: String?
   public var capturedRequests = [TestGraphRequest]()
 
-  // MARK: - GraphRequestFactoryProtocol
+  public init() {}
 
   public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [String: Any],
     tokenString: String?,
-    httpMethod method: HTTPMethod?,
+    httpMethod: HTTPMethod?,
     flags: GraphRequestFlags
   ) -> GraphRequestProtocol {
-    capturedGraphPath = graphPath
-    capturedParameters = parameters
-    capturedTokenString = tokenString
-    capturedHttpMethod = method
-    capturedFlags = flags
-
-    let request = TestGraphRequest(
+    makeRequest(
       graphPath: graphPath,
       parameters: parameters,
       tokenString: tokenString,
-      HTTPMethod: method ?? .get,
+      httpMethod: httpMethod,
       flags: flags
     )
-    capturedRequests.append(request)
-    return request
   }
 
   public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [String: Any],
-    httpMethod method: HTTPMethod
+    httpMethod: HTTPMethod
   ) -> GraphRequestProtocol {
-    capturedGraphPath = graphPath
-    capturedParameters = parameters
-    capturedHttpMethod = method
-
-    let request = TestGraphRequest(
+    makeRequest(
       graphPath: graphPath,
       parameters: parameters,
-      HTTPMethod: method
+      httpMethod: httpMethod
     )
-    capturedRequests.append(request)
-    return request
   }
 
   public func createGraphRequest(
@@ -68,48 +55,26 @@ public class TestGraphRequestFactory: NSObject, GraphRequestFactoryProtocol {
     parameters: [String: Any],
     tokenString: String?,
     version: String?,
-    httpMethod method: HTTPMethod
+    httpMethod: HTTPMethod
   ) -> GraphRequestProtocol {
-    capturedGraphPath = graphPath
-    capturedParameters = parameters
-    capturedTokenString = tokenString
-    capturedHttpMethod = method
-
-    let request = TestGraphRequest(
+    makeRequest(
       graphPath: graphPath,
       parameters: parameters,
       tokenString: tokenString,
-      HTTPMethod: method,
-      flags: []
+      version: version,
+      httpMethod: httpMethod
     )
-    capturedRequests.append(request)
-    return request
   }
 
-  public func createGraphRequest(
-    withGraphPath graphPath: String
-  ) -> GraphRequestProtocol {
-    capturedGraphPath = graphPath
-
-    let request = TestGraphRequest(graphPath: graphPath, HTTPMethod: .get)
-    capturedRequests.append(request)
-    return request
+  public func createGraphRequest(withGraphPath graphPath: String) -> GraphRequestProtocol {
+    makeRequest(graphPath: graphPath)
   }
 
   public func createGraphRequest(
     withGraphPath graphPath: String,
     parameters: [String: Any]
   ) -> GraphRequestProtocol {
-    capturedGraphPath = graphPath
-    capturedParameters = parameters
-
-    let request = TestGraphRequest(
-      graphPath: graphPath,
-      parameters: parameters,
-      HTTPMethod: .get
-    )
-    capturedRequests.append(request)
-    return request
+    makeRequest(graphPath: graphPath, parameters: parameters)
   }
 
   public func createGraphRequest(
@@ -117,18 +82,35 @@ public class TestGraphRequestFactory: NSObject, GraphRequestFactoryProtocol {
     parameters: [String: Any],
     flags: GraphRequestFlags
   ) -> GraphRequestProtocol {
+    makeRequest(graphPath: graphPath, parameters: parameters, flags: flags)
+  }
+
+  private func makeRequest(
+    graphPath: String,
+    parameters: [String: Any]? = nil,
+    tokenString: String? = nil,
+    version: String? = nil,
+    httpMethod: HTTPMethod? = nil,
+    flags: GraphRequestFlags? = nil
+  ) -> TestGraphRequest {
     capturedGraphPath = graphPath
     capturedParameters = parameters
+    capturedTokenString = tokenString
+    capturedVersion = version
+    capturedHTTPMethod = httpMethod
     capturedFlags = flags
 
-    let request = TestGraphRequest(
+    let newRequest = TestGraphRequest(
       graphPath: graphPath,
       parameters: parameters,
-      tokenString: nil,
-      HTTPMethod: .get,
+      tokenString: tokenString,
+      httpMethod: httpMethod,
+      version: version,
       flags: flags
     )
-    capturedRequests.append(request)
-    return request
+
+    let returnedRequest = stubbedGraphRequest ?? newRequest
+    capturedRequests.append(returnedRequest)
+    return returnedRequest
   }
 }

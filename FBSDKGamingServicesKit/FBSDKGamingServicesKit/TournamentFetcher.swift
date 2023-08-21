@@ -16,14 +16,12 @@ public enum TournamentFetchError: Error {
   case invalidAccessToken
 }
 
-public class TournamentFetcher {
+public final class TournamentFetcher {
 
   let graphRequestFactory: GraphRequestFactoryProtocol
   let gamingGraphDomain = "gaming"
 
-  /**
-   Creates the TournamentFetcher
-   */
+  /// Creates the TournamentFetcher
   public convenience init() {
     self.init(graphRequestFactory: GraphRequestFactory())
   }

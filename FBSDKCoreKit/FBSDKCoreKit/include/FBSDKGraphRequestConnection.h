@@ -11,6 +11,18 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestConnecting.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnectionDelegate.h>
 
+@protocol FBSDKURLSessionProxyProviding;
+@protocol FBSDKErrorConfigurationProviding;
+@protocol FBSDKGraphRequestPiggybackManaging;
+@protocol FBSDKSettings;
+@protocol FBSDKGraphRequestConnectionFactory;
+@protocol FBSDKEventLogging;
+@protocol FBSDKOperatingSystemVersionComparing;
+@protocol FBSDKMacCatalystDetermining;
+@protocol FBSDKAccessTokenProviding;
+@protocol FBSDKErrorCreating;
+@protocol FBSDKAuthenticationTokenProviding;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -36,19 +48,13 @@ NS_SWIFT_NAME(NonJSONResponseProperty);
 NS_SWIFT_NAME(GraphRequestConnection)
 @interface FBSDKGraphRequestConnection : NSObject <FBSDKGraphRequestConnecting>
 
-/**
- The default timeout on all FBSDKGraphRequestConnection instances. Defaults to 60 seconds.
- */
+/// The default timeout on all FBSDKGraphRequestConnection instances. Defaults to 60 seconds.
 @property (class, nonatomic, assign) NSTimeInterval defaultConnectionTimeout;
 
-/**
- The delegate object that receives updates.
- */
+/// The delegate object that receives updates.
 @property (nullable, nonatomic, weak) id<FBSDKGraphRequestConnectionDelegate> delegate;
 
-/**
- Gets or sets the timeout interval to wait for a response before giving up.
- */
+/// Gets or sets the timeout interval to wait for a response before giving up.
 @property (nonatomic, assign) NSTimeInterval timeout;
 
 /**
@@ -70,13 +76,9 @@ NS_SWIFT_NAME(GraphRequestConnection)
  */
 @property (nullable, nonatomic) NSOperationQueue *delegateQueue;
 
-/**
- @methodgroup Class methods
- */
+/// @methodgroup Class methods
 
-/**
- @methodgroup Adding requests
- */
+/// @methodgroup Adding requests
 
 /**
  @method
@@ -136,9 +138,7 @@ NS_SWIFT_NAME(GraphRequestConnection)
         parameters:(nullable NSDictionary<NSString *, id> *)parameters
         completion:(FBSDKGraphRequestCompletion)completion;
 
-/**
- @methodgroup Instance methods
- */
+/// @methodgroup Instance methods
 
 /**
  @method
@@ -179,6 +179,33 @@ NS_SWIFT_NAME(GraphRequestConnection)
  @param version   This is a string in the form @"v2.0" which will be used for the version part of an API path
  */
 - (void)overrideGraphAPIVersion:(NSString *)version;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)setCanMakeRequests;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
++ (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
+                 errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
+                           piggybackManager:(nonnull id<FBSDKGraphRequestPiggybackManaging>)piggybackManager
+                                   settings:(nonnull id<FBSDKSettings>)settings
+              graphRequestConnectionFactory:(nonnull id<FBSDKGraphRequestConnectionFactory>)factory
+                                eventLogger:(nonnull id<FBSDKEventLogging>)eventLogger
+             operatingSystemVersionComparer:(nonnull id<FBSDKOperatingSystemVersionComparing>)operatingSystemVersionComparer
+                    macCatalystDeterminator:(nonnull id<FBSDKMacCatalystDetermining>)macCatalystDeterminator
+                        accessTokenProvider:(nonnull Class<FBSDKAccessTokenProviding>)accessTokenProvider
+                               errorFactory:(nonnull id<FBSDKErrorCreating>)errorFactory
+                authenticationTokenProvider:(nonnull Class<FBSDKAuthenticationTokenProviding>)authenticationTokenProvider
+NS_SWIFT_NAME(configure(urlSessionProxyFactory:errorConfigurationProvider:piggybackManager:settings:graphRequestConnectionFactory:eventLogger:operatingSystemVersionComparer:macCatalystDeterminator:accessTokenProvider:errorFactory:authenticationTokenProvider:));
 
 @end
 

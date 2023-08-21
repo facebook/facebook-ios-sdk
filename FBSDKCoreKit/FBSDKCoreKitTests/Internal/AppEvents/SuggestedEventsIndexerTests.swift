@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -20,7 +22,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
   var collectionView: TestCollectionView!
   var tableView: TestTableView!
   var button: UIButton!
-  var indexer: SuggestedEventsIndexer!
+  var indexer: _SuggestedEventsIndexer!
   // swiftlint:enable implicitly_unwrapped_optional
 
   enum Keys {
@@ -63,7 +65,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
     )
     tableView = TestTableView()
     button = UIButton()
-    indexer = SuggestedEventsIndexer(
+    indexer = _SuggestedEventsIndexer(
       graphRequestFactory: graphRequestFactory,
       serverConfigurationProvider: serverConfigurationProvider,
       swizzler: TestSwizzler.self,
@@ -97,7 +99,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
   static func reset() {
     TestSwizzler.reset()
     TestFeatureExtractor.reset()
-    SuggestedEventsIndexer.reset()
+    _SuggestedEventsIndexer.reset()
   }
 
   // MARK: - Delegate methods
@@ -233,7 +235,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       SwizzleEvidence(
         selector: #selector(setter: UICollectionView.delegate),
         class: UICollectionView.self
-      )
+      ),
     ]
     XCTAssertEqual(
       TestSwizzler.evidence,
@@ -286,7 +288,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
 
     let expectedMetadata = [Keys.dense: Values.denseFeature, Keys.buttonText: Values.buttonText]
     guard
-      let parameter = graphRequestFactory.capturedParameters[Keys.metadata] as? String,
+      let parameter = graphRequestFactory.capturedParameters?[Keys.metadata] as? String,
       let data = parameter.data(using: .utf8),
       let decodedMetadata = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
     else {
@@ -299,7 +301,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       "Should use the app identifier from the settings"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedParameters[Keys.eventName] as? String,
+      graphRequestFactory.capturedParameters?[Keys.eventName] as? String,
       name,
       "Should capture the event name in the parameters"
     )
@@ -313,12 +315,12 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       "The request should be tokenless"
     )
     XCTAssertEqual(
-      graphRequestFactory.capturedHttpMethod,
+      graphRequestFactory.capturedHTTPMethod,
       .post,
       "Should use the expected http method"
     )
-    XCTAssertTrue(
-      graphRequestFactory.capturedFlags.isEmpty,
+    XCTAssertNil(
+      graphRequestFactory.capturedFlags,
       "Should not create the request with explicit request flags"
     )
   }
@@ -451,7 +453,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       eventLogger.capturedParameters as? [AppEvents.ParameterName: String],
       [
         .init(Keys.isSuggestedEvent): "1",
-        .init(Keys.eventButtonText): Values.buttonText
+        .init(Keys.eventButtonText): Values.buttonText,
       ],
       "Should log an opt-in event with the expected parameters"
     )
@@ -649,7 +651,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
     )
     indexer.enable()
     serverConfigurationProvider.capturedCompletionBlock?(
-      ServerConfigurationFixtures.config(withDictionary: setting),
+      ServerConfigurationFixtures.configuration(withDictionary: setting),
       error
     )
   }
@@ -707,7 +709,7 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
     line: UInt = #line
   ) {
     XCTAssertEqual(
-      button.allTargets.first as? SuggestedEventsIndexer,
+      button.allTargets.first as? _SuggestedEventsIndexer,
       indexer,
       "Indexer should add itself as a target of the button",
       file: file,

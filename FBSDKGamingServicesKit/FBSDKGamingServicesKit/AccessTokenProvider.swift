@@ -8,7 +8,7 @@
 
 import FBSDKCoreKit
 
-class AccessTokenProvider: AccessTokenProviding {
+final class AccessTokenProvider: _AccessTokenProviding {
   static var tokenCache: TokenCaching? {
     get {
       AccessToken.tokenCache
@@ -18,7 +18,10 @@ class AccessTokenProvider: AccessTokenProviding {
     }
   }
 
-  static var currentAccessToken: AccessToken? {
-    AccessToken.current
+  static var current: AccessToken? {
+    get {
+      AccessToken.current
+    }
+    set {} // swiftlint:disable:this unused_setter_value
   }
 }

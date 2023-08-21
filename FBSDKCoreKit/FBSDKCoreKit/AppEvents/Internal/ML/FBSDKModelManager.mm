@@ -10,7 +10,8 @@
 
 #import "FBSDKModelManager.h"
 
-#import "FBSDKAppEventName.h"
+#import <FBSDKCoreKit/FBSDKAppEventName.h>
+
 #import "FBSDKIntegrityManager.h"
 #import "FBSDKMLMacros.h"
 #import "FBSDKModelParser.h"
@@ -33,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
 @property (nullable, nonatomic) id<FBSDKFileManaging> fileManager;
 @property (nullable, nonatomic) id<FBSDKDataPersisting> store;
-@property (nullable, nonatomic) id<FBSDKSettings> settings;
+@property (nullable, nonatomic) NSString * (^getAppID)(void);
 @property (nullable, nonatomic) Class<FBSDKFileDataExtracting> dataExtractor;
 @property (nullable, nonatomic) Class<FBSDKGateKeeperManaging> gateKeeperManager;
 @property (nullable, nonatomic) id<FBSDKSuggestedEventsIndexer> suggestedEventsIndexer;
@@ -65,7 +66,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
                 graphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                         fileManager:(id<FBSDKFileManaging>)fileManager
                               store:(id<FBSDKDataPersisting>)store
-                           settings:(id<FBSDKSettings>)settings
+                           getAppID:(NSString * (^)(void))getAppID
                       dataExtractor:(Class<FBSDKFileDataExtracting>)dataExtractor
                   gateKeeperManager:(Class<FBSDKGateKeeperManaging>)gateKeeperManager
              suggestedEventsIndexer:(id<FBSDKSuggestedEventsIndexer>)suggestedEventsIndexer
@@ -75,7 +76,7 @@ typedef void (^FBSDKDownloadCompletionBlock)(void);
   _graphRequestFactory = graphRequestFactory;
   _fileManager = fileManager;
   _store = store;
-  _settings = settings;
+  _getAppID = getAppID;
   _dataExtractor = dataExtractor;
   _gateKeeperManager = gateKeeperManager;
   _suggestedEventsIndexer = suggestedEventsIndexer;
@@ -97,28 +98,31 @@ static dispatch_once_t enableNonce;
       }
 
       _directoryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:FBSDK_ML_MODEL_PATH];
-      if (![self.fileManager fileExistsAtPath:_directoryPath]) {
-        [self.fileManager createDirectoryAtPath:_directoryPath withIntermediateDirectories:YES attributes:NULL error:NULL];
+      if (![self.fileManager fb_fileExistsAtPath:_directoryPath]) {
+        [self.fileManager fb_createDirectoryAtPath:_directoryPath
+                       withIntermediateDirectories:YES
+                                        attributes:NULL
+                                             error:NULL];
       }
-      _modelInfo = [self.store objectForKey:MODEL_INFO_KEY];
-      NSDate *timestamp = [self.store objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
+      _modelInfo = [self.store fb_objectForKey:MODEL_INFO_KEY];
+      NSDate *timestamp = [self.store fb_objectForKey:MODEL_REQUEST_TIMESTAMP_KEY];
       if ([_modelInfo count] == 0 || ![self.featureChecker isEnabled:FBSDKFeatureModelRequest] || ![self.class isValidTimestamp:timestamp]) {
         // fetch api
-        NSString *graphPath = [NSString stringWithFormat:@"%@/model_asset", self.settings.appID];
+        NSString *graphPath = [NSString stringWithFormat:@"%@/model_asset", self.getAppID()];
         id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:graphPath];
         __weak FBSDKModelManager *weakSelf = self;
         [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
           if (!error) {
             NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-            NSArray *rawModels = resultDictionary[MODEL_DATA_KEY];
+            NSArray<NSDictionary<NSString *, id> *> *rawModels = resultDictionary[MODEL_DATA_KEY];
             if ([rawModels isKindOfClass:NSArray.class]) {
               NSDictionary<NSString *, id> *modelInfo = [weakSelf.class convertToDictionary:rawModels];
               if (modelInfo) {
                 _modelInfo = [modelInfo mutableCopy];
                 [weakSelf.class processMTML];
                 // update cache for model info and timestamp
-                [weakSelf.store setObject:_modelInfo forKey:MODEL_INFO_KEY];
-                [weakSelf.store setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
+                [weakSelf.store fb_setObject:_modelInfo forKey:MODEL_INFO_KEY];
+                [weakSelf.store fb_setObject:[NSDate date] forKey:MODEL_REQUEST_TIMESTAMP_KEY];
               }
             }
           }
@@ -140,7 +144,9 @@ static dispatch_once_t enableNonce;
     if (model && model[VERSION_ID_KEY]) {
       NSString *filePath = [_directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@_%@.rules", useCase, model[VERSION_ID_KEY]]];
       if (filePath) {
-        NSData *rulesData = [self.dataExtractor dataWithContentsOfFile:filePath options:NSDataReadingMappedIfSafe error:nil];
+        NSData *rulesData = [self.dataExtractor fb_dataWithContentsOfFile:filePath
+                                                                  options:NSDataReadingMappedIfSafe
+                                                                    error:nil];
         NSDictionary<NSString *, id> *rules = [FBSDKTypeUtility JSONObjectWithData:rulesData options:0 error:nil];
         return rules;
       }
@@ -172,12 +178,12 @@ static dispatch_once_t enableNonce;
   return nil;
 }
 
-- (nullable NSArray *)getThresholdsForKey:(NSString *)useCase
+- (nullable NSArray<NSNumber *> *)getThresholdsForKey:(NSString *)useCase
 {
   if (!_modelInfo) {
     return nil;
   }
-  NSDictionary<NSString *, id> *modelInfo = _modelInfo[useCase];
+  NSDictionary<NSString *, NSArray<NSNumber *> *> *modelInfo = _modelInfo[useCase];
   if (!modelInfo) {
     return nil;
   }
@@ -200,7 +206,7 @@ static dispatch_once_t enableNonce;
     if ((int)strlen(bytes) == 0) {
       return false;
     }
-    NSArray *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskIntegrityDetectKey];
+    NSArray<NSNumber *> *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskIntegrityDetectKey];
     if (thresholds.count != integrityMapping.count) {
       return false;
     }
@@ -232,7 +238,7 @@ static dispatch_once_t enableNonce;
       return SUGGESTED_EVENT_OTHER;
     }
 
-    NSArray *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskAppEventPredKey];
+    NSArray<NSNumber *> *thresholds = [FBSDKModelManager.shared getThresholdsForKey:MTMLTaskAppEventPredKey];
     if (thresholds.count != eventMapping.count) {
       return SUGGESTED_EVENT_OTHER;
     }
@@ -450,7 +456,7 @@ static dispatch_once_t enableNonce;
     FBSDKAppEventNameInitiatedCheckout];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)reset
 {
@@ -464,7 +470,7 @@ static dispatch_once_t enableNonce;
   self.shared.graphRequestFactory = nil;
   self.shared.fileManager = nil;
   self.shared.store = nil;
-  self.shared.settings = nil;
+  self.shared.getAppID = nil;
   self.shared.dataExtractor = nil;
   self.shared.gateKeeperManager = nil;
   self.shared.suggestedEventsIndexer = nil;

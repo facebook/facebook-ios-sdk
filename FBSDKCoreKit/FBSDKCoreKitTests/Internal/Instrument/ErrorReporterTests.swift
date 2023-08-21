@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -24,7 +25,7 @@ final class ErrorReporterTests: XCTestCase {
   let timeInterval = 10.0
   let validReportNames = [
     "error_report_1.json",
-    "error_report_2.json"
+    "error_report_2.json",
   ]
 
   override func setUp() {
@@ -223,7 +224,7 @@ final class ErrorReporterTests: XCTestCase {
     reporter.uploadErrors()
 
     guard
-      let reports = factory.capturedParameters["error_reports"] as? String,
+      let reports = factory.capturedParameters?["error_reports"] as? String,
       let data = reports.data(using: .utf8)
     else {
       return XCTFail("Should upload reports as an array of strings")
@@ -241,7 +242,7 @@ final class ErrorReporterTests: XCTestCase {
       "Should upload the expected reports"
     )
     XCTAssertEqual(
-      factory.capturedHttpMethod,
+      factory.capturedHTTPMethod,
       .post,
       "Should use the correct http method"
     )

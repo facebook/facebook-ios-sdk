@@ -22,6 +22,7 @@ enum SampleRawLoginCompletionParameters {
   static let defaultParameters: [String: Any] = [
     "access_token": "some_access_token",
     "id_token": "some_id_token",
+    "nonce": "some_nonce",
     "granted_scopes": "public_profile,openid",
     "denied_scopes": "email",
     "signed_request": "some_signed_request",
@@ -70,12 +71,21 @@ enum SampleRawLoginCompletionParameters {
     ])
   }
 
+  static var withNonce: [String: Any] {
+    createParameters(withKeys: [
+      "nonce",
+      "user_id",
+      "state",
+      "graph_domain",
+    ])
+  }
+
   static var withCode: [String: Any] {
     createParameters(withKeys: [
       "code",
       "user_id",
       "state",
-      "graph_domain"
+      "graph_domain",
     ])
   }
 
@@ -86,7 +96,7 @@ enum SampleRawLoginCompletionParameters {
       "denied_scopes",
       "user_id",
       "state",
-      "graph_domain"
+      "graph_domain",
     ])
   }
 
@@ -101,14 +111,15 @@ enum SampleRawLoginCompletionParameters {
       "expires_in",
       "data_access_expiration_time",
       "state",
-      "graph_domain"
+      "graph_domain",
     ])
   }
 
   static var withEmptyStrings = [
     "access_token": "",
     "id_token": "",
-    "code": ""
+    "nonce": "",
+    "code": "",
   ]
 
   static var withStringExpirations = [
@@ -117,7 +128,7 @@ enum SampleRawLoginCompletionParameters {
     "expires_in": String(secondsInDay * 60),
     "data_access_expiration_time": String(dataExpirationDate),
     "state": defaultState,
-    "graph_domain": defaultDomain
+    "graph_domain": defaultDomain,
   ]
 
   static var withError: [String: Any] {

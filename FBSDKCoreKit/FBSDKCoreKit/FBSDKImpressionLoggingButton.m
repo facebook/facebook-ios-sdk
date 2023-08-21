@@ -8,7 +8,7 @@
 
 #import "FBSDKImpressionLoggingButton+Internal.h"
 
-#import "FBSDKButtonImpressionLogging.h"
+#import <FBSDKCoreKit/FBSDKButtonImpressionLogging.h>
 
 @implementation FBSDKImpressionLoggingButton
 
@@ -45,7 +45,7 @@ static id<FBSDKImpressionLoggerFactory> _impressionLoggerFactory;
   [super layoutSubviews];
 }
 
-#if DEBUG && FBTEST
+#if DEBUG
 
 + (void)resetClassDependencies
 {

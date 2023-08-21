@@ -9,9 +9,9 @@
 import FBSDKCoreKit
 
 struct CreateContextDialogFactory: CreateContextDialogMaking {
-  private var tokenProvider: AccessTokenProviding.Type
+  private var tokenProvider: _AccessTokenProviding.Type
 
-  init(tokenProvider: AccessTokenProviding.Type) {
+  init(tokenProvider: _AccessTokenProviding.Type) {
     self.tokenProvider = tokenProvider
   }
 
@@ -20,7 +20,7 @@ struct CreateContextDialogFactory: CreateContextDialogMaking {
     windowFinder: _WindowFinding,
     delegate: ContextDialogDelegate
   ) throws -> Showable? {
-    guard tokenProvider.currentAccessToken != nil else {
+    guard tokenProvider.current != nil else {
       throw ContextDialogPresenterError.invalidAccessToken
     }
 

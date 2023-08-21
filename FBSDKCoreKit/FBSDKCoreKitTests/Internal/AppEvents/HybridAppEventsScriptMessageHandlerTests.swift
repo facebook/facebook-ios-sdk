@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
@@ -112,7 +114,7 @@ final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
       ["foo"],
       Date(),
       "foo".data(using: .utf8) as Any,
-      SampleError()
+      SampleError(),
     ].forEach { input in
       handler.userContentController(
         controller,
@@ -155,7 +157,7 @@ final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
         body: [
           Keys.event: Values.validEventName,
           Keys.params: Values.emptyString,
-          Keys.pixelID: Values.nonEmptyString
+          Keys.pixelID: Values.nonEmptyString,
         ]
       )
     )
@@ -174,7 +176,7 @@ final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
         body: [
           Keys.event: Values.validEventName,
           Keys.params: name,
-          Keys.pixelID: Values.nonEmptyString
+          Keys.pixelID: Values.nonEmptyString,
         ]
       )
     )
@@ -202,7 +204,7 @@ final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
         body: [
           Keys.event: Values.validEventName,
           Keys.params: json,
-          Keys.pixelID: Values.nonEmptyString
+          Keys.pixelID: Values.nonEmptyString,
         ]
       )
     )
@@ -210,7 +212,7 @@ final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
       name: Values.validEventName,
       parameters: [
         Keys.valid: Values.valid,
-        Keys.referralID: Values.nonEmptyString
+        Keys.referralID: Values.nonEmptyString,
       ]
     )
   }
@@ -245,7 +247,7 @@ final class HybridAppEventsScriptMessageHandlerTests: XCTestCase {
     )
   }
 
-  class TestScriptMessage: WKScriptMessage {
+  final class TestScriptMessage: WKScriptMessage {
     let stubbedName: String
     let stubbedBody: Any
 

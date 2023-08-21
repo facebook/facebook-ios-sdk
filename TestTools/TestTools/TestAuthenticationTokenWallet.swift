@@ -10,12 +10,12 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestAuthenticationTokenWallet: NSObject, AuthenticationTokenProviding, AuthenticationTokenSetting {
+public final class TestAuthenticationTokenWallet: NSObject, _AuthenticationTokenProviding {
   public static var tokenCache: TokenCaching?
-  public static var currentAuthenticationToken: AuthenticationToken?
+  public static var current: AuthenticationToken?
 
   public static func reset() {
     tokenCache = nil
-    currentAuthenticationToken = nil
+    current = nil
   }
 }

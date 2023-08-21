@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKGamingServicesKit
+@testable import FBSDKGamingServicesKit
 
 import FBSDKCoreKit
 import TestTools
@@ -21,13 +21,13 @@ final class CustomUpdateGraphRequestTests: XCTestCase {
   let validMediaContentParameterDictionary = [
     CustomUpdateContentObjectsParameters.contextKEY: CustomUpdateContentObjectsParameters.contextValue,
     CustomUpdateContentObjectsParameters.textKey: CustomUpdateContentObjectsParameters.textValue,
-    CustomUpdateContentObjectsParameters.mediaKey: CustomUpdateContentObjectsParameters.mediaValue
+    CustomUpdateContentObjectsParameters.mediaKey: CustomUpdateContentObjectsParameters.mediaValue,
   ]
 
   let validImageContentParameterDictionary = [
     CustomUpdateContentObjectsParameters.contextKEY: CustomUpdateContentObjectsParameters.contextValue,
     CustomUpdateContentObjectsParameters.textKey: CustomUpdateContentObjectsParameters.textValue,
-    CustomUpdateContentObjectsParameters.imageKey: CustomUpdateContentObjectsParameters.imageValue
+    CustomUpdateContentObjectsParameters.imageKey: CustomUpdateContentObjectsParameters.imageValue,
   ]
 
   override func setUp() {
@@ -45,8 +45,8 @@ final class CustomUpdateGraphRequestTests: XCTestCase {
   }
 
   func testCustomDependencies() {
-    XCTAssertEqual(
-      requester.graphRequestFactory as? TestGraphRequestFactory,
+    XCTAssertIdentical(
+      requester.graphRequestFactory as AnyObject,
       factory,
       "Should be able to create with a custom graph request factory"
     )

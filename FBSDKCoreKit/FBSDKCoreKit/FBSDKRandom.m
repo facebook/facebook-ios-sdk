@@ -12,7 +12,7 @@
 
 #import "FBSDKDynamicFrameworkLoader.h"
 
-NSString *fb_randomString(NSUInteger numberOfBytes)
+NSString *_Nullable fb_randomString(NSUInteger numberOfBytes)
 {
   uint8_t *buffer = malloc(numberOfBytes);
   int result = fbsdkdfl_SecRandomCopyBytes([FBSDKDynamicFrameworkLoader loadkSecRandomDefault], numberOfBytes, buffer);
@@ -25,7 +25,7 @@ NSString *fb_randomString(NSUInteger numberOfBytes)
   if (!randomStringData) {
     return nil;
   }
-  NSString *randomString = [FBSDKBase64 encodeData:randomStringData];
+  NSString *randomString = [randomStringData base64EncodedStringWithOptions:0];
   // FBSDKCryptoBlankData(randomStringData);
   if (!randomStringData) {
     return nil;

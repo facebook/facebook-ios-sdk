@@ -9,4 +9,4 @@
 import Foundation
 
 @objcMembers
-final class TestAccessTokenExpirer: NSObject, AccessTokenExpiring {}
+final class TestAccessTokenExpirer: NSObject, _AccessTokenExpiring {}

@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@available(iOS 11.2, *)
-class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod {
+final class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod {
   let stubbedNumberOfUnits: Int
 
   init(numberOfUnits: Int) {

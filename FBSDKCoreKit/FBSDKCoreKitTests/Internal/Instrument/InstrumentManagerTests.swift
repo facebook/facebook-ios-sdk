@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import FBSDKCoreKit
+@testable import FBSDKCoreKit
+
 import TestTools
 import XCTest
 
 final class InstrumentManagerTests: XCTestCase {
 
-  var manager = InstrumentManager.shared
+  var manager = _InstrumentManager.shared
   let settings = TestSettings()
   let crashObserver = TestCrashObserver()
   let errorReporter = TestErrorReporter()
@@ -21,7 +22,7 @@ final class InstrumentManagerTests: XCTestCase {
 
   override class func setUp() {
     super.setUp()
-    InstrumentManager.reset()
+    _InstrumentManager.reset()
   }
 
   override func setUp() {
@@ -38,11 +39,11 @@ final class InstrumentManagerTests: XCTestCase {
 
   override func tearDown() {
     super.tearDown()
-    InstrumentManager.reset()
+    _InstrumentManager.reset()
   }
 
   func testDefaultDependencies() {
-    let manager = InstrumentManager.shared
+    let manager = _InstrumentManager.shared
 
     XCTAssertNil(
       manager.featureChecker,

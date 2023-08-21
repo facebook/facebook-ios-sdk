@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-public class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
-  public var actionID: String
+public final class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
+  public var actionID = "1"
   public var methodName: String?
   public var protocolType: FBSDKBridgeAPIProtocolType
   public var `protocol`: BridgeAPIProtocol?
@@ -18,11 +19,14 @@ public class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
 
   public let url: URL?
 
-  public init(url: URL?, protocolType: FBSDKBridgeAPIProtocolType = .native, scheme: String = "1") {
+  public init(
+    url: URL? = nil,
+    protocolType: FBSDKBridgeAPIProtocolType = .native,
+    scheme: String = "1"
+  ) {
     self.url = url
     self.protocolType = protocolType
     self.scheme = scheme
-    actionID = "1"
   }
 
   public func copy(with zone: NSZone? = nil) -> Any {
@@ -46,4 +50,4 @@ public class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
 }
 
 @objc
-public class FakeBridgeAPIRequestError: NSError {}
+public final class FakeBridgeAPIRequestError: NSError {}
