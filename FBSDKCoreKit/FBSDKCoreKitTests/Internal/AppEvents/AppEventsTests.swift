@@ -175,6 +175,8 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  // MARK: - Tests for configurations
+
   func testConfiguringSetsSwizzlerDependency() {
     XCTAssertIdentical(
       appEvents.swizzler,
