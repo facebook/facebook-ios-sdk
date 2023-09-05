@@ -1,0 +1,11 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+  }
+}FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+    initWithGraphPath:@"/me"
+           parameters:@{ @"fields": @"id,name",}
+           HTTPMethod:@"GET"];
+[request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    // Insert your code here
+}];
