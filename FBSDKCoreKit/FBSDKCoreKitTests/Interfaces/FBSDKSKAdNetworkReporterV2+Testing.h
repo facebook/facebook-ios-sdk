@@ -12,7 +12,7 @@ typedef void (^FBSDKSKAdNetworkReporterBlock)(void);
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKSKAdNetworkReporter (Testing)
+@interface FBSDKSKAdNetworkReporterV2 (Testing)
 
 @property (nonatomic) BOOL isSKAdNetworkReportEnabled;
 @property (nonnull, nonatomic) NSMutableArray<FBSDKSKAdNetworkReporterBlock> *completionBlocks;
@@ -20,21 +20,28 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic) FBSDKSKAdNetworkConversionConfiguration *configuration;
 @property (nonnull, nonatomic) NSDate *configRefreshTimestamp;
 @property (nonatomic) NSInteger conversionValue;
+@property (nonatomic) NSString *coarseConversionValue;
 @property (nonatomic) NSDate *timestamp;
+@property (nonatomic) NSDate *coarseCVUpdateTimestamp;
 @property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedEvents;
+@property (nonnull, nonatomic) NSMutableSet<NSString *> *recordedCoarseEvents;
 @property (nonnull, nonatomic) NSMutableDictionary<NSString *, id> *recordedValues;
+@property (nonnull, nonatomic) NSMutableDictionary<NSString *, id> *recordedCoarseValues;
 
 - (void)_loadReportData;
 - (void)_recordAndUpdateEvent:(NSString *)event
                      currency:(nullable NSString *)currency
                         value:(nullable NSNumber *)value;
 - (void)_updateConversionValue:(NSInteger)value;
+- (void)_updateCoarseConversionValue:(NSString *)value;
+
 
 - (void)setSKAdNetworkReportEnabled:(BOOL)enabled;
 
 - (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block;
 - (void)configureWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
                                    store:(id<FBSDKDataPersisting>)store;
+- (NSInteger)_getCurrentPostbackSequenceIndex;
 
 @end
 
