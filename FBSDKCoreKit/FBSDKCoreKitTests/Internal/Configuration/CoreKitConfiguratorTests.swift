@@ -282,6 +282,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEvents should not have a StoreKit ad network reporter by default"
     )
     XCTAssertNil(
+      AppEvents.shared.skAdNetworkReporterV2,
+      "AppEvents should not have a StoreKit ad network reporter by default"
+    )
+    XCTAssertNil(
       AppEvents.shared.codelessIndexer,
       "AppEvents should not have a codeless indexer by default"
     )
@@ -307,6 +311,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEvents.shared.skAdNetworkReporter === components.skAdNetworkReporter,
       "AppEvents should be configured with StoreKit ad network reporter"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.skAdNetworkReporterV2 === components.skAdNetworkReporterV2,
+      "AppEvents should be configured with StoreKit ad network reporter v2"
     )
     XCTAssertTrue(
       AppEvents.shared.codelessIndexer === components.codelessIndexer,

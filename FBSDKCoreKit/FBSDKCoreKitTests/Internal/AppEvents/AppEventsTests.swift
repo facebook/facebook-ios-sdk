@@ -41,6 +41,7 @@ final class AppEventsTests: XCTestCase {
   var appEventsStateProvider: TestAppEventsStateProvider!
   var advertiserIDProvider: TestAdvertiserIDProvider!
   var skAdNetworkReporter: TestAppEventsReporter!
+  var skAdNetworkReporterV2: TestAppEventsReporter!
   var serverConfigurationProvider: TestServerConfigurationProvider!
   var userDataStore: TestUserDataStore!
   var appEventsUtility: TestAppEventsUtility!
@@ -82,6 +83,7 @@ final class AppEventsTests: XCTestCase {
     timeSpentRecorder = TestTimeSpentRecorder()
     advertiserIDProvider = TestAdvertiserIDProvider()
     skAdNetworkReporter = TestAppEventsReporter()
+    skAdNetworkReporterV2 = TestAppEventsReporter()
     serverConfigurationProvider = TestServerConfigurationProvider(
       configuration: ServerConfigurationFixtures.defaultConfiguration
     )
@@ -121,6 +123,7 @@ final class AppEventsTests: XCTestCase {
     appEventsStateProvider = nil
     advertiserIDProvider = nil
     skAdNetworkReporter = nil
+    skAdNetworkReporterV2 = nil
     serverConfigurationProvider = nil
     userDataStore = nil
     appEventsUtility = nil
@@ -169,6 +172,7 @@ final class AppEventsTests: XCTestCase {
       onDeviceMLModelManager: onDeviceMLModelManager,
       metadataIndexer: metadataIndexer,
       skAdNetworkReporter: skAdNetworkReporter,
+      skAdNetworkReporterV2: skAdNetworkReporterV2,
       codelessIndexer: TestCodelessEvents.self,
       swizzler: TestSwizzler.self,
       aemReporter: TestAEMReporter.self
@@ -1226,6 +1230,7 @@ final class AppEventsTests: XCTestCase {
 
   func testLogEventWillRecordAndUpdateWithSKAdNetworkReporter() {
     appEvents.logEvent(eventName, valueToSum: purchaseAmount)
+    featureManager.completeCheck(forFeature: .skAdNetworkV4, with: false)
     XCTAssertEqual(
       eventName.rawValue,
       skAdNetworkReporter.capturedEvent,
@@ -1234,6 +1239,27 @@ final class AppEventsTests: XCTestCase {
     XCTAssertEqual(
       purchaseAmount,
       skAdNetworkReporter.capturedValue?.doubleValue,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
+    )
+    validateAEMReporterCalled(
+      eventName: eventName,
+      currency: nil,
+      value: purchaseAmount,
+      parameters: [:]
+    )
+  }
+
+  func testLogEventWillRecordAndUpdateWithSKAdNetworkReporterV2() {
+    appEvents.logEvent(eventName, valueToSum: purchaseAmount)
+    featureManager.completeCheck(forFeature: .skAdNetworkV4, with: true)
+    XCTAssertEqual(
+      eventName.rawValue,
+      skAdNetworkReporterV2.capturedEvent,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
+    )
+    XCTAssertEqual(
+      purchaseAmount,
+      skAdNetworkReporterV2.capturedValue?.doubleValue,
       "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
     )
     validateAEMReporterCalled(
@@ -1493,6 +1519,10 @@ final class AppEventsTests: XCTestCase {
       forFeature: .skAdNetworkConversionValue,
       with: true
     )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkV4,
+      with: false
+    )
     XCTAssertTrue(
       skAdNetworkReporter.enableWasCalled,
       """
@@ -1530,6 +1560,83 @@ final class AppEventsTests: XCTestCase {
     XCTAssertFalse(
       featureManager.capturedFeaturesContains(.skAdNetwork),
       "fetchConfiguration should NOT check if the SKAdNetwork feature is disabled when SKAdNetworkReport is disabled"
+    )
+  }
+
+  // | SKAdNetwork | SKAdNetworkConversionValue | SKAdNetworkV4 |
+  // |   Enabled   |         Enabled            |    Enabled    |
+  // swiftlint:disable:next line_length
+  func testFetchingConfigurationEnablesSKAdNetworkReporterWhenSKAdNetworkReportAndConversionValueEnabledAndSKAdNetworkReportV4Enabled() {
+    settings.isSKAdNetworkReportEnabled = true
+    featureManager.enable(feature: .skAdNetworkV4)
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: true
+    )
+    XCTAssertTrue(
+      skAdNetworkReporterV2.enableWasCalled,
+      """
+      Fetching a configuration should enable SKAdNetworkReporterV2 when SKAdNetworkReport \
+      SKAdNetworkConversionValue and SKAdNetworkReportV4 are enabled
+      """
+    )
+  }
+
+  // | SKAdNetwork | SKAdNetworkConversionValue | SKAdNetworkV4 |
+  // |   Enabled   |         Disabled           |   Disabled    |
+  // swiftlint:disable:next line_length
+  func testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabledAndSKAdNetworkV4IsDisabled() {
+    settings.isSKAdNetworkReportEnabled = true
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: false
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkV4,
+      with: false
+    )
+    XCTAssertFalse(
+      skAdNetworkReporterV2.enableWasCalled,
+      """
+      Fetching a configuration should NOT enable SKAdNetworkReporterV2 if SKAdNetworkConversionValue \
+      is disabled and SKAdNetworkV4 is disabled
+      """
+    )
+  }
+
+  // | SKAdNetwork | SKAdNetworkConversionValue | SKAdNetworkV4 |
+  // |   Disabled  |         Disabled           |    Enabled    |
+  func testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabledAndSKAdNetworkV4IsEnabled() {
+    settings.isSKAdNetworkReportEnabled = false
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkV4,
+      with: true
+    )
+
+    XCTAssertFalse(
+      featureManager.capturedFeaturesContains(.skAdNetwork),
+      """
+      FetchConfiguration should NOT check if the SKAdNetwork feature is disabled when SKAdNetworkReport \
+      is disabled and SKAdNetworkV4 is enabled
+      """
     )
   }
 

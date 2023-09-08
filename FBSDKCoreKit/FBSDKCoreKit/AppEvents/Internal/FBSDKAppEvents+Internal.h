@@ -49,6 +49,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
 @property (nullable, nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
 @property (nullable, nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporter;
+@property (nullable, nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporterV2;
 @property (nullable, nonatomic) Class<FBSDKCodelessIndexing> codelessIndexer;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) Class<FBSDKAEMReporter> aemReporter;

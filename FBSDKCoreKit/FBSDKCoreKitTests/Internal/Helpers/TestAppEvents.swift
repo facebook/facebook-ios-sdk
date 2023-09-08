@@ -60,6 +60,7 @@ final class TestAppEvents: TestEventLogger,
   var capturedOnDeviceMLModelManager: _EventProcessing?
   var capturedMetadataIndexer: _MetadataIndexing?
   var capturedSKAdNetworkReporter: _AppEventsReporter?
+  var capturedSKAdNetworkReporterV2: _AppEventsReporter?
   var capturedUserDataStore: _UserDataPersisting?
   var capturedAEMReporter: _AEMReporterProtocol.Type?
   // swiftlint:disable:next line_length
@@ -122,6 +123,7 @@ final class TestAppEvents: TestEventLogger,
     onDeviceMLModelManager modelManager: _EventProcessing,
     metadataIndexer: _MetadataIndexing,
     skAdNetworkReporter: _AppEventsReporter?,
+    skAdNetworkReporterV2: _AppEventsReporter?,
     codelessIndexer: _CodelessIndexing.Type,
     swizzler: _Swizzling.Type,
     aemReporter: _AEMReporterProtocol.Type
@@ -129,6 +131,7 @@ final class TestAppEvents: TestEventLogger,
     capturedOnDeviceMLModelManager = modelManager
     capturedMetadataIndexer = metadataIndexer
     capturedSKAdNetworkReporter = skAdNetworkReporter
+    capturedSKAdNetworkReporterV2 = skAdNetworkReporterV2
     capturedCodelessIndexer = codelessIndexer
     capturedConfigureSwizzler = swizzler
     capturedAEMReporter = aemReporter
