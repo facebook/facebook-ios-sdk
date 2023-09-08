@@ -39,6 +39,7 @@
 		ECA21F7C52F9A7C5192642E2 /* SampleAuthenticationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3BBF889E05BBA85DFD18DD /* SampleAuthenticationToken.swift */; };
 		F5C5088D9B790C47A9FB6DB5 /* TestBridgeAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 134CD181A17C3D73F6D958E3 /* TestBridgeAPIRequest.swift */; };
 		FB7D50EB7B42C13CF153050F /* TestAccessTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */; };
+		FD0DEB0A2B8E84E481D7CC0D /* TestSKAdNetworkReporterV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 473BCBCD3610AFA28600DE39 /* TestSKAdNetworkReporterV2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		373AC4291587EE6AC6185981 /* FBAEMKit */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBAEMKit; path = ../FBAEMKit/FBAEMKit.xcodeproj; sourceTree = "<group>"; };
 		3D5B18A936EE4E827325688A /* TestGraphRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestGraphRequest.swift; sourceTree = "<group>"; };
 		4432C72015BCD0839770B2E5 /* TestProfileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestProfileProvider.swift; sourceTree = "<group>"; };
+		473BCBCD3610AFA28600DE39 /* TestSKAdNetworkReporterV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestSKAdNetworkReporterV2.swift; sourceTree = "<group>"; };
 		508DC43DDB000BAAD710F6A2 /* TestAccessTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestAccessTokenProvider.swift; sourceTree = "<group>"; };
 		571755F44AE658FF8F3716B4 /* TestBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestBundle.swift; sourceTree = "<group>"; };
 		5E8AF6D02214BA4038952018 /* TestNotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNotificationCenter.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				8640C198FCE46662467AD22C /* TestSessionProvider.swift */,
 				BCFA80AADB26410AC60714D8 /* TestSettings.swift */,
 				5EADCEC319126E782252276B /* TestSKAdNetworkReporter.swift */,
+				473BCBCD3610AFA28600DE39 /* TestSKAdNetworkReporterV2.swift */,
 				B26F9D497DC3FEC7192A188F /* TestURLHoster.swift */,
 				B965B179D2246C48C0EF89B6 /* TestURLOpener.swift */,
 				E4BAFA46C11FE8AD599E3549 /* TestWindowFinder.swift */,
@@ -325,6 +328,7 @@
 				638591E785DA72F04EEE2212 /* TestProfileProvider.swift in Sources */,
 				C267A09733E0B5399A583086 /* TestSDKError.swift in Sources */,
 				8AFCBC7353B0BF34CF008C30 /* TestSKAdNetworkReporter.swift in Sources */,
+				FD0DEB0A2B8E84E481D7CC0D /* TestSKAdNetworkReporterV2.swift in Sources */,
 				B9300B57F130CADA2FA635E3 /* TestSessionProvider.swift in Sources */,
 				2A7CA9317DCBCEACF959C50E /* TestSettings.swift in Sources */,
 				D8D8E4F13BCAEEF3BFEB564F /* TestURLHoster.swift in Sources */,

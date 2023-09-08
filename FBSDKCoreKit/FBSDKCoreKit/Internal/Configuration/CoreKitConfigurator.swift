@@ -316,6 +316,7 @@ private extension CoreKitConfigurator {
       onDeviceMLModelManager: components.modelManager,
       metadataIndexer: components.metadataIndexer,
       skAdNetworkReporter: components.skAdNetworkReporter,
+      skAdNetworkReporterV2: components.skAdNetworkReporterV2,
       codelessIndexer: components.codelessIndexer,
       swizzler: components.swizzler,
       aemReporter: components.aemReporter

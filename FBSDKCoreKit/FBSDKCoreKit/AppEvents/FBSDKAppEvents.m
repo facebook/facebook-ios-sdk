@@ -113,6 +113,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
 @property (nullable, nonatomic) id<FBSDKMetadataIndexing> metadataIndexer;
 @property (nullable, nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporter;
+@property (nullable, nonatomic) id<FBSDKAppEventsReporter> skAdNetworkReporterV2;
 @property (nullable, nonatomic) Class<FBSDKCodelessIndexing> codelessIndexer;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
 @property (nullable, nonatomic) FBSDKEventBindingManager *eventBindingManager;
@@ -679,6 +680,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 - (void)configureNonTVComponentsWithOnDeviceMLModelManager:(nonnull id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider>)modelManager
                                            metadataIndexer:(nonnull id<FBSDKMetadataIndexing>)metadataIndexer
                                        skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
+                                       skAdNetworkReporterV2:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporterV2
                                            codelessIndexer:(nonnull Class<FBSDKCodelessIndexing>)codelessIndexer
                                                   swizzler:(nonnull Class<FBSDKSwizzling>)swizzler
                                                aemReporter:(nonnull Class<FBSDKAEMReporter>)aemReporter
@@ -686,6 +688,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.onDeviceMLModelManager = modelManager;
   self.metadataIndexer = metadataIndexer;
   self.skAdNetworkReporter = skAdNetworkReporter;
+  self.skAdNetworkReporterV2 = skAdNetworkReporterV2;
   self.codelessIndexer = codelessIndexer;
   self.swizzler = swizzler;
   self.aemReporter = aemReporter;
@@ -1001,7 +1004,12 @@ static BOOL g_explicitEventsLoggedYet = NO;
             }
             [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkConversionValue completionBlock:^(BOOL SKAdNetworkConversionValueEnabled) {
               if (SKAdNetworkConversionValueEnabled) {
-                [self.skAdNetworkReporter enable];
+                if ([self.featureChecker isEnabled :FBSDKFeatureSKAdNetworkV4]) {
+                                     [self.skAdNetworkReporterV2 enable];
+                                   }
+                                   else {
+                                     [self.skAdNetworkReporter enable];
+                                   }
               }
             }];
           }
@@ -1047,10 +1055,20 @@ static BOOL g_explicitEventsLoggedYet = NO;
   }
 #if !TARGET_OS_TV
   // Update conversion value for SKAdNetwork if needed
-  [self.skAdNetworkReporter recordAndUpdateEvent:eventName
-                                        currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
-                                           value:valueToSum
-                                      parameters:parameters];
+  [self.featureChecker checkFeature:FBSDKFeatureSKAdNetworkV4 completionBlock:^(BOOL enabled) {
+    if (enabled) {
+      [self.skAdNetworkReporterV2 recordAndUpdateEvent:eventName
+                                            currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                               value:valueToSum
+                                          parameters:parameters];
+    }
+    else {
+      [self.skAdNetworkReporter recordAndUpdateEvent:eventName
+                                            currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
+                                               value:valueToSum
+                                          parameters:parameters];
+    }
+  }];
   // Update conversion value for AEM if needed
   [self.aemReporter recordAndUpdateEvent:eventName
                                 currency:[FBSDKTypeUtility dictionary:parameters objectForKey:FBSDKAppEventParameterNameCurrency ofType:NSString.class]
@@ -1505,6 +1523,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.onDeviceMLModelManager = nil;
   self.metadataIndexer = nil;
   self.skAdNetworkReporter = nil;
+  self.skAdNetworkReporterV2 = nil;
   self.codelessIndexer = nil;
   self.swizzler = nil;
   self.eventBindingManager = nil;

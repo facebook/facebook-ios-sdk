@@ -71,6 +71,7 @@ final class CoreKitComponents {
   let sessionDataTaskProvider: URLSessionProviding
   let settings: SettingsProtocol & SettingsLogging
   let skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
+  let skAdNetworkReporterV2: (_AppEventsReporter & SKAdNetworkReporting)?
   let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol
   let swizzler: _Swizzling.Type
   let timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording
@@ -147,6 +148,7 @@ final class CoreKitComponents {
     sessionDataTaskProvider: URLSessionProviding,
     settings: SettingsLogging & SettingsProtocol,
     skAdNetworkReporter: (SKAdNetworkReporting & _AppEventsReporter)?,
+    skAdNetworkReporterV2: (SKAdNetworkReporting & _AppEventsReporter)?,
     suggestedEventsIndexer: _SuggestedEventsIndexerProtocol,
     swizzler: _Swizzling.Type,
     timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
@@ -220,6 +222,7 @@ final class CoreKitComponents {
     self.sessionDataTaskProvider = sessionDataTaskProvider
     self.settings = settings
     self.skAdNetworkReporter = skAdNetworkReporter
+    self.skAdNetworkReporterV2 = skAdNetworkReporterV2
     self.suggestedEventsIndexer = suggestedEventsIndexer
     self.swizzler = swizzler
     self.timeSpentRecorder = timeSpentRecorder
@@ -350,6 +353,13 @@ final class CoreKitComponents {
       conversionValueUpdater: SKAdNetwork.self
     )
 
+    var skAdNetworkReporterV2: (_AppEventsReporter & SKAdNetworkReporting)?
+    skAdNetworkReporterV2 = _SKAdNetworkReporterV2(
+      graphRequestFactory: graphRequestFactory,
+      dataStore: UserDefaults.standard,
+      conversionValueUpdater: SKAdNetwork.self
+    )
+
     let metaIndexer: _MetadataIndexing = _MetadataIndexer(userDataStore: userDataStore, swizzler: _Swizzler.self)
     let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol = _SuggestedEventsIndexer(
       graphRequestFactory: graphRequestFactory,
@@ -423,6 +433,7 @@ final class CoreKitComponents {
       sessionDataTaskProvider: URLSession.shared,
       settings: settings,
       skAdNetworkReporter: skAdNetworkReporter,
+      skAdNetworkReporterV2: skAdNetworkReporterV2,
       suggestedEventsIndexer: suggestedEventsIndexer,
       swizzler: _Swizzler.self,
       timeSpentRecorder: timeSpentRecorder,

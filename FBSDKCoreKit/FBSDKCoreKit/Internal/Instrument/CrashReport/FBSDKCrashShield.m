@@ -99,6 +99,7 @@ static id<FBSDKSettings> _settings;
       ],
       @"SKAdNetworkConversionValue" : @[
         @"FBSDKSKAdNetworkReporter",
+        @"FBSDKSKAdNetworkReporterV2",
         @"FBSDKSKAdNetworkConversionConfiguration",
         @"FBSDKSKAdNetworkRule",
         @"FBSDKSKAdNetworkEvent",
@@ -118,6 +119,7 @@ static id<FBSDKSettings> _settings;
       @"EventDeactivation" : @(FBSDKFeatureEventDeactivation),
       @"SKAdNetwork" : @(FBSDKFeatureSKAdNetwork),
       @"SKAdNetworkConversionValue" : @(FBSDKFeatureSKAdNetworkConversionValue),
+      @"SKAdNetworkV4" : @(FBSDKFeatureSKAdNetworkV4),
       @"Instrument" : @(FBSDKFeatureInstrument),
       @"CrashReport" : @(FBSDKFeatureCrashReport),
       @"CrashShield" : @(FBSDKFeatureCrashShield),
