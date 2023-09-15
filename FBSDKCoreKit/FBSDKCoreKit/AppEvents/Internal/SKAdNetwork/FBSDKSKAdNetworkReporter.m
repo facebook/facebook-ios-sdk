@@ -233,7 +233,11 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
     if ([self shouldCutoff]) {
       return;
     }
-    [self.conversionValueUpdater updateConversionValue:value];
+    if (@available(iOS 15.4, *)) {
+      [self.conversionValueUpdater updatePostbackConversionValue:value completionHandler:nil];
+    } else {
+      [self.conversionValueUpdater updateConversionValue:value];
+    }
     self.conversionValue = value + 1;
     self.timestamp = [NSDate date];
     [self _saveReportData];
