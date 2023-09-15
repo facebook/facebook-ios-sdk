@@ -74,7 +74,6 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
       [self _loadConfigurationWithBlock:^{
         [self _checkAndUpdateConversionValue];
         [self _checkAndUpdateCoarseConversionValue];
-        [self _checkAndRevokeTimer];
       }];
       self.isSKAdNetworkReportEnabled = YES;
     });
@@ -83,14 +82,7 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 - (void)checkAndRevokeTimer
 {
-  if (@available(iOS 14.0, *)) {
-    if (!self.isSKAdNetworkReportEnabled) {
-      return;
-    }
-    [self _loadConfigurationWithBlock:^() {
-      [self _checkAndRevokeTimer];
-    }];
-  }
+  // no-op
 }
 
 - (void)recordAndUpdateEvent:(NSString *)event
@@ -165,18 +157,6 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
       }];
     }];
   }];
-}
-
-- (void)_checkAndRevokeTimer
-{
-  if (!self.configuration) {
-    return;
-  }
-  if ([self shouldCutoff] && [self _getCurrentPostbackSequenceIndex] == 1) {
-    return;
-  }
-  [self _updateConversionValue:self.conversionValue];
-  [self _updateCoarseConversionValue:self.coarseConversionValue];
 }
 
 - (void)_recordAndUpdateEvent:(NSString *)event

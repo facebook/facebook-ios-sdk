@@ -27,6 +27,8 @@
       if (!conversionRules) {
         return nil;
       }
+      _timerBuckets = [FBSDKTypeUtility integerValue:conversionRules[@"timer_buckets"]];
+      _timerInterval = (NSTimeInterval)[FBSDKTypeUtility integerValue:conversionRules[@"timer_interval"]];
       _cutoffTime = [FBSDKTypeUtility integerValue:conversionRules[@"cutoff_time"]];
       _defaultCurrency = [[FBSDKTypeUtility coercedToStringValue:conversionRules[@"default_currency"]] uppercaseString];
       _conversionValueRules = [FBSDKSKAdNetworkConversionConfiguration parseRules:conversionRules[@"conversion_value_rules"]];
