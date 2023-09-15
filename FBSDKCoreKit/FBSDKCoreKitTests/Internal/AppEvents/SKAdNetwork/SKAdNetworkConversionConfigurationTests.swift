@@ -61,8 +61,10 @@ final class SKAdNetworkConversionConfigurationTests: XCTestCase {
 
     configuration = SKAdNetworkConversionConfiguration(json: validData)
     XCTAssertNotNil(configuration)
+    XCTAssertEqual(1, configuration?.timerBuckets)
     XCTAssertEqual(2, configuration?.cutoffTime)
     XCTAssertEqual(configuration?.defaultCurrency, "USD")
+    XCTAssertEqual(1000, configuration?.timerInterval ?? 0, accuracy: 0.001)
     XCTAssertEqual(false, configuration?.isCoarseCVAccumulative)
   }
 
