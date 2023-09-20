@@ -364,7 +364,11 @@ final class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithInvalidTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: URL(string: "invalid url"), appStoreId: nil, appName: name)
+    var url = URL(string: "invalid url")
+    if #available(iOS 17.0, *) {
+      url = URL(string: "invalid url", encodingInvalidCharacters: false)
+    }
+    let target = AppLinkTarget(url: url, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
@@ -400,7 +404,11 @@ final class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithInvalidTargetWithWebUrl() {
-    let target = AppLinkTarget(url: URL(string: "invalid url"), appStoreId: nil, appName: name)
+    var url = URL(string: "invalid url")
+    if #available(iOS 17.0, *) {
+      url = URL(string: "invalid url", encodingInvalidCharacters: false)
+    }
+    let target = AppLinkTarget(url: url, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: .usingHost1)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
