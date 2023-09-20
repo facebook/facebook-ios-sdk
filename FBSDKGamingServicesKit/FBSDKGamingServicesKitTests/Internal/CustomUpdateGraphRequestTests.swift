@@ -27,7 +27,7 @@ final class CustomUpdateGraphRequestTests: XCTestCase {
   let validImageContentParameterDictionary = [
     CustomUpdateContentObjectsParameters.contextKEY: CustomUpdateContentObjectsParameters.contextValue,
     CustomUpdateContentObjectsParameters.textKey: CustomUpdateContentObjectsParameters.textValue,
-    CustomUpdateContentObjectsParameters.imageKey: CustomUpdateContentObjectsParameters.imageValue,
+    CustomUpdateContentObjectsParameters.imageKey: "data:image/png;base64,\(CustomUpdateContentObjects.validImage.pngData()!.base64EncodedString())", // swiftlint:disable:this force_unwrapping
   ]
 
   override func setUp() {

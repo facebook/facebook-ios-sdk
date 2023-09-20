@@ -45,8 +45,10 @@ extension BridgeAPITests {
   }
 
   func testInvokingAuthSessionCompletionHandlerFromHandlerWithInvalidURLWithoutError() {
-    let url = URL(string: " ")
-
+    var url = URL(string: " ")
+    if #available(iOS 17.0, *) {
+      url = URL(string: " ", encodingInvalidCharacters: false)
+    }
     var capturedSuccesses = [Bool]()
     var capturedErrors = [Error?]()
     let handler: SuccessBlock = { success, error in

@@ -321,21 +321,27 @@ static FBSDKInternalUtility *_shared;
     }
   }
 
-  NSURL *const URL = [NSURL URLWithString:[NSString stringWithFormat:
-                                           @"%@://%@%@%@",
-                                           scheme ?: @"",
-                                           host ?: @"",
-                                           path ?: @"",
-                                           queryString ?: @""]];
+  NSString *urlString = [NSString stringWithFormat:
+                         @"%@://%@%@%@",
+                         scheme ?: @"",
+                         host ?: @"",
+                         path ?: @"",
+                         queryString ?: @""];
+  NSURL *url;
+  if (@available(iOS 17.0, *)) {
+    url = [NSURL URLWithString:urlString encodingInvalidCharacters:NO];
+  } else {
+    url = [NSURL URLWithString:urlString];
+  }
   if (errorRef != NULL) {
-    if (URL) {
+    if (url) {
       *errorRef = nil;
     } else {
       *errorRef = [self.errorFactory unknownErrorWithMessage:@"Unknown error building URL."
                                                     userInfo:nil];
     }
   }
-  return URL;
+  return url;
 }
 
 - (void)deleteFacebookCookies

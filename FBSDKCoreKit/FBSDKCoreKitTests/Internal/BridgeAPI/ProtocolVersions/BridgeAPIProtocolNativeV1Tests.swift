@@ -13,7 +13,7 @@ import TestTools
 
 final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   let actionID = UUID().uuidString
-  let scheme = UUID().uuidString
+  let scheme = "com.testscheme"
   let methodName = UUID().uuidString
   let methodVersion = UUID().uuidString
   let sampleURL = URL(string: "https://example.com")! // swiftlint:disable:this force_unwrapping
