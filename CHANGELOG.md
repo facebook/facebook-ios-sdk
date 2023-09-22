@@ -10,7 +10,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.3...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.2.0...HEAD)
+
+## 16.2.0
+
+### Changed
+
+- Update the implementation for SKAdNetwork to use the latest Apple API
+
+[2023-09-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.3...v16.2.0)
 
 ## 16.1.3
 
