@@ -327,12 +327,14 @@ static FBSDKInternalUtility *_shared;
                          host ?: @"",
                          path ?: @"",
                          queryString ?: @""];
-  NSURL *url;
+  NSURL *url = [NSURL URLWithString:urlString];
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 170000
   if (@available(iOS 17.0, *)) {
     url = [NSURL URLWithString:urlString encodingInvalidCharacters:NO];
-  } else {
-    url = [NSURL URLWithString:urlString];
   }
+#endif
+
   if (errorRef != NULL) {
     if (url) {
       *errorRef = nil;
