@@ -18,6 +18,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - Update the implementation for SKAdNetwork to use the latest Apple API
 
+### Fixed
+
+- Fix an issue when the SDK may hang the app for devices with low memory.
+
 [2023-09-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.2.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.3...v16.2.0)
 
