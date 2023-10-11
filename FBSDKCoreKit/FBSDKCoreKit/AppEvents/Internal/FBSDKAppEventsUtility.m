@@ -153,7 +153,11 @@ static FBSDKAppEventsUtility *_shared;
 
   ASIdentifierManager *manager = [self _asIdentifierManagerWithShouldUseCachedManager:shouldUseCachedManager
                                                              dynamicFrameworkResolver:dynamicFrameworkResolver];
-  return manager.advertisingIdentifier.UUIDString;
+  __block NSString* adid = nil;
+  [FBSDKDispatchTools performSyncOnBackgroundWithTimeout:2 block:^{
+    adid = manager.advertisingIdentifier.UUIDString;
+  }];
+  return adid;
 }
 
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)shouldUseCachedManager
