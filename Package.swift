@@ -134,7 +134,7 @@ extension Target {
     }
 
     static func remoteBinaryURLString(for targetName: String) -> String {
-        "https://github.com/facebook/facebook-ios-sdk/releases/download/v16.1.3/\(targetName)-Static_XCFramework.zip"
+        "https://github.com/facebook/facebook-ios-sdk/releases/download/v16.2.1/\(targetName)-Static_XCFramework.zip"
     }
 
     static let aem = target(name: .aem, dependencies: [.Prefixed.aem])
@@ -158,32 +158,32 @@ extension Target {
     enum Prefixed {
         static let basics = binaryTarget(
             name: .Prefixed.basics,
-            remoteChecksum: "eadaa16330035fcf06f71db7b89312b9d020f947fbde0bb55446a28bc59ca18c"
+            remoteChecksum: "60462e481932f18089abe1d2178994b39eb91285357d4184ececb78f047bf10e"
         )
 
         static let aem = binaryTarget(
             name: .Prefixed.aem,
-            remoteChecksum: "8c2460b6dd2834aad78b40a2e6b51316c6489d4f84c975794a53e3dfb5841a0a"
+            remoteChecksum: "b4f40a55ab87af470dac136909301e3d7ff0fffd3b814b4822bca058e058dba6"
         )
 
         static let core = binaryTarget(
             name: .Prefixed.core,
-            remoteChecksum: "47a23bbc85881781505d871ee9f43790bf1e57942081cbeea96689fc86c22dac"
+            remoteChecksum: "4bd84b8e46e3aaac94cb704228fd462bad219802e81be8b16165e594440c0719"
         )
 
         static let login = binaryTarget(
             name: .Prefixed.login,
-            remoteChecksum: "5ff84e9262a1a7fbe84ae9b32deeaeb0e6ec1aa2c68ac9cc7a39e85147053569"
+            remoteChecksum: "15ed0239693cd8db9e94817bf363c6b153f9baa0db882600a45c519d54d30c36"
         )
 
         static let share = binaryTarget(
             name: .Prefixed.share,
-            remoteChecksum: "bf0e61b865d948725f67a87bdcba7e445373d9aab8bf9c27f592bd101107aba6"
+            remoteChecksum: "b614aeb7399b4adac8f159f277117281085b4899f434faf68541331592bebbb5"
         )
 
         static let gamingServices = binaryTarget(
             name: .Prefixed.gaming,
-            remoteChecksum: "3d8460ca8d0011066835cd02fff9510e8c4d496c4f0e3597cad7f4d7ec490d2e"
+            remoteChecksum: "fc05496880dbda3a2b3972c05d04adf15770a89bf79c7d39262de91d98ccae48"
         )
     }
 }
