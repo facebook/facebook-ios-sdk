@@ -44,7 +44,7 @@ final class AppLinkNavigationTests: XCTestCase {
     eventPoster = TestMeasurementEvent()
     resolver = TestAppLinkResolver()
     settings = TestSettings()
-    settings.sdkVersion = "16.2.0"
+    settings.sdkVersion = "16.2.1"
     urlOpener = URLOpener(canOpenURL: true)
     AppLinkNavigation.defaultResolver = resolver
 
