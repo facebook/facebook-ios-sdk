@@ -87,7 +87,13 @@ targets:
     platform: iOS
     sources:
       - FBSDKLoginKitTests
-    configFiles:
+    configFiles:<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>fbapi</string>
+  <string>fb-messenger-api</string>
+  <string>fbauth2</string>
+  <string>fbshareextension</string>
+</array>
       Debug: Configurations/FBSDKLoginKitTests.xcconfig
       Release: Configurations/FBSDKLoginKitTests.xcconfig
     dependencies:
