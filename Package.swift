@@ -137,7 +137,7 @@ extension Target {
         "https://github.com/facebook/facebook-ios-sdk/releases/download/v16.2.1/\(targetName)-Static_XCFramework.zip"
     }
 
-    static let aem = target(name: .aem, dependencies: [.Prefixed.aem])
+    static let aem = target(name: .aem, dependencies: [.Prefixed.basics, .Prefixed.aem])
 
     static let core = target(
         name: .core,
