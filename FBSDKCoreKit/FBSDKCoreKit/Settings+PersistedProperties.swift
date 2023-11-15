@@ -60,9 +60,9 @@ extension Settings {
     let backingKeyPath: ReferenceWritableKeyPath<Settings, Bool?> // swiftlint:disable:this discouraged_optional_boolean
     let defaultValue: Bool
 
-    static let isAutoLogAppEventsEnabled = Self(
-      persistenceKey: .isAutoLogAppEventsEnabled,
-      backingKeyPath: \._isAutoLogAppEventsEnabled,
+    static let isAutoLogAppEventsEnabledLocally = Self(
+      persistenceKey: .isAutoLogAppEventsEnabledLocally,
+      backingKeyPath: \._isAutoLogAppEventsEnabledLocally,
       defaultValue: true
     )
 
