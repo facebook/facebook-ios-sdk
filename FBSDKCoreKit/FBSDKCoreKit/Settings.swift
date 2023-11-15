@@ -80,7 +80,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    The default value is `true`.
    */
   public var isAutoLogAppEventsEnabled: Bool {
-    get { isAutoLogAppEventsEnabledLocally }
+    get { checkAutoLogAppEventsEnabled() }
     set { isAutoLogAppEventsEnabledLocally = newValue }
   }
 
@@ -446,9 +446,9 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    Sets the data processing options.
 
    - Parameters:
-     - options The list of the options.
-     - country The code for the country.
-     - state The code for the state.
+   - options The list of the options.
+   - country The code for the country.
+   - state The code for the state.
    */
   public func setDataProcessingOptions(_ options: [String]?, country: Int32, state: Int32) {
     let values: [DataProcessingOptionKey.RawValue: Any] = [
@@ -642,6 +642,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 extension Settings: DependentAsObject {
   struct ObjectDependencies {
     var appEventsConfigurationProvider: _AppEventsConfigurationProviding
+    var serverConfigurationProvider: _ServerConfigurationProviding
     var dataStore: DataPersisting
     var eventLogger: EventLogging
     var infoDictionaryProvider: InfoDictionaryProviding

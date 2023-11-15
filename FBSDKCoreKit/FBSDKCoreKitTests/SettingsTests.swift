@@ -16,6 +16,7 @@ final class SettingsTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var logger: TestEventLogger!
   var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
+  var serverConfigurationProvider: TestAppEventsServerConfigurationProvider!
   var userDefaultsSpy: UserDefaultsSpy!
   var settings: Settings!
   var bundle: InfoDictionaryProviding!
@@ -35,6 +36,7 @@ final class SettingsTests: XCTestCase {
 
     logger = TestEventLogger()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
+    serverConfigurationProvider = TestAppEventsServerConfigurationProvider()
     userDefaultsSpy = UserDefaultsSpy()
     bundle = TestBundle()
     settings = Settings()
@@ -55,6 +57,7 @@ final class SettingsTests: XCTestCase {
     settings.setDependencies(
       .init(
         appEventsConfigurationProvider: appEventsConfigurationProvider,
+        serverConfigurationProvider: serverConfigurationProvider,
         dataStore: userDefaultsSpy,
         eventLogger: logger,
         infoDictionaryProvider: bundle

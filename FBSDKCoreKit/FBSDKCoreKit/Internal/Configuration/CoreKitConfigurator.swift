@@ -335,6 +335,7 @@ private extension CoreKitConfigurator {
     Settings.shared.setDependencies(
       .init(
         appEventsConfigurationProvider: components.appEventsConfigurationProvider,
+        serverConfigurationProvider: components.serverConfigurationProvider,
         dataStore: components.defaultDataStore,
         eventLogger: components.eventLogger,
         infoDictionaryProvider: components.infoDictionaryProvider
