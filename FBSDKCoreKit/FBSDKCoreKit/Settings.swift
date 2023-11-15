@@ -80,12 +80,22 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    The default value is `true`.
    */
   public var isAutoLogAppEventsEnabled: Bool {
-    get { getPersistedBooleanProperty(.isAutoLogAppEventsEnabled) }
-    set { setPersistedBooleanProperty(.isAutoLogAppEventsEnabled, to: newValue) }
+    get { isAutoLogAppEventsEnabledLocally }
+    set { isAutoLogAppEventsEnabledLocally = newValue }
+  }
+
+  /**
+   Controls the automatic logging of basic app events on the client side such as `activateApp` and `deactivateApp`.
+
+   The default value is `true`.
+   */
+  internal var isAutoLogAppEventsEnabledLocally: Bool {
+    get { getPersistedBooleanProperty(.isAutoLogAppEventsEnabledLocally) }
+    set { setPersistedBooleanProperty(.isAutoLogAppEventsEnabledLocally, to: newValue) }
   }
 
   // swiftlint:disable:next identifier_name discouraged_optional_boolean
-  var _isAutoLogAppEventsEnabled: Bool?
+  internal var _isAutoLogAppEventsEnabledLocally: Bool?
 
   /**
    Controls the `fb_codeless_debug` logging event.
