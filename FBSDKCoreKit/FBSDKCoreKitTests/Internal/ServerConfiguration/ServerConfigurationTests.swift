@@ -86,6 +86,27 @@ final class ServerConfigurationTests: XCTestCase {
     )
   }
 
+  func testAutoLoggingWithServerDefaultValue() {
+    let migratedAutoLogValues = ["auto_log_app_events_default": NSNumber(true)]
+    configuration = Fixtures.configuration(withDictionary: ["migratedAutoLogValues": migratedAutoLogValues])
+    XCTAssertEqual(configuration.migratedAutoLogValues as? [String: NSNumber], migratedAutoLogValues)
+  }
+
+  func testAutoLoggingWithServerEnabledValue() {
+    let migratedAutoLogValues = [
+      "auto_log_app_events_default": NSNumber(false),
+      "auto_log_app_events_enabled": NSNumber(true),
+    ]
+    configuration = Fixtures.configuration(withDictionary: ["migratedAutoLogValues": migratedAutoLogValues])
+    XCTAssertEqual(configuration.migratedAutoLogValues as? [String: NSNumber], migratedAutoLogValues)
+  }
+
+  func testAutoLoggingWithServerEmptyValue() {
+    let migratedAutoLogValues: [String: NSNumber] = [:]
+    configuration = Fixtures.configuration(withDictionary: ["migratedAutoLogValues": migratedAutoLogValues])
+    XCTAssertEqual(configuration.migratedAutoLogValues as? [String: NSNumber], migratedAutoLogValues)
+  }
+
   func testCreatingWithDefaultCodelessEventsEnabled() {
     XCTAssertFalse(
       configuration.isCodelessEventsEnabled,

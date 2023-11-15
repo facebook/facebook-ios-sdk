@@ -108,6 +108,7 @@ NS_SWIFT_NAME(_ServerConfiguration)
                         AAMRules:(nullable NSDictionary<NSString *, id> *)AAMRules
           suggestedEventsSetting:(nullable NSDictionary<NSString *, id> *)suggestedEventsSetting
               protectedModeRules:(nullable NSDictionary<NSString *, id> *)protectedModeRules
+           migratedAutoLogValues:(nullable NSDictionary<NSString *, id> *)migratedAutoLogValues
   NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, readonly, getter = isAdvertisingIDEnabled, assign) BOOL advertisingIDEnabled;
@@ -134,6 +135,7 @@ NS_SWIFT_NAME(_ServerConfiguration)
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *AAMRules;
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *suggestedEventsSetting;
 @property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *protectedModeRules;
+@property (nullable, nonatomic, readonly, copy) NSDictionary<NSString *, id> *migratedAutoLogValues;
 @property (nonatomic, readonly) NSInteger version;
 
 - (nullable FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName;
