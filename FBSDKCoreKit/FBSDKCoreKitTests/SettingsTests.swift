@@ -981,6 +981,20 @@ final class SettingsTests: XCTestCase {
 
   // MARK: - Auto Log App Events Enabled
 
+  func testAutoLogAppEventsEnabledFromKeyPath() {
+    configureSettings()
+    settings.isAutoLogAppEventsEnabled = false
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Auto logging should pick up the correct value from KeyPath"
+    )
+    settings.isAutoLogAppEventsEnabled = true
+    XCTAssertTrue(
+      settings.isAutoLogAppEventsEnabled,
+      "Auto logging should pick up the correct value from KeyPath when value changed"
+    )
+  }
+
   func testAutoLogAppEventsEnabledFromPlist() {
     bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
     configureSettings()

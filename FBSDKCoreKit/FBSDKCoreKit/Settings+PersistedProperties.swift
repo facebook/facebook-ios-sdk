@@ -97,6 +97,7 @@ extension Settings {
 
   func setPersistedBooleanProperty(_ property: PersistedBooleanValue, to value: Bool) {
     validateConfiguration()
+    self[keyPath: property.backingKeyPath] = value
     // swiftformat:disable:next redundantSelf
     self.dataStore?.fb_setObject(value, forKey: property.persistenceKey.rawValue)
     logIfSDKSettingsChanged()
