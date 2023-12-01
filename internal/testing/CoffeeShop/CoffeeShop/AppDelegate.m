@@ -3,6 +3,7 @@
 #import "AppDelegate.h"
 
 #import <objc/message.h>
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 #import "AEMTestUtils.h"
 // @lint-ignore CLANGTIDY
@@ -230,6 +231,24 @@ static NSInteger const kStatusBarViewTag = 10098;
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
   // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+  if (@available(iOS 14, *)) {
+    [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+      switch (status) {
+        case ATTrackingManagerAuthorizationStatusAuthorized:
+          NSLog(@"ATT Authorized");
+          break;
+        case ATTrackingManagerAuthorizationStatusDenied:
+          NSLog(@"ATT Denied");
+          break;
+        case ATTrackingManagerAuthorizationStatusRestricted:
+          NSLog(@"ATT Restricted");
+          break;
+        case ATTrackingManagerAuthorizationStatusNotDetermined:
+          NSLog(@"ATT Not Determined");
+          break;
+      }
+    }];
+  }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

@@ -66,5 +66,7 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>CoffeeShop needs to enable to test</string>
 </dict>
 </plist>
