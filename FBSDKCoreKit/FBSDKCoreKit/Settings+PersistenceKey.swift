@@ -12,7 +12,7 @@ extension Settings {
     case clientToken = "FacebookClientToken"
     case displayName = "FacebookDisplayName"
     case domainPart = "FacebookDomainPart"
-    case isAutoLogAppEventsEnabled = "FacebookAutoLogAppEventsEnabled"
+    case isAutoLogAppEventsEnabledLocally = "FacebookAutoLogAppEventsEnabled"
     case isAdvertiserIDCollectionEnabled = "FacebookAdvertiserIDCollectionEnabled"
     case isCodelessDebugLogEnabled = "FacebookCodelessDebugLogEnabled"
     case loggingBehaviors = "FacebookLoggingBehavior"
