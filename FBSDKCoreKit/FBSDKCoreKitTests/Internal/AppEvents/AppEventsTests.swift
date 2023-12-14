@@ -1404,6 +1404,30 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testEnablingRedactedEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .filterRedactedEvents, with: true)
+
+    XCTAssertTrue(
+      redactedEventsManager.enabledWasCalled,
+      "Should enable blocklist events when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingRedactedEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.filterRedactedEvents),
+      "Fetching a configuration should check if the BlocklistEvents feature is enabled"
+    )
+  }
+
   func testFetchingConfigurationIncludingEventDeactivation() {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()

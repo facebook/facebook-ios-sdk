@@ -16,6 +16,7 @@ final class AppEventsStateTests: XCTestCase {
   let appId = "appid"
   let eventsProcessor = TestAppEventsParameterProcessor()
   let blocklistEventsManager = TestBlocklistEventsManager()
+  let redactedEventsManager = TestRedactedEventsManager()
   lazy var state = _AppEventsState(token: self.name, appID: appId)
   lazy var partiallyFullState = _AppEventsState(
     token: self.name,
@@ -27,7 +28,7 @@ final class AppEventsStateTests: XCTestCase {
     super.setUp()
 
     setUpFixtures()
-    _AppEventsState.eventProcessors = [eventsProcessor, blocklistEventsManager]
+    _AppEventsState.eventProcessors = [eventsProcessor, blocklistEventsManager, redactedEventsManager]
   }
 
   func setUpFixtures(
@@ -525,6 +526,10 @@ final class AppEventsStateTests: XCTestCase {
     XCTAssertTrue(
       blocklistEventsManager.processEventsWasCalled,
       "Blocklist events manager should process events"
+    )
+    XCTAssertTrue(
+      redactedEventsManager.processEventsWasCalled,
+      "Redacted events manager should process events"
     )
   }
 }
