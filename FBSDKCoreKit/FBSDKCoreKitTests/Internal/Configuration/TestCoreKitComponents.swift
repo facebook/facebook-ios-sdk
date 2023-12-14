@@ -87,7 +87,8 @@ enum TestCoreKitComponents {
     aemManager: _AutoSetup = TestAEMManager(),
     protectedModeManager: _AppEventsParameterProcessing = TestAppEventsParameterProcessor(),
     macaRuleMatchingManager: MACARuleMatching = TestMACARuleMatchingManager(),
-    blocklistEventsManager: _EventsProcessing = TestBlocklistEventsManager()
+    blocklistEventsManager: _EventsProcessing = TestBlocklistEventsManager(),
+    redactedEventsManager: _EventsProcessing = TestRedactedEventsManager()
   ) -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
@@ -163,7 +164,8 @@ enum TestCoreKitComponents {
       aemManager: aemManager,
       protectedModeManager: protectedModeManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
-      blocklistEventsManager: blocklistEventsManager
+      blocklistEventsManager: blocklistEventsManager,
+      redactedEventsManager: redactedEventsManager
     )
   }
 }
