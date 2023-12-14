@@ -116,7 +116,8 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .skAdNetwork,
       .skAdNetworkConversionValue,
       .protectedMode,
-      .macaRuleMatching:
+      .macaRuleMatching,
+      .blocklistEvents:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -172,6 +173,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .gamingServices: featureName = "GamingServicesKit"
     case .protectedMode: featureName = "ProtectedMode"
     case .macaRuleMatching: featureName = "MACARuleMatching"
+    case .blocklistEvents: featureName = "BlocklistEvents"
     @unknown default: featureName = "NONE"
     }
 

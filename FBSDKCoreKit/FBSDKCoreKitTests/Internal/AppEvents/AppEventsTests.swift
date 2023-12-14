@@ -49,6 +49,7 @@ final class AppEventsTests: XCTestCase {
   var capiReporter: TestCAPIReporter!
   var protectedModeManager: TestAppEventsParameterProcessor!
   var macaRuleMatchingManager: TestMACARuleMatchingManager!
+  var blocklistEventsManager: TestBlocklistEventsManager!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -77,6 +78,7 @@ final class AppEventsTests: XCTestCase {
     restrictiveDataFilterParameterProcessor = TestAppEventsParameterProcessor()
     protectedModeManager = TestAppEventsParameterProcessor()
     macaRuleMatchingManager = TestMACARuleMatchingManager()
+    blocklistEventsManager = TestBlocklistEventsManager()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     appEventsStateProvider = TestAppEventsStateProvider()
     atePublisherFactory = TestATEPublisherFactory()
@@ -120,6 +122,7 @@ final class AppEventsTests: XCTestCase {
     restrictiveDataFilterParameterProcessor = nil
     protectedModeManager = nil
     macaRuleMatchingManager = nil
+    blocklistEventsManager = nil
     appEventsStateProvider = nil
     advertiserIDProvider = nil
     skAdNetworkReporter = nil
@@ -165,7 +168,8 @@ final class AppEventsTests: XCTestCase {
       internalUtility: internalUtility,
       capiReporter: capiReporter,
       protectedModeManager: protectedModeManager,
-      macaRuleMatchingManager: macaRuleMatchingManager
+      macaRuleMatchingManager: macaRuleMatchingManager,
+      blocklistEventsManager: blocklistEventsManager
     )
 
     appEvents.configureNonTVComponents(
