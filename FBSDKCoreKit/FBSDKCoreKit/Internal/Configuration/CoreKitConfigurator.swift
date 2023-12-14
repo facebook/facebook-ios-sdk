@@ -132,6 +132,7 @@ private extension CoreKitConfigurator {
       components.eventDeactivationManager,
       components.blocklistEventsManager,
       components.restrictiveDataFilterManager,
+      components.redactedEventsManager,
     ]
   }
 
