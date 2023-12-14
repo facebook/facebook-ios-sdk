@@ -394,13 +394,17 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _AppEventsState.eventProcessors,
       "_AppEventsState's event processors should be configured"
     )
-    XCTAssertEqual(processors.count, 2, "_AppEventsState should have two event processors")
+    XCTAssertEqual(processors.count, 3, "_AppEventsState should have three event processors")
     XCTAssertTrue(
-      processors.first === components.eventDeactivationManager,
+      processors[0] === components.eventDeactivationManager,
       "_AppEventsState's event processors should be configured with the event deactivation manager"
     )
     XCTAssertTrue(
-      processors.last === components.restrictiveDataFilterManager,
+      processors[1] === components.blocklistEventsManager,
+      "_AppEventsState's event processors should be configured with the blocklist events manager"
+    )
+    XCTAssertTrue(
+      processors[2] === components.restrictiveDataFilterManager,
       "_AppEventsState's event processors should be configured with the restrictive data filter manager"
     )
   }

@@ -964,6 +964,11 @@ static BOOL g_explicitEventsLoggedYet = NO;
           [self.macaRuleMatchingManager enable];
         }
       }];
+      [self.featureChecker checkFeature:FBSDKFeatureBlocklistEvents completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.blocklistEventsManager enable];
+        }
+      }];
       if (@available(iOS 14.0, *)) {
         __weak FBSDKAppEvents *weakSelf = self;
         [self.featureChecker checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
