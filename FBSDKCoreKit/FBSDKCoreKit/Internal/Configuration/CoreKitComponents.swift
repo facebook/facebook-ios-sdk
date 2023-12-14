@@ -85,6 +85,7 @@ final class CoreKitComponents {
   let protectedModeManager: _AppEventsParameterProcessing
   let macaRuleMatchingManager: MACARuleMatching
   let blocklistEventsManager: _EventsProcessing
+  let redactedEventsManager: _EventsProcessing
 
   // MARK: - Initializers
 
@@ -162,7 +163,8 @@ final class CoreKitComponents {
     aemManager: _AutoSetup,
     protectedModeManager: _AppEventsParameterProcessing,
     macaRuleMatchingManager: MACARuleMatching,
-    blocklistEventsManager: _EventsProcessing
+    blocklistEventsManager: _EventsProcessing,
+    redactedEventsManager: _EventsProcessing
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
@@ -238,6 +240,7 @@ final class CoreKitComponents {
     self.protectedModeManager = protectedModeManager
     self.macaRuleMatchingManager = macaRuleMatchingManager
     self.blocklistEventsManager = blocklistEventsManager
+    self.redactedEventsManager = redactedEventsManager
   }
 
   // MARK: - Default components
@@ -344,6 +347,7 @@ final class CoreKitComponents {
     let protectedModeManager: _AppEventsParameterProcessing = ProtectedModeManager()
     let macaRuleMatchingManager: MACARuleMatching = MACARuleMatchingManager()
     let blocklistEventsManager: _EventsProcessing = BlocklistEventsManager()
+    let redactedEventsManager: _EventsProcessing = RedactedEventsManager()
 
     var aemNetworker: AEMNetworking?
     if #available(iOS 14, *) {
@@ -450,7 +454,8 @@ final class CoreKitComponents {
       aemManager: _AEMManager.shared,
       protectedModeManager: protectedModeManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
-      blocklistEventsManager: blocklistEventsManager
+      blocklistEventsManager: blocklistEventsManager,
+      redactedEventsManager: redactedEventsManager
     )
   }()
 }
