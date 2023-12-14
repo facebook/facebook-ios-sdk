@@ -11,6 +11,11 @@ import Foundation
 @objc(FBSDKBlocklistEventsManager)
 final class BlocklistEventsManager: NSObject, _EventsProcessing {
 
+  private var isEnabled = false
+  private var blocklistedEventNames = Set<String>()
+  private static let blocklistEventsKey = "blocklist_events"
+  private static let eventKey = "event"
+
   var configuredDependencies: ObjectDependencies?
 
   var defaultDependencies: ObjectDependencies? = .init(
@@ -18,11 +23,34 @@ final class BlocklistEventsManager: NSObject, _EventsProcessing {
   )
 
   func enable() {
-    // TODO: Implement this
+    guard let dependencies = try? getDependencies() else {
+      return
+    }
+    if let blocklistedEvents = dependencies.serverConfigurationProvider
+      .cachedServerConfiguration()
+      .protectedModeRules?[BlocklistEventsManager.blocklistEventsKey] as? [String] {
+      if !blocklistedEvents.isEmpty {
+        blocklistedEventNames = Set(blocklistedEvents)
+        isEnabled = true
+      }
+    }
   }
 
   func processEvents(_ events: NSMutableArray) {
-    // TODO: Implement this
+    guard isEnabled else { return }
+
+    var filteredEvents = [Any]()
+    events.forEach { eventDictionary in
+      guard let eventDictionaryTyped = eventDictionary as? [String: Any],
+            let event = eventDictionaryTyped[BlocklistEventsManager.eventKey] as? [NSString: Any],
+            let eventName = (event as [String: Any])[AppEvents.ParameterName.eventName.rawValue] as? String
+      else { return }
+      if !blocklistedEventNames.contains(eventName) {
+        filteredEvents.append(eventDictionary)
+      }
+    }
+    events.removeAllObjects()
+    events.addObjects(from: filteredEvents)
   }
 }
 

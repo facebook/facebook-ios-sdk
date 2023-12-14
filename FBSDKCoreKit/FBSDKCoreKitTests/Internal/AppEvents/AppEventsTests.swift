@@ -1376,6 +1376,30 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testEnablingBlocklistEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .blocklistEvents, with: true)
+
+    XCTAssertTrue(
+      blocklistEventsManager.enabledWasCalled,
+      "Should enable blocklist events when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingBlocklistEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.blocklistEvents),
+      "Fetching a configuration should check if the BlocklistEvents feature is enabled"
+    )
+  }
+
   func testFetchingConfigurationIncludingEventDeactivation() {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()

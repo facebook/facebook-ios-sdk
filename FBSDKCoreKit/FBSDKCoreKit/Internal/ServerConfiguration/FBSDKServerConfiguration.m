@@ -61,7 +61,7 @@ NSString *const FBSDKDialogConfigurationFeatureUseSafariViewController = @"use_s
 
 // Increase this value when adding new fields and previous cached configurations should be
 // treated as stale.
-const NSInteger FBSDKServerConfigurationVersion = 2;
+const NSInteger FBSDKServerConfigurationVersion = 3;
 
 @interface FBSDKServerConfiguration ()
 @property (nonatomic) NSDictionary<NSString *, id> *dialogConfigurations;
