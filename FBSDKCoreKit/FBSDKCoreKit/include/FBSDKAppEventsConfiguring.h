@@ -34,6 +34,7 @@
 @protocol FBSDKCAPIReporter;
 @protocol FBSDKAppEventParametersExtracting;
 @protocol FBSDKMACARuleMatching;
+@protocol FBSDKEventsProcessing;
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
 @protocol FBSDKMetadataIndexing;
@@ -75,7 +76,8 @@ NS_SWIFT_NAME(_AppEventsConfiguring)
                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
                      protectedModeManager:(id<FBSDKAppEventsParameterProcessing>)protectedModeManager
                   macaRuleMatchingManager:(id<FBSDKMACARuleMatching>)macaRuleMatchingManager
-NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:protectedModeManager:macaRuleMatchingManager:));
+                   blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
+NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:protectedModeManager:macaRuleMatchingManager:blocklistEventsManager:));
 
 #if !TARGET_OS_TV
 
