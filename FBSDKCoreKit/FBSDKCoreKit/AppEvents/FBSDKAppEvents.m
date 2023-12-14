@@ -851,7 +851,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
   [self fetchServerConfiguration:^{
-    if ([self.appEventsUtility shouldDropAppEvents]) {
+    if ([self.appEventsUtility shouldDropAppEvents] || [self.gateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch defaultValue:NO]) {
       return;
     }
     NSMutableDictionary<NSString *, NSString *> *params = [self.appEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"

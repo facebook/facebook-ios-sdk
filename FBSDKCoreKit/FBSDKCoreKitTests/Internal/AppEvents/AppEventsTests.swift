@@ -570,6 +570,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testActivateAppWithInitializedSDK() throws {
+    TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: false)
     appEvents.activateApp()
 
     XCTAssertTrue(
@@ -596,6 +597,39 @@ final class AppEventsTests: XCTestCase {
       "MOBILE_APP_INSTALL"
     )
     XCTAssertNotNil(capiReporter.capturedEvent)
+  }
+
+  func testActivateAppWithAppEventsKillSwitchEnabled() throws {
+    TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: true)
+    appEvents.activateApp()
+
+    XCTAssertTrue(
+      timeSpentRecorder.restoreWasCalled,
+      "Activating App with initialized SDK should restore recording time spent data."
+    )
+    XCTAssertTrue(
+      timeSpentRecorder.capturedCalledFromActivateApp,
+      """
+      Activating App with initialized SDK should indicate its \
+      calling from activateApp when restoring recording time spent data.
+      """
+    )
+
+    // The publish call happens after both configurations are fetched
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    appEventsConfigurationProvider.lastCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    serverConfigurationProvider.secondCapturedCompletionBlock?(nil, nil)
+
+    let request = graphRequestFactory.capturedRequests.first
+    XCTAssertNil(
+      request,
+      "No request should be made when the FBSDKGateKeeperAppEventsKillSwitch is enabled"
+    )
+    XCTAssertNil(
+      capiReporter.capturedEvent,
+      "The capiReporter should not be invoked when the FBSDKGateKeeperAppEventsKillSwitch is enabled"
+    )
   }
 
   func testApplicationBecomingActiveRestoresTimeSpentRecording() {
