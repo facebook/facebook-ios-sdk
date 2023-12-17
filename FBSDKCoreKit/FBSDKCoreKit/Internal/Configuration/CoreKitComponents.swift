@@ -71,6 +71,7 @@ final class CoreKitComponents {
   let sessionDataTaskProvider: URLSessionProviding
   let settings: SettingsProtocol & SettingsLogging
   let skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
+  let skAdNetworkReporterV2: (_AppEventsReporter & SKAdNetworkReporting)?
   let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol
   let swizzler: _Swizzling.Type
   let timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording
@@ -81,6 +82,10 @@ final class CoreKitComponents {
   let userIDProvider: _UserIDProviding
   let webViewProvider: _WebViewProviding
   let aemManager: _AutoSetup
+  let protectedModeManager: _AppEventsParameterProcessing
+  let macaRuleMatchingManager: MACARuleMatching
+  let blocklistEventsManager: _EventsProcessing
+  let redactedEventsManager: _EventsProcessing
 
   // MARK: - Initializers
 
@@ -145,6 +150,7 @@ final class CoreKitComponents {
     sessionDataTaskProvider: URLSessionProviding,
     settings: SettingsLogging & SettingsProtocol,
     skAdNetworkReporter: (SKAdNetworkReporting & _AppEventsReporter)?,
+    skAdNetworkReporterV2: (SKAdNetworkReporting & _AppEventsReporter)?,
     suggestedEventsIndexer: _SuggestedEventsIndexerProtocol,
     swizzler: _Swizzling.Type,
     timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
@@ -154,7 +160,11 @@ final class CoreKitComponents {
     userDataStore: _UserDataPersisting,
     userIDProvider: _UserIDProviding,
     webViewProvider: _WebViewProviding,
-    aemManager: _AutoSetup
+    aemManager: _AutoSetup,
+    protectedModeManager: _AppEventsParameterProcessing,
+    macaRuleMatchingManager: MACARuleMatching,
+    blocklistEventsManager: _EventsProcessing,
+    redactedEventsManager: _EventsProcessing
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
@@ -216,6 +226,7 @@ final class CoreKitComponents {
     self.sessionDataTaskProvider = sessionDataTaskProvider
     self.settings = settings
     self.skAdNetworkReporter = skAdNetworkReporter
+    self.skAdNetworkReporterV2 = skAdNetworkReporterV2
     self.suggestedEventsIndexer = suggestedEventsIndexer
     self.swizzler = swizzler
     self.timeSpentRecorder = timeSpentRecorder
@@ -226,6 +237,10 @@ final class CoreKitComponents {
     self.userIDProvider = userIDProvider
     self.webViewProvider = webViewProvider
     self.aemManager = aemManager
+    self.protectedModeManager = protectedModeManager
+    self.macaRuleMatchingManager = macaRuleMatchingManager
+    self.blocklistEventsManager = blocklistEventsManager
+    self.redactedEventsManager = redactedEventsManager
   }
 
   // MARK: - Default components
@@ -329,6 +344,10 @@ final class CoreKitComponents {
     let serverConfigurationProvider: _ServerConfigurationProviding = _ServerConfigurationManager.shared
     let settings: SettingsProtocol & SettingsLogging = Settings.shared
     let urlSessionProxyFactory: _URLSessionProxyProviding = _URLSessionProxyFactory()
+    let protectedModeManager: _AppEventsParameterProcessing = ProtectedModeManager()
+    let macaRuleMatchingManager: MACARuleMatching = MACARuleMatchingManager()
+    let blocklistEventsManager: _EventsProcessing = BlocklistEventsManager()
+    let redactedEventsManager: _EventsProcessing = RedactedEventsManager()
 
     var aemNetworker: AEMNetworking?
     if #available(iOS 14, *) {
@@ -337,6 +356,13 @@ final class CoreKitComponents {
 
     var skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
     skAdNetworkReporter = _SKAdNetworkReporter(
+      graphRequestFactory: graphRequestFactory,
+      dataStore: UserDefaults.standard,
+      conversionValueUpdater: SKAdNetwork.self
+    )
+
+    var skAdNetworkReporterV2: (_AppEventsReporter & SKAdNetworkReporting)?
+    skAdNetworkReporterV2 = _SKAdNetworkReporterV2(
       graphRequestFactory: graphRequestFactory,
       dataStore: UserDefaults.standard,
       conversionValueUpdater: SKAdNetwork.self
@@ -415,6 +441,7 @@ final class CoreKitComponents {
       sessionDataTaskProvider: URLSession.shared,
       settings: settings,
       skAdNetworkReporter: skAdNetworkReporter,
+      skAdNetworkReporterV2: skAdNetworkReporterV2,
       suggestedEventsIndexer: suggestedEventsIndexer,
       swizzler: _Swizzler.self,
       timeSpentRecorder: timeSpentRecorder,
@@ -424,7 +451,11 @@ final class CoreKitComponents {
       userDataStore: userDataStore,
       userIDProvider: AppEvents.shared,
       webViewProvider: _WebViewFactory(),
-      aemManager: _AEMManager.shared
+      aemManager: _AEMManager.shared,
+      protectedModeManager: protectedModeManager,
+      macaRuleMatchingManager: macaRuleMatchingManager,
+      blocklistEventsManager: blocklistEventsManager,
+      redactedEventsManager: redactedEventsManager
     )
   }()
 }

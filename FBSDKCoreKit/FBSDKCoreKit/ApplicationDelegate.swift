@@ -130,7 +130,9 @@ public final class ApplicationDelegate: NSObject {
       components.aemManager.logAutoSetupStatus(false, source: "client_flag")
     }
     if enabled, components.featureChecker.isEnabled(.aemAutoSetup) {
-      components.aemManager.enable()
+      components.aemManager.enable(
+        components.featureChecker.isEnabled(.aemAutoSetupProxy)
+      )
     }
   }
 
@@ -383,7 +385,11 @@ public final class ApplicationDelegate: NSObject {
       components.appEvents.activateApp()
     }
 
-    components.skAdNetworkReporter?.checkAndRevokeTimer()
+    if components.featureChecker.isEnabled(.skAdNetworkV4) {
+      components.skAdNetworkReporterV2?.checkAndRevokeTimer()
+    } else {
+      components.skAdNetworkReporter?.checkAndRevokeTimer()
+    }
 
     applicationObservers.allObjects.forEach { observer in
       observer.applicationDidBecomeActive?(notification?.object as? UIApplication)

@@ -97,7 +97,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     skAdNetworkReporter.completionBlocks = []
     skAdNetworkReporter.configRefreshTimestamp = Date()
     userDefaultsSpy.set(
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       forKey: "com.facebook.sdk:FBSDKSKAdNetworkConversionConfiguration"
     )
 
@@ -127,7 +127,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let request = graphRequestFactory.capturedRequests[0]
     request.capturedCompletionHandler?(
       nil,
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       nil
     )
     XCTAssertEqual(count, 1, "Should expect the execution block to be called once")
@@ -152,7 +152,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let request = graphRequestFactory.capturedRequests[0]
     request.capturedCompletionHandler?(
       nil,
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       SampleError()
     )
     XCTAssertEqual(
@@ -285,7 +285,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
 
   func testIsReportingEventWithConfiguration() {
     skAdNetworkReporter.configuration = SKAdNetworkConversionConfiguration(
-      json: SampleSKAdNetworkConversionConfiguration.configurationJson
+      json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
     )! // swiftlint:disable:this force_unwrapping
     XCTAssertTrue(
       skAdNetworkReporter.isReportingEvent("fb_test"),
@@ -310,7 +310,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
   func testRecord() throws {
     if #available(iOS 14.0, *) {
       let configuration = SKAdNetworkConversionConfiguration(
-        json: SampleSKAdNetworkConversionConfiguration.configurationJson
+        json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
       )! // swiftlint:disable:this force_unwrapping
       skAdNetworkReporter.configuration = configuration
       skAdNetworkReporter._recordAndUpdateEvent("fb_test", currency: nil, value: nil)

@@ -282,6 +282,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       "AppEvents should not have a StoreKit ad network reporter by default"
     )
     XCTAssertNil(
+      AppEvents.shared.skAdNetworkReporterV2,
+      "AppEvents should not have a StoreKit ad network reporter by default"
+    )
+    XCTAssertNil(
       AppEvents.shared.codelessIndexer,
       "AppEvents should not have a codeless indexer by default"
     )
@@ -307,6 +311,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEvents.shared.skAdNetworkReporter === components.skAdNetworkReporter,
       "AppEvents should be configured with StoreKit ad network reporter"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.skAdNetworkReporterV2 === components.skAdNetworkReporterV2,
+      "AppEvents should be configured with StoreKit ad network reporter v2"
     )
     XCTAssertTrue(
       AppEvents.shared.codelessIndexer === components.codelessIndexer,
@@ -386,14 +394,22 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _AppEventsState.eventProcessors,
       "_AppEventsState's event processors should be configured"
     )
-    XCTAssertEqual(processors.count, 2, "_AppEventsState should have two event processors")
+    XCTAssertEqual(processors.count, 4, "_AppEventsState should have three event processors")
     XCTAssertTrue(
-      processors.first === components.eventDeactivationManager,
+      processors[0] === components.eventDeactivationManager,
       "_AppEventsState's event processors should be configured with the event deactivation manager"
     )
     XCTAssertTrue(
-      processors.last === components.restrictiveDataFilterManager,
+      processors[1] === components.blocklistEventsManager,
+      "_AppEventsState's event processors should be configured with the blocklist events manager"
+    )
+    XCTAssertTrue(
+      processors[2] === components.restrictiveDataFilterManager,
       "_AppEventsState's event processors should be configured with the restrictive data filter manager"
+    )
+    XCTAssertTrue(
+      processors[3] === components.redactedEventsManager,
+      "_AppEventsState's event processors should be configured with the redacted events manager"
     )
   }
 

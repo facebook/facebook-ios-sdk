@@ -561,6 +561,25 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
+  func testSKAdNetworkReporterV2() throws {
+    let reporter = try XCTUnwrap(
+      components.skAdNetworkReporterV2 as? _SKAdNetworkReporterV2,
+      "The default components should use an instance of SKAdNetworkReporterV2 as its StoreKit ad network reporter"
+    )
+    XCTAssertTrue(
+      reporter.graphRequestFactory === components.graphRequestFactory,
+      "The reporter should use the components' graph request factory"
+    )
+    XCTAssertTrue(
+      reporter.dataStore === components.defaultDataStore,
+      "The reporter should use the components' default data store"
+    )
+    XCTAssertTrue(
+      reporter.conversionValueUpdater === SKAdNetwork.self,
+      "The reporter should use the SKAdNetwork type as its conversion value updater"
+    )
+  }
+
   func testSuggestedEventsIndexer() throws {
     let indexer = try XCTUnwrap(
       components.suggestedEventsIndexer as? _SuggestedEventsIndexer,

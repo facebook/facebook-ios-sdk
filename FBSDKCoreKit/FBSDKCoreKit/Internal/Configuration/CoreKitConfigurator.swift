@@ -106,7 +106,11 @@ private extension CoreKitConfigurator {
       userDataStore: components.userDataStore,
       appEventsUtility: components.appEventsUtility,
       internalUtility: components.internalUtility,
-      capiReporter: components.capiReporter
+      capiReporter: components.capiReporter,
+      protectedModeManager: components.protectedModeManager,
+      macaRuleMatchingManager: components.macaRuleMatchingManager,
+      blocklistEventsManager: components.blocklistEventsManager,
+      redactedEventsManager: components.redactedEventsManager
     )
   }
 
@@ -126,7 +130,9 @@ private extension CoreKitConfigurator {
   func configureAppEventsState() {
     _AppEventsState.eventProcessors = [
       components.eventDeactivationManager,
+      components.blocklistEventsManager,
       components.restrictiveDataFilterManager,
+      components.redactedEventsManager,
     ]
   }
 
@@ -314,6 +320,7 @@ private extension CoreKitConfigurator {
       onDeviceMLModelManager: components.modelManager,
       metadataIndexer: components.metadataIndexer,
       skAdNetworkReporter: components.skAdNetworkReporter,
+      skAdNetworkReporterV2: components.skAdNetworkReporterV2,
       codelessIndexer: components.codelessIndexer,
       swizzler: components.swizzler,
       aemReporter: components.aemReporter
@@ -332,6 +339,7 @@ private extension CoreKitConfigurator {
     Settings.shared.setDependencies(
       .init(
         appEventsConfigurationProvider: components.appEventsConfigurationProvider,
+        serverConfigurationProvider: components.serverConfigurationProvider,
         dataStore: components.defaultDataStore,
         eventLogger: components.eventLogger,
         infoDictionaryProvider: components.infoDictionaryProvider

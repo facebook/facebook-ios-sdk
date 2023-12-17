@@ -101,7 +101,16 @@ extension Profile {
     else { return nil }
 
     let rawLinkURL = response[ResponseKey.link.rawValue] as? String
-    let linkURL = (response[ResponseKey.link.rawValue] as? URL) ?? (rawLinkURL.flatMap(URL.init(string:)))
+
+    var linkURL = (response[ResponseKey.link.rawValue] as? URL) ?? (rawLinkURL.flatMap(URL.init(string:)))
+
+    #if swift(>=5.9)
+    if #available(iOS 17.0, *) {
+      linkURL = (response[ResponseKey.link.rawValue] as? URL) ?? rawLinkURL.flatMap { str in
+        URL(string: str, encodingInvalidCharacters: false)
+      }
+    }
+    #endif
 
     let friendsResponse = response[ResponseKey.friends.rawValue] as? [String: Any]
     let friends = friendsResponse.flatMap(friendIdentifiers(from:))

@@ -74,6 +74,7 @@ enum TestCoreKitComponents {
     sessionDataTaskProvider: URLSessionProviding = TestSessionProvider(),
     settings: SettingsLogging & SettingsProtocol = TestSettings(),
     skAdNetworkReporter: (SKAdNetworkReporting & _AppEventsReporter)? = TestSKAdNetworkReporter(),
+    skAdNetworkReporterV2: (SKAdNetworkReporting & _AppEventsReporter)? = TestSKAdNetworkReporterV2(),
     suggestedEventsIndexer: _SuggestedEventsIndexerProtocol = TestSuggestedEventsIndexer(),
     swizzler: _Swizzling.Type = TestSwizzler.self,
     timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording = TestTimeSpentRecorder(),
@@ -83,7 +84,11 @@ enum TestCoreKitComponents {
     userDataStore: _UserDataPersisting = TestUserDataStore(),
     userIDProvider: _UserIDProviding = TestUserIDProvider(),
     webViewProvider: _WebViewProviding = TestWebViewFactory(),
-    aemManager: _AutoSetup = TestAEMManager()
+    aemManager: _AutoSetup = TestAEMManager(),
+    protectedModeManager: _AppEventsParameterProcessing = TestAppEventsParameterProcessor(),
+    macaRuleMatchingManager: MACARuleMatching = TestMACARuleMatchingManager(),
+    blocklistEventsManager: _EventsProcessing = TestBlocklistEventsManager(),
+    redactedEventsManager: _EventsProcessing = TestRedactedEventsManager()
   ) -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
@@ -146,6 +151,7 @@ enum TestCoreKitComponents {
       sessionDataTaskProvider: sessionDataTaskProvider,
       settings: settings,
       skAdNetworkReporter: skAdNetworkReporter,
+      skAdNetworkReporterV2: skAdNetworkReporterV2,
       suggestedEventsIndexer: suggestedEventsIndexer,
       swizzler: swizzler,
       timeSpentRecorder: timeSpentRecorder,
@@ -155,7 +161,11 @@ enum TestCoreKitComponents {
       userDataStore: userDataStore,
       userIDProvider: userIDProvider,
       webViewProvider: webViewProvider,
-      aemManager: aemManager
+      aemManager: aemManager,
+      protectedModeManager: protectedModeManager,
+      macaRuleMatchingManager: macaRuleMatchingManager,
+      blocklistEventsManager: blocklistEventsManager,
+      redactedEventsManager: redactedEventsManager
     )
   }
 }

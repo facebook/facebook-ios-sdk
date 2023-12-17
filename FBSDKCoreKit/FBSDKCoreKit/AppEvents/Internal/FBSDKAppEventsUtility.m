@@ -164,7 +164,7 @@ static FBSDKAppEventsUtility *_shared;
   }
 
   Class ASIdentifierManagerClass = [dynamicFrameworkResolver asIdentifierManagerClass];
-  ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
+  ASIdentifierManager *manager = (ASIdentifierManager *)[ASIdentifierManagerClass sharedManager];
   if (shouldUseCachedManager) {
     self.cachedAdvertiserIdentifierManager = manager;
   } else {
