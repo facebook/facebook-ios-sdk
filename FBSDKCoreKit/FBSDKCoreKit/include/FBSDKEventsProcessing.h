@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(_EventsProcessing)
 @protocol FBSDKEventsProcessing
 
+- (void)enable;
 - (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events;
 
 @end
