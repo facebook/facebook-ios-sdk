@@ -52,6 +52,8 @@ final class TestAppEvents: TestEventLogger,
   var capturedConfigureEventDeactivationParameterProcessor: _AppEventsParameterProcessing?
   var capturedConfigureProtectedModeManager: _AppEventsParameterProcessing?
   var capturedConfigureMACARuleMatchingManager: MACARuleMatching?
+  var capturedConfigureBlocklistEventsManager: _EventsProcessing?
+  var capturedConfigureRedactedEventsManager: _EventsProcessing?
   var capturedConfigureRestrictiveDataFilterParameterProcessor: _AppEventsParameterProcessing?
   var capturedConfigureATEPublisherFactory: _ATEPublisherCreating?
   var capturedConfigureAppEventsStateProvider: _AppEventsStateProviding?
@@ -92,7 +94,9 @@ final class TestAppEvents: TestEventLogger,
     internalUtility: InternalUtilityProtocol,
     capiReporter: CAPIReporter,
     protectedModeManager: _AppEventsParameterProcessing,
-    macaRuleMatchingManager: MACARuleMatching
+    macaRuleMatchingManager: MACARuleMatching,
+    blocklistEventsManager: _EventsProcessing,
+    redactedEventsManager: _EventsProcessing
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -116,6 +120,8 @@ final class TestAppEvents: TestEventLogger,
     capturedCAPIReporter = capiReporter
     capturedConfigureProtectedModeManager = protectedModeManager
     capturedConfigureMACARuleMatchingManager = macaRuleMatchingManager
+    capturedConfigureBlocklistEventsManager = blocklistEventsManager
+    capturedConfigureRedactedEventsManager = redactedEventsManager
   }
 
   // swiftlint:disable:next function_parameter_count

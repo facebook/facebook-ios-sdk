@@ -108,7 +108,9 @@ private extension CoreKitConfigurator {
       internalUtility: components.internalUtility,
       capiReporter: components.capiReporter,
       protectedModeManager: components.protectedModeManager,
-      macaRuleMatchingManager: components.macaRuleMatchingManager
+      macaRuleMatchingManager: components.macaRuleMatchingManager,
+      blocklistEventsManager: components.blocklistEventsManager,
+      redactedEventsManager: components.redactedEventsManager
     )
   }
 
@@ -128,7 +130,9 @@ private extension CoreKitConfigurator {
   func configureAppEventsState() {
     _AppEventsState.eventProcessors = [
       components.eventDeactivationManager,
+      components.blocklistEventsManager,
       components.restrictiveDataFilterManager,
+      components.redactedEventsManager,
     ]
   }
 
