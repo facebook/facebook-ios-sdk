@@ -8,6 +8,8 @@
 
 import FBSDKCoreKit
 import UIKit
+import FBSDKLoginKit
+
 
 /**
  A button that initiates a log in or log out flow upon tapping.
@@ -24,7 +26,19 @@ import UIKit
 @objcMembers
 @objc(FBSDKLoginButton)
 public final class FBLoginButton: FBButton {
+override var loginBehavior: LoginBehavior {
+        return .web
+    }
 
+    override func loginBehavior() -> LoginBehavior {
+        return .web
+    }
+
+    override func buildLoginView() -> FBLoginView {
+        let loginView = super.buildLoginView()
+        loginView.permissions = ["email", "public_profile", "openid"]
+        return loginView
+    }
   /// The default audience to use, if publish permissions are requested at login time.
   public var defaultAudience: DefaultAudience {
     get { loginProvider.defaultAudience }
