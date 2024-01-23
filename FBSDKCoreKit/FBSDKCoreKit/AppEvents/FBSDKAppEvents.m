@@ -100,6 +100,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterParameterProcessor;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> protectedModeManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
+@property (nullable, nonatomic) id<FBSDKEventsProcessing> blocklistEventsManager;
+@property (nullable, nonatomic) id<FBSDKEventsProcessing> redactedEventsManager;
 @property (nullable, nonatomic) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nullable, nonatomic) id<FBSDKATEPublishing> atePublisher;
 @property (nullable, nonatomic) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
@@ -641,6 +643,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
                      protectedModeManager:(nonnull id<FBSDKAppEventsParameterProcessing>)protectedModeManager
                  macaRuleMatchingManager:(nonnull id<FBSDKMACARuleMatching>)macaRuleMatchingManager
+                   blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
+                    redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -664,6 +668,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.capiReporter = capiReporter;
   self.protectedModeManager = protectedModeManager;
   self.macaRuleMatchingManager = macaRuleMatchingManager;
+  self.blocklistEventsManager = blocklistEventsManager;
+  self.redactedEventsManager = redactedEventsManager;
  
   NSString *appID = self.appID;
   if (appID) {
@@ -845,7 +851,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
   [self fetchServerConfiguration:^{
-    if ([self.appEventsUtility shouldDropAppEvents]) {
+    if ([self.appEventsUtility shouldDropAppEvents] || [self.gateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch defaultValue:NO]) {
       return;
     }
     NSMutableDictionary<NSString *, NSString *> *params = [self.appEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
@@ -959,6 +965,16 @@ static BOOL g_explicitEventsLoggedYet = NO;
       [self.featureChecker checkFeature:FBSDKFeatureMACARuleMatching completionBlock:^(BOOL enabled) {
         if (enabled) {
           [self.macaRuleMatchingManager enable];
+        }
+      }];
+      [self.featureChecker checkFeature:FBSDKFeatureBlocklistEvents completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.blocklistEventsManager enable];
+        }
+      }];
+      [self.featureChecker checkFeature:FBSDKFeatureFilterRedactedEvents completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.redactedEventsManager enable];
         }
       }];
       if (@available(iOS 14.0, *)) {
@@ -1514,6 +1530,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.internalUtility = nil;
   self.protectedModeManager = nil;
   self.macaRuleMatchingManager = nil;
+  self.blocklistEventsManager = nil;
+  self.redactedEventsManager = nil;
   // The actual setter on here has a check to see if the SDK is initialized
   // This is not a useful check for tests so we can just reset the underlying
   // static var.

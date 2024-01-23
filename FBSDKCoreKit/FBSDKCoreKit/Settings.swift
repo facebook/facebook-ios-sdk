@@ -80,12 +80,22 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    The default value is `true`.
    */
   public var isAutoLogAppEventsEnabled: Bool {
-    get { getPersistedBooleanProperty(.isAutoLogAppEventsEnabled) }
-    set { setPersistedBooleanProperty(.isAutoLogAppEventsEnabled, to: newValue) }
+    get { checkAutoLogAppEventsEnabled() }
+    set { isAutoLogAppEventsEnabledLocally = newValue }
+  }
+
+  /**
+   Controls the automatic logging of basic app events on the client side such as `activateApp` and `deactivateApp`.
+
+   The default value is `true`.
+   */
+  internal var isAutoLogAppEventsEnabledLocally: Bool {
+    get { getPersistedBooleanProperty(.isAutoLogAppEventsEnabledLocally) }
+    set { setPersistedBooleanProperty(.isAutoLogAppEventsEnabledLocally, to: newValue) }
   }
 
   // swiftlint:disable:next identifier_name discouraged_optional_boolean
-  var _isAutoLogAppEventsEnabled: Bool?
+  internal var _isAutoLogAppEventsEnabledLocally: Bool?
 
   /**
    Controls the `fb_codeless_debug` logging event.
@@ -436,9 +446,9 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    Sets the data processing options.
 
    - Parameters:
-     - options The list of the options.
-     - country The code for the country.
-     - state The code for the state.
+   - options The list of the options.
+   - country The code for the country.
+   - state The code for the state.
    */
   public func setDataProcessingOptions(_ options: [String]?, country: Int32, state: Int32) {
     let values: [DataProcessingOptionKey.RawValue: Any] = [
@@ -632,6 +642,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 extension Settings: DependentAsObject {
   struct ObjectDependencies {
     var appEventsConfigurationProvider: _AppEventsConfigurationProviding
+    var serverConfigurationProvider: _ServerConfigurationProviding
     var dataStore: DataPersisting
     var eventLogger: EventLogging
     var infoDictionaryProvider: InfoDictionaryProviding
