@@ -50,7 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
          accessToken:(nullable FBSDKAccessToken *)accessToken;
 - (void)applicationDidBecomeActive;
-- (void)applicationMovingFromActiveStateOrTerminating;
+- (void)applicationMovingFromActiveState;
+- (void)applicationTerminating;
 
 @end
 

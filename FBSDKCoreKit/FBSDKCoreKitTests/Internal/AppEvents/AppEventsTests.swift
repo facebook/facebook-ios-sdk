@@ -647,11 +647,37 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
-  func testApplicationTerminatingSuspendsTimeSpentRecording() {
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+  func testApplicationMovingFromActiveStateSuspendsTimeSpentRecording() {
+    appEvents.applicationMovingFromActiveState()
     XCTAssertTrue(
       timeSpentRecorder.suspendWasCalled,
-      "When application terminates or moves from active state, the time spent recording should be suspended."
+      "When application moves from active state, the time spent recording should be suspended."
+    )
+  }
+
+  func testApplicationTerminatingSuspendsTimeSpentRecording() {
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastInstallResponsemockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertFalse(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPing123")
+    )
+  }
+
+  func testApplicationTerminatingWithoutInstallResponse() {
+    settings.appID = "123"
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertTrue(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPingmockAppID")
     )
   }
 
@@ -671,7 +697,7 @@ final class AppEventsTests: XCTestCase {
       isImplicitlyLogged: false,
       accessToken: SampleAccessTokens.validToken
     )
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+    appEvents.applicationMovingFromActiveState()
 
     XCTAssertTrue(
       !appEventsStateStore.capturedPersistedState.isEmpty,

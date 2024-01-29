@@ -12,6 +12,7 @@ import Foundation
 public final class UserDefaultsSpy: UserDefaults {
   public var capturedObjectRetrievalKeys = [String]()
   public var capturedSetObjectKeys = [String]()
+  public var capturedRemoveObjectKeys = [String]()
   public var capturedObjectRetrievalKey: String?
   public var capturedSetObjectKey: String?
   public var capturedValues = [String: Any]()
@@ -32,5 +33,9 @@ public final class UserDefaultsSpy: UserDefaults {
     capturedValues[defaultName] = value
     capturedSetObjectKeys.append(defaultName)
     capturedSetObjectKey = defaultName
+  }
+
+  public override func removeObject(forKey defaultName: String) {
+    capturedRemoveObjectKeys.append(defaultName)
   }
 }
