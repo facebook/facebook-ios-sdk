@@ -16,6 +16,7 @@ final class SettingsTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var logger: TestEventLogger!
   var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
+  var serverConfigurationProvider: TestAppEventsServerConfigurationProvider!
   var userDefaultsSpy: UserDefaultsSpy!
   var settings: Settings!
   var bundle: InfoDictionaryProviding!
@@ -35,6 +36,7 @@ final class SettingsTests: XCTestCase {
 
     logger = TestEventLogger()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
+    serverConfigurationProvider = TestAppEventsServerConfigurationProvider()
     userDefaultsSpy = UserDefaultsSpy()
     bundle = TestBundle()
     settings = Settings()
@@ -55,6 +57,7 @@ final class SettingsTests: XCTestCase {
     settings.setDependencies(
       .init(
         appEventsConfigurationProvider: appEventsConfigurationProvider,
+        serverConfigurationProvider: serverConfigurationProvider,
         dataStore: userDefaultsSpy,
         eventLogger: logger,
         infoDictionaryProvider: bundle
@@ -981,6 +984,20 @@ final class SettingsTests: XCTestCase {
 
   // MARK: - Auto Log App Events Enabled
 
+  func testAutoLogAppEventsEnabledFromKeyPath() {
+    configureSettings()
+    settings.isAutoLogAppEventsEnabled = false
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Auto logging should pick up the correct value from KeyPath"
+    )
+    settings.isAutoLogAppEventsEnabled = true
+    XCTAssertTrue(
+      settings.isAutoLogAppEventsEnabled,
+      "Auto logging should pick up the correct value from KeyPath when value changed"
+    )
+  }
+
   func testAutoLogAppEventsEnabledFromPlist() {
     bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
     configureSettings()
@@ -1046,6 +1063,82 @@ final class SettingsTests: XCTestCase {
     XCTAssertNil(
       testBundle.capturedKeys.last,
       "Should not attempt to access the plist to retrieve objects that have a current value"
+    )
+  }
+
+  func testAutoLogAppEventsEnabledFromServer_1() {
+    // set true for the server-side overriden value
+    let migratedAutoLogValues = ["auto_log_app_events_enabled": NSNumber(true)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    // set false in info.plist
+    bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
+    configureSettings()
+    XCTAssertTrue(
+      settings.isAutoLogAppEventsEnabled,
+      "Should favor the server-side overriden value over others"
+    )
+  }
+
+  func testAutoLogAppEventsEnabledFromServer_2() {
+    // set true for the server-side overriden value
+    let migratedAutoLogValues = ["auto_log_app_events_enabled": String("Some_Value")]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    configureSettings()
+    settings.isAutoLogAppEventsEnabled = true
+    XCTAssertTrue(
+      settings.isAutoLogAppEventsEnabled,
+      "Should favor the client-side value when type casting fails"
+    )
+  }
+
+  func testAutoLogAppEventsEnabledFromServerDefault() {
+    // set false for the server-side default value
+    let migratedAutoLogValues = ["auto_log_app_events_default": NSNumber(false)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    configureSettings()
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should favor the server-side default value if there are no other values set"
+    )
+  }
+
+  func testAutoLogAppEventsEnabledFromLocal_1() {
+    // set true for the server-side default value
+    let migratedAutoLogValues = ["auto_log_app_events_default": NSNumber(true)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    // set false in info.plist
+    bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
+    configureSettings()
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should favor the value in info.plist over the server-side default value"
+    )
+  }
+
+  func testAutoLogAppEventsEnabledFromLocal_2() {
+    // set true for the server-side overriden value
+    let migratedAutoLogValues = ["auto_log_app_events_default": NSNumber(true)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    // set false in memory store
+    configureSettings()
+    settings.isAutoLogAppEventsEnabled = false
+    configureSettings()
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should favor the value in memory over the server-side default value"
+    )
+  }
+
+  func testAutoLogAppEventsEnabledFromLocal_3() {
+    // Set an empty dictionary for the server-side value
+    // Technically, this should not happen in production environment
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": [:]]
+    // set false in user default
+    configureSettings()
+    settings.dataStore?.fb_setObject(false, forKey: "FacebookAutoLogAppEventsEnabled")
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should favor the value in user default over the server-side default value"
     )
   }
 

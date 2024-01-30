@@ -49,6 +49,8 @@ final class AppEventsTests: XCTestCase {
   var capiReporter: TestCAPIReporter!
   var protectedModeManager: TestAppEventsParameterProcessor!
   var macaRuleMatchingManager: TestMACARuleMatchingManager!
+  var blocklistEventsManager: TestBlocklistEventsManager!
+  var redactedEventsManager: TestRedactedEventsManager!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -77,6 +79,8 @@ final class AppEventsTests: XCTestCase {
     restrictiveDataFilterParameterProcessor = TestAppEventsParameterProcessor()
     protectedModeManager = TestAppEventsParameterProcessor()
     macaRuleMatchingManager = TestMACARuleMatchingManager()
+    blocklistEventsManager = TestBlocklistEventsManager()
+    redactedEventsManager = TestRedactedEventsManager()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     appEventsStateProvider = TestAppEventsStateProvider()
     atePublisherFactory = TestATEPublisherFactory()
@@ -120,6 +124,8 @@ final class AppEventsTests: XCTestCase {
     restrictiveDataFilterParameterProcessor = nil
     protectedModeManager = nil
     macaRuleMatchingManager = nil
+    blocklistEventsManager = nil
+    redactedEventsManager = nil
     appEventsStateProvider = nil
     advertiserIDProvider = nil
     skAdNetworkReporter = nil
@@ -165,7 +171,9 @@ final class AppEventsTests: XCTestCase {
       internalUtility: internalUtility,
       capiReporter: capiReporter,
       protectedModeManager: protectedModeManager,
-      macaRuleMatchingManager: macaRuleMatchingManager
+      macaRuleMatchingManager: macaRuleMatchingManager,
+      blocklistEventsManager: blocklistEventsManager,
+      redactedEventsManager: redactedEventsManager
     )
 
     appEvents.configureNonTVComponents(
@@ -562,6 +570,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testActivateAppWithInitializedSDK() throws {
+    TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: false)
     appEvents.activateApp()
 
     XCTAssertTrue(
@@ -590,6 +599,39 @@ final class AppEventsTests: XCTestCase {
     XCTAssertNotNil(capiReporter.capturedEvent)
   }
 
+  func testActivateAppWithAppEventsKillSwitchEnabled() throws {
+    TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: true)
+    appEvents.activateApp()
+
+    XCTAssertTrue(
+      timeSpentRecorder.restoreWasCalled,
+      "Activating App with initialized SDK should restore recording time spent data."
+    )
+    XCTAssertTrue(
+      timeSpentRecorder.capturedCalledFromActivateApp,
+      """
+      Activating App with initialized SDK should indicate its \
+      calling from activateApp when restoring recording time spent data.
+      """
+    )
+
+    // The publish call happens after both configurations are fetched
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    appEventsConfigurationProvider.lastCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    serverConfigurationProvider.secondCapturedCompletionBlock?(nil, nil)
+
+    let request = graphRequestFactory.capturedRequests.first
+    XCTAssertNil(
+      request,
+      "No request should be made when the FBSDKGateKeeperAppEventsKillSwitch is enabled"
+    )
+    XCTAssertNil(
+      capiReporter.capturedEvent,
+      "The capiReporter should not be invoked when the FBSDKGateKeeperAppEventsKillSwitch is enabled"
+    )
+  }
+
   func testApplicationBecomingActiveRestoresTimeSpentRecording() {
     appEvents.applicationDidBecomeActive()
     XCTAssertTrue(
@@ -605,11 +647,37 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
-  func testApplicationTerminatingSuspendsTimeSpentRecording() {
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+  func testApplicationMovingFromActiveStateSuspendsTimeSpentRecording() {
+    appEvents.applicationMovingFromActiveState()
     XCTAssertTrue(
       timeSpentRecorder.suspendWasCalled,
-      "When application terminates or moves from active state, the time spent recording should be suspended."
+      "When application moves from active state, the time spent recording should be suspended."
+    )
+  }
+
+  func testApplicationTerminatingSuspendsTimeSpentRecording() {
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastInstallResponsemockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertFalse(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPing123")
+    )
+  }
+
+  func testApplicationTerminatingWithoutInstallResponse() {
+    settings.appID = "123"
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertTrue(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPingmockAppID")
     )
   }
 
@@ -629,7 +697,7 @@ final class AppEventsTests: XCTestCase {
       isImplicitlyLogged: false,
       accessToken: SampleAccessTokens.validToken
     )
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+    appEvents.applicationMovingFromActiveState()
 
     XCTAssertTrue(
       !appEventsStateStore.capturedPersistedState.isEmpty,
@@ -1369,6 +1437,54 @@ final class AppEventsTests: XCTestCase {
     XCTAssertTrue(
       TestCodelessEvents.wasEnabledCalled,
       "Should enable codeless events when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testEnablingBlocklistEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .blocklistEvents, with: true)
+
+    XCTAssertTrue(
+      blocklistEventsManager.enabledWasCalled,
+      "Should enable blocklist events when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingBlocklistEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.blocklistEvents),
+      "Fetching a configuration should check if the BlocklistEvents feature is enabled"
+    )
+  }
+
+  func testEnablingRedactedEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .filterRedactedEvents, with: true)
+
+    XCTAssertTrue(
+      redactedEventsManager.enabledWasCalled,
+      "Should enable blocklist events when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingRedactedEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.filterRedactedEvents),
+      "Fetching a configuration should check if the BlocklistEvents feature is enabled"
     )
   }
 
