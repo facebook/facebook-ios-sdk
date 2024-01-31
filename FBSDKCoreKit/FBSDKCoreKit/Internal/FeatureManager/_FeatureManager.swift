@@ -114,6 +114,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .aemAutoSetupProxy,
       .appEventsCloudbridge,
       .skAdNetwork,
+      .skAdNetworkV4,
       .skAdNetworkConversionValue,
       .protectedMode,
       .macaRuleMatching,
@@ -157,6 +158,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .eventDeactivation: featureName = "EventDeactivation"
     case .skAdNetwork: featureName = "SKAdNetwork"
     case .skAdNetworkConversionValue: featureName = "SKAdNetworkConversionValue"
+    case .skAdNetworkV4: featureName = "SKAdNetworkV4"
     case .instrument: featureName = "Instrument"
     case .crashReport: featureName = "CrashReport"
     case .crashShield: featureName = "CrashShield"
