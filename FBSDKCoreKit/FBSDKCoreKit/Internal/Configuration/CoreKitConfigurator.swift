@@ -48,6 +48,8 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureModelManager()
     configureProfile()
     configureWebDialogView()
+    configureDomainHandler()
+    configureGraphRequestQueue()
   }
 }
 
@@ -365,6 +367,24 @@ private extension CoreKitConfigurator {
       webViewProvider: components.webViewProvider,
       urlOpener: components.internalURLOpener,
       errorFactory: components.errorFactory
+    )
+  }
+
+  func configureDomainHandler() {
+    components.internalUtility.detectFatalTrackingDomainsConfig()
+    _DomainHandler.sharedInstance().configure(
+      domainConfigurationProvider: _DomainConfigurationManager.sharedInstance(),
+      settings: components.settings,
+      dataStore: components.defaultDataStore,
+      graphRequestFactory: components.graphRequestFactory,
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory
+    )
+    _DomainConfiguration.setDefaultDomainInfo()
+  }
+
+  func configureGraphRequestQueue() {
+    GraphRequestQueue.sharedInstance().configure(
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory
     )
   }
 }

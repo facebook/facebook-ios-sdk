@@ -11,11 +11,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKGraphRequestConnection (Testing)
 
 @property (class, nonatomic, readonly) BOOL canMakeRequests;
+@property (class, nonatomic, readonly) BOOL didFetchDomainConfiguration;
 
 + (void)resetCanMakeRequests;
++ (void)resetDidFetchDomainConfiguration;
 + (void)resetDefaultConnectionTimeout;
 
 - (NSString *)_overrideVersionPart;
+- (BOOL)shouldPiggyBackRequests;
 
 @end
 

@@ -7,6 +7,7 @@
  */
 
 #import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKDomainHandler.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
@@ -47,8 +48,7 @@ static dispatch_once_t fetchUrlSchemesToken;
 
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
-  return [FBSDKAuthenticationToken.currentAuthenticationToken respondsToSelector:@selector(graphDomain)]
-  && [FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]
+  return [FBSDKDomainHandler isAuthenticatedForGamingDomain]
   && ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]);
 }
 
@@ -327,6 +327,7 @@ static FBSDKInternalUtility *_shared;
                          host ?: @"",
                          path ?: @"",
                          queryString ?: @""];
+  
   NSURL *url = [NSURL URLWithString:urlString];
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 170000
@@ -484,6 +485,30 @@ static NSMapTable *_transientObjects;
     if ([self isRegisteredURLScheme:scheme]) {
       NSString *reason = [NSString stringWithFormat:@"%@ is registered as a URL scheme. Please move the entry from CFBundleURLSchemes in your Info.plist to LSApplicationQueriesSchemes. If you are trying to resolve \"canOpenURL: failed\" warnings, those only indicate that the Facebook app is not installed on your device or simulator and can be ignored.", scheme];
       @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+    }
+  }
+}
+
+- (void)detectFatalTrackingDomainsConfig
+{
+  NSArray *subdirectories = @[[NSNull null],
+                               @"Frameworks/FBSDKCoreKit.framework",
+                               @"Frameworks/FBSDKCoreKit_Basics.framework",
+                               @"Frameworks/FBAEMKit.framework",
+                               @"Frameworks/FBSDKLoginKit.framework",
+                               @"Frameworks/FBSDKShareKit.framework"];
+  for (NSString *subdirectory in subdirectories) {
+    NSString *subdir = [subdirectory isKindOfClass:[NSNull class]] ? nil: subdirectory;
+    NSArray<NSURL *> *privacyInfoUrls = [[NSBundle mainBundle] URLsForResourcesWithExtension:@"xcprivacy" subdirectory:subdir];
+    for (NSURL *privacyInfoUrl in privacyInfoUrls) {
+      NSDictionary *privacyInfo = [[NSDictionary alloc] initWithContentsOfURL:privacyInfoUrl];
+      NSArray *trackingDomains = privacyInfo[@"NSPrivacyTrackingDomains"];
+      for (NSString *domain in trackingDomains) {
+        if ([@"facebook.com" isEqualToString:domain]) {
+          NSString *reason = [NSString stringWithFormat:@"Configuring facebook.com as tracking domain could block all subdomains of facebook.com. Please ensure tracking domains are configured correctly in Privacy Manifest file."];
+          @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+        }
+      }
     }
   }
 }

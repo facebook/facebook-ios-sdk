@@ -93,6 +93,7 @@ targets:
       - sdk: SafariServices.framework
         weak: true
       - sdk: AdSupport.framework
+      - sdk: AppTrackingTransparency.framework
       - sdk: CoreGraphics.framework
       - sdk: StoreKit.framework
         weak: true
