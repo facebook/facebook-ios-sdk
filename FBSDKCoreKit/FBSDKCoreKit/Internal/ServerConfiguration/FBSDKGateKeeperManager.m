@@ -151,7 +151,8 @@ static id<FBSDKDataPersisting> _store;
                                                         parameters:parameters
                                                        tokenString:nil
                                                         HTTPMethod:nil
-                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery
+                                 useAlternativeDefaultDomainPrefix:NO];
 }
 
 + (void)processLoadRequestResponse:(id)result error:(NSError *)error

@@ -69,6 +69,8 @@ final class CoreKitConfiguratorTests: XCTestCase {
     _ModelManager.reset()
     Profile.resetDependencies()
     _AEMManager.shared.reset()
+    GraphRequestQueue.sharedInstance().reset()
+    _DomainConfigurationManager.sharedInstance().reset()
   }
 
   func testConfiguringAccessToken() {
@@ -1384,6 +1386,68 @@ final class CoreKitConfiguratorTests: XCTestCase {
       FBWebDialogView.errorFactory,
       components.errorFactory,
       "FBWebDialogView should be configured with the error factory"
+    )
+  }
+
+  func testConfiguringDomainHandler() {
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().settings,
+      "_DomainConfigurationManager should not have settings by default"
+    )
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().dataStore,
+      "_DomainConfigurationManager should not have a dataStore by default"
+    )
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().graphRequestFactory,
+      "_DomainConfigurationManager should not have a graphRequestFactory by default"
+    )
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().graphRequestConnectionFactory,
+      "_DomainConfigurationManager should not have a graphRequestConnectionFactory by default"
+    )
+
+    configurator.performConfiguration()
+
+    XCTAssertTrue(
+      _DomainConfigurationManager.sharedInstance().settings === components.settings,
+      "Should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      _DomainConfigurationManager.sharedInstance().dataStore === components.defaultDataStore,
+      "Should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      _DomainConfigurationManager.sharedInstance().graphRequestFactory === components.graphRequestFactory,
+      "Should be configured with the graph request connection factory"
+    )
+    let connectionFactory = _DomainConfigurationManager.sharedInstance().graphRequestConnectionFactory
+    XCTAssertTrue(
+      connectionFactory === components.graphRequestConnectionFactory,
+      "Should be configured with the graph request connection factory"
+    )
+  }
+
+  func testConfiguringGraphRequestQueue() {
+    XCTAssertNil(
+      GraphRequestQueue.sharedInstance().graphRequestConnectionFactory,
+      "GraphRequestQueue should not have a graphRequestConnectionFactory by default"
+    )
+    guard let requests = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
+      XCTFail("GraphRequestQueue should be backed by [GraphRequestMetadata]")
+      return
+    }
+    XCTAssertTrue(
+      requests.isEmpty,
+      "GraphRequestQueue should have no requests by default"
+    )
+
+    configurator.performConfiguration()
+
+    let connectionFactory = GraphRequestQueue.sharedInstance().graphRequestConnectionFactory
+    XCTAssertTrue(
+      connectionFactory === components.graphRequestConnectionFactory,
+      "Should be configured with the graph request connection factory"
     )
   }
 }

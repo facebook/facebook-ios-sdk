@@ -151,6 +151,37 @@ static void LaunchMediaPicker(NSString *type)
    completion:nil];
 }
 
+static void MakeGamingDomainTestBatchRequest(void)
+{
+  if (![[FBSDKAuthenticationToken currentAuthenticationToken].graphDomain isEqualToString:@"gaming"]) {
+    return;
+  }
+  if (![FBSDKAccessToken currentAccessToken]) {
+    return;
+  }
+  NSString *tournamentsGraphPath = [NSString stringWithFormat:@"%@/tournaments", [FBSDKAccessToken currentAccessToken].userID];
+  id<FBSDKGraphRequest> tournamentRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:tournamentsGraphPath parameters:@{}];
+  id<FBSDKGraphRequest> meRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me" parameters:@{}];
+  
+  FBSDKGraphRequestConnectionFactory *connectionFactory = [FBSDKGraphRequestConnectionFactory new];
+  id<FBSDKGraphRequestConnecting> connection = [connectionFactory createGraphRequestConnection];
+  [connection addRequest:tournamentRequest completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    if (error) {
+      ConsoleError(error, @"Failed to fetch tournaments in gaming domain batch request");
+    } else {
+      ConsoleSucceed(@"Successfully fetched tournaments in gaming domain batch request");
+    }
+  }];
+  [connection addRequest:meRequest completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    if (error) {
+      ConsoleError(error, @"Failed to fetch user information in gaming domain batch request");
+    } else {
+      ConsoleSucceed(@"Successfully fetched user information in gaming domain batch request");
+    }
+  }];
+  [connection start];
+}
+
 void GamingServicesRegisterCells(UITableView *tableView)
 {
   [tableView
@@ -192,6 +223,10 @@ UITableViewCell *GamingServicesConfiguredCell(NSIndexPath *indexPath, UITableVie
     case GamingServicesCellRowTournaments:
       cell.textLabel.text = @"Tournaments";
       cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+      break;
+    case GamingServicesCellRowBatchRequest:
+      cell.textLabel.text = @"Make Test Batch Request";
+      cell.textLabel.textColor = UIColor.systemBlueColor;
       break;
   }
 
@@ -238,6 +273,9 @@ void GamingServicesDidSelectCell(GamingServicesCellRow row)
     case GamingServicesCellRowCustomUpdate:
       break;
     case GamingServicesCellRowTournaments:
+      break;
+    case GamingServicesCellRowBatchRequest:
+      MakeGamingDomainTestBatchRequest();
       break;
   }
 }

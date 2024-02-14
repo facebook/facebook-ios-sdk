@@ -239,7 +239,8 @@ static id<FBSDKSettings> _settings;
                                                                                  parameters:parameters
                                                                                 tokenString:nil
                                                                                  HTTPMethod:nil
-                                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                                      flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery
+                                                          useAlternativeDefaultDomainPrefix:NO];
   return request;
 }
 
@@ -269,6 +270,12 @@ static id<FBSDKSettings> _settings;
   if (_isCheckingSession) {
     return;
   }
+  
+  if ([[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled]) {
+    if (![self.settings isAdvertiserTrackingEnabled]) {
+      return;
+    }
+  }
 
   _isCheckingSession = YES;
   NSDictionary<NSString *, id> *parameters = @{
@@ -279,7 +286,8 @@ static id<FBSDKSettings> _settings;
                                                                                              [self.settings appID],
                                                                                              CODELESS_INDEXING_SESSION_ENDPOINT]
                                                                                  parameters:parameters
-                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                          useAlternativeDefaultDomainPrefix:NO];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCheckingSession = NO;
     if ([result isKindOfClass:[NSDictionary<NSString *, id> class]]) {
@@ -406,7 +414,8 @@ static id<FBSDKSettings> _settings;
                                      CODELESS_INDEXING_PLATFORM_KEY : @"iOS",
                                      CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID]
                                    }
-                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                          useAlternativeDefaultDomainPrefix:NO];
   _isCodelessIndexing = YES;
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCodelessIndexing = NO;

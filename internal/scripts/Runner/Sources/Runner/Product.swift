@@ -44,11 +44,14 @@ enum Product: String, CaseIterable, ExpressibleByArgument {
         rawValue + destination.schemeSuffix(libraryType: libraryType)
     }
 
-    func stringBundlePathInArchive(for libraryType: LibraryType) -> String? {
+    func stringBundlePathInArchive(for libraryType: LibraryType, forDestination destination: Destination) -> String? {
         guard self == .core,
               libraryType == .dynamic
         else { return nil }
 
+        if destination == Destination.macCatalyst {
+            return "Products/@rpath/\(rawValue).framework/Versions/A/Resources"
+        }
         return "Products/@rpath/\(rawValue).framework"
     }
 }

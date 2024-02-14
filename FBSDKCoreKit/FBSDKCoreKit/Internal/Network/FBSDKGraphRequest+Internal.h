@@ -37,6 +37,17 @@ NS_ASSUME_NONNULL_BEGIN
                             flags:(FBSDKGraphRequestFlags)flags
     graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory;
 
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary<NSString *, id> *)parameters
+                      tokenString:(NSString *)tokenString
+                       HTTPMethod:(NSString *)method
+                          version:(NSString *)version
+                            flags:(FBSDKGraphRequestFlags)flags
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix
+    graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)factory;
+
++ (BOOL)isForFetchingDomainConfiguration:(id<FBSDKGraphRequest>)request 
+NS_SWIFT_NAME(isForFetchingDomainConfiguration(request:));
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl
                     params:(nullable NSDictionary<NSString *, id> *)params

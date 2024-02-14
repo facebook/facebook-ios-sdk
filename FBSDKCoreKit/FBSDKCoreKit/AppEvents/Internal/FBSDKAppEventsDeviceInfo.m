@@ -27,9 +27,6 @@
 
 static const u_int FB_GROUP1_RECHECK_DURATION = 30 * 60; // seconds
 
-// Apple reports storage in binary gigabytes (1024^3) in their About menus, etc.
-static const u_int FB_GIGABYTE = 1024 * 1024 * 1024; // bytes
-
 @interface FBSDKAppEventsDeviceInfo ()
 
 // Other state
@@ -121,10 +118,6 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
   struct utsname systemInfo;
   uname(&systemInfo);
   self.machine = @(systemInfo.machine);
-
-  // Disk space stuff
-  float totalDiskSpace = [FBSDKAppEventsDeviceInfo _getTotalDiskSpace].floatValue;
-  self.totalDiskSpaceGB = (unsigned long long)round(totalDiskSpace / FB_GIGABYTE);
 }
 
 - (BOOL)_isGroup1Expired
@@ -155,14 +148,6 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
     }
   }
 
-  // Remaining disk space
-  float remainingDiskSpace = [FBSDKAppEventsDeviceInfo _getRemainingDiskSpace].floatValue;
-  unsigned long long newRemainingDiskSpaceGB = (unsigned long long)round(remainingDiskSpace / FB_GIGABYTE);
-  if (self.remainingDiskSpaceGB != newRemainingDiskSpaceGB) {
-    self.remainingDiskSpaceGB = newRemainingDiskSpaceGB;
-    self.isEncodingDirty = YES;
-  }
-
   self.lastGroup1CheckTime = [self unixTimeNow];
 }
 
@@ -185,8 +170,8 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
     self.height ? @((unsigned long)self.height) : @"",
     densityString,
     @(self.coreCount) ?: @"",
-    @(self.totalDiskSpaceGB) ?: @"",
-    @(self.remainingDiskSpaceGB) ?: @"",
+    @-1,
+    @-1,
     self.timeZoneName ?: @""
   ];
 
@@ -198,20 +183,6 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
 - (NSTimeInterval)unixTimeNow
 {
   return round([NSDate date].timeIntervalSince1970);
-}
-
-+ (NSNumber *)_getTotalDiskSpace
-{
-  NSDictionary<NSString *, id> *attrs = [[NSFileManager new] attributesOfFileSystemForPath:NSHomeDirectory()
-                                                                                     error:nil];
-  return attrs[NSFileSystemSize];
-}
-
-+ (NSNumber *)_getRemainingDiskSpace
-{
-  NSDictionary<NSString *, id> *attrs = [[NSFileManager new] attributesOfFileSystemForPath:NSHomeDirectory()
-                                                                                     error:nil];
-  return attrs[NSFileSystemFreeSize];
 }
 
 + (uint)_readCoreCount

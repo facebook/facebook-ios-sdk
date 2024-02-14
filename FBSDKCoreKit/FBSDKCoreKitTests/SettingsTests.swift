@@ -8,6 +8,7 @@
 
 @testable import FBSDKCoreKit
 
+import AppTrackingTransparency
 import TestTools
 import XCTest
 
@@ -41,6 +42,7 @@ final class SettingsTests: XCTestCase {
     bundle = TestBundle()
     settings = Settings()
     configureSettings()
+    DomainHandlerTests.configureDomainHandlerForTesting()
   }
 
   override func tearDown() {
@@ -101,6 +103,10 @@ final class SettingsTests: XCTestCase {
   // MARK: Advertiser Tracking Status
 
   func testFacebookAdvertiserTrackingStatusDefaultValue() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     let configuration = TestAppEventsConfiguration(defaultATEStatus: .disallowed)
     appEventsConfigurationProvider.stubbedConfiguration = configuration
 
@@ -127,6 +133,10 @@ final class SettingsTests: XCTestCase {
   }
 
   func testGettingExplicitlySetFacebookAdvertiserTrackingStatus() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     settings.advertisingTrackingStatus = .disallowed
     XCTAssertEqual(
       settings.advertisingTrackingStatus,
@@ -144,6 +154,10 @@ final class SettingsTests: XCTestCase {
   }
 
   func testGettingPersistedFacebookAdvertiserTrackingStatus() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     let key = "com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus"
     userDefaultsSpy.set(
       NSNumber(value: AdvertisingTrackingStatus.allowed.rawValue),
@@ -166,6 +180,10 @@ final class SettingsTests: XCTestCase {
   }
 
   func testGettingCachedFacebookAdvertiserTrackingStatus() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     let key = "com.facebook.sdk:FBSDKSettingsAdvertisingTrackingStatus"
     userDefaultsSpy.set(
       NSNumber(value: AdvertisingTrackingStatus.allowed.rawValue),
@@ -188,6 +206,10 @@ final class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToEnabled() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     settings.isAdvertiserTrackingEnabled = true
     XCTAssertEqual(
       userDefaultsSpy.capturedSetObjectKey,
@@ -197,6 +219,10 @@ final class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToDisallowed() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     settings.isAdvertiserTrackingEnabled = false
     XCTAssertEqual(
       userDefaultsSpy.capturedSetObjectKey,
@@ -206,6 +232,10 @@ final class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToEnabledProperty() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertTrue(
@@ -220,6 +250,10 @@ final class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToDisallowedProperty() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     settings.isAdvertiserTrackingEnabled = false
 
     XCTAssertFalse(
@@ -234,12 +268,42 @@ final class SettingsTests: XCTestCase {
   }
 
   func testSettingFacebookAdvertiserTrackingStatusToUnspecified() {
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+
     settings.advertisingTrackingStatus = .unspecified
 
     XCTAssertNil(
       userDefaultsSpy.object(forKey: "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"),
       "Should not capture the time the status is set to unspecified"
     )
+  }
+
+  func testAdvertiserTrackingStatusWithDomainHandlingEnabled() {
+    if !_DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+    if #available(iOS 14, *) {
+      let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
+      switch status {
+      case .notDetermined:
+        XCTAssertTrue(settings.advertisingTrackingStatus == .unspecified)
+        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
+      case .restricted:
+        XCTAssertTrue(settings.advertisingTrackingStatus == .disallowed)
+        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
+      case .denied:
+        XCTAssertTrue(settings.advertisingTrackingStatus == .disallowed)
+        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
+      case .authorized:
+        XCTAssertTrue(settings.advertisingTrackingStatus == .allowed)
+        XCTAssertTrue(settings.isAdvertiserTrackingEnabled)
+      @unknown default:
+        XCTAssertTrue(settings.advertisingTrackingStatus == .unspecified)
+        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
+      }
+    }
   }
 
   // MARK: - Logging behaviors

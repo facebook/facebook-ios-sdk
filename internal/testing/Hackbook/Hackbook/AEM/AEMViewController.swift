@@ -2,6 +2,7 @@
 
 import UIKit
 
+import AppTrackingTransparency
 import FBSDKCoreKit
 
 class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, JsonParserDelegate {
@@ -17,6 +18,7 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     "Publish Install",
     "New Ads Click",
     "Generate Parameter",
+    "Request To Track",
     "ATE",
     "Deeplink Type",
   ]
@@ -33,6 +35,7 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
   private let publishInstallButton: UIButton = .init()
   private let resetButton: UIButton = .init()
   private let parameterGenerationButton: UIButton = .init()
+  private let requestToTrackButton: UIButton = .init()
   private let ATEToggle: UISwitch = .init()
   private let deeplinkTypeSegmentedControl: UISegmentedControl = .init()
 
@@ -106,6 +109,13 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     publishInstallButton.layer.cornerRadius = 5.0
     publishInstallButton.addTarget(self, action: #selector(AEMViewController.publishInstall), for: .touchUpInside)
     publishInstallButton.accessibilityIdentifier = "button_publish_install"
+
+    requestToTrackButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
+    requestToTrackButton.backgroundColor = .systemBlue
+    requestToTrackButton.setTitle("Request To Track", for: .normal)
+    requestToTrackButton.layer.cornerRadius = 5.0
+    requestToTrackButton.addTarget(self, action: #selector(AEMViewController.requestToTrack), for: .touchUpInside)
+    requestToTrackButton.accessibilityIdentifier = "button_request_to_track"
 
     resetButton.frame = CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34)
     resetButton.backgroundColor = .systemBlue
@@ -205,11 +215,15 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
       cell.accessoryType = .none
       cell.accessoryView = parameterGenerationButton
     case 10:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      cell.accessoryView = requestToTrackButton
+    case 11:
       cell.accessoryType = .disclosureIndicator
       cell.textLabel?.text = toggles[indexPath.row]
       cell.accessoryView = ATEToggle
       cell.accessibilityIdentifier = "cell_ate"
-    case 11:
+    case 12:
       cell.layoutMargins = .zero
       cell.accessoryType = .none
       cell.accessoryView = deeplinkTypeSegmentedControl
@@ -248,6 +262,18 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
 
   @objc func publishInstall() {
     AEMTestUtils.publishInstall(consoleView)
+  }
+
+  @objc func requestToTrack() {
+    if #available(iOS 14.0, *) {
+      ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+        DispatchQueue.main.async {
+          ConsoleSucceedWithFormattedMessage(
+            "AEMViewController Request to track, ATT status: \(status)"
+          )
+        }
+      })
+    }
   }
 
   @objc func swizzleReporter() {

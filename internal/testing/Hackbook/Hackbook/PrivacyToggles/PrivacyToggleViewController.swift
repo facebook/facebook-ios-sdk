@@ -2,14 +2,15 @@
 
 import UIKit
 
+import AppTrackingTransparency
 import FBSDKCoreKit
 
 class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
   #if targetEnvironment(simulator)
-  private let toggles: Array = ["iOS 14", "Event Collection Enabled", "IDFA Collection Enabled", "LAT Enabled", "Default ATE", "Set ATE", "Log Event", "Reset", "Publish Install"]
+  private let toggles: Array = ["iOS 14", "Event Collection Enabled", "IDFA Collection Enabled", "LAT Enabled", "Default ATE", "Set ATE", "Log Event", "Reset", "Publish Install", "Test Batch Request", "Get Custom Audience Third Party ID", "Test Codeless Indexing Session", "Request to Track"]
   #else
-  private let toggles: Array = ["Event Collection Enabled", "IDFA Collection Enabled", "Default ATE", "Set ATE", "Log Event", "Reset", "Publish Install"]
+  private let toggles: Array = ["Event Collection Enabled", "IDFA Collection Enabled", "Default ATE", "Set ATE", "Log Event", "Reset", "Publish Install", "Test Batch Request", "Get Custom Audience Third Party ID", "Test Codeless Indexing Session", "Request to Track"]
   #endif
 
   private let consoleView: UITextView = .init()
@@ -143,6 +144,46 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
       button.addTarget(self, action: #selector(PrivacyToggleViewController.publishInstall), for: .touchUpInside)
       cell.accessoryView = button
       button.accessibilityIdentifier = "button_publish_install"
+    case 9:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Test Batch Request", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.testBatchRequest), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_test_batch_request"
+    case 10:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Get Custom Audience Third Party ID", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.testGetCustomAudienceThirdPartyID), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_get_custom_audience_third_party_id"
+    case 11:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Test Codeless Indexing Session", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.testCheckCodelessIndexingSession), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_test_codeless_indexing"
+    case 12:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Request to Track", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.requestToTrack), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_request_to_track"
     default:
       cell.accessoryType = .disclosureIndicator
       cell.textLabel?.text = toggles[indexPath.row]
@@ -202,6 +243,46 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
       button.addTarget(self, action: #selector(PrivacyToggleViewController.publishInstall), for: .touchUpInside)
       cell.accessoryView = button
       button.accessibilityIdentifier = "button_publish_install"
+    case 7:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Test Batch Request", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.testBatchRequest), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_test_batch_request"
+    case 8:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Get Custom Audience Third Party ID", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.testGetCustomAudienceThirdPartyID), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_get_custom_audience_third_party_id"
+    case 9:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Test Codeless Indexing Session", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.testCheckCodelessIndexingSession), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_test_codeless_indexing"
+    case 10:
+      cell.layoutMargins = .zero
+      cell.accessoryType = .none
+      let button = UIButton(frame: CGRect(x: 20, y: 3, width: view.frame.width - 40, height: 34))
+      button.backgroundColor = .systemBlue
+      button.setTitle("Request to Track", for: .normal)
+      button.layer.cornerRadius = 5.0
+      button.addTarget(self, action: #selector(PrivacyToggleViewController.requestToTrack), for: .touchUpInside)
+      cell.accessoryView = button
+      button.accessibilityIdentifier = "button_request_to_track"
     default:
       cell.accessoryType = .disclosureIndicator
       cell.textLabel?.text = toggles[indexPath.row]
@@ -259,6 +340,145 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
     AppEvents.shared.flush()
   }
 
+  private func getTestThirdPartyIDRequest() -> GraphRequest? {
+    let accessToken = AccessToken.current
+    guard let thirdPartyIDRequest = AppEvents.shared.requestForCustomAudienceThirdPartyID(accessToken: accessToken) else {
+      return nil
+    }
+    return thirdPartyIDRequest
+  }
+
+  private func getTestCheckCodelessIndexingSessionRequest() -> GraphRequest? {
+    if !Settings.shared.isAdvertiserTrackingEnabled {
+      return nil
+    }
+    guard let appID = Settings.shared.appID else {
+      return nil
+    }
+    let parameters = [
+      "device_session_id": UUID().uuidString,
+      "extinfo": _CodelessIndexer.extInfo,
+    ]
+    let graphPath = "\(appID)/app_indexing_session"
+    let codelessIndexingRequest = GraphRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      httpMethod: .post
+    )
+    return codelessIndexingRequest
+  }
+
+  @objc func testBatchRequest() {
+    PrivacyTestUtils.setFlag("_eventCollectionEnabled", value: eventCollectionToggle.isOn)
+    PrivacyTestUtils.setFlag("_advertiserIDCollectionEnabled", value: advertiserIDCollectionToggle.isOn)
+    let meRequest = GraphRequest(graphPath: "/me", parameters: [:])
+    let permissionRequest = GraphRequest(graphPath: "/me/permissions", parameters: [:])
+    let connectionFactory = GraphRequestConnectionFactory()
+    let connection = connectionFactory.createGraphRequestConnection()
+    connection.add(meRequest) { _, _, error in
+      if let error = error {
+        ConsoleReportBugWithFormattedMessage(
+          "Received error in fetching user information in batch request: \(String(describing: error))"
+        )
+      } else {
+        ConsoleSucceedWithFormattedMessage(
+          "Successfully fetched user information in batch request"
+        )
+      }
+    }
+    connection.add(permissionRequest) { _, _, error in
+      if let error = error {
+        ConsoleReportBugWithFormattedMessage(
+          "Received error in fetching user permissions in batch request: \(String(describing: error))"
+        )
+      } else {
+        ConsoleSucceedWithFormattedMessage(
+          "Successfully fetched user permissions in batch request"
+        )
+      }
+    }
+    if let thirdPartyIDRequest = getTestThirdPartyIDRequest() {
+      connection.add(thirdPartyIDRequest) { _, result, error in
+        if let error = error {
+          ConsoleReportBugWithFormattedMessage(
+            "Received error in fetching custom audience third party id in batch request: \(String(describing: error))"
+          )
+        } else {
+          if let resultDict = result as? [String: Any] {
+            ConsoleSucceedWithFormattedMessage(
+              "Custom audience third party id fetched in batch request: \(resultDict)"
+            )
+          } else {
+            ConsoleReportBugWithFormattedMessage(
+              "Expected custom audience third party id batch request response result to be of type Dictionary but got \(type(of: result))"
+            )
+          }
+        }
+      }
+    }
+    connection.start()
+  }
+
+  @objc func testGetCustomAudienceThirdPartyID() {
+    guard let thirdPartyIDRequest = getTestThirdPartyIDRequest() else {
+      if Settings.shared.isAdvertiserTrackingEnabled {
+        ConsoleReportBugWithFormattedMessage("Could not make request for custom audience third party id")
+      } else {
+        ConsoleSucceedWithFormattedMessage(
+          "As expected, we cannot create a custom audience third party id request when ATT is not opt in"
+        )
+      }
+      return
+    }
+    thirdPartyIDRequest.start { _, result, error in
+      if let error = error {
+        ConsoleReportBugWithFormattedMessage(
+          "Received error in sending custom audience third party id request: \(String(describing: error))"
+        )
+      } else {
+        if let resultDict = result as? [String: Any] {
+          ConsoleSucceedWithFormattedMessage(
+            "Custom audience third party id request response received: \(resultDict)"
+          )
+        } else {
+          ConsoleReportBugWithFormattedMessage(
+            "Expected custom audience third party id request response result to be of type Dictionary but got \(type(of: result))"
+          )
+        }
+      }
+    }
+  }
+
+  @objc func testCheckCodelessIndexingSession() {
+    guard let codelessIndexingRequest = getTestCheckCodelessIndexingSessionRequest() else {
+      if Settings.shared.isAdvertiserTrackingEnabled {
+        ConsoleReportBugWithFormattedMessage("Unexpected: Could not make request for checking the codeless indexing session")
+      } else {
+        ConsoleSucceedWithFormattedMessage(
+          "We cannot check the codeless indexing session when ATT is not opt in"
+        )
+      }
+      return
+    }
+    codelessIndexingRequest.start { _, result, error in
+      if let error = error {
+        ConsoleReportBugWithFormattedMessage(
+          "Received error in sending codeless indexing session request: \(String(describing: error))"
+        )
+      } else {
+        if let resultDict = result as? [String: Any] {
+          ConsoleSucceedWithFormattedMessage(
+            "Codeless indexing session request received: \(resultDict)"
+          )
+        } else {
+          ConsoleReportBugWithFormattedMessage(
+            "Expected codeless indexing session request response result to be of type Dictionary but got \(type(of: result))"
+          )
+        }
+      }
+    }
+  }
+
   @objc func reset() {
     // Drop previously stored events
     PrivacyTestUtils.setIsIOS14(true)
@@ -285,6 +505,18 @@ class PrivacyToggleViewController: UIViewController, UITableViewDelegate, UITabl
 
   @objc func publishInstall() {
     PrivacyTestUtils.publishInstall()
+  }
+
+  @objc func requestToTrack() {
+    if #available(iOS 14.0, *) {
+      ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
+        DispatchQueue.main.async {
+          ConsoleSucceedWithFormattedMessage(
+            "PrivacyToggleViewController Request to track, ATT status: \(status)"
+          )
+        }
+      })
+    }
   }
 
   @objc func selectAdvertisingTrackingStatus(sender: UISegmentedControl) {

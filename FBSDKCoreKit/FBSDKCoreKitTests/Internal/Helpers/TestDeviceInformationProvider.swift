@@ -11,8 +11,6 @@ final class TestDeviceInformationProvider: _DeviceInformationProviding {
 
   var timeZoneAbbrev: String? = ""
 
-  var remainingDiskSpaceGB: UInt64 = 0
-
   var timeZoneName: String? = ""
 
   var bundleIdentifier: String? = ""

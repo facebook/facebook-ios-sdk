@@ -10,5 +10,6 @@
 - (IBAction)fetchMe:(id)sender;
 - (IBAction)fetchPermissions:(id)sender;
 - (IBAction)fetchDeprecatedUserInfo:(id)sender;
+- (IBAction)makeTestBatchRequest:(id)sender;
 
 @end

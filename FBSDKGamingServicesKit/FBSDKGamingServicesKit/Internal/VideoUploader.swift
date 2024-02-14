@@ -100,9 +100,7 @@ final class VideoUploader: VideoUploading {
       parameters: parameters,
       httpMethod: .post
     )
-    request.start { [weak self] _, result, error in
-      guard let self = self else { return }
-
+    request.start { _, result, error in
       if let error = error {
         self.delegate?.videoUploader(self, didFailWithError: error)
         return
@@ -121,7 +119,6 @@ final class VideoUploader: VideoUploading {
       guard let offsetDictionary = self.extractOffsets(fromResultDictionary: result) else {
         return
       }
-
       self.uploadSessionID = uploadSessionID
       self.videoID = videoID
       self.startTransferRequest(withOffsetDictionary: offsetDictionary)
@@ -143,9 +140,7 @@ final class VideoUploader: VideoUploading {
       return
     }
 
-    DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-      guard let self = self else { return }
-
+    DispatchQueue.global(qos: .userInitiated).async {
       guard endOffset >= startOffset else { return }
 
       let chunkSize = endOffset - startOffset
@@ -176,9 +171,7 @@ final class VideoUploader: VideoUploading {
       parameters: parameters,
       httpMethod: .post
     )
-    request.start { [weak self] _, result, error in
-      guard let self = self else { return }
-
+    request.start { _, result, error in
       if let error = error {
         self.delegate?.videoUploader(self, didFailWithError: error)
         return
@@ -263,13 +256,15 @@ final class VideoUploader: VideoUploading {
       parameters: parameters,
       httpMethod: .post
     )
-    request.start { _, _, innerError in
+    request.start { _, innerResult, innerError in
       if let innerError = innerError {
         self.delegate?.videoUploader(self, didFailWithError: innerError)
         return
       }
-
-      guard let innerOffsetDictionary = self.extractOffsets(fromResultDictionary: offsetDictionary) else {
+      guard let innerResult = innerResult as? [String: Any] else {
+        return
+      }
+      guard let innerOffsetDictionary = self.extractOffsets(fromResultDictionary: innerResult) else {
         return
       }
 

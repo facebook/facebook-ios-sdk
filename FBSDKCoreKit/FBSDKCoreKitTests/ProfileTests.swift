@@ -70,6 +70,8 @@ final class ProfileTests: XCTestCase {
         urlHoster: urlHoster
       )
     )
+    _DomainConfiguration.setDefaultDomainInfo()
+    DomainHandlerTests.configureDomainHandlerForTesting()
   }
 
   override func tearDown() {
@@ -147,7 +149,11 @@ final class ProfileTests: XCTestCase {
 
   func testCreatingImageURL() throws {
     try makeImageURL()
-    XCTAssertEqual(urlHoster.capturedHostPrefix, "graph")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlHoster.capturedHostPrefix, "ep1")
+    } else {
+      XCTAssertEqual(urlHoster.capturedHostPrefix, "graph")
+    }
     XCTAssertEqual(urlHoster.capturedPath, "\(profile.userID)/picture")
     XCTAssertNotNil(urlHoster.capturedQueryParameters)
     XCTAssertEqual(imageURL, urlHoster.stubbedURL)

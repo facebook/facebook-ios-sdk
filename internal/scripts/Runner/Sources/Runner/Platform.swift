@@ -68,6 +68,10 @@ struct Destination {
         platform: .iOS
     )
 
+    static func == (lhs: Destination, rhs: Destination) -> Bool {
+        return lhs.name == rhs.name && lhs.sdk == rhs.sdk && lhs.archiveToken == rhs.archiveToken && lhs.platform == rhs.platform
+    }
+
     func schemeSuffix(libraryType: LibraryType) -> String {
         platform.schemeSuffix + "-\(libraryType.rawValue.capitalized)"
     }

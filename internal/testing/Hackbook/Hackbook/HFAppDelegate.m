@@ -61,7 +61,11 @@
   [AEMTestUtils setLoggingBehaviorsForNetworkRuquest];
   [[FBSDKApplicationDelegate sharedInstance] application:application
                            didFinishLaunchingWithOptions:launchOptions];
-
+  
+  FBSDKGraphRequest *meRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{}];
+  [meRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    ConsoleLog(@"/me request initiated before domain configuration fetch finished has now completed");
+  }];
   // Additional setup. Moved from the +initialize to be run after the SDK is initialized
   [FBSDKLoginButton class];
   [FBSDKProfilePictureView class];

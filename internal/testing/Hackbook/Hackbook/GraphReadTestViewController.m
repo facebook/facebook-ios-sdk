@@ -52,4 +52,27 @@
   }];
 }
 
+- (void)makeTestBatchRequest:(id)sender
+{
+  FBSDKGraphRequest *meRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me" parameters:@{}];
+  FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/permissions" parameters:@{}];
+  FBSDKGraphRequestConnectionFactory *connectionFactory = [FBSDKGraphRequestConnectionFactory new];
+  id<FBSDKGraphRequestConnecting> connection = [connectionFactory createGraphRequestConnection];
+  [connection addRequest:meRequest completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    if (error) {
+      ConsoleError(error, @"Failed to fetch user information in non-app events batch request");
+    } else {
+      ConsoleSucceed(@"Successfully fetched user information in non-app events batch request");
+    }
+  }];
+  [connection addRequest:permissionsRequest completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    if (error) {
+      ConsoleError(error, @"Failed to fetch user permissions in non-app events batch request");
+    } else {
+      ConsoleSucceed(@"Successfully fetched user permissions in non-app events batch request");
+    }
+  }];
+  [connection start];
+}
+
 @end

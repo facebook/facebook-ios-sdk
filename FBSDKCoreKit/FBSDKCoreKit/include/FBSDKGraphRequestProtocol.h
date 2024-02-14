@@ -52,6 +52,10 @@ NS_SWIFT_NAME(GraphRequestProtocol)
 /// Convenience property to determine if the request has attachments
 @property (nonatomic, readonly) BOOL hasAttachments;
 
+@property (nonatomic, readonly, assign) BOOL forAppEvents;
+
+@property (nonatomic, readonly, assign) BOOL useAlternativeDefaultDomainPrefix;
+
 /**
  Starts a connection to the Graph API.
  @param completion The handler block to call when the request completes.

@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKAppEvents (Testing)
 
 @property (class, nonatomic) FBSDKAppEvents *shared;
+@property (nonatomic) BOOL isConfigured;
 
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;

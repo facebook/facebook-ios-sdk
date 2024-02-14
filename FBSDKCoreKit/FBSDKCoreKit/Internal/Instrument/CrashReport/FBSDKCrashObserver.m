@@ -60,7 +60,8 @@ NS_ASSUME_NONNULL_BEGIN
     [FBSDKInternalUtility.sharedUtility extendDictionaryWithDataProcessingOptions:parameters];
     id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [_settings appID]]
                                                                                parameters:parameters
-                                                                               HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                               HTTPMethod:FBSDKHTTPMethodPOST
+                                                        useAlternativeDefaultDomainPrefix:NO];
 
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (!error && [result isKindOfClass:[NSDictionary<NSString *, id> class]] && result[@"success"]) {

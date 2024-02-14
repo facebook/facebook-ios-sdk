@@ -194,6 +194,14 @@ NS_SWIFT_NAME(GraphRequestConnection)
 
  @warning INTERNAL - DO NOT USE
  */
++ (void)setDidFetchDomainConfiguration;
+
+/**
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
 + (void)configureWithURLSessionProxyFactory:(nonnull id<FBSDKURLSessionProxyProviding>)proxyFactory
                  errorConfigurationProvider:(nonnull id<FBSDKErrorConfigurationProviding>)errorConfigurationProvider
                            piggybackManager:(nonnull id<FBSDKGraphRequestPiggybackManaging>)piggybackManager

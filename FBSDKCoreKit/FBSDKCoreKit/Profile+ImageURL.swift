@@ -71,8 +71,18 @@ extension Profile {
       values[item.key.rawValue] = item.value
     }
 
+    var hostPrefix = ImageURL.hostPrefix
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      let domainConfig = _DomainConfigurationManager.sharedInstance().cachedDomainConfiguration()
+      if let domainHandlingHostPrefix =
+        domainConfig.domainInfo?["default_config"]?["default_alternative_domain_prefix"] as? String {
+        hostPrefix = domainHandlingHostPrefix
+      } else {
+        hostPrefix = ImageURL.defaultDomainHandlingHostPrefix
+      }
+    }
     return try? dependencies.urlHoster.facebookURL(
-      hostPrefix: ImageURL.hostPrefix,
+      hostPrefix: hostPrefix,
       path: "\(profileID)/\(ImageURL.path)",
       queryParameters: stringlyKeyedItems
     )
@@ -81,6 +91,7 @@ extension Profile {
   private enum ImageURL {
     static let hostPrefix = "graph"
     static let path = "picture"
+    static let defaultDomainHandlingHostPrefix = "ep1"
 
     enum QueryItemName: String {
       case accessToken = "access_token"

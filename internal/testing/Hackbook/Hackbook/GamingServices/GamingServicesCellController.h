@@ -10,9 +10,10 @@ typedef NS_ENUM(NSInteger, GamingServicesCellRow) {
   GamingServicesCellRowOpenGamingGroup,
   GamingServicesCellRowCustomUpdate,
   GamingServicesCellRowTournaments,
+  GamingServicesCellRowBatchRequest,
   // Adding a row? You should increment GamingServicesCellCount
 };
-static const int GamingServicesCellCount = 6;
+static const int GamingServicesCellCount = 7;
 void LaunchCreateContextDialog(NSString *playerID);
 void GamingServicesRegisterCells(UITableView *tableView);
 UITableViewCell *GamingServicesConfiguredCell(NSIndexPath *indexPath, UITableView *tableView);

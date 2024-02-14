@@ -11,6 +11,29 @@ import Foundation
 
 @objcMembers
 public final class TestGraphRequestConnection: NSObject, GraphRequestConnecting {
+  var shouldExecuteCompletion = false
+  var error: Error?
+  var requestConnectionResult: [String: Any]?
+
+  public override convenience init() {
+    self.init(shouldExecuteCompletion: false)
+  }
+
+  public convenience init(shouldExecuteCompletion: Bool) {
+    self.init(
+      shouldExecuteCompletion: shouldExecuteCompletion,
+      error: nil,
+      requestConnectionResult: nil
+    )
+  }
+
+  public init(shouldExecuteCompletion: Bool, error: Error?, requestConnectionResult: [String: Any]?) {
+    super.init()
+    self.shouldExecuteCompletion = shouldExecuteCompletion
+    self.error = error
+    self.requestConnectionResult = requestConnectionResult
+  }
+
   public var requests: NSMutableArray {
     NSMutableArray(
       array: graphRequests.compactMap {
@@ -57,6 +80,11 @@ public final class TestGraphRequestConnection: NSObject, GraphRequestConnecting 
 
   public func start() {
     startCallCount += 1
+    if shouldExecuteCompletion {
+      for completion in capturedCompletions {
+        completion(self, requestConnectionResult, error)
+      }
+    }
   }
 
   public func cancel() {

@@ -67,18 +67,18 @@ public final class AppLinkNavigation: NSObject {
   public let appLinkData: [String: Any]
 
   /// The AppLink to navigate to
-  public let appLink: AppLink
+  public let appLink: AppLink?
 
   /**
    Returns navigation type for current instance. It does not produce any side-effects as the `navigate` method.
    */
   public var navigationType: AppLinkNavigationType {
-    navigationType(for: appLink.targets)
+    navigationType(for: appLink?.targets)
   }
 
   /// Creates an AppLinkNavigation with the given link, extras, and App Link data
   @objc(initWithAppLink:extras:appLinkData:)
-  public init(appLink: AppLink, extras: [String: Any], appLinkData: [String: Any]) {
+  public init(appLink: AppLink?, extras: [String: Any], appLinkData: [String: Any]) {
     self.appLink = appLink
     self.extras = extras
     self.appLinkData = appLinkData
@@ -113,7 +113,7 @@ public final class AppLinkNavigation: NSObject {
   )
   @objc(navigationWithAppLink:extras:appLinkData:settings:)
   public static func navigation(
-    with appLink: AppLink,
+    with appLink: AppLink?,
     extras: [String: Any],
     appLinkData: [String: Any],
     settings: SettingsProtocol
@@ -162,6 +162,10 @@ public final class AppLinkNavigation: NSObject {
     var openedURL: URL?
     var navigationType: AppLinkNavigationType = .failure
     var lastError: Error?
+
+    guard let appLink else {
+      return (.failure, lastError)
+    }
 
     // Find the first eligible/launchable target in the AppLink.
     for target in appLink.targets {
@@ -293,7 +297,7 @@ public final class AppLinkNavigation: NSObject {
       appLinkData[FBSDKAppLinkVersionKeyName] = AppLinkVersion
     }
 
-    if let rawURL = appLink.sourceURL?.absoluteString {
+    if let rawURL = appLink?.sourceURL?.absoluteString {
       appLinkData[FBSDKAppLinkTargetKeyName] = rawURL
     }
 
@@ -345,16 +349,16 @@ public final class AppLinkNavigation: NSObject {
     var logData = [String: Any]()
     logData[LogDataKeys.outputURLScheme] = targetURL?.scheme
     logData[LogDataKeys.outputURL] = targetURL?.absoluteString
-    logData[LogDataKeys.sourceURL] = appLink.sourceURL?.absoluteString
-    logData[LogDataKeys.sourceHost] = appLink.sourceURL?.host
-    logData[LogDataKeys.sourceScheme] = appLink.sourceURL?.scheme
+    logData[LogDataKeys.sourceURL] = appLink?.sourceURL?.absoluteString
+    logData[LogDataKeys.sourceHost] = appLink?.sourceURL?.host
+    logData[LogDataKeys.sourceScheme] = appLink?.sourceURL?.scheme
     logData[LogDataKeys.error] = error?.localizedDescription
 
     let (result, type) = EventValues.getEventType(for: navigationType)
     logData[LogDataKeys.success] = result
     logData[LogDataKeys.type] = type
 
-    if appLink.isBackToReferrer {
+    if let appLink, appLink.isBackToReferrer {
       appLinkEventPoster.postNotification(
         eventName: AppLinkNavigateBackToReferrerEventName,
         arguments: logData
@@ -367,7 +371,8 @@ public final class AppLinkNavigation: NSObject {
     }
   }
 
-  func navigationType(for targets: [AppLinkTargetProtocol]) -> AppLinkNavigationType {
+  func navigationType(for targets: [AppLinkTargetProtocol]?) -> AppLinkNavigationType {
+    guard let targets else { return .failure }
     guard let urlOpener = Self.urlOpener else { return .failure }
 
     let eligibleTarget = targets.first { target in
@@ -379,7 +384,7 @@ public final class AppLinkNavigation: NSObject {
     if let eligibleTargetURL = eligibleTarget?.url,
        (try? appLinkURL(targetURL: eligibleTargetURL)) != nil {
       return .app
-    } else if let webURL = appLink.webURL,
+    } else if let webURL = appLink?.webURL,
               (try? appLinkURL(targetURL: webURL)) != nil {
       return .browser
     } else {
