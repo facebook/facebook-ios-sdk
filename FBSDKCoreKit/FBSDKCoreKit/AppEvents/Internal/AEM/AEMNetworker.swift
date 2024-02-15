@@ -21,7 +21,8 @@ final class AEMNetworker: NSObject, AEMNetworking {
       parameters: parameters,
       tokenString: tokenString,
       httpMethod: method,
-      flags: [.skipClientToken, .disableErrorRecovery]
+      flags: [.skipClientToken, .disableErrorRecovery],
+      useAlternativeDefaultDomainPrefix: false
     )
 
     graphRequest.start { _, result, error in

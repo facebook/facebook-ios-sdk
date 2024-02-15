@@ -288,7 +288,6 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
     params["_carrier"] = dependencies.deviceInformationProvider.carrierName ?? ""
     params["_deviceOSTypeName"] = "IOS"
     params["_deviceOSVersion"] = dependencies.deviceInformationProvider.sysVersion ?? ""
-    params["_remainingDiskGB"] = dependencies.deviceInformationProvider.remainingDiskSpaceGB
   }
 
   func removeGeneratedInfo(params: inout [String: Any]) {

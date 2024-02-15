@@ -89,6 +89,10 @@
 #import <FBSDKCoreKit/FBSDKDeviceInformationProviding.h>
 #import <FBSDKCoreKit/FBSDKDialogConfiguration.h>
 #import <FBSDKCoreKit/FBSDKDialogConfigurationMapBuilding.h>
+#import <FBSDKCoreKit/FBSDKDomainConfiguration.h>
+#import <FBSDKCoreKit/FBSDKDomainConfigurationManager.h>
+#import <FBSDKCoreKit/FBSDKDomainConfigurationProviding.h>
+#import <FBSDKCoreKit/FBSDKDomainHandler.h>
 #import <FBSDKCoreKit/FBSDKDynamicFrameworkLoaderProxy.h>
 #import <FBSDKCoreKit/FBSDKErrorConfiguration.h>
 #import <FBSDKCoreKit/FBSDKErrorConfigurationProtocol.h>
@@ -207,3 +211,4 @@
 #import <FBSDKCoreKit/UIApplication+URLOpener.h>
 #import <FBSDKCoreKit/UIPasteboard+Pasteboard.h>
 #import <FBSDKCoreKit/WKWebView+WebViewProtocol.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestQueue.h>

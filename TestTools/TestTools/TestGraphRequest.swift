@@ -21,6 +21,8 @@ public final class TestGraphRequest: GraphRequestProtocol {
   public var capturedCompletionHandler: GraphRequestCompletion?
   public var startCallCount = 0
   public var cancelCallCount = 0
+  public var forAppEvents: Bool
+  public var useAlternativeDefaultDomainPrefix: Bool
 
   public init(
     graphPath: String = "",
@@ -28,7 +30,9 @@ public final class TestGraphRequest: GraphRequestProtocol {
     tokenString: String? = nil,
     httpMethod: HTTPMethod? = nil,
     version: String? = nil,
-    flags: GraphRequestFlags? = nil
+    flags: GraphRequestFlags? = nil,
+    forAppEvents: Bool = false,
+    useAlternativeDefaultDomainPrefix: Bool = true
   ) {
     self.graphPath = graphPath
     self.parameters = parameters ?? [:]
@@ -36,6 +40,8 @@ public final class TestGraphRequest: GraphRequestProtocol {
     self.httpMethod = httpMethod ?? .get
     self.version = version ?? ""
     self.flags = flags ?? []
+    self.forAppEvents = forAppEvents
+    self.useAlternativeDefaultDomainPrefix = useAlternativeDefaultDomainPrefix
   }
 
   public func start(completion handler: GraphRequestCompletion? = nil) -> GraphRequestConnecting {
