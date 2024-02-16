@@ -1,0 +1,6 @@
+ pod 'FBSDKCoreKit' 
+ pod 'FBSDKLoginKit' 
+ pod 'FBSDKShareKit' 
+ pod 'FBSDKPlacesKit' 
+ pod 'FBSDKMessengerShareKit'
+ pod 'Facebook-iOS-SDK' 
