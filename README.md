@@ -58,7 +58,7 @@ or open an issue in this repository.
 
 Facebook welcomes contributions to our SDKs. Please see the [CONTRIBUTING](CONTRIBUTING.md) file.
 
-## LICENSE
+## Copyright LICENSE
 
 See the [LICENSE](LICENSE) file.
 
@@ -82,7 +82,5 @@ See the [SECURITY POLICY](SECURITY.md) for more info on our bug bounty program.
   regarding such collection, use, and disclosure (including, at a minimum, through your privacy policy). You further
   agree that you will not share information with us about children under the age of 13.
 - You agree to comply with all applicable laws and regulations and also agree to our Terms
-  <https://www.facebook.com/policies/>, including our Platform Policies <https://developers.facebook.com/policy/> and
-  Advertising Guidelines, as applicable <https://www.facebook.com/ad_guidelines.php>.
 
 By using the Facebook SDK for iOS you agree to these terms.
