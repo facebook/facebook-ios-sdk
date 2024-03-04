@@ -17,7 +17,7 @@ static UITextView *_console;
 {
   NSDate *date = [NSDate date];
   [[NSUserDefaults standardUserDefaults] setObject:date forKey:@"com.facebook.sdk:FBSDKSettingsInstallTimestamp"];
-  console.text = [NSString stringWithFormat:@"New Install %@\t\t", date];
+  console.text = [NSString stringWithFormat:@"New Install at: %@", date];
 }
 
 + (void)recordAndUpdateEvent:(NSString *)event
@@ -25,7 +25,7 @@ static UITextView *_console;
                        value:(NSString *)value
                      console:(UITextView *)console
 {
-  console.text = [console.text stringByAppendingFormat:@"Recording event: %@\t\twith currency: %@\t\twith value: %@\t\t", event, currency, value];
+  console.text = [console.text stringByAppendingFormat:@"\nRecording event: %@, with currency: %@, with value: %@", event, currency, value];
   NSMutableDictionary *parameters = [NSMutableDictionary new];
   if (currency) {
     parameters[@"fb_currency"] = currency;
