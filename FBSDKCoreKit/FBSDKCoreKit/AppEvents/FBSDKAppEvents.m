@@ -171,13 +171,13 @@ static BOOL g_explicitEventsLoggedYet = NO;
 {
   [NSNotificationCenter.defaultCenter
    addObserver:self
-   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   selector:@selector(applicationMovingFromActiveState)
    name:UIApplicationWillResignActiveNotification
    object:NULL];
 
   [NSNotificationCenter.defaultCenter
    addObserver:self
-   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   selector:@selector(applicationTerminating)
    name:UIApplicationWillTerminateNotification
    object:NULL];
 
@@ -850,6 +850,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   if ([self.primaryDataStore fb_objectForKey:lastAttributionPingString]) {
     return;
   }
+  [self.primaryDataStore fb_setObject:[NSDate date] forKey:lastAttributionPingString];
   [self fetchServerConfiguration:^{
     if ([self.appEventsUtility shouldDropAppEvents] || [self.gateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch defaultValue:NO]) {
       return;
@@ -865,13 +866,16 @@ static BOOL g_explicitEventsLoggedYet = NO;
                                                                                    parameters:params
                                                                                   tokenString:nil
                                                                                    HTTPMethod:FBSDKHTTPMethodPOST
-                                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery
+                                                                                 forAppEvents:YES
+                                                            useAlternativeDefaultDomainPrefix:NO];
     __block id<FBSDKDataPersisting> weakStore = self.primaryDataStore;
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       if (!error) {
-        [weakStore fb_setObject:[NSDate date] forKey:lastAttributionPingString];
         NSString *lastInstallResponseKey = [NSString stringWithFormat:@"com.facebook.sdk:lastInstallResponse%@", appID];
         [weakStore fb_setObject:result forKey:lastInstallResponseKey];
+      } else {
+        [weakStore fb_removeObjectForKey:lastAttributionPingString];
       }
     }];
   }];
@@ -1333,7 +1337,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
                                                                                    parameters:postParameters
                                                                                   tokenString:appEventsState.tokenString
                                                                                    HTTPMethod:FBSDKHTTPMethodPOST
-                                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery
+                                                                                 forAppEvents:YES
+                                                            useAlternativeDefaultDomainPrefix:NO];
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
       [self handleActivitiesPostCompletion:error
                               loggingEntry:loggingEntry
@@ -1423,7 +1429,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   [self.timeSpentRecorder restore:NO];
 }
 
-- (void)applicationMovingFromActiveStateOrTerminating
+- (void)applicationMovingFromActiveState
 {
   // When moving from active state, we don't have time to wait for the result of a flush, so
   // just persist events to storage, and we'll process them at the next activation.
@@ -1436,6 +1442,19 @@ static BOOL g_explicitEventsLoggedYet = NO;
     [self.appEventsStateStore persistAppEventsData:copy];
   }
   [self.timeSpentRecorder suspend];
+}
+
+- (void)applicationTerminating
+{
+  NSString *appID = [self appID];
+  if (appID) {
+    NSString *lastAttributionPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", appID];
+    NSString *lastInstallResponseKey = [NSString stringWithFormat:@"com.facebook.sdk:lastInstallResponse%@", appID];
+    if (nil == [self.primaryDataStore fb_objectForKey:lastInstallResponseKey]) {
+      [self.primaryDataStore fb_removeObjectForKey:lastAttributionPingString];
+    }
+  }
+  [self applicationMovingFromActiveState];
 }
 
 #pragma mark - Configuration Validation
@@ -1467,7 +1486,14 @@ static BOOL g_explicitEventsLoggedYet = NO;
   // so use that data here to return nil as well.
   // 3) if we have a user session token, then no need to send attribution ID / advertiser ID back as the udid parameter
   // 4) otherwise, send back the udid parameter.
-  if (self.settings.advertisingTrackingStatus == FBSDKAdvertisingTrackingDisallowed || self.settings.isEventDataUsageLimited) {
+  if (self.settings.isEventDataUsageLimited) {
+    return nil;
+  }
+  if ([[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled]) {
+    if (![self.settings isAdvertiserTrackingEnabled]) {
+      return nil;
+    }
+  } else if (self.settings.advertisingTrackingStatus == FBSDKAdvertisingTrackingDisallowed) {
     return nil;
   }
 
@@ -1495,7 +1521,8 @@ static BOOL g_explicitEventsLoggedYet = NO;
                                                                                  parameters:parameters
                                                                                 tokenString:tokenString
                                                                                  HTTPMethod:FBSDKHTTPMethodGET
-                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery
+                                                          useAlternativeDefaultDomainPrefix:NO];
   return request;
 }
 

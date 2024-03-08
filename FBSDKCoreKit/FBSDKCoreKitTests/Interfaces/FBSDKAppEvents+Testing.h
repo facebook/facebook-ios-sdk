@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKAppEvents (Testing)
 
 @property (class, nonatomic) FBSDKAppEvents *shared;
+@property (nonatomic) BOOL isConfigured;
 
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
 @property (nullable, nonatomic) Class<FBSDKSwizzling> swizzler;
@@ -50,7 +51,8 @@ NS_ASSUME_NONNULL_BEGIN
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
          accessToken:(nullable FBSDKAccessToken *)accessToken;
 - (void)applicationDidBecomeActive;
-- (void)applicationMovingFromActiveStateOrTerminating;
+- (void)applicationMovingFromActiveState;
+- (void)applicationTerminating;
 
 @end
 

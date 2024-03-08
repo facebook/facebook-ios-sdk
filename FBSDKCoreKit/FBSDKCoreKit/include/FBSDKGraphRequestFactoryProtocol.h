@@ -28,16 +28,50 @@ NS_SWIFT_NAME(GraphRequestFactoryProtocol)
                                               parameters:(NSDictionary<NSString *, id> *)parameters
                                              tokenString:(nullable NSString *)tokenString
                                               HTTPMethod:(nullable FBSDKHTTPMethod)method
+                                                   flags:(FBSDKGraphRequestFlags)flags
+                                            forAppEvents:(BOOL)forAppEvents;
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                             tokenString:(nullable NSString *)tokenString
+                                              HTTPMethod:(nullable FBSDKHTTPMethod)method
+                                                   flags:(FBSDKGraphRequestFlags)flags
+                                            forAppEvents:(BOOL)forAppEvents
+                       useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                             tokenString:(nullable NSString *)tokenString
+                                              HTTPMethod:(nullable FBSDKHTTPMethod)method
                                                    flags:(FBSDKGraphRequestFlags)flags;
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                             tokenString:(nullable NSString *)tokenString
+                                              HTTPMethod:(nullable FBSDKHTTPMethod)method
+                                                   flags:(FBSDKGraphRequestFlags)flags
+                       useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
                                               parameters:(NSDictionary<NSString *, id> *)parameters;
 
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                       useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
+
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath;
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                       useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
                                               parameters:(NSDictionary<NSString *, id> *)parameters
                                               HTTPMethod:(FBSDKHTTPMethod)method;
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                              HTTPMethod:(FBSDKHTTPMethod)method
+                       useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
                                               parameters:(NSDictionary<NSString *, id> *)parameters
@@ -47,7 +81,28 @@ NS_SWIFT_NAME(GraphRequestFactoryProtocol)
 
 - (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
                                               parameters:(NSDictionary<NSString *, id> *)parameters
+                                             tokenString:(nullable NSString *)tokenString
+                                                 version:(nullable NSString *)version
+                                              HTTPMethod:(FBSDKHTTPMethod)method
+                                            forAppEvents:(BOOL)forAppEvents;
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                             tokenString:(nullable NSString *)tokenString
+                                                 version:(nullable NSString *)version
+                                              HTTPMethod:(FBSDKHTTPMethod)method
+                                            forAppEvents:(BOOL)forAppEvents
+                       useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
+
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
                                                    flags:(FBSDKGraphRequestFlags)flags;
+
+- (id<FBSDKGraphRequest>)createGraphRequestWithGraphPath:(NSString *)graphPath
+                                              parameters:(NSDictionary<NSString *, id> *)parameters
+                                                   flags:(FBSDKGraphRequestFlags)flags
+                       useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
 
 @end
 

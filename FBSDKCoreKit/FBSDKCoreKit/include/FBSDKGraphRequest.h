@@ -63,6 +63,13 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
 /**
  Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
  @param graphPath the graph path (e.g., @"me").
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
+
+/**
+ Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
+ @param graphPath the graph path (e.g., @"me").
  @param method the HTTP method. Empty String defaults to @"GET".
  */
 - (instancetype)initWithGraphPath:(NSString *)graphPath
@@ -80,11 +87,31 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
  Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary<NSString *, id> *)parameters
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
+
+/**
+ Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
  @param method the HTTP method. Empty String defaults to @"GET".
  */
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        parameters:(NSDictionary<NSString *, id> *)parameters
                        HTTPMethod:(FBSDKHTTPMethod)method;
+
+/**
+ Initializes a new instance that use use `[FBSDKAccessToken currentAccessToken]`.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param method the HTTP method. Empty String defaults to @"GET".
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary<NSString *, id> *)parameters
+                       HTTPMethod:(FBSDKHTTPMethod)method
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
 
 /**
  Initializes a new instance.
@@ -98,7 +125,40 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                        parameters:(NSDictionary<NSString *, id> *)parameters
                       tokenString:(nullable NSString *)tokenString
                           version:(nullable NSString *)version
+                       HTTPMethod:(FBSDKHTTPMethod)method;
+
+/**
+ Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param tokenString the token string to use. Specifying nil will cause no token to be used.
+ @param version the optional Graph API version (e.g., @"v2.0"). nil defaults to `[FBSDKSettings graphAPIVersion]`.
+ @param method the HTTP method. Empty String defaults to @"GET".
+ @param forAppEvents a convenience flag indicating if the request is for sending app events.
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                          version:(nullable NSString *)version
                        HTTPMethod:(FBSDKHTTPMethod)method
+                     forAppEvents:(BOOL)forAppEvents;
+
+/**
+ Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param tokenString the token string to use. Specifying nil will cause no token to be used.
+ @param version the optional Graph API version (e.g., @"v2.0"). nil defaults to `[FBSDKSettings graphAPIVersion]`.
+ @param method the HTTP method. Empty String defaults to @"GET".
+ @param forAppEvents a convenience flag indicating if the request is for sending app events.
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                          version:(nullable NSString *)version
+                       HTTPMethod:(FBSDKHTTPMethod)method
+                     forAppEvents:(BOOL)forAppEvents
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix
   NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -115,6 +175,17 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
  Initializes a new instance.
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
+ @param requestFlags  flags that indicate how a graph request should be treated in various scenarios
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                            flags:(FBSDKGraphRequestFlags)requestFlags
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
+
+/**
+ Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
  @param tokenString the token string to use. Specifying nil will cause no token to be used.
  @param HTTPMethod  the HTTP method. Empty String defaults to @"GET".
  @param flags  flags that indicate how a graph request should be treated in various scenarios
@@ -124,6 +195,54 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
                       tokenString:(nullable NSString *)tokenString
                        HTTPMethod:(nullable NSString *)HTTPMethod
                             flags:(FBSDKGraphRequestFlags)flags;
+
+/**
+ Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param tokenString the token string to use. Specifying nil will cause no token to be used.
+ @param HTTPMethod  the HTTP method. Empty String defaults to @"GET".
+ @param flags  flags that indicate how a graph request should be treated in various scenarios
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable NSString *)HTTPMethod
+                            flags:(FBSDKGraphRequestFlags)flags
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;;
+
+/**
+ Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param tokenString the token string to use. Specifying nil will cause no token to be used.
+ @param method  the HTTP method. Empty String defaults to @"GET".
+ @param requestFlags  flags that indicate how a graph request should be treated in various scenarios
+ @param forAppEvents a convenience flag indicating if the request is for sending app events.
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable NSString *)method
+                            flags:(FBSDKGraphRequestFlags)requestFlags
+                     forAppEvents:(BOOL)forAppEvents;
+
+/**
+ Initializes a new instance.
+ @param graphPath the graph path (e.g., @"me").
+ @param parameters the optional parameters dictionary.
+ @param tokenString the token string to use. Specifying nil will cause no token to be used.
+ @param method  the HTTP method. Empty String defaults to @"GET".
+ @param requestFlags  flags that indicate how a graph request should be treated in various scenarios
+ @param forAppEvents a convenience flag indicating if the request is for sending app events.
+ */
+- (instancetype)initWithGraphPath:(NSString *)graphPath
+                       parameters:(nullable NSDictionary<NSString *, id> *)parameters
+                      tokenString:(nullable NSString *)tokenString
+                       HTTPMethod:(nullable NSString *)method
+                            flags:(FBSDKGraphRequestFlags)requestFlags
+                     forAppEvents:(BOOL)forAppEvents
+useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix;
 
 /// The request parameters.
 @property (nonatomic, copy) NSDictionary<NSString *, id> *parameters;
@@ -139,6 +258,10 @@ NS_SWIFT_NAME(configure(settings:currentAccessTokenStringProvider:graphRequestCo
 
 /// The Graph API version to use (e.g., "v2.0")
 @property (nonatomic, readonly, copy) NSString *version;
+
+@property (nonatomic, readonly, assign) BOOL forAppEvents;
+
+@property (nonatomic, readonly, assign) BOOL useAlternativeDefaultDomainPrefix;
 
 /**
  If set, disables the automatic error recovery mechanism.

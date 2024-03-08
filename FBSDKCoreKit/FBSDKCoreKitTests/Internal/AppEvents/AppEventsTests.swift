@@ -100,7 +100,7 @@ final class AppEventsTests: XCTestCase {
     // Must be stubbed before the configure method is called
     atePublisher = TestATEPublisher()
     atePublisherFactory.stubbedPublisher = atePublisher
-
+    DomainHandlerTests.configureDomainHandlerForTesting()
     configureAppEvents()
     appEvents.loggingOverrideAppID = mockAppID
   }
@@ -238,6 +238,8 @@ final class AppEventsTests: XCTestCase {
       "Should store the publisher created by the publisher factory"
     )
   }
+
+  // MARK: - Tests for publishing ATE
 
   func testPublishingATEWithNilPublisher() {
     appEvents.atePublisher = nil
@@ -647,11 +649,37 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
-  func testApplicationTerminatingSuspendsTimeSpentRecording() {
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+  func testApplicationMovingFromActiveStateSuspendsTimeSpentRecording() {
+    appEvents.applicationMovingFromActiveState()
     XCTAssertTrue(
       timeSpentRecorder.suspendWasCalled,
-      "When application terminates or moves from active state, the time spent recording should be suspended."
+      "When application moves from active state, the time spent recording should be suspended."
+    )
+  }
+
+  func testApplicationTerminatingSuspendsTimeSpentRecording() {
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastInstallResponsemockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertFalse(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPing123")
+    )
+  }
+
+  func testApplicationTerminatingWithoutInstallResponse() {
+    settings.appID = "123"
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertTrue(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPingmockAppID")
     )
   }
 
@@ -671,7 +699,7 @@ final class AppEventsTests: XCTestCase {
       isImplicitlyLogged: false,
       accessToken: SampleAccessTokens.validToken
     )
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+    appEvents.applicationMovingFromActiveState()
 
     XCTAssertTrue(
       !appEventsStateStore.capturedPersistedState.isEmpty,
@@ -974,6 +1002,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed() {
+    settings.isAdvertiserTrackingEnabled = false
     settings.advertisingTrackingStatus = .disallowed
 
     XCTAssertNil(
@@ -991,9 +1020,41 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testRequestForCustomAudienceThirdPartyIDWithTrackingUnspecified() {
+    settings.isAdvertiserTrackingEnabled = false
+    settings.advertisingTrackingStatus = .unspecified
+
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(
+          accessToken: SampleAccessTokens.validToken
+        ),
+        """
+        Should not create a request for third party Any if tracking is not enabled \
+        even if there is a current access token
+        """
+      )
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
+        "Should not create a request for third party Any if tracking is not enabled"
+      )
+    } else {
+      XCTAssertNotNil(
+        appEvents.requestForCustomAudienceThirdPartyID(
+          accessToken: SampleAccessTokens.validToken
+        ),
+        "Should create a request for third party Any if tracking is unspecified in iOS < 17"
+      )
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
+        "Should not create a request for third party Any if tracking is unspecified in iOS < 17"
+      )
+    }
+  }
+
   func testRequestForCustomAudienceThirdPartyIDWithLimitedEventAndDataUsage() {
     settings.isEventDataUsageLimited = true
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertNil(
       appEvents.requestForCustomAudienceThirdPartyID(
@@ -1012,7 +1073,7 @@ final class AppEventsTests: XCTestCase {
 
   func testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithoutAdvertiserID() {
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertNil(
       appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
@@ -1023,7 +1084,7 @@ final class AppEventsTests: XCTestCase {
   func testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithAdvertiserID() {
     let advertiserID = "abc123"
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     advertiserIDProvider.advertiserID = advertiserID
 
     appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil)
@@ -1037,7 +1098,7 @@ final class AppEventsTests: XCTestCase {
   func testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithoutAdvertiserID() {
     let token = SampleAccessTokens.validToken
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     appEventsUtility.stubbedTokenStringToUse = token.tokenString
     appEvents.loggingOverrideAppID = token.appID
 
@@ -1059,7 +1120,7 @@ final class AppEventsTests: XCTestCase {
     let expectedGraphPath = "\(token.appID)/custom_audience_third_party_id"
     let advertiserID = "abc123"
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     advertiserIDProvider.advertiserID = advertiserID
     appEventsUtility.stubbedTokenStringToUse = token.tokenString
 

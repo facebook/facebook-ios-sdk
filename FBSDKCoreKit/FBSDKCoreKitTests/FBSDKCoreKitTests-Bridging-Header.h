@@ -62,6 +62,8 @@
 #import "FBSDKGraphRequestConnecting.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
 #import "FBSDKGraphRequestConnection+Testing.h"
+#import "FBSDKDomainConfigurationManager+Testing.h"
+#import "FBSDKDomainHandler+Testing.h"
 #import "FBSDKGraphRequestConnectionFactory.h"
 #import "FBSDKGraphRequestConnectionFactoryProtocol.h"
 #import "FBSDKGraphRequestFactory.h"
@@ -104,6 +106,9 @@
 #import "SuggestedEventsIndexer+Testing.h"
 #import "UIApplication+URLOpener.h"
 #import "WebViewAppLinkResolver+Testing.h"
+#import "FBSDKDomainConfiguration+Internal.h"
+#import "FBSDKDomainConfigurationManager+Testing.h"
+#import "FBSDKGraphRequestQueue+Testing.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

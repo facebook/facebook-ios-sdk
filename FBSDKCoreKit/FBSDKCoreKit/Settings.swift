@@ -7,6 +7,7 @@
  */
 
 import AdSupport
+import AppTrackingTransparency
 import Foundation
 
 @objcMembers
@@ -354,6 +355,12 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   public var isAdvertiserTrackingEnabled: Bool {
     get { advertisingTrackingStatus == .allowed }
     set(isNewlyAllowed) {
+      if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+        // swiftlint:disable:next line_length
+        print("<Warning>: isAdvertiserTrackingEnabled setter has been deprecated and the value will be read from ATT status.")
+        return
+      }
+
       if #available(iOS 14.0, *) {
         advertisingTrackingStatus = isNewlyAllowed ? .allowed : .disallowed
         recordSetAdvertiserTrackingEnabled()
@@ -369,16 +376,42 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    */
   public var advertisingTrackingStatus: AdvertisingTrackingStatus {
     get {
-      if #available(iOS 14, *) {
+      if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+        return _advertisingTrackingStatusFromATT
+      } else if #available(iOS 14, *) {
         return _advertisingTrackingStatus
       } else {
         return ASIdentifierManager.shared().isAdvertisingTrackingEnabled ? .allowed : .disallowed
       }
     }
     set {
+      if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+        // swiftlint:disable:next line_length
+        print("<Warning>: advertisingTrackingStatus setter has been deprecated and the value will be read from ATT status.")
+        return
+      }
+
       _advertisingTrackingStatus = newValue
       self.dataStore?.fb_setObject(newValue.rawValue, forKey: PersistenceKey.advertisingTrackingStatus.rawValue)
     }
+  }
+
+  private var _advertisingTrackingStatusFromATT: AdvertisingTrackingStatus {
+    var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
+    if #available(iOS 14.0, *) {
+      let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
+      switch status {
+      case .authorized:
+        advertisingTrackingStatus = .allowed
+      case .denied, .restricted:
+        advertisingTrackingStatus = .disallowed
+      case .notDetermined:
+        advertisingTrackingStatus = .unspecified
+      @unknown default:
+        advertisingTrackingStatus = .unspecified
+      }
+    }
+    return advertisingTrackingStatus
   }
 
   private lazy var _advertisingTrackingStatus: AdvertisingTrackingStatus = {
