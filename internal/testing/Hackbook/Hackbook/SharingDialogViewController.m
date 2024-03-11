@@ -173,10 +173,7 @@ static void SetSharingContentPlaceID(id<FBSDKSharingContent> sharingContent)
   // check if the native dialog is available
   id<FBSDKSharingDialog> dialog = [self buildDialog];
   dialog.delegate = self;
-  if (![dialog canShow]) {
-    ConsoleSucceed(@"Facebook/Messenger App is not installed.");
-    return;
-  }
+  const BOOL canShow = [dialog canShow];
 
   // build the content
   id<FBSDKSharingContent> shareContent = contentBlock ? contentBlock() : nil;
@@ -188,8 +185,14 @@ static void SetSharingContentPlaceID(id<FBSDKSharingContent> sharingContent)
   // share
   dialog.shouldFailOnDataError = YES;
   NSError *error;
-  if (![dialog validateWithError:&error]) {
-    ConsoleError(error, @"Error validating share content");
+  if (![dialog validateWithError:&error] || !canShow) {
+    if (!canShow && error == nil) {
+      ConsoleSucceed(@"Facebook/Messenger App is not installed.");
+    } else if (!canShow && error != nil) {
+      ConsoleError(error, @"Dialog can not be shown. See the detailed error below");
+    } else {
+      ConsoleError(error, @"Error validating share content");
+    }
     return;
   }
   if (![dialog show]) {

@@ -211,6 +211,8 @@ final class ShareDialogTests: XCTestCase {
     let controller = UIViewController()
     let content = ShareModelTestUtility.linkContent
     let delegate = TestSharingDelegate()
+    let components = WebShareBridgeComponents(methodName: "test", parameters: ["key": "value"])
+    TestShareUtility.stubbedWebShareBridgeComponents = components
     dialog = ShareDialog.show(viewController: controller, content: content, delegate: delegate)
 
     XCTAssertIdentical(dialog.fromViewController, controller, .Construction.createViaClassShowMethod)
@@ -305,6 +307,7 @@ final class ShareDialogTests: XCTestCase {
 
     AccessToken.current = SampleAccessTokens.validToken
     dialog.shareContent = ShareModelTestUtility.photoContentWithFileURLs
+    settings.isAdvertiserTrackingEnabled = true
     XCTAssertTrue(
       dialog.canShow,
       "A dialog with photo content with file urls should be showable in a browser when there is a current access token"
@@ -323,6 +326,7 @@ final class ShareDialogTests: XCTestCase {
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
 
+    settings.isAdvertiserTrackingEnabled = true
     dialog.shareContent = ShareModelTestUtility.photoContentWithImages
     AccessToken.current = SampleAccessTokens.validToken
     XCTAssertNoThrow(try dialog.validate())
@@ -397,6 +401,7 @@ final class ShareDialogTests: XCTestCase {
   }
 
   func testSharingViaBrowserWithValidPhotoContent() {
+    settings.isAdvertiserTrackingEnabled = true
     let request = TestBridgeAPIRequest()
     bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
     let components = WebShareBridgeComponents(methodName: "test", parameters: ["key": "value"])
@@ -442,7 +447,8 @@ final class ShareDialogTests: XCTestCase {
 
   // MARK: - Web mode
 
-  func testCanShowWeb() {
+  func testCanShowWebWithTrackingPermission() {
+    settings.isAdvertiserTrackingEnabled = true
     dialog = createEmptyDialog(mode: .web)
     XCTAssertTrue(
       dialog.canShow,
@@ -473,7 +479,22 @@ final class ShareDialogTests: XCTestCase {
     )
   }
 
-  func testValidateWeb() throws {
+  func testCanShowWebWithoutTrackingPermissions() {
+    dialog = createEmptyDialog(mode: .web)
+    XCTAssertFalse(
+      dialog.canShow,
+      "A dialog without share content should be showable on web"
+    )
+
+    dialog.shareContent = ShareModelTestUtility.linkContent
+    XCTAssertFalse(
+      dialog.canShow,
+      "A dialog with link content should not be showable on web"
+    )
+  }
+
+  func testValidateWebWithTrackingPermission() throws {
+    settings.isAdvertiserTrackingEnabled = true
     dialog = createEmptyDialog(mode: .web)
 
     dialog.shareContent = ShareModelTestUtility.linkContent
@@ -660,7 +681,8 @@ final class ShareDialogTests: XCTestCase {
 
   // MARK: - Feed web mode
 
-  func testCanShowFeedWeb() {
+  func testCanShowFeedWebWithTrackingPermission() {
+    settings.isAdvertiserTrackingEnabled = true
     dialog = createEmptyDialog(mode: .feedWeb)
 
     XCTAssertTrue(
@@ -687,7 +709,18 @@ final class ShareDialogTests: XCTestCase {
     )
   }
 
-  func testValidateFeedWeb() throws {
+  func testCanShowFeedWebWithoutTrackingPermission() {
+    settings.isAdvertiserTrackingEnabled = false
+    dialog = createEmptyDialog(mode: .feedWeb)
+
+    XCTAssertFalse(
+      dialog.canShow,
+      "A dialog without tracking permissions should not be showable in a web feed"
+    )
+  }
+
+  func testValidateFeedWebWithTrackingPermission() throws {
+    settings.isAdvertiserTrackingEnabled = true
     dialog = createEmptyDialog(mode: .feedWeb)
     dialog.shareContent = ShareModelTestUtility.linkContent
     XCTAssertNoThrow(try dialog.validate())
@@ -697,6 +730,16 @@ final class ShareDialogTests: XCTestCase {
 
     dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
     XCTAssertThrowsError(try dialog.validate())
+  }
+
+  func testValidateFeedWebWithoutTrackingPermission() throws {
+    settings.isAdvertiserTrackingEnabled = false
+    dialog = createEmptyDialog(mode: .feedWeb)
+    dialog.shareContent = ShareModelTestUtility.linkContent
+    XCTAssertThrowsError(
+      try dialog.validate(),
+      "A web view dialog without tracking permission should not pass validation"
+    )
   }
 
   // MARK: - Automatic mode

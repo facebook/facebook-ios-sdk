@@ -175,7 +175,13 @@ extension Target {
         ]
     )
 
-    static let share = target(name: .share, dependencies: [.core, .Prefixed.share])
+    static let share = target(
+        name: .share,
+        dependencies: [.core, .Prefixed.share],
+        resources: [
+           .copy("Resources/PrivacyInfo.xcprivacy"),
+        ]
+    )
 
     static let gaming = target(name: .gaming, dependencies: [.Prefixed.gaming])
 

@@ -20,7 +20,7 @@ public class ShareDialog: NSObject, SharingDialog { // swiftlint:disable:this pr
   private struct UnknownValidationError: Error {}
   private struct BridgeRequestCreationError: Error {}
 
-  private static let feedMethodName = "feed"
+  private static let feedMethodName = "share"
 
   private static var hasValidatedURLSchemeRegistration = false
   private static var temporaryDirectory = URL(
@@ -172,7 +172,12 @@ extension ShareDialog {
 
   public var canShow: Bool {
     guard shareContent != nil else {
-      return canShowWithoutContent
+      do {
+        try validateAdvertiserTrackingPermission(mode: mode)
+        return canShowWithoutContent
+      } catch {
+        return false
+      }
     }
 
     do {
@@ -430,7 +435,7 @@ extension ShareDialog {
       throw MissingContentError()
     }
 
-    try validateShareContentForBrowser()
+    try validateShareContentForShareWebDialog(mode: .browser)
 
     if let photoContent = content as? SharePhotoContent,
        photoContentHasAtLeastOneImage(photoContent) {
@@ -490,7 +495,7 @@ extension ShareDialog {
   }
 
   private func showFeedBrowser() throws {
-    try validateShareContentForFeed()
+    try validateShareContentForFeedWebDialog(mode: .feedBrowser)
     let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
@@ -525,7 +530,7 @@ extension ShareDialog {
   }
 
   private func showFeedWeb() throws {
-    try validateShareContentForFeed()
+    try validateShareContentForFeedWebDialog(mode: .feedWeb)
     let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
@@ -680,7 +685,7 @@ extension ShareDialog {
   }
 
   private func showWeb() throws {
-    try validateShareContentForBrowser(options: .photoImageURL)
+    try validateShareContentForShareWebDialog(mode: .web, options: .photoImageURL)
     let dependencies = try Self.getDependencies()
 
     guard let content = shareContent else {
@@ -748,12 +753,13 @@ extension ShareDialog {
     case .shareSheet:
       try validateShareContentForShareSheet()
     case .browser:
-      try validateShareContentForBrowser()
+      try validateShareContentForShareWebDialog(mode: mode)
     case .web:
-      try validateShareContentForBrowser(options: .photoImageURL)
-    case .feedBrowser,
-         .feedWeb:
-      try validateShareContentForFeed()
+      try validateShareContentForShareWebDialog(mode: mode, options: .photoImageURL)
+    case .feedBrowser:
+      try validateShareContentForFeedWebDialog(mode: mode)
+    case .feedWeb:
+      try validateShareContentForFeedWebDialog(mode: mode)
     }
   }
 
@@ -773,23 +779,29 @@ extension ShareDialog {
     }
 
     do {
-      try validateShareContentForFeed()
+      try validateShareContentForFeedWebDialog(mode: .automatic)
       return
     } catch {}
 
-    try validateShareContentForBrowser()
+    try validateShareContentForShareWebDialog(mode: .automatic)
   }
 
-  private func validateShareContentForBrowser(options bridgeOptions: ShareBridgeOptions = []) throws {
+  private func validateShareContentForShareWebDialog(
+    mode: Mode,
+    options bridgeOptions: ShareBridgeOptions = []
+  ) throws {
     let dependencies = try Self.getDependencies()
+
+    try validateAdvertiserTrackingPermission(mode: mode)
 
     guard let content = shareContent else {
       throw MissingContentError()
     }
 
+    let errorFactory = dependencies.errorFactory
     if let linkContent = content as? ShareLinkContent,
        linkContent.contentURL == nil {
-      throw dependencies.errorFactory.invalidArgumentError(
+      throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: linkContent,
@@ -799,7 +811,7 @@ extension ShareDialog {
     }
 
     guard !(shareContent is ShareCameraEffectContent) else {
-      throw dependencies.errorFactory.invalidArgumentError(
+      throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: shareContent,
@@ -812,7 +824,7 @@ extension ShareDialog {
 
     if flags.containsPhotos {
       guard AccessToken.current != nil else {
-        throw dependencies.errorFactory.invalidArgumentError(
+        throw errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
           name: "shareContent",
           value: content,
@@ -824,7 +836,7 @@ extension ShareDialog {
       if let photo = content as? SharePhotoContent {
         try photo.validate(options: bridgeOptions)
       } else {
-        throw dependencies.errorFactory.invalidArgumentError(
+        throw errorFactory.invalidArgumentError(
           domain: ShareErrorDomain,
           name: "shareContent",
           value: content,
@@ -835,18 +847,18 @@ extension ShareDialog {
     }
 
     if flags.containsVideos {
-      throw dependencies.errorFactory.invalidArgumentError(
+      throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: content,
-        message: "video sharing through the browser is not supported.",
+        message: "Video sharing through the browser is not supported.",
         underlyingError: nil
       )
     }
 
     if flags.containsMedia,
        bridgeOptions == .photoImageURL { // a web-based URL is required
-      throw dependencies.errorFactory.invalidArgumentError(
+      throw errorFactory.invalidArgumentError(
         domain: ShareErrorDomain,
         name: "shareContent",
         value: content,
@@ -856,8 +868,11 @@ extension ShareDialog {
     }
   }
 
-  private func validateShareContentForFeed() throws {
-    let errorFactory = try Self.getDependencies().errorFactory
+  private func validateShareContentForFeedWebDialog(mode: Mode) throws {
+    let dependencies = try Self.getDependencies()
+    let errorFactory = dependencies.errorFactory
+
+    try validateAdvertiserTrackingPermission(mode: mode)
 
     if let linkContent = shareContent as? ShareLinkContent {
       if linkContent.contentURL == nil {
@@ -874,7 +889,7 @@ extension ShareDialog {
         domain: ShareErrorDomain,
         name: "shareContent",
         value: shareContent,
-        message: "Feed share dialogs support ShareLinkContent.",
+        message: "Feed share dialogs support ShareLinkContent only.",
         underlyingError: nil
       )
     }
@@ -960,6 +975,34 @@ extension ShareDialog {
         name: "shareContent",
         value: content,
         message: "Cannot use the share sheet if the share sheet is unavailable. Make sure the FB app is installed.",
+        underlyingError: nil
+      )
+    }
+  }
+
+  private func validateAdvertiserTrackingPermission(mode: Mode) throws {
+    let dependencies = try Self.getDependencies()
+    let errorFactory = dependencies.errorFactory
+
+    let isTrackingEnabled = dependencies.settings.isAdvertiserTrackingEnabled == true
+    let isWebViewsMode = mode == .feedWeb || mode == .web
+    guard !isWebViewsMode || isTrackingEnabled else {
+      throw errorFactory.invalidArgumentError(
+        domain: ShareErrorDomain,
+        name: "unavailableDestination",
+        value: shareContent,
+        message: "Tracking permission is required to share to web destination.",
+        underlyingError: nil
+      )
+    }
+
+    let isBrowsersMode = mode == .browser || mode == .feedBrowser
+    guard !isBrowsersMode || !(shareContent is SharePhotoContent) || isTrackingEnabled else {
+      throw errorFactory.invalidArgumentError(
+        domain: ShareErrorDomain,
+        name: "unavailableDestination",
+        value: shareContent,
+        message: "Valid access token is required to share photos with browser destination.",
         underlyingError: nil
       )
     }

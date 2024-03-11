@@ -163,7 +163,7 @@ extension _ShareUtility: ShareUtilityProtocol {
     guard let linkContent = content as? ShareLinkContent else { return nil }
 
     let parameters: [String: Any?] = [
-      "link": linkContent.contentURL,
+      "href": linkContent.contentURL?.absoluteString,
       "quote": linkContent.quote,
       "hashtag": hashtagString(from: linkContent.hashtag),
       "place": content.placeID,
