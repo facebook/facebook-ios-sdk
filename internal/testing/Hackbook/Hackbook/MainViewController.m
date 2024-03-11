@@ -15,6 +15,7 @@
 #import "NavigationController.h"
 #import "PermissionsViewController.h"
 #import "Utilities.h"
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 static NSString *GetVersionInfo(NSBundle *bundle)
 {
@@ -133,6 +134,10 @@ static const CGFloat marginYForBanner = 0;
 
   NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
   [self.tableView deselectRowAtIndexPath:selectedIndexPath animated:YES];
+  
+  if (@available(iOS 14, *)) {
+    [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status){}];
+  }
 }
 
 - (void)viewWillDisappear:(BOOL)animated

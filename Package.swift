@@ -167,7 +167,13 @@ extension Target {
         ]
     )
 
-    static let login = target(name: .login, dependencies: [.core, .Prefixed.login])
+    static let login = target(
+        name: .login,
+        dependencies: [.core, .Prefixed.login],
+        resources: [
+            .copy("Resources/PrivacyInfo.xcprivacy"),
+        ]
+    )
 
     static let share = target(name: .share, dependencies: [.core, .Prefixed.share])
 

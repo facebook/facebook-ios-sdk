@@ -824,7 +824,20 @@ final class LoginURLCompleterTests: XCTestCase {
         userLink: "facebook.com"
       )
     )
-    _ = urlCompleter.profile(with: claim)
+    let profile = urlCompleter.profile(
+      with: claim,
+      permissions: [
+        "public_profile",
+        "user_link",
+        "email",
+        "user_friends",
+        "user_birthday",
+        "user_age_range",
+        "user_hometown",
+        "user_location",
+        "user_gender",
+      ]
+    )
 
     XCTAssertEqual(
       factory.capturedUserID,
@@ -864,6 +877,11 @@ final class LoginURLCompleterTests: XCTestCase {
     XCTAssertEqual(
       factory.capturedFriendIDs,
       claim.userFriends,
+      "Should request a profile using the friend identifiers from the claims"
+    )
+    XCTAssertEqual(
+      factory.capturedPermissions,
+      profile?.permissions,
       "Should request a profile using the friend identifiers from the claims"
     )
     // @lint-ignore FBOBJCDISCOURAGEDFUNCTION

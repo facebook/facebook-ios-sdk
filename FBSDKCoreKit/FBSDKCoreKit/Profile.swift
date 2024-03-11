@@ -110,6 +110,15 @@ public final class Profile: NSObject {
    */
   public let gender: String?
 
+  /**
+   The user's granted permissions.
+
+   - Important: This field will only be populated if your user has granted permissions to your
+   application.
+   */
+
+  public let permissions: Set<String>?
+
   let isLimited: Bool
 
   // swiftlint:disable:next identifier_name
@@ -152,8 +161,9 @@ public final class Profile: NSObject {
      - name: The user's complete name. Defaults to `nil`.
      - linkURL: The link for the profile. Defaults to `nil`.
      - refreshDate: The date the profile was fetched. Defaults to the time of instantiation.
+     - permissions: The user's granted permissions. Defaults to `nil`.
    */
-  @objc(initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:)
+  @objc(initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:permissions:)
   public convenience init(
     userID: UserIdentifier,
     firstName: String?,
@@ -161,7 +171,8 @@ public final class Profile: NSObject {
     lastName: String?,
     name: String?,
     linkURL: URL?,
-    refreshDate: Date?
+    refreshDate: Date?,
+    permissions: Set<String>? = nil
   ) {
     self.init(
       userID: userID,
@@ -179,7 +190,8 @@ public final class Profile: NSObject {
       hometown: nil,
       location: nil,
       gender: nil,
-      isLimited: false
+      isLimited: false,
+      permissions: permissions
     )
   }
 
@@ -206,8 +218,9 @@ public final class Profile: NSObject {
      - hometown: The user's hometown. Defaults to `nil`.
      - location: The user's location. Defaults to `nil`.
      - gender: The user's gender. Defaults to `nil`.
+     - permissions: The user's granted permissions. Defaults to `nil`.
    */
-  @objc(initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:hometown:location:gender:)
+  @objc(initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:hometown:location:gender:permissions:)
   public convenience init(
     userID: UserIdentifier,
     firstName: String? = nil,
@@ -223,7 +236,8 @@ public final class Profile: NSObject {
     ageRange: UserAgeRange? = nil,
     hometown: Location? = nil,
     location: Location? = nil,
-    gender: String? = nil
+    gender: String? = nil,
+    permissions: Set<String>? = nil
   ) {
     self.init(
       userID: userID,
@@ -241,7 +255,8 @@ public final class Profile: NSObject {
       hometown: hometown,
       location: location,
       gender: gender,
-      isLimited: false
+      isLimited: false,
+      permissions: permissions
     )
   }
 
@@ -267,8 +282,9 @@ public final class Profile: NSObject {
      - isLimited: Indicates whether the information provided is incomplete in some way.
        When `true`, `loadCurrentProfile(completion:):` will assume the profile is incomplete and disregard
        any cached profile. Defaults to `false`.
+    - permissions: The user's granted permissions. Defaults to `nil`.
    */
-  @objc(initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:hometown:location:gender:isLimited:)
+  @objc(initWithUserID:firstName:middleName:lastName:name:linkURL:refreshDate:imageURL:email:friendIDs:birthday:ageRange:hometown:location:gender:isLimited:permissions:)
   public init(
     userID: UserIdentifier,
     firstName: String?,
@@ -285,7 +301,8 @@ public final class Profile: NSObject {
     hometown: Location?,
     location: Location?,
     gender: String?,
-    isLimited: Bool
+    isLimited: Bool,
+    permissions: Set<String>? = nil
   ) {
     self.userID = userID
     self.firstName = firstName
@@ -303,6 +320,7 @@ public final class Profile: NSObject {
     self.location = location
     self.gender = gender
     self.isLimited = isLimited
+    self.permissions = permissions
 
     super.init()
   }

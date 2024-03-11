@@ -27,6 +27,7 @@ final class ProfileFactory: NSObject, ProfileCreating {
     hometown: Location?,
     location: Location?,
     gender: String?,
+    permissions: Set<String>?,
     isLimited: Bool
   ) -> Profile {
     Profile(
@@ -45,7 +46,8 @@ final class ProfileFactory: NSObject, ProfileCreating {
       hometown: hometown,
       location: location,
       gender: gender,
-      isLimited: isLimited
+      isLimited: isLimited,
+      permissions: permissions
     )
   }
 }

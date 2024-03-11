@@ -1,6 +1,7 @@
 // (c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.
 
 #import "LoginManagerViewController.h"
+#import <AppTrackingTransparency/AppTrackingTransparency.h>
 
 @import FBSDKLoginKit;
 
@@ -8,6 +9,7 @@
 
 @property (nonatomic, strong) IBOutlet UIButton *stateAgnosticLoginButton;
 @property (nonatomic, strong) IBOutlet UIButton *loginButton;
+@property (nonatomic, strong) IBOutlet UILabel *attLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *trackingLimitedSwitch;
 @property (nonatomic, strong) IBOutlet UITextField *nonceTextField;
 @property (nonatomic, strong) IBOutlet UIButton *defaultAudienceButton;
@@ -24,6 +26,8 @@
   [self updateLoginButton];
 
   [self configureDefaultAudienceButton];
+  
+  [self setATTLabelText];
 }
 
 - (FBSDKLoginTracking)tracking
@@ -114,6 +118,22 @@
 {
   NSString *title = self.isLoggedIn ? @"Log Out" : @"Log In With Facebook";
   [self.loginButton setTitle:title forState:UIControlStateNormal];
+}
+
+- (void)setATTLabelText
+{
+  NSString *attLabelText = @"Not Authorized";
+  if (@available(iOS 14, *)) {
+    if (ATTrackingManager.trackingAuthorizationStatus == ATTrackingManagerAuthorizationStatusAuthorized) {
+      attLabelText = @"Authorized";
+    }
+  } else {
+    // Previous iOS versions will go thorugh the regular FB Login flow by default, which is the case
+    // for the Authorized status
+    attLabelText = @"Authorized";
+  }
+  
+  [self.attLabel setText:[NSString stringWithFormat:@"ATT Status: %@", attLabelText]];
 }
 
 @end

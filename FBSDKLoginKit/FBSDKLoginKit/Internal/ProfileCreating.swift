@@ -27,6 +27,7 @@ protocol ProfileCreating {
     hometown: Location?,
     location: Location?,
     gender: String?,
+    permissions: Set<String>?,
     isLimited: Bool
   ) -> Profile
 }
