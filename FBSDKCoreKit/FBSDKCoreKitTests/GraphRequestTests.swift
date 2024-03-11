@@ -461,9 +461,9 @@ final class GraphRequestTests: XCTestCase {
       XCTFail("Should have an app id")
       return
     }
-    let parameters = ["fields": "server_domain_infos"]
+    let parameters = ["fields": ""]
     let domainConfigRequest1 = graphRequestFactory.createGraphRequest(
-      withGraphPath: appID,
+      withGraphPath: "\(appID)/server_domain_infos",
       parameters: parameters,
       tokenString: nil,
       httpMethod: nil,
@@ -474,7 +474,7 @@ final class GraphRequestTests: XCTestCase {
       "Request is for fetching the domain configuration"
     )
 
-    let domainConfigRequest2 = GraphRequest(graphPath: appID, parameters: parameters, httpMethod: .get)
+    let domainConfigRequest2 = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
     XCTAssertTrue(
       GraphRequest.isForFetchingDomainConfiguration(request: domainConfigRequest2),
       "Request is for fetching the domain configuration"
@@ -505,8 +505,8 @@ final class GraphRequestTests: XCTestCase {
     )
 
     let failingRequest5 = GraphRequest(
-      graphPath: appID,
-      parameters: ["fields": "server_domain_infos,test_field,name,app_events_feature_bitmask"],
+      graphPath: "\(appID)/server_domain_infos",
+      parameters: ["fields": "test_field,name,app_events_feature_bitmask"],
       httpMethod: .get
     )
     XCTAssertFalse(

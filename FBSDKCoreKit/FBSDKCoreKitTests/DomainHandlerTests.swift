@@ -99,8 +99,8 @@ final class DomainHandlerTests: XCTestCase {
       XCTFail("Should have an app id")
       return
     }
-    let parameters = ["fields": "server_domain_infos"]
-    let domainConfigRequest = GraphRequest(graphPath: appID, parameters: parameters, httpMethod: .get)
+    let parameters = ["fields": ""]
+    let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
     let urlPrefix = _DomainHandler.sharedInstance().getURLPrefix(
       forSingleRequest: domainConfigRequest,
       isAdvertiserTrackingEnabled: true

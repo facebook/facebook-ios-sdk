@@ -373,26 +373,30 @@ static FBSDKAppEventsUtility *_shared;
 }
 
 // Given a candidate token (which may be nil), find the real token to string to use.
-// Precedence: 1) provided token, 2) current token, 3) app | client token, 4) fully anonymous session.
+// Precedence: 1) provided token, 2) current token only if ATE is true, 3) app | client token, 4) fully anonymous session.
 - (nullable NSString *)tokenStringToUseFor:(nullable FBSDKAccessToken *)token
                       loggingOverrideAppID:(nullable NSString *)loggingOverrideAppID
 {
-  if (!token) {
+  if (!token && (![[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled] || self.settings.isAdvertiserTrackingEnabled)) {
     token = FBSDKAccessToken.currentAccessToken;
+  }
+
+  if (token && token.isExpired) {
+    token = nil;
   }
 
   NSString *appID = loggingOverrideAppID ?: token.appID ?: self.settings.appID;
   NSString *tokenString = token.tokenString;
   NSString *clientTokenString = self.settings.clientToken;
 
-  if (![appID isEqualToString:token.appID]) {
+  if (!token || ![appID isEqualToString:token.appID]) {
     // If there's a logging override app id present
     // then we don't want to use the client token since the client token
     // is intended to match up with the primary app id
     // and AppEvents doesn't require a client token.
-    if (clientTokenString && loggingOverrideAppID) {
+    if (clientTokenString && loggingOverrideAppID && loggingOverrideAppID != self.settings.appID && loggingOverrideAppID != token.appID) {
       tokenString = nil;
-    } else if (clientTokenString && appID && ([appID isEqualToString:token.appID] || token == nil)) {
+    } else if (clientTokenString && appID && (token == nil || [appID isEqualToString:token.appID])) {
       tokenString = [NSString stringWithFormat:@"%@|%@", appID, clientTokenString];
     } else if (appID) {
       tokenString = nil;

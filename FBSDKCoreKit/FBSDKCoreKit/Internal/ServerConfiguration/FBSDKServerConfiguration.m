@@ -261,6 +261,7 @@ const NSInteger FBSDKServerConfigurationVersion = 3;
                                         [NSDictionary<NSString *, id> class],
                                         NSString.class,
                                         NSArray.class,
+                                        NSNumber.class,
                                         nil];
   NSArray<NSDictionary<NSString *, id> *> *eventBindings = [decoder decodeObjectOfClasses:eventBindingsClasses forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
   NSSet<Class> *dictionaryClasses = [NSSet setWithObjects:

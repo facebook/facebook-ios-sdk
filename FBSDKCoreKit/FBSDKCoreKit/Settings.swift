@@ -354,6 +354,16 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    */
   public var isAdvertiserTrackingEnabled: Bool {
     get { advertisingTrackingStatus == .allowed }
+
+    @available(
+      *,
+      deprecated,
+      message: """
+        The setAdvertiserTrackingEnabled flag is not used for FBSDK v17+ on iOS 17+ \
+        as the FBSDK v17+ now relies on ATTrackingManager.trackingAuthorizationStatus \
+        to accurately represent ATT permission for users of your app.
+        """
+    )
     set(isNewlyAllowed) {
       if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
         // swiftlint:disable:next line_length

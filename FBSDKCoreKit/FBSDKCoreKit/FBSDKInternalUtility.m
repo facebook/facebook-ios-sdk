@@ -496,7 +496,12 @@ static NSMapTable *_transientObjects;
                                @"Frameworks/FBSDKCoreKit_Basics.framework",
                                @"Frameworks/FBAEMKit.framework",
                                @"Frameworks/FBSDKLoginKit.framework",
-                               @"Frameworks/FBSDKShareKit.framework"];
+                               @"Frameworks/FBSDKShareKit.framework",
+                               @"Facebook_FacebookAEM.bundle",
+                               @"Facebook_FacebookBasics.bundle",
+                               @"Facebook_FacebookCore.bundle",
+                               @"Facebook_FacebookLogin.bundle",
+                               @"Facebook_FacebookShare.bundle"];
   for (NSString *subdirectory in subdirectories) {
     NSString *subdir = [subdirectory isKindOfClass:[NSNull class]] ? nil: subdirectory;
     NSArray<NSURL *> *privacyInfoUrls = [[NSBundle mainBundle] URLsForResourcesWithExtension:@"xcprivacy" subdirectory:subdir];

@@ -586,6 +586,7 @@ final class AppEventsUtilityTests: XCTestCase {
   }
 
   func testTokenStringWithAccessTokenWithoutAppIdWithClientToken() {
+    settings.isAdvertiserTrackingEnabled = true
     AccessToken.current = SampleAccessTokens.validToken
     settings.appID = nil
     settings.clientToken = "toktok"
@@ -598,7 +599,29 @@ final class AppEventsUtilityTests: XCTestCase {
     )
   }
 
+  func testTokenStringWithAccessTokenWithoutAppIdWithClientTokenAdvertiserTrackingDisabled() {
+    settings.isAdvertiserTrackingEnabled = false
+    AccessToken.current = SampleAccessTokens.validToken
+    settings.appID = nil
+    settings.clientToken = "toktok"
+    let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertNil(
+        tokenString,
+        "tokenString should be nil"
+      )
+    } else {
+      XCTAssertEqual(
+        tokenString,
+        SampleAccessTokens.validToken.tokenString,
+        "Should use the current access token"
+      )
+    }
+  }
+
   func testTokenStringWithAccessTokenWithoutAppIdWithoutClientToken() {
+    settings.isAdvertiserTrackingEnabled = true
     AccessToken.current = SampleAccessTokens.validToken
     settings.appID = nil
     settings.clientToken = nil
@@ -613,7 +636,28 @@ final class AppEventsUtilityTests: XCTestCase {
     )
   }
 
+  func testTokenStringWithAccessTokenWithoutAppIdWithoutClientTokenAdvertiserTrackingDisabled() {
+    settings.isAdvertiserTrackingEnabled = false
+    AccessToken.current = SampleAccessTokens.validToken
+    settings.appID = nil
+    settings.clientToken = nil
+    let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertNil(
+        tokenString,
+        "tokenString should be nil"
+      )
+    } else {
+      XCTAssertEqual(
+        tokenString,
+        SampleAccessTokens.validToken.tokenString,
+        "Should use the current access token"
+      )
+    }
+  }
+
   func testTokenStringWithAccessTokenWithAppIdWithoutClientToken() {
+    settings.isAdvertiserTrackingEnabled = true
     AccessToken.current = SampleAccessTokens.validToken
     settings.appID = "456"
     settings.clientToken = nil
@@ -628,7 +672,28 @@ final class AppEventsUtilityTests: XCTestCase {
     )
   }
 
+  func testTokenStringWithAccessTokenWithAppIdWithoutClientTokenAdvertiserTrackingDisabled() {
+    settings.isAdvertiserTrackingEnabled = false
+    AccessToken.current = SampleAccessTokens.validToken
+    settings.appID = "456"
+    settings.clientToken = nil
+    let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertNil(
+        tokenString,
+        "tokenString should be nil"
+      )
+    } else {
+      XCTAssertEqual(
+        tokenString,
+        SampleAccessTokens.validToken.tokenString,
+        "Should use the current access token"
+      )
+    }
+  }
+
   func testTokenStringWithAccessTokenWithAppIdWithClientToken() {
+    settings.isAdvertiserTrackingEnabled = true
     AccessToken.current = SampleAccessTokens.validToken
     settings.appID = "456"
     settings.clientToken = "toktok"
@@ -638,6 +703,27 @@ final class AppEventsUtilityTests: XCTestCase {
       SampleAccessTokens.validToken.tokenString,
       "Should provide the token string stored on the current access token when the app id on the token does not match the app id in settings" // swiftlint:disable:this line_length
     )
+  }
+
+  func testTokenStringWithAccessTokenWithAppIdWithClientTokenAdvertiserTrackingDisabled() {
+    settings.isAdvertiserTrackingEnabled = false
+    AccessToken.current = SampleAccessTokens.validToken
+    settings.appID = "456"
+    settings.clientToken = "toktok"
+    let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(
+        tokenString,
+        "456|toktok",
+        "Should default to the client token"
+      )
+    } else {
+      XCTAssertEqual(
+        tokenString,
+        SampleAccessTokens.validToken.tokenString,
+        "Should use the current access token"
+      )
+    }
   }
 
   func testTokenStringWithoutAccessTokenWithoutAppIdWithoutClientTokenWithLoggingAppID() {
@@ -729,6 +815,7 @@ final class AppEventsUtilityTests: XCTestCase {
   }
 
   func testTokenStringWithAccessTokenWithAppIdWithClientTokenWithLoggingAppIDMatching() {
+    settings.isAdvertiserTrackingEnabled = true
     AccessToken.current = SampleAccessTokens.validToken
     settings.appID = "456"
     settings.clientToken = "toktok"
@@ -744,6 +831,91 @@ final class AppEventsUtilityTests: XCTestCase {
       access token's app id matches the logging override
       """
     )
+  }
+
+  func testTokenStringWithAccessTokenWithAppIdWithClientTokenWithLoggingAppIDMatchingAdvertiserTrackingDisabled() {
+    settings.isAdvertiserTrackingEnabled = false
+    AccessToken.current = SampleAccessTokens.validToken
+    settings.appID = "appID123"
+    settings.clientToken = "toktok"
+    let tokenString = appEventsUtility.tokenStringToUse(
+      for: nil,
+      loggingOverrideAppID: "appID123"
+    )
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(
+        tokenString,
+        "appID123|toktok",
+        "Should default to the client token"
+      )
+    } else {
+      XCTAssertEqual(
+        tokenString,
+        SampleAccessTokens.validToken.tokenString,
+        "Should use the current access token"
+      )
+    }
+  }
+
+  func testTokenStringWithAccessTokenWithAppIdWithClientTokenWithLoggingAppIDMatchingAdvertiserTrackingDisabled2() {
+    settings.isAdvertiserTrackingEnabled = false
+    AccessToken.current = SampleAccessTokens.validToken
+    settings.appID = "456"
+    settings.clientToken = "toktok"
+    let tokenString = appEventsUtility.tokenStringToUse(
+      for: nil,
+      loggingOverrideAppID: "456"
+    )
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(
+        tokenString,
+        "456|toktok",
+        "Should default to the client token"
+      )
+    } else {
+      XCTAssertNil(
+        tokenString,
+        "tokenString should be nil"
+      )
+    }
+  }
+
+  func testExpiredTokenAdvertiserTrackingEnabled() {
+    settings.isAdvertiserTrackingEnabled = true
+    AccessToken.current = SampleAccessTokens.expiredToken
+    settings.appID = "456"
+    settings.clientToken = "toktok"
+    let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    XCTAssertEqual(
+      tokenString,
+      "456|toktok",
+      "Should default to the client token"
+    )
+  }
+
+  func testExpiredTokenAdvertiserTrackingDisabled() {
+    settings.isAdvertiserTrackingEnabled = false
+    AccessToken.current = SampleAccessTokens.expiredToken
+    settings.appID = "456"
+    settings.clientToken = "toktok"
+    let tokenString = appEventsUtility.tokenStringToUse(for: nil, loggingOverrideAppID: nil)
+    XCTAssertEqual(
+      tokenString,
+      "456|toktok",
+      "Should default to the client token"
+    )
+  }
+
+  func testTokenWithProvidedTokenString() {
+    let token = SampleAccessTokens.validToken
+    let tokenString = appEventsUtility.tokenStringToUse(for: token, loggingOverrideAppID: nil)
+    XCTAssertEqual(tokenString, token.tokenString)
+  }
+
+  func testTokenWithProvidedTokenString2() {
+    let token = SampleAccessTokens.validToken
+    let tokenString = appEventsUtility.tokenStringToUse(for: token, loggingOverrideAppID: "789")
+    XCTAssertNil(tokenString)
   }
 
   func testDefaultDependencies() {

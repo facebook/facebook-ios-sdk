@@ -168,9 +168,9 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
 
 - (id<FBSDKGraphRequest>)requestToLoadDomainConfiguration:(NSString *)appID
 {
-  NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : DOMAIN_CONFIGURATION_DOMAIN_INFO_FIELD };
-
-  return [self.graphRequestFactory createGraphRequestWithGraphPath:appID
+  NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : @"" };
+  NSString *graphPath = [NSString stringWithFormat:@"%@/%@", appID, DOMAIN_CONFIGURATION_DOMAIN_INFO_FIELD];
+  return [self.graphRequestFactory createGraphRequestWithGraphPath:graphPath
                                                         parameters:parameters
                                                        tokenString:nil
                                                         HTTPMethod:nil
