@@ -415,7 +415,12 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
       [self taskDidCompleteWithResponse:responseV1 data:responseDataV1 requestStartTime:self.requestStartTime handler:handler];
     }
   };
-  [self.session executeURLRequest:request completionHandler:completionHandler];
+  
+  if ([[FBSDKShimGraphRequestInterceptor shared] shouldInterceptRequest:request]) {
+    [[FBSDKShimGraphRequestInterceptor shared] executeWithRequest:request completionHandler:completionHandler];
+  } else {
+    [self.session executeURLRequest:request completionHandler:completionHandler];
+  }
 
   id<FBSDKGraphRequestConnectionDelegate> delegate = self.delegate;
   if ([delegate respondsToSelector:@selector(requestConnectionWillBeginLoading:)]) {
