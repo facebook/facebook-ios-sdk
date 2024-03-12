@@ -362,13 +362,14 @@ useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix
 + (BOOL)isForFetchingDomainConfiguration:(id<FBSDKGraphRequest>)request
 {
   NSString *appID = self.class.settings.appID;
-  if (![request.graphPath isEqualToString:appID]) {
+  NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/%@", appID, kDomainConfigurationDomainInfoField];
+  if (![request.graphPath isEqualToString:expectedGraphPath]) {
     return NO;
   }
   if (![request.HTTPMethod isEqualToString:FBSDKHTTPMethodGET]) {
     return NO;
   }
-  if (!request.parameters || ![[request.parameters objectForKey:@"fields"] isEqualToString:kDomainConfigurationDomainInfoField]) {
+  if (!request.parameters || ![[request.parameters objectForKey:@"fields"] isEqualToString:@""]) {
     return NO;
   }
   return YES;

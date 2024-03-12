@@ -1478,7 +1478,9 @@ static BOOL g_explicitEventsLoggedYet = NO;
 {
   [self validateConfiguration];
 
-  accessToken = accessToken ?: FBSDKAccessToken.currentAccessToken;
+  if (accessToken == nil && (![[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled] || self.settings.isAdvertiserTrackingEnabled)) {
+    accessToken = FBSDKAccessToken.currentAccessToken;
+  }
 
   // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
   // 1) if the OS tells us that the user has Limited Ad Tracking, then just don't send, and return a nil in the token.

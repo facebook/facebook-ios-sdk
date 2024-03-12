@@ -800,8 +800,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       return
     }
     GraphRequestConnection.resetDidFetchDomainConfiguration()
-    let parameters = ["fields": "server_domain_infos"]
-    let domainConfigRequest = GraphRequest(graphPath: appID, parameters: parameters, httpMethod: .get)
+    let parameters = ["fields": ""]
+    let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
     connection.add(domainConfigRequest) { _, _, _ in }
     connection.start()
     XCTAssertEqual(
@@ -2054,8 +2054,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testShouldPiggyBackDomainConfigurationRequest() {
-    let parameters = ["fields": "server_domain_infos"]
-    let domainConfigRequest = GraphRequest(graphPath: appID, parameters: parameters, httpMethod: .get)
+    let parameters = ["fields": ""]
+    let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
     connection.add(domainConfigRequest) { _, _, _ in }
     if #available(iOS 14.5, *) {
       XCTAssertFalse(
