@@ -148,8 +148,7 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
     }
 
     NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-    NSDictionary<NSString *, id> *domainInfoField = [FBSDKTypeUtility dictionaryValue:resultDictionary[DOMAIN_CONFIGURATION_DOMAIN_INFO_FIELD]];
-    NSArray<NSDictionary<NSString *, id> *> *domainInfoDataArray = [FBSDKTypeUtility arrayValue:domainInfoField[@"data"]];
+    NSArray<NSDictionary<NSString *, id> *> *domainInfoDataArray = [FBSDKTypeUtility arrayValue:resultDictionary[@"data"]];
     NSDictionary<NSString *, id> *endpoints = [FBSDKTypeUtility array:domainInfoDataArray objectAtIndex:0];
     NSArray<NSDictionary<NSString *, id> *> *domainInfoArray = [FBSDKTypeUtility arrayValue:endpoints[@"endpoints"]];
 
