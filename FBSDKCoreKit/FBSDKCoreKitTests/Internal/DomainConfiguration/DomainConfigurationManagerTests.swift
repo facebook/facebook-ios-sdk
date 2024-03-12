@@ -21,39 +21,36 @@ final class DomainConfigurationManagerTests: XCTestCase {
   // swiftlint:enable implicitly_unwrapped_optional
 
   let sampleResult: [String: Any] = [
-    "id": 2020399148181142,
-    "server_domain_infos": [
-      "data": [
-        [
-          "endpoints": [
-            [
-              "key": "activities",
-              "value": [
-                "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
-                "att_opt_out_domain_prefix": kEndpoint2URLPrefix,
-              ],
+    "data": [
+      [
+        "endpoints": [
+          [
+            "key": "activities",
+            "value": [
+              "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
+              "att_opt_out_domain_prefix": kEndpoint2URLPrefix,
             ],
-            [
-              "key": "custom_audience_third_party_id",
-              "value": [
-                "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
-                "att_opt_out_domain_prefix": kEndpoint1URLPrefix,
-              ],
+          ],
+          [
+            "key": "custom_audience_third_party_id",
+            "value": [
+              "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
+              "att_opt_out_domain_prefix": kEndpoint1URLPrefix,
             ],
-            [
-              "key": "app_indexing_session",
-              "value": [
-                "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
-                "att_opt_out_domain_prefix": kEndpoint1URLPrefix,
-              ],
+          ],
+          [
+            "key": "app_indexing_session",
+            "value": [
+              "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
+              "att_opt_out_domain_prefix": kEndpoint1URLPrefix,
             ],
-            [
-              "key": "default_config",
-              "value": [
-                "default_domain_prefix": kEndpoint2URLPrefix,
-                "default_alternative_domain_prefix": kEndpoint1URLPrefix,
-                "enable_for_early_versions": false,
-              ],
+          ],
+          [
+            "key": "default_config",
+            "value": [
+              "default_domain_prefix": kEndpoint2URLPrefix,
+              "default_alternative_domain_prefix": kEndpoint1URLPrefix,
+              "enable_for_early_versions": false,
             ],
           ],
         ],
