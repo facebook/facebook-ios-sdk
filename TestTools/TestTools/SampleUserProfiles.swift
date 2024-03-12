@@ -53,7 +53,18 @@ public final class SampleUserProfiles: NSObject {
       hometown: Location(from: ["id": "112724962075996", "name": "Martinez, California"]),
       location: Location(from: ["id": "110843418940484", "name": "Seattle, Washington"]),
       gender: "male",
-      isLimited: isLimited
+      isLimited: isLimited,
+      permissions: [
+        "public_profile",
+        "user_link",
+        "email",
+        "user_friends",
+        "user_birthday",
+        "user_age_range",
+        "user_hometown",
+        "user_location",
+        "user_gender",
+      ]
     )
   }
 }
