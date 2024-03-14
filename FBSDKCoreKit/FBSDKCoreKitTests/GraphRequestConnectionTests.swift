@@ -800,8 +800,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       return
     }
     GraphRequestConnection.resetDidFetchDomainConfiguration()
-    let parameters = ["fields": "server_domain_infos"]
-    let domainConfigRequest = GraphRequest(graphPath: appID, parameters: parameters, httpMethod: .get)
+    let parameters = ["fields": ""]
+    let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
     connection.add(domainConfigRequest) { _, _, _ in }
     connection.start()
     XCTAssertEqual(
@@ -872,7 +872,12 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       .started,
       "The connection should have started"
     )
-    XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+    } else {
+      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+    }
+
     guard let requestsQ = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
       XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
       return
@@ -1049,7 +1054,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
           .started,
           "Should change the connection state to 'started' when starting in an valid state"
         )
-        XCTAssertNotNil(session.capturedRequest, "Should start a request for a connection in an valid state")
+        if self.settings.isAdvertiserTrackingEnabled == true {
+          XCTAssertNotNil(session.capturedRequest, "Should start a request for a connection in an valid state")
+        }
       }
   }
 
@@ -1347,107 +1354,113 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testUnsettingAccessToken() {
-    let expectation = expectation(description: name)
-    let accessToken = AccessToken(
-      tokenString: "token",
-      permissions: ["public_profile"],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: "appid",
-      userID: "userid",
-      expirationDate: nil,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
-    )
-    TestAccessTokenWallet.current = accessToken
-
-    connection.add(makeRequest(tokenString: accessToken.tokenString)) { _, result, error in
-      XCTAssertNil(result)
-      let testError = error as? TestSDKError
-      XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNil(
-        TestAccessTokenWallet.current,
-        "Should clear the current stored access token"
+    if settings.isAdvertiserTrackingEnabled == true {
+      let expectation = expectation(description: name)
+      let accessToken = AccessToken(
+        tokenString: "token",
+        permissions: ["public_profile"],
+        declinedPermissions: [],
+        expiredPermissions: [],
+        appID: "appid",
+        userID: "userid",
+        expirationDate: nil,
+        refreshDate: nil,
+        dataAccessExpirationDate: nil
       )
-      expectation.fulfill()
+      TestAccessTokenWallet.current = accessToken
+
+      connection.add(makeRequest(tokenString: accessToken.tokenString)) { _, result, error in
+        XCTAssertNil(result)
+        let testError = error as? TestSDKError
+        XCTAssertEqual("Token is broken", testError?.message)
+        XCTAssertNil(
+          TestAccessTokenWallet.current,
+          "Should clear the current stored access token"
+        )
+        expectation.fulfill()
+      }
+      connection.start()
+
+      let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
+
+      session.capturedCompletion?(missingTokenData, response, nil)
+
+      wait(for: [expectation], timeout: 1)
     }
-    connection.start()
-
-    let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
-
-    session.capturedCompletion?(missingTokenData, response, nil)
-
-    wait(for: [expectation], timeout: 1)
   }
 
   func testUnsettingAccessTokenSkipped() {
-    let expectation = expectation(description: name)
-    TestAccessTokenWallet.current = AccessToken(
-      tokenString: "token",
-      permissions: ["public_profile"],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: "appid",
-      userID: "userid",
-      expirationDate: nil,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
-    )
+    if settings.isAdvertiserTrackingEnabled == true {
+      let expectation = expectation(description: name)
+      TestAccessTokenWallet.current = AccessToken(
+        tokenString: "token",
+        permissions: ["public_profile"],
+        declinedPermissions: [],
+        expiredPermissions: [],
+        appID: "appid",
+        userID: "userid",
+        expirationDate: nil,
+        refreshDate: nil,
+        dataAccessExpirationDate: nil
+      )
 
-    let request = TestGraphRequest(
-      graphPath: "me",
-      parameters: ["fields": ""],
-      tokenString: "notCurrentToken"
-    )
-    connection.add(request) { _, result, error in
-      XCTAssertNil(result)
-      let testError = error as? TestSDKError
-      XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNotNil(TestAccessTokenWallet.current)
-      expectation.fulfill()
+      let request = TestGraphRequest(
+        graphPath: "me",
+        parameters: ["fields": ""],
+        tokenString: "notCurrentToken"
+      )
+      connection.add(request) { _, result, error in
+        XCTAssertNil(result)
+        let testError = error as? TestSDKError
+        XCTAssertEqual("Token is broken", testError?.message)
+        XCTAssertNotNil(TestAccessTokenWallet.current)
+        expectation.fulfill()
+      }
+      connection.start()
+
+      let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
+
+      session.capturedCompletion?(missingTokenData, response, nil)
+
+      wait(for: [expectation], timeout: 1)
     }
-    connection.start()
-
-    let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
-
-    session.capturedCompletion?(missingTokenData, response, nil)
-
-    wait(for: [expectation], timeout: 1)
   }
 
   func testUnsettingAccessTokenFlag() {
-    let expectation = expectation(description: name)
-    TestAccessTokenWallet.current = AccessToken(
-      tokenString: "token",
-      permissions: ["public_profile"],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: "appid",
-      userID: "userid",
-      expirationDate: nil,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
-    )
+    if settings.isAdvertiserTrackingEnabled == true {
+      let expectation = expectation(description: name)
+      TestAccessTokenWallet.current = AccessToken(
+        tokenString: "token",
+        permissions: ["public_profile"],
+        declinedPermissions: [],
+        expiredPermissions: [],
+        appID: "appid",
+        userID: "userid",
+        expirationDate: nil,
+        refreshDate: nil,
+        dataAccessExpirationDate: nil
+      )
 
-    let request = TestGraphRequest(
-      graphPath: "me",
-      parameters: ["fields": ""],
-      flags: [.doNotInvalidateTokenOnError]
-    )
-    connection.add(request) { _, result, error in
-      XCTAssertNil(result)
-      let testError = error as? TestSDKError
-      XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNotNil(TestAccessTokenWallet.current)
-      expectation.fulfill()
+      let request = TestGraphRequest(
+        graphPath: "me",
+        parameters: ["fields": ""],
+        flags: [.doNotInvalidateTokenOnError]
+      )
+      connection.add(request) { _, result, error in
+        XCTAssertNil(result)
+        let testError = error as? TestSDKError
+        XCTAssertEqual("Token is broken", testError?.message)
+        XCTAssertNotNil(TestAccessTokenWallet.current)
+        expectation.fulfill()
+      }
+      connection.start()
+
+      let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
+
+      session.capturedCompletion?(missingTokenData, response, nil)
+
+      wait(for: [expectation], timeout: 1)
     }
-    connection.start()
-
-    let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
-
-    session.capturedCompletion?(missingTokenData, response, nil)
-
-    wait(for: [expectation], timeout: 1)
   }
 
   func testRequestWithUserAgentSuffix() throws {
@@ -1456,8 +1469,12 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(makeRequestForMeWithEmptyFields()) { _, _, _ in }
     connection.start()
 
-    let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
-    XCTAssertTrue(userAgent.hasSuffix("/UnitTest.1.0.0"), "unexpected user agent \(userAgent)")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest)
+    } else {
+      let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
+      XCTAssertTrue(userAgent.hasSuffix("/UnitTest.1.0.0"), "unexpected user agent \(userAgent)")
+    }
   }
 
   func testRequestWithoutUserAgentSuffix() throws {
@@ -1466,12 +1483,16 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(makeRequestForMeWithEmptyFields()) { _, _, _ in }
     connection.start()
 
-    let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
-    XCTAssertEqual(
-      userAgent,
-      "FBiOSSDK.\(FBSDK_VERSION_STRING)",
-      "unexpected user agent \(userAgent)"
-    )
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest)
+    } else {
+      let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
+      XCTAssertEqual(
+        userAgent,
+        "FBiOSSDK.\(FBSDK_VERSION_STRING)",
+        "unexpected user agent \(userAgent)"
+      )
+    }
   }
 
   func testRequestWithMacCatalystUserAgent() throws {
@@ -1481,8 +1502,12 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(makeRequestForMeWithEmptyFields()) { _, _, _ in }
     connection.start()
 
-    let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
-    XCTAssertTrue(userAgent.hasSuffix("/macOS"), "unexpected user agent \(userAgent)")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest)
+    } else {
+      let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
+      XCTAssertTrue(userAgent.hasSuffix("/macOS"), "unexpected user agent \(userAgent)")
+    }
   }
 
   func testNonDictionaryInError() {
@@ -2054,8 +2079,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testShouldPiggyBackDomainConfigurationRequest() {
-    let parameters = ["fields": "server_domain_infos"]
-    let domainConfigRequest = GraphRequest(graphPath: appID, parameters: parameters, httpMethod: .get)
+    let parameters = ["fields": ""]
+    let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
     connection.add(domainConfigRequest) { _, _, _ in }
     if #available(iOS 14.5, *) {
       XCTAssertFalse(
@@ -2308,11 +2333,15 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     wait(for: [expectation], timeout: 1)
 
     let error = try XCTUnwrap(capturedError as NSError?)
-    XCTAssertEqual(
-      2,
-      error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
-      "The completion should be called with the expected error code"
-    )
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(error.userInfo[GraphRequestErrorGraphErrorCodeKey])
+    } else {
+      XCTAssertEqual(
+        2,
+        error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
+        "The completion should be called with the expected error code"
+      )
+    }
   }
 
   func testRetryDisabled() throws {
@@ -2340,11 +2369,16 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     wait(for: [expectation], timeout: 1)
 
     let error = try XCTUnwrap(capturedError as NSError?)
-    XCTAssertEqual(
-      1,
-      error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
-      "The completion should be called with the expected error code"
-    )
+
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(error.userInfo[GraphRequestErrorGraphErrorCodeKey])
+    } else {
+      XCTAssertEqual(
+        1,
+        error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
+        "The completion should be called with the expected error code"
+      )
+    }
   }
 
   // MARK: - Response Parsing

@@ -27,6 +27,7 @@ final class TestProfileFactory: ProfileCreating {
   var capturedLocation: Location?
   var capturedGender: String?
   var capturedIsLimited = false
+  var capturedPermissions: Set<String>?
   private var stubbedProfile: Profile
 
   init(stubbedProfile: Profile) {
@@ -49,6 +50,7 @@ final class TestProfileFactory: ProfileCreating {
     hometown: Location?,
     location: Location?,
     gender: String?,
+    permissions: Set<String>?,
     isLimited: Bool
   ) -> Profile {
     capturedUserID = userID
@@ -67,6 +69,7 @@ final class TestProfileFactory: ProfileCreating {
     capturedLocation = location
     capturedGender = gender
     capturedIsLimited = isLimited
+    capturedPermissions = permissions
 
     return stubbedProfile
   }

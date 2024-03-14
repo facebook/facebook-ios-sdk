@@ -49,6 +49,7 @@ final class ProfileFactoryTests: XCTestCase {
       hometown: sampleProfile.hometown,
       location: sampleProfile.location,
       gender: sampleProfile.gender,
+      permissions: sampleProfile.permissions,
       isLimited: true
     )
 
@@ -67,5 +68,6 @@ final class ProfileFactoryTests: XCTestCase {
     XCTAssertEqual(profile.hometown, sampleProfile.hometown)
     XCTAssertEqual(profile.location, sampleProfile.location)
     XCTAssertEqual(profile.gender, sampleProfile.gender)
+    XCTAssertEqual(profile.permissions, sampleProfile.permissions)
   }
 }

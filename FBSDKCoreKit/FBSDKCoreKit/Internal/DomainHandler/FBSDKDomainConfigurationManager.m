@@ -148,8 +148,7 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
     }
 
     NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-    NSDictionary<NSString *, id> *domainInfoField = [FBSDKTypeUtility dictionaryValue:resultDictionary[DOMAIN_CONFIGURATION_DOMAIN_INFO_FIELD]];
-    NSArray<NSDictionary<NSString *, id> *> *domainInfoDataArray = [FBSDKTypeUtility arrayValue:domainInfoField[@"data"]];
+    NSArray<NSDictionary<NSString *, id> *> *domainInfoDataArray = [FBSDKTypeUtility arrayValue:resultDictionary[@"data"]];
     NSDictionary<NSString *, id> *endpoints = [FBSDKTypeUtility array:domainInfoDataArray objectAtIndex:0];
     NSArray<NSDictionary<NSString *, id> *> *domainInfoArray = [FBSDKTypeUtility arrayValue:endpoints[@"endpoints"]];
 
@@ -168,9 +167,9 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
 
 - (id<FBSDKGraphRequest>)requestToLoadDomainConfiguration:(NSString *)appID
 {
-  NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : DOMAIN_CONFIGURATION_DOMAIN_INFO_FIELD };
-
-  return [self.graphRequestFactory createGraphRequestWithGraphPath:appID
+  NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : @"" };
+  NSString *graphPath = [NSString stringWithFormat:@"%@/%@", appID, DOMAIN_CONFIGURATION_DOMAIN_INFO_FIELD];
+  return [self.graphRequestFactory createGraphRequestWithGraphPath:graphPath
                                                         parameters:parameters
                                                        tokenString:nil
                                                         HTTPMethod:nil

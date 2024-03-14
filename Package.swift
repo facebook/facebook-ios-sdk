@@ -52,6 +52,7 @@ let package = Package(
     targets: [
         // The kernel of the SDK
         .Prefixed.basics,
+        .basics,
 
         /*
           The legacy Objective-C implementation that will be converted to Swift.
@@ -102,7 +103,7 @@ let package = Package(
 )
 
 extension Product {
-    static let basics = library(name: .basics, targets: [.Prefixed.basics])
+    static let basics = library(name: .basics, targets: [.basics, .Prefixed.basics])
     static let core = library(name: .core, targets: [.core, .Prefixed.core])
     static let login = library(name: .login, targets: [.login])
     static let share = library(name: .share, targets: [.share, .Prefixed.share])
@@ -137,11 +138,28 @@ extension Target {
         "https://github.com/facebook/facebook-ios-sdk/releases/download/v16.3.1/\(targetName)-Static_XCFramework.zip"
     }
 
-    static let aem = target(name: .aem, dependencies: [.Prefixed.aem])
+    static let basics = target(
+        name: .basics,
+        dependencies: [.Prefixed.basics],
+        resources: [
+           .copy("Resources/PrivacyInfo.xcprivacy"),
+        ]
+    )
+
+    static let aem = target(
+        name: .aem,
+        dependencies: [.Prefixed.aem],
+        resources: [
+           .copy("Resources/PrivacyInfo.xcprivacy"),
+        ]
+    )
 
     static let core = target(
         name: .core,
         dependencies: [.aem, .Prefixed.basics, .Prefixed.core],
+        resources: [
+           .copy("Resources/PrivacyInfo.xcprivacy"),
+        ],
         linkerSettings: [
             .cPlusPlusLibrary,
             .zLibrary,
@@ -149,9 +167,21 @@ extension Target {
         ]
     )
 
-    static let login = target(name: .login, dependencies: [.core, .Prefixed.login])
+    static let login = target(
+        name: .login,
+        dependencies: [.core, .Prefixed.login],
+        resources: [
+            .copy("Resources/PrivacyInfo.xcprivacy"),
+        ]
+    )
 
-    static let share = target(name: .share, dependencies: [.core, .Prefixed.share])
+    static let share = target(
+        name: .share,
+        dependencies: [.core, .Prefixed.share],
+        resources: [
+           .copy("Resources/PrivacyInfo.xcprivacy"),
+        ]
+    )
 
     static let gaming = target(name: .gaming, dependencies: [.Prefixed.gaming])
 
