@@ -30,7 +30,7 @@ struct GeneratePackageManifest: ParsableCommand {
     private func generateChecksum(for product: Product) throws -> String {
         try zipFramework(for: product)
 
-        let zippedFrameworkName = "\(product.rawValue)-Static_XCFramework.zip"
+        let zippedFrameworkName = "\(product.rawValue)-Dynamic_XCFramework.zip"
 
         return try FileSystem.execute(from: .sdk) {
             try shellOut(to: "swift package compute-checksum build/\(zippedFrameworkName)")
@@ -40,8 +40,8 @@ struct GeneratePackageManifest: ParsableCommand {
     private func zipFramework(for product: Product) throws {
         try FileSystem.execute(from: .xcframeworks) {
             let source = "\(product.rawValue).xcframework"
-            let destination = "../../\(product.rawValue)-Static_XCFramework.zip"
-            try shellOut(to: "cd Static; zip -r \(destination) \(source)")
+            let destination = "../../\(product.rawValue)-Dynamic_XCFramework.zip"
+            try shellOut(to: "cd Dynamic; zip -r \(destination) \(source)")
         }
     }
 

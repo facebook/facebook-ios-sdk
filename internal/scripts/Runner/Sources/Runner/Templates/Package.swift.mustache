@@ -130,11 +130,11 @@ extension Target {
     }
 
     static func localBinaryPath(for targetName: String) -> String {
-        "build/XCFrameworks/Static/\(targetName).xcframework"
+        "build/XCFrameworks/Dynamic/\(targetName).xcframework"
     }
 
     static func remoteBinaryURLString(for targetName: String) -> String {
-        "https://github.com/facebook/facebook-ios-sdk/releases/download/v{{version}}/\(targetName)-Static_XCFramework.zip"
+        "https://github.com/facebook/facebook-ios-sdk/releases/download/v{{version}}/\(targetName)-Dynamic_XCFramework.zip"
     }
 
     static let aem = target(name: .aem, dependencies: [.Prefixed.aem])
