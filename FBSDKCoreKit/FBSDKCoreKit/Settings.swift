@@ -360,8 +360,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
       deprecated,
       message: """
         The setAdvertiserTrackingEnabled flag is not used for FBSDK v17+ on iOS 17+ \
-        as the FBSDK v17+ now relies on ATTrackingManager.trackingAuthorizationStatus \
-        to accurately represent ATT permission for users of your app.
+        as the FBSDK v17+ now relies on ATTrackingManager.trackingAuthorizationStatus.
         """
     )
     set(isNewlyAllowed) {
