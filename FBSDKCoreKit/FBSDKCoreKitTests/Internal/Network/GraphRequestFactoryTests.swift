@@ -28,7 +28,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: "foo",
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .get
     )
   }
@@ -48,7 +48,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .post,
       expectedUseAlternativeValue: false
     )
@@ -72,7 +72,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: "test_token_string",
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .post,
       expectedForAppEvents: true,
       expectedUseAlternativeValue: false
@@ -96,7 +96,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: "test_token_string",
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .post,
       expectedUseAlternativeValue: false
     )
@@ -141,7 +141,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .get,
       expectedUseAlternativeValue: false
     )
@@ -160,7 +160,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["fields": ""],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .get,
       expectedUseAlternativeValue: false
     )
@@ -181,7 +181,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .get,
       expectedUseAlternativeValue: false
     )
@@ -201,7 +201,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .post,
       expectedUseAlternativeValue: true
     )
@@ -224,7 +224,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: "test_token_string",
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .post,
       expectedForAppEvents: true,
       expectedUseAlternativeValue: true
@@ -247,7 +247,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: "test_token_string",
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .post,
       expectedUseAlternativeValue: true
     )
@@ -290,7 +290,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .get,
       expectedUseAlternativeValue: true
     )
@@ -308,7 +308,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["fields": ""],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .get,
       expectedUseAlternativeValue: true
     )
@@ -328,7 +328,7 @@ final class GraphRequestFactoryTests: XCTestCase {
       expectedGraphPath: "me",
       expectedParameters: ["some": "thing"],
       expectedTokenString: nil,
-      expectedVersion: "v16.0",
+      expectedVersion: FBSDK_DEFAULT_GRAPH_API_VERSION,
       expectedMethod: .get,
       expectedUseAlternativeValue: true
     )
