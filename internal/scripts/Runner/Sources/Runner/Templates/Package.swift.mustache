@@ -183,7 +183,7 @@ extension Target {
         ]
     )
 
-    static let gaming = target(name: .gaming, dependencies: [.Prefixed.gaming])
+    static let gaming = target(name: .gaming, dependencies: [.core, .Prefixed.share, .Prefixed.gaming])
 
     enum Prefixed {
         static let basics = binaryTarget(
