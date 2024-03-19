@@ -41,7 +41,7 @@ struct GeneratePackageManifest: ParsableCommand {
         try FileSystem.execute(from: .xcframeworks) {
             let source = "\(product.rawValue).xcframework"
             let destination = "../../\(product.rawValue)-Dynamic_XCFramework.zip"
-            try shellOut(to: "cd Dynamic; zip -r \(destination) \(source)")
+            try shellOut(to: "cd Dynamic; zip -r --symlinks \(destination) \(source)")
         }
     }
 
