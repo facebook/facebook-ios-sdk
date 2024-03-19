@@ -509,8 +509,8 @@ static NSMapTable *_transientObjects;
       NSDictionary *privacyInfo = [[NSDictionary alloc] initWithContentsOfURL:privacyInfoUrl];
       NSArray *trackingDomains = privacyInfo[@"NSPrivacyTrackingDomains"];
       for (NSString *domain in trackingDomains) {
-        if ([@"facebook.com" isEqualToString:domain]) {
-          NSString *reason = [NSString stringWithFormat:@"Configuring facebook.com as tracking domain could block all subdomains of facebook.com. Please ensure tracking domains are configured correctly in Privacy Manifest file."];
+        if ([@"facebook.com" isEqualToString:domain] || [@"ep2.facebook.com" isEqualToString:domain]) {
+          NSString *reason = [NSString stringWithFormat:@"Configuring facebook.com or ep2.facebook.com as tracking domain could block the connection. Please ensure tracking domains are configured correctly in Privacy Manifest files."];
           @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
         }
       }
