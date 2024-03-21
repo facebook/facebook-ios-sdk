@@ -489,6 +489,7 @@ static NSMapTable *_transientObjects;
   }
 }
 
+#if DEBUG
 - (void)detectFatalTrackingDomainsConfig
 {
   NSArray *subdirectories = @[[NSNull null],
@@ -517,6 +518,7 @@ static NSMapTable *_transientObjects;
     }
   }
 }
+#endif
 
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters
 {
