@@ -371,7 +371,10 @@ private extension CoreKitConfigurator {
   }
 
   func configureDomainHandler() {
+    #if DEBUG
     components.internalUtility.detectFatalTrackingDomainsConfig()
+    #endif
+
     _DomainHandler.sharedInstance().configure(
       domainConfigurationProvider: _DomainConfigurationManager.sharedInstance(),
       settings: components.settings,
