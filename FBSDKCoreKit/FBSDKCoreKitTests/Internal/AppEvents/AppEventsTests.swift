@@ -910,6 +910,27 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testLogEventProcessParametersWithSensitiveParamsManager() {
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
+    appEvents.logEvent(
+      eventName,
+      valueToSum: NSNumber(value: purchaseAmount),
+      parameters: parameters,
+      isImplicitlyLogged: false,
+      accessToken: nil
+    )
+    XCTAssertEqual(
+      sensitiveParamsManager.capturedEventName,
+      eventName,
+      "AppEvents instance should submit the event name to the SensitiveParamsManager."
+    )
+    XCTAssertEqual(
+      sensitiveParamsManager.capturedParameters as? [AppEvents.ParameterName: String],
+      parameters,
+      "AppEvents instance should submit the parameters to the SensitiveParamsManager."
+    )
+  }
+
   // MARK: - Test for log push notification
 
   func testLogPushNotificationOpen() throws {
@@ -1513,7 +1534,7 @@ final class AppEventsTests: XCTestCase {
 
     XCTAssertTrue(
       redactedEventsManager.enabledWasCalled,
-      "Should enable blocklist events when the feature is enabled and the server configuration allows it"
+      "Should enable redacted events when the feature is enabled and the server configuration allows it"
     )
   }
 
@@ -1523,7 +1544,31 @@ final class AppEventsTests: XCTestCase {
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
     XCTAssertTrue(
       featureManager.capturedFeaturesContains(.filterRedactedEvents),
-      "Fetching a configuration should check if the BlocklistEvents feature is enabled"
+      "Fetching a configuration should check if the RedactedEvents feature is enabled"
+    )
+  }
+
+  func testEnablingSensitiveParamsFiltering() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .filterSensitiveParams, with: true)
+
+    XCTAssertTrue(
+      sensitiveParamsManager.enabledWasCalled,
+      "Should enable sensitive parameter filtering when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingSensitiveParamsFiltering() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.filterSensitiveParams),
+      "Fetching a configuration should check if the SensitiveParams feature is enabled"
     )
   }
 

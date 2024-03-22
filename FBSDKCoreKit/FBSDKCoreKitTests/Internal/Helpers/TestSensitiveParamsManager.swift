@@ -12,6 +12,8 @@ final class TestSensitiveParamsManager: _AppEventsParameterProcessing {
 
   var enabledWasCalled = false
   var processParametersWasCalled = false
+  var capturedParameters: [AppEvents.ParameterName: Any]?
+  var capturedEventName: AppEvents.Name?
 
   func enable() {
     enabledWasCalled = true
@@ -22,6 +24,8 @@ final class TestSensitiveParamsManager: _AppEventsParameterProcessing {
     eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
     processParametersWasCalled = true
+    capturedParameters = parameters
+    capturedEventName = eventName
     return parameters
   }
 }

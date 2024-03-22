@@ -984,6 +984,11 @@ static BOOL g_explicitEventsLoggedYet = NO;
           [self.redactedEventsManager enable];
         }
       }];
+      [self.featureChecker checkFeature:FBSDKFeatureFilterSensitiveParams completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.sensitiveParamsManager enable];
+        }
+      }];
       if (@available(iOS 14.0, *)) {
         __weak FBSDKAppEvents *weakSelf = self;
         [self.featureChecker checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
@@ -1154,6 +1159,13 @@ static BOOL g_explicitEventsLoggedYet = NO;
   if (self.protectedModeManager) {
     @try {
         parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
+    } @catch(NSException *exception) {}
+  }
+  
+  BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
+  if (!isProtectedModeApplied && self.sensitiveParamsManager) {
+    @try {
+      parameters = [self.sensitiveParamsManager processParameters:parameters eventName:eventName];
     } @catch(NSException *exception) {}
   }
   
