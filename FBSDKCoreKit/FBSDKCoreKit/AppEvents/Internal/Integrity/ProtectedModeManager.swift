@@ -9,8 +9,9 @@
 import Foundation
 
 @objc(FBSDKProtectedModeManager)
-final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
+public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
   private var isEnabled = false
+  private static let pmKey = AppEvents.ParameterName(rawValue: "pm")
   private let standardParametersDefault: Set<String> = [
     "_currency",
     "_valueToSum",
@@ -159,7 +160,7 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
     serverConfigurationProvider: _ServerConfigurationManager.shared
   )
 
-  func enable() {
+  public func enable() {
     guard let dependencies = try? getDependencies() else {
       return
     }
@@ -178,7 +179,7 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
     isEnabled = true
   }
 
-  @objc func processParameters(
+  @objc public func processParameters(
     _ parameters: [AppEvents.ParameterName: Any]?,
     eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
@@ -195,9 +196,16 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
         params.removeValue(forKey: appEventsParameterName)
       }
     }
-    let pmKey = AppEvents.ParameterName(rawValue: "pm")
-    params[pmKey] = true
+    params[ProtectedModeManager.pmKey] = true
     return params
+  }
+
+  @objc public static func isProtectedModeApplied(parameters: [AppEvents.ParameterName: Any]?) -> Bool {
+    guard let parameters else {
+      return false
+    }
+    return parameters.keys.contains(ProtectedModeManager.pmKey) &&
+      parameters[ProtectedModeManager.pmKey] as? Bool == true
   }
 }
 

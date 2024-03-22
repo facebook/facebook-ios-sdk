@@ -189,6 +189,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEvents.shared.internalUtility,
       "AppEvents should not have an internal utility by default"
     )
+    XCTAssertNil(
+      AppEvents.shared.sensitiveParamsManager,
+      "AppEvents should not have a sensitiveParamsManager by default"
+    )
 
     configurator.performConfiguration()
 
@@ -267,6 +271,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEvents.shared.internalUtility === components.internalUtility,
       "AppEvents should be configured with the internal utility"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.sensitiveParamsManager === components.sensitiveParamsManager,
+      "AppEvents should be configured with sensitiveParamsManager"
     )
   }
 
