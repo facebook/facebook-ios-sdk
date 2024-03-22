@@ -112,7 +112,8 @@ private extension CoreKitConfigurator {
       protectedModeManager: components.protectedModeManager,
       macaRuleMatchingManager: components.macaRuleMatchingManager,
       blocklistEventsManager: components.blocklistEventsManager,
-      redactedEventsManager: components.redactedEventsManager
+      redactedEventsManager: components.redactedEventsManager,
+      sensitiveParamsManager: components.sensitiveParamsManager
     )
   }
 

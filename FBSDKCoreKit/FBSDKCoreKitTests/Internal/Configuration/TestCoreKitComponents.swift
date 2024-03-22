@@ -88,7 +88,8 @@ enum TestCoreKitComponents {
     protectedModeManager: _AppEventsParameterProcessing = TestAppEventsParameterProcessor(),
     macaRuleMatchingManager: MACARuleMatching = TestMACARuleMatchingManager(),
     blocklistEventsManager: _EventsProcessing = TestBlocklistEventsManager(),
-    redactedEventsManager: _EventsProcessing = TestRedactedEventsManager()
+    redactedEventsManager: _EventsProcessing = TestRedactedEventsManager(),
+    sensitiveParamsManager: _AppEventsParameterProcessing = TestSensitiveParamsManager()
   ) -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
@@ -165,7 +166,8 @@ enum TestCoreKitComponents {
       protectedModeManager: protectedModeManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,
-      redactedEventsManager: redactedEventsManager
+      redactedEventsManager: redactedEventsManager,
+      sensitiveParamsManager: sensitiveParamsManager
     )
   }
 }
