@@ -102,6 +102,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> blocklistEventsManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> redactedEventsManager;
+@property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> sensitiveParamsManager;
 @property (nullable, nonatomic) id<FBSDKATEPublisherCreating> atePublisherFactory;
 @property (nullable, nonatomic) id<FBSDKATEPublishing> atePublisher;
 @property (nullable, nonatomic) id<FBSDKAppEventsStateProviding> appEventsStateProvider;
@@ -645,6 +646,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                  macaRuleMatchingManager:(nonnull id<FBSDKMACARuleMatching>)macaRuleMatchingManager
                    blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
                     redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
+                   sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -670,6 +672,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.macaRuleMatchingManager = macaRuleMatchingManager;
   self.blocklistEventsManager = blocklistEventsManager;
   self.redactedEventsManager = redactedEventsManager;
+  self.sensitiveParamsManager = sensitiveParamsManager;
  
   NSString *appID = self.appID;
   if (appID) {
@@ -1561,6 +1564,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.macaRuleMatchingManager = nil;
   self.blocklistEventsManager = nil;
   self.redactedEventsManager = nil;
+  self.sensitiveParamsManager = nil;
   // The actual setter on here has a check to see if the SDK is initialized
   // This is not a useful check for tests so we can just reset the underlying
   // static var.
