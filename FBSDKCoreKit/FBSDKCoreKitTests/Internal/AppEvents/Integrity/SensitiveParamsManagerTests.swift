@@ -162,4 +162,191 @@ final class SensitiveParamsManagerTests: XCTestCase {
     XCTAssertTrue(sensitiveParamsManager.getSensitiveParamsConfig().isEmpty)
     XCTAssertTrue(sensitiveParamsManager.getDefaultSensitiveParams().isEmpty)
   }
+
+  func testProcessParams1() {
+    sensitiveParamsManager.enable()
+    let eventName = AppEvents.Name(rawValue: "test_event_name_1")
+    let parameters = [
+      AppEvents.ParameterName.currency: "CAD",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_1"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_2"): "This is a sensitive param",
+    ]
+    let expectedFilteredParams: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "CAD",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "_filteredKey"): ["test_sensitive_param_1", "test_sensitive_param_2"],
+    ]
+    let filteredParams = sensitiveParamsManager.processParameters(parameters, eventName: eventName)
+    XCTAssertEqual(filteredParams?.count, 3)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "test_sensitive_param_1")), false)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "test_sensitive_param_2")), false)
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.currency] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.currency] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.description] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.description] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "_filteredKey")] as? Set<String>,
+      expectedFilteredParams[AppEvents.ParameterName(rawValue: "_filteredKey")] as? Set<String>
+    )
+  }
+
+  func testProcessParams2() {
+    sensitiveParamsManager.enable()
+    let eventName = AppEvents.Name(rawValue: "test_event_name_2")
+    let parameters = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_2"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_4"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "default_param_1"): "This is a default sensitive param",
+    ]
+    let expectedFilteredParams: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "_filteredKey"): [
+        "test_sensitive_param_2",
+        "test_sensitive_param_4",
+        "default_param_1",
+      ],
+    ]
+    let filteredParams = sensitiveParamsManager.processParameters(parameters, eventName: eventName)
+    XCTAssertEqual(filteredParams?.count, 3)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "test_sensitive_param_2")), false)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "test_sensitive_param_4")), false)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "default_param_1")), false)
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.currency] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.currency] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.description] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.description] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "_filteredKey")] as? Set<String>,
+      expectedFilteredParams[AppEvents.ParameterName(rawValue: "_filteredKey")] as? Set<String>
+    )
+  }
+
+  func testProcessParams3() {
+    sensitiveParamsManager.enable()
+    let eventName = AppEvents.Name(rawValue: "test_event_name_3")
+    let parameters = [
+      AppEvents.ParameterName.currency: "GBP",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_1"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_3"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "default_param_2"): "This is a default sensitive param",
+    ]
+    let expectedFilteredParams: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "GBP",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_1"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_3"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "_filteredKey"): ["default_param_2"],
+    ]
+    let filteredParams = sensitiveParamsManager.processParameters(parameters, eventName: eventName)
+    XCTAssertEqual(filteredParams?.count, 5)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "default_param_2")), false)
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.currency] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.currency] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.description] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.description] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "test_sensitive_param_1")] as? String,
+      expectedFilteredParams[AppEvents.ParameterName(rawValue: "test_sensitive_param_1")] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "test_sensitive_param_3")] as? String,
+      expectedFilteredParams[AppEvents.ParameterName(rawValue: "test_sensitive_param_3")] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "_filteredKey")] as? Set<String>,
+      expectedFilteredParams[AppEvents.ParameterName(rawValue: "_filteredKey")] as? Set<String>
+    )
+  }
+
+  func testProcessParams4() {
+    sensitiveParamsManager.enable()
+    let eventName = AppEvents.Name(rawValue: "test_event_name_3")
+    let parameters = [
+      AppEvents.ParameterName.currency: "GBP",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_1"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_3"): "This is a sensitive param",
+    ]
+    let expectedFilteredParams: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "GBP",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_1"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_3"): "This is a sensitive param",
+    ]
+    let filteredParams = sensitiveParamsManager.processParameters(parameters, eventName: eventName)
+    XCTAssertEqual(filteredParams?.count, 4)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "_filteredKey")), false)
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.currency] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.currency] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.description] as? String,
+      expectedFilteredParams[AppEvents.ParameterName.description] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "test_sensitive_param_1")] as? String,
+      expectedFilteredParams[AppEvents.ParameterName(rawValue: "test_sensitive_param_1")] as? String
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "test_sensitive_param_3")] as? String,
+      expectedFilteredParams[AppEvents.ParameterName(rawValue: "test_sensitive_param_3")] as? String
+    )
+  }
+
+  func testProcessParamsNotEnabled() {
+    let eventName = AppEvents.Name(rawValue: "test_event_name_1")
+    let parameters = [
+      AppEvents.ParameterName.currency: "CAD",
+      AppEvents.ParameterName.description: "This is a test event",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_1"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "test_sensitive_param_2"): "This is a sensitive param",
+      AppEvents.ParameterName(rawValue: "default_param_1"): "This is a default sensitive param",
+      AppEvents.ParameterName(rawValue: "default_param_2"): "This is a default sensitive param",
+    ]
+    let filteredParams = sensitiveParamsManager.processParameters(parameters, eventName: eventName)
+    XCTAssertEqual(filteredParams?.count, 6)
+    XCTAssertEqual(filteredParams?.keys.contains(AppEvents.ParameterName(rawValue: "_filteredKey")), false)
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.currency] as? String,
+      parameters[AppEvents.ParameterName.currency]
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName.description] as? String,
+      parameters[AppEvents.ParameterName.description]
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "test_sensitive_param_1")] as? String,
+      parameters[AppEvents.ParameterName(rawValue: "test_sensitive_param_1")]
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "test_sensitive_param_2")] as? String,
+      parameters[AppEvents.ParameterName(rawValue: "test_sensitive_param_2")]
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "default_param_1")] as? String,
+      parameters[AppEvents.ParameterName(rawValue: "default_param_1")]
+    )
+    XCTAssertEqual(
+      filteredParams?[AppEvents.ParameterName(rawValue: "default_param_2")] as? String,
+      parameters[AppEvents.ParameterName(rawValue: "default_param_2")]
+    )
+  }
 }
