@@ -15,6 +15,7 @@ final class SensitiveParamsManager: NSObject, _AppEventsParameterProcessing {
   private var defaultSensitiveParams = Set<String>()
   private static let sensitiveParamsKey = "sensitive_params"
   private static let defaultSensitiveParamsKey = "_MTSDK_Default_"
+  private static let filteredSensitiveParamsKey = AppEvents.ParameterName(rawValue: "_filteredKey")
 
   var configuredDependencies: ObjectDependencies?
 
@@ -40,8 +41,41 @@ final class SensitiveParamsManager: NSObject, _AppEventsParameterProcessing {
     _ parameters: [AppEvents.ParameterName: Any]?,
     eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
-    // TODO: Implement this
-    return nil
+    guard isEnabled,
+          var parameters,
+          !parameters.isEmpty
+    else {
+      return parameters
+    }
+    var filteredSensitiveParams = filterSensitiveParams(
+      parameters: &parameters,
+      sensitiveParams: defaultSensitiveParams
+    )
+    if let eventName,
+       sensitiveParamsConfig.keys.contains(eventName.rawValue),
+       let sensitiveParams = sensitiveParamsConfig[eventName.rawValue] {
+      let result = filterSensitiveParams(parameters: &parameters, sensitiveParams: sensitiveParams)
+      filteredSensitiveParams = filteredSensitiveParams.union(result)
+    }
+    if !filteredSensitiveParams.isEmpty {
+      parameters[SensitiveParamsManager.filteredSensitiveParamsKey] = Array(filteredSensitiveParams)
+    }
+    return parameters
+  }
+
+  private func filterSensitiveParams(
+    parameters: inout [AppEvents.ParameterName: Any],
+    sensitiveParams: Set<String>
+  ) -> Set<String> {
+    var filteredSensitiveParams = Set<String>()
+    for sensitiveParam in sensitiveParams {
+      let appEventSensitiveParamName = AppEvents.ParameterName(rawValue: sensitiveParam)
+      if parameters.keys.contains(appEventSensitiveParamName) {
+        parameters.removeValue(forKey: appEventSensitiveParamName)
+        filteredSensitiveParams.insert(appEventSensitiveParamName.rawValue)
+      }
+    }
+    return filteredSensitiveParams
   }
 
   private func configureSensitiveParams(sensitiveParams: [[String: Any]]) {
