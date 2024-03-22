@@ -10,7 +10,7 @@
 
 final class ProtectedModeManagerTests: XCTestCase {
   let protectedModeManager = ProtectedModeManager()
-  let sampleParameters: [AppEvents.ParameterName: Any] = [
+  var sampleParameters: [AppEvents.ParameterName: Any] = [
     AppEvents.ParameterName.pushCampaign: "fb_mobile_catalog_update",
     AppEvents.ParameterName.productTitle: "Coffee 4",
     AppEvents.ParameterName.logTime: 1686615025,
@@ -32,5 +32,16 @@ final class ProtectedModeManagerTests: XCTestCase {
       3, // should also include PM flag
       "It should do the parameter filtering when enbaled"
     )
+  }
+
+  func testIsProtectedModeApplied1() {
+    let isProtectedModeApplied = ProtectedModeManager.isProtectedModeApplied(parameters: sampleParameters)
+    XCTAssertFalse(isProtectedModeApplied)
+  }
+
+  func testIsProtectedModeApplied2() {
+    sampleParameters[AppEvents.ParameterName(rawValue: "pm")] = true
+    let isProtectedModeApplied = ProtectedModeManager.isProtectedModeApplied(parameters: sampleParameters)
+    XCTAssertTrue(isProtectedModeApplied)
   }
 }
