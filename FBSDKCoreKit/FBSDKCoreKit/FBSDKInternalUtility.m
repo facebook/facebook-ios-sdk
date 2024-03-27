@@ -491,7 +491,7 @@ static NSMapTable *_transientObjects;
 
 - (void)detectFatalTrackingDomainsConfig
 {
-  if (!self.settings.isDomainErrorEnabled || ![FBSDKAppEventsUtility.shared isDebugBuild]) {
+  if (![FBSDKAppEventsUtility.shared isDebugBuild]) {
     return;
   }
 
@@ -506,6 +506,7 @@ static NSMapTable *_transientObjects;
                                @"Facebook_FacebookCore.bundle",
                                @"Facebook_FacebookLogin.bundle",
                                @"Facebook_FacebookShare.bundle"];
+  NSString *message = @"We have pre-populated the tracking domain field for the FBSDK in the Privacy Manifest to help ensure that our services continue to function properly. We do not advise manually adding domains. Listing \"www.facebook.com\" or subdomains of \"facebook.com\" in the tracking domain field of a Privacy Manifest may break functionality.";
   for (NSString *subdirectory in subdirectories) {
     NSString *subdir = [subdirectory isKindOfClass:[NSNull class]] ? nil: subdirectory;
     NSArray<NSURL *> *privacyInfoUrls = [[NSBundle mainBundle] URLsForResourcesWithExtension:@"xcprivacy" subdirectory:subdir];
@@ -513,9 +514,11 @@ static NSMapTable *_transientObjects;
       NSDictionary *privacyInfo = [[NSDictionary alloc] initWithContentsOfURL:privacyInfoUrl];
       NSArray *trackingDomains = privacyInfo[@"NSPrivacyTrackingDomains"];
       for (NSString *domain in trackingDomains) {
-        if ([@"facebook.com" isEqualToString:domain] || [@"ep2.facebook.com" isEqualToString:domain]) {
-          NSString *reason = [NSString stringWithFormat:@"Configuring facebook.com or ep2.facebook.com as tracking domain could block the connection. Please ensure tracking domains are configured correctly in Privacy Manifest files."];
-          @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+        if (self.settings.isDomainErrorEnabled && ([@"facebook.com" isEqualToString:domain] || [@"ep2.facebook.com" isEqualToString:domain])) {
+          NSString *errorMsg = [NSString stringWithFormat:@"%@%@", message, @" Developers can set \"Settings.shared.isDomainErrorEnabled\" to \"false\" in order to disable FBSDK Privacy Manifest related errors."];
+          @throw [NSException exceptionWithName:@"InvalidOperationException" reason:errorMsg userInfo:nil];
+        } else if ([@"www.facebook.com" isEqualToString:domain]) {
+          NSLog(@"%@%@", @"<Warning>: ", message);
         }
       }
     }
