@@ -492,6 +492,10 @@ static NSMapTable *_transientObjects;
 #if DEBUG
 - (void)detectFatalTrackingDomainsConfig
 {
+  if (!self.settings.isDomainErrorEnabled) {
+    return;
+  }
+
   NSArray *subdirectories = @[[NSNull null],
                                @"Frameworks/FBSDKCoreKit.framework",
                                @"Frameworks/FBSDKCoreKit_Basics.framework",
