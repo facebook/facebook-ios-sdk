@@ -116,9 +116,7 @@ NS_SWIFT_NAME(facebookURL(hostPrefix:path:queryParameters:));
 /// validates that Facebook reserved URL schemes are not registered, throws an NSException if they are.
 - (void)validateFacebookReservedURLSchemes;
 
-#if DEBUG
 - (void)detectFatalTrackingDomainsConfig;
-#endif
 
 /**
  Parses an FB url's query params (and potentially fragment) into a dictionary.
