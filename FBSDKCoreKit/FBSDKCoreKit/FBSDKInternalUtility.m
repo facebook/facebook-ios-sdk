@@ -489,7 +489,7 @@ static NSMapTable *_transientObjects;
   }
 }
 
-- (void)detectFatalTrackingDomainsConfig
+- (void)validateDomainConfiguration
 {
   if (![FBSDKAppEventsUtility.shared isDebugBuild]) {
     return;

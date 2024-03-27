@@ -137,7 +137,7 @@ public final class TestInternalUtility: NSObject,
 
   public func validateFacebookReservedURLSchemes() {}
 
-  public func detectFatalTrackingDomainsConfig() {}
+  public func validateDomainConfiguration() {}
 
   public var stubbedFBURLParameters: [String: Any]?
 
