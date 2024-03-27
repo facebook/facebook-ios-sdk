@@ -669,6 +669,9 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     }
   }
 
+  /// Controls whether to show domain errors.
+  public var isDomainErrorEnabled = true
+
   // swiftlint:enable let_var_whitespace
 
   #if DEBUG
