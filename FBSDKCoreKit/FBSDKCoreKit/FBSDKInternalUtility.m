@@ -489,10 +489,9 @@ static NSMapTable *_transientObjects;
   }
 }
 
-#if DEBUG
 - (void)detectFatalTrackingDomainsConfig
 {
-  if (!self.settings.isDomainErrorEnabled) {
+  if (!self.settings.isDomainErrorEnabled || ![FBSDKAppEventsUtility.shared isDebugBuild]) {
     return;
   }
 
@@ -522,7 +521,6 @@ static NSMapTable *_transientObjects;
     }
   }
 }
-#endif
 
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters
 {
