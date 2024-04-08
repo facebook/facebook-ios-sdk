@@ -51,4 +51,5 @@ Pod::Spec.new do |s|
     sha1: '15fc2c8e2a1cfd2399af85162b4287d7ffe3c939'
   }
   s.vendored_frameworks = 'XCFrameworks/FBSDKCoreKit_Basics.xcframework'
+  s.resource_bundles = {'FBSDKCoreKit_Basics' => ['FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/PrivacyInfo.xcprivacy']}
 end

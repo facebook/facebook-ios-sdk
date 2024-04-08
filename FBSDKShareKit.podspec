@@ -53,4 +53,5 @@ Pod::Spec.new do |s|
   }
   s.vendored_frameworks = 'XCFrameworks/FBSDKShareKit.xcframework'
   s.dependency 'FBSDKCoreKit', "#{s.version}"
+  s.resource_bundles = {'FBSDKShareKit' => ['FBSDKShareKit/FBSDKShareKit/PrivacyInfo.xcprivacy']}
 end

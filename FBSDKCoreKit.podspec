@@ -54,4 +54,5 @@ Pod::Spec.new do |s|
   s.vendored_frameworks = 'XCFrameworks/FBSDKCoreKit.xcframework'
   s.dependency 'FBSDKCoreKit_Basics', "#{s.version}"
   s.ios.dependency 'FBAEMKit', "#{s.version}"
+  s.resource_bundles = {'FBSDKCoreKit' => ['FBSDKCoreKit/FBSDKCoreKit/PrivacyInfo.xcprivacy']}
 end
