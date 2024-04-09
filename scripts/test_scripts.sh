@@ -38,6 +38,13 @@ test_failure() {
 log_test_begin() {
   echo "Testing ${FUNCNAME[1]}"
 }
+FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+    initWithGraphPath:@"/924281082768649/events"
+           parameters:@{ @"data": @"[{"action_source":"website","event_id":12345,"event_name":"TestEvent","event_time":1712683149,"user_data":{"client_ip_address":"254.254.254.254","client_user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0","em":"f660ab912ec121d1b1e928a0bb4bc61b15f5ad44d5efdc4e1c92a25e99b8e44a"}}]",@"test_event_code": @"TEST86789",}
+           HTTPMethod:@"POST"];
+[request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    // Insert your code here
+}];
 
 log_test_results() {
   # $1: Number of Test Failures
