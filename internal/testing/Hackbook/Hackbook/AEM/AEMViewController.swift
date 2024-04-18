@@ -134,10 +134,14 @@ class AEMViewController: UIViewController, UITableViewDelegate, UITableViewDataS
       for: .touchUpInside
     )
     parameterGenerationButton.accessibilityIdentifier = "button_generate_parameter"
-
-    ATEToggle.addTarget(self, action: #selector(AEMViewController.switchATE(sender:)), for: .valueChanged)
-    ATEToggle.isOn = true
-    Settings.shared.isAdvertiserTrackingEnabled = true
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      ATEToggle.isEnabled = false
+    } else {
+      ATEToggle.isEnabled = true
+      ATEToggle.addTarget(self, action: #selector(AEMViewController.switchATE(sender:)), for: .valueChanged)
+      ATEToggle.isOn = true
+      Settings.shared.isAdvertiserTrackingEnabled = true
+    }
 
     tableView.rowHeight = 40
     tableView.register(UITableViewCell.self, forCellReuseIdentifier: "ToggleCell")
