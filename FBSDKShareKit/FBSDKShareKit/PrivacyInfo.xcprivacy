@@ -39,6 +39,7 @@
 			<array>
 				<string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string>
 				<string>NSPrivacyCollectedDataTypePurposeAppFunctionality</string>
+				<string>NSPrivacyCollectedDataTypePurposeAnalytics</string>
 			</array>
 		</dict>
 	</array>
