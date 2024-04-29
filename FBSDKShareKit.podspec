@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKShareKit'
-  s.version      = '17.0.0'
+  s.version      = '17.0.1'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform Sharing Features'
 
   s.description  = <<-DESC
@@ -49,7 +49,7 @@ Pod::Spec.new do |s|
 
   s.source = {
     http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Dynamic.xcframework.zip",
-    sha1: '15fc2c8e2a1cfd2399af85162b4287d7ffe3c939'
+    sha1: 'd109d5534c2769723e3807911bb3e8f433e63551'
   }
   s.vendored_frameworks = 'XCFrameworks/FBSDKShareKit.xcframework'
   s.dependency 'FBSDKCoreKit', "#{s.version}"
