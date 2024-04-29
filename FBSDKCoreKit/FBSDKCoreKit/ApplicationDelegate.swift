@@ -59,10 +59,13 @@ public final class ApplicationDelegate: NSObject {
    controlled via the 'FacebookAutoLogAppEventsEnabled' key in your project's Info.plist file.
    */
   public func initializeSDK() {
-    initializeSDK(launchOptions: [:])
+    initializeSDK(launchOptions: [:], completionBlock: nil)
   }
 
-  func initializeSDK(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+  func initializeSDK(
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
+    completionBlock: _DomainConfigurationBlock?
+  ) {
     guard !hasInitializeBeenCalled else { return }
 
     hasInitializeBeenCalled = true
@@ -70,7 +73,21 @@ public final class ApplicationDelegate: NSObject {
     // DO NOT MOVE THIS CALL
     // Dependencies MUST be configured before they are used
     configurator.performConfiguration()
+    if #available(iOS 14.5, *) {
+      fetchDomainConfiguration {
+        GraphRequestConnection.setDidFetchDomainConfiguration()
+        self.doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
+        GraphRequestQueue.sharedInstance().flush() // Flush any queued requests
+      }
+    } else {
+      doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
+    }
+  }
 
+  private func doSDKSetup(
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
+    completionBlock: _DomainConfigurationBlock?
+  ) {
     logInitialization()
     addObservers()
     components.appEvents.startObservingApplicationLifecycleNotifications()
@@ -80,8 +97,10 @@ public final class ApplicationDelegate: NSObject {
 
     logBackgroundRefreshStatus()
     initializeAppLink()
+    initializeAEMAutoSetup()
 
     configureSourceApplication(launchOptions: launchOptions)
+    completionBlock?()
   }
 
   private func initializeAppLink() {
@@ -114,6 +133,25 @@ public final class ApplicationDelegate: NSObject {
     // Register Listener for App Link measurement events
     _MeasurementEventListener(eventLogger: components.appEvents, sourceApplicationTracker: components.appEvents)
       .registerForAppLinkMeasurementEvents()
+  }
+
+  private func initializeAEMAutoSetup() {
+    guard
+      #available(iOS 14.0, *)
+    else {
+      return
+    }
+
+    let flag = components.infoDictionaryProvider.fb_object(forInfoDictionaryKey: "FBSDKAemAutoSetupEnabled") as? Bool
+    let enabled = flag ?? true
+    if !enabled {
+      components.aemManager.logAutoSetupStatus(false, source: "client_flag")
+    }
+    if enabled, components.featureChecker.isEnabled(.aemAutoSetup) {
+      components.aemManager.enable(
+        components.featureChecker.isEnabled(.aemAutoSetupProxy)
+      )
+    }
   }
 
   private func logBackgroundRefreshStatus() {
@@ -281,10 +319,7 @@ public final class ApplicationDelegate: NSObject {
      - application: The application as passed to `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`.
      - launchOptions: The launch options as passed to `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`.
 
-   - Returns: `true` if there are any added application observers that themselves return true from calling `application(_:didFinishLaunchingWithOptions:)`.
-     Otherwise will return `false`.
-
-   - Note: If this method is called after calling `initializeSDK`, then the return value will always be `false`.
+   - Returns: `true`
    */
   @discardableResult
   public func application(
@@ -296,20 +331,21 @@ public final class ApplicationDelegate: NSObject {
       !hasInitializeBeenCalled
     else { return false }
 
-    initializeSDK(launchOptions: launchOptions)
-    isAppLaunched = true
+    initializeSDK(launchOptions: launchOptions) {
+      self.isAppLaunched = true
 
-    initializeTokenCache()
-    fetchServerConfiguration()
+      self.initializeTokenCache()
+      self.fetchServerConfiguration()
 
-    if components.settings.isAutoLogAppEventsEnabled {
-      logSDKInitialize()
+      if self.components.settings.isAutoLogAppEventsEnabled {
+        self.logSDKInitialize()
+      }
+
+      self.initializeProfile()
+      self.checkAuthentication()
+      _ = self.notifyLaunchObservers(application: application, launchOptions: launchOptions)
     }
-
-    initializeProfile()
-    checkAuthentication()
-
-    return notifyLaunchObservers(application: application, launchOptions: launchOptions)
+    return true
   }
 
   private func initializeTokenCache() {
@@ -318,6 +354,10 @@ public final class ApplicationDelegate: NSObject {
 
   private func fetchServerConfiguration() {
     components.serverConfigurationProvider.loadServerConfiguration(completionBlock: nil)
+  }
+
+  private func fetchDomainConfiguration(completionBlock: _DomainConfigurationBlock?) {
+    _DomainHandler.sharedInstance().loadDomainConfiguration(completionBlock: completionBlock)
   }
 
   private func initializeProfile() {
@@ -365,7 +405,11 @@ public final class ApplicationDelegate: NSObject {
       components.appEvents.activateApp()
     }
 
-    components.skAdNetworkReporter?.checkAndRevokeTimer()
+    if components.featureChecker.isEnabled(.skAdNetworkV4) {
+      components.skAdNetworkReporterV2?.checkAndRevokeTimer()
+    } else {
+      components.skAdNetworkReporter?.checkAndRevokeTimer()
+    }
 
     applicationObservers.allObjects.forEach { observer in
       observer.applicationDidBecomeActive?(notification?.object as? UIApplication)

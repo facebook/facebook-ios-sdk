@@ -34,13 +34,6 @@ extension Settings {
    @warning INTERNAL - DO NOT USE
    */
   public func logWarnings() {
-    // Log warnings for App Event Flags
-    // swiftformat:disable:next redundantSelf
-    if self.infoDictionaryProvider?
-      .fb_object(forInfoDictionaryKey: PersistenceKey.isAutoLogAppEventsEnabled.rawValue) == nil {
-      print(AppEventFlagWarningMessages.isAutoLogAppEventsEnabledNotSet)
-    }
-
     // swiftformat:disable:next redundantSelf
     if self.infoDictionaryProvider?
       .fb_object(forInfoDictionaryKey: PersistenceKey.isAdvertiserIDCollectionEnabled.rawValue) == nil {
@@ -80,7 +73,7 @@ extension Settings {
     var initialBitmask = 0
     var usageBitmask = 0
     let bits: [(key: PersistenceKey, defaultValue: Bool)] = [
-      (key: .isAutoLogAppEventsEnabled, defaultValue: true),
+      (key: .isAutoLogAppEventsEnabledLocally, defaultValue: true),
       (key: .isAdvertiserIDCollectionEnabled, defaultValue: true),
     ]
 

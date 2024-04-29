@@ -8,6 +8,7 @@
 
 @testable import FBSDKCoreKit
 
+import TestTools
 import UIKit
 import XCTest
 
@@ -36,6 +37,10 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   var errorFactory: TestErrorFactory!
   var metadata: GraphRequestMetadata!
   var piggybackManager: TestGraphRequestPiggybackManager!
+  var domainHandler: _DomainHandler!
+  let endpoint1Domain = "ep1.facebook.com"
+  let endpoint2Domain = "ep2.facebook.com"
+  let endpoint3Domain = "graph.facebook.com"
   // swiftlint:enable implicitly_unwrapped_optional force_unwrapping line_length
 
   func createSampleMetadata() -> GraphRequestMetadata {
@@ -56,7 +61,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
     GraphRequestConnection.setCanMakeRequests()
-
+    GraphRequestConnection.setDidFetchDomainConfiguration()
     session = TestURLSessionProxy()
     secondSession = TestURLSessionProxy()
     sessionFactory = TestURLSessionProxyFactory.create(withSessions: [session, secondSession])
@@ -87,8 +92,18 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       errorFactory: errorFactory,
       authenticationTokenProvider: TestAuthenticationTokenWallet.self
     )
+    GraphRequest.configure(
+      settings: settings,
+      currentAccessTokenStringProvider: TestAccessTokenWallet.self,
+      graphRequestConnectionFactory: graphRequestConnectionFactory
+    )
     connection = GraphRequestConnection()
     graphRequestConnectionFactory.stubbedConnection = connection
+    // Configure _DomainHandler for testing
+    DomainHandlerTests.configureDomainHandlerForTesting()
+    GraphRequestQueue.sharedInstance().configure(
+      graphRequestConnectionFactory: TestGraphRequestConnectionFactory(stubbedConnection: connection)
+    )
   }
 
   override func tearDown() {
@@ -108,14 +123,16 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     errorFactory = nil
     metadata = nil
     piggybackManager = nil
+    domainHandler = nil
 
     GraphRequestConnection.resetClassDependencies()
     GraphRequestConnection.resetDefaultConnectionTimeout()
     GraphRequestConnection.resetCanMakeRequests()
+    GraphRequestConnection.resetDidFetchDomainConfiguration()
     TestLogger.reset()
     TestAccessTokenWallet.reset()
     TestAuthenticationTokenWallet.reset()
-
+    GraphRequestQueue.sharedInstance().reset()
     super.tearDown()
   }
 
@@ -329,6 +346,14 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     XCTAssertFalse(
       GraphRequestConnection.canMakeRequests(),
       "Should not be able to make requests by default"
+    )
+  }
+
+  func testDefaultDidFetchDomainConfig() {
+    GraphRequestConnection.resetDidFetchDomainConfiguration()
+    XCTAssertFalse(
+      GraphRequestConnection.didFetchDomainConfiguration(),
+      "Should not have the domain configuration fetched by default"
     )
   }
 
@@ -769,6 +794,215 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     )
   }
 
+  func testStartingConnectionForFetchingDomainConfiguration() {
+    guard let appID = settings.appID else {
+      XCTFail("Should have an app id")
+      return
+    }
+    GraphRequestConnection.resetDidFetchDomainConfiguration()
+    let parameters = ["fields": ""]
+    let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
+    connection.add(domainConfigRequest) { _, _, _ in }
+    connection.start()
+    XCTAssertEqual(
+      connection.state,
+      .started,
+      "The connection state should be 'started'"
+    )
+    XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+    if #available(iOS 14.5, *) {
+      XCTAssertFalse(
+        connection === piggybackManager.capturedConnection,
+        "A connection used for fetching the domain configuration should not invoke the piggyback manager"
+      )
+    } else {
+      XCTAssertTrue(
+        connection === piggybackManager.capturedConnection,
+        "Should invoke the piggyback manager"
+      )
+    }
+    guard let requestsQ = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
+      XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+      return
+    }
+    XCTAssertTrue(
+      requestsQ.isEmpty,
+      "GraphRequestQueue should have 0 requests in it"
+    )
+  }
+
+  func testStartingConnectionWithoutDomainConfiguration() {
+    GraphRequestConnection.resetDidFetchDomainConfiguration()
+    connection.add(makeSampleRequest()) { _, _, _ in }
+    connection.start()
+    if #available(iOS 14.5, *) {
+      XCTAssertEqual(
+        connection.state,
+        .created,
+        "The connection should not have started"
+      )
+      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+      XCTAssertTrue(
+        GraphRequestQueue.sharedInstance().requestsQueue.count == 1,
+        "GraphRequestQueue should have 1 request in it"
+      )
+    } else {
+      XCTAssertEqual(
+        connection.state,
+        .started,
+        "The connection should have started"
+      )
+      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+      guard let requestsQ = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
+        XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+        return
+      }
+      XCTAssertTrue(
+        requestsQ.isEmpty,
+        "GraphRequestQueue should be empty"
+      )
+    }
+  }
+
+  func testStartingConnectionWithDomainConfiguration() {
+    connection.add(makeSampleRequest()) { _, _, _ in }
+    connection.start()
+    XCTAssertEqual(
+      connection.state,
+      .started,
+      "The connection should have started"
+    )
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+    } else {
+      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+    }
+
+    guard let requestsQ = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
+      XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+      return
+    }
+    XCTAssertTrue(
+      requestsQ.isEmpty,
+      "GraphRequestQueue should have 0 requests in it"
+    )
+  }
+
+  func testGraphRequestQueueCircularCall() {
+    GraphRequestConnection.resetDidFetchDomainConfiguration()
+    let request1 = makeSampleRequest()
+    let request2 = makeSampleRequest()
+    GraphRequestQueue.sharedInstance().enqueue(request1) { _, _, _ in }
+    GraphRequestQueue.sharedInstance().enqueue(request2) { _, _, _ in }
+    GraphRequestQueue.sharedInstance().flush()
+    if #available(iOS 14.5, *) {
+      XCTAssertEqual(
+        connection.state,
+        .created,
+        "The connection should not have started"
+      )
+      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+      let count = GraphRequestQueue.sharedInstance().requestsQueue.count
+      XCTAssertTrue(
+        count == 2,
+        "GraphRequestQueue should still have 2 requests. It has \(count)"
+      )
+    } else {
+      XCTAssertEqual(
+        connection.state,
+        .started,
+        "The connection should have started"
+      )
+      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+      let count = GraphRequestQueue.sharedInstance().requestsQueue.count
+      XCTAssertEqual(
+        count,
+        0,
+        "GraphRequestQueue should have 0 requests. It has \(count)"
+      )
+    }
+  }
+
+  func testGraphRequestQueueCircularCall2() {
+    GraphRequestConnection.resetDidFetchDomainConfiguration()
+    let request1 = makeSampleRequest()
+    let request2 = makeSampleRequest()
+    connection.add(request1) { _, _, _ in }
+    connection.add(request2) { _, _, _ in }
+    var count = GraphRequestQueue.sharedInstance().requestsQueue.count
+    if #available(iOS 14.5, *) {
+      XCTAssertTrue(
+        count == 2,
+        "GraphRequestQueue should have 2 requests. It has \(count)"
+      )
+    } else {
+      XCTAssertEqual(
+        count,
+        0,
+        "GraphRequestQueue should have 0 requests. It has \(count)"
+      )
+    }
+    connection.start()
+    if #available(iOS 14.5, *) {
+      XCTAssertEqual(
+        connection.state,
+        .created,
+        "The connection should not have started"
+      )
+    } else {
+      XCTAssertEqual(
+        connection.state,
+        .started,
+        "The connection should have started"
+      )
+    }
+    GraphRequestQueue.sharedInstance().flush()
+    if #available(iOS 14.5, *) {
+      XCTAssertEqual(
+        connection.state,
+        .created,
+        "The connection should still not have started"
+      )
+      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+      count = GraphRequestQueue.sharedInstance().requestsQueue.count
+      XCTAssertTrue(
+        count == 2,
+        "GraphRequestQueue should still have 2 requests. It has \(count)"
+      )
+    } else {
+      XCTAssertEqual(
+        connection.state,
+        .started,
+        "The connection state should not have changed"
+      )
+      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+    }
+  }
+
+  func testFlushingGraphRequestQueueAfterFetchingDomainConfiguration() {
+    GraphRequestConnection.resetDidFetchDomainConfiguration()
+    let request1 = makeSampleRequest()
+    let request2 = makeSampleRequest()
+    GraphRequestQueue.sharedInstance().enqueue(request1) { _, _, _ in }
+    GraphRequestQueue.sharedInstance().enqueue(request2) { _, _, _ in }
+    GraphRequestConnection.setDidFetchDomainConfiguration()
+    GraphRequestQueue.sharedInstance().flush()
+    XCTAssertEqual(
+      connection.state,
+      .started,
+      "The connection should have started"
+    )
+    XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
+    guard let requestsQ = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
+      XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+      return
+    }
+    XCTAssertTrue(
+      requestsQ.isEmpty,
+      "GraphRequestQueue should have 0 requests in it"
+    )
+  }
+
   func testStartingWithInvalidStates() {
     connection.logger = makeLogger()
 
@@ -820,7 +1054,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
           .started,
           "Should change the connection state to 'started' when starting in an valid state"
         )
-        XCTAssertNotNil(session.capturedRequest, "Should start a request for a connection in an valid state")
+        if self.settings.isAdvertiserTrackingEnabled == true {
+          XCTAssertNotNil(session.capturedRequest, "Should start a request for a connection in an valid state")
+        }
       }
   }
 
@@ -1118,107 +1354,113 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testUnsettingAccessToken() {
-    let expectation = expectation(description: name)
-    let accessToken = AccessToken(
-      tokenString: "token",
-      permissions: ["public_profile"],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: "appid",
-      userID: "userid",
-      expirationDate: nil,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
-    )
-    TestAccessTokenWallet.current = accessToken
-
-    connection.add(makeRequest(tokenString: accessToken.tokenString)) { _, result, error in
-      XCTAssertNil(result)
-      let testError = error as? TestSDKError
-      XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNil(
-        TestAccessTokenWallet.current,
-        "Should clear the current stored access token"
+    if settings.isAdvertiserTrackingEnabled == true {
+      let expectation = expectation(description: name)
+      let accessToken = AccessToken(
+        tokenString: "token",
+        permissions: ["public_profile"],
+        declinedPermissions: [],
+        expiredPermissions: [],
+        appID: "appid",
+        userID: "userid",
+        expirationDate: nil,
+        refreshDate: nil,
+        dataAccessExpirationDate: nil
       )
-      expectation.fulfill()
+      TestAccessTokenWallet.current = accessToken
+
+      connection.add(makeRequest(tokenString: accessToken.tokenString)) { _, result, error in
+        XCTAssertNil(result)
+        let testError = error as? TestSDKError
+        XCTAssertEqual("Token is broken", testError?.message)
+        XCTAssertNil(
+          TestAccessTokenWallet.current,
+          "Should clear the current stored access token"
+        )
+        expectation.fulfill()
+      }
+      connection.start()
+
+      let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
+
+      session.capturedCompletion?(missingTokenData, response, nil)
+
+      wait(for: [expectation], timeout: 1)
     }
-    connection.start()
-
-    let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
-
-    session.capturedCompletion?(missingTokenData, response, nil)
-
-    wait(for: [expectation], timeout: 1)
   }
 
   func testUnsettingAccessTokenSkipped() {
-    let expectation = expectation(description: name)
-    TestAccessTokenWallet.current = AccessToken(
-      tokenString: "token",
-      permissions: ["public_profile"],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: "appid",
-      userID: "userid",
-      expirationDate: nil,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
-    )
+    if settings.isAdvertiserTrackingEnabled == true {
+      let expectation = expectation(description: name)
+      TestAccessTokenWallet.current = AccessToken(
+        tokenString: "token",
+        permissions: ["public_profile"],
+        declinedPermissions: [],
+        expiredPermissions: [],
+        appID: "appid",
+        userID: "userid",
+        expirationDate: nil,
+        refreshDate: nil,
+        dataAccessExpirationDate: nil
+      )
 
-    let request = TestGraphRequest(
-      graphPath: "me",
-      parameters: ["fields": ""],
-      tokenString: "notCurrentToken"
-    )
-    connection.add(request) { _, result, error in
-      XCTAssertNil(result)
-      let testError = error as? TestSDKError
-      XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNotNil(TestAccessTokenWallet.current)
-      expectation.fulfill()
+      let request = TestGraphRequest(
+        graphPath: "me",
+        parameters: ["fields": ""],
+        tokenString: "notCurrentToken"
+      )
+      connection.add(request) { _, result, error in
+        XCTAssertNil(result)
+        let testError = error as? TestSDKError
+        XCTAssertEqual("Token is broken", testError?.message)
+        XCTAssertNotNil(TestAccessTokenWallet.current)
+        expectation.fulfill()
+      }
+      connection.start()
+
+      let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
+
+      session.capturedCompletion?(missingTokenData, response, nil)
+
+      wait(for: [expectation], timeout: 1)
     }
-    connection.start()
-
-    let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
-
-    session.capturedCompletion?(missingTokenData, response, nil)
-
-    wait(for: [expectation], timeout: 1)
   }
 
   func testUnsettingAccessTokenFlag() {
-    let expectation = expectation(description: name)
-    TestAccessTokenWallet.current = AccessToken(
-      tokenString: "token",
-      permissions: ["public_profile"],
-      declinedPermissions: [],
-      expiredPermissions: [],
-      appID: "appid",
-      userID: "userid",
-      expirationDate: nil,
-      refreshDate: nil,
-      dataAccessExpirationDate: nil
-    )
+    if settings.isAdvertiserTrackingEnabled == true {
+      let expectation = expectation(description: name)
+      TestAccessTokenWallet.current = AccessToken(
+        tokenString: "token",
+        permissions: ["public_profile"],
+        declinedPermissions: [],
+        expiredPermissions: [],
+        appID: "appid",
+        userID: "userid",
+        expirationDate: nil,
+        refreshDate: nil,
+        dataAccessExpirationDate: nil
+      )
 
-    let request = TestGraphRequest(
-      graphPath: "me",
-      parameters: ["fields": ""],
-      flags: [.doNotInvalidateTokenOnError]
-    )
-    connection.add(request) { _, result, error in
-      XCTAssertNil(result)
-      let testError = error as? TestSDKError
-      XCTAssertEqual("Token is broken", testError?.message)
-      XCTAssertNotNil(TestAccessTokenWallet.current)
-      expectation.fulfill()
+      let request = TestGraphRequest(
+        graphPath: "me",
+        parameters: ["fields": ""],
+        flags: [.doNotInvalidateTokenOnError]
+      )
+      connection.add(request) { _, result, error in
+        XCTAssertNil(result)
+        let testError = error as? TestSDKError
+        XCTAssertEqual("Token is broken", testError?.message)
+        XCTAssertNotNil(TestAccessTokenWallet.current)
+        expectation.fulfill()
+      }
+      connection.start()
+
+      let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
+
+      session.capturedCompletion?(missingTokenData, response, nil)
+
+      wait(for: [expectation], timeout: 1)
     }
-    connection.start()
-
-    let response = HTTPURLResponse(url: sampleUrl, statusCode: 400, httpVersion: nil, headerFields: nil)
-
-    session.capturedCompletion?(missingTokenData, response, nil)
-
-    wait(for: [expectation], timeout: 1)
   }
 
   func testRequestWithUserAgentSuffix() throws {
@@ -1227,8 +1469,12 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(makeRequestForMeWithEmptyFields()) { _, _, _ in }
     connection.start()
 
-    let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
-    XCTAssertTrue(userAgent.hasSuffix("/UnitTest.1.0.0"), "unexpected user agent \(userAgent)")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest)
+    } else {
+      let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
+      XCTAssertTrue(userAgent.hasSuffix("/UnitTest.1.0.0"), "unexpected user agent \(userAgent)")
+    }
   }
 
   func testRequestWithoutUserAgentSuffix() throws {
@@ -1237,12 +1483,16 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(makeRequestForMeWithEmptyFields()) { _, _, _ in }
     connection.start()
 
-    let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
-    XCTAssertEqual(
-      userAgent,
-      "FBiOSSDK.\(FBSDK_VERSION_STRING)",
-      "unexpected user agent \(userAgent)"
-    )
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest)
+    } else {
+      let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
+      XCTAssertEqual(
+        userAgent,
+        "FBiOSSDK.\(FBSDK_VERSION_STRING)",
+        "unexpected user agent \(userAgent)"
+      )
+    }
   }
 
   func testRequestWithMacCatalystUserAgent() throws {
@@ -1252,8 +1502,12 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(makeRequestForMeWithEmptyFields()) { _, _, _ in }
     connection.start()
 
-    let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
-    XCTAssertTrue(userAgent.hasSuffix("/macOS"), "unexpected user agent \(userAgent)")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(session.capturedRequest)
+    } else {
+      let userAgent = try XCTUnwrap(session.capturedRequest?.value(forHTTPHeaderField: "User-Agent"))
+      XCTAssertTrue(userAgent.hasSuffix("/macOS"), "unexpected user agent \(userAgent)")
+    }
   }
 
   func testNonDictionaryInError() {
@@ -1274,6 +1528,7 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testRequestWithBatchConstructionWithSingleGetRequest() throws {
+    AuthenticationToken.current = nil
     let singleRequest = TestGraphRequest(graphPath: "me", parameters: ["fields": "with_suffix"])
     connection.add(singleRequest) { _, _, _ in }
     let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
@@ -1283,7 +1538,11 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
     let requestBody = try XCTUnwrap(request.httpBody)
 
-    XCTAssertEqual(urlComponents.host, "graph.facebook.com")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
     XCTAssertTrue(urlComponents.path.contains("me"))
     XCTAssertEqual(request.httpMethod, "GET")
     XCTAssertEqual(requestBody.count, 0)
@@ -1297,7 +1556,12 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     let parameters: [String: Any] = [
       "first_key": "first_value",
     ]
-    let singleRequest = TestGraphRequest(graphPath: "activities", parameters: parameters, httpMethod: .post)
+    let singleRequest = TestGraphRequest(
+      graphPath: "activities",
+      parameters: parameters,
+      httpMethod: .post,
+      forAppEvents: true
+    )
     connection.add(singleRequest) { _, _, _ in }
     let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
     let request = connection.request(withBatch: requests, timeout: 0)
@@ -1306,12 +1570,650 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
     let requestBody = try XCTUnwrap(request.httpBody)
 
-    XCTAssertEqual(urlComponents.host, "graph.facebook.com")
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint2Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
     XCTAssertTrue(urlComponents.path.contains("activities"))
     XCTAssertEqual(request.httpMethod, "POST")
     XCTAssertGreaterThan(requestBody.count, 0)
     XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Encoding"), "gzip")
     XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/json")
+  }
+
+  // MARK: Domain Split Single Request Tests
+
+  func testSingleRequestInATTScopeAdvertiserTrackingEnabled() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "activities",
+      forAppEvents: true,
+      useAlternativeDefaultDomainPrefix: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testSingleRequestInATTScopeAdvertiserTrackingNotEnabled() throws {
+    settings.isAdvertiserTrackingEnabled = false
+    AuthenticationToken.current = nil
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "activities",
+      forAppEvents: true,
+      useAlternativeDefaultDomainPrefix: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint2Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testSingleRequestToNonAppActivitiesEndpoint() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "activities",
+      forAppEvents: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testSingleRequestNotInATTScope() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testSingleRequestToAdsEndpointNotInATTScope() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "ads_endpoint",
+      forAppEvents: false,
+      useAlternativeDefaultDomainPrefix: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint2Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testSingleRequestToNonAdsEndpoint() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "non_ads_endpoint",
+      forAppEvents: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testSingleRequestToVideosEndpoint() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "mockVideoId/videos",
+      forAppEvents: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    XCTAssertEqual(urlComponents.host, "graph-video.facebook.com")
+  }
+
+  func testSingleRequestToGamingDomain() throws {
+    settings.isAdvertiserTrackingEnabled = false
+    AuthenticationToken.current = AuthenticationToken(
+      tokenString: "test_token_string",
+      nonce: "test_nonce",
+      graphDomain: "gaming"
+    )
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    XCTAssertEqual(urlComponents.host, "graph.fb.gg")
+  }
+
+  func testSingleRequestToGamingDomainVideosEndpoint() throws {
+    settings.isAdvertiserTrackingEnabled = false
+    AuthenticationToken.current = AuthenticationToken(
+      tokenString: "test_token_string",
+      nonce: "test_nonce",
+      graphDomain: "gaming"
+    )
+    let singleRequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "mockVideoId/videos",
+      forAppEvents: false
+    )
+    connection.add(singleRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    XCTAssertEqual(urlComponents.host, "graph-video.fb.gg")
+  }
+
+  func testSingleRequestToCustomAudienceThirdPartyEndpointWithTrackingAllowed() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AppEvents.shared.settings = settings
+    AppEvents.shared.graphRequestFactory = GraphRequestFactory()
+    AppEvents.shared.isConfigured = true
+    guard let customAudienceRequest = AppEvents.shared.requestForCustomAudienceThirdPartyID(
+      accessToken: SampleAccessTokens.validToken
+    ) else {
+      XCTFail("Should be able to create custom audience third party request")
+      return
+    }
+    connection.add(customAudienceRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testSingleRequestToAppIndexingSessionEndpointWithTrackingEnabled() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    guard let appID = settings.appID else {
+      XCTFail("Should have an app ID")
+      return
+    }
+    guard let sessionID = _CodelessIndexer.currentSessionDeviceID else {
+      XCTFail("Should provide a session device identifier")
+      return
+    }
+    let params: [String: Any] = [
+      "device_session_id": _CodelessIndexer.extInfo,
+      "extinfo": sessionID,
+    ]
+    let appIndexingSessionRequest = TestGraphRequest(
+      graphPath: "\(appID)/app_indexing_session",
+      parameters: params,
+      httpMethod: .post,
+      useAlternativeDefaultDomainPrefix: false
+    )
+    connection.add(appIndexingSessionRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  // MARK: Domain Split Batch Request Tests
+
+  func testBatchRequestInAttScopeAdvertiserTrackingEnabled() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    let request2 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "activities",
+      forAppEvents: true,
+      useAlternativeDefaultDomainPrefix: false
+    )
+    connection.add(request2) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testBatchRequestInAttScopeAdvertiserTrackingNotEnabled() throws {
+    settings.isAdvertiserTrackingEnabled = false
+    AuthenticationToken.current = nil
+
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    let request2 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "activities",
+      forAppEvents: true,
+      useAlternativeDefaultDomainPrefix: false
+    )
+    connection.add(request2) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint2Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testBatchRequestNotInAttScope() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    let request2 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "activities",
+      forAppEvents: false
+    )
+    connection.add(request2) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testBatchRequestToGamingDomain() throws {
+    settings.isAdvertiserTrackingEnabled = false
+    AuthenticationToken.current = AuthenticationToken(
+      tokenString: "test_token_string",
+      nonce: "test_nonce",
+      graphDomain: "gaming"
+    )
+
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    let request2 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_2_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request2) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    XCTAssertEqual(urlComponents.host, "graph.fb.gg")
+  }
+
+  func testBatchRequestToCustomAudienceThirdPartyEndpointWithTrackingAllowed() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AppEvents.shared.settings = settings
+    AppEvents.shared.graphRequestFactory = GraphRequestFactory()
+    AppEvents.shared.isConfigured = true
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    guard let customAudienceRequest = AppEvents.shared.requestForCustomAudienceThirdPartyID(
+      accessToken: SampleAccessTokens.validToken
+    ) else {
+      XCTFail("Should be able to create custom audience third party request")
+      return
+    }
+    connection.add(customAudienceRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testBatchRequestToAppIndexingSessionEndpointWithTrackingEnabled() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    guard let appID = settings.appID else {
+      XCTFail("Should have an app ID")
+      return
+    }
+    guard let sessionID = _CodelessIndexer.currentSessionDeviceID else {
+      XCTFail("Should provide a session device identifier")
+      return
+    }
+    let params: [String: Any] = [
+      "device_session_id": _CodelessIndexer.extInfo,
+      "extinfo": sessionID,
+    ]
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    let appIndexingSessionRequest = TestGraphRequest(
+      graphPath: "\(appID)/app_indexing_session",
+      parameters: params,
+      httpMethod: .post,
+      useAlternativeDefaultDomainPrefix: false
+    )
+    connection.add(appIndexingSessionRequest) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testDefaultURLPrefixForBatchRequest1() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    let request2 =
+      DomainHandlerTests.getSingleTestRequest(
+        graphPath: "test_endpoint_2_not_in_att_scope",
+        forAppEvents: false
+      )
+    connection.add(request2) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint1Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  func testDefaultURLPrefixForBatchRequest2() throws {
+    settings.isAdvertiserTrackingEnabled = true
+    AuthenticationToken.current = nil
+
+    let request1 = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "test_endpoint_not_in_att_scope",
+      forAppEvents: false
+    )
+    connection.add(request1) { _, _, _ in }
+    let request2 =
+      DomainHandlerTests.getSingleTestRequest(
+        graphPath: "ads_endpoint",
+        forAppEvents: false,
+        useAlternativeDefaultDomainPrefix: false
+      )
+    connection.add(request2) { _, _, _ in }
+    let requests = try XCTUnwrap(connection.requests as? [GraphRequestMetadata])
+    let request = connection.request(withBatch: requests, timeout: 0)
+
+    let url = try XCTUnwrap(request.url)
+    let urlComponents = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: true))
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertEqual(urlComponents.host, endpoint2Domain)
+    } else {
+      XCTAssertEqual(urlComponents.host, endpoint3Domain)
+    }
+  }
+
+  // MARK: - Piggybacking requests
+
+  func testShouldPiggyBackRegularGraphRequests() {
+    connection.add(makeSampleRequest()) { _, _, _ in }
+    XCTAssertTrue(
+      connection.shouldPiggyBackRequests(),
+      "Should be able to piggy back requests onto regular requests"
+    )
+    connection.start()
+    XCTAssertTrue(
+      connection === piggybackManager.capturedConnection,
+      "A connection used for a regular graph request should invoke the piggyback manager"
+    )
+  }
+
+  func testShouldPiggyBackBatchRequests() {
+    connection.add(makeSampleRequest()) { _, _, _ in }
+    connection.add(makeSampleRequest()) { _, _, _ in }
+    XCTAssertTrue(
+      connection.shouldPiggyBackRequests(),
+      "Should be able to piggy back requests onto batch requests"
+    )
+    connection.start()
+    XCTAssertTrue(
+      connection === piggybackManager.capturedConnection,
+      "A connection used for batch requests should invoke the piggyback manager"
+    )
+  }
+
+  func testShouldPiggyBackDomainConfigurationRequest() {
+    let parameters = ["fields": ""]
+    let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
+    connection.add(domainConfigRequest) { _, _, _ in }
+    if #available(iOS 14.5, *) {
+      XCTAssertFalse(
+        connection.shouldPiggyBackRequests(),
+        "Should not be able to piggy back requests onto the domain configuration request"
+      )
+      connection.start()
+      XCTAssertFalse(
+        connection === piggybackManager.capturedConnection,
+        "A connection used to fetch the domain configuration should not invoke the piggyback manager"
+      )
+    } else {
+      XCTAssertTrue(
+        connection.shouldPiggyBackRequests(),
+        "Should be able to piggy back requests"
+      )
+      connection.start()
+      XCTAssertTrue(
+        connection === piggybackManager.capturedConnection,
+        "Should invoke the piggyback manager"
+      )
+    }
+  }
+
+  func testShouldPiggyBackAppActivitiesRequest() {
+    guard let appID = settings.appID else {
+      XCTFail("Should have appID")
+      return
+    }
+    let appActivitiesrequest = DomainHandlerTests.getSingleTestRequest(
+      graphPath: "\(appID)/activities",
+      forAppEvents: true
+    )
+    connection.add(appActivitiesrequest) { _, _, _ in }
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertFalse(
+        connection.shouldPiggyBackRequests(),
+        "Should not be able to piggy back requests onto an app activities request"
+      )
+      connection.start()
+      XCTAssertFalse(
+        connection === piggybackManager.capturedConnection,
+        "A connection used for app events should not invoke the piggyback manager"
+      )
+    } else {
+      XCTAssertTrue(
+        connection.shouldPiggyBackRequests(),
+        "Should be able to piggy back requests"
+      )
+      connection.start()
+      XCTAssertTrue(
+        connection === piggybackManager.capturedConnection,
+        "Should invoke the piggyback manager"
+      )
+    }
+  }
+
+  func testShouldPiggyBackCustomAudienceRequest() {
+    settings.isAdvertiserTrackingEnabled = true
+    AppEvents.shared.settings = settings
+    AppEvents.shared.graphRequestFactory = GraphRequestFactory()
+    AppEvents.shared.isConfigured = true
+    guard let customAudienceRequest = AppEvents.shared.requestForCustomAudienceThirdPartyID(
+      accessToken: SampleAccessTokens.validToken
+    ) else {
+      XCTFail("Should be able to create custom audience third party request")
+      return
+    }
+    connection.add(customAudienceRequest) { _, _, _ in }
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertFalse(
+        connection.shouldPiggyBackRequests(),
+        "Should not be able to piggy back requests onto the custom audience third party request"
+      )
+      connection.start()
+      XCTAssertFalse(
+        connection === piggybackManager.capturedConnection,
+        "A connection used for the custom audience third party request should not invoke the piggyback manager"
+      )
+    } else {
+      XCTAssertTrue(
+        connection.shouldPiggyBackRequests(),
+        "Should be able to piggy back requests"
+      )
+      connection.start()
+      XCTAssertTrue(
+        connection === piggybackManager.capturedConnection,
+        "Should invoke the piggyback manager"
+      )
+    }
+  }
+
+  func testShouldPiggyBackAppIndexingSessionRequest() {
+    settings.isAdvertiserTrackingEnabled = true
+    guard let appID = settings.appID else {
+      XCTFail("Should have an app ID")
+      return
+    }
+    guard let sessionID = _CodelessIndexer.currentSessionDeviceID else {
+      XCTFail("Should provide a session device identifier")
+      return
+    }
+    let params: [String: Any] = [
+      "device_session_id": _CodelessIndexer.extInfo,
+      "extinfo": sessionID,
+    ]
+    let appIndexingSessionRequest = TestGraphRequest(
+      graphPath: "\(appID)/app_indexing_session",
+      parameters: params,
+      httpMethod: .post
+    )
+    connection.add(appIndexingSessionRequest) { _, _, _ in }
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertFalse(
+        connection.shouldPiggyBackRequests(),
+        "Should not be able to piggy back requests onto the app indexing session request"
+      )
+      connection.start()
+      XCTAssertFalse(
+        connection === piggybackManager.capturedConnection,
+        "A connection used for the app indexing session request should not invoke the piggyback manager"
+      )
+    } else {
+      XCTAssertTrue(
+        connection.shouldPiggyBackRequests(),
+        "Should be able to piggy back requests"
+      )
+      connection.start()
+      XCTAssertTrue(
+        connection === piggybackManager.capturedConnection,
+        "Should invoke the piggyback manager"
+      )
+    }
   }
 
   // MARK: - accessTokenWithRequest
@@ -1431,11 +2333,15 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     wait(for: [expectation], timeout: 1)
 
     let error = try XCTUnwrap(capturedError as NSError?)
-    XCTAssertEqual(
-      2,
-      error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
-      "The completion should be called with the expected error code"
-    )
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(error.userInfo[GraphRequestErrorGraphErrorCodeKey])
+    } else {
+      XCTAssertEqual(
+        2,
+        error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
+        "The completion should be called with the expected error code"
+      )
+    }
   }
 
   func testRetryDisabled() throws {
@@ -1463,11 +2369,16 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     wait(for: [expectation], timeout: 1)
 
     let error = try XCTUnwrap(capturedError as NSError?)
-    XCTAssertEqual(
-      1,
-      error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
-      "The completion should be called with the expected error code"
-    )
+
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), settings.isAdvertiserTrackingEnabled == false {
+      XCTAssertNil(error.userInfo[GraphRequestErrorGraphErrorCodeKey])
+    } else {
+      XCTAssertEqual(
+        1,
+        error.userInfo[GraphRequestErrorGraphErrorCodeKey] as? Int,
+        "The completion should be called with the expected error code"
+      )
+    }
   }
 
   // MARK: - Response Parsing

@@ -20,8 +20,10 @@ final class ApplicationDelegateTests: XCTestCase {
   var userDataStore: UserDefaultsSpy!
   var observer: TestApplicationDelegateObserver!
   var settings: TestSettings!
+  var aemManager: TestAEMManager!
   var backgroundEventLogger: TestBackgroundEventLogger!
   var serverConfigurationProvider: TestServerConfigurationProvider!
+  var domainConfigurationManager: TestDomainConfigurationManager!
   let bitmaskKey = "com.facebook.sdk.kits.bitmask"
   var paymentObserver: TestPaymentObserver!
   var profile: Profile!
@@ -41,6 +43,7 @@ final class ApplicationDelegateTests: XCTestCase {
     userDataStore = UserDefaultsSpy()
     observer = TestApplicationDelegateObserver()
     settings = TestSettings()
+    aemManager = TestAEMManager()
 
     TestBackgroundEventLogger.setDependencies(
       .init(
@@ -51,6 +54,8 @@ final class ApplicationDelegateTests: XCTestCase {
     backgroundEventLogger = TestBackgroundEventLogger()
     serverConfigurationProvider = TestServerConfigurationProvider()
     paymentObserver = TestPaymentObserver()
+    let connection = TestGraphRequestConnection(shouldExecuteCompletion: true)
+    let graphRequestConnectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
     profile = Profile(
       userID: name,
       firstName: nil,
@@ -65,12 +70,23 @@ final class ApplicationDelegateTests: XCTestCase {
       backgroundEventLogger: backgroundEventLogger,
       defaultDataStore: userDataStore,
       featureChecker: featureChecker,
+      graphRequestConnectionFactory: graphRequestConnectionFactory as GraphRequestConnectionFactoryProtocol,
       notificationCenter: notificationCenter,
       paymentObserver: paymentObserver,
       serverConfigurationProvider: serverConfigurationProvider,
-      settings: settings
+      settings: settings,
+      aemManager: aemManager
     )
     configurator = TestCoreKitConfigurator(components: components)
+    _DomainConfiguration.setDefaultDomainInfo()
+    domainConfigurationManager = TestDomainConfigurationManager(domainInfo: nil, shouldExecuteCompletion: true)
+    _DomainHandler.sharedInstance().configure(
+      domainConfigurationProvider: domainConfigurationManager,
+      settings: components.settings,
+      dataStore: components.defaultDataStore,
+      graphRequestFactory: components.graphRequestFactory,
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory
+    )
 
     makeDelegate()
     delegate.resetApplicationObserverCache()
@@ -89,7 +105,7 @@ final class ApplicationDelegateTests: XCTestCase {
     profile = nil
     components = nil
     delegate = nil
-
+    _DomainConfiguration.resetDefaultDomainInfo()
     resetTestDependencies()
 
     super.tearDown()
@@ -164,6 +180,35 @@ final class ApplicationDelegateTests: XCTestCase {
 
   // MARK: - Initializing SDK
 
+  func testInitializeSDKLoadsDomainConfiguration() {
+    delegate.initializeSDK()
+
+    if #available(iOS 14.5, *) {
+      XCTAssertTrue(
+        domainConfigurationManager.loadDomainConfigurationWasCalled,
+        "Should load the domain configuration on initializing the SDK"
+      )
+      guard let fetchedDomainInfo = domainConfigurationManager.domainConfiguration?.domainInfo,
+            let defaultDomainInfo = _DomainConfiguration.default().domainInfo else {
+        XCTFail("Should not be nil")
+        return
+      }
+      XCTAssertTrue(
+        NSDictionary(dictionary: fetchedDomainInfo).isEqual(to: defaultDomainInfo),
+        "The correct domain configuration should have been loaded"
+      )
+    } else {
+      XCTAssertFalse(
+        domainConfigurationManager.loadDomainConfigurationWasCalled,
+        "Should not load the domain configuration on initializing the SDK unless we have iOS 14.5+"
+      )
+      XCTAssertNil(
+        domainConfigurationManager.domainConfiguration?.domainInfo,
+        "Should not load the domain configuration on initializing the SDK unless we have iOS 14.5+"
+      )
+    }
+  }
+
   func testInitializingSdkAddsBridgeApiObserver() {
     delegate.initializeSDK()
 
@@ -214,6 +259,24 @@ final class ApplicationDelegateTests: XCTestCase {
     XCTAssertTrue(
       configurator.performConfigurationCalled,
       "Initializing the SDK should ask the configurator to perform downstream configuration"
+    )
+  }
+
+  func testInitializingAutoSetupWithFeatureEnabled() {
+    featureChecker.enable(feature: .aemAutoSetup)
+    delegate.initializeSDK()
+    XCTAssert(
+      aemManager.enabled,
+      "Initializing the SDK should have AEM Auto Setup feature enabled with feature enabled"
+    )
+  }
+
+  func testInitializingAutoSetupWithoutFeatureEnabled() {
+    featureChecker.disableFeature(.aemAutoSetup)
+    delegate.initializeSDK()
+    XCTAssert(
+      !aemManager.enabled,
+      "Initializing the SDK should not have AEM Auto Setup feature enabled without feature enabled"
     )
   }
 
@@ -339,7 +402,7 @@ final class ApplicationDelegateTests: XCTestCase {
   func testDidFinishLaunchingWithoutObservers() {
     let notifiedObservers = delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
-    XCTAssertFalse(notifiedObservers, "Should indicate if no observers were notified")
+    XCTAssertTrue(notifiedObservers, "Should always return true")
   }
 
   func testAppEventsEnabled() {
@@ -394,7 +457,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingSdkTriggersApplicationLifecycleNotificationsForAppEvents() {
-    delegate.initializeSDK(launchOptions: [:])
+    delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
 
     XCTAssertTrue(
       appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
@@ -416,7 +479,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingSdkObservesSystemNotifications() {
-    delegate.initializeSDK(launchOptions: [:])
+    delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
 
     XCTAssertTrue(
       notificationCenter.capturedAddObserverInvocations.contains(
@@ -458,7 +521,8 @@ final class ApplicationDelegateTests: XCTestCase {
       launchOptions: [
         UIApplication.LaunchOptionsKey.sourceApplication: name,
         .url: SampleURLs.valid,
-      ]
+      ],
+      completionBlock: nil
     )
 
     XCTAssertEqual(
@@ -474,7 +538,7 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializingSdkRegistersForSessionUpdates() {
-    delegate.initializeSDK(launchOptions: [:])
+    delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
 
     XCTAssertTrue(
       appEvents.wasRegisterAutoResetSourceApplicationCalled,
@@ -483,6 +547,35 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   // MARK: - DidFinishLaunching
+
+  func testDidFinishLaunchingLoadsDomainConfiguration() {
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    if #available(iOS 14.5, *) {
+      XCTAssertTrue(
+        domainConfigurationManager.loadDomainConfigurationWasCalled,
+        "Should load the domain configuration on finishing launching the application"
+      )
+      guard let fetchedDomainInfo = domainConfigurationManager.domainConfiguration?.domainInfo,
+            let defaultDomainInfo = _DomainConfiguration.default().domainInfo else {
+        XCTFail("Should not be nil")
+        return
+      }
+      XCTAssertTrue(
+        NSDictionary(dictionary: fetchedDomainInfo).isEqual(to: defaultDomainInfo),
+        "The correct domain configuration should have been loaded"
+      )
+    } else {
+      XCTAssertFalse(
+        domainConfigurationManager.loadDomainConfigurationWasCalled,
+        "We should not load the domain configuration unless we are on iOS 14.5+"
+      )
+      XCTAssertNil(
+        domainConfigurationManager.domainConfiguration?.domainInfo,
+        "We should not load the domain configuration unless we are on iOS 14.5+"
+      )
+    }
+  }
 
   func testDidFinishLaunchingLoadsServerConfiguration() {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)

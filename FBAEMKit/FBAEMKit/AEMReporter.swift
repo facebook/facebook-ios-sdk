@@ -86,7 +86,7 @@ public final class AEMReporter: NSObject {
   static var minAggregationRequestTimestamp: Date?
   static var completionBlocks: [FBAEMReporterBlock] = []
 
-  static func configure(
+  public static func configure(
     networker: AEMNetworking?,
     appID: String?,
     reporter: SKAdNetworkReporting?
@@ -114,7 +114,7 @@ public final class AEMReporter: NSObject {
     )
   }
 
-  static func configure(
+  public static func configure(
     networker: AEMNetworking?,
     appID: String?,
     reporter: SKAdNetworkReporting?,
@@ -129,60 +129,13 @@ public final class AEMReporter: NSObject {
   }
 
   /**
-   Enable AEM reporting
+   Enable AEM reporting. This function won't work and AEM APIs will early return.
 
-   This function should be called in application(_:open:options:) from ApplicationDelegate
+   This function should be called in application(_:open:options:) from ApplicationDelegate.
    */
   public static func enable() {
-    guard
-      #available(iOS 14.0, *),
-      !isAEMReportEnabled
-    else {
-      return
-    }
-
-    isAEMReportEnabled = true
-
-    AEMConfiguration.configure(withRuleProvider: AEMAdvertiserRuleFactory())
-    reportFile = BasicUtility.persistenceFilePath(FileNames.aemReporter)
-    configFile = BasicUtility.persistenceFilePath(FileNames.aemConfig)
-    completionBlocks = []
-
-    dispatchOnQueue(serialQueue) {
-      minAggregationRequestTimestamp = loadMinAggregationRequestTimestamp()
-      configurations = loadConfigurations()
-      invocations = loadReportData()
-    }
-
-    loadConfiguration(withRefreshForced: false) { error in
-      if error != nil {
-        return
-      }
-
-      sendAggregationRequest()
-      clearCache()
-    }
-
-    // If developers forget to call configureWithNetworker:appID:
-    // or pass nil for networker,
-    // we use default networker in FBAEMKit
-    if networker == nil {
-      let networker = AEMNetworker()
-      networker.userAgentSuffix = analyticsAppID
-      self.networker = networker
-    }
-
-    // If developers forget to call configureWithNetworker:appID:,
-    // we will look up app Any in plist file, key is FacebookAppID
-    if appID == nil || appID?.isEmpty == true {
-      appID = AEMSettings.appID()
-    }
-
-    // If appID is still nil/empty, we don't enable AEM and throw warning here
-    if appID == nil || appID?.isEmpty == true {
-      // swiftlint:disable:next line_length
-      print("App ID is not set up correctly, please call configureWithNetworker:appID: and pass correct FB App ID OR add FacebookAppID in Info.plist")
-    }
+    // AEMKit is disabled and public APIs will always early return
+    isAEMReportEnabled = false
   }
 
   /**
@@ -218,7 +171,7 @@ public final class AEMReporter: NSObject {
 
    This function should be called in `application(_:open:options:) `from ApplicationDelegate
    */
-  public static func handle(_ url: URL) {
+  public static func handle(_ url: URL?) {
     guard
       isAEMReportEnabled,
       let invocation = parseURL(url)

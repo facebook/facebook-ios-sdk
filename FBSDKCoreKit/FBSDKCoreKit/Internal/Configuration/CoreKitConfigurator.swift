@@ -35,6 +35,7 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureServerConfigurationManager()
     configureCloudBridge()
     configureAEMReporter()
+    configureAEMManager()
     configureNonTVOSAppEvents()
     configureAppLinkNavigation()
     configureAppLinkURL()
@@ -47,6 +48,8 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureModelManager()
     configureProfile()
     configureWebDialogView()
+    configureDomainHandler()
+    configureGraphRequestQueue()
   }
 }
 
@@ -67,6 +70,19 @@ private extension CoreKitConfigurator {
         networker: components.aemNetworker,
         appID: components.settings.appID,
         reporter: components.skAdNetworkReporter
+      )
+    }
+  }
+
+  func configureAEMManager() {
+    if #available(iOS 14, *) {
+      _AEMManager.shared.configure(
+        swizzler: components.swizzler,
+        reporter: components.aemReporter,
+        eventLogger: components.eventLogger,
+        crashHandler: components.crashHandler,
+        featureChecker: components.featureChecker,
+        appEventsUtility: components.appEventsUtility
       )
     }
   }
@@ -92,7 +108,12 @@ private extension CoreKitConfigurator {
       userDataStore: components.userDataStore,
       appEventsUtility: components.appEventsUtility,
       internalUtility: components.internalUtility,
-      capiReporter: components.capiReporter
+      capiReporter: components.capiReporter,
+      protectedModeManager: components.protectedModeManager,
+      macaRuleMatchingManager: components.macaRuleMatchingManager,
+      blocklistEventsManager: components.blocklistEventsManager,
+      redactedEventsManager: components.redactedEventsManager,
+      sensitiveParamsManager: components.sensitiveParamsManager
     )
   }
 
@@ -112,7 +133,9 @@ private extension CoreKitConfigurator {
   func configureAppEventsState() {
     _AppEventsState.eventProcessors = [
       components.eventDeactivationManager,
+      components.blocklistEventsManager,
       components.restrictiveDataFilterManager,
+      components.redactedEventsManager,
     ]
   }
 
@@ -300,6 +323,7 @@ private extension CoreKitConfigurator {
       onDeviceMLModelManager: components.modelManager,
       metadataIndexer: components.metadataIndexer,
       skAdNetworkReporter: components.skAdNetworkReporter,
+      skAdNetworkReporterV2: components.skAdNetworkReporterV2,
       codelessIndexer: components.codelessIndexer,
       swizzler: components.swizzler,
       aemReporter: components.aemReporter
@@ -318,6 +342,7 @@ private extension CoreKitConfigurator {
     Settings.shared.setDependencies(
       .init(
         appEventsConfigurationProvider: components.appEventsConfigurationProvider,
+        serverConfigurationProvider: components.serverConfigurationProvider,
         dataStore: components.defaultDataStore,
         eventLogger: components.eventLogger,
         infoDictionaryProvider: components.infoDictionaryProvider
@@ -343,6 +368,25 @@ private extension CoreKitConfigurator {
       webViewProvider: components.webViewProvider,
       urlOpener: components.internalURLOpener,
       errorFactory: components.errorFactory
+    )
+  }
+
+  func configureDomainHandler() {
+    components.internalUtility.validateDomainConfiguration()
+
+    _DomainHandler.sharedInstance().configure(
+      domainConfigurationProvider: _DomainConfigurationManager.sharedInstance(),
+      settings: components.settings,
+      dataStore: components.defaultDataStore,
+      graphRequestFactory: components.graphRequestFactory,
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory
+    )
+    _DomainConfiguration.setDefaultDomainInfo()
+  }
+
+  func configureGraphRequestQueue() {
+    GraphRequestQueue.sharedInstance().configure(
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory
     )
   }
 }

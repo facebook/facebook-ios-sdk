@@ -46,6 +46,7 @@ public final class LoginManager: NSObject {
     static let expectedChallenge = "expected_login_challenge"
     static let expectedNonce = "expected_login_nonce"
     static let expectedCodeVerifier = "expected_login_code_verifier"
+    static let userTokenNonce = "user_token_nonce"
   }
 
   private static let clientStateChallengeLength = UInt(20)
@@ -259,11 +260,6 @@ public final class LoginManager: NSObject {
   }
 
   private func logIn(permissions: Set<FBPermission>, handler: LoginManagerLoginResultBlock?) {
-    if let configuration = configuration {
-      let provider = ServerConfigurationProvider()
-      logger = LoginManagerLogger(loggingToken: provider.loggingToken, tracking: configuration.tracking)
-    }
-
     self.handler = handler.flatMap(IdentifiedLoginResultHandler.init)
 
     logger?.startSession(for: self)
@@ -354,6 +350,7 @@ public final class LoginManager: NSObject {
     dependencies.accessTokenWallet.current = nil
     dependencies.authenticationTokenWallet.current = nil
     dependencies.profileProvider.current = nil
+    storeUserTokenNonce(nil)
   }
 
   // MARK: - Helpers
@@ -424,7 +421,11 @@ public final class LoginManager: NSObject {
            // swiftformat:disable:next redundantSelf
            let accessToken = self.accessTokenWallet?.current {
           // In a reauthentication, short circuit and let the login handler be called when the validation finishes.
-          return validateReauthentication(accessToken: accessToken, loginResult: result)
+          return validateReauthentication(
+            accessToken: accessToken,
+            loginResult: result,
+            userTokenNonce: parameters.userTokenNonce
+          )
         }
       } else {
         result = getCancelledResult(from: parameters)
@@ -432,7 +433,7 @@ public final class LoginManager: NSObject {
     }
 
     setGlobalProperties(parameters: parameters, loginResult: result)
-
+    storeUserTokenNonce(parameters.userTokenNonce)
     invokeHandler(result: result, error: error)
   }
 
@@ -526,6 +527,7 @@ public final class LoginManager: NSObject {
       "ies": NSNumber(value: dependencies.settings.isAutoLogAppEventsEnabled).stringValue,
       "local_client_id": dependencies.settings.appURLSchemeSuffix,
       "default_audience": LoginUtility.stringForAudience(defaultAudience),
+      "user_token_nonce": loadUserTokenNonce(),
     ]
     var parameters = nullableParameters.compactMapValues { $0 }
 
@@ -561,20 +563,24 @@ public final class LoginManager: NSObject {
 
     switch configuration.tracking {
     case .limited:
-      parameters["response_type"] = "id_token,graph_domain"
+      parameters["response_type"] = "id_token,graph_domain,user_token_nonce"
       parameters["tp"] = "ios_14_do_not_track"
 
     case .enabled:
-      parameters["response_type"] = "id_token,token_or_nonce,signed_request,graph_domain"
-      parameters["code_challenge"] = configuration.codeVerifier.challenge
-      parameters["code_challenge_method"] = "S256"
-      storeExpectedCodeVerifier(configuration.codeVerifier)
+      if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
+        addLimitedLoginShimParameters(parameters: &parameters, configuration: configuration)
+      } else {
+        addTrackingParameters(parameters: &parameters, configuration: configuration)
+      }
     }
 
     parameters["nonce"] = configuration.nonce
     storeExpectedNonce(configuration.nonce)
 
-    let values = ["init": MonotonicTimer().getCurrentSeconds()]
+    let nanoseconds = clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
+    let seconds = Double(nanoseconds) / 1_000_000_000.0
+
+    let values = ["init": seconds]
     if let timestamp = try? BasicUtility.jsonString(for: values) {
       parameters["e2e"] = timestamp
     }
@@ -587,7 +593,24 @@ public final class LoginManager: NSObject {
       .replacingOccurrences(of: "+", with: "=")
   }
 
-  func validateReauthentication(accessToken: AccessToken, loginResult: LoginManagerLoginResult?) {
+  private func addTrackingParameters(parameters: inout [String: String], configuration: LoginConfiguration) {
+    parameters["response_type"] = "id_token,token_or_nonce,signed_request,graph_domain,user_token_nonce"
+    parameters["code_challenge"] = configuration.codeVerifier.challenge
+    parameters["code_challenge_method"] = "S256"
+    storeExpectedCodeVerifier(configuration.codeVerifier)
+  }
+
+  private func addLimitedLoginShimParameters(parameters: inout [String: String], configuration: LoginConfiguration) {
+    addTrackingParameters(parameters: &parameters, configuration: configuration)
+    parameters["tp"] = "ios_14_do_not_track"
+    parameters["is_limited_login_shim"] = "true"
+  }
+
+  func validateReauthentication(
+    accessToken: AccessToken,
+    loginResult: LoginManagerLoginResult?,
+    userTokenNonce: String? = nil
+  ) {
     guard let dependencies = try? getDependencies() else { return }
 
     let request = dependencies.graphRequestFactory.createGraphRequest(
@@ -614,6 +637,7 @@ public final class LoginManager: NSObject {
       }
 
       dependencies.accessTokenWallet.current = loginResult?.token
+      storeUserTokenNonce(userTokenNonce)
       invokeHandler(result: loginResult)
     }
   }
@@ -643,12 +667,34 @@ public final class LoginManager: NSObject {
       loggingToken: serverConfigurationProvider.loggingToken,
       authenticationMethod: authenticationMethod
     )
-
-    if let parameters = loginParameters,
-       parameters["redirect_uri"] != nil {
+    if let parameters = loginParameters, parameters["redirect_uri"] != nil {
       do {
+        let loginHandler = browserLoginHandler ?? { _, _ in }
+        guard let configuration = configuration else {
+          let failureMessage = """
+            Cannot create authenticationURL without a valid login configuration.
+            Please make sure the `LoginConfiguration` provided is non-nil.
+            """
+          _Logger.singleShotLogEntry(.developerErrors, logEntry: failureMessage)
+          // swiftformat:disable:next redundantSelf
+          let error = self.errorFactory?.error(
+            code: CoreError.errorInvalidArgument.rawValue,
+            message: failureMessage,
+            underlyingError: nil
+          )
+          return loginHandler(false, error)
+        }
+        var hostPrefix = "m."
+        switch configuration.tracking {
+        case .limited:
+          hostPrefix = "limited."
+        case .enabled:
+          if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
+            hostPrefix = "limited."
+          }
+        }
         authenticationURL = try dependencies.internalUtility.facebookURL(
-          hostPrefix: "m.",
+          hostPrefix: hostPrefix,
           path: Self.oAuthPath,
           queryParameters: parameters
         )
@@ -822,6 +868,23 @@ public final class LoginManager: NSObject {
     // swiftformat:disable:next redundantSelf
     self.keychainStore?.string(forKey: Keys.expectedCodeVerifier)
   }
+
+  private func storeUserTokenNonce(_ nonce: String?) {
+    let accessibility = DynamicFrameworkLoaderProxy
+      .loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly()
+      .takeRetainedValue()
+    // swiftformat:disable:next redundantSelf
+    self.keychainStore?.setString(
+      nonce,
+      forKey: Keys.userTokenNonce,
+      accessibility: accessibility
+    )
+  }
+
+  private func loadUserTokenNonce() -> String? {
+    // swiftformat:disable:next redundantSelf
+    self.keychainStore?.string(forKey: Keys.userTokenNonce)
+  }
 }
 
 extension LoginManager: URLOpening {
@@ -854,26 +917,16 @@ extension LoginManager: URLOpening {
       isFacebookURL,
       let dependencies = try? getDependencies()
     else { return false }
-
     let urlParameters = LoginUtility.getQueryParameters(from: url) ?? [:]
     let completer = dependencies.loginCompleterFactory.createLoginCompleter(
       urlParameters: urlParameters,
       appID: dependencies.settings.appID ?? ""
     )
-
     // Any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
     completer.completeLogin(
       nonce: loadExpectedNonce(),
       codeVerifier: loadExpectedCodeVerifier()
     ) { [self] parameters in
-      if let configuration = configuration,
-         logger == nil {
-        logger = LoginManagerLogger(
-          parameters: urlParameters,
-          tracking: configuration.tracking
-        )
-      }
-
       completeAuthentication(parameters: parameters, expectChallenge: true)
     }
 

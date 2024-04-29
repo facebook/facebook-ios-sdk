@@ -19,11 +19,11 @@ final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
 
   private enum Values {
     static let newline = "\r\n"
-    static let versionString = "15.1.0"
-    static let defaultGraphAPIVersion = "v15.0"
+    static let versionString = "17.0.1"
+    static let defaultGraphAPIVersion = "v17.0"
     static let SDK = "ios"
     static let userAgentBase = "FBiOSAEM"
-    static let graphAPIEndpoint = "https://graph.facebook.com/v15.0/"
+    static let graphAPIEndpoint = "https://graph.facebook.com/v17.0/"
     static let graphAPIContentType = "application/json"
     static let errorDomain = "com.facebook.aemkit"
     static let agent = "\(Values.userAgentBase).\(Values.versionString)"

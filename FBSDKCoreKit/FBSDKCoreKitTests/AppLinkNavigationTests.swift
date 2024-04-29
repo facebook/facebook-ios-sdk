@@ -44,7 +44,7 @@ final class AppLinkNavigationTests: XCTestCase {
     eventPoster = TestMeasurementEvent()
     resolver = TestAppLinkResolver()
     settings = TestSettings()
-    settings.sdkVersion = "15.1.0"
+    settings.sdkVersion = "17.0.1"
     urlOpener = URLOpener(canOpenURL: true)
     AppLinkNavigation.defaultResolver = resolver
 
@@ -364,7 +364,13 @@ final class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithInvalidTargetWithoutWebUrl() {
-    let target = AppLinkTarget(url: URL(string: "invalid url"), appStoreId: nil, appName: name)
+    var url = URL(string: "invalid url")
+    #if swift(>=5.9)
+    if #available(iOS 17.0, *) {
+      url = URL(string: "invalid url", encodingInvalidCharacters: false)
+    }
+    #endif
+    let target = AppLinkTarget(url: url, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 
@@ -400,7 +406,13 @@ final class AppLinkNavigationTests: XCTestCase {
   }
 
   func testNavigationTypeWithInvalidTargetWithWebUrl() {
-    let target = AppLinkTarget(url: URL(string: "invalid url"), appStoreId: nil, appName: name)
+    var url = URL(string: "invalid url")
+    #if swift(>=5.9)
+    if #available(iOS 17.0, *) {
+      url = URL(string: "invalid url", encodingInvalidCharacters: false)
+    }
+    #endif
+    let target = AppLinkTarget(url: url, appStoreId: nil, appName: name)
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: .usingHost1)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
 

@@ -33,7 +33,8 @@
 @protocol FBSDKAppEventDropDetermining;
 @protocol FBSDKCAPIReporter;
 @protocol FBSDKAppEventParametersExtracting;
-
+@protocol FBSDKMACARuleMatching;
+@protocol FBSDKEventsProcessing;
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
 @protocol FBSDKMetadataIndexing;
@@ -73,7 +74,12 @@ NS_SWIFT_NAME(_AppEventsConfiguring)
                          appEventsUtility:(id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying>)appEventsUtility
                           internalUtility:(id<FBSDKInternalUtility>)internalUtility
                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
-NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:));
+                     protectedModeManager:(id<FBSDKAppEventsParameterProcessing>)protectedModeManager
+                  macaRuleMatchingManager:(id<FBSDKMACARuleMatching>)macaRuleMatchingManager
+                   blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
+                   redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
+                  sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
+NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:protectedModeManager:macaRuleMatchingManager:blocklistEventsManager:redactedEventsManager:sensitiveParamsManager:));
 
 #if !TARGET_OS_TV
 
@@ -81,10 +87,11 @@ NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverC
 - (void)configureNonTVComponentsWithOnDeviceMLModelManager:(id<FBSDKEventProcessing>)modelManager
                                            metadataIndexer:(id<FBSDKMetadataIndexing>)metadataIndexer
                                        skAdNetworkReporter:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporter
+                                       skAdNetworkReporterV2:(nullable id<FBSDKAppEventsReporter>)skAdNetworkReporterV2
                                            codelessIndexer:(Class<FBSDKCodelessIndexing>)codelessIndexer
                                                   swizzler:(Class<FBSDKSwizzling>)swizzler
                                                aemReporter:(Class<FBSDKAEMReporter>)aemReporter
-NS_SWIFT_NAME(configureNonTVComponents(onDeviceMLModelManager:metadataIndexer:skAdNetworkReporter:codelessIndexer:swizzler:aemReporter:));
+NS_SWIFT_NAME(configureNonTVComponents(onDeviceMLModelManager:metadataIndexer:skAdNetworkReporter:skAdNetworkReporterV2:codelessIndexer:swizzler:aemReporter:));
 // UNCRUSTIFY_FORMAT_ON
 
 #endif

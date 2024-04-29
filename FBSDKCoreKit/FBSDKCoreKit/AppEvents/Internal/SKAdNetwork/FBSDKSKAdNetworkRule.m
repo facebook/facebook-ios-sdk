@@ -9,6 +9,7 @@
 #if !TARGET_OS_TV
 
 #import "FBSDKSKAdNetworkRule.h"
+#import "FBSDKSKAdnetworkUtils.h"
 
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
@@ -22,7 +23,7 @@
       return nil;
     }
     NSNumber *value = [FBSDKTypeUtility dictionary:dict objectForKey:@"conversion_value" ofType:NSNumber.class];
-    NSArray<FBSDKSKAdNetworkEvent *> *events = [FBSDKSKAdNetworkRule parseEvents:[FBSDKTypeUtility dictionary:dict objectForKey:@"events" ofType:NSArray.class]];
+    NSArray<FBSDKSKAdNetworkEvent *> *events = [FBSDKSKAdnetworkUtils parseEvents:[FBSDKTypeUtility dictionary:dict objectForKey:@"events" ofType:NSArray.class]];
     if (value == nil || !events) {
       return nil;
     }
@@ -57,22 +58,6 @@
     }
   }
   return YES;
-}
-
-+ (nullable NSArray<FBSDKSKAdNetworkEvent *> *)parseEvents:(NSArray<NSDictionary<NSString *, id> *> *)events
-{
-  if (!events) {
-    return nil;
-  }
-  NSMutableArray<FBSDKSKAdNetworkEvent *> *parsedEvents = [NSMutableArray new];
-  for (NSDictionary<NSString *, id> *eventEntry in events) {
-    FBSDKSKAdNetworkEvent *event = [[FBSDKSKAdNetworkEvent alloc] initWithJSON:eventEntry];
-    if (!event) {
-      return nil;
-    }
-    [FBSDKTypeUtility array:parsedEvents addObject:event];
-  }
-  return [parsedEvents copy];
 }
 
 @end

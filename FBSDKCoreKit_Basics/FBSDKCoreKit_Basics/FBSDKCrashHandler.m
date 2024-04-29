@@ -22,7 +22,7 @@
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
 #ifndef FBSDK_VERSION_STRING
- #define FBSDK_VERSION_STRING @"15.1.0"
+ #define FBSDK_VERSION_STRING @"17.0.1"
 #endif
 
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
@@ -190,7 +190,7 @@ NSString *const kFBSDKMappingTableIdentifier = @"mapping_table_identifier";
 
 static void FBSDKExceptionHandler(NSException *exception)
 {
-  [FBSDKCrashHandler.shared _saveException:exception];
+  [FBSDKCrashHandler.shared saveException:exception];
   if (previousExceptionHandler) {
     previousExceptionHandler(exception);
   }
@@ -198,7 +198,7 @@ static void FBSDKExceptionHandler(NSException *exception)
 
 #pragma mark - Storage & Process
 
-- (void)_saveException:(NSException *)exception
+- (void)saveException:(NSException *)exception
 {
   if (exception.callStackSymbols && exception.name) {
     NSArray<NSString *> *stackSymbols = [NSArray arrayWithArray:exception.callStackSymbols];

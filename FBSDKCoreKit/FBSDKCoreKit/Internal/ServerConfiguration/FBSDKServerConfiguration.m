@@ -39,6 +39,8 @@
 #define FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING @"suggestedEventsSetting"
 #define FBSDK_SERVER_CONFIGURATION_VERSION_KEY @"version"
 #define FBSDK_SERVER_CONFIGURATION_TRACK_UNINSTALL_ENABLED_KEY @"trackAppUninstallEnabled"
+#define FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES @"protectedModeRules"
+#define FBSDK_SERVER_CONFIGURATION_MIGRATED_AUTO_LOG_VALUES_KEY @"migratedAutoLogValues"
 
 #pragma mark - Dialog Names
 
@@ -59,7 +61,7 @@ NSString *const FBSDKDialogConfigurationFeatureUseSafariViewController = @"use_s
 
 // Increase this value when adding new fields and previous cached configurations should be
 // treated as stale.
-const NSInteger FBSDKServerConfigurationVersion = 2;
+const NSInteger FBSDKServerConfigurationVersion = 3;
 
 @interface FBSDKServerConfiguration ()
 @property (nonatomic) NSDictionary<NSString *, id> *dialogConfigurations;
@@ -96,6 +98,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
                         AAMRules:(NSDictionary<NSString *, id> *)AAMRules
           suggestedEventsSetting:(NSDictionary<NSString *, id> *)suggestedEventsSetting
+              protectedModeRules:(NSDictionary<NSString *, id> *)protectedModeRules
+           migratedAutoLogValues:(NSDictionary<NSString *, id> *) migratedAutoLogValues
 {
   if ((self = [super init])) {
     _appID = [appID copy];
@@ -124,6 +128,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
     _AAMRules = AAMRules;
     _suggestedEventsSetting = suggestedEventsSetting;
     _version = FBSDKServerConfigurationVersion;
+    _protectedModeRules = protectedModeRules;
+    _migratedAutoLogValues = [migratedAutoLogValues copy];
   }
   return self;
 }
@@ -170,6 +176,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                                 restrictiveParams:nil
                                                                          AAMRules:nil
                                                            suggestedEventsSetting:nil
+                                                               protectedModeRules:nil
+                                                            migratedAutoLogValues:nil
     ];
   }
   return _defaultServerConfiguration;
@@ -253,6 +261,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                         [NSDictionary<NSString *, id> class],
                                         NSString.class,
                                         NSArray.class,
+                                        NSNumber.class,
                                         nil];
   NSArray<NSDictionary<NSString *, id> *> *eventBindings = [decoder decodeObjectOfClasses:eventBindingsClasses forKey:FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS];
   NSSet<Class> *dictionaryClasses = [NSSet setWithObjects:
@@ -266,6 +275,9 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   NSDictionary<NSString *, id> *AAMRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES]];
   NSDictionary<NSString *, id> *suggestedEventsSetting = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING]];
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  NSDictionary<NSString *, id> *protectedModeRules = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES]];
+  NSDictionary<NSString*, id> *migratedAutoLogValues = [FBSDKTypeUtility dictionaryValue:[decoder decodeObjectOfClasses:dictionaryClasses forKey:FBSDK_SERVER_CONFIGURATION_MIGRATED_AUTO_LOG_VALUES_KEY]];
+  
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
                                                                     appName:appName
                                                         loginTooltipEnabled:loginTooltipEnabled
@@ -291,6 +303,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
                                                           restrictiveParams:restrictiveParams
                                                                    AAMRules:AAMRules
                                                      suggestedEventsSetting:suggestedEventsSetting
+                                                         protectedModeRules:protectedModeRules
+                                                      migratedAutoLogValues:migratedAutoLogValues
   ];
   configuration->_version = version;
   return configuration;
@@ -326,6 +340,8 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
   [encoder encodeObject:_AAMRules forKey:FBSDK_SERVER_CONFIGURATION_AAM_RULES];
   [encoder encodeObject:_suggestedEventsSetting forKey:FBSDK_SERVER_CONFIGURATION_SUGGESTED_EVENTS_SETTING];
   [encoder encodeInteger:_version forKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
+  [encoder encodeObject:_protectedModeRules forKey:FBSDK_SERVER_CONFIGURATION_PROTECTED_MODE_RULES];
+  [encoder encodeObject:_migratedAutoLogValues forKey:FBSDK_SERVER_CONFIGURATION_MIGRATED_AUTO_LOG_VALUES_KEY];
 }
 
 #pragma mark - NSCopying

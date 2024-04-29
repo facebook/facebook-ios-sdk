@@ -7,6 +7,7 @@
  */
 
 import AdSupport
+import AppTrackingTransparency
 import Foundation
 
 @objcMembers
@@ -80,12 +81,22 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    The default value is `true`.
    */
   public var isAutoLogAppEventsEnabled: Bool {
-    get { getPersistedBooleanProperty(.isAutoLogAppEventsEnabled) }
-    set { setPersistedBooleanProperty(.isAutoLogAppEventsEnabled, to: newValue) }
+    get { checkAutoLogAppEventsEnabled() }
+    set { isAutoLogAppEventsEnabledLocally = newValue }
+  }
+
+  /**
+   Controls the automatic logging of basic app events on the client side such as `activateApp` and `deactivateApp`.
+
+   The default value is `true`.
+   */
+  internal var isAutoLogAppEventsEnabledLocally: Bool {
+    get { getPersistedBooleanProperty(.isAutoLogAppEventsEnabledLocally) }
+    set { setPersistedBooleanProperty(.isAutoLogAppEventsEnabledLocally, to: newValue) }
   }
 
   // swiftlint:disable:next identifier_name discouraged_optional_boolean
-  var _isAutoLogAppEventsEnabled: Bool?
+  internal var _isAutoLogAppEventsEnabledLocally: Bool?
 
   /**
    Controls the `fb_codeless_debug` logging event.
@@ -324,8 +335,6 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   /**
    Controls the advertiser tracking status of the data sent to Facebook.
-
-   The default value is `false`.
    */
   @available(
     *,
@@ -342,12 +351,25 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   /**
    Controls the advertiser tracking status of the data sent to Facebook.
-
-   The default value is `false`.
    */
   public var isAdvertiserTrackingEnabled: Bool {
     get { advertisingTrackingStatus == .allowed }
+
+    @available(
+      *,
+      deprecated,
+      message: """
+        The setAdvertiserTrackingEnabled flag is not used for FBSDK v17+ on iOS 17+ \
+        as the FBSDK v17+ now relies on ATTrackingManager.trackingAuthorizationStatus.
+        """
+    )
     set(isNewlyAllowed) {
+      if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+        // swiftlint:disable:next line_length
+        print("<Warning>: isAdvertiserTrackingEnabled setter has been deprecated and the value will be read from ATT status.")
+        return
+      }
+
       if #available(iOS 14.0, *) {
         advertisingTrackingStatus = isNewlyAllowed ? .allowed : .disallowed
         recordSetAdvertiserTrackingEnabled()
@@ -363,16 +385,42 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    */
   public var advertisingTrackingStatus: AdvertisingTrackingStatus {
     get {
-      if #available(iOS 14, *) {
+      if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+        return _advertisingTrackingStatusFromATT
+      } else if #available(iOS 14, *) {
         return _advertisingTrackingStatus
       } else {
         return ASIdentifierManager.shared().isAdvertisingTrackingEnabled ? .allowed : .disallowed
       }
     }
     set {
+      if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+        // swiftlint:disable:next line_length
+        print("<Warning>: advertisingTrackingStatus setter has been deprecated and the value will be read from ATT status.")
+        return
+      }
+
       _advertisingTrackingStatus = newValue
       self.dataStore?.fb_setObject(newValue.rawValue, forKey: PersistenceKey.advertisingTrackingStatus.rawValue)
     }
+  }
+
+  private var _advertisingTrackingStatusFromATT: AdvertisingTrackingStatus {
+    var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
+    if #available(iOS 14.0, *) {
+      let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
+      switch status {
+      case .authorized:
+        advertisingTrackingStatus = .allowed
+      case .denied, .restricted:
+        advertisingTrackingStatus = .disallowed
+      case .notDetermined:
+        advertisingTrackingStatus = .unspecified
+      @unknown default:
+        advertisingTrackingStatus = .unspecified
+      }
+    }
+    return advertisingTrackingStatus
   }
 
   private lazy var _advertisingTrackingStatus: AdvertisingTrackingStatus = {
@@ -440,9 +488,9 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    Sets the data processing options.
 
    - Parameters:
-     - options The list of the options.
-     - country The code for the country.
-     - state The code for the state.
+   - options The list of the options.
+   - country The code for the country.
+   - state The code for the state.
    */
   public func setDataProcessingOptions(_ options: [String]?, country: Int32, state: Int32) {
     let values: [DataProcessingOptionKey.RawValue: Any] = [
@@ -621,6 +669,9 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     }
   }
 
+  /// Controls whether to show domain errors.
+  public var isDomainErrorEnabled = true
+
   // swiftlint:enable let_var_whitespace
 
   #if DEBUG
@@ -636,6 +687,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 extension Settings: DependentAsObject {
   struct ObjectDependencies {
     var appEventsConfigurationProvider: _AppEventsConfigurationProviding
+    var serverConfigurationProvider: _ServerConfigurationProviding
     var dataStore: DataPersisting
     var eventLogger: EventLogging
     var infoDictionaryProvider: InfoDictionaryProviding

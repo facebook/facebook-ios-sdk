@@ -43,7 +43,8 @@ final class CodelessIndexerTests: XCTestCase {
     Self.reset()
 
     settings.appID = name
-
+    settings.isAdvertiserTrackingEnabled = true
+    DomainHandlerTests.configureDomainHandlerForTesting()
     _CodelessIndexer.configure(
       graphRequestFactory: graphRequestFactory,
       serverConfigurationProvider: serverConfigurationProvider,
@@ -598,6 +599,47 @@ final class CodelessIndexerTests: XCTestCase {
       .post,
       "Should request the session with the expected http method"
     )
+  }
+
+  func testCheckingIndexingSessionRequestAdvertiserTrackingNotEnabled() {
+    settings.isAdvertiserTrackingEnabled = false
+    _CodelessIndexer.checkCodelessIndexingSession()
+
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertNil(
+        graphRequestFactory.capturedGraphPath,
+        "Should not create codeless indexing session request when advertiser tracking is disabled"
+      )
+      XCTAssertNil(
+        graphRequestFactory.capturedParameters,
+        "Should not create codeless indexing session request when advertiser tracking is disabled"
+      )
+      XCTAssertNil(
+        graphRequestFactory.capturedHTTPMethod,
+        "Should not create codeless indexing session request when advertiser tracking is disabled"
+      )
+      XCTAssertTrue(
+        graphRequestFactory.capturedRequests.isEmpty,
+        "Should not create codeless indexing session request when advertiser tracking is disabled"
+      )
+    } else {
+      XCTAssertNotNil(
+        graphRequestFactory.capturedGraphPath,
+        "Should create codeless indexing session request when advertiser tracking is disabled"
+      )
+      XCTAssertNotNil(
+        graphRequestFactory.capturedParameters,
+        "Should create codeless indexing session request when advertiser tracking is disabled"
+      )
+      XCTAssertNotNil(
+        graphRequestFactory.capturedHTTPMethod,
+        "Should create codeless indexing session request when advertiser tracking is disabled"
+      )
+      XCTAssertNotNil(
+        graphRequestFactory.capturedRequests.isEmpty,
+        "Should create codeless indexing session request when advertiser tracking is disabled"
+      )
+    }
   }
 
   func testCompleteCheckingIndexingSessionWithNoInput() {

@@ -86,10 +86,9 @@ final class AEMReporterTests: XCTestCase {
   }
 
   func testEnable() {
-    AEMReporter.isAEMReportEnabled = false
     AEMReporter.enable()
 
-    XCTAssertTrue(AEMReporter.isAEMReportEnabled, "AEM Report should be enabled")
+    XCTAssertFalse(AEMReporter.isAEMReportEnabled, "AEM Report should not be enabled")
   }
 
   func testConversionFilteringDefaultConfigure() {
@@ -185,48 +184,6 @@ final class AEMReporterTests: XCTestCase {
     XCTAssertEqual(data[0].acsToken, "test_token_1234567")
     XCTAssertEqual(data[0].campaignID, "test_campaign_1234")
     XCTAssertEqual(data[0].businessID, "test_advertiserid_12345")
-  }
-
-  func testLoadConfigurations() {
-    AEMReporter.addConfigurations([SampleAEMData.validConfigurationData1])
-    AEMReporter.addConfigurations([SampleAEMData.validConfigurationData1, SampleAEMData.validConfigurationData2])
-    let loadedConfigurations = AEMReporter.loadConfigurations()
-    XCTAssertEqual(loadedConfigurations.count, 1, "Should load the expected number of configuration")
-
-    let defaultConfigurations = loadedConfigurations[Values.defaultMode]
-    XCTAssertEqual(
-      defaultConfigurations?.count, 2, "Should load the expected number of default configuration"
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[0].defaultCurrency, Values.USD, "Should save the expected default_currency of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[0].cutoffTime, 1, "Should save the expected cutoff_time of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[0].validFrom, 10000, "Should save the expected valid_from of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[0].mode, Values.defaultMode, "Should save the expected config_mode of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[0].conversionValueRules.count, 1, "Should save the expected conversion_value_rules of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[1].defaultCurrency, Values.USD, "Should save the expected default_currency of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[1].cutoffTime, 1, "Should save the expected cutoff_time of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[1].validFrom, 10001, "Should save the expected valid_from of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[1].mode, Values.defaultMode, "Should save the expected config_mode of the "
-    )
-    XCTAssertEqual(
-      defaultConfigurations?[1].conversionValueRules.count, 2, "Should save the expected conversion_value_rules of the "
-    )
   }
 
   func testClearCache() {

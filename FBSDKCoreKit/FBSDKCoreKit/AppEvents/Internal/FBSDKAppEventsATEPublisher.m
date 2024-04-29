@@ -90,7 +90,9 @@
                                                                                  parameters:parameters
                                                                                 tokenString:nil
                                                                                  HTTPMethod:FBSDKHTTPMethodPOST
-                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+                                                                                      flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery
+                                                                               forAppEvents:YES
+                                                          useAlternativeDefaultDomainPrefix:NO];
   __block id<FBSDKDataPersisting> weakStore = self.store;
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (!error) {
