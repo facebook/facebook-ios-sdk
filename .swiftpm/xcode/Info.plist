@@ -7,6 +7,21 @@
   <dict>
   <key>CFBundleURLSchemes</key>
   <array>
+    <string>fbAPP-ID</string>
+  </array>
+  </dict>
+</array>
+<key>FacebookAppID</key>
+<string>APP-ID</string>
+<key>FacebookClientToken</key>
+<string>CLIENT-TOKEN</string>
+<key>FacebookDisplayName</key>
+<string>APP-NAME</string>
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+  <key>CFBundleURLSchemes</key>
+  <array>
     <string>fb3476229615962419</string>
   </array>
   </dict>
@@ -25,7 +40,7 @@
 	<string>834390427241</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
-	<key>BUNDLE_ID</key>
+	<key></key>
 	<string>com.AFC.app.com</string>
 	<key>PROJECT_ID</key>
 	<string>azhar-fitness-center</string>
