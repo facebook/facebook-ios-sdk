@@ -97,7 +97,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     skAdNetworkReporter.completionBlocks = []
     skAdNetworkReporter.configRefreshTimestamp = Date()
     userDefaultsSpy.set(
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       forKey: "com.facebook.sdk:FBSDKSKAdNetworkConversionConfiguration"
     )
 
@@ -127,7 +127,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let request = graphRequestFactory.capturedRequests[0]
     request.capturedCompletionHandler?(
       nil,
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       nil
     )
     XCTAssertEqual(count, 1, "Should expect the execution block to be called once")
@@ -152,7 +152,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
     let request = graphRequestFactory.capturedRequests[0]
     request.capturedCompletionHandler?(
       nil,
-      SampleSKAdNetworkConversionConfiguration.configurationJson,
+      SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson,
       SampleError()
     )
     XCTAssertEqual(
@@ -244,11 +244,9 @@ final class SKAdNetworkReporterTests: XCTestCase {
     XCTAssertFalse(skAdNetworkReporter.shouldCutoff())
 
     // Case 2: timestamp is already expired
-    let calendar = Calendar(identifier: .gregorian)
-    var addComponents = DateComponents()
-    addComponents.day = -2
+    let secondsInPast = 2 * 24 * 60 * 60
+    let expiredDate = Date().addingTimeInterval(-TimeInterval(secondsInPast))
 
-    let expiredDate = calendar.date(byAdding: addComponents, to: Date())
     userDefaultsSpy.set(
       expiredDate,
       forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
@@ -261,11 +259,8 @@ final class SKAdNetworkReporterTests: XCTestCase {
   func testCutoffWhenTimeBucketIsAvailable() {
     if #available(iOS 14.0, *) {
       skAdNetworkReporter.configuration = defaultConfiguration
-      let today = Date()
-      let calendar = Calendar(identifier: .gregorian)
-      var addComponents = DateComponents()
-      addComponents.day = -2
-      let expiredDate = calendar.date(byAdding: addComponents, to: today)
+      let secondsInPast = 2 * 24 * 60 * 60
+      let expiredDate = Date().addingTimeInterval(-TimeInterval(secondsInPast))
       userDefaultsSpy.set(
         expiredDate,
         forKey: "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
@@ -285,7 +280,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
 
   func testIsReportingEventWithConfiguration() {
     skAdNetworkReporter.configuration = SKAdNetworkConversionConfiguration(
-      json: SampleSKAdNetworkConversionConfiguration.configurationJson
+      json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
     )! // swiftlint:disable:this force_unwrapping
     XCTAssertTrue(
       skAdNetworkReporter.isReportingEvent("fb_test"),
@@ -310,7 +305,7 @@ final class SKAdNetworkReporterTests: XCTestCase {
   func testRecord() throws {
     if #available(iOS 14.0, *) {
       let configuration = SKAdNetworkConversionConfiguration(
-        json: SampleSKAdNetworkConversionConfiguration.configurationJson
+        json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
       )! // swiftlint:disable:this force_unwrapping
       skAdNetworkReporter.configuration = configuration
       skAdNetworkReporter._recordAndUpdateEvent("fb_test", currency: nil, value: nil)

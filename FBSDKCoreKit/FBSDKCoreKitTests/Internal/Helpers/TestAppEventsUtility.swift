@@ -50,4 +50,8 @@ final class TestAppEventsUtility: NSObject, _AppEventDropDetermining, _AppEventP
   func logAndNotify(_ message: String, allowLogAsDeveloperError: Bool) {}
 
   func saveCampaignIDs(_ url: URL) {}
+
+  func getCampaignIDs() -> String? {
+    nil
+  }
 }

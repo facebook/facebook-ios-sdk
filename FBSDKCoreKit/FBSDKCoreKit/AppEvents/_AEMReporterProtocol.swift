@@ -32,6 +32,8 @@ public protocol _AEMReporterProtocol {
   static func setCatalogMatchingEnabled(_ isEnabled: Bool)
 
   static func setAdvertiserRuleMatchInServerEnabled(_ isEnabled: Bool)
+
+  static func handle(_ url: URL?)
 }
 
 extension AEMReporter: _AEMReporterProtocol {}

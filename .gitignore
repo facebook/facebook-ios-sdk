@@ -15,7 +15,6 @@ FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcodeproj
 FBSDKLoginKit/FBSDKLoginKit.xcodeproj
 FBSDKShareKit/FBSDKShareKit.xcodeproj
 FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcodeproj
-TestTools/TestTools.xcodeproj
 
 ## Various settings
 *.pbxuser

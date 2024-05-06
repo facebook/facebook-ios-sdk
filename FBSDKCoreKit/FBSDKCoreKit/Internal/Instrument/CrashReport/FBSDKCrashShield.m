@@ -99,6 +99,7 @@ static id<FBSDKSettings> _settings;
       ],
       @"SKAdNetworkConversionValue" : @[
         @"FBSDKSKAdNetworkReporter",
+        @"FBSDKSKAdNetworkReporterV2",
         @"FBSDKSKAdNetworkConversionConfiguration",
         @"FBSDKSKAdNetworkRule",
         @"FBSDKSKAdNetworkEvent",
@@ -118,6 +119,7 @@ static id<FBSDKSettings> _settings;
       @"EventDeactivation" : @(FBSDKFeatureEventDeactivation),
       @"SKAdNetwork" : @(FBSDKFeatureSKAdNetwork),
       @"SKAdNetworkConversionValue" : @(FBSDKFeatureSKAdNetworkConversionValue),
+      @"SKAdNetworkV4" : @(FBSDKFeatureSKAdNetworkV4),
       @"Instrument" : @(FBSDKFeatureInstrument),
       @"CrashReport" : @(FBSDKFeatureCrashReport),
       @"CrashShield" : @(FBSDKFeatureCrashShield),
@@ -155,7 +157,8 @@ static id<FBSDKSettings> _settings;
       if (disabledFeatureReport) {
         id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [self.settings appID]]
                                                                                    parameters:@{@"crash_shield" : disabledFeatureReport}
-                                                                                   HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                   HTTPMethod:FBSDKHTTPMethodPOST
+                                                            useAlternativeDefaultDomainPrefix:NO];
 
         [request startWithCompletion:nil];
       }

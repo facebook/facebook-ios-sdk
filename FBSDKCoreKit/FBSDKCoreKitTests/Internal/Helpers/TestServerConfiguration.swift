@@ -47,7 +47,9 @@ final class TestServerConfiguration: _ServerConfiguration {
       eventBindings: nil,
       restrictiveParams: nil,
       aamRules: nil,
-      suggestedEventsSetting: nil
+      suggestedEventsSetting: nil,
+      protectedModeRules: nil,
+      migratedAutoLogValues: nil
     )
   }
 

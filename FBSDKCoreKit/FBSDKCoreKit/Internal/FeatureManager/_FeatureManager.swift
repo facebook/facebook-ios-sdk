@@ -27,6 +27,16 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       return true
     }
 
+    guard let dependencies = try? Self.getDependencies() else {
+      return false
+    }
+
+    // check if the feature is locally disabled by Crash Shield first
+    let version = dependencies.store.fb_string(forKey: storageKey(for: feature))
+    if version == dependencies.settings.sdkVersion {
+      return false
+    }
+
     guard let parentFeature = getParentFeature(for: feature) else {
       return false
     }
@@ -100,9 +110,17 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .aemConversionFiltering,
       .aemCatalogMatching,
       .aemAdvertiserRuleMatchInServer,
+      .aemAutoSetup,
+      .aemAutoSetupProxy,
       .appEventsCloudbridge,
       .skAdNetwork,
-      .skAdNetworkConversionValue:
+      .skAdNetworkV4,
+      .skAdNetworkConversionValue,
+      .protectedMode,
+      .macaRuleMatching,
+      .blocklistEvents,
+      .filterRedactedEvents,
+      .filterSensitiveParams:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -141,6 +159,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .eventDeactivation: featureName = "EventDeactivation"
     case .skAdNetwork: featureName = "SKAdNetwork"
     case .skAdNetworkConversionValue: featureName = "SKAdNetworkConversionValue"
+    case .skAdNetworkV4: featureName = "SKAdNetworkV4"
     case .instrument: featureName = "Instrument"
     case .crashReport: featureName = "CrashReport"
     case .crashShield: featureName = "CrashShield"
@@ -150,10 +169,17 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .aemConversionFiltering: featureName = "AEMConversionFiltering"
     case .aemCatalogMatching: featureName = "AEMCatalogMatching"
     case .aemAdvertiserRuleMatchInServer: featureName = "AEMAdvertiserRuleMatchInServer"
+    case .aemAutoSetup: featureName = "AppAemAutoSetUp"
+    case .aemAutoSetupProxy: featureName = "AppAemAutoSetUpProxy"
     case .appEventsCloudbridge: featureName = "AppEventsCloudbridge"
     case .login: featureName = "LoginKit"
     case .share: featureName = "ShareKit"
     case .gamingServices: featureName = "GamingServicesKit"
+    case .protectedMode: featureName = "ProtectedMode"
+    case .macaRuleMatching: featureName = "MACARuleMatching"
+    case .blocklistEvents: featureName = "BlocklistEvents"
+    case .filterRedactedEvents: featureName = "FilterRedactedEvents"
+    case .filterSensitiveParams: featureName = "FilterSensitiveParams"
     @unknown default: featureName = "NONE"
     }
 

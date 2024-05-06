@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
 #endif
 
 + (BOOL)canMakeRequests;
++ (BOOL)didFetchDomainConfiguration;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray<FBSDKGraphRequestMetadata *> *)requests
                                   timeout:(NSTimeInterval)timeout;
@@ -92,11 +93,16 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState) {
   totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend;
 
 /**
- Get the graph request url for a single graph request
+ Get the graph request url for a single, stand-alone graph request
  @param request The Graph Request we need the url for
- @param forBatch whether the request is a batch request.
  */
-- (NSString *)urlStringForSingleRequest:(id<FBSDKGraphRequest>)request forBatch:(BOOL)forBatch;
+- (NSString *)urlStringForSingleRequest:(id<FBSDKGraphRequest>)request;
+
+/**
+ Get the graph request url for a single graph request that belongs to a batch
+ @param request The Graph Request we need the url for
+ */
+- (NSString *)urlStringForRequestInBatch:(id<FBSDKGraphRequest>)request;
 
 /**
  Add the specified body as the HTTPBody of the specified request.

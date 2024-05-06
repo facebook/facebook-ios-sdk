@@ -220,7 +220,9 @@ static BOOL _isConfigured = NO;
                                                                                                   parameters:deferredAppLinkParameters
                                                                                                  tokenString:nil
                                                                                                      version:nil
-                                                                                                  HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                                  HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                                forAppEvents:YES
+                                                                           useAlternativeDefaultDomainPrefix:NO];
     [deferredAppLinkRequest startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection,
                                                   id result,
                                                   NSError *error) {

@@ -19,6 +19,22 @@ NS_SWIFT_NAME(_DeviceInformationProviding)
 
 @property (nonatomic, readonly) NSString *storageKey;
 @property (nullable, nonatomic, readonly) NSString *encodedDeviceInfo;
+// group1
+@property (nullable, nonatomic) NSString *carrierName;
+@property (nullable, nonatomic) NSString *timeZoneAbbrev;
+@property (nullable, nonatomic) NSString *timeZoneName;
+
+// Persistent data, but we maintain it to make rebuilding the device info as fast as possible.
+@property (nullable, nonatomic) NSString *bundleIdentifier;
+@property (nullable, nonatomic) NSString *longVersion;
+@property (nullable, nonatomic) NSString *shortVersion;
+@property (nullable, nonatomic) NSString *sysVersion;
+@property (nullable, nonatomic) NSString *machine;
+@property (nullable, nonatomic) NSString *language;
+@property (nonatomic) unsigned long long coreCount;
+@property (nonatomic) CGFloat width;
+@property (nonatomic) CGFloat height;
+@property (nonatomic) CGFloat density;
 
 @end
 

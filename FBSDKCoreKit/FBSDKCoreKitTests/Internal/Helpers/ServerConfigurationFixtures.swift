@@ -87,6 +87,9 @@ final class ServerConfigurationFixtures: NSObject {
     let AAMRules = dict["aamRules"] as? [String: Any] ?? defaultConfiguration.aamRules
     // swiftlint:disable:next line_length
     let suggestedEventsSetting = dict["suggestedEventsSetting"] as? [String: Any] ?? defaultConfiguration.suggestedEventsSetting
+    let protectedModeRules = dict["protectedModeRules"] as? [String: Any] ?? defaultConfiguration.protectedModeRules
+    // swiftlint:disable:next line_length
+    let migratedAutoLogValues = dict["migratedAutoLogValues"] as? [String: Any] ?? defaultConfiguration.migratedAutoLogValues
 
     return _ServerConfiguration(
       appID: appID,
@@ -113,7 +116,9 @@ final class ServerConfigurationFixtures: NSObject {
       eventBindings: eventBindings,
       restrictiveParams: restrictiveParams,
       aamRules: AAMRules,
-      suggestedEventsSetting: suggestedEventsSetting
+      suggestedEventsSetting: suggestedEventsSetting,
+      protectedModeRules: protectedModeRules,
+      migratedAutoLogValues: migratedAutoLogValues
     )
   }
 }

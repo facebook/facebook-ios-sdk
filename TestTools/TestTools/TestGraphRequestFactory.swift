@@ -19,8 +19,66 @@ public final class TestGraphRequestFactory: GraphRequestFactoryProtocol {
   public var capturedFlags: GraphRequestFlags?
   public var capturedVersion: String?
   public var capturedRequests = [TestGraphRequest]()
+  public var capturedForAppEvents = false
 
   public init() {}
+
+  // swiftlint:disable:next function_parameter_count
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    tokenString: String?,
+    httpMethod method: HTTPMethod?,
+    flags: GraphRequestFlags,
+    forAppEvents: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      tokenString: tokenString,
+      httpMethod: method,
+      flags: flags,
+      forAppEvents: forAppEvents
+    )
+  }
+
+  // swiftlint:disable:next function_parameter_count
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    tokenString: String?,
+    httpMethod method: HTTPMethod?,
+    flags: GraphRequestFlags,
+    useAlternativeDefaultDomainPrefix: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      tokenString: tokenString,
+      httpMethod: method,
+      flags: flags,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
+    )
+  }
+
+  // swiftlint:disable:next function_parameter_count
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    tokenString: String?,
+    version: String?,
+    httpMethod method: HTTPMethod,
+    forAppEvents: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      tokenString: tokenString,
+      version: version,
+      httpMethod: method,
+      forAppEvents: forAppEvents
+    )
+  }
 
   public func createGraphRequest(
     withGraphPath graphPath: String,
@@ -85,13 +143,106 @@ public final class TestGraphRequestFactory: GraphRequestFactoryProtocol {
     makeRequest(graphPath: graphPath, parameters: parameters, flags: flags)
   }
 
+  // swiftlint:disable:next function_parameter_count
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    tokenString: String?,
+    httpMethod method: HTTPMethod?,
+    flags: GraphRequestFlags,
+    forAppEvents: Bool,
+    useAlternativeDefaultDomainPrefix: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      tokenString: tokenString,
+      httpMethod: method,
+      flags: flags,
+      forAppEvents: forAppEvents,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
+    )
+  }
+
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    useAlternativeDefaultDomainPrefix: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
+    )
+  }
+
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    useAlternativeDefaultDomainPrefix: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
+    )
+  }
+
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    httpMethod method: HTTPMethod,
+    useAlternativeDefaultDomainPrefix: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      httpMethod: method,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
+    )
+  }
+
+  // swiftlint:disable:next function_parameter_count
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    tokenString: String?,
+    version: String?,
+    httpMethod method: HTTPMethod,
+    forAppEvents: Bool,
+    useAlternativeDefaultDomainPrefix: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      tokenString: tokenString,
+      httpMethod: method,
+      forAppEvents: forAppEvents,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
+    )
+  }
+
+  public func createGraphRequest(
+    withGraphPath graphPath: String,
+    parameters: [String: Any],
+    flags: GraphRequestFlags,
+    useAlternativeDefaultDomainPrefix: Bool
+  ) -> GraphRequestProtocol {
+    makeRequest(
+      graphPath: graphPath,
+      parameters: parameters,
+      flags: flags,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
+    )
+  }
+
   private func makeRequest(
     graphPath: String,
     parameters: [String: Any]? = nil,
     tokenString: String? = nil,
     version: String? = nil,
     httpMethod: HTTPMethod? = nil,
-    flags: GraphRequestFlags? = nil
+    flags: GraphRequestFlags? = nil,
+    forAppEvents: Bool = false,
+    useAlternativeDefaultDomainPrefix: Bool = true
   ) -> TestGraphRequest {
     capturedGraphPath = graphPath
     capturedParameters = parameters
@@ -99,6 +250,7 @@ public final class TestGraphRequestFactory: GraphRequestFactoryProtocol {
     capturedVersion = version
     capturedHTTPMethod = httpMethod
     capturedFlags = flags
+    capturedForAppEvents = forAppEvents
 
     let newRequest = TestGraphRequest(
       graphPath: graphPath,
@@ -106,7 +258,9 @@ public final class TestGraphRequestFactory: GraphRequestFactoryProtocol {
       tokenString: tokenString,
       httpMethod: httpMethod,
       version: version,
-      flags: flags
+      flags: flags,
+      forAppEvents: forAppEvents,
+      useAlternativeDefaultDomainPrefix: useAlternativeDefaultDomainPrefix
     )
 
     let returnedRequest = stubbedGraphRequest ?? newRequest

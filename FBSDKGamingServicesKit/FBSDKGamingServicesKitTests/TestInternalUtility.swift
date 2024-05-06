@@ -75,6 +75,8 @@ final class TestInternalUtility: InternalUtilityProtocol {
 
   func validateFacebookReservedURLSchemes() {}
 
+  func validateDomainConfiguration() {}
+
   func parameters(fromFBURL url: URL) -> [String: Any] {
     [:]
   }

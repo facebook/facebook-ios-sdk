@@ -35,8 +35,13 @@
       if (!_conversionValueRules || !_defaultCurrency) {
         return nil;
       }
+      _lockWindowRules = [FBSDKSKAdNetworkConversionConfiguration parseLockWindowRules:conversionRules[@"lock_window_rules"]];
+      _coarseCvConfigs = [FBSDKSKAdNetworkConversionConfiguration parseCoarseCvConfigs:conversionRules[@"coarse_cv_configs"]];
+      _isCoarseCVAccumulative = [FBSDKTypeUtility boolValue:conversionRules[@"is_coarse_cv_accumulative"]];
       _eventSet = [FBSDKSKAdNetworkConversionConfiguration getEventSetFromRules:_conversionValueRules];
       _currencySet = [FBSDKSKAdNetworkConversionConfiguration getCurrencySetFromRules:_conversionValueRules];
+      _coarseEventSet = [FBSDKSKAdNetworkConversionConfiguration getEventSetFromCoarseConfigs:_coarseCvConfigs];
+      _coarseCurrencySet = [FBSDKSKAdNetworkConversionConfiguration getCurrencySetFromCoarseConfigs:_coarseCvConfigs];
     } @catch (NSException *exception) {
       return nil;
     }
@@ -60,6 +65,26 @@
   return [eventSet copy];
 }
 
++ (NSSet<NSString *> *)getEventSetFromCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
+{
+  NSMutableSet<NSString *> *eventSet = [NSMutableSet new];
+  if (configs) {
+    for (FBSDKSKAdNetworkCoarseCVConfig *config in configs) {
+      for (FBSDKSKAdNetworkCoarseCVRule *rule in config.cvRules) {
+        if (!rule) {
+          continue;
+        }
+        for (FBSDKSKAdNetworkEvent *event in rule.events) {
+          if (event.eventName) {
+            [eventSet addObject:event.eventName];
+          }
+        }
+      }
+    }
+  }
+  return [eventSet copy];
+}
+
 + (NSSet<NSString *> *)getCurrencySetFromRules:(NSArray<FBSDKSKAdNetworkRule *> *)rules
 {
   NSMutableSet<NSString *> *currencySet = [NSMutableSet new];
@@ -70,6 +95,26 @@
     for (FBSDKSKAdNetworkEvent *event in rule.events) {
       for (NSString *currency in event.values) {
         [currencySet addObject:currency.uppercaseString];
+      }
+    }
+  }
+  return [currencySet copy];
+}
+
++ (NSSet<NSString *> *)getCurrencySetFromCoarseConfigs:(nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)configs
+{
+  NSMutableSet<NSString *> *currencySet = [NSMutableSet new];
+  if (configs) {
+    for (FBSDKSKAdNetworkCoarseCVConfig *config in configs) {
+      for (FBSDKSKAdNetworkCoarseCVRule *rule in config.cvRules) {
+        if (!rule) {
+          continue;
+        }
+        for (FBSDKSKAdNetworkEvent *event in rule.events) {
+          for (NSString *currency in event.values) {
+            [currencySet addObject:currency.uppercaseString];
+          }
+        }
       }
     }
   }
@@ -97,6 +142,52 @@
     return NSOrderedSame;
   }];
   return [parsedRules copy];
+}
+
++ (nullable NSArray<FBSDKSKAdNetworkLockWindowRule *> *)parseLockWindowRules:(nullable NSArray<id> *)rules
+{
+  rules = [FBSDKTypeUtility arrayValue:rules];
+  if (!rules) {
+    return nil;
+  }
+  NSMutableArray<FBSDKSKAdNetworkLockWindowRule *> *parsedRules = [NSMutableArray new];
+  for (id ruleEntry in rules) {
+    FBSDKSKAdNetworkLockWindowRule *rule = [[FBSDKSKAdNetworkLockWindowRule alloc] initWithJSON:ruleEntry];
+    [FBSDKTypeUtility array:parsedRules addObject:rule];
+  }
+  [parsedRules sortUsingComparator:^NSComparisonResult (FBSDKSKAdNetworkLockWindowRule *obj1, FBSDKSKAdNetworkLockWindowRule *obj2) {
+    if (obj1.postbackSequenceIndex < obj2.postbackSequenceIndex) {
+      return NSOrderedAscending;
+    }
+    if (obj1.postbackSequenceIndex > obj2.postbackSequenceIndex) {
+      return NSOrderedDescending;
+    }
+    return NSOrderedSame;
+  }];
+  return [parsedRules copy];
+}
+
++ (nullable NSArray<FBSDKSKAdNetworkCoarseCVConfig *> *)parseCoarseCvConfigs:(nullable NSArray<id> *)configs
+{
+  configs = [FBSDKTypeUtility arrayValue:configs];
+  if (!configs) {
+    return nil;
+  }
+  NSMutableArray<FBSDKSKAdNetworkCoarseCVConfig *> *parsedConfigs = [NSMutableArray new];
+  for (id configEntry in configs) {
+    FBSDKSKAdNetworkCoarseCVConfig *config = [[FBSDKSKAdNetworkCoarseCVConfig alloc] initWithJSON:configEntry];
+    [FBSDKTypeUtility array:parsedConfigs addObject:config];
+  }
+  [parsedConfigs sortUsingComparator:^NSComparisonResult (FBSDKSKAdNetworkCoarseCVConfig *obj1, FBSDKSKAdNetworkCoarseCVConfig *obj2) {
+    if (obj1.postbackSequenceIndex < obj2.postbackSequenceIndex) {
+      return NSOrderedAscending;
+    }
+    if (obj1.postbackSequenceIndex > obj2.postbackSequenceIndex) {
+      return NSOrderedDescending;
+    }
+    return NSOrderedSame;
+  }];
+  return [parsedConfigs copy];
 }
 
 @end

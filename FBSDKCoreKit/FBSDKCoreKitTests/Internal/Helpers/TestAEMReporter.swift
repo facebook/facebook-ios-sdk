@@ -56,6 +56,8 @@ final class TestAEMReporter: NSObject, _AEMReporterProtocol {
     capturedAdvertiserRuleMatchInServerEnabled = enabled
   }
 
+  static func handle(_ url: URL?) {}
+
   static func reset() {
     enableWasCalled = false
     setConversionFilteringEnabledWasCalled = false
