@@ -40,16 +40,3 @@
 	<string>com.AFC.app.com</string>
 	<key>PROJECT_ID</key>
 	<string>azhar-fitness-center</string>
-	<key>STORAGE_BUCKET</key>
-	<string>azhar-fitness-center.appspot.com</string>
-	<key>IS_ADS_ENABLED</key>
-	<false></false>
-	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
-	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
-	<key>IS_GCM_ENABLED</key>
-	<true></true>
-	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
-	<key>GOOGLE_APP_ID</key>
