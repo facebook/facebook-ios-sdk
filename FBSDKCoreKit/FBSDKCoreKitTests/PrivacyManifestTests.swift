@@ -11,18 +11,10 @@
 import XCTest
 
 final class PrivacyManifestTests: XCTestCase {
-  override func setUp() {
-    super.setUp()
-  }
-
-  override func tearDown() {
-    super.tearDown()
-  }
-
   func testTrackingDomains() {
     let bundle = Bundle(for: Settings.self)
     let manifestUrl = bundle.url(forResource: "PrivacyInfo", withExtension: "xcprivacy")
-    guard let manifestUrl = manifestUrl else {
+    guard let manifestUrl else {
       return XCTFail("Could not find Privacy Manifest file")
     }
     let manifest = NSDictionary(contentsOf: manifestUrl)
