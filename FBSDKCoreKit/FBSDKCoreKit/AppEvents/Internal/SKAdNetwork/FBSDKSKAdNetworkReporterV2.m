@@ -134,6 +134,9 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
     self.isRequestStarted = YES;
     id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/ios_skadnetwork_conversion_config", FBSDKSettings.sharedSettings.appID]
                                                                                    parameters:@{@"os_version" : UIDevice.currentDevice.systemVersion}
+                                                                                  tokenString:nil
+                                                                                   HTTPMethod:FBSDKHTTPMethodGET
+                                                                                        flags:FBSDKGraphRequestFlagNone
                                                             useAlternativeDefaultDomainPrefix:NO];
     
     [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {

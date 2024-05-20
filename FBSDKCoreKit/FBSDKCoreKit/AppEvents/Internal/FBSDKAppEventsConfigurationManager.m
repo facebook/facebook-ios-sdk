@@ -95,6 +95,9 @@ static FBSDKAppEventsConfigurationManager *_shared;
                                                                                    parameters:@{
                                        @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", UIDevice.currentDevice.systemVersion]
                                      }
+                                                                                  tokenString:nil
+                                                                                   HTTPMethod:FBSDKHTTPMethodGET
+                                                                                        flags:FBSDKGraphRequestFlagNone
                                                             useAlternativeDefaultDomainPrefix:NO];
     id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
     requestConnection.timeout = kTimeout;

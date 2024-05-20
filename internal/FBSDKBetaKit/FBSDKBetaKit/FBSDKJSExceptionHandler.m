@@ -116,7 +116,10 @@ static NSString *directoryPath = nil;
 
   /** @brief Upload the errorData to the Facebook servers at the Error Report endpoint. */
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [[FBSDKSettings sharedSettings] appID]]
-                                                                 parameters:@{@"error_reports" : errorData ?: @""} HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                 parameters:@{@"error_reports" : errorData ?: @""} 
+                                                                tokenString:nil
+                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                                      flags:FBSDKGraphRequestFlagNone];
 
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     if (!error && [result isKindOfClass:[NSDictionary class]] && result[@"success"]) {
