@@ -459,10 +459,24 @@ final class AppEventsUtilityTests: XCTestCase {
 
         switch status {
         case .unspecified:
-          XCTAssertNil(
-            parameters["advertiser_tracking_enabled"] as? String,
-            "advertiser_tracking_enabled should not be attached to event payload if ATE is unspecified"
-          )
+          if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+            XCTAssertEqual(
+              parameters["advertiser_tracking_enabled"] as? String,
+              "0",
+              """
+              advertiser_tracking_enabled should be attached as 0 to event payload
+              if ATE is unspecified and DomainHandling is enabled
+              """
+            )
+          } else {
+            XCTAssertNil(
+              parameters["advertiser_tracking_enabled"] as? String,
+              """
+              advertiser_tracking_enabled should not be attached to event payload
+              if ATE is unspecified and DomainHandling is not enabled
+              """
+            )
+          }
 
         case .allowed:
           XCTAssertEqual(
