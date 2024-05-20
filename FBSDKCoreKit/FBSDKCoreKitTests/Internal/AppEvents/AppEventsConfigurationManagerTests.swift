@@ -142,13 +142,15 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
       graphRequestFactory.capturedTokenString,
       "Should not include a token string in the request"
     )
-    XCTAssertNil(
+    XCTAssertEqual(
       graphRequestFactory.capturedHTTPMethod,
-      "Should not specify an http method when creating the request"
+      .get,
+      "Should have GET http method when creating the request"
     )
-    XCTAssertNil(
+    XCTAssertEqual(
       graphRequestFactory.capturedFlags,
-      "Should not specify flags when creating the request"
+      [],
+      "Should have no flags when creating the request"
     )
   }
 

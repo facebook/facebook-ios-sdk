@@ -565,7 +565,9 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   NSString *jsonBatch = [FBSDKBasicUtility JSONStringForObject:batch error:NULL invalidObjectHandler:NULL];
 
   [body appendWithKey:kBatchKey formValue:jsonBatch logger:logger];
-  if (batchToken) {
+  BOOL isBatchTokenCurrentToken = batchToken == [[self.class.accessTokenProvider currentAccessToken] tokenString];
+  BOOL tokenIsLikelyInvalid = [[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled] && ![[FBSDKSettings sharedSettings] isAdvertiserTrackingEnabled] && isBatchTokenCurrentToken;
+  if (batchToken && !tokenIsLikelyInvalid) {
     [body appendWithKey:kAccessTokenKey formValue:batchToken logger:logger];
   }
 }

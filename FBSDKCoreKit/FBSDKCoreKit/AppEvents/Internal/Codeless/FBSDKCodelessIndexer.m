@@ -286,7 +286,9 @@ static id<FBSDKSettings> _settings;
                                                                                              [self.settings appID],
                                                                                              CODELESS_INDEXING_SESSION_ENDPOINT]
                                                                                  parameters:parameters
+                                                                                tokenString:nil
                                                                                  HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagNone
                                                           useAlternativeDefaultDomainPrefix:NO];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
     _isCheckingSession = NO;
@@ -414,7 +416,9 @@ static id<FBSDKSettings> _settings;
                                      CODELESS_INDEXING_PLATFORM_KEY : @"iOS",
                                      CODELESS_INDEXING_SESSION_ID_KEY : [self currentSessionDeviceID]
                                    }
+                                                                                tokenString:nil
                                                                                  HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagNone
                                                           useAlternativeDefaultDomainPrefix:NO];
   _isCodelessIndexing = YES;
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {

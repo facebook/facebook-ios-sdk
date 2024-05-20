@@ -110,6 +110,10 @@ static dispatch_once_t enableNonce;
         // fetch api
         NSString *graphPath = [NSString stringWithFormat:@"%@/model_asset", self.getAppID()];
         id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:graphPath
+                                                                                       parameters:@{}
+                                                                                      tokenString:nil
+                                                                                       HTTPMethod:FBSDKHTTPMethodGET
+                                                                                            flags:FBSDKGraphRequestFlagNone
                                                                 useAlternativeDefaultDomainPrefix:NO];
         __weak FBSDKModelManager *weakSelf = self;
         [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {

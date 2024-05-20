@@ -319,9 +319,10 @@ final class SuggestedEventsIndexerTests: XCTestCase, UITableViewDelegate, UIColl
       .post,
       "Should use the expected http method"
     )
-    XCTAssertNil(
+    XCTAssertEqual(
       graphRequestFactory.capturedFlags,
-      "Should not create the request with explicit request flags"
+      [],
+      "Should not create the request with any request flags"
     )
   }
 
