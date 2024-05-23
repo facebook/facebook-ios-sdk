@@ -22,7 +22,7 @@
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
 #ifndef FBSDK_VERSION_STRING
- #define FBSDK_VERSION_STRING @"17.0.1"
+ #define FBSDK_VERSION_STRING @"17.0.2"
 #endif
 
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
