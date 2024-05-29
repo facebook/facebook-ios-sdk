@@ -428,8 +428,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 
   [self.appEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self.class)];
 
-  // Fetch app settings and register for transaction notifications only if app supports implicit purchase
-  // events
+  // Fetch app settings and register for transaction notifications only if app supports implicit purchase events
   [self publishInstall];
   [self fetchServerConfiguration:NULL];
 
@@ -849,39 +848,41 @@ static BOOL g_explicitEventsLoggedYet = NO;
     [self.logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appID] for [FBSDKAppEvents publishInstall:]"];
     return;
   }
-  NSString *lastAttributionPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", appID];
-  if ([self.primaryDataStore fb_objectForKey:lastAttributionPingString]) {
-    return;
-  }
-  [self.primaryDataStore fb_setObject:[NSDate date] forKey:lastAttributionPingString];
-  [self fetchServerConfiguration:^{
-    if ([self.appEventsUtility shouldDropAppEvents] || [self.gateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch defaultValue:NO]) {
+  fb_dispatch_on_main_thread(^{
+    NSString *lastAttributionPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", appID];
+    if ([self.primaryDataStore fb_objectForKey:lastAttributionPingString]) {
       return;
     }
-    NSMutableDictionary<NSString *, NSString *> *params = [self.appEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
-                                                                                            shouldAccessAdvertisingID:self.serverConfiguration.isAdvertisingIDEnabled
-                                                                                                               userID:self.userID
-                                                                                                             userData:[self getUserData]];
-    [self appendInstallTimestamp:params];
-    [self.capiReporter recordEvent:params];
-    NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
-    id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:path
-                                                                                   parameters:params
-                                                                                  tokenString:nil
-                                                                                   HTTPMethod:FBSDKHTTPMethodPOST
-                                                                                        flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery
-                                                                                 forAppEvents:YES
-                                                            useAlternativeDefaultDomainPrefix:NO];
-    __block id<FBSDKDataPersisting> weakStore = self.primaryDataStore;
-    [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-      if (!error) {
-        NSString *lastInstallResponseKey = [NSString stringWithFormat:@"com.facebook.sdk:lastInstallResponse%@", appID];
-        [weakStore fb_setObject:result forKey:lastInstallResponseKey];
-      } else {
-        [weakStore fb_removeObjectForKey:lastAttributionPingString];
+    [self.primaryDataStore fb_setObject:[NSDate date] forKey:lastAttributionPingString];
+    [self fetchServerConfiguration:^{
+      if ([self.appEventsUtility shouldDropAppEvents] || [self.gateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch defaultValue:NO]) {
+        return;
       }
+      NSMutableDictionary<NSString *, NSString *> *params = [self.appEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
+                                                                                              shouldAccessAdvertisingID:self.serverConfiguration.isAdvertisingIDEnabled
+                                                                                                                 userID:self.userID
+                                                                                                               userData:[self getUserData]];
+      [self appendInstallTimestamp:params];
+      [self.capiReporter recordEvent:params];
+      NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
+      id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:path
+                                                                                     parameters:params
+                                                                                    tokenString:nil
+                                                                                     HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                          flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery
+                                                                                   forAppEvents:YES
+                                                              useAlternativeDefaultDomainPrefix:NO];
+      __block id<FBSDKDataPersisting> weakStore = self.primaryDataStore;
+      [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+        if (!error) {
+          NSString *lastInstallResponseKey = [NSString stringWithFormat:@"com.facebook.sdk:lastInstallResponse%@", appID];
+          [weakStore fb_setObject:result forKey:lastInstallResponseKey];
+        } else {
+          [weakStore fb_removeObjectForKey:lastAttributionPingString];
+        }
+      }];
     }];
-  }];
+  });
 }
 
 - (void)publishATE
