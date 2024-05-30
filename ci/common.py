@@ -4,7 +4,7 @@
 def ios_sdk_capabilities(**kwargs):
     capabilities = {
         "tenant": "ios_diff",
-        "type": "lego-mac",
+        "type": "lego-mac-arm",
         "vcs": "facebook-ios-sdk-git"
     }
     capabilities.update(kwargs)
