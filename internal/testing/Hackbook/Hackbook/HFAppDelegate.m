@@ -96,25 +96,27 @@
   NSDictionary *environment = NSProcessInfo.processInfo.environment;
   NSString *isTesting = environment[@"IS_TESTING"];
 
-  if (isTesting) {
-    NSString *proxyHost = environment[@"LAB_PROXY_HOST"] ?: @"nil";
-    NSString *proxyPort = environment[@"LAB_PROXY_PORT"] ?: @"nil";
-    NSString *isUsingLabProxy = environment[@"LAB_PROXY"] ?: @"nil";
-    NSString *sandboxDomain = environment[@"USER_DEFAULT_FBSandboxSubdomain"] ?: @"nil";
-    NSString *userAgent = environment[@"JEST_CUSTOM_USER_AGENT"] ?: @"nil";
-
-    NSDictionary *e2eInfo = @{
-      @"Is E2E testing" : isTesting,
-      @"Is using E2E lab proxy" : isUsingLabProxy,
-      @"E2E Proxy Host" : proxyHost,
-      @"E2E Proxy Port" : proxyPort,
-      @"Sandbox Domain" : sandboxDomain,
-      @"User Agent" : userAgent
-    };
-    [e2eInfo enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-      ConsoleLog(@"%@: %@", key, obj);
-    }];
+  if ([isTesting length] == 0) {
+    return;
   }
+
+  NSString *proxyHost = environment[@"LAB_PROXY_HOST"] ?: @"nil";
+  NSString *proxyPort = environment[@"LAB_PROXY_PORT"] ?: @"nil";
+  NSString *isUsingLabProxy = environment[@"LAB_PROXY"] ?: @"nil";
+  NSString *sandboxDomain = environment[@"USER_DEFAULT_FBSandboxSubdomain"] ?: @"nil";
+  NSString *userAgent = environment[@"JEST_CUSTOM_USER_AGENT"] ?: @"nil";
+
+  NSDictionary *e2eInfo = @{
+    @"Is E2E testing" : isTesting,
+    @"Is using E2E lab proxy" : isUsingLabProxy,
+    @"E2E Proxy Host" : proxyHost,
+    @"E2E Proxy Port" : proxyPort,
+    @"Sandbox Domain" : sandboxDomain,
+    @"User Agent" : userAgent
+  };
+  [e2eInfo enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+    ConsoleLog(@"%@: %@", key, obj);
+  }];
 }
 
 - (void)updateDeepLinkLabel:(NSURL *)url
