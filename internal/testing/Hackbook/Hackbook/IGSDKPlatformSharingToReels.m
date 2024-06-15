@@ -39,12 +39,15 @@ BOOL IGSDKPlatformSharingToReelsCanOpen(void)
 
 BOOL IGSDKPlatformSharingToReelsPasteboard(NSArray<NSDictionary<NSString *, id> *> *pasteboardItems)
 {
-  if (pasteboardItems.count > 0) {
-    NSURL *const URL = [NSURL URLWithString:IGSDKPlatformSharingToReelsScheme];
-    if ([[UIApplication sharedApplication] canOpenURL:URL]) {
-      [[UIPasteboard generalPasteboard] addItems:pasteboardItems]; // iOS 10+ setItems:options:
-      return [[UIApplication sharedApplication] openURL:URL]; // iOS 10+ openURL:options:completionHandler:
-    }
+  if (pasteboardItems.count == 0) {
+    return NO;
   }
-  return NO;
+
+  NSURL *const URL = [NSURL URLWithString:IGSDKPlatformSharingToReelsScheme];
+  if (![[UIApplication sharedApplication] canOpenURL:URL]) {
+    return NO;
+  }
+
+  [[UIPasteboard generalPasteboard] addItems:pasteboardItems]; // iOS 10+ setItems:options:
+  return [[UIApplication sharedApplication] openURL:URL]; // iOS 10+ openURL:options:completionHandler:
 }
