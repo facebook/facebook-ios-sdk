@@ -41,12 +41,14 @@
   if ([object isKindOfClass:NSNumber.class]) {
     // @0 or @NO returns NO, otherwise YES
     return ((NSNumber *)object).boolValue;
-  } else if ([object isKindOfClass:NSString.class]) {
+  }
+
+  if ([object isKindOfClass:NSString.class]) {
     // Returns YES on encountering one of "Y", "y", "T", "t", or a digit 1-9, otherwise NO
     return ((NSString *)object).boolValue;
-  } else {
-    return ([self objectValue:object] != nil);
   }
+
+  return ([self objectValue:object] != nil);
 }
 
 + (nullable NSDictionary<NSString *, id> *)dictionaryValue:(nullable id)object
@@ -63,9 +65,9 @@
 
   if ([potentialValue isKindOfClass:type]) {
     return potentialValue;
-  } else {
-    return nil;
   }
+
+  return nil;
 }
 
 + (void)dictionary:(NSMutableDictionary *)dictionary
@@ -94,22 +96,26 @@
 {
   if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).integerValue;
-  } else if ([object isKindOfClass:NSString.class]) {
-    return ((NSString *)object).integerValue;
-  } else {
-    return 0;
   }
+
+  if ([object isKindOfClass:NSString.class]) {
+    return ((NSString *)object).integerValue;
+  }
+
+  return 0;
 }
 
 + (double)doubleValue:(id)object
 {
   if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).doubleValue;
-  } else if ([object isKindOfClass:NSString.class]) {
-    return ((NSString *)object).doubleValue;
-  } else {
-    return 0;
   }
+
+  if ([object isKindOfClass:NSString.class]) {
+    return ((NSString *)object).doubleValue;
+  }
+
+  return 0;
 }
 
 + (NSString *)stringValueOrNil:(id)object
@@ -126,50 +132,58 @@
 {
   if ([object isKindOfClass:NSString.class]) {
     return (NSString *)object;
-  } else if ([object isKindOfClass:NSNumber.class]) {
-    return ((NSNumber *)object).stringValue;
-  } else if ([object isKindOfClass:NSURL.class]) {
-    return ((NSURL *)object).absoluteString;
-  } else {
-    return nil;
   }
+
+  if ([object isKindOfClass:NSNumber.class]) {
+    return ((NSNumber *)object).stringValue;
+  }
+
+  if ([object isKindOfClass:NSURL.class]) {
+    return ((NSURL *)object).absoluteString;
+  }
+
+  return nil;
 }
 
 + (NSTimeInterval)timeIntervalValue:(id)object
 {
   if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).doubleValue;
-  } else if ([object isKindOfClass:NSString.class]) {
-    return ((NSString *)object).doubleValue;
-  } else {
-    return 0;
   }
+
+  if ([object isKindOfClass:NSString.class]) {
+    return ((NSString *)object).doubleValue;
+  }
+
+  return 0;
 }
 
 + (NSUInteger)unsignedIntegerValue:(id)object
 {
   if ([object isKindOfClass:NSNumber.class]) {
     return ((NSNumber *)object).unsignedIntegerValue;
-  } else {
-    // there is no direct support for strings containing unsigned values > NSIntegerMax - not worth writing ourselves
-    // right now, so just cap unsigned values at NSIntegerMax until we have a need for larger
-    NSInteger integerValue = [self integerValue:object];
-    if (integerValue < 0) {
-      integerValue = 0;
-    }
-    return (NSUInteger)integerValue;
   }
+
+  // there is no direct support for strings containing unsigned values > NSIntegerMax - not worth writing ourselves
+  // right now, so just cap unsigned values at NSIntegerMax until we have a need for larger
+  NSInteger integerValue = [self integerValue:object];
+  if (integerValue < 0) {
+    integerValue = 0;
+  }
+  return (NSUInteger)integerValue;
 }
 
 + (nullable NSURL *)coercedToURLValue:(id)object
 {
   if ([object isKindOfClass:NSURL.class]) {
     return (NSURL *)object;
-  } else if ([object isKindOfClass:NSString.class]) {
-    return [NSURL URLWithString:(NSString *)object];
-  } else {
-    return nil;
   }
+
+  if ([object isKindOfClass:NSString.class]) {
+    return [NSURL URLWithString:(NSString *)object];
+  }
+
+  return nil;
 }
 
 + (NSData *)dataWithJSONObject:(id)obj options:(NSJSONWritingOptions)opt error:(NSError *__autoreleasing _Nullable *)error
