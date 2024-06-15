@@ -68,8 +68,12 @@
       } else {
         ConsoleLog(@"Fetching deferred app link");
 
-        BOOL startingATEState = FBSDKSettings.sharedSettings.isAdvertiserTrackingEnabled;
-        FBSDKSettings.sharedSettings.advertiserTrackingEnabled = YES;
+        BOOL startingATEState = NO;
+        BOOL isDomainHandlingDisabled = ![[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled];
+        if (isDomainHandlingDisabled) {
+          startingATEState = FBSDKSettings.sharedSettings.isAdvertiserTrackingEnabled;
+          FBSDKSettings.sharedSettings.advertiserTrackingEnabled = YES;
+        }
 
         [FBSDKAppLinkUtility fetchDeferredAppLink:^(NSURL *_Nullable url, NSError *_Nullable error) {
           if (url) {
@@ -80,8 +84,10 @@
             ConsoleLog(@"No url or error received");
           }
 
-          // Reset ATE state
-          FBSDKSettings.sharedSettings.advertiserTrackingEnabled = startingATEState;
+          if (isDomainHandlingDisabled) {
+            // Reset ATE state
+            FBSDKSettings.sharedSettings.advertiserTrackingEnabled = startingATEState;
+          }
         }];
       }
     }];
