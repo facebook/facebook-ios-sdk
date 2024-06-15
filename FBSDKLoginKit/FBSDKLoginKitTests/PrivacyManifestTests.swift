@@ -44,4 +44,15 @@ final class PrivacyManifestTests: XCTestCase {
       return XCTFail("Should not contain Privacy Accessed API Types")
     }
   }
+
+  func testPrivacyTracking() {
+    guard let manifestUrl else {
+      return XCTFail("Could not find Privacy Manifest file")
+    }
+    let manifest = NSDictionary(contentsOf: manifestUrl)
+    guard let privacyTrackingFlag = manifest?["NSPrivacyTracking"] as? Bool else {
+      return XCTFail("Could not find NSPrivacyTracking key")
+    }
+    XCTAssertTrue(privacyTrackingFlag, "NSPrivacyTracking is expected to be true in the Privacy Manifest file")
+  }
 }

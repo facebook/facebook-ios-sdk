@@ -66,4 +66,15 @@ final class PrivacyManifestTests: XCTestCase {
     )
     XCTAssertEqual(reasons[0] as? String, "CA92.1", "Reason should match CA92.1")
   }
+
+  func testPrivacyTracking() {
+    guard let manifestUrl else {
+      return XCTFail("Could not find Privacy Manifest file")
+    }
+    let manifest = NSDictionary(contentsOf: manifestUrl)
+    guard let privacyTrackingFlag = manifest?["NSPrivacyTracking"] as? Bool else {
+      return XCTFail("Could not find NSPrivacyTracking key")
+    }
+    XCTAssertTrue(privacyTrackingFlag, "NSPrivacyTracking is expected to be true in the Privacy Manifest file")
+  }
 }
