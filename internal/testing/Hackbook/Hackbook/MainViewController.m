@@ -410,7 +410,8 @@ static const CGFloat marginYForBanner = 0;
   [theTextField setTextAlignment:NSTextAlignmentRight];
   if (theTextField.tag == kFacebookDomainRowIndex) {
     return [self _updateDomain:theTextField];
-  } else if (theTextField.tag == kGraphAPIRowIndex) {
+  }
+  if (theTextField.tag == kGraphAPIRowIndex) {
     return [self _updateGraphAPIVersion:theTextField];
   }
   return YES;
