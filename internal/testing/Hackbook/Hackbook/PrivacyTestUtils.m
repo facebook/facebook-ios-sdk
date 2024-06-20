@@ -19,12 +19,14 @@ typedef void (*send_type)(Class, SEL, SEL, Class, id, id);
 
 void dispatch_on_main_thread(dispatch_block_t block)
 {
-  if (block != nil) {
-    if ([NSThread isMainThread]) {
-      block();
-    } else {
-      dispatch_async(dispatch_get_main_queue(), block);
-    }
+  if (!block) {
+    return;
+  }
+
+  if ([NSThread isMainThread]) {
+    block();
+  } else {
+    dispatch_async(dispatch_get_main_queue(), block);
   }
 }
 
@@ -99,12 +101,12 @@ void dispatch_on_main_thread(dispatch_block_t block)
   if (_isIOS14) {
     NSNumber *advertiserTrackingStatus = [[NSUserDefaults standardUserDefaults] objectForKey:FBSDKSettingsAdvertisingTrackingStatus] ?: @(_defaultATEStatus);
     return advertiserTrackingStatus.unsignedIntegerValue;
-  } else {
-    if (_isLATEnabled) {
-      return 1;
-    }
-    return 0;
   }
+
+  if (_isLATEnabled) {
+    return 1;
+  }
+  return 0;
 }
 
 + (BOOL)PrivacyTestUtils_shouldDropAppEvent
@@ -132,10 +134,11 @@ void dispatch_on_main_thread(dispatch_block_t block)
 
 + (BOOL)shouldDropAppEvent
 {
-  if (_isIOS14) {
-    if ([FBSDKSettings.sharedSettings advertisingTrackingStatus] == 1 && !_appEventCollectionEnabled) {
-      return YES;
-    }
+  if (!_isIOS14) {
+    return NO;
+  }
+  if ([FBSDKSettings.sharedSettings advertisingTrackingStatus] == 1 && !_appEventCollectionEnabled) {
+    return YES;
   }
   return NO;
 }
