@@ -141,22 +141,24 @@ static FBSDKInternalUtility *_shared;
                     expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions
 {
   NSArray<NSDictionary<NSString *, id> *> *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
-  if (resultData.count > 0) {
-    for (NSDictionary<NSString *, id> *permissionsDictionary in resultData) {
-      NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
-      NSString *status = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"status" ofType:NSString.class];
+  if (resultData.count == 0) {
+    return;
+  }
 
-      if (!permissionName || !status) {
-        continue;
-      }
+  for (NSDictionary<NSString *, id> *permissionsDictionary in resultData) {
+    NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
+    NSString *status = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"status" ofType:NSString.class];
 
-      if ([status isEqualToString:@"granted"]) {
-        [grantedPermissions addObject:permissionName];
-      } else if ([status isEqualToString:@"declined"]) {
-        [declinedPermissions addObject:permissionName];
-      } else if ([status isEqualToString:@"expired"]) {
-        [expiredPermissions addObject:permissionName];
-      }
+    if (!permissionName || !status) {
+      continue;
+    }
+
+    if ([status isEqualToString:@"granted"]) {
+      [grantedPermissions addObject:permissionName];
+    } else if ([status isEqualToString:@"declined"]) {
+      [declinedPermissions addObject:permissionName];
+    } else if ([status isEqualToString:@"expired"]) {
+      [expiredPermissions addObject:permissionName];
     }
   }
 }
@@ -445,11 +447,13 @@ static NSMapTable *_transientObjects;
 - (void)validateAppID
 {
   [self validateConfiguration];
-  if (!self.settings.appID) {
-    NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
-    @"FacebookAppID to the Info.plist or call Settings.shared.appID.";
-    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  if (self.settings.appID) {
+    return;
   }
+
+  NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
+  @"FacebookAppID to the Info.plist or call Settings.shared.appID.";
+  @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
 }
 
 - (NSString *)validateRequiredClientAccessToken
@@ -528,21 +532,23 @@ static NSMapTable *_transientObjects;
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters
 {
   NSDictionary<NSString *, id> *dataProcessingOptions = self.settings.persistableDataProcessingOptions;
-  if (dataProcessingOptions) {
-    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[FBSDKDataProcessingOptionKeyOptions];
-    if (options && [options isKindOfClass:NSArray.class]) {
-      NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
-      [FBSDKTypeUtility dictionary:parameters
-                         setObject:optionsString
-                            forKey:FBSDKDataProcessingOptionKeyOptions];
-    }
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyCountry]
-                          forKey:FBSDKDataProcessingOptionKeyCountry];
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyState]
-                          forKey:FBSDKDataProcessingOptionKeyState];
+  if (!dataProcessingOptions) {
+    return;
   }
+
+  NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[FBSDKDataProcessingOptionKeyOptions];
+  if (options && [options isKindOfClass:NSArray.class]) {
+    NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
+    [FBSDKTypeUtility dictionary:parameters
+                       setObject:optionsString
+                          forKey:FBSDKDataProcessingOptionKeyOptions];
+  }
+  [FBSDKTypeUtility dictionary:parameters
+                     setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyCountry]
+                        forKey:FBSDKDataProcessingOptionKeyCountry];
+  [FBSDKTypeUtility dictionary:parameters
+                     setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyState]
+                        forKey:FBSDKDataProcessingOptionKeyState];
 }
 
 - (nullable UIWindow *)findWindow
@@ -615,9 +621,9 @@ static NSMapTable *_transientObjects;
 {
   if (@available(iOS 13.0, *)) {
     return [self findWindow].windowScene.interfaceOrientation;
-  } else {
-    return UIInterfaceOrientationUnknown;
   }
+
+  return UIInterfaceOrientationUnknown;
 }
 
 #endif
@@ -707,13 +713,15 @@ static NSMapTable *_transientObjects;
 - (void)validateConfiguration
 {
 #if DEBUG
-  if (!self.isConfigured) {
-    static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
-    "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
-    "Learn more: https://developers.facebook.com/docs/ios/getting-started"
-    "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
-    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  if (self.isConfigured) {
+    return;
   }
+
+  static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
+  "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
+  "Learn more: https://developers.facebook.com/docs/ios/getting-started"
+  "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
+  @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
 #endif
 }
 
