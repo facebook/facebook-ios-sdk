@@ -108,23 +108,23 @@
     appSecretTextField.text = GetAppSecret();
     appSecretTextField.delegate = self;
     return cell;
-  } else {
-    static NSString *const CellIdentifier = @"permissionCell";
-
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                                   reuseIdentifier:CellIdentifier];
-    NSString *option = [self _tableView:tableView optionForRowAtIndexPath:indexPath];
-    cell.textLabel.text = option;
-    if ([_selectedOptions containsObject:option]) {
-      cell.accessoryType = UITableViewCellAccessoryCheckmark;
-      cell.selected = YES;
-    } else {
-      cell.accessoryType = UITableViewCellAccessoryNone;
-      cell.selected = NO;
-    }
-
-    return cell;
   }
+
+  static NSString *const CellIdentifier = @"permissionCell";
+
+  UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                 reuseIdentifier:CellIdentifier];
+  NSString *option = [self _tableView:tableView optionForRowAtIndexPath:indexPath];
+  cell.textLabel.text = option;
+  if ([_selectedOptions containsObject:option]) {
+    cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    cell.selected = YES;
+  } else {
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.selected = NO;
+  }
+
+  return cell;
 }
 
 #pragma mark - Table view delegate
