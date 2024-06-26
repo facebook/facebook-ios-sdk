@@ -167,6 +167,7 @@ static const CGFloat marginYForBanner = 0;
     @"Login Features",
     @"AEM",
     @"SKAN",
+    @"IAB",
   ];
 }
 
@@ -254,6 +255,11 @@ static const CGFloat marginYForBanner = 0;
       cell.accessibilityIdentifier = @"cell_skan";
       break;
     }
+    case 19: {
+      // Set accessibility ID for IAB
+      cell.accessibilityIdentifier = @"cell_iab";
+      break;
+    }
     default: {
       cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
       cell.accessoryView = nil;
@@ -332,6 +338,12 @@ static const CGFloat marginYForBanner = 0;
     case 18: {
       SKANViewController *SKANVC = [[SKANViewController alloc] init];
       [self.navigationController pushViewController:SKANVC animated:YES];
+      break;
+    }
+    case 19: {
+      UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"TestWKWebView" bundle:nil];
+      UIViewController *vc = [storyboard instantiateInitialViewController];
+      [self.navigationController pushViewController:vc animated:YES];
       break;
     }
     default: {
