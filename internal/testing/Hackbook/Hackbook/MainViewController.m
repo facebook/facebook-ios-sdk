@@ -341,7 +341,7 @@ static const CGFloat marginYForBanner = 0;
       break;
     }
     case 19: {
-      UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"TestWKWebView" bundle:nil];
+      UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"TestWebView" bundle:nil];
       UIViewController *vc = [storyboard instantiateInitialViewController];
       [self.navigationController pushViewController:vc animated:YES];
       break;
