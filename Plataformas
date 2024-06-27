@@ -1,0 +1,59 @@
+Plataformas círculoci
+
+Vainas de cacao Compatible con Cartago
+
+Esta biblioteca de código abierto te permite integrar Facebook en tu aplicación iOS.
+
+Obtenga más información sobre los ejemplos proporcionados, la documentación, la integración del SDK en su aplicación, el acceso al código fuente y más en https://developers.facebook.com/docs/ios
+
+Tómese un momento y suscríbase a las versiones para recibir notificaciones sobre nuevas funciones, desusos y correcciones críticas. Para ver información sobre la última versión, consulte nuestro registro de cambios .
+
+⚠️Ser aconsejado⚠️
+Hemos comenzado a reescribir el SDK de iOS en Swift para modernizar la base del código.
+
+Supervise el registro de cambios para ver si hay actualizaciones de las interfaces existentes, pero tenga en cuenta que algunas interfaces serán inestables durante este proceso. Como tal, la actualización a una versión menor puede presentar problemas de compilación relacionados con la interoperabilidad del lenguaje. El uso de símbolos ahora definidos en Swift puede requerir el uso de @importla sintaxis de Objective-C y el uso de C++ probablemente requerirá soluciones alternativas como la creación de contenedores en Objective-C.
+
+Tenga paciencia mientras trabajamos para brindar una experiencia mejorada para la integración con la plataforma de Facebook.
+PRUÉBALO
+Administrador de paquetes rápido
+En Xcode, seleccione Archivo > Paquetes Swift > Agregar dependencia de paquete.
+Siga las indicaciones utilizando la URL de este repositorio
+Seleccione las Facebookbibliotecas con prefijo que desea utilizar
+Consulte los tutoriales disponibles en línea en: https://developers.facebook.com/docs/ios/getting-started
+¡Empiece a codificar! Visite https://developers.facebook.com/docs/ios para ver tutoriales y documentación de referencia.
+CAMBIOS EN iOS 14
+Divulgación de datos
+Debido al lanzamiento de iOS 14, el seguimiento de los eventos que su aplicación recopila y envía a Facebook puede requerir que revele estos tipos de datos en el cuestionario de App Store Connect. Es su responsabilidad asegurarse de que esto se refleje en la política de privacidad de su aplicación. Visite nuestra publicación de blog para obtener información sobre los SDK, API y productos de Facebook afectados y el artículo Detalles de privacidad de la App Store de Apple para obtener más información sobre los tipos de datos que deberá divulgar.
+
+enlace a la publicación del blog de Facebook https://developers.facebook.com/blog/post/2020/10/22/preparing-for-apple-app-store-data-disclosure-requirements/
+
+Detalles de la tienda de Apple: https://developer.apple.com/app-store/app-privacy-details/
+
+CARACTERÍSTICAS
+Iniciar sesión: https://developers.facebook.com/docs/facebook-login
+Compartir: https://developers.facebook.com/docs/sharing
+Enlaces de aplicaciones: https://developers.facebook.com/docs/applinks
+API de gráficos: https://developers.facebook.com/docs/ios/graph
+Análisis: https://developers.facebook.com/docs/analytics
+DAR OPINION
+Informe errores o problemas a nuestro equipo de soporte para desarrolladores designado: https://developers.facebook.com/support/bugs/ , ya que esto nos ayudará a resolverlos más rápidamente.
+
+También puede visitar nuestro Foro de la comunidad de desarrolladores de Facebook , unirse al grupo de desarrolladores de Facebook en Facebook , hacer preguntas sobre Stack Overflow o abrir una incidencia en este repositorio.
+
+CONTRIBUIR
+Facebook agradece las contribuciones a nuestros SDK. Consulte el archivo CONTRIBUYENTE .
+
+LICENCIA
+Ver el archivo de LICENCIA .
+
+Derechos de autor © Meta Platforms, Inc.
+
+POLITICA DE SEGURIDAD
+Consulte la POLÍTICA DE SEGURIDAD para obtener más información sobre nuestro programa de recompensas por errores.
+
+TÉRMINOS DEL DESARROLLADOR
+Al habilitar las integraciones de Facebook, incluso a través de este SDK, puedes compartir información con Facebook, incluida información sobre el uso que las personas hacen de tu aplicación. Facebook utilizará la información recibida de acuerdo con nuestra Política de uso de datos , incluso para brindarte información sobre la eficacia de tus anuncios y el uso de tu aplicación. Estas integraciones también nos permiten a nosotros y a nuestros socios publicar anuncios dentro y fuera de Facebook.
+Puede limitar el intercambio de información con nosotros actualizando el control de Insights en la herramienta para desarrolladores https://developers.facebook.com/apps/{app_id}/settings/advanced.
+Si utiliza una integración de Facebook, incluso para compartir información con nosotros, acepta y confirma que ha proporcionado un aviso apropiado y suficientemente destacado y obtenido el consentimiento apropiado de sus usuarios con respecto a dicha recopilación, uso y divulgación (incluido, como mínimo , a través de su política de privacidad). Además, acepta que no compartirá información con nosotros sobre niños menores de 13 años.
+Usted acepta cumplir con todas las leyes y regulaciones aplicables y también acepta nuestros Términos https://www.facebook.com/policies/ , incluidas nuestras Políticas de plataforma https://developers.facebook.com/policy/ y Pautas de publicidad, así como aplicable https://www.facebook.com/ad_guidelines.php .
+Al utilizar el SDK de Facebook para iOS, acepta estos términos.
