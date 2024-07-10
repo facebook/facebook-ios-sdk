@@ -101,6 +101,7 @@ public protocol SettingsProtocol {
   var isAdvertiserTrackingEnabled: Bool { get set }
   var shouldUseCachedValuesForExpensiveMetadata: Bool { get set }
   var persistableDataProcessingOptions: [DataProcessingOptionKey.RawValue: Any]? { get }
+  var isDomainErrorEnabled: Bool { get set }
 
   /**
    Sets the data processing options.

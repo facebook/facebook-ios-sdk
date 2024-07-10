@@ -9,6 +9,7 @@
 @testable import FBSDKCoreKit
 @testable import FBSDKLoginKit
 
+import AppTrackingTransparency
 import FBSDKCoreKit_Basics
 import TestTools
 import XCTest
@@ -116,7 +117,8 @@ final class LoginManagerTests: XCTestCase {
         ]
       ),
       gender: "male",
-      isLimited: false
+      isLimited: false,
+      permissions: ["public_profile"]
     )
   }
 
@@ -857,7 +859,7 @@ final class LoginManagerTests: XCTestCase {
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
       parameters["response_type"],
-      "id_token,token_or_nonce,signed_request,graph_domain"
+      "id_token,token_or_nonce,signed_request,graph_domain,user_token_nonce"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -868,7 +870,33 @@ final class LoginManagerTests: XCTestCase {
       "email,openid,public_profile"
     )
     XCTAssertNotNil(parameters["nonce"])
-    XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    if #available(iOS 14, *) {
+      switch ATTrackingManager.trackingAuthorizationStatus {
+      case .authorized:
+        XCTAssertNil(
+          parameters["tp"],
+          "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
+        )
+      default:
+        let limitedLoginShimMissingParametersErrorMessage =
+          """
+          Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
+          should send Limited Login Shim parameters
+          """
+        XCTAssertEqual(
+          parameters["tp"],
+          "ios_14_do_not_track",
+          limitedLoginShimMissingParametersErrorMessage
+        )
+        XCTAssertEqual(
+          parameters["is_limited_login_shim"],
+          "true",
+          limitedLoginShimMissingParametersErrorMessage
+        )
+      }
+    } else {
+      XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    }
     let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
     XCTAssertEqual(
@@ -902,7 +930,7 @@ final class LoginManagerTests: XCTestCase {
 
     XCTAssertEqual(
       parameters["response_type"],
-      "id_token,graph_domain"
+      "id_token,graph_domain,user_token_nonce"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -975,7 +1003,7 @@ final class LoginManagerTests: XCTestCase {
     try validateCommonLoginParameters(parameters)
     XCTAssertEqual(
       parameters["response_type"],
-      "id_token,token_or_nonce,signed_request,graph_domain"
+      "id_token,token_or_nonce,signed_request,graph_domain,user_token_nonce"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -986,10 +1014,33 @@ final class LoginManagerTests: XCTestCase {
       "email,openid,public_profile"
     )
     XCTAssertNotNil(parameters["nonce"])
-    XCTAssertNil(
-      parameters["tp"],
-      "Regular login should not send a tracking parameter"
-    )
+    if #available(iOS 14, *) {
+      switch ATTrackingManager.trackingAuthorizationStatus {
+      case .authorized:
+        XCTAssertNil(
+          parameters["tp"],
+          "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
+        )
+      default:
+        let limitedLoginShimMissingParametersErrorMessage =
+          """
+          Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
+          should send Limited Login Shim parameters
+          """
+        XCTAssertEqual(
+          parameters["tp"],
+          "ios_14_do_not_track",
+          limitedLoginShimMissingParametersErrorMessage
+        )
+        XCTAssertEqual(
+          parameters["is_limited_login_shim"],
+          "true",
+          limitedLoginShimMissingParametersErrorMessage
+        )
+      }
+    } else {
+      XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    }
     let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
     XCTAssertEqual(state?["3_method"] as? String, "sfvc_auth")
@@ -1018,7 +1069,7 @@ final class LoginManagerTests: XCTestCase {
 
     XCTAssertEqual(
       parameters["response_type"],
-      "id_token,token_or_nonce,signed_request,graph_domain"
+      "id_token,token_or_nonce,signed_request,graph_domain,user_token_nonce"
     )
     let scopes = parameters["scope"]?
       .split(separator: ",")
@@ -1029,7 +1080,33 @@ final class LoginManagerTests: XCTestCase {
       "email,openid,public_profile"
     )
     XCTAssertNotNil(parameters["nonce"])
-    XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    if #available(iOS 14, *) {
+      switch ATTrackingManager.trackingAuthorizationStatus {
+      case .authorized:
+        XCTAssertNil(
+          parameters["tp"],
+          "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
+        )
+      default:
+        let limitedLoginShimMissingParametersErrorMessage =
+          """
+          Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
+          should send Limited Login Shim parameters
+          """
+        XCTAssertEqual(
+          parameters["tp"],
+          "ios_14_do_not_track",
+          limitedLoginShimMissingParametersErrorMessage
+        )
+        XCTAssertEqual(
+          parameters["is_limited_login_shim"],
+          "true",
+          limitedLoginShimMissingParametersErrorMessage
+        )
+      }
+    } else {
+      XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    }
     let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
     XCTAssertEqual(state?["3_method"] as? String, "sfvc_auth")
@@ -1449,6 +1526,11 @@ final class LoginManagerTests: XCTestCase {
       profile.linkURL,
       link,
       "failed to parse user link"
+    )
+    XCTAssertEqual(
+      profile.permissions,
+      ["public_profile"],
+      "failed to validate profile permissions"
     )
   }
 

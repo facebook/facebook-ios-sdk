@@ -86,7 +86,6 @@ enum DeviceRequestsHelper {
     )
     mdnsAdvertisementService.delegate = delegate
     mdnsAdvertisementService.publish(options: [.noAutoRename, .listenForConnections])
-    AppEvents.shared.logInternalEvent(.smartLoginService, parameters: [:], isImplicitlyLogged: true)
     mdnsAdvertisementServices.setObject(mdnsAdvertisementService, forKey: delegate)
     return true
   }

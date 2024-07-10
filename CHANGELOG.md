@@ -10,11 +10,44 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-### Fixed
-
 - Fix infinite recursion when enabling `.graphAPIDebugInfo` logging behavior.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.3.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.2...HEAD)
+
+## 17.0.2
+
+### Fixed
+- Improved invalid access token issues
+- Fixed ATE value issues when status is unspecified
+
+[2024-05-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.1...v17.0.2)
+
+## 17.0.1
+
+### Updated
+- Updated privacy manifests
+
+[2024-04-26](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.0...v17.0.1)
+
+## 17.0.0
+
+### Added
+
+- Added privacy manifests
+
+[2024-02-16](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.4.0...v17.0.0)
+
+## 16.4.0
+
+### Added
+
+- More support on integrity
+
+[2024-01-31](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.4.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.3.1...v16.4.0)
 
 ## 16.3.1
 

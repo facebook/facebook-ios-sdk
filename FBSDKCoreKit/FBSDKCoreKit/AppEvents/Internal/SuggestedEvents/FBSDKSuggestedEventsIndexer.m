@@ -306,7 +306,10 @@ static dispatch_once_t setupNonce;
                                      @"event_name" : event,
                                      @"metadata" : metadata,
                                    }
-                                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
+                                                                                tokenString:nil
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagNone
+                                                          useAlternativeDefaultDomainPrefix:NO];
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {}];
   return;
 }

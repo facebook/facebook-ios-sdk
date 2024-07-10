@@ -30,12 +30,27 @@ extension ShareDialog {
     case browser
 
     /// Displays the dialog in a WKWebView within the app.
+    @available(
+      *,
+      deprecated,
+      message: "The web sharing mode is deprecated. Consider using automatic sharing mode instead."
+    )
     case web
 
     /// Displays the feed dialog in Safari.
+    @available(
+      *,
+      deprecated,
+      message: "The feed browser sharing mode is deprecated. Consider using automatic or browser sharing modes instead."
+    )
     case feedBrowser
 
     /// Displays the feed dialog in a WKWebView within the app.
+    @available(
+      *,
+      deprecated,
+      message: "The feed web sharing mode is deprecated. Consider using automatic sharing mode instead."
+    )
     case feedWeb
 
     /// The string description

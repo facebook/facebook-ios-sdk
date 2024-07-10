@@ -59,10 +59,13 @@ public final class ApplicationDelegate: NSObject {
    controlled via the 'FacebookAutoLogAppEventsEnabled' key in your project's Info.plist file.
    */
   public func initializeSDK() {
-    initializeSDK(launchOptions: [:])
+    initializeSDK(launchOptions: [:], completionBlock: nil)
   }
 
-  func initializeSDK(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+  func initializeSDK(
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
+    completionBlock: _DomainConfigurationBlock?
+  ) {
     guard !hasInitializeBeenCalled else { return }
 
     hasInitializeBeenCalled = true
@@ -70,7 +73,23 @@ public final class ApplicationDelegate: NSObject {
     // DO NOT MOVE THIS CALL
     // Dependencies MUST be configured before they are used
     configurator.performConfiguration()
+    initializeTokenCache()
+    initializeProfile()
+    if #available(iOS 14.5, *) {
+      fetchDomainConfiguration {
+        GraphRequestConnection.setDidFetchDomainConfiguration()
+        self.doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
+        GraphRequestQueue.sharedInstance().flush() // Flush any queued requests
+      }
+    } else {
+      doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
+    }
+  }
 
+  private func doSDKSetup(
+    launchOptions: [UIApplication.LaunchOptionsKey: Any]?,
+    completionBlock: _DomainConfigurationBlock?
+  ) {
     logInitialization()
     addObservers()
     components.appEvents.startObservingApplicationLifecycleNotifications()
@@ -83,6 +102,7 @@ public final class ApplicationDelegate: NSObject {
     initializeAEMAutoSetup()
 
     configureSourceApplication(launchOptions: launchOptions)
+    completionBlock?()
   }
 
   private func initializeAppLink() {
@@ -301,10 +321,7 @@ public final class ApplicationDelegate: NSObject {
      - application: The application as passed to `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`.
      - launchOptions: The launch options as passed to `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`.
 
-   - Returns: `true` if there are any added application observers that themselves return true from calling `application(_:didFinishLaunchingWithOptions:)`.
-     Otherwise will return `false`.
-
-   - Note: If this method is called after calling `initializeSDK`, then the return value will always be `false`.
+   - Returns: `true`
    */
   @discardableResult
   public func application(
@@ -316,20 +333,19 @@ public final class ApplicationDelegate: NSObject {
       !hasInitializeBeenCalled
     else { return false }
 
-    initializeSDK(launchOptions: launchOptions)
-    isAppLaunched = true
+    initializeSDK(launchOptions: launchOptions) {
+      self.isAppLaunched = true
 
-    initializeTokenCache()
-    fetchServerConfiguration()
+      self.fetchServerConfiguration()
 
-    if components.settings.isAutoLogAppEventsEnabled {
-      logSDKInitialize()
+      if self.components.settings.isAutoLogAppEventsEnabled {
+        self.logSDKInitialize()
+      }
+
+      self.checkAuthentication()
+      _ = self.notifyLaunchObservers(application: application, launchOptions: launchOptions)
     }
-
-    initializeProfile()
-    checkAuthentication()
-
-    return notifyLaunchObservers(application: application, launchOptions: launchOptions)
+    return true
   }
 
   private func initializeTokenCache() {
@@ -338,6 +354,10 @@ public final class ApplicationDelegate: NSObject {
 
   private func fetchServerConfiguration() {
     components.serverConfigurationProvider.loadServerConfiguration(completionBlock: nil)
+  }
+
+  private func fetchDomainConfiguration(completionBlock: _DomainConfigurationBlock?) {
+    _DomainHandler.sharedInstance().loadDomainConfiguration(completionBlock: completionBlock)
   }
 
   private func initializeProfile() {

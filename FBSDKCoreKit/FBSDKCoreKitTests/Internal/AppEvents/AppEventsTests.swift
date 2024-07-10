@@ -51,6 +51,7 @@ final class AppEventsTests: XCTestCase {
   var macaRuleMatchingManager: TestMACARuleMatchingManager!
   var blocklistEventsManager: TestBlocklistEventsManager!
   var redactedEventsManager: TestRedactedEventsManager!
+  var sensitiveParamsManager: TestSensitiveParamsManager!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -81,6 +82,7 @@ final class AppEventsTests: XCTestCase {
     macaRuleMatchingManager = TestMACARuleMatchingManager()
     blocklistEventsManager = TestBlocklistEventsManager()
     redactedEventsManager = TestRedactedEventsManager()
+    sensitiveParamsManager = TestSensitiveParamsManager()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     appEventsStateProvider = TestAppEventsStateProvider()
     atePublisherFactory = TestATEPublisherFactory()
@@ -100,7 +102,7 @@ final class AppEventsTests: XCTestCase {
     // Must be stubbed before the configure method is called
     atePublisher = TestATEPublisher()
     atePublisherFactory.stubbedPublisher = atePublisher
-
+    DomainHandlerTests.configureDomainHandlerForTesting()
     configureAppEvents()
     appEvents.loggingOverrideAppID = mockAppID
   }
@@ -126,6 +128,7 @@ final class AppEventsTests: XCTestCase {
     macaRuleMatchingManager = nil
     blocklistEventsManager = nil
     redactedEventsManager = nil
+    sensitiveParamsManager = nil
     appEventsStateProvider = nil
     advertiserIDProvider = nil
     skAdNetworkReporter = nil
@@ -173,7 +176,8 @@ final class AppEventsTests: XCTestCase {
       protectedModeManager: protectedModeManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,
-      redactedEventsManager: redactedEventsManager
+      redactedEventsManager: redactedEventsManager,
+      sensitiveParamsManager: sensitiveParamsManager
     )
 
     appEvents.configureNonTVComponents(
@@ -238,6 +242,8 @@ final class AppEventsTests: XCTestCase {
       "Should store the publisher created by the publisher factory"
     )
   }
+
+  // MARK: - Tests for publishing ATE
 
   func testPublishingATEWithNilPublisher() {
     appEvents.atePublisher = nil
@@ -904,6 +910,27 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testLogEventProcessParametersWithSensitiveParamsManager() {
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
+    appEvents.logEvent(
+      eventName,
+      valueToSum: NSNumber(value: purchaseAmount),
+      parameters: parameters,
+      isImplicitlyLogged: false,
+      accessToken: nil
+    )
+    XCTAssertEqual(
+      sensitiveParamsManager.capturedEventName,
+      eventName,
+      "AppEvents instance should submit the event name to the SensitiveParamsManager."
+    )
+    XCTAssertEqual(
+      sensitiveParamsManager.capturedParameters as? [AppEvents.ParameterName: String],
+      parameters,
+      "AppEvents instance should submit the parameters to the SensitiveParamsManager."
+    )
+  }
+
   // MARK: - Test for log push notification
 
   func testLogPushNotificationOpen() throws {
@@ -1000,6 +1027,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed() {
+    settings.isAdvertiserTrackingEnabled = false
     settings.advertisingTrackingStatus = .disallowed
 
     XCTAssertNil(
@@ -1017,9 +1045,41 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testRequestForCustomAudienceThirdPartyIDWithTrackingUnspecified() {
+    settings.isAdvertiserTrackingEnabled = false
+    settings.advertisingTrackingStatus = .unspecified
+
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(
+          accessToken: SampleAccessTokens.validToken
+        ),
+        """
+        Should not create a request for third party Any if tracking is not enabled \
+        even if there is a current access token
+        """
+      )
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
+        "Should not create a request for third party Any if tracking is not enabled"
+      )
+    } else {
+      XCTAssertNotNil(
+        appEvents.requestForCustomAudienceThirdPartyID(
+          accessToken: SampleAccessTokens.validToken
+        ),
+        "Should create a request for third party Any if tracking is unspecified in iOS < 17"
+      )
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
+        "Should not create a request for third party Any if tracking is unspecified in iOS < 17"
+      )
+    }
+  }
+
   func testRequestForCustomAudienceThirdPartyIDWithLimitedEventAndDataUsage() {
     settings.isEventDataUsageLimited = true
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertNil(
       appEvents.requestForCustomAudienceThirdPartyID(
@@ -1038,7 +1098,7 @@ final class AppEventsTests: XCTestCase {
 
   func testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithoutAdvertiserID() {
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertNil(
       appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
@@ -1049,7 +1109,7 @@ final class AppEventsTests: XCTestCase {
   func testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithAdvertiserID() {
     let advertiserID = "abc123"
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     advertiserIDProvider.advertiserID = advertiserID
 
     appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil)
@@ -1063,7 +1123,7 @@ final class AppEventsTests: XCTestCase {
   func testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithoutAdvertiserID() {
     let token = SampleAccessTokens.validToken
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     appEventsUtility.stubbedTokenStringToUse = token.tokenString
     appEvents.loggingOverrideAppID = token.appID
 
@@ -1085,7 +1145,7 @@ final class AppEventsTests: XCTestCase {
     let expectedGraphPath = "\(token.appID)/custom_audience_third_party_id"
     let advertiserID = "abc123"
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     advertiserIDProvider.advertiserID = advertiserID
     appEventsUtility.stubbedTokenStringToUse = token.tokenString
 
@@ -1474,7 +1534,7 @@ final class AppEventsTests: XCTestCase {
 
     XCTAssertTrue(
       redactedEventsManager.enabledWasCalled,
-      "Should enable blocklist events when the feature is enabled and the server configuration allows it"
+      "Should enable redacted events when the feature is enabled and the server configuration allows it"
     )
   }
 
@@ -1484,7 +1544,31 @@ final class AppEventsTests: XCTestCase {
     serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
     XCTAssertTrue(
       featureManager.capturedFeaturesContains(.filterRedactedEvents),
-      "Fetching a configuration should check if the BlocklistEvents feature is enabled"
+      "Fetching a configuration should check if the RedactedEvents feature is enabled"
+    )
+  }
+
+  func testEnablingSensitiveParamsFiltering() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .filterSensitiveParams, with: true)
+
+    XCTAssertTrue(
+      sensitiveParamsManager.enabledWasCalled,
+      "Should enable sensitive parameter filtering when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingSensitiveParamsFiltering() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.filterSensitiveParams),
+      "Fetching a configuration should check if the SensitiveParams feature is enabled"
     )
   }
 

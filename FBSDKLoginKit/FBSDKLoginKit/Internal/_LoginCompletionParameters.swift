@@ -37,4 +37,5 @@ public final class _LoginCompletionParameters: NSObject {
   public var dataAccessExpirationDate: Date?
   public var challenge: String?
   public var graphDomain: String?
+  public var userTokenNonce: String?
 }

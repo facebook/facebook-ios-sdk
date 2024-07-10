@@ -7,6 +7,7 @@
  */
 
 #import "FBSDKInternalUtility+Internal.h"
+#import "FBSDKDomainHandler.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
@@ -47,8 +48,7 @@ static dispatch_once_t fetchUrlSchemesToken;
 
 static BOOL ShouldOverrideHostWithGamingDomain(NSString *hostPrefix)
 {
-  return [FBSDKAuthenticationToken.currentAuthenticationToken respondsToSelector:@selector(graphDomain)]
-  && [FBSDKAuthenticationToken.currentAuthenticationToken.graphDomain isEqualToString:@"gaming"]
+  return [FBSDKDomainHandler isAuthenticatedForGamingDomain]
   && ([hostPrefix isEqualToString:@"graph."] || [hostPrefix isEqualToString:@"graph-video."]);
 }
 
@@ -141,22 +141,24 @@ static FBSDKInternalUtility *_shared;
                     expiredPermissions:(NSMutableSet<NSString *> *)expiredPermissions
 {
   NSArray<NSDictionary<NSString *, id> *> *resultData = [FBSDKTypeUtility dictionary:responseObject objectForKey:@"data" ofType:NSArray.class];
-  if (resultData.count > 0) {
-    for (NSDictionary<NSString *, id> *permissionsDictionary in resultData) {
-      NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
-      NSString *status = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"status" ofType:NSString.class];
+  if (resultData.count == 0) {
+    return;
+  }
 
-      if (!permissionName || !status) {
-        continue;
-      }
+  for (NSDictionary<NSString *, id> *permissionsDictionary in resultData) {
+    NSString *permissionName = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"permission" ofType:NSString.class];
+    NSString *status = [FBSDKTypeUtility dictionary:permissionsDictionary objectForKey:@"status" ofType:NSString.class];
 
-      if ([status isEqualToString:@"granted"]) {
-        [grantedPermissions addObject:permissionName];
-      } else if ([status isEqualToString:@"declined"]) {
-        [declinedPermissions addObject:permissionName];
-      } else if ([status isEqualToString:@"expired"]) {
-        [expiredPermissions addObject:permissionName];
-      }
+    if (!permissionName || !status) {
+      continue;
+    }
+
+    if ([status isEqualToString:@"granted"]) {
+      [grantedPermissions addObject:permissionName];
+    } else if ([status isEqualToString:@"declined"]) {
+      [declinedPermissions addObject:permissionName];
+    } else if ([status isEqualToString:@"expired"]) {
+      [expiredPermissions addObject:permissionName];
     }
   }
 }
@@ -327,6 +329,7 @@ static FBSDKInternalUtility *_shared;
                          host ?: @"",
                          path ?: @"",
                          queryString ?: @""];
+  
   NSURL *url = [NSURL URLWithString:urlString];
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 170000
@@ -444,11 +447,13 @@ static NSMapTable *_transientObjects;
 - (void)validateAppID
 {
   [self validateConfiguration];
-  if (!self.settings.appID) {
-    NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
-    @"FacebookAppID to the Info.plist or call Settings.shared.appID.";
-    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  if (self.settings.appID) {
+    return;
   }
+
+  NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
+  @"FacebookAppID to the Info.plist or call Settings.shared.appID.";
+  @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
 }
 
 - (NSString *)validateRequiredClientAccessToken
@@ -488,24 +493,62 @@ static NSMapTable *_transientObjects;
   }
 }
 
+- (void)validateDomainConfiguration
+{
+  if (![FBSDKAppEventsUtility.shared isDebugBuild]) {
+    return;
+  }
+
+  NSArray *subdirectories = @[[NSNull null],
+                               @"Frameworks/FBSDKCoreKit.framework",
+                               @"Frameworks/FBSDKCoreKit_Basics.framework",
+                               @"Frameworks/FBAEMKit.framework",
+                               @"Frameworks/FBSDKLoginKit.framework",
+                               @"Frameworks/FBSDKShareKit.framework",
+                               @"Facebook_FacebookAEM.bundle",
+                               @"Facebook_FacebookBasics.bundle",
+                               @"Facebook_FacebookCore.bundle",
+                               @"Facebook_FacebookLogin.bundle",
+                               @"Facebook_FacebookShare.bundle"];
+  NSString *message = @"We have pre-populated the tracking domain field for the FBSDK in the Privacy Manifest to help ensure that our services continue to function properly. We do not advise manually adding domains. Listing \"www.facebook.com\" or subdomains of \"facebook.com\" in the tracking domain field of a Privacy Manifest may break functionality.";
+  for (NSString *subdirectory in subdirectories) {
+    NSString *subdir = [subdirectory isKindOfClass:[NSNull class]] ? nil: subdirectory;
+    NSArray<NSURL *> *privacyInfoUrls = [[NSBundle mainBundle] URLsForResourcesWithExtension:@"xcprivacy" subdirectory:subdir];
+    for (NSURL *privacyInfoUrl in privacyInfoUrls) {
+      NSDictionary *privacyInfo = [[NSDictionary alloc] initWithContentsOfURL:privacyInfoUrl];
+      NSArray *trackingDomains = privacyInfo[@"NSPrivacyTrackingDomains"];
+      for (NSString *domain in trackingDomains) {
+        if (self.settings.isDomainErrorEnabled && ([@"facebook.com" isEqualToString:domain] || [@"ep2.facebook.com" isEqualToString:domain])) {
+          NSString *errorMsg = [NSString stringWithFormat:@"%@%@", message, @" Developers can set \"Settings.shared.isDomainErrorEnabled\" to \"false\" in order to disable FBSDK Privacy Manifest related errors."];
+          @throw [NSException exceptionWithName:@"InvalidOperationException" reason:errorMsg userInfo:nil];
+        } else if ([@"www.facebook.com" isEqualToString:domain]) {
+          NSLog(@"%@%@", @"<Warning>: ", message);
+        }
+      }
+    }
+  }
+}
+
 - (void)extendDictionaryWithDataProcessingOptions:(NSMutableDictionary<NSString *, id> *)parameters
 {
   NSDictionary<NSString *, id> *dataProcessingOptions = self.settings.persistableDataProcessingOptions;
-  if (dataProcessingOptions) {
-    NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[FBSDKDataProcessingOptionKeyOptions];
-    if (options && [options isKindOfClass:NSArray.class]) {
-      NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
-      [FBSDKTypeUtility dictionary:parameters
-                         setObject:optionsString
-                            forKey:FBSDKDataProcessingOptionKeyOptions];
-    }
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyCountry]
-                          forKey:FBSDKDataProcessingOptionKeyCountry];
-    [FBSDKTypeUtility dictionary:parameters
-                       setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyState]
-                          forKey:FBSDKDataProcessingOptionKeyState];
+  if (!dataProcessingOptions) {
+    return;
   }
+
+  NSArray<NSString *> *options = (NSArray<NSString *> *)dataProcessingOptions[FBSDKDataProcessingOptionKeyOptions];
+  if (options && [options isKindOfClass:NSArray.class]) {
+    NSString *optionsString = [FBSDKBasicUtility JSONStringForObject:options error:nil invalidObjectHandler:nil];
+    [FBSDKTypeUtility dictionary:parameters
+                       setObject:optionsString
+                          forKey:FBSDKDataProcessingOptionKeyOptions];
+  }
+  [FBSDKTypeUtility dictionary:parameters
+                     setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyCountry]
+                        forKey:FBSDKDataProcessingOptionKeyCountry];
+  [FBSDKTypeUtility dictionary:parameters
+                     setObject:dataProcessingOptions[FBSDKDataProcessingOptionKeyState]
+                        forKey:FBSDKDataProcessingOptionKeyState];
 }
 
 - (nullable UIWindow *)findWindow
@@ -578,9 +621,9 @@ static NSMapTable *_transientObjects;
 {
   if (@available(iOS 13.0, *)) {
     return [self findWindow].windowScene.interfaceOrientation;
-  } else {
-    return UIInterfaceOrientationUnknown;
   }
+
+  return UIInterfaceOrientationUnknown;
 }
 
 #endif
@@ -670,13 +713,15 @@ static NSMapTable *_transientObjects;
 - (void)validateConfiguration
 {
 #if DEBUG
-  if (!self.isConfigured) {
-    static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
-    "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
-    "Learn more: https://developers.facebook.com/docs/ios/getting-started"
-    "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
-    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  if (self.isConfigured) {
+    return;
   }
+
+  static NSString *const reason = @"As of v9.0, you must initialize the SDK prior to calling any methods or setting any properties. "
+  "You can do this by calling `FBSDKApplicationDelegate`'s `application:didFinishLaunchingWithOptions:` method. "
+  "Learn more: https://developers.facebook.com/docs/ios/getting-started"
+  "If no `UIApplication` is available you can use `FBSDKApplicationDelegate`'s `initializeSDK` method.";
+  @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
 #endif
 }
 

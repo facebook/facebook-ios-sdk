@@ -114,11 +114,13 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .aemAutoSetupProxy,
       .appEventsCloudbridge,
       .skAdNetwork,
+      .skAdNetworkV4,
       .skAdNetworkConversionValue,
       .protectedMode,
       .macaRuleMatching,
       .blocklistEvents,
-      .filterRedactedEvents:
+      .filterRedactedEvents,
+      .filterSensitiveParams:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -157,6 +159,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .eventDeactivation: featureName = "EventDeactivation"
     case .skAdNetwork: featureName = "SKAdNetwork"
     case .skAdNetworkConversionValue: featureName = "SKAdNetworkConversionValue"
+    case .skAdNetworkV4: featureName = "SKAdNetworkV4"
     case .instrument: featureName = "Instrument"
     case .crashReport: featureName = "CrashReport"
     case .crashShield: featureName = "CrashShield"
@@ -176,6 +179,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .macaRuleMatching: featureName = "MACARuleMatching"
     case .blocklistEvents: featureName = "BlocklistEvents"
     case .filterRedactedEvents: featureName = "FilterRedactedEvents"
+    case .filterSensitiveParams: featureName = "FilterSensitiveParams"
     @unknown default: featureName = "NONE"
     }
 

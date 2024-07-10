@@ -87,7 +87,10 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
       guard let graphRequest = self.factory?.createGraphRequest(
         withGraphPath: String(format: "%@/%@", appID, FBSDKAppEventsCAPIManager.settingsPath),
         parameters: [:] as [String: Any],
-        flags: []
+        tokenString: nil,
+        httpMethod: .get,
+        flags: [],
+        useAlternativeDefaultDomainPrefix: false
       ) else {
         print("Fail to create CAPI Gateway Settings API request")
         self.executeBlocks(isEnabled: false)

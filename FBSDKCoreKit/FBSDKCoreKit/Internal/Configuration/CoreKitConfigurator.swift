@@ -48,6 +48,8 @@ final class CoreKitConfigurator: CoreKitConfiguring {
     configureModelManager()
     configureProfile()
     configureWebDialogView()
+    configureDomainHandler()
+    configureGraphRequestQueue()
   }
 }
 
@@ -110,7 +112,8 @@ private extension CoreKitConfigurator {
       protectedModeManager: components.protectedModeManager,
       macaRuleMatchingManager: components.macaRuleMatchingManager,
       blocklistEventsManager: components.blocklistEventsManager,
-      redactedEventsManager: components.redactedEventsManager
+      redactedEventsManager: components.redactedEventsManager,
+      sensitiveParamsManager: components.sensitiveParamsManager
     )
   }
 
@@ -365,6 +368,25 @@ private extension CoreKitConfigurator {
       webViewProvider: components.webViewProvider,
       urlOpener: components.internalURLOpener,
       errorFactory: components.errorFactory
+    )
+  }
+
+  func configureDomainHandler() {
+    components.internalUtility.validateDomainConfiguration()
+
+    _DomainHandler.sharedInstance().configure(
+      domainConfigurationProvider: _DomainConfigurationManager.sharedInstance(),
+      settings: components.settings,
+      dataStore: components.defaultDataStore,
+      graphRequestFactory: components.graphRequestFactory,
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory
+    )
+    _DomainConfiguration.setDefaultDomainInfo()
+  }
+
+  func configureGraphRequestQueue() {
+    GraphRequestQueue.sharedInstance().configure(
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory
     )
   }
 }
