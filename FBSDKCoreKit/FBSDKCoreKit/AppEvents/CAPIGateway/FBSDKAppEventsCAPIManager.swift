@@ -87,6 +87,8 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
       guard let graphRequest = self.factory?.createGraphRequest(
         withGraphPath: String(format: "%@/%@", appID, FBSDKAppEventsCAPIManager.settingsPath),
         parameters: [:] as [String: Any],
+        tokenString: nil,
+        httpMethod: .get,
         flags: [],
         useAlternativeDefaultDomainPrefix: false
       ) else {

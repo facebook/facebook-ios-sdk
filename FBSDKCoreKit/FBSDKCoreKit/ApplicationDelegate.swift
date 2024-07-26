@@ -73,6 +73,8 @@ public final class ApplicationDelegate: NSObject {
     // DO NOT MOVE THIS CALL
     // Dependencies MUST be configured before they are used
     configurator.performConfiguration()
+    initializeTokenCache()
+    initializeProfile()
     if #available(iOS 14.5, *) {
       fetchDomainConfiguration {
         GraphRequestConnection.setDidFetchDomainConfiguration()
@@ -334,14 +336,12 @@ public final class ApplicationDelegate: NSObject {
     initializeSDK(launchOptions: launchOptions) {
       self.isAppLaunched = true
 
-      self.initializeTokenCache()
       self.fetchServerConfiguration()
 
       if self.components.settings.isAutoLogAppEventsEnabled {
         self.logSDKInitialize()
       }
 
-      self.initializeProfile()
       self.checkAuthentication()
       _ = self.notifyLaunchObservers(application: application, launchOptions: launchOptions)
     }

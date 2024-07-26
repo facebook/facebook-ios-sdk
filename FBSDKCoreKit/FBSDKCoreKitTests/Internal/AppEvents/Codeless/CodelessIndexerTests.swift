@@ -486,8 +486,9 @@ final class CodelessIndexerTests: XCTestCase {
       ],
       "Should create a request with the expected parameters"
     )
-    XCTAssertNil(
+    XCTAssertEqual(
       graphRequestFactory.capturedFlags,
+      [],
       "Should create a request with the expected flags"
     )
   }

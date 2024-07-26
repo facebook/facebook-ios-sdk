@@ -157,7 +157,9 @@ static id<FBSDKSettings> _settings;
       if (disabledFeatureReport) {
         id<FBSDKGraphRequest> request = [_graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", [self.settings appID]]
                                                                                    parameters:@{@"crash_shield" : disabledFeatureReport}
-                                                                                   HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                  tokenString:nil
+                                                                                   HTTPMethod:FBSDKHTTPMethodPOST 
+                                                                                        flags:FBSDKGraphRequestFlagNone
                                                             useAlternativeDefaultDomainPrefix:NO];
 
         [request startWithCompletion:nil];

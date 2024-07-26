@@ -123,7 +123,9 @@ NSString *const kFBSDKErrorTimestamp = @"timestamp";
   NSString *errorData = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
   id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/instruments", self.settings.appID]
                                                                                  parameters:@{@"error_reports" : errorData ?: @""}
+                                                                                tokenString:nil
                                                                                  HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagNone
                                                           useAlternativeDefaultDomainPrefix:NO];
 
   [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {

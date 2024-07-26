@@ -627,7 +627,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   private func updateGraphAPIDebugBehavior() {
     // Enable warnings every time info is enabled
-    if loggingBehaviors.contains(.graphAPIDebugInfo) {
+    if loggingBehaviors.contains(.graphAPIDebugInfo), !loggingBehaviors.contains(.graphAPIDebugWarning) {
       loggingBehaviors.insert(.graphAPIDebugWarning)
     }
   }

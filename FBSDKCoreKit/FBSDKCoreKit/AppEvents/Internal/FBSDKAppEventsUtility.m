@@ -81,7 +81,7 @@ static FBSDKAppEventsUtility *_shared;
   [FBSDKTypeUtility dictionary:parameters setObject:[FBSDKBasicUtility anonymousID] forKey:FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = self.settings.advertisingTrackingStatus;
-  if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
+  if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified || [[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled]) {
     [FBSDKTypeUtility dictionary:parameters setObject:@(self.settings.isAdvertiserTrackingEnabled).stringValue forKey:@"advertiser_tracking_enabled"];
   }
 
