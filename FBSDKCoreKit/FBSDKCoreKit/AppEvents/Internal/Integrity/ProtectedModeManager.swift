@@ -12,7 +12,7 @@ import Foundation
 public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
   private var isEnabled = false
   private static let pmKey = AppEvents.ParameterName(rawValue: "pm")
-  private let standardParametersDefault: Set<String> = [
+  let standardParametersDefault: Set<String> = [
     "_currency",
     "_valueToSum",
     "fb_availability",
@@ -21,9 +21,7 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     "fb_checkout_date",
     "fb_city",
     "fb_condition_of_vehicle",
-    "fb_content_category",
     "fb_content_ids",
-    "fb_content_name",
     "fb_content_type",
     "fb_contents",
     "fb_country",
@@ -66,9 +64,7 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     "fb_region",
     "fb_returning_arrival_date",
     "fb_returning_departure_date",
-    "fb_search_string",
     "fb_state_of_vehicle",
-    "fb_status",
     "fb_suggested_destinations",
     "fb_suggested_home_listings",
     "fb_suggested_hotels",
