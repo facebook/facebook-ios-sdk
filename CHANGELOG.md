@@ -10,9 +10,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.3...HEAD)
+
+## 17.0.3
+
+### Fixed
 - Fix infinite recursion when enabling `.graphAPIDebugInfo` logging behavior.
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.2...HEAD)
+[2024-08-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.3) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.2...v17.0.3)
 
 ## 17.0.2
 
