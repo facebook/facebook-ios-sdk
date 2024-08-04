@@ -1,0 +1,6 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {winget install --id Git.Git -e --source winget
+
+
+  }
