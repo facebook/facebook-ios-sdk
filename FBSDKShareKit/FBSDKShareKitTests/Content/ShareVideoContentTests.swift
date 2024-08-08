@@ -139,14 +139,12 @@ final class ShareVideoContentTests: XCTestCase {
 
   func testAssetSourceBridgeParametersWithoutAssetOption() throws {
     content = .valid(.withAssetSource)
-    mediaLibrarySearcher.stubbedGetVideoURL = .asset
     let parameters = content.addParameters(originalParameters, options: [])
 
     try validateOriginalParameters(in: parameters)
-    XCTAssertIdentical(mediaLibrarySearcher.getVideoURLAsset, ShareVideo.withAssetSource.videoAsset, .assetURLParameter)
-    let videoParameters = try getVideoParameters(from: parameters, message: .assetURLParameter)
-    let url = try XCTUnwrap(videoParameters["assetURL"] as? URL, .assetURLParameter)
-    XCTAssertEqual(url, .asset, .assetURLParameter)
+    let videoParameters = try getVideoParameters(from: parameters, message: .assetIdentifierParameter)
+    let identifier = try XCTUnwrap(videoParameters["assetIdentifier"] as? String, .assetIdentifierParameter)
+    XCTAssertEqual(identifier, PHAsset.testAsset.localIdentifier, .assetIdentifierParameter)
   }
 
   // MARK: Data Source

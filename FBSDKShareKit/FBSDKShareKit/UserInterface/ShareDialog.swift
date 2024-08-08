@@ -572,7 +572,7 @@ extension ShareDialog {
 
     let parameters = dependencies.shareUtility.bridgeParameters(
       for: content,
-      options: [],
+      options: [.videoAsset],
       shouldFailOnDataError: shouldFailOnDataError
     )
 
