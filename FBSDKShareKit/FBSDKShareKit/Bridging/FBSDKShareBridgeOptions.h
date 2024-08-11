@@ -15,7 +15,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKShareBridgeOptions) {
   FBSDKShareBridgeOptionsDefault = 0,
   FBSDKShareBridgeOptionsPhotoAsset = 1 << 0,
   FBSDKShareBridgeOptionsPhotoImageURL = 1 << 1, // if set, a web-based URL is required; asset, image, and imageURL.isFileURL not allowed
-  FBSDKShareBridgeOptionsVideoAsset = 1 << 2,
+  FBSDKShareBridgeOptionsVideoAsset = 1 << 2, // Default now due to Asset Library framework deprecation
   FBSDKShareBridgeOptionsVideoData = 1 << 3,
   FBSDKShareBridgeOptionsWebHashtag = 1 << 4, // if set, pass the hashtag as a string value, not an array of one string
 } NS_SWIFT_NAME(ShareBridgeOptions);
