@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 - Migrate ShareDialog from AssetLibrary to Photos for share content represented by PHAsset
+- Fix images being out of order in ShareDialog
 
 [2024-09-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.1.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.3...v17.1.0)
