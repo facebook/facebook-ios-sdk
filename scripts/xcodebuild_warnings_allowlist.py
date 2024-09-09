@@ -14,4 +14,6 @@ XCODEBUILD_WARNINGS_ALLOWLIST = [
     "is deprecated and will be removed in the next major release",
     "warning: Building targets in manual order is deprecated",
     "warning: 'prefer_self_in_static_references' is not a valid rule identifier",
+    "warning: 'web' is deprecated: The web sharing mode is deprecated. Consider using automatic sharing mode instead.",
+    "warning: 'feedWeb' is deprecated: The feed web sharing mode is deprecated. Consider using automatic sharing mode instead.",
 ]
