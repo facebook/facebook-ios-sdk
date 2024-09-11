@@ -12,6 +12,7 @@ import StoreKit
 final class IAPTransactionCache: NSObject {
   static let restoredPurchasesKey = "com.facebook.sdk:RestoredPurchasesKey"
   static let loggedTransactionsKey = "com.facebook.sdk:LoggedTransactionsKey"
+  static let newCandidatesDateKey = "com.facebook.sdk:NewCandidatesDateKey"
 
   var configuredDependencies: ObjectDependencies?
   var defaultDependencies: ObjectDependencies? = .init(
@@ -74,7 +75,30 @@ extension IAPTransactionCache {
     }
   }
 
-  func addTransaction(transactionID: Int, eventName: AppEvents.Name) {
+  var newCandidatesDate: Date? {
+    // swiftlint:disable:next implicit_getter
+    get {
+      guard let dependencies = try? getDependencies() else {
+        return nil
+      }
+      guard let date =
+        dependencies.dataStore.fb_object(forKey: IAPTransactionCache.newCandidatesDateKey) as? Date else {
+        return nil
+      }
+      return date
+    }
+    set {
+      guard let dependencies = try? getDependencies() else {
+        return
+      }
+      guard let newValue else {
+        return
+      }
+      dependencies.dataStore.fb_setObject(newValue, forKey: IAPTransactionCache.newCandidatesDateKey)
+    }
+  }
+
+  func addTransaction(transactionID: UInt64, eventName: AppEvents.Name) {
     synchronized(self) {
       let newTransaction = IAPCachedTransaction(transactionID: transactionID, eventName: eventName.rawValue)
       loggedTransactions.insert(newTransaction)
@@ -82,7 +106,7 @@ extension IAPTransactionCache {
     }
   }
 
-  func removeTransaction(transactionID: Int, eventName: AppEvents.Name) {
+  func removeTransaction(transactionID: UInt64, eventName: AppEvents.Name) {
     synchronized(self) {
       let oldTransaction = IAPCachedTransaction(transactionID: transactionID, eventName: eventName.rawValue)
       loggedTransactions.remove(oldTransaction)
@@ -90,12 +114,12 @@ extension IAPTransactionCache {
     }
   }
 
-  func contains(transactionID: Int, eventName: AppEvents.Name) -> Bool {
+  func contains(transactionID: UInt64, eventName: AppEvents.Name) -> Bool {
     let transactionCandidate = IAPCachedTransaction(transactionID: transactionID, eventName: eventName.rawValue)
     return loggedTransactions.contains(transactionCandidate)
   }
 
-  func contains(transactionID: Int) -> Bool {
+  func contains(transactionID: UInt64) -> Bool {
     return loggedTransactions.contains { $0.transactionID == transactionID } // swiftlint:disable:this implicit_return
   }
 }
@@ -104,7 +128,7 @@ extension IAPTransactionCache {
 
 extension IAPTransactionCache {
   struct IAPCachedTransaction: Hashable, Equatable, Codable {
-    var transactionID: Int
+    var transactionID: UInt64
     var eventName: String
   }
 }
@@ -124,6 +148,7 @@ extension IAPTransactionCache {
   func reset() {
     UserDefaults.standard.removeObject(forKey: IAPTransactionCache.restoredPurchasesKey)
     UserDefaults.standard.removeObject(forKey: IAPTransactionCache.loggedTransactionsKey)
+    UserDefaults.standard.removeObject(forKey: IAPTransactionCache.newCandidatesDateKey)
     configuredDependencies = nil
     loggedTransactions = []
   }

@@ -18,7 +18,7 @@ final class IAPTransactionTests: StoreKitTestCase {
   @available(iOS 17.0, *)
   func testValidIAPTransaction() async throws {
     guard let transaction =
-      try? await testSession.buyProduct(identifier: Self.ProductIdentifiers.product1.rawValue) else {
+      try? await testSession.buyProduct(identifier: Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
     let iapTransaction = IAPTransaction(transaction: transaction, isVerified: true)
@@ -29,7 +29,7 @@ final class IAPTransactionTests: StoreKitTestCase {
   @available(iOS 17.0, *)
   func testInvalidIAPTransaction() async throws {
     guard let transaction =
-      try? await testSession.buyProduct(identifier: Self.ProductIdentifiers.product1.rawValue) else {
+      try? await testSession.buyProduct(identifier: Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
     let iapTransaction = IAPTransaction(transaction: transaction, isVerified: false)
@@ -39,7 +39,8 @@ final class IAPTransactionTests: StoreKitTestCase {
 
   @available(iOS 15.0, *)
   func testVerificationResult() async throws {
-    guard let products = try? await Product.products(for: [Self.ProductIdentifiers.product1.rawValue]) else {
+    guard let products =
+      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {
       return
     }
     guard let purchaseResult = try? await products.first?.purchase() else {

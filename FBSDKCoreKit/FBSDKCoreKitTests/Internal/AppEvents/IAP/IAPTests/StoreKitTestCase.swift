@@ -20,11 +20,32 @@ class StoreKitTestCase: XCTestCase {
   static let configFileName = "FBSDKStoreKitConfigurationUnitTests"
 
   enum ProductIdentifiers: String, CaseIterable {
-    case product1 = "com.fbsdk.p1"
+    case nonConsumableProduct1 = "com.fbsdk.nonconsumable.p1"
+    case nonConsumableProduct2 = "com.fbsdk.nonconsumable.p2"
+    case autoRenewingSubscription1 = "com.fbsdk.autorenewing.s1"
+    case nonRenewingSubscription1 = "com.fbsdk.nonrenewing.s1"
+  }
+
+  enum StoreKitTestCaseError: Error {
+    case purchaseFailed
+  }
+
+  static var allIdentifiers = ProductIdentifiers.allCases.map { id in
+    id.rawValue
   }
 
   // swiftlint:disable:next implicitly_unwrapped_optional
   var testSession: SKTestSession!
+
+  @available(iOS 15.0, *)
+  func getIAPTransactionForPurchaseResult(result: Product.PurchaseResult) throws -> IAPTransaction {
+    switch result {
+    case let .success(verificationResult):
+      return verificationResult.iapTransaction
+    default:
+      throw StoreKitTestCaseError.purchaseFailed
+    }
+  }
 
   override func setUp() async throws {
     try await super.setUp()
@@ -35,6 +56,7 @@ class StoreKitTestCase: XCTestCase {
   }
 
   override func tearDown() {
+    IAPTransactionCache.shared.reset()
     testSession = nil
     super.tearDown()
   }

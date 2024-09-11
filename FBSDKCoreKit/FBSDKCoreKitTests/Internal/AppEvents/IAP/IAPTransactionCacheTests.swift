@@ -56,6 +56,15 @@ final class IAPTransactionCacheTests: XCTestCase {
     XCTAssertFalse(UserDefaults.standard.fb_bool(forKey: IAPTransactionCache.restoredPurchasesKey))
   }
 
+  func testNewCandidatesDate() {
+    XCTAssertNil(IAPTransactionCache.shared.newCandidatesDate)
+    let now = Date()
+    IAPTransactionCache.shared.newCandidatesDate = now
+    let persisted = UserDefaults.standard.fb_object(forKey: IAPTransactionCache.newCandidatesDateKey) as? Date
+    XCTAssertEqual(IAPTransactionCache.shared.newCandidatesDate, now)
+    XCTAssertEqual(persisted, now)
+  }
+
   func testAddTransaction() {
     IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)
     IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)

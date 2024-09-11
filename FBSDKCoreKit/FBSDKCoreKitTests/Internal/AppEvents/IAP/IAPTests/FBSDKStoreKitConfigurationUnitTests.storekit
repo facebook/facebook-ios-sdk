@@ -1,7 +1,21 @@
 {
   "identifier" : "C0F1F7F1",
   "nonRenewingSubscriptions" : [
-
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "15F87AA6",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.fbsdk.nonrenewing.s1",
+      "referenceName" : "Non-renewing Subscription 1",
+      "type" : "NonRenewingSubscription"
+    }
   ],
   "products" : [
     {
@@ -15,8 +29,23 @@
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.fbsdk.p1",
-      "referenceName" : "Product",
+      "productID" : "com.fbsdk.nonconsumable.p1",
+      "referenceName" : "Non Consumable Product 1",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "AEEFA3B1",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.fbsdk.nonconsumable.p2",
+      "referenceName" : "Non Consumable Product 2",
       "type" : "NonConsumable"
     }
   ],
@@ -73,7 +102,40 @@
     ]
   },
   "subscriptionGroups" : [
+    {
+      "id" : "D14ED020",
+      "localizations" : [
 
+      ],
+      "name" : "Group 1",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "666E0D10",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.fbsdk.autorenewing.s1",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Autorenewing Subscription 1",
+          "subscriptionGroupID" : "D14ED020",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 3,
