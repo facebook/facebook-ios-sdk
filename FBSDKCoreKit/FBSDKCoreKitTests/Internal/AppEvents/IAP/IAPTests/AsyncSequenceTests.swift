@@ -16,7 +16,8 @@ import XCTest
 final class AsyncSequenceTests: StoreKitTestCase {
 
   func testGetValues() async throws {
-    guard let products = try? await Product.products(for: [Self.ProductIdentifiers.product1.rawValue]) else {
+    guard let products =
+      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {
       return
     }
     _ = try await products.first?.purchase()
