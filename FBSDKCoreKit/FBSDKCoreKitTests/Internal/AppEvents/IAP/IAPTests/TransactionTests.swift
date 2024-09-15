@@ -16,7 +16,8 @@ import XCTest
 final class TransactionTests: StoreKitTestCase {
 
   func testGetAllTransactions() async {
-    guard let products = try? await Product.products(for: Self.allIdentifiers) else {
+    guard let products = try? await Product.products(for: Self.allIdentifiers),
+          products.count == Self.allIdentifiers.count else {
       return
     }
     for product in products {
@@ -29,11 +30,13 @@ final class TransactionTests: StoreKitTestCase {
       await transaction.transaction.finish()
     }
     let transactions = await Transaction.all.getValues()
-    XCTAssertEqual(transactions.count, products.count)
+    let expectedCount = products.count - 1 // Cannot observe Consumables by default
+    XCTAssertEqual(transactions.count, expectedCount)
   }
 
   func testGetCurrentEntitlements() async {
-    guard let products = try? await Product.products(for: Self.allIdentifiers) else {
+    guard let products = try? await Product.products(for: Self.allIdentifiers),
+          products.count == Self.allIdentifiers.count else {
       return
     }
     for product in products {
@@ -46,7 +49,8 @@ final class TransactionTests: StoreKitTestCase {
       await transaction.transaction.finish()
     }
     let transactions = await Transaction.currentEntitlements.getValues()
-    XCTAssertEqual(transactions.count, products.count)
+    let expectedCount = products.count - 1 // Cannot observe Consumables by default
+    XCTAssertEqual(transactions.count, expectedCount)
   }
 
   func testGetNewCandidateTransactions() async {

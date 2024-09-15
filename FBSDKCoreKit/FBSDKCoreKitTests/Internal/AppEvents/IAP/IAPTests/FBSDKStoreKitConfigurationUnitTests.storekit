@@ -2,7 +2,7 @@
   "identifier" : "C0F1F7F1",
   "nonRenewingSubscriptions" : [
     {
-      "displayPrice" : "0.99",
+      "displayPrice" : "5",
       "familyShareable" : false,
       "internalID" : "15F87AA6",
       "localizations" : [
@@ -47,6 +47,21 @@
       "productID" : "com.fbsdk.nonconsumable.p2",
       "referenceName" : "Non Consumable Product 2",
       "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "10",
+      "familyShareable" : false,
+      "internalID" : "A2048D09",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.fbsdk.consumable.p1",
+      "referenceName" : "Consumable Product 1",
+      "type" : "Consumable"
     }
   ],
   "settings" : {
@@ -116,7 +131,7 @@
           "codeOffers" : [
 
           ],
-          "displayPrice" : "0.99",
+          "displayPrice" : "2",
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "666E0D10",
@@ -132,6 +147,44 @@
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Autorenewing Subscription 1",
           "subscriptionGroupID" : "D14ED020",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    },
+    {
+      "id" : "F6CFFE52",
+      "localizations" : [
+
+      ],
+      "name" : "Group 2",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "173A60F7",
+          "introductoryOffer" : {
+            "internalID" : "FA0A223E",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P6M"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.fbsdk.autorenewing.s2",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Autorenewing Subscription 2",
+          "subscriptionGroupID" : "F6CFFE52",
           "type" : "RecurringSubscription"
         }
       ]
