@@ -39,21 +39,29 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     iapLogger = IAPTransactionLogger()
   }
 
+  private func executeTransactionFor(_ productID: String) async -> (IAPTransaction, Product)? {
+    guard let products =
+      try? await Product.products(for: [productID]),
+      let product = products.first else {
+      return nil
+    }
+    guard let result = try? await product.purchase() else {
+      return nil
+    }
+    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
+      return nil
+    }
+    await iapTransaction.transaction.finish()
+    return (iapTransaction, product)
+  }
+
   // MARK: - New Subscriptions
 
   func testLogNewSubscriptionTransactionStartTrial() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription2.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription2.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .startTrial)
     XCTAssertEqual(eventLogger.capturedValueToSum, 0)
@@ -87,18 +95,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewSubscriptionTransactionNonRenewable() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribe)
     XCTAssertEqual(eventLogger.capturedValueToSum, 5)
@@ -132,18 +132,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewSubscriptionTransactionAutoRenewable() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribe)
     XCTAssertEqual(eventLogger.capturedValueToSum, 2)
@@ -177,18 +169,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewSubscriptionTransactionWithStartTrialInCache() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     IAPTransactionCache.shared.addTransaction(
       transactionID: iapTransaction.transaction.id,
       eventName: .startTrial
@@ -227,18 +211,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
 
   func testLogNewSubscriptionTransactionGKDisabled() async {
     TestGateKeeperManager.gateKeepers[autoLogSubscriptionGK] = false
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
     XCTAssertNil(eventLogger.capturedValueToSum)
@@ -275,18 +251,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewSubscriptionTransactionStartTrialWithStartTrialInCache() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription2.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription2.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     IAPTransactionCache.shared.addTransaction(
       transactionID: iapTransaction.transaction.originalID,
       eventName: .startTrial
@@ -304,18 +272,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewSubscriptionTransactionWithSubscribeInCache() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     IAPTransactionCache.shared.addTransaction(
       transactionID: iapTransaction.transaction.originalID,
       eventName: .subscribe
@@ -333,18 +293,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewSubscriptionTransactionWithRestoreInCache() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     IAPTransactionCache.shared.addTransaction(
       transactionID: iapTransaction.transaction.originalID,
       eventName: .subscribeRestore
@@ -425,18 +377,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   // MARK: - New Purchases
 
   func testLogNewPurchaseTransactionConsumable() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.consumableProduct1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.consumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .purchased)
     XCTAssertEqual(eventLogger.capturedValueToSum, 10)
@@ -470,18 +414,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewPurchaseTransactionNonConsumable() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .purchased)
     XCTAssertEqual(eventLogger.capturedValueToSum, 0.99)
@@ -515,18 +451,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogNewPurchaseTransactionWithPurchaseInCache() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     IAPTransactionCache.shared.addTransaction(
       transactionID: iapTransaction.transaction.originalID,
       eventName: .purchased
@@ -546,18 +474,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   // MARK: - Restored Subscriptions
 
   func testLogRestoredSubscriptionTransactionAutoRenewableStartTrial() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription2.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription2.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribeRestore)
     XCTAssertEqual(eventLogger.capturedValueToSum, 0)
@@ -591,18 +511,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogRestoredSubscriptionTransactionNonRenewable() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribeRestore)
     XCTAssertEqual(eventLogger.capturedValueToSum, 5)
@@ -636,18 +548,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogRestoredSubscriptionTransactionAutoRenewable() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribeRestore)
     XCTAssertEqual(eventLogger.capturedValueToSum, 2)
@@ -681,18 +585,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   }
 
   func testLogRestoredSubscriptionTransactionWithRestoredInCache() async {
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     IAPTransactionCache.shared.addTransaction(
       transactionID: iapTransaction.transaction.originalID,
       eventName: .subscribeRestore
@@ -711,18 +607,10 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
 
   func testLogRestoredSubscriptionTransactionGKDisabled() async {
     TestGateKeeperManager.gateKeepers[autoLogSubscriptionGK] = false
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
     XCTAssertNil(eventLogger.capturedValueToSum)
@@ -732,20 +620,11 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
 
   // MARK: - Restored Purchases
 
-  func testLogRestoredPurchaseTransaction_1() async {
-    // Purchase - consumable
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.consumableProduct1.rawValue]),
-      let product = products.first else {
+  func testLogRestoredPurchaseTransactionConsumable() async {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.consumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .purchaseRestored)
     XCTAssertEqual(eventLogger.capturedValueToSum, 10)
@@ -778,20 +657,11 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(capturedParameters[.trialPrice])
   }
 
-  func testLogRestoredPurchaseTransaction_2() async {
-    // Purchase - non consumable
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
-      let product = products.first else {
+  func testLogRestoredPurchaseTransactionNonConsumable() async {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .purchaseRestored)
     XCTAssertEqual(eventLogger.capturedValueToSum, 0.99)
@@ -824,20 +694,11 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(capturedParameters[.trialPrice])
   }
 
-  func testLogRestoredPurchaseTransaction_3() async {
-    // Purchase - cache contains restored
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
-      let product = products.first else {
+  func testLogRestoredPurchaseTransactionRestoredInCache() async {
+    guard let (iapTransaction, _) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     IAPTransactionCache.shared.addTransaction(
       transactionID: iapTransaction.transaction.originalID,
       eventName: .purchaseRestored
@@ -856,20 +717,11 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
 
   // MARK: - Duplicates
 
-  func testLogDuplicatePurchaseEvent() async {
-    // New Purchase -> New Purchase
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
-      let product = products.first else {
+  func testLogDuplicatePurchaseEventFirstOneShouldSucceed() async {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .purchased)
@@ -903,20 +755,11 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(capturedParameters[.trialPrice])
   }
 
-  func testLogDuplicatePurchaseRestoredEvent() async {
-    // Purchase Restored -> New Purchase
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
-      let product = products.first else {
+  func testLogPurchaseRestoredEventAndThenPurchaseEventPurchaseRestoredShouldSucceed() async {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .purchaseRestored)
@@ -956,20 +799,11 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(capturedParameters[.trialPrice])
   }
 
-  func testLogDuplicateSubscriptionEvent() async {
-    // New Subscription -> New Subscription
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+  func testLogDuplicateSubscriptionEventFirstOneShouldSucceed() async {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logNewTransaction(iapTransaction)
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribe)
@@ -1003,20 +837,11 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(capturedParameters[.trialPrice])
   }
 
-  func testLogDuplicateSubscriptionRestoredEvent() async {
-    // Subscription Restored -> New Subscription
-    guard let products =
-      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
-      let product = products.first else {
+  func testLogSubscriptionRestoredEventAndThenSubscriptionEventSubscriptionRestoredShouldSucceed() async {
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription1.rawValue) else {
       return
     }
-    guard let result = try? await product.purchase() else {
-      return
-    }
-    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
-      return
-    }
-    await iapTransaction.transaction.finish()
     await iapLogger.logRestoredTransaction(iapTransaction)
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribeRestore)
