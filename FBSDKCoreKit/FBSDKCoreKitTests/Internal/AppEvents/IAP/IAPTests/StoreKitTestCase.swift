@@ -49,6 +49,7 @@ class StoreKitTestCase: XCTestCase {
 
   override func setUp() async throws {
     try await super.setUp()
+    IAPTransactionCache.shared.reset()
     testSession = try SKTestSession(configurationFileNamed: Self.configFileName)
     testSession.resetToDefaultState()
     testSession.clearTransactions()
@@ -56,7 +57,6 @@ class StoreKitTestCase: XCTestCase {
   }
 
   override func tearDown() {
-    IAPTransactionCache.shared.reset()
     testSession = nil
     super.tearDown()
   }
