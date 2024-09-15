@@ -63,6 +63,9 @@ struct IAPEventResolver {
     if #available(iOS 16.0, *) {
       currency = transaction.currency?.identifier
     }
+    let introOffer = product.subscription?.introductoryOffer
+    let hasIntroductoryOffer = introOffer != nil
+    let hasFreeTrial = introOffer?.paymentMode == .freeTrial
     return IAPEvent(
       eventName: eventName,
       productID: transaction.productID,
@@ -75,7 +78,12 @@ struct IAPEventResolver {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: transaction.purchaseDate,
       originalTransactionDate: transaction.originalPurchaseDate,
-      isVerified: iapTransaction.isVerified
+      isVerified: iapTransaction.isVerified,
+      subscriptionPeriod: product.subscription?.subscriptionPeriod.iapSubscriptionPeriod,
+      hasIntroductoryOffer: hasIntroductoryOffer,
+      hasFreeTrial: hasFreeTrial,
+      introductoryOfferSubscriptionPeriod: introOffer?.period.iapSubscriptionPeriod,
+      introductoryOfferPrice: introOffer?.price
     )
   }
 }
