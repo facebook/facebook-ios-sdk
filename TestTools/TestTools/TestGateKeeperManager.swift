@@ -6,20 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestGateKeeperManager: NSObject, _GateKeeperManaging {
-  static var gateKeepers = [String?: Bool]()
-  static var loadGateKeepersWasCalled = false
-  static var capturedLoadGateKeepersCompletion: _GKManagerBlock?
-  static var capturedBoolForGateKeeperKeys = [String]()
+public final class TestGateKeeperManager: NSObject, _GateKeeperManaging {
+  public static var gateKeepers = [String?: Bool]()
+  public static var loadGateKeepersWasCalled = false
+  public static var capturedLoadGateKeepersCompletion: _GKManagerBlock?
+  public static var capturedBoolForGateKeeperKeys = [String]()
 
-  static func setGateKeeperValue(key: String, value: Bool) {
+  public static func setGateKeeperValue(key: String, value: Bool) {
     gateKeepers[key] = value
   }
 
-  static func bool(forKey key: String, defaultValue: Bool) -> Bool {
+  public static func bool(forKey key: String, defaultValue: Bool) -> Bool {
     capturedBoolForGateKeeperKeys.append(key)
     if let value = gateKeepers[key] {
       return value
@@ -28,12 +29,12 @@ final class TestGateKeeperManager: NSObject, _GateKeeperManaging {
     }
   }
 
-  static func loadGateKeepers(_ completionBlock: @escaping _GKManagerBlock) {
+  public static func loadGateKeepers(_ completionBlock: @escaping _GKManagerBlock) {
     loadGateKeepersWasCalled = true
     capturedLoadGateKeepersCompletion = completionBlock
   }
 
-  static func reset() {
+  public static func reset() {
     gateKeepers = [:]
     loadGateKeepersWasCalled = false
     capturedLoadGateKeepersCompletion = nil
