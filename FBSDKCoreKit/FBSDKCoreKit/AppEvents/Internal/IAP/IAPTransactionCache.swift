@@ -60,7 +60,6 @@ extension IAPTransactionCache {
 
 extension IAPTransactionCache {
   var hasRestoredPurchases: Bool {
-    // swiftlint:disable:next implicit_getter
     get {
       guard let dependencies = try? getDependencies() else {
         return false
@@ -76,7 +75,6 @@ extension IAPTransactionCache {
   }
 
   var newCandidatesDate: Date? {
-    // swiftlint:disable:next implicit_getter
     get {
       guard let dependencies = try? getDependencies() else {
         return nil

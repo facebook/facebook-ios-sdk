@@ -40,7 +40,7 @@ NS_SWIFT_NAME(GraphRequestMetadata)
   NS_DESIGNATED_INITIALIZER;
 
 - (void)invokeCompletionHandlerForConnection:(id<FBSDKGraphRequestConnecting>)connection
-                                 withResults:(id)results
+                                 withResults:(nullable id)results
                                        error:(nullable NSError *)error;
 @end
 
