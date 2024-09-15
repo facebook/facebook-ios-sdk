@@ -6,31 +6,31 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@testable import FBSDKCoreKit
+import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer_final_classes
-  var flushCallCount = 0
-  var flushBehavior: AppEvents.FlushBehavior = .auto
-  var capturedEventName: AppEvents.Name?
-  var capturedParameters: [AppEvents.ParameterName: Any]?
-  var capturedIsImplicitlyLogged = false
-  var capturedAccessToken: AccessToken?
-  var capturedValueToSum: Double?
-  var capturedFlushReason: AppEvents.FlushReason?
+open class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer_final_classes
+  public var flushCallCount = 0
+  public var flushBehavior: AppEvents.FlushBehavior = .auto
+  public var capturedEventName: AppEvents.Name?
+  public var capturedParameters: [AppEvents.ParameterName: Any]?
+  public var capturedIsImplicitlyLogged = false
+  public var capturedAccessToken: AccessToken?
+  public var capturedValueToSum: Double?
+  public var capturedFlushReason: AppEvents.FlushReason?
 
-  func flush(for flushReason: AppEvents.FlushReason) {
+  public func flush(for flushReason: AppEvents.FlushReason) {
     flushCallCount += 1
     capturedFlushReason = flushReason
   }
 
-  func logEvent(_ eventName: AppEvents.Name, parameters: [AppEvents.ParameterName: Any]?) {
+  public func logEvent(_ eventName: AppEvents.Name, parameters: [AppEvents.ParameterName: Any]?) {
     capturedEventName = eventName
     capturedParameters = parameters
   }
 
-  func logEvent(
+  public func logEvent(
     _ eventName: AppEvents.Name,
     valueToSum: Double,
     parameters: [AppEvents.ParameterName: Any]?
@@ -40,12 +40,12 @@ class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer
     capturedParameters = parameters
   }
 
-  func logInternalEvent(_ eventName: AppEvents.Name, isImplicitlyLogged: Bool) {
+  public func logInternalEvent(_ eventName: AppEvents.Name, isImplicitlyLogged: Bool) {
     capturedEventName = eventName
     capturedIsImplicitlyLogged = isImplicitlyLogged
   }
 
-  func logInternalEvent(
+  public func logInternalEvent(
     _ eventName: AppEvents.Name,
     parameters: [AppEvents.ParameterName: Any]?,
     isImplicitlyLogged: Bool
@@ -55,7 +55,7 @@ class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer
     capturedIsImplicitlyLogged = isImplicitlyLogged
   }
 
-  func logInternalEvent(
+  public func logInternalEvent(
     _ eventName: AppEvents.Name,
     parameters: [AppEvents.ParameterName: Any]?,
     isImplicitlyLogged: Bool,
@@ -67,7 +67,7 @@ class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer
     capturedAccessToken = accessToken
   }
 
-  func logInternalEvent(
+  public func logInternalEvent(
     _ eventName: AppEvents.Name,
     valueToSum: Double,
     isImplicitlyLogged: Bool

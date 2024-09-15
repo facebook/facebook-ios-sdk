@@ -7,6 +7,7 @@
  */
 
 @testable import FBSDKCoreKit
+import TestTools
 
 // swiftlint:disable:next swiftlint_disable_without_this_or_next
 // swiftlint:disable line_length
