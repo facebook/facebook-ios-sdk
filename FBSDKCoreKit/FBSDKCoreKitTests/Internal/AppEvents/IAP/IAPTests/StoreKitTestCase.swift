@@ -20,9 +20,11 @@ class StoreKitTestCase: XCTestCase {
   static let configFileName = "FBSDKStoreKitConfigurationUnitTests"
 
   enum ProductIdentifiers: String, CaseIterable {
+    case consumableProduct1 = "com.fbsdk.consumable.p1"
     case nonConsumableProduct1 = "com.fbsdk.nonconsumable.p1"
     case nonConsumableProduct2 = "com.fbsdk.nonconsumable.p2"
     case autoRenewingSubscription1 = "com.fbsdk.autorenewing.s1"
+    case autoRenewingSubscription2 = "com.fbsdk.autorenewing.s2"
     case nonRenewingSubscription1 = "com.fbsdk.nonrenewing.s1"
   }
 
