@@ -80,6 +80,10 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameInitiatedCheckout;
 /// Log this event when the user has completed a transaction.  The valueToSum passed to logEvent should be the total price of the transaction.
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNamePurchased;
 
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNamePurchaseRestored;
+
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSubscribeRestore;
+
 // MARK: - Gaming
 
 /// Log this event when the user has achieved a level in the app.
