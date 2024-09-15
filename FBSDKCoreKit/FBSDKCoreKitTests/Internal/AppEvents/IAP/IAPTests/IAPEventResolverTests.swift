@@ -53,7 +53,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -84,7 +89,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -115,7 +125,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -134,6 +149,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       return
     }
     await iapTransaction.transaction.finish()
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
     let expectedEvent = IAPEvent(
       eventName: .subscribe,
       productID: Self.ProductIdentifiers.autoRenewingSubscription1.rawValue,
@@ -146,7 +162,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: subscriptionPeriod,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -165,6 +186,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       return
     }
     await iapTransaction.transaction.finish()
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
+    let introOfferSubscriptionPeriod = IAPSubscriptionPeriod(unit: .month, numUnits: 6)
     let expectedEvent = IAPEvent(
       eventName: .startTrial,
       productID: Self.ProductIdentifiers.autoRenewingSubscription2.rawValue,
@@ -177,7 +200,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: subscriptionPeriod,
+      hasIntroductoryOffer: true,
+      hasFreeTrial: true,
+      introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
+      introductoryOfferPrice: 0.0
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -208,7 +236,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -227,6 +260,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       return
     }
     await iapTransaction.transaction.finish()
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
     let expectedEvent = IAPEvent(
       eventName: .subscribeRestore,
       productID: Self.ProductIdentifiers.autoRenewingSubscription1.rawValue,
@@ -239,7 +273,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: subscriptionPeriod,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -258,6 +297,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       return
     }
     await iapTransaction.transaction.finish()
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
+    let introOfferSubscriptionPeriod = IAPSubscriptionPeriod(unit: .month, numUnits: 6)
     let expectedEvent = IAPEvent(
       eventName: .subscribeRestore,
       productID: Self.ProductIdentifiers.autoRenewingSubscription2.rawValue,
@@ -270,7 +311,12 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionID: iapTransaction.transaction.originalID,
       transactionDate: iapTransaction.transaction.purchaseDate,
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: subscriptionPeriod,
+      hasIntroductoryOffer: true,
+      hasFreeTrial: true,
+      introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
+      introductoryOfferPrice: 0.0
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)

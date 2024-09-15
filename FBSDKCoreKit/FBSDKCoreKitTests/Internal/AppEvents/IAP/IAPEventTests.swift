@@ -26,7 +26,12 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: 1,
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     XCTAssertEqual(event1.eventName.rawValue, AppEvents.Name.purchased.rawValue)
     XCTAssertEqual(event1.productID, "com.fbsdk.p1")
@@ -40,6 +45,11 @@ final class IAPEventTests: XCTestCase {
     XCTAssertEqual(event1.transactionDate, now)
     XCTAssertEqual(event1.originalTransactionDate, now)
     XCTAssertTrue(event1.isVerified)
+    XCTAssertNil(event1.subscriptionPeriod)
+    XCTAssertFalse(event1.hasIntroductoryOffer)
+    XCTAssertFalse(event1.hasFreeTrial)
+    XCTAssertNil(event1.introductoryOfferSubscriptionPeriod)
+    XCTAssertNil(event1.introductoryOfferPrice)
   }
 
   func testIAPEventNotEqualName() {
@@ -56,7 +66,12 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: 1,
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event2 = IAPEvent(
       eventName: .purchaseRestored,
@@ -70,7 +85,12 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: 1,
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     XCTAssertNotEqual(event1, event2)
   }
@@ -89,7 +109,12 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: 1,
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event2 = IAPEvent(
       eventName: .purchased,
@@ -103,7 +128,12 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: 1,
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: false
+      isVerified: false,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     XCTAssertNotEqual(event1, event2)
   }
@@ -122,7 +152,12 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: 1,
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     let event2 = IAPEvent(
       eventName: .purchased,
@@ -136,7 +171,12 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: 1,
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true
+      isVerified: true,
+      subscriptionPeriod: nil,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil
     )
     XCTAssertEqual(event1, event2)
   }
