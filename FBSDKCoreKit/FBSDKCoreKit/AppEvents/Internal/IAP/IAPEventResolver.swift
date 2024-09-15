@@ -12,19 +12,37 @@ import StoreKit
 @available(iOS 15.0, *)
 struct IAPEventResolver {
 
+  static var configuredDependencies: TypeDependencies?
+  static var defaultDependencies: TypeDependencies? = .init(
+    gateKeeperManager: _GateKeeperManager.self
+  )
+
   private static let freeTrialPaymentModeString = "FREE_TRIAL"
+  let gateKeeperAppEventsIfAutoLogSubs = "app_events_if_auto_log_subs"
 
   func resolveNewEventFor(iapTransaction: IAPTransaction) async -> IAPEvent? {
+    guard let dependencies = try? Self.getDependencies() else {
+      return nil
+    }
     var eventName: AppEvents.Name = .purchased
     if isSubscription(transaction: iapTransaction.transaction) {
+      guard dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false) else {
+        return nil
+      }
       eventName = resolveNewSubscriptionEventName(transaction: iapTransaction.transaction)
     }
     return await resolveEventFor(iapTransaction: iapTransaction, eventName: eventName)
   }
 
   func resolveRestoredEventFor(iapTransaction: IAPTransaction) async -> IAPEvent? {
+    guard let dependencies = try? Self.getDependencies() else {
+      return nil
+    }
     var eventName: AppEvents.Name = .purchaseRestored
     if isSubscription(transaction: iapTransaction.transaction) {
+      guard dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false) else {
+        return nil
+      }
       eventName = .subscribeRestore
     }
     return await resolveEventFor(iapTransaction: iapTransaction, eventName: eventName)
@@ -36,13 +54,18 @@ struct IAPEventResolver {
     return subscriptionCheck
   }
 
-  private func resolveNewSubscriptionEventName(transaction: Transaction) -> AppEvents.Name {
+  private func isStartTrial(transaction: Transaction) -> Bool {
     var isFreeTrial = false
     if #available(iOS 17.2, *) {
       isFreeTrial = transaction.offer?.paymentMode == .freeTrial
     } else {
       isFreeTrial = transaction.offerPaymentModeStringRepresentation == Self.freeTrialPaymentModeString
     }
+    return isFreeTrial
+  }
+
+  private func resolveNewSubscriptionEventName(transaction: Transaction) -> AppEvents.Name {
+    let isFreeTrial = isStartTrial(transaction: transaction)
     return isFreeTrial ? .startTrial : .subscribe
   }
 
@@ -80,10 +103,20 @@ struct IAPEventResolver {
       originalTransactionDate: transaction.originalPurchaseDate,
       isVerified: iapTransaction.isVerified,
       subscriptionPeriod: product.subscription?.subscriptionPeriod.iapSubscriptionPeriod,
+      isStartTrial: isStartTrial(transaction: iapTransaction.transaction),
       hasIntroductoryOffer: hasIntroductoryOffer,
       hasFreeTrial: hasFreeTrial,
       introductoryOfferSubscriptionPeriod: introOffer?.period.iapSubscriptionPeriod,
       introductoryOfferPrice: introOffer?.price
     )
+  }
+}
+
+// MARK: - DependentAsObject
+
+@available(iOS 15.0, *)
+extension IAPEventResolver: DependentAsType {
+  struct TypeDependencies {
+    var gateKeeperManager: _GateKeeperManaging.Type
   }
 }

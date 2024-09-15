@@ -10,16 +10,22 @@
 @testable import IAPTestsHostApp
 
 import StoreKitTest
+import TestTools
 import XCTest
 
 @available(iOS 15.0, *)
 final class IAPEventResolverTests: StoreKitTestCase {
 
-  // swiftlint:disable:next implicitly_unwrapped_optional
+  // swiftlint:disable implicitly_unwrapped_optional
   private var eventResolver: IAPEventResolver!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() async throws {
     try await super.setUp()
+    TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = true
+    IAPEventResolver.configuredDependencies = .init(
+      gateKeeperManager: TestGateKeeperManager.self
+    )
     eventResolver = IAPEventResolver()
   }
 
@@ -55,6 +61,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: nil,
+      isStartTrial: false,
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
@@ -91,6 +98,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: nil,
+      isStartTrial: false,
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
@@ -127,6 +135,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: nil,
+      isStartTrial: false,
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
@@ -164,6 +173,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: false,
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
@@ -202,6 +212,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: true,
       hasIntroductoryOffer: true,
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
@@ -209,6 +220,24 @@ final class IAPEventResolverTests: StoreKitTestCase {
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
+  }
+
+  func testResolveNewAutoSubscriptionEventGKDisabled() async {
+    TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = false
+    guard let products =
+      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
+      let product = products.first else {
+      return
+    }
+    guard let result = try? await product.purchase() else {
+      return
+    }
+    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
+      return
+    }
+    await iapTransaction.transaction.finish()
+    let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
+    XCTAssertNil(event)
   }
 
   func testResolveRestoredPurchaseEvent() async {
@@ -238,6 +267,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: nil,
+      isStartTrial: false,
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
@@ -275,6 +305,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: false,
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
@@ -313,6 +344,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
       originalTransactionDate: iapTransaction.transaction.originalPurchaseDate,
       isVerified: true,
       subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: true,
       hasIntroductoryOffer: true,
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
@@ -320,5 +352,23 @@ final class IAPEventResolverTests: StoreKitTestCase {
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
+  }
+
+  func testResolveRestoredAutoSubscriptionEventGKDisabled() async {
+    TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = false
+    guard let products =
+      try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
+      let product = products.first else {
+      return
+    }
+    guard let result = try? await product.purchase() else {
+      return
+    }
+    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
+      return
+    }
+    await iapTransaction.transaction.finish()
+    let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
+    XCTAssertNil(event)
   }
 }
