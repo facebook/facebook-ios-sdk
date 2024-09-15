@@ -141,6 +141,7 @@ targets:
       DEVELOPMENT_LANGUAGE: en
       CURRENT_PROJECT_VERSION: 1.0
       GENERATE_INFOPLIST_FILE: YES
+      BUILD_LIBRARY_FOR_DISTRIBUTION: NO
   IAPTests:
     type: bundle.unit-test
     platform: iOS
@@ -154,6 +155,7 @@ targets:
       CURRENT_PROJECT_VERSION: 1.0
       TEST_HOST: $(BUILT_PRODUCTS_DIR)/IAPTestsHostApp.app/IAPTestsHostApp
       GENERATE_INFOPLIST_FILE: YES
+      BUILD_LIBRARY_FOR_DISTRIBUTION: NO
     dependencies:
       - target: IAPTestsHostApp
 
