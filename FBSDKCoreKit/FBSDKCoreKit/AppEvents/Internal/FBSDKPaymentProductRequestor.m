@@ -312,7 +312,7 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
   NSString *originalTransactionID = transaction.originalTransaction.transactionIdentifier;
   switch (transaction.transactionState) {
     case SKPaymentTransactionStatePurchasing:
-      eventName = @"SubscriptionInitiatedCheckout";
+      eventName = FBSDKAppEventNameSubscribeInitiatedCheckout;
       break;
     case SKPaymentTransactionStatePurchased:
       if ([self isStartTrial:transaction ofProduct:product]) {
@@ -327,10 +327,10 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
       }
       break;
     case SKPaymentTransactionStateFailed:
-      eventName = @"SubscriptionFailed";
+      eventName = FBSDKAppEventNameSubscribeFailed;
       break;
     case SKPaymentTransactionStateRestored:
-      eventName = @"SubscriptionRestore";
+      eventName = FBSDKAppEventNameSubscribeRestore;
       break;
     case SKPaymentTransactionStateDeferred:
       return;
