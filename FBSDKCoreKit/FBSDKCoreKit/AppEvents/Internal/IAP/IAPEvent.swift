@@ -23,6 +23,7 @@ struct IAPEvent: Equatable {
   let originalTransactionDate: Date
   let isVerified: Bool
   let subscriptionPeriod: IAPSubscriptionPeriod?
+  let isStartTrial: Bool
   let hasIntroductoryOffer: Bool
   let hasFreeTrial: Bool
   let introductoryOfferSubscriptionPeriod: IAPSubscriptionPeriod?
