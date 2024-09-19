@@ -180,8 +180,12 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
   
   [self.swizzler swizzleSelector:@selector(application:continueUserActivity:restorationHandler:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSUserActivity *userActivity, id restorationHandler) {
     [self.aemReporter enable];
-    [self.aemReporter handle:userActivity.webpageURL];
-    [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
+    NSURL *webpageURL = userActivity.webpageURL;
+    if (webpageURL) {
+        [self.aemReporter handle:userActivity.webpageURL];
+        [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
+    }
+    
     [self logAutoSetupStatus:YES source:@"appdelegate_ul"];
   } named:@"AEMUniversallinkAutoSetup"];
   
