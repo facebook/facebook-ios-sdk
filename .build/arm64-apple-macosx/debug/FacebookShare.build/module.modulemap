@@ -1,0 +1,4 @@
+module FacebookShare {
+    header "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/arm64-apple-macosx/debug/FacebookShare.build/FacebookShare-Swift.h"
+    requires objc
+}

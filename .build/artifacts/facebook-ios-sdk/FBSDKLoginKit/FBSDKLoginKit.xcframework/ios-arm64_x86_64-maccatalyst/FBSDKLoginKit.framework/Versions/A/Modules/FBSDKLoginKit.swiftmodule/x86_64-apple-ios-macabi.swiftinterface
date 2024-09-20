@@ -1,0 +1,391 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target x86_64-apple-ios13.1-macabi -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name FBSDKLoginKit
+import CommonCrypto
+import FBSDKCoreKit
+import FBSDKCoreKit_Basics
+@_exported import FBSDKLoginKit
+import Foundation
+import Security
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKCodeVerifier) final public class CodeVerifier : ObjectiveC.NSObject {
+  @objc final public let value: Swift.String
+  @objc final public var challenge: Swift.String {
+    @objc get
+  }
+  @objc(initWithString:) convenience public init?(string: Swift.String)
+  @objc override convenience dynamic public init()
+  @objc deinit
+}
+@objc(FBSDKDefaultAudience) public enum DefaultAudience : Swift.UInt {
+  case friends
+  case onlyMe
+  case everyone
+  public init?(rawValue: Swift.UInt)
+  public typealias RawValue = Swift.UInt
+  public var rawValue: Swift.UInt {
+    get
+  }
+}
+@objcMembers @objc(FBSDKDeviceLoginCodeInfo) final public class DeviceLoginCodeInfo : ObjectiveC.NSObject {
+  @objc final public let identifier: Swift.String
+  @objc final public let loginCode: Swift.String
+  @objc final public let verificationURL: Foundation.URL
+  @objc final public let expirationDate: Foundation.Date
+  @objc final public let pollingInterval: Swift.UInt
+  @objc public init(identifier: Swift.String, loginCode: Swift.String, verificationURL: Foundation.URL, expirationDate: Foundation.Date, pollingInterval: Swift.UInt)
+  @objc deinit
+}
+public struct DeviceLoginError : Foundation.CustomNSError, Swift.Hashable {
+  public let errorCode: Swift.Int
+  public let errorUserInfo: [Swift.String : Any]
+  public init(_nsError nsError: Foundation.NSError)
+  public init(_ code: FBSDKLoginKit.DeviceLoginError.Code, userInfo: [Swift.String : Any] = [:])
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public typealias Code = FBSDKLoginKit.DeviceLoginErrorCode
+  public static var excessivePolling: FBSDKLoginKit.DeviceLoginError.Code {
+    get
+  }
+  public static var authorizationDeclined: FBSDKLoginKit.DeviceLoginError.Code {
+    get
+  }
+  public static var authorizationPending: FBSDKLoginKit.DeviceLoginError.Code {
+    get
+  }
+  public static var codeExpired: FBSDKLoginKit.DeviceLoginError.Code {
+    get
+  }
+  public static func == (lhs: FBSDKLoginKit.DeviceLoginError, rhs: FBSDKLoginKit.DeviceLoginError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc(FBSDKDeviceLoginError) public enum DeviceLoginErrorCode : Swift.Int, @unchecked Swift.Sendable, Swift.Equatable {
+  public typealias _ErrorType = FBSDKLoginKit.DeviceLoginError
+  case excessivePolling = 1349172
+  case authorizationDeclined = 1349173
+  case authorizationPending = 1349174
+  case codeExpired = 1349152
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objcMembers @objc(FBSDKDeviceLoginManager) final public class DeviceLoginManager : ObjectiveC.NSObject {
+  @objc weak final public var delegate: (any FBSDKLoginKit.DeviceLoginManagerDelegate)?
+  @objc final public let permissions: [Swift.String]
+  @objc final public var redirectURL: Foundation.URL?
+  @objc(initWithPermissions:enableSmartLogin:) public init(permissions: [Swift.String], enableSmartLogin: Swift.Bool)
+  @objc final public func start()
+  @objc final public func cancel()
+  @objc deinit
+}
+extension FBSDKLoginKit.DeviceLoginManager : Foundation.NetServiceDelegate {
+  @objc final public func netService(_ service: Foundation.NetService, didNotPublish errorValues: [Swift.String : Foundation.NSNumber])
+}
+@objc(FBSDKDeviceLoginManagerDelegate) public protocol DeviceLoginManagerDelegate {
+  @objc(deviceLoginManager:startedWithCodeInfo:) func deviceLoginManager(_ loginManager: FBSDKLoginKit.DeviceLoginManager, startedWith codeInfo: FBSDKLoginKit.DeviceLoginCodeInfo)
+  @objc(deviceLoginManager:completedWithResult:error:) func deviceLoginManager(_ loginManager: FBSDKLoginKit.DeviceLoginManager, completedWith result: FBSDKLoginKit.DeviceLoginManagerResult?, error: (any Swift.Error)?)
+}
+@objcMembers @objc(FBSDKDeviceLoginManagerResult) final public class DeviceLoginManagerResult : ObjectiveC.NSObject {
+  @objc final public var accessToken: FBSDKCoreKit.AccessToken? {
+    get
+  }
+  @objc final public var isCancelled: Swift.Bool {
+    get
+  }
+  @objc public init(token: FBSDKCoreKit.AccessToken?, isCancelled cancelled: Swift.Bool)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKLoginButton) @_Concurrency.MainActor(unsafe) final public class FBLoginButton : FBSDKCoreKit.FBButton {
+  @objc @_Concurrency.MainActor(unsafe) final public var defaultAudience: FBSDKLoginKit.DefaultAudience {
+    @objc get
+    @objc set
+  }
+  @objc @IBOutlet @_Concurrency.MainActor(unsafe) weak final public var delegate: (any FBSDKLoginKit.LoginButtonDelegate)?
+  @objc @_Concurrency.MainActor(unsafe) final public var permissions: [Swift.String]
+  @objc @_Concurrency.MainActor(unsafe) final public var tooltipBehavior: FBSDKLoginKit.FBLoginButton.TooltipBehavior
+  @objc @_Concurrency.MainActor(unsafe) final public var tooltipColorStyle: FBSDKLoginKit.FBTooltipView.ColorStyle
+  @objc @_Concurrency.MainActor(unsafe) final public var loginTracking: FBSDKLoginKit.LoginTracking
+  @objc @_Concurrency.MainActor(unsafe) final public var nonce: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var messengerPageId: Swift.String?
+  @objc @_Concurrency.MainActor(unsafe) final public var authType: FBSDKLoginKit.LoginAuthType?
+  @objc @_Concurrency.MainActor(unsafe) final public var codeVerifier: FBSDKLoginKit.CodeVerifier
+  @objc(FBSDKLoginButtonTooltipBehavior) public enum TooltipBehavior : Swift.UInt {
+    case automatic = 0
+    case forceDisplay
+    case disable
+    public init?(rawValue: Swift.UInt)
+    public typealias RawValue = Swift.UInt
+    public var rawValue: Swift.UInt {
+      get
+    }
+  }
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc override final public func didMoveToWindow()
+  @_Concurrency.MainActor(unsafe) @objc override final public func imageRect(forContentRect contentRect: CoreFoundation.CGRect) -> CoreFoundation.CGRect
+  @_Concurrency.MainActor(unsafe) @objc override final public func titleRect(forContentRect contentRect: CoreFoundation.CGRect) -> CoreFoundation.CGRect
+  @_Concurrency.MainActor(unsafe) @objc override final public func layoutSubviews()
+  @_Concurrency.MainActor(unsafe) @objc override final public func sizeThatFits(_ size: CoreFoundation.CGSize) -> CoreFoundation.CGSize
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(FBSDKLoginTooltipView) @_Concurrency.MainActor(unsafe) final public class FBLoginTooltipView : FBSDKLoginKit.FBTooltipView {
+  @objc @_Concurrency.MainActor(unsafe) weak final public var delegate: (any FBSDKLoginKit.LoginTooltipViewDelegate)?
+  @objc @_Concurrency.MainActor(unsafe) final public var forceDisplay: Swift.Bool
+  @objc @_Concurrency.MainActor(unsafe) final public var shouldForceDisplay: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) @objc convenience dynamic public init()
+  @objc(initWithTagline:message:colorStyle:) @_Concurrency.MainActor(unsafe) override public init(tagline: Swift.String?, message: Swift.String?, colorStyle: FBSDKLoginKit.FBTooltipView.ColorStyle)
+  @_Concurrency.MainActor(unsafe) @objc override final public func present(in view: UIKit.UIView, arrowPosition: CoreFoundation.CGPoint, direction: FBSDKLoginKit.FBTooltipView.ArrowDirection)
+  @objc deinit
+}
+@objcMembers @objc(FBSDKPermission) final public class FBPermission : ObjectiveC.NSObject {
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  @objc override final public var hash: Swift.Int {
+    @objc get
+  }
+  @objc public init?(string: Swift.String)
+  @objc(permissionsFromRawPermissions:) public static func permissions(fromRawPermissions rawPermissions: Swift.Set<Swift.String>) -> Swift.Set<FBSDKLoginKit.FBPermission>?
+  @objc(rawPermissionsFromPermissions:) public static func rawPermissions(from permissions: Swift.Set<FBSDKLoginKit.FBPermission>) -> Swift.Set<Swift.String>
+  @objc override final public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+}
+@objc(FBSDKTooltipView) @_Concurrency.MainActor(unsafe) open class FBTooltipView : UIKit.UIView {
+  @objc(FBSDKTooltipViewArrowDirection) @frozen public enum ArrowDirection : Swift.UInt {
+    case down = 0
+    case up = 1
+    public init?(rawValue: Swift.UInt)
+    public typealias RawValue = Swift.UInt
+    public var rawValue: Swift.UInt {
+      get
+    }
+  }
+  @objc(FBSDKTooltipColorStyle) @frozen public enum ColorStyle : Swift.UInt {
+    case friendlyBlue = 0
+    case neutralGray = 1
+    public init?(rawValue: Swift.UInt)
+    public typealias RawValue = Swift.UInt
+    public var rawValue: Swift.UInt {
+      get
+    }
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var displayDuration: Swift.Double
+  @objc @_Concurrency.MainActor(unsafe) public var colorStyle: FBSDKLoginKit.FBTooltipView.ColorStyle {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var message: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public var tagline: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) public init(tagline: Swift.String?, message: Swift.String?, colorStyle: FBSDKLoginKit.FBTooltipView.ColorStyle)
+  @available(*, unavailable)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+  @objc(presentFromView:) @_Concurrency.MainActor(unsafe) public func present(from anchorView: UIKit.UIView)
+  @objc(presentInView:withArrowPosition:direction:) @_Concurrency.MainActor(unsafe) open func present(in view: UIKit.UIView, arrowPosition: CoreFoundation.CGPoint, direction: FBSDKLoginKit.FBTooltipView.ArrowDirection)
+  @objc @_Concurrency.MainActor(unsafe) public func dismiss()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func draw(_ rect: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public func layoutSubviews()
+}
+@objc(FBSDKLoginButtonDelegate) public protocol LoginButtonDelegate : ObjectiveC.NSObjectProtocol {
+  @objc(loginButton:didCompleteWithResult:error:) func loginButton(_ loginButton: FBSDKLoginKit.FBLoginButton, didCompleteWith result: FBSDKLoginKit.LoginManagerLoginResult?, error: (any Swift.Error)?)
+  @objc func loginButtonDidLogOut(_ loginButton: FBSDKLoginKit.FBLoginButton)
+  @objc optional func loginButtonWillLogin(_ loginButton: FBSDKLoginKit.FBLoginButton) -> Swift.Bool
+}
+@objcMembers @objc(FBSDKLoginConfiguration) final public class LoginConfiguration : ObjectiveC.NSObject {
+  @objc final public let nonce: Swift.String
+  @objc final public let tracking: FBSDKLoginKit.LoginTracking
+  @objc final public let requestedPermissions: Swift.Set<FBSDKLoginKit.FBPermission>
+  @objc final public let messengerPageId: Swift.String?
+  @objc final public let authType: FBSDKLoginKit.LoginAuthType?
+  @objc final public let codeVerifier: FBSDKLoginKit.CodeVerifier
+  @objc(initWithPermissions:tracking:nonce:messengerPageId:) convenience public init?(permissions: [Swift.String], tracking: FBSDKLoginKit.LoginTracking, nonce: Swift.String, messengerPageId: Swift.String?)
+  @objc(initWithPermissions:tracking:nonce:messengerPageId:authType:) convenience public init?(permissions: [Swift.String], tracking: FBSDKLoginKit.LoginTracking, nonce: Swift.String, messengerPageId: Swift.String?, authType: FBSDKLoginKit.LoginAuthType?)
+  @objc(initWithPermissions:tracking:nonce:) convenience public init?(permissions: [Swift.String], tracking: FBSDKLoginKit.LoginTracking, nonce: Swift.String)
+  @objc(initWithPermissions:tracking:messengerPageId:) convenience public init?(permissions: [Swift.String], tracking: FBSDKLoginKit.LoginTracking, messengerPageId: Swift.String?)
+  @objc(initWithPermissions:tracking:messengerPageId:authType:) convenience public init?(permissions: [Swift.String], tracking: FBSDKLoginKit.LoginTracking, messengerPageId: Swift.String?, authType: FBSDKLoginKit.LoginAuthType?)
+  @objc(initWithPermissions:tracking:nonce:messengerPageId:authType:codeVerifier:) public init?(permissions: [Swift.String], tracking: FBSDKLoginKit.LoginTracking, nonce: Swift.String, messengerPageId: Swift.String?, authType: FBSDKLoginKit.LoginAuthType?, codeVerifier: FBSDKLoginKit.CodeVerifier)
+  @objc(initWithPermissions:tracking:) convenience public init?(permissions: [Swift.String], tracking: FBSDKLoginKit.LoginTracking)
+  @objc(initWithTracking:) convenience public init?(tracking: FBSDKLoginKit.LoginTracking)
+  convenience public init?(permissions: Swift.Set<FBSDKCoreKit.Permission> = [], tracking: FBSDKLoginKit.LoginTracking = .enabled, nonce: Swift.String = UUID().uuidString, messengerPageId: Swift.String? = nil, authType: FBSDKLoginKit.LoginAuthType? = .rerequest, codeVerifier: FBSDKLoginKit.CodeVerifier = CodeVerifier())
+  @objc deinit
+}
+public struct LoginError : Foundation.CustomNSError, Swift.Hashable {
+  public let errorCode: Swift.Int
+  public let errorUserInfo: [Swift.String : Any]
+  public init(_nsError nsError: Foundation.NSError)
+  public init(_ code: FBSDKLoginKit.LoginError.Code, userInfo: [Swift.String : Any] = [:])
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public typealias Code = FBSDKLoginKit.LoginErrorCode
+  public static var reserved: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var unknown: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var passwordChanged: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var userCheckpointed: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var userMismatch: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var unconfirmedUser: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var systemAccountAppDisabled: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var systemAccountUnavailable: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var badChallengeString: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var invalidIDToken: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static var missingAccessToken: FBSDKLoginKit.LoginError.Code {
+    get
+  }
+  public static func == (lhs: FBSDKLoginKit.LoginError, rhs: FBSDKLoginKit.LoginError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc(FBSDKLoginError) public enum LoginErrorCode : Swift.Int, @unchecked Swift.Sendable, Swift.Equatable {
+  public typealias _ErrorType = FBSDKLoginKit.LoginError
+  case reserved = 300
+  case unknown
+  case passwordChanged
+  case userCheckpointed
+  case userMismatch
+  case unconfirmedUser
+  case systemAccountAppDisabled
+  case systemAccountUnavailable
+  case badChallengeString
+  case invalidIDToken
+  case missingAccessToken
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public let LoginErrorDomain: Swift.String
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKLoginManager) final public class LoginManager : ObjectiveC.NSObject {
+  @objc final public var defaultAudience: FBSDKLoginKit.DefaultAudience
+  @objc convenience public init(defaultAudience: FBSDKLoginKit.DefaultAudience = .friends)
+  @available(swift, obsoleted: 0.1)
+  @objc(logInFromViewController:configuration:completion:) final public func logIn(from viewController: UIKit.UIViewController?, configuration: FBSDKLoginKit.LoginConfiguration?, completion: @escaping FBSDKLoginKit.LoginManagerLoginResultBlock)
+  @nonobjc final public func logIn(viewController: UIKit.UIViewController? = nil, configuration: FBSDKLoginKit.LoginConfiguration?, completion: @escaping FBSDKLoginKit.LoginResultBlock)
+  @objc(logInWithPermissions:fromViewController:handler:) final public func logIn(permissions: [Swift.String], from viewController: UIKit.UIViewController?, handler: FBSDKLoginKit.LoginManagerLoginResultBlock?)
+  @objc(reauthorizeDataAccess:handler:) final public func reauthorizeDataAccess(from viewController: UIKit.UIViewController, handler: @escaping FBSDKLoginKit.LoginManagerLoginResultBlock)
+  @objc(logOut) final public func logOut()
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension FBSDKLoginKit.LoginManager : FBSDKCoreKit.URLOpening {
+  @objc public static func makeOpener() -> FBSDKLoginKit.LoginManager
+  @objc final public func application(_ application: UIKit.UIApplication?, open url: Foundation.URL?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func canOpen(_ url: Foundation.URL, for application: UIKit.UIApplication?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func applicationDidBecomeActive(_ application: UIKit.UIApplication)
+  @objc final public func isAuthenticationURL(_ url: Foundation.URL) -> Swift.Bool
+  @objc final public func shouldStopPropagation(of url: Foundation.URL) -> Swift.Bool
+}
+@objcMembers @objc(FBSDKLoginManagerLoginResult) final public class LoginManagerLoginResult : ObjectiveC.NSObject {
+  @objc final public let token: FBSDKCoreKit.AccessToken?
+  @objc final public let authenticationToken: FBSDKCoreKit.AuthenticationToken?
+  @objc final public let isCancelled: Swift.Bool
+  @objc final public let grantedPermissions: Swift.Set<Swift.String>
+  @objc final public let declinedPermissions: Swift.Set<Swift.String>
+  @objc(initWithToken:authenticationToken:isCancelled:grantedPermissions:declinedPermissions:) public init(token: FBSDKCoreKit.AccessToken?, authenticationToken: FBSDKCoreKit.AuthenticationToken?, isCancelled: Swift.Bool, grantedPermissions: Swift.Set<Swift.String>, declinedPermissions: Swift.Set<Swift.String>)
+  @objc deinit
+}
+public typealias LoginResultBlock = (FBSDKLoginKit.LoginResult) -> Swift.Void
+@frozen public enum LoginResult {
+  case success(granted: Swift.Set<FBSDKCoreKit.Permission>, declined: Swift.Set<FBSDKCoreKit.Permission>, token: FBSDKCoreKit.AccessToken?)
+  case cancelled
+  case failed(any Swift.Error)
+}
+@objc(FBSDKLoginTooltipViewDelegate) public protocol LoginTooltipViewDelegate {
+  @objc(loginTooltipView:shouldAppear:) optional func loginTooltipView(_ view: FBSDKLoginKit.FBLoginTooltipView, shouldAppear appIsEligible: Swift.Bool) -> Swift.Bool
+  @objc(loginTooltipViewWillAppear:) optional func loginTooltipViewWillAppear(_ view: FBSDKLoginKit.FBLoginTooltipView)
+  @objc(loginTooltipViewWillNotAppear:) optional func loginTooltipViewWillNotAppear(_ view: FBSDKLoginKit.FBLoginTooltipView)
+}
+@objc(FBSDKLoginTracking) public enum LoginTracking : Swift.UInt {
+  case enabled
+  case limited
+  public init?(rawValue: Swift.UInt)
+  public typealias RawValue = Swift.UInt
+  public var rawValue: Swift.UInt {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKLoginCompletionParameters) final public class _LoginCompletionParameters : ObjectiveC.NSObject {
+  @objc final public var authenticationToken: FBSDKCoreKit.AuthenticationToken?
+  @objc final public var profile: FBSDKCoreKit.Profile?
+  @objc final public var accessTokenString: Swift.String?
+  @objc final public var nonceString: Swift.String?
+  @objc final public var authenticationTokenString: Swift.String?
+  @objc final public var code: Swift.String?
+  @objc final public var permissions: Swift.Set<FBSDKLoginKit.FBPermission>?
+  @objc final public var declinedPermissions: Swift.Set<FBSDKLoginKit.FBPermission>?
+  @objc final public var expiredPermissions: Swift.Set<FBSDKLoginKit.FBPermission>?
+  @objc final public var appID: Swift.String?
+  @objc final public var userID: Swift.String?
+  @objc final public var error: (any Swift.Error)?
+  @objc final public var expirationDate: Foundation.Date?
+  @objc final public var dataAccessExpirationDate: Foundation.Date?
+  @objc final public var challenge: Swift.String?
+  @objc final public var graphDomain: Swift.String?
+  @objc final public var userTokenNonce: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension FBSDKLoginKit.DefaultAudience : Swift.Equatable {}
+extension FBSDKLoginKit.DefaultAudience : Swift.Hashable {}
+extension FBSDKLoginKit.DefaultAudience : Swift.RawRepresentable {}
+extension FBSDKLoginKit.DeviceLoginErrorCode : Swift.Hashable {}
+extension FBSDKLoginKit.DeviceLoginErrorCode : Swift.RawRepresentable {}
+extension FBSDKLoginKit.FBLoginButton.TooltipBehavior : Swift.Equatable {}
+extension FBSDKLoginKit.FBLoginButton.TooltipBehavior : Swift.Hashable {}
+extension FBSDKLoginKit.FBLoginButton.TooltipBehavior : Swift.RawRepresentable {}
+extension FBSDKLoginKit.FBTooltipView.ArrowDirection : Swift.Equatable {}
+extension FBSDKLoginKit.FBTooltipView.ArrowDirection : Swift.Hashable {}
+extension FBSDKLoginKit.FBTooltipView.ArrowDirection : Swift.RawRepresentable {}
+extension FBSDKLoginKit.FBTooltipView.ArrowDirection : Swift.Sendable {}
+extension FBSDKLoginKit.FBTooltipView.ColorStyle : Swift.Equatable {}
+extension FBSDKLoginKit.FBTooltipView.ColorStyle : Swift.Hashable {}
+extension FBSDKLoginKit.FBTooltipView.ColorStyle : Swift.RawRepresentable {}
+extension FBSDKLoginKit.FBTooltipView.ColorStyle : Swift.Sendable {}
+extension FBSDKLoginKit.LoginErrorCode : Swift.Hashable {}
+extension FBSDKLoginKit.LoginErrorCode : Swift.RawRepresentable {}
+extension FBSDKLoginKit.LoginTracking : Swift.Equatable {}
+extension FBSDKLoginKit.LoginTracking : Swift.Hashable {}
+extension FBSDKLoginKit.LoginTracking : Swift.RawRepresentable {}

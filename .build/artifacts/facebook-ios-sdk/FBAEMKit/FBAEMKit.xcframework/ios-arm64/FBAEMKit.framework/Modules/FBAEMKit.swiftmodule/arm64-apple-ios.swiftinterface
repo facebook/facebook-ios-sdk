@@ -1,0 +1,32 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name FBAEMKit
+import CommonCrypto
+import CommonCrypto.CommonHMAC
+import FBSDKCoreKit_Basics
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public typealias FBGraphRequestCompletion = (Any?, (any Swift.Error)?) -> Swift.Void
+@objc(FBAEMNetworking) public protocol AEMNetworking {
+  @objc(startGraphRequestWithGraphPath:parameters:tokenString:HTTPMethod:completion:) func startGraphRequest(withGraphPath graphPath: Swift.String, parameters: [Swift.String : Any], tokenString: Swift.String?, httpMethod method: Swift.String?, completion: @escaping FBAEMKit.FBGraphRequestCompletion)
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBAEMReporter) final public class AEMReporter : ObjectiveC.NSObject {
+  @objc public static func configure(networker: (any FBAEMKit.AEMNetworking)?, appID: Swift.String?, reporter: (any FBAEMKit.SKAdNetworkReporting)?)
+  @objc public static func configure(networker: (any FBAEMKit.AEMNetworking)?, appID: Swift.String?, reporter: (any FBAEMKit.SKAdNetworkReporting)?, analyticsAppID: Swift.String?, store: (any FBSDKCoreKit_Basics.DataPersisting)?)
+  @objc public static func enable()
+  @objc public static func setConversionFilteringEnabled(_ enabled: Swift.Bool)
+  @objc public static func setCatalogMatchingEnabled(_ enabled: Swift.Bool)
+  @objc public static func setAdvertiserRuleMatchInServerEnabled(_ enabled: Swift.Bool)
+  @objc public static func handle(_ url: Foundation.URL?)
+  @objc(recordAndUpdateEvent:currency:value:parameters:) public static func recordAndUpdate(event: Swift.String, currency: Swift.String?, value: Foundation.NSNumber?, parameters: [Swift.String : Any]?)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc(FBSKAdNetworkReporting) public protocol SKAdNetworkReporting {
+  @objc func shouldCutoff() -> Swift.Bool
+  @objc(isReportingEvent:) func isReportingEvent(_ event: Swift.String) -> Swift.Bool
+  @objc func checkAndRevokeTimer()
+}

@@ -1,0 +1,494 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios12.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name FBSDKGamingServicesKit
+import FBSDKCoreKit
+import FBSDKCoreKit_Basics
+import FBSDKShareKit
+import Foundation
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@objc(FBSDKChooseContextFilter) public enum ChooseContextFilter : Swift.Int, Swift.CaseIterable {
+  case none
+  case existingChallenges
+  case newPlayersOnly
+  case newContextOnly
+  public var name: Swift.String {
+    get
+  }
+  public init?(rawValue: Swift.Int)
+  public typealias AllCases = [FBSDKGamingServicesKit.ChooseContextFilter]
+  public typealias RawValue = Swift.Int
+  public static var allCases: [FBSDKGamingServicesKit.ChooseContextFilter] {
+    get
+  }
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKChooseContextContent) final public class ChooseContextContent : ObjectiveC.NSObject, FBSDKGamingServicesKit.ValidatableProtocol {
+  @objc final public var filter: FBSDKGamingServicesKit.ChooseContextFilter
+  @objc final public var maxParticipants: Swift.Int
+  @objc final public var minParticipants: Swift.Int
+  @objc public static func filtersName(forFilters filter: FBSDKGamingServicesKit.ChooseContextFilter) -> Swift.String
+  @objc final public func validate() throws
+  @objc override final public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKChooseContextDialog) final public class ChooseContextDialog : FBSDKGamingServicesKit.ContextWebDialog, FBSDKCoreKit.URLOpening {
+  @objc convenience public init(content: FBSDKGamingServicesKit.ChooseContextContent, delegate: any FBSDKGamingServicesKit.ContextDialogDelegate)
+  @objc override final public func show() -> Swift.Bool
+  @objc override final public func validate() throws
+  @objc final public func application(_ application: UIKit.UIApplication?, open url: Foundation.URL?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func canOpen(_ url: Foundation.URL, for application: UIKit.UIApplication?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func applicationDidBecomeActive(_ application: UIKit.UIApplication)
+  @objc final public func isAuthenticationURL(_ url: Foundation.URL) -> Swift.Bool
+  @objc deinit
+}
+@objc(FBSDKContextDialogDelegate) public protocol ContextDialogDelegate {
+  @objc func contextDialogDidComplete(_ contextDialog: FBSDKGamingServicesKit.ContextWebDialog)
+  @objc func contextDialog(_ contextDialog: FBSDKGamingServicesKit.ContextWebDialog, didFailWithError error: any Swift.Error)
+  @objc func contextDialogDidCancel(_ contextDialog: FBSDKGamingServicesKit.ContextWebDialog)
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKContextDialogPresenter) final public class ContextDialogPresenter : ObjectiveC.NSObject {
+  @objc override convenience dynamic public init()
+  @objc final public func makeAndShowCreateContextDialog(content: FBSDKGamingServicesKit.CreateContextContent, delegate: any FBSDKGamingServicesKit.ContextDialogDelegate) throws
+  @objc final public func makeAndShowSwitchContextDialog(content: FBSDKGamingServicesKit.SwitchContextContent, delegate: any FBSDKGamingServicesKit.ContextDialogDelegate) throws
+  @objc final public func makeAndShowChooseContextDialog(content: FBSDKGamingServicesKit.ChooseContextContent, delegate: any FBSDKGamingServicesKit.ContextDialogDelegate)
+  @objc deinit
+}
+public enum ContextDialogPresenterError : Swift.Error {
+  case showCreateContext
+  case showSwitchContext
+  case showChooseContext
+  case invalidAccessToken
+  public static func == (a: FBSDKGamingServicesKit.ContextDialogPresenterError, b: FBSDKGamingServicesKit.ContextDialogPresenterError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKContextWebDialog) public class ContextWebDialog : ObjectiveC.NSObject, FBSDKCoreKit.WebDialogDelegate, FBSDKGamingServicesKit.DialogProtocol {
+  @objc public var delegate: (any FBSDKGamingServicesKit.ContextDialogDelegate)?
+  @objc public var dialogContent: (any FBSDKGamingServicesKit.ValidatableProtocol)?
+  @objc public var currentWebDialog: FBSDKCoreKit._WebDialog?
+  @objc public func show() -> Swift.Bool
+  @objc public func validate() throws
+  @objc public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didCompleteWithResults results: [Swift.String : Any])
+  @objc public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didFailWithError error: any Swift.Error)
+  @objc public func webDialogDidCancel(_ webDialog: FBSDKCoreKit._WebDialog)
+  @objc public func createWebDialogFrame(withWidth width: CoreFoundation.CGFloat, height: CoreFoundation.CGFloat, windowFinder: any FBSDKCoreKit._WindowFinding) -> CoreFoundation.CGRect
+  @objc deinit
+}
+@objcMembers @objc(FBSDKCreateContextContent) final public class CreateContextContent : ObjectiveC.NSObject, FBSDKGamingServicesKit.ValidatableProtocol {
+  @objc final public var playerID: Swift.String
+  @objc(initDialogContentWithPlayerID:) public init(playerID: Swift.String)
+  @objc override final public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc final public func validate() throws
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKCreateContextDialog) final public class CreateContextDialog : FBSDKGamingServicesKit.ContextWebDialog {
+  @objc public init(content: FBSDKGamingServicesKit.CreateContextContent, windowFinder: any FBSDKCoreKit._WindowFinding, delegate: any FBSDKGamingServicesKit.ContextDialogDelegate)
+  @discardableResult
+  @objc override final public func show() -> Swift.Bool
+  @objc override final public func validate() throws
+  @objc deinit
+}
+public enum CustomUpdateContentError : Swift.Error {
+  case notInGameContext
+  case invalidMessage
+  case invalidMedia
+  case invalidImage
+  public static func == (a: FBSDKGamingServicesKit.CustomUpdateContentError, b: FBSDKGamingServicesKit.CustomUpdateContentError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+final public class CustomUpdateContentImage {
+  public init(message: Swift.String, image: UIKit.UIImage, cta: Swift.String? = nil, payload: Swift.String? = nil, messageLocalization: [Swift.String : Swift.String] = [:], ctaLocalization: [Swift.String : Swift.String] = [:])
+  @objc deinit
+}
+final public class CustomUpdateContentMedia {
+  public init(message: Swift.String, media: any FBSDKGamingServicesKit.URLMedia, cta: Swift.String? = nil, payload: Swift.String? = nil, messageLocalization: [Swift.String : Swift.String] = [:], ctaLocalization: [Swift.String : Swift.String] = [:])
+  @objc deinit
+}
+public enum CustomUpdateGraphRequestError : Swift.Error {
+  case server(any Swift.Error)
+  case invalidAccessToken
+  case contentParsing
+  case decoding
+}
+final public class CustomUpdateGraphRequest {
+  final public let graphRequestFactory: any FBSDKCoreKit.GraphRequestFactoryProtocol
+  public init()
+  public init(graphRequestFactory: any FBSDKCoreKit.GraphRequestFactoryProtocol = GraphRequestFactory())
+  final public func request(content: FBSDKGamingServicesKit.CustomUpdateContentMedia, completionHandler: @escaping (Swift.Result<Swift.Bool, FBSDKGamingServicesKit.CustomUpdateGraphRequestError>) -> Swift.Void) throws
+  final public func request(content: FBSDKGamingServicesKit.CustomUpdateContentImage, completionHandler: @escaping (Swift.Result<Swift.Bool, FBSDKGamingServicesKit.CustomUpdateGraphRequestError>) -> Swift.Void) throws
+  @objc deinit
+}
+@objc(FBSDKDialog) public protocol DialogProtocol {
+  @objc weak var delegate: (any FBSDKGamingServicesKit.ContextDialogDelegate)? { get set }
+  @objc var dialogContent: (any FBSDKGamingServicesKit.ValidatableProtocol)? { get set }
+  @objc func show() -> Swift.Bool
+  @objc func validate() throws
+}
+@objc(FBSDKValidatable) public protocol ValidatableProtocol {
+  @objc func validate() throws
+}
+public struct FacebookGIF : Swift.Codable, Swift.Equatable, FBSDKGamingServicesKit.URLMedia {
+  public init(withUrl url: Foundation.URL)
+  public static func == (a: FBSDKGamingServicesKit.FacebookGIF, b: FBSDKGamingServicesKit.FacebookGIF) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct FacebookVideo : Swift.Codable, Swift.Equatable, FBSDKGamingServicesKit.URLMedia {
+  public init(withUrl url: Foundation.URL)
+  public static func == (a: FBSDKGamingServicesKit.FacebookVideo, b: FBSDKGamingServicesKit.FacebookVideo) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc(FBSDKFriendFinderDialog) final public class FriendFinderDialog : ObjectiveC.NSObject {
+  @objc override convenience dynamic public init()
+  @objc(launchFriendFinderDialogWithCompletionHandler:) public static func launch(completionHandler: @escaping FBSDKGamingServicesKit.GamingServiceCompletionHandler)
+  @objc deinit
+}
+@objc(FBSDKGameRequestActionType) public enum GameRequestActionType : Swift.UInt {
+  case none
+  case send
+  case askFor
+  case turn
+  case invite
+  public init?(rawValue: Swift.UInt)
+  public typealias RawValue = Swift.UInt
+  public var rawValue: Swift.UInt {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKGameRequestContent) final public class GameRequestContent : ObjectiveC.NSObject, FBSDKShareKit.SharingValidatable, Foundation.NSSecureCoding {
+  @objc final public var actionType: FBSDKGamingServicesKit.GameRequestActionType
+  @objc final public var data: Swift.String?
+  @objc final public var filters: FBSDKGamingServicesKit.GameRequestFilter
+  @objc final public var message: Swift.String
+  @objc final public var objectID: Swift.String
+  @objc final public var recipients: [Swift.String]
+  @objc final public var recipientSuggestions: [Swift.String]
+  @objc final public var title: Swift.String
+  @objc final public var cta: Swift.String
+  @objc(validateWithOptions:error:) final public func validate(options: FBSDKShareKit.ShareBridgeOptions = []) throws
+  @objc override final public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc(isEqualToGameRequestContent:) final public func isEqual(to content: FBSDKGamingServicesKit.GameRequestContent) -> Swift.Bool
+  @objc final public class var supportsSecureCoding: Swift.Bool {
+    @objc get
+  }
+  @objc convenience public init(coder decoder: Foundation.NSCoder)
+  @objc final public func encode(with encoder: Foundation.NSCoder)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objcMembers @objc(FBSDKGameRequestDialog) final public class GameRequestDialog : ObjectiveC.NSObject {
+  @objc weak final public var delegate: (any FBSDKGamingServicesKit.GameRequestDialogDelegate)?
+  @objc final public var content: FBSDKGamingServicesKit.GameRequestContent
+  @objc final public var isFrictionlessRequestsEnabled: Swift.Bool
+  @objc final public var canShow: Swift.Bool {
+    @objc get
+  }
+  @objc public init(content: FBSDKGamingServicesKit.GameRequestContent, delegate: (any FBSDKGamingServicesKit.GameRequestDialogDelegate)?)
+  @objc(dialogWithContent:delegate:) public static func dialog(content: FBSDKGamingServicesKit.GameRequestContent, delegate: (any FBSDKGamingServicesKit.GameRequestDialogDelegate)?) -> FBSDKGamingServicesKit.GameRequestDialog
+  @discardableResult
+  @objc(showWithContent:delegate:) public static func show(content: FBSDKGamingServicesKit.GameRequestContent, delegate: (any FBSDKGamingServicesKit.GameRequestDialogDelegate)?) -> FBSDKGamingServicesKit.GameRequestDialog
+  @objc @discardableResult
+  final public func show() -> Swift.Bool
+  @objc(validateWithError:) final public func validate() throws
+  @objc deinit
+}
+extension FBSDKGamingServicesKit.GameRequestDialog : FBSDKCoreKit.WebDialogDelegate {
+  @objc final public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didCompleteWithResults results: [Swift.String : Any])
+  @objc final public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didFailWithError error: any Swift.Error)
+  @objc final public func webDialogDidCancel(_ webDialog: FBSDKCoreKit._WebDialog)
+}
+extension FBSDKGamingServicesKit.GameRequestDialog : FBSDKCoreKit.URLOpening {
+  @objc final public func application(_ application: UIKit.UIApplication?, open potentialURL: Foundation.URL?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func canOpen(_ url: Foundation.URL, for application: UIKit.UIApplication?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func applicationDidBecomeActive(_ application: UIKit.UIApplication)
+  @objc final public func isAuthenticationURL(_ url: Foundation.URL) -> Swift.Bool
+}
+@objc(FBSDKGameRequestDialogDelegate) public protocol GameRequestDialogDelegate {
+  @objc(gameRequestDialog:didCompleteWithResults:) func gameRequestDialog(_ gameRequestDialog: FBSDKGamingServicesKit.GameRequestDialog, didCompleteWithResults results: [Swift.String : Any])
+  @objc(gameRequestDialog:didFailWithError:) func gameRequestDialog(_ gameRequestDialog: FBSDKGamingServicesKit.GameRequestDialog, didFailWithError error: any Swift.Error)
+  @objc func gameRequestDialogDidCancel(_ gameRequestDialog: FBSDKGamingServicesKit.GameRequestDialog)
+}
+@objc(FBSDKGameRequestFilter) public enum GameRequestFilter : Swift.UInt {
+  case none
+  case appUsers
+  case appNonUsers
+  case everybody
+  public init?(rawValue: Swift.UInt)
+  public typealias RawValue = Swift.UInt
+  public var rawValue: Swift.UInt {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKGameRequestURLProvider) final public class GameRequestURLProvider : ObjectiveC.NSObject {
+  @objc(createDeepLinkURLWithQueryDictionary:) final public class func createDeepLinkURL(queryDictionary: [Swift.String : Any]) -> Foundation.URL?
+  @objc(filtersNameForFilters:) final public class func filtersName(for filters: FBSDKGamingServicesKit.GameRequestFilter) -> Swift.String?
+  @objc(actionTypeNameForActionType:) final public class func actionTypeName(for actionType: FBSDKGamingServicesKit.GameRequestActionType) -> Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objcMembers @objc(FBSDKGamingContext) final public class GamingContext : ObjectiveC.NSObject {
+  @objc(currentContext) public static var current: FBSDKGamingServicesKit.GamingContext?
+  @objc final public let identifier: Swift.String
+  @objc final public let size: Swift.Int
+  @objc public init?(identifier: Swift.String, size: Swift.Int)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKGamingGroupIntegration) final public class GamingGroupIntegration : ObjectiveC.NSObject {
+  @objc public static func openGroupPage(completionHandler: @escaping FBSDKGamingServicesKit.GamingServiceCompletionHandler)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKGamingImageUploader) final public class GamingImageUploader : ObjectiveC.NSObject {
+  @objc(uploadImageWithConfiguration:andResultCompletion:) public static func uploadImage(with configuration: FBSDKGamingServicesKit.GamingImageUploaderConfiguration, andResultCompletion completion: @escaping FBSDKGamingServicesKit.GamingServiceResultCompletion)
+  @objc(uploadImageWithConfiguration:completion:andProgressHandler:) public static func uploadImage(with configuration: FBSDKGamingServicesKit.GamingImageUploaderConfiguration, completion: @escaping FBSDKGamingServicesKit.GamingServiceResultCompletion, andProgressHandler progressHandler: FBSDKGamingServicesKit.GamingServiceProgressHandler?)
+  @objc deinit
+}
+extension FBSDKGamingServicesKit.GamingImageUploader : FBSDKCoreKit.GraphRequestConnectionDelegate {
+  @objc final public func requestConnection(_ connection: any FBSDKCoreKit.GraphRequestConnecting, didSendBodyData bytesWritten: Swift.Int, totalBytesWritten: Swift.Int, totalBytesExpectedToWrite: Swift.Int)
+}
+@objcMembers @objc(FBSDKGamingImageUploaderConfiguration) final public class GamingImageUploaderConfiguration : ObjectiveC.NSObject {
+  @objc final public var image: UIKit.UIImage {
+    get
+  }
+  @objc final public var caption: Swift.String? {
+    get
+  }
+  @objc final public var shouldLaunchMediaDialog: Swift.Bool {
+    get
+  }
+  @objc public init(image: UIKit.UIImage, caption: Swift.String?, shouldLaunchMediaDialog: Swift.Bool)
+  @objc deinit
+}
+@objcMembers @objc(FBSDKGamingPayload) final public class GamingPayload : ObjectiveC.NSObject {
+  @objc final public var URL: FBSDKCoreKit.AppLinkURL
+  @objc final public var payload: Swift.String
+  @objc public init(URL: FBSDKCoreKit.AppLinkURL)
+  @objc deinit
+}
+@objc(FBSDKGamingPayloadDelegate) public protocol GamingPayloadDelegate : ObjectiveC.NSObjectProtocol {
+  @objc optional func parsedGameRequestURLContaining(_ payload: FBSDKGamingServicesKit.GamingPayload, gameRequestID: Swift.String)
+  @objc optional func parsedGamingContextURLContaining(_ payload: FBSDKGamingServicesKit.GamingPayload)
+  @objc optional func parsedTournamentURLContaining(_ payload: FBSDKGamingServicesKit.GamingPayload, tournamentID: Swift.String)
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKGamingPayloadObserver) final public class GamingPayloadObserver : ObjectiveC.NSObject {
+  @objc weak final public var delegate: (any FBSDKGamingServicesKit.GamingPayloadDelegate)? {
+    @objc get
+    @objc set
+  }
+  @objc convenience public init(delegate: (any FBSDKGamingServicesKit.GamingPayloadDelegate)?)
+  @objc deinit
+}
+extension FBSDKGamingServicesKit.GamingPayloadObserver : FBSDKCoreKit.FBSDKApplicationObserving {
+  @objc final public func application(_ application: UIKit.UIApplication, open url: Foundation.URL, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+}
+public typealias GamingServiceCompletionHandler = (_ success: Swift.Bool, _ error: (any Swift.Error)?) -> Swift.Void
+public typealias FBSDKGamingServiceCompletionHandler = FBSDKGamingServicesKit.GamingServiceCompletionHandler
+public typealias GamingServiceResultCompletion = (_ success: Swift.Bool, _ result: [Swift.String : Any]?, _ error: (any Swift.Error)?) -> Swift.Void
+public typealias FBSDKGamingServiceResultCompletion = FBSDKGamingServicesKit.GamingServiceResultCompletion
+public typealias GamingServiceProgressHandler = (_ bytesSent: Swift.Int64, _ totalBytesSent: Swift.Int64, _ totalBytesExpectedToSend: Swift.Int64) -> Swift.Void
+public typealias FBSDKGamingServiceProgressHandler = FBSDKGamingServicesKit.GamingServiceProgressHandler
+public enum GamingServicesDialogError : Swift.Error {
+  case invalidContentType
+  case missingContent
+  case deeplinkURLCreation
+  case cancelled
+  public static func == (a: FBSDKGamingServicesKit.GamingServicesDialogError, b: FBSDKGamingServicesKit.GamingServicesDialogError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKGamingVideoUploader) final public class GamingVideoUploader : ObjectiveC.NSObject {
+  @objc(uploadVideoWithConfiguration:andResultCompletion:) public static func uploadVideo(configuration: FBSDKGamingServicesKit.GamingVideoUploaderConfiguration, completion: @escaping FBSDKGamingServicesKit.GamingServiceResultCompletion)
+  @objc(uploadVideoWithConfiguration:completion:andProgressHandler:) public static func uploadVideo(configuration: FBSDKGamingServicesKit.GamingVideoUploaderConfiguration, completion: @escaping FBSDKGamingServicesKit.GamingServiceResultCompletion, progressHandler: FBSDKGamingServicesKit.GamingServiceProgressHandler?)
+  @objc deinit
+}
+@objcMembers @objc(FBSDKGamingVideoUploaderConfiguration) final public class GamingVideoUploaderConfiguration : ObjectiveC.NSObject {
+  @objc final public var videoURL: Foundation.URL {
+    get
+  }
+  @objc final public var caption: Swift.String? {
+    get
+  }
+  @objc public init(videoURL: Foundation.URL, caption: Swift.String?)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class GamingWebDialog<Success> : FBSDKCoreKit.WebDialogDelegate where Success : FBSDKGamingServicesKit.GamingWebDialogSuccess {
+  public var completion: ((Swift.Result<Success, any Swift.Error>) -> Swift.Void)?
+  @objc public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didCompleteWithResults results: [Swift.String : Any])
+  @objc public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didFailWithError error: any Swift.Error)
+  @objc public func webDialogDidCancel(_ webDialog: FBSDKCoreKit._WebDialog)
+  @objc deinit
+}
+public protocol GamingWebDialogSuccess {
+  init(_ dict: [Swift.String : Any]) throws
+}
+@_hasMissingDesignatedInitializers final public class JoinTournamentDialog : FBSDKGamingServicesKit.GamingWebDialog<FBSDKGamingServicesKit.JoinTournamentDialogSuccess> {
+  final public var tournamentID: Swift.String?
+  final public var payload: Swift.String?
+  public init()
+  final public func showSpecific(tournamentID: Swift.String, payload: Swift.String?, completion: @escaping (Swift.Result<FBSDKGamingServicesKit.JoinTournamentDialogSuccess, any Swift.Error>) -> Swift.Void)
+  final public func showSuggested(payload: Swift.String?, completion: @escaping (Swift.Result<FBSDKGamingServicesKit.JoinTournamentDialogSuccess, any Swift.Error>) -> Swift.Void)
+  @objc deinit
+}
+public struct JoinTournamentDialogSuccess : FBSDKGamingServicesKit.GamingWebDialogSuccess {
+  public let tournamentID: Swift.String
+  public let payload: Swift.String?
+  public init(_ dict: [Swift.String : Any]) throws
+}
+public enum ShareTournamentDialogError : Swift.Error {
+  case invalidAccessToken
+  case invalidAuthToken
+  case invalidTournamentID
+  case unableToCreateDialogUrl
+  case unknownBridgeError
+  case errorMessage(Swift.String)
+  case bridgeError(any Swift.Error)
+}
+@objc @_hasMissingDesignatedInitializers final public class ShareTournamentDialog : ObjectiveC.NSObject, FBSDKCoreKit.URLOpening {
+  convenience public init(delegate: any FBSDKGamingServicesKit.ShareTournamentDialogDelegate)
+  final public func show(score: Swift.Int, tournamentID: Swift.String) throws
+  final public func show(score: Swift.Int, tournament: FBSDKGamingServicesKit.Tournament) throws
+  final public func show(initialScore: Swift.Int, config configuration: FBSDKGamingServicesKit.TournamentConfig) throws
+  @objc final public func isAuthenticationURL(_ url: Foundation.URL) -> Swift.Bool
+  @objc final public func application(_ application: UIKit.UIApplication?, open url: Foundation.URL?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func canOpen(_ url: Foundation.URL, for application: UIKit.UIApplication?, sourceApplication: Swift.String?, annotation: Any?) -> Swift.Bool
+  @objc final public func applicationDidBecomeActive(_ application: UIKit.UIApplication)
+  @objc deinit
+}
+public protocol ShareTournamentDialogDelegate : AnyObject {
+  func didComplete(dialog: FBSDKGamingServicesKit.ShareTournamentDialog, tournament: FBSDKGamingServicesKit.Tournament)
+  func didFail(withError error: any Swift.Error, dialog: FBSDKGamingServicesKit.ShareTournamentDialog)
+  func didCancel(dialog: FBSDKGamingServicesKit.ShareTournamentDialog)
+}
+@objc(FBSDKShowable) public protocol Showable {
+  @objc func show() -> Swift.Bool
+}
+extension FBSDKGamingServicesKit.ChooseContextDialog : FBSDKGamingServicesKit.Showable {
+}
+extension FBSDKGamingServicesKit.CreateContextDialog : FBSDKGamingServicesKit.Showable {
+}
+@objcMembers @objc(FBSDKSwitchContextContent) final public class SwitchContextContent : ObjectiveC.NSObject, FBSDKGamingServicesKit.ValidatableProtocol {
+  @objc(initDialogContentWithContextID:) public init(contextID: Swift.String)
+  @objc override final public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc final public func validate() throws
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKSwitchContextDialog) final public class SwitchContextDialog : FBSDKGamingServicesKit.ContextWebDialog, FBSDKGamingServicesKit.Showable {
+  @objc public init(content: FBSDKGamingServicesKit.SwitchContextContent, windowFinder: any FBSDKCoreKit._WindowFinding, delegate: any FBSDKGamingServicesKit.ContextDialogDelegate)
+  @objc override final public func show() -> Swift.Bool
+  @objc override final public func validate() throws
+  @objc deinit
+}
+public enum TournamentDecodingError : Swift.Error {
+  case invalidExpirationDate
+  case invalidScoreType
+  public static func == (a: FBSDKGamingServicesKit.TournamentDecodingError, b: FBSDKGamingServicesKit.TournamentDecodingError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct Tournament : Swift.Codable {
+  public var identifier: Swift.String {
+    get
+  }
+  public var endTime: Foundation.Date? {
+    get
+  }
+  public var title: Swift.String? {
+    get
+  }
+  public var payload: Swift.String?
+  public init(from decoder: any Swift.Decoder) throws
+  public func encode(to encoder: any Swift.Encoder) throws
+}
+public struct TournamentConfig {
+  public var title: Swift.String?
+  public var endTime: Foundation.TimeInterval?
+  public var scoreType: FBSDKGamingServicesKit.TournamentScoreType?
+  public var sortOrder: FBSDKGamingServicesKit.TournamentSortOrder?
+  public var payload: Swift.String?
+  public var image: UIKit.UIImage?
+  public init(title: Swift.String? = nil, endTime: Foundation.Date? = nil, scoreType: FBSDKGamingServicesKit.TournamentScoreType? = nil, sortOrder: FBSDKGamingServicesKit.TournamentSortOrder? = nil, image: UIKit.UIImage? = nil, payload: Swift.String? = nil)
+}
+public enum TournamentFetchError : Swift.Error {
+  case server(any Swift.Error)
+  case decoding
+  case invalidAuthToken
+  case invalidAccessToken
+}
+@_hasMissingDesignatedInitializers final public class TournamentFetcher {
+  convenience public init()
+  final public func fetchTournaments(completionHandler: @escaping (Swift.Result<[FBSDKGamingServicesKit.Tournament], FBSDKGamingServicesKit.TournamentFetchError>) -> Swift.Void)
+  @objc deinit
+}
+public enum TournamentScoreType : Swift.String {
+  case numeric
+  case time
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum TournamentSortOrder : Swift.String {
+  case higherIsBetter
+  case lowerIsBetter
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum TournamentUpdaterError : Swift.Error {
+  case server(any Swift.Error)
+  case decoding
+  case invalidAuthToken
+  case invalidAccessToken
+  case invalidTournamentID
+}
+@_hasMissingDesignatedInitializers final public class TournamentUpdater {
+  convenience public init()
+  final public func update(tournamentID: Swift.String, score: Swift.Int, completionHandler: @escaping (Swift.Result<Swift.Bool, FBSDKGamingServicesKit.TournamentUpdaterError>) -> Swift.Void)
+  final public func update(tournament: FBSDKGamingServicesKit.Tournament, score: Swift.Int, completionHandler: @escaping (Swift.Result<Swift.Bool, FBSDKGamingServicesKit.TournamentUpdaterError>) -> Swift.Void)
+  @objc deinit
+}
+public protocol URLMedia : Swift.Decodable, Swift.Encodable {
+  init(withUrl: Foundation.URL)
+}
+extension FBSDKGamingServicesKit.ChooseContextFilter : Swift.Equatable {}
+extension FBSDKGamingServicesKit.ChooseContextFilter : Swift.Hashable {}
+extension FBSDKGamingServicesKit.ChooseContextFilter : Swift.RawRepresentable {}
+extension FBSDKGamingServicesKit.ContextDialogPresenterError : Swift.Equatable {}
+extension FBSDKGamingServicesKit.ContextDialogPresenterError : Swift.Hashable {}
+extension FBSDKGamingServicesKit.CustomUpdateContentError : Swift.Equatable {}
+extension FBSDKGamingServicesKit.CustomUpdateContentError : Swift.Hashable {}
+extension FBSDKGamingServicesKit.GameRequestActionType : Swift.Equatable {}
+extension FBSDKGamingServicesKit.GameRequestActionType : Swift.Hashable {}
+extension FBSDKGamingServicesKit.GameRequestActionType : Swift.RawRepresentable {}
+extension FBSDKGamingServicesKit.GameRequestFilter : Swift.Equatable {}
+extension FBSDKGamingServicesKit.GameRequestFilter : Swift.Hashable {}
+extension FBSDKGamingServicesKit.GameRequestFilter : Swift.RawRepresentable {}
+extension FBSDKGamingServicesKit.GamingServicesDialogError : Swift.Equatable {}
+extension FBSDKGamingServicesKit.GamingServicesDialogError : Swift.Hashable {}
+extension FBSDKGamingServicesKit.TournamentDecodingError : Swift.Equatable {}
+extension FBSDKGamingServicesKit.TournamentDecodingError : Swift.Hashable {}
+extension FBSDKGamingServicesKit.TournamentScoreType : Swift.Equatable {}
+extension FBSDKGamingServicesKit.TournamentScoreType : Swift.Hashable {}
+extension FBSDKGamingServicesKit.TournamentScoreType : Swift.RawRepresentable {}
+extension FBSDKGamingServicesKit.TournamentSortOrder : Swift.Equatable {}
+extension FBSDKGamingServicesKit.TournamentSortOrder : Swift.Hashable {}
+extension FBSDKGamingServicesKit.TournamentSortOrder : Swift.RawRepresentable {}

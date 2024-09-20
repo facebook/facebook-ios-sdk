@@ -1,0 +1,4 @@
+module FacebookGamingServices {
+    header "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/arm64-apple-macosx/debug/FacebookGamingServices.build/FacebookGamingServices-Swift.h"
+    requires objc
+}

@@ -1,0 +1,106 @@
+{
+  "object" : {
+    "artifacts" : [
+      {
+        "kind" : "xcframework",
+        "packageRef" : {
+          "identity" : "facebook-ios-sdk",
+          "kind" : "root",
+          "location" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk",
+          "name" : "facebook-ios-sdk"
+        },
+        "path" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/artifacts/facebook-ios-sdk/FBSDKLoginKit/FBSDKLoginKit.xcframework",
+        "source" : {
+          "checksum" : "254ba0368b8adca816cce5a52627ded0d3d1d646279541b2fa9d51f2bef3996c",
+          "type" : "remote",
+          "url" : "https://github.com/facebook/facebook-ios-sdk/releases/download/v17.1.0/FBSDKLoginKit-Dynamic_XCFramework.zip"
+        },
+        "targetName" : "FBSDKLoginKit"
+      },
+      {
+        "kind" : "xcframework",
+        "packageRef" : {
+          "identity" : "facebook-ios-sdk",
+          "kind" : "root",
+          "location" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk",
+          "name" : "facebook-ios-sdk"
+        },
+        "path" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/artifacts/facebook-ios-sdk/FBSDKCoreKit/FBSDKCoreKit.xcframework",
+        "source" : {
+          "checksum" : "d80a2a674acdd2ae52ab682e26bf8317ef0a34724ab974a1006aabfa151e6949",
+          "type" : "remote",
+          "url" : "https://github.com/facebook/facebook-ios-sdk/releases/download/v17.1.0/FBSDKCoreKit-Dynamic_XCFramework.zip"
+        },
+        "targetName" : "FBSDKCoreKit"
+      },
+      {
+        "kind" : "xcframework",
+        "packageRef" : {
+          "identity" : "facebook-ios-sdk",
+          "kind" : "root",
+          "location" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk",
+          "name" : "facebook-ios-sdk"
+        },
+        "path" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/artifacts/facebook-ios-sdk/FBAEMKit/FBAEMKit.xcframework",
+        "source" : {
+          "checksum" : "898c2de5faf0613ce9a01a20ec736e07641a89bb30cb86d19d5c4e15b78a1491",
+          "type" : "remote",
+          "url" : "https://github.com/facebook/facebook-ios-sdk/releases/download/v17.1.0/FBAEMKit-Dynamic_XCFramework.zip"
+        },
+        "targetName" : "FBAEMKit"
+      },
+      {
+        "kind" : "xcframework",
+        "packageRef" : {
+          "identity" : "facebook-ios-sdk",
+          "kind" : "root",
+          "location" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk",
+          "name" : "facebook-ios-sdk"
+        },
+        "path" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/artifacts/facebook-ios-sdk/FBSDKShareKit/FBSDKShareKit.xcframework",
+        "source" : {
+          "checksum" : "fcd05bd84ca65b3775392a8ab14c811fe8eea9b917e8a1c99d6487d92116ac41",
+          "type" : "remote",
+          "url" : "https://github.com/facebook/facebook-ios-sdk/releases/download/v17.1.0/FBSDKShareKit-Dynamic_XCFramework.zip"
+        },
+        "targetName" : "FBSDKShareKit"
+      },
+      {
+        "kind" : "xcframework",
+        "packageRef" : {
+          "identity" : "facebook-ios-sdk",
+          "kind" : "root",
+          "location" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk",
+          "name" : "facebook-ios-sdk"
+        },
+        "path" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/artifacts/facebook-ios-sdk/FBSDKGamingServicesKit/FBSDKGamingServicesKit.xcframework",
+        "source" : {
+          "checksum" : "4f83434976fdfe076241c47f239a2ffcfe3f0f9f235d64e02b01a2a2d9dfac7b",
+          "type" : "remote",
+          "url" : "https://github.com/facebook/facebook-ios-sdk/releases/download/v17.1.0/FBSDKGamingServicesKit-Dynamic_XCFramework.zip"
+        },
+        "targetName" : "FBSDKGamingServicesKit"
+      },
+      {
+        "kind" : "xcframework",
+        "packageRef" : {
+          "identity" : "facebook-ios-sdk",
+          "kind" : "root",
+          "location" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk",
+          "name" : "facebook-ios-sdk"
+        },
+        "path" : "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/artifacts/facebook-ios-sdk/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.xcframework",
+        "source" : {
+          "checksum" : "311bf4192b56656cfdd5025cf9f611176502506d70d0b79d141465377ad30462",
+          "type" : "remote",
+          "url" : "https://github.com/facebook/facebook-ios-sdk/releases/download/v17.1.0/FBSDKCoreKit_Basics-Dynamic_XCFramework.zip"
+        },
+        "targetName" : "FBSDKCoreKit_Basics"
+      }
+    ],
+    "dependencies" : [
+
+    ]
+  },
+  "version" : 6
+}

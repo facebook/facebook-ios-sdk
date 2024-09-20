@@ -1,0 +1,4 @@
+module FacebookLogin {
+    header "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/arm64-apple-macosx/debug/FacebookLogin.build/FacebookLogin-Swift.h"
+    requires objc
+}

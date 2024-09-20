@@ -1,0 +1,371 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios13.1-macabi -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name FBSDKShareKit
+import FBSDKCoreKit
+import FBSDKCoreKit_Basics
+@_exported import FBSDKShareKit
+import Foundation
+import Photos
+import Social
+import Swift
+import UIKit
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@objcMembers @objc(FBSDKAppInviteContent) final public class AppInviteContent : ObjectiveC.NSObject {
+  @objc(FBSDKAppInviteDestination) public enum Destination : Swift.Int {
+    case facebook
+    case messenger
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc final public var appInvitePreviewImageURL: Foundation.URL?
+  @objc final public var appLinkURL: Foundation.URL
+  @objc final public var promotionCode: Swift.String?
+  @objc final public var promotionText: Swift.String?
+  @objc final public var destination: FBSDKShareKit.AppInviteContent.Destination
+  @objc(initWithAppLinkURL:) public init(appLinkURL: Foundation.URL)
+  @objc deinit
+}
+extension FBSDKShareKit.AppInviteContent : FBSDKShareKit.SharingValidatable {
+  @objc final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKCameraEffectArguments) final public class CameraEffectArguments : ObjectiveC.NSObject {
+  @objc(setString:forKey:) final public func set(_ string: Swift.String?, forKey key: Swift.String)
+  @objc final public func string(forKey key: Swift.String) -> Swift.String?
+  @objc(setArray:forKey:) final public func set(_ array: [Swift.String]?, forKey key: Swift.String)
+  @objc final public func array(forKey key: Swift.String) -> [Swift.String]?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKCameraEffectTextures) final public class CameraEffectTextures : ObjectiveC.NSObject {
+  @objc(setImage:forKey:) final public func set(_ image: UIKit.UIImage?, forKey key: Swift.String)
+  @objc(imageForKey:) final public func image(forKey key: Swift.String) -> UIKit.UIImage?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKSendButton) @_Concurrency.MainActor(unsafe) final public class FBSendButton : FBSDKCoreKit.FBButton, FBSDKShareKit.SharingButton, FBSDKCoreKit.FBButtonImpressionLogging {
+  @objc @_Concurrency.MainActor(unsafe) final public var dialog: FBSDKShareKit.MessageDialog?
+  @_Concurrency.MainActor(unsafe) @objc final public var shareContent: (any FBSDKShareKit.SharingContent)? {
+    @objc get
+    @objc set
+  }
+  @_Concurrency.MainActor(unsafe) @objc final public var analyticsParameters: [FBSDKCoreKit.AppEvents.ParameterName : Any]? {
+    @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc final public var impressionTrackingEventName: FBSDKCoreKit.AppEvents.Name {
+    @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc final public var impressionTrackingIdentifier: Swift.String {
+    @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc override final public var isImplicitlyDisabled: Swift.Bool {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public func configureButton()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKShareButton) @_Concurrency.MainActor(unsafe) final public class FBShareButton : FBSDKCoreKit.FBButton, FBSDKShareKit.SharingButton {
+  @_Concurrency.MainActor(unsafe) @objc final public var shareContent: (any FBSDKShareKit.SharingContent)? {
+    @objc get
+    @objc set
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var analyticsParameters: [FBSDKCoreKit.AppEvents.ParameterName : Any]? {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var impressionTrackingEventName: FBSDKCoreKit.AppEvents.Name {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public var impressionTrackingIdentifier: Swift.String {
+    @objc get
+  }
+  @_Concurrency.MainActor(unsafe) @objc override final public var isImplicitlyDisabled: Swift.Bool {
+    @objc get
+  }
+  @objc @_Concurrency.MainActor(unsafe) final public func configureButton()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic public init(frame: CoreFoundation.CGRect)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @objc deinit
+}
+@objcMembers @objc(FBSDKHashtag) final public class Hashtag : ObjectiveC.NSObject {
+  @objc final public var stringRepresentation: Swift.String
+  @objc(initWithString:) public init(_ string: Swift.String)
+  @objc override final public var description: Swift.String {
+    @objc get
+  }
+  @objc final public var isValid: Swift.Bool {
+    @objc get
+  }
+  @objc override final public var hash: Swift.Int {
+    @objc get
+  }
+  @objc override final public func isEqual(_ object: Any?) -> Swift.Bool
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKMessageDialog) public class MessageDialog : ObjectiveC.NSObject, FBSDKShareKit.SharingDialog {
+  @objc weak public var delegate: (any FBSDKShareKit.SharingDelegate)?
+  @objc public var shareContent: (any FBSDKShareKit.SharingContent)?
+  @objc public var shouldFailOnDataError: Swift.Bool
+  @objc(initWithContent:delegate:) convenience public init(content: (any FBSDKShareKit.SharingContent)?, delegate: (any FBSDKShareKit.SharingDelegate)?)
+  @objc(dialogWithContent:delegate:) public static func dialog(content: (any FBSDKShareKit.SharingContent)?, delegate: (any FBSDKShareKit.SharingDelegate)?) -> FBSDKShareKit.MessageDialog
+  @objc(showWithContent:delegate:) public static func show(content: (any FBSDKShareKit.SharingContent)?, delegate: (any FBSDKShareKit.SharingDelegate)?) -> FBSDKShareKit.MessageDialog
+  @objc public var canShow: Swift.Bool {
+    @objc get
+  }
+  @discardableResult
+  @objc public func show() -> Swift.Bool
+  @objc public func validate() throws
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKShareCameraEffectContent) final public class ShareCameraEffectContent : ObjectiveC.NSObject {
+  @objc final public var effectID: Swift.String
+  @objc final public var effectArguments: FBSDKShareKit.CameraEffectArguments
+  @objc final public var effectTextures: FBSDKShareKit.CameraEffectTextures
+  @objc final public var contentURL: Foundation.URL?
+  @objc final public var hashtag: FBSDKShareKit.Hashtag?
+  @objc final public var peopleIDs: [Swift.String]
+  @objc final public var placeID: Swift.String?
+  @objc final public var ref: Swift.String?
+  @objc final public var pageID: Swift.String?
+  @objc final public var shareUUID: Swift.String? {
+    get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension FBSDKShareKit.ShareCameraEffectContent : FBSDKShareKit.SharingContent {
+  @objc(addParameters:bridgeOptions:) final public func addParameters(_ existingParameters: [Swift.String : Any], options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) -> [Swift.String : Any]
+  @objc(validateWithOptions:error:) final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@objcMembers @objc(FBSDKShareDialog) public class ShareDialog : ObjectiveC.NSObject, FBSDKShareKit.SharingDialog {
+  @objc weak public var fromViewController: UIKit.UIViewController?
+  @objc public var mode: FBSDKShareKit.ShareDialog.Mode
+  @objc weak public var delegate: (any FBSDKShareKit.SharingDelegate)?
+  @objc public var shareContent: (any FBSDKShareKit.SharingContent)?
+  @objc public var shouldFailOnDataError: Swift.Bool
+  @objc(initWithViewController:content:delegate:) public init(viewController: UIKit.UIViewController?, content: (any FBSDKShareKit.SharingContent)?, delegate: (any FBSDKShareKit.SharingDelegate)?)
+  @objc deinit
+  @objc(dialogWithViewController:withContent:delegate:) public class func dialog(viewController: UIKit.UIViewController?, content: (any FBSDKShareKit.SharingContent)?, delegate: (any FBSDKShareKit.SharingDelegate)?) -> FBSDKShareKit.ShareDialog
+  @discardableResult
+  @objc(showFromViewController:withContent:delegate:) public class func show(viewController: UIKit.UIViewController?, content: (any FBSDKShareKit.SharingContent)?, delegate: (any FBSDKShareKit.SharingDelegate)?) -> FBSDKShareKit.ShareDialog
+}
+extension FBSDKShareKit.ShareDialog {
+  @objc dynamic public var canShow: Swift.Bool {
+    @objc get
+  }
+  @discardableResult
+  @objc dynamic public func show() -> Swift.Bool
+  @objc dynamic public func validate() throws
+}
+extension FBSDKShareKit.ShareDialog : FBSDKCoreKit.WebDialogDelegate {
+  @objc dynamic public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didCompleteWithResults results: [Swift.String : Any])
+  @objc dynamic public func webDialog(_ webDialog: FBSDKCoreKit._WebDialog, didFailWithError error: any Swift.Error)
+  @objc dynamic public func webDialogDidCancel(_ webDialog: FBSDKCoreKit._WebDialog)
+}
+extension FBSDKShareKit.ShareDialog {
+  @objc(FBSDKShareDialogMode) public enum Mode : Swift.UInt, Swift.CustomStringConvertible {
+    case automatic
+    case native
+    case shareSheet
+    case browser
+    @available(*, deprecated, message: "The web sharing mode is deprecated. Consider using automatic sharing mode instead.")
+    case web
+    @available(*, deprecated, message: "The feed browser sharing mode is deprecated. Consider using automatic or browser sharing modes instead.")
+    case feedBrowser
+    @available(*, deprecated, message: "The feed web sharing mode is deprecated. Consider using automatic sharing mode instead.")
+    case feedWeb
+    public var description: Swift.String {
+      get
+    }
+    public init?(rawValue: Swift.UInt)
+    public typealias RawValue = Swift.UInt
+    public var rawValue: Swift.UInt {
+      get
+    }
+  }
+}
+public let ShareErrorDomain: Swift.String
+@objc(FBSDKShareError) public enum ShareError : Swift.Int {
+  case reserved = 200
+  case openGraph
+  case dialogNotAvailable
+  case unknown
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKShareLinkContent) final public class ShareLinkContent : ObjectiveC.NSObject {
+  @objc final public var quote: Swift.String?
+  @objc final public var contentURL: Foundation.URL?
+  @objc final public var hashtag: FBSDKShareKit.Hashtag?
+  @objc final public var peopleIDs: [Swift.String]
+  @objc final public var placeID: Swift.String?
+  @objc final public var ref: Swift.String?
+  @objc final public var pageID: Swift.String?
+  @objc final public let shareUUID: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension FBSDKShareKit.ShareLinkContent : FBSDKShareKit.SharingContent {
+  @objc(addParameters:bridgeOptions:) final public func addParameters(_ existingParameters: [Swift.String : Any], options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) -> [Swift.String : Any]
+}
+extension FBSDKShareKit.ShareLinkContent : FBSDKShareKit.SharingValidatable {
+  @objc(validateWithOptions:error:) final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@objc(FBSDKShareMedia) public protocol ShareMedia {
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKShareMediaContent) final public class ShareMediaContent : ObjectiveC.NSObject {
+  @objc final public var media: [any FBSDKShareKit.ShareMedia]
+  @objc final public var contentURL: Foundation.URL?
+  @objc final public var hashtag: FBSDKShareKit.Hashtag?
+  @objc final public var peopleIDs: [Swift.String]
+  @objc final public var placeID: Swift.String?
+  @objc final public var ref: Swift.String?
+  @objc final public var pageID: Swift.String?
+  @objc final public let shareUUID: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension FBSDKShareKit.ShareMediaContent : FBSDKShareKit.SharingContent {
+  @objc(addParameters:bridgeOptions:) final public func addParameters(_ existingParameters: [Swift.String : Any], options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) -> [Swift.String : Any]
+}
+extension FBSDKShareKit.ShareMediaContent : FBSDKShareKit.SharingValidatable {
+  @objc(validateWithOptions:error:) final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKSharePhoto) final public class SharePhoto : ObjectiveC.NSObject, FBSDKShareKit.ShareMedia {
+  @objc final public var image: UIKit.UIImage? {
+    @objc get
+    @objc set
+  }
+  @objc final public var imageURL: Foundation.URL? {
+    @objc get
+    @objc set
+  }
+  @objc final public var photoAsset: Photos.PHAsset? {
+    @objc get
+    @objc set
+  }
+  @objc final public var isUserGenerated: Swift.Bool
+  @objc final public var caption: Swift.String?
+  @objc convenience public init(image: UIKit.UIImage, isUserGenerated: Swift.Bool)
+  @objc convenience public init(imageURL: Foundation.URL, isUserGenerated: Swift.Bool)
+  @objc convenience public init(photoAsset: Photos.PHAsset, isUserGenerated: Swift.Bool)
+  @objc deinit
+}
+extension FBSDKShareKit.SharePhoto : FBSDKShareKit.SharingValidatable {
+  @objc(validateWithOptions:error:) final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKSharePhotoContent) final public class SharePhotoContent : ObjectiveC.NSObject {
+  @objc final public var photos: [FBSDKShareKit.SharePhoto]
+  @objc final public var contentURL: Foundation.URL?
+  @objc final public var hashtag: FBSDKShareKit.Hashtag?
+  @objc final public var peopleIDs: [Swift.String]
+  @objc final public var placeID: Swift.String?
+  @objc final public var ref: Swift.String?
+  @objc final public var pageID: Swift.String?
+  @objc final public let shareUUID: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension FBSDKShareKit.SharePhotoContent : FBSDKShareKit.SharingContent {
+  @objc(addParameters:bridgeOptions:) final public func addParameters(_ existingParameters: [Swift.String : Any], options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) -> [Swift.String : Any]
+}
+extension FBSDKShareKit.SharePhotoContent : FBSDKShareKit.SharingValidatable {
+  @objc(validateWithOptions:error:) final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@_hasMissingDesignatedInitializers @objcMembers @objc(FBSDKShareVideo) final public class ShareVideo : ObjectiveC.NSObject, FBSDKShareKit.ShareMedia {
+  @objc final public var data: Foundation.Data? {
+    @objc get
+    @objc set
+  }
+  @objc final public var videoAsset: Photos.PHAsset? {
+    @objc get
+    @objc set
+  }
+  @objc final public var videoURL: Foundation.URL? {
+    @objc get
+    @objc set
+  }
+  @objc final public var previewPhoto: FBSDKShareKit.SharePhoto?
+  @objc convenience public init(data: Foundation.Data, previewPhoto: FBSDKShareKit.SharePhoto? = nil)
+  @objc convenience public init(videoAsset: Photos.PHAsset, previewPhoto: FBSDKShareKit.SharePhoto? = nil)
+  @objc convenience public init(videoURL: Foundation.URL, previewPhoto: FBSDKShareKit.SharePhoto? = nil)
+  @objc deinit
+}
+extension FBSDKShareKit.ShareVideo : FBSDKShareKit.SharingValidatable {
+  @objc(validateWithOptions:error:) final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@_inheritsConvenienceInitializers @objcMembers @objc(FBSDKShareVideoContent) final public class ShareVideoContent : ObjectiveC.NSObject {
+  @objc final public var video: FBSDKShareKit.ShareVideo
+  @objc final public var contentURL: Foundation.URL?
+  @objc final public var hashtag: FBSDKShareKit.Hashtag?
+  @objc final public var peopleIDs: [Swift.String]
+  @objc final public var placeID: Swift.String?
+  @objc final public var ref: Swift.String?
+  @objc final public var pageID: Swift.String?
+  @objc final public var shareUUID: Swift.String? {
+    get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension FBSDKShareKit.ShareVideoContent : FBSDKShareKit.SharingContent {
+  @objc(addParameters:bridgeOptions:) final public func addParameters(_ existingParameters: [Swift.String : Any], options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) -> [Swift.String : Any]
+}
+extension FBSDKShareKit.ShareVideoContent : FBSDKShareKit.SharingValidatable {
+  @objc(validateWithOptions:error:) final public func validate(options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) throws
+}
+@objc(FBSDKSharing) public protocol Sharing {
+  @objc weak var delegate: (any FBSDKShareKit.SharingDelegate)? { get set }
+  @objc var shareContent: (any FBSDKShareKit.SharingContent)? { get set }
+  @objc var shouldFailOnDataError: Swift.Bool { get set }
+  @objc(validateWithError:) func validate() throws
+}
+@objc(FBSDKSharingButton) public protocol SharingButton {
+  @objc var shareContent: (any FBSDKShareKit.SharingContent)? { get set }
+}
+@objc(FBSDKSharingContent) public protocol SharingContent : FBSDKShareKit.SharingValidatable, ObjectiveC.NSObjectProtocol {
+  @objc var contentURL: Foundation.URL? { get set }
+  @objc var hashtag: FBSDKShareKit.Hashtag? { get set }
+  @objc var peopleIDs: [Swift.String] { get set }
+  @objc var placeID: Swift.String? { get set }
+  @objc var ref: Swift.String? { get set }
+  @objc var pageID: Swift.String? { get set }
+  @objc var shareUUID: Swift.String? { get }
+  @objc(addParameters:bridgeOptions:) func addParameters(_ existingParameters: [Swift.String : Any], options bridgeOptions: FBSDKShareKit.ShareBridgeOptions) -> [Swift.String : Any]
+}
+@objc(FBSDKSharingDelegate) public protocol SharingDelegate {
+  @objc(sharer:didCompleteWithResults:) func sharer(_ sharer: any FBSDKShareKit.Sharing, didCompleteWithResults results: [Swift.String : Any])
+  @objc(sharer:didFailWithError:) func sharer(_ sharer: any FBSDKShareKit.Sharing, didFailWithError error: any Swift.Error)
+  @objc(sharerDidCancel:) func sharerDidCancel(_ sharer: any FBSDKShareKit.Sharing)
+}
+@objc(FBSDKSharingDialog) public protocol SharingDialog : FBSDKShareKit.Sharing {
+  @objc var canShow: Swift.Bool { get }
+  @objc @discardableResult
+  func show() -> Swift.Bool
+}
+@objc(FBSDKSharingValidatable) public protocol SharingValidatable {
+  @objc(validateWithOptions:error:) func validate(options: FBSDKShareKit.ShareBridgeOptions) throws
+}
+public enum _ShareUtility {
+}
+extension FBSDKShareKit._ShareUtility {
+  public static func validateRequiredValue(_ value: Any, named name: Swift.String) throws
+  public static func validateArgument<Argument>(_ value: Argument, named name: Swift.String, in possibleValues: Swift.Set<Argument>) throws where Argument : Swift.Hashable
+}
+extension FBSDKShareKit.AppInviteContent.Destination : Swift.Equatable {}
+extension FBSDKShareKit.AppInviteContent.Destination : Swift.Hashable {}
+extension FBSDKShareKit.AppInviteContent.Destination : Swift.RawRepresentable {}
+extension FBSDKShareKit.ShareDialog.Mode : Swift.Equatable {}
+extension FBSDKShareKit.ShareDialog.Mode : Swift.Hashable {}
+extension FBSDKShareKit.ShareDialog.Mode : Swift.RawRepresentable {}
+extension FBSDKShareKit.ShareError : Swift.Equatable {}
+extension FBSDKShareKit.ShareError : Swift.Hashable {}
+extension FBSDKShareKit.ShareError : Swift.RawRepresentable {}

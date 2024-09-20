@@ -1,0 +1,4 @@
+module FacebookCore {
+    header "/Users/andrew/Documents/GitHub/facebook-ios-sdk/.build/arm64-apple-macosx/debug/FacebookCore.build/FacebookCore-Swift.h"
+    requires objc
+}

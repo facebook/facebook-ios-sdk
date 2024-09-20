@@ -1,0 +1,11 @@
+framework module FBSDKShareKit {
+    umbrella header "FBSDKShareKit.h"
+
+    export *
+    module * { export * }
+}
+
+module FBSDKShareKit.Swift {
+  header "FBSDKShareKit-Swift.h"
+  requires objc
+}

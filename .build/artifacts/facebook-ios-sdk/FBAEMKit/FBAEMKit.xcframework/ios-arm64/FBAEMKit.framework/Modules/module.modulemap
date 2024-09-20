@@ -1,0 +1,4 @@
+framework module FBAEMKit {
+  header "FBAEMKit-Swift.h"
+  requires objc
+}
