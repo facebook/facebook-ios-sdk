@@ -81,7 +81,7 @@ final class SharePhotoContentTests: XCTestCase {
     XCTAssertNoThrow(try content.validate(options: []))
     XCTAssertEqual(validator.validateArrayArray as? [SharePhoto], content.photos, .validationValidatesPhotos)
     XCTAssertEqual(validator.validateArrayMinCount, 1, .validationValidatesPhotos)
-    XCTAssertEqual(validator.validateArrayMaxCount, 6, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayMaxCount, 10, .validationValidatesPhotos)
     XCTAssertEqual(validator.validateArrayName, "photos", .validationValidatesPhotos)
   }
 
@@ -92,7 +92,7 @@ final class SharePhotoContentTests: XCTestCase {
     XCTAssertThrowsError(try content.validate(options: []), .validationValidatesPhotos)
     XCTAssertEqual(validator.validateArrayArray as? [SharePhoto], content.photos, .validationValidatesPhotos)
     XCTAssertEqual(validator.validateArrayMinCount, 1, .validationValidatesPhotos)
-    XCTAssertEqual(validator.validateArrayMaxCount, 6, .validationValidatesPhotos)
+    XCTAssertEqual(validator.validateArrayMaxCount, 10, .validationValidatesPhotos)
     XCTAssertEqual(validator.validateArrayName, "photos", .validationValidatesPhotos)
   }
 

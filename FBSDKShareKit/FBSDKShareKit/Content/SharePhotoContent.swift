@@ -116,8 +116,8 @@ extension SharePhotoContent: SharingContent {
 // MARK: - SharingValidatable
 
 extension SharePhotoContent: SharingValidatable {
-  // The number of photos that can be shared at once is restricted
-  private static let photosCountRange = 1 ... 6
+  // The number of photos that can be shared at once is restricted by SLComposeViewController
+  private static let photosCountRange = 1 ... 10
 
   /// Validate that this content contains valid values
   @objc(validateWithOptions:error:)
