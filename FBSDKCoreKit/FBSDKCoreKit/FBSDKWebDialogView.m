@@ -240,14 +240,9 @@ static id<FBSDKErrorCreating> _errorFactory;
     }
     decisionHandler(WKNavigationActionPolicyCancel);
   } else if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
-    if (@available(iOS 10.0, *)) {
-      [self.class.urlOpener openURL:URL options:@{} completionHandler:^(BOOL success) {
-        decisionHandler(WKNavigationActionPolicyCancel);
-      }];
-    } else {
-      [self.class.urlOpener openURL:URL];
+    [self.class.urlOpener openURL:URL options:@{} completionHandler:^(BOOL success) {
       decisionHandler(WKNavigationActionPolicyCancel);
-    }
+    }];
   } else {
     decisionHandler(WKNavigationActionPolicyAllow);
   }

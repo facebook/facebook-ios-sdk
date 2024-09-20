@@ -69,6 +69,11 @@ public final class AppLinkNavigation: NSObject {
   /// The AppLink to navigate to
   public let appLink: AppLink?
 
+  private var lastNavError: Error?
+  static let maxDepth = 32
+
+  typealias AppLinkNavigationFallbackBlock = (Error?) -> Void
+
   /**
    Returns navigation type for current instance. It does not produce any side-effects as the `navigate` method.
    */
@@ -130,73 +135,137 @@ public final class AppLinkNavigation: NSObject {
   }
 
   /// Performs the navigation
-  @available(swift, obsoleted: 0.1)
   @objc(navigate:)
-  public func navigate(error errorPointer: NSErrorPointer) -> AppLinkNavigationType {
-    // This method can be removed when Objective-C support is removed.
-    // The remaining navigation methods can then be refactored for a strict throw vs. return paradigm
-    let (result, error) = navigate()
-    errorPointer?.pointee = error as NSError?
-    return result
-  }
-
-  /// Performs the navigation
-  @nonobjc
-  public func navigate() throws -> AppLinkNavigationType {
-    let (result, error) = navigate()
-    if let error = error {
-      throw error
-    } else {
-      return result
-    }
-  }
-
-  private func navigate() -> (AppLinkNavigationType, Error?) {
+  public func navigate(handler: AppLinkNavigationBlock?) {
     let urlOpener: _InternalURLOpener
     do {
       urlOpener = try Self.getDependencies().urlOpener
     } catch {
-      return (.failure, error)
+      handler?(.failure, error)
+      return
     }
-
-    var openedURL: URL?
-    var navigationType: AppLinkNavigationType = .failure
-    var lastError: Error?
 
     guard let appLink else {
-      return (.failure, lastError)
+      handler?(.failure, nil)
+      return
     }
 
-    // Find the first eligible/launchable target in the AppLink.
-    for target in appLink.targets {
-      do {
-        if let targetURL = target.url,
-           let appLinkURL = try appLinkURL(targetURL: targetURL),
-           urlOpener.open(appLinkURL) {
-          openedURL = appLinkURL
-          navigationType = .app
-          break
-        }
-      } catch {
-        lastError = error
-      }
+    let fallbackBlock: AppLinkNavigationFallbackBlock = { lastError in
+      self.openInBrowserIfAvailable(urlOpener: urlOpener, lastError: lastError, handler: handler)
+    }
+    findAndOpenFirstLaunchableTarget(
+      targets: appLink.targets,
+      urlOpener: urlOpener,
+      fallbackBlock: fallbackBlock,
+      handler: handler
+    )
+  }
+
+  private func findAndOpenFirstLaunchableTarget(
+    targets: [AppLinkTargetProtocol],
+    urlOpener: _InternalURLOpener,
+    fallbackBlock: @escaping AppLinkNavigationFallbackBlock,
+    handler: AppLinkNavigationBlock?
+  ) {
+    // Find the first eligible/launchable target in the AppLink and open.
+    lastNavError = nil
+    findAndOpenFirstLaunchableTarget(
+      targets: targets,
+      urlOpener: urlOpener,
+      index: 0,
+      fallbackBlock: fallbackBlock,
+      handler: handler
+    )
+  }
+
+  private func findAndOpenFirstLaunchableTarget(
+    targets: [AppLinkTargetProtocol],
+    urlOpener: _InternalURLOpener,
+    index: Int,
+    fallbackBlock: @escaping AppLinkNavigationFallbackBlock,
+    handler: AppLinkNavigationBlock?
+  ) {
+    // Use recursion as the calls need to be chained within the async callback.
+    // Limit the number of link targets to avoid stack overflow.
+    if index >= targets.count || index >= AppLinkNavigation.maxDepth {
+      // Fall back to opening the url in the browser if available.
+      fallbackBlock(lastNavError)
+      return
     }
 
     do {
-      // Fall back to opening the url in the browser if available.
-      if openedURL == nil,
-         let webURL = appLink.webURL,
-         let appLinkBrowserURL = try appLinkURL(targetURL: webURL),
-         urlOpener.open(appLinkBrowserURL) {
-        openedURL = appLinkBrowserURL
-        navigationType = .browser
+      if let targetURL = targets[index].url,
+         let appLinkURL = try appLinkURL(targetURL: targetURL) {
+        urlOpener.open(appLinkURL, options: [:]) { [weak self] success in
+          if success {
+            let openedURL = appLinkURL
+            let navigationType: AppLinkNavigationType = .app
+            self?.postNavigateEventNotification(
+              targetURL: openedURL,
+              error: self?.lastNavError,
+              navigationType: navigationType
+            )
+            handler?(navigationType, self?.lastNavError)
+            return
+          } else {
+            self?.findAndOpenFirstLaunchableTarget(
+              targets: targets,
+              urlOpener: urlOpener,
+              index: index + 1,
+              fallbackBlock: fallbackBlock,
+              handler: handler
+            )
+          }
+        }
+      } else {
+        findAndOpenFirstLaunchableTarget(
+          targets: targets,
+          urlOpener: urlOpener,
+          index: index + 1,
+          fallbackBlock: fallbackBlock,
+          handler: handler
+        )
       }
     } catch {
-      lastError = error
+      lastNavError = error
+      findAndOpenFirstLaunchableTarget(
+        targets: targets,
+        urlOpener: urlOpener,
+        index: index + 1,
+        fallbackBlock: fallbackBlock,
+        handler: handler
+      )
     }
+  }
 
-    postNavigateEventNotification(targetURL: openedURL, error: lastError, navigationType: navigationType)
-    return (navigationType, lastError)
+  private func openInBrowserIfAvailable(
+    urlOpener: _InternalURLOpener,
+    lastError: Error?,
+    handler: AppLinkNavigationBlock?
+  ) {
+    // Fall back to opening the url in the browser if available.
+    var navigationType: AppLinkNavigationType = .failure
+    var openedURL: URL?
+    do {
+      if let webURL = appLink?.webURL,
+         let appLinkBrowserURL = try appLinkURL(targetURL: webURL),
+         urlOpener.canOpen(appLinkBrowserURL) {
+        urlOpener.open(appLinkBrowserURL, options: [:]) { success in
+          if success {
+            openedURL = appLinkBrowserURL
+            navigationType = .browser
+          }
+          self.postNavigateEventNotification(targetURL: openedURL, error: lastError, navigationType: navigationType)
+          handler?(navigationType, lastError)
+        }
+      } else {
+        postNavigateEventNotification(targetURL: openedURL, error: lastError, navigationType: navigationType)
+        handler?(navigationType, lastError)
+      }
+    } catch {
+      postNavigateEventNotification(targetURL: openedURL, error: error, navigationType: navigationType)
+      handler?(navigationType, error)
+    }
   }
 
   /// Returns an AppLink for the given URL
@@ -214,24 +283,9 @@ public final class AppLinkNavigation: NSObject {
     resolver.appLink(from: destination, handler: handler)
   }
 
-  /// Navigates to an AppLink and returns whether it opened in-app or in-browser
-  @available(swift, obsoleted: 0.1)
-  @objc(navigateToAppLink:error:)
-  public static func navigate(to appLink: AppLink, errorPointer: ErrorPointer) -> AppLinkNavigationType {
-    // This method can be removed when Objective-C support is removed.
-    // The remaining navigation methods can then be refactored for a strict throw vs. return paradigm
-    do {
-      return try navigate(to: appLink)
-    } catch {
-      errorPointer?.pointee = error as NSError
-      return .failure
-    }
-  }
-
-  /// Navigates to an AppLink and returns whether it opened in-app or in-browser
-  @nonobjc
-  public static func navigate(to appLink: AppLink) throws -> AppLinkNavigationType {
-    try AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:]).navigate()
+  @objc(navigateToAppLink:handler:)
+  public static func navigate(to appLink: AppLink, handler: @escaping AppLinkNavigationBlock) {
+    AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:]).navigate(handler: handler)
   }
 
   /**
@@ -274,12 +328,7 @@ public final class AppLinkNavigation: NSObject {
           return
         }
 
-        do {
-          let result = try navigate(to: appLink)
-          handler(result, nil)
-        } catch {
-          handler(.failure, error)
-        }
+        navigate(to: appLink, handler: handler)
       }
     }
   }

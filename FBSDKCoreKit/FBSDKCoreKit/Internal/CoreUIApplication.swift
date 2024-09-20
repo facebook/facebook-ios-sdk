@@ -29,8 +29,6 @@ import UIKit
 private final class TestUIApplication: _InternalURLOpener {
   func canOpen(_ url: URL) -> Bool { false }
 
-  func open(_ url: URL) -> Bool { false }
-
   func open(
     _ url: URL,
     options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
