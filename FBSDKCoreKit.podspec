@@ -52,7 +52,7 @@ Pod::Spec.new do |s|
 #       sha1: '15fc2c8e2a1cfd2399af85162b4287d7ffe3c939'
 #   }
   s.module_name         = "FBSDKCoreKit"
-  s.source              = { :git => "https://github.com/james-chun-dev/git-public-pod-public.git" }
+  s.source              = { :git => "https://github.com/james-chun-dev/git-public-pod-public.git", :tag => "v#{s.version}" }
 
   s.vendored_frameworks = 'XCFrameworks/FBSDKCoreKit.xcframework'
   s.dependency 'FBSDKCoreKit_Basics', "#{s.version}"
