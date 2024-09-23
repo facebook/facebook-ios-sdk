@@ -164,6 +164,7 @@ static const CGFloat marginYForBanner = 0;
     @"Access Token",
     @"Device Login",
     @"App Link",
+    @"URL Opener",
     @"Login Features",
     @"AEM",
     @"SKAN",
@@ -241,21 +242,21 @@ static const CGFloat marginYForBanner = 0;
       cell.accessibilityIdentifier = @"cell_privacy_toggle";
       break;
     }
-    case 16: {
+    case 17: {
       cell.accessibilityIdentifier = @"cell_login_features";
       break;
     }
-    case 17: {
+    case 18: {
       // Set accessibility ID for AEM
       cell.accessibilityIdentifier = @"cell_aem";
       break;
     }
-    case 18: {
+    case 19: {
       // Set accessibility ID for SKAN
       cell.accessibilityIdentifier = @"cell_skan";
       break;
     }
-    case 19: {
+    case 20: {
       // Set accessibility ID for IAB
       cell.accessibilityIdentifier = @"cell_iab";
       break;
@@ -322,7 +323,7 @@ static const CGFloat marginYForBanner = 0;
       [self.navigationController pushViewController:privacyToggleVC animated:YES];
       break;
     }
-    case 16: {
+    case 17: {
       UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"LoginFeatures" bundle:nil];
       LoginViewController *viewController = [storyboard instantiateInitialViewController];
 
@@ -330,17 +331,17 @@ static const CGFloat marginYForBanner = 0;
       [self.navigationController pushViewController:viewController animated:YES];
       break;
     }
-    case 17: {
+    case 18: {
       AEMViewController *AEMVC = [[AEMViewController alloc] init];
       [self.navigationController pushViewController:AEMVC animated:YES];
       break;
     }
-    case 18: {
+    case 19: {
       SKANViewController *SKANVC = [[SKANViewController alloc] init];
       [self.navigationController pushViewController:SKANVC animated:YES];
       break;
     }
-    case 19: {
+    case 20: {
       UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"TestWebView" bundle:nil];
       UIViewController *vc = [storyboard instantiateInitialViewController];
       [self.navigationController pushViewController:vc animated:YES];
@@ -348,7 +349,7 @@ static const CGFloat marginYForBanner = 0;
     }
     default: {
       if (indexPath.row > 7) {
-        NSArray<NSString *> *identifiers = @[@"GameRequest", @"GamingServices", @"", @"GraphAPI", @"Camera", @"AccessToken", @"", @"AppLink"];
+        NSArray<NSString *> *identifiers = @[@"GameRequest", @"GamingServices", @"", @"GraphAPI", @"Camera", @"AccessToken", @"", @"AppLink", @"URLOpener"];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Hackbook" bundle:nil];
         UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:identifiers[indexPath.row - 8]];
         [self.navigationController pushViewController:vc animated:YES];
