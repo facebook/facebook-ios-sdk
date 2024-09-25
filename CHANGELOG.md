@@ -14,6 +14,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 17.2.0
 
+### Fixed
+- Fixed Xcode 16 deprecated API issues
+  - UIApplication.open(_ url:) API silently failed in swift.
+  - AppLinks navigation silently failed.
+
+### Changed
+- AppLinkNavigation public APIs have been changed due to the platform API deprecation.
+  AppLinkNavigation now passes back the navigation result via async completionHandler rather than returning the results synchronously.
+
 [2024-09-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.2.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.1.0...v17.2.0)
 
