@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
     s.name         = 'FBAEMKit'
-    s.version      = '17.1.0'
+    s.version      = '17.2.0'
     s.summary      = 'The kernal module for Facebook AEM solution'
 
     s.description  = <<-DESC
@@ -47,7 +47,7 @@ Pod::Spec.new do |s|
 
     s.source = {
       http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Dynamic.xcframework.zip",
-      sha1: '193fea69ce19e4b5a783223a922e17c342fb8e48'
+      sha1: '01715eb28136b20233996405a5373e8a724174d6'
     }
     s.vendored_frameworks = 'XCFrameworks/FBAEMKit.xcframework'
     s.dependency 'FBSDKCoreKit_Basics', "#{s.version}"
