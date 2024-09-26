@@ -1113,6 +1113,17 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
   
+
+  BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
+  if (!isProtectedModeApplied && self.sensitiveParamsManager) {
+    @try {
+      parameters = [self.sensitiveParamsManager processParameters:parameters eventName:eventName];
+    } @catch(NSException *exception) {
+      [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                                   logEntry:@"FBSDKAppEvents: caught exception while processing sensitiveParamsManager."];
+    }
+  }
+  
   if (self.macaRuleMatchingManager) {
     @try {
         parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
@@ -1156,6 +1167,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   // Filter out restrictive keys
   parameters = [self.restrictiveDataFilterParameterProcessor processParameters:parameters
                                                                      eventName:eventName];
+
   // Filter out non-standard params
   if (self.protectedModeManager) {
     @try {
@@ -1163,12 +1175,6 @@ static BOOL g_explicitEventsLoggedYet = NO;
     } @catch(NSException *exception) {}
   }
   
-  BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
-  if (!isProtectedModeApplied && self.sensitiveParamsManager) {
-    @try {
-      parameters = [self.sensitiveParamsManager processParameters:parameters eventName:eventName];
-    } @catch(NSException *exception) {}
-  }
   
   NSMutableDictionary<FBSDKAppEventParameterName, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters ?: @{}];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterNameEventName];
