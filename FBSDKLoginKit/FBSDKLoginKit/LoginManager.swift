@@ -303,7 +303,7 @@ public final class LoginManager: NSObject {
    */
   @objc(reauthorizeDataAccess:handler:)
   public func reauthorizeDataAccess(
-    from viewController: UIViewController,
+    from viewController: UIViewController?,
     handler: @escaping LoginManagerLoginResultBlock
   ) {
     guard
