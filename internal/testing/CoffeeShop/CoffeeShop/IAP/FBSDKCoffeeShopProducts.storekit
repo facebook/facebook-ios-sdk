@@ -17,8 +17,8 @@
       "internalID" : "B8EB1F1D",
       "localizations" : [
         {
-          "description" : "",
-          "displayName" : "",
+          "description" : "Purchase a 1 time annual membership",
+          "displayName" : "One Time Annual Membership",
           "locale" : "en_US"
         }
       ],
@@ -34,8 +34,8 @@
       "internalID" : "716AF062",
       "localizations" : [
         {
-          "description" : "",
-          "displayName" : "",
+          "description" : "Purchase a Coffee using IAP",
+          "displayName" : "Coffee",
           "locale" : "en_US"
         }
       ],
@@ -49,8 +49,8 @@
       "internalID" : "A99C7F4D",
       "localizations" : [
         {
-          "description" : "",
-          "displayName" : "",
+          "description" : "Purchase a 25$ Gift Card Using IAP",
+          "displayName" : "Gift Card",
           "locale" : "en_US"
         }
       ],
@@ -64,8 +64,8 @@
       "internalID" : "9C4A9D75",
       "localizations" : [
         {
-          "description" : "",
-          "displayName" : "",
+          "description" : "Purchase a Coffee Shop Rewards Card",
+          "displayName" : "Rewards Card",
           "locale" : "en_US"
         }
       ],
@@ -76,6 +76,8 @@
   ],
   "settings" : {
     "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
     "_storeKitErrors" : [
       {
         "current" : null,
@@ -158,7 +160,7 @@
           "localizations" : [
             {
               "description" : "",
-              "displayName" : "",
+              "displayName" : "Basic Monthly Membership",
               "locale" : "en_US"
             }
           ],
@@ -186,7 +188,7 @@
           "localizations" : [
             {
               "description" : "",
-              "displayName" : "",
+              "displayName" : "Premium Monthly Membership",
               "locale" : "en_US"
             }
           ],
