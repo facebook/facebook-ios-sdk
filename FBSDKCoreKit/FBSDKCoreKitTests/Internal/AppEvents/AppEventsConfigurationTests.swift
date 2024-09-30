@@ -47,6 +47,15 @@ final class AppEventsConfigurationTests: XCTestCase {
     XCTAssertTrue(configuration.eventCollectionEnabled, "Event collection enabled should be settable")
   }
 
+  func testCreatingWithDefaultIAPObservationTime() {
+    XCTAssertEqual(configuration.iapObservationTime, 3600000000000)
+  }
+
+  func testCreatingWithKnownIAPObservationTime() {
+    configuration = SampleAppEventsConfigurations.create(iapObservationTime: 1800000000000)
+    XCTAssertEqual(configuration.iapObservationTime, 1800000000000)
+  }
+
   func testCodingSecurity() {
     XCTAssertTrue(_AppEventsConfiguration.supportsSecureCoding, "Should support secure coding")
   }
@@ -142,6 +151,11 @@ final class AppEventsConfigurationTests: XCTestCase {
       decodedObject.eventCollectionEnabled,
       .isCodable
     )
+    XCTAssertEqual(
+      configuration.iapObservationTime,
+      decodedObject.iapObservationTime,
+      .isCodable
+    )
   }
 }
 
@@ -153,7 +167,8 @@ extension _AppEventsConfiguration {
     if let other = object as? _AppEventsConfiguration {
       return advertiserIDCollectionEnabled == other.advertiserIDCollectionEnabled &&
         eventCollectionEnabled == other.eventCollectionEnabled &&
-        defaultATEStatus == other.defaultATEStatus
+        defaultATEStatus == other.defaultATEStatus &&
+        iapObservationTime == other.iapObservationTime
     } else {
       return super.isEqual(object)
     }

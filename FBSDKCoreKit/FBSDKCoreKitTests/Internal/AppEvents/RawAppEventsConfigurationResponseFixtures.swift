@@ -16,6 +16,7 @@ final class RawAppEventsConfigurationResponseFixtures: NSObject {
     static let defaultATEStatus = "default_ate_status"
     static let advertiserIDCollectionEnabled = "advertiser_id_collection_enabled"
     static let eventCollectionEnabled = "event_collection_enabled"
+    static let iapObservationTime = "ios_iap_observation_time"
     static let topLevel = "app_events_config"
   }
 
@@ -25,6 +26,7 @@ final class RawAppEventsConfigurationResponseFixtures: NSObject {
         Keys.defaultATEStatus: 1,
         Keys.advertiserIDCollectionEnabled: false,
         Keys.eventCollectionEnabled: true,
+        Keys.iapObservationTime: 3600000000000,
       ],
     ]
   }
@@ -34,6 +36,7 @@ final class RawAppEventsConfigurationResponseFixtures: NSObject {
       Keys.defaultATEStatus: 1,
       Keys.advertiserIDCollectionEnabled: 1,
       Keys.eventCollectionEnabled: 1,
+      Keys.iapObservationTime: 3600000000000,
     ]
   }
 
@@ -43,6 +46,7 @@ final class RawAppEventsConfigurationResponseFixtures: NSObject {
         Keys.defaultATEStatus: "foo",
         Keys.advertiserIDCollectionEnabled: "bar",
         Keys.eventCollectionEnabled: "baz",
+        Keys.iapObservationTime: "fuzz",
       ],
     ]
   }
@@ -54,6 +58,7 @@ final class RawAppEventsConfigurationResponseFixtures: NSObject {
         Keys.defaultATEStatus: Fuzzer.random,
         Keys.advertiserIDCollectionEnabled: Fuzzer.random,
         Keys.eventCollectionEnabled: Fuzzer.random,
+        Keys.iapObservationTime: Fuzzer.random,
       ],
     ]
     return Fuzzer.randomize(json: response)

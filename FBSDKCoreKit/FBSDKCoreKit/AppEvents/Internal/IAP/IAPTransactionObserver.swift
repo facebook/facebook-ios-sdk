@@ -14,13 +14,14 @@ final class IAPTransactionObserver: NSObject {
   var configuredDependencies: ObjectDependencies?
   var defaultDependencies: ObjectDependencies? = .init(
     iapTransactionLoggingFactory: IAPTransactionLoggingFactory(),
-    paymentQueue: SKPaymentQueue.default()
+    paymentQueue: SKPaymentQueue.default(),
+    appEventsConfigurationProvider: _AppEventsConfigurationManager.shared
   )
 
   private var isObservingStoreKit1Transactions = false
   private var isObservingStoreKit2Transactions = false
   private var anyTransactionListenerTask: Any?
-  private var observationTime: UInt64 = 3_600_000_000_000
+  private var observationTime: UInt64 = IAPConstants.defaultIAPObservationTime
 
   static let shared = IAPTransactionObserver()
 
@@ -39,6 +40,7 @@ extension IAPTransactionObserver: DependentAsObject {
   struct ObjectDependencies {
     var iapTransactionLoggingFactory: IAPTransactionLoggingCreating
     var paymentQueue: SKPaymentQueue
+    var appEventsConfigurationProvider: _AppEventsConfigurationProviding
   }
 }
 
@@ -122,6 +124,10 @@ extension IAPTransactionObserver {
       guard !isObservingStoreKit2Transactions else {
         return
       }
+      observationTime = IAPConstants.defaultIAPObservationTime
+      if let dependencies = try? getDependencies() {
+        observationTime = dependencies.appEventsConfigurationProvider.cachedAppEventsConfiguration.iapObservationTime
+      }
       isObservingStoreKit2Transactions = true
       anyTransactionListenerTask = Task {
         await checkForRestoredPurchases()
@@ -203,11 +209,11 @@ extension IAPTransactionObserver {
     stopObserving()
     isObservingStoreKit2Transactions = false
     anyTransactionListenerTask = nil
-    observationTime = 60_000_000_000
+    observationTime = IAPConstants.defaultIAPObservationTime
   }
 
-  func setObservationTime(time: UInt64) {
-    observationTime = time
+  var configuredObservationTime: UInt64 {
+    observationTime
   }
 }
 #endif
