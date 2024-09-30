@@ -6,11 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestProductsResponse: SKProductsResponse {
+import StoreKit
+
+public final class TestProductsResponse: SKProductsResponse {
   private let stubbedProducts: [SKProduct]
   private let stubbedInvalidProductIdentifiers: [String]
 
-  init(
+  public init(
     products: [SKProduct],
     invalidProductIdentifiers: [String]
   ) {
@@ -18,11 +20,11 @@ final class TestProductsResponse: SKProductsResponse {
     stubbedInvalidProductIdentifiers = invalidProductIdentifiers
   }
 
-  override var products: [SKProduct] {
+  public override var products: [SKProduct] {
     stubbedProducts
   }
 
-  override var invalidProductIdentifiers: [String] {
+  public override var invalidProductIdentifiers: [String] {
     stubbedInvalidProductIdentifiers
   }
 }

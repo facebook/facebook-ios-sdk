@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-@available(iOS 12.2, *)
-final class TestPayment: SKPayment {
-  let stubbedProductIdentifier: String
-  let stubbedQuantity: Int
-  let stubbedPaymentDiscount: SKPaymentDiscount?
+import StoreKit
 
-  init(
+@available(iOS 12.2, *)
+public final class TestPayment: SKPayment {
+  public let stubbedProductIdentifier: String
+  public let stubbedQuantity: Int
+  public let stubbedPaymentDiscount: SKPaymentDiscount?
+
+  public init(
     productIdentifier: String,
     quantity: Int = 0,
     discount: SKPaymentDiscount? = nil
@@ -22,16 +24,16 @@ final class TestPayment: SKPayment {
     stubbedPaymentDiscount = discount
   }
 
-  override var productIdentifier: String {
+  public override var productIdentifier: String {
     stubbedProductIdentifier
   }
 
-  override var quantity: Int {
+  public override var quantity: Int {
     stubbedQuantity
   }
 
   @available(iOS 12.2, *)
-  override var paymentDiscount: SKPaymentDiscount? {
+  public override var paymentDiscount: SKPaymentDiscount? {
     stubbedPaymentDiscount
   }
 }

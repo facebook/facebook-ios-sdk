@@ -6,15 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import StoreKit
+
 @available(iOS 12.2, *)
-final class TestPaymentTransaction: SKPaymentTransaction {
+public final class TestPaymentTransaction: SKPaymentTransaction {
   private let stubbedTransactionIdentifier: String?
   private let stubbedTransactionState: SKPaymentTransactionState
   private let stubbedTransactionDate: Date?
   private let stubbedPayment: TestPayment
   private let stubbedOriginalTransaction: TestPaymentTransaction?
 
-  init(
+  public init(
     identifier: String? = nil,
     state: SKPaymentTransactionState,
     date: Date? = nil,
@@ -30,23 +32,23 @@ final class TestPaymentTransaction: SKPaymentTransaction {
     super.init()
   }
 
-  override var original: SKPaymentTransaction? {
+  public override var original: SKPaymentTransaction? {
     stubbedOriginalTransaction
   }
 
-  override var transactionIdentifier: String? {
+  public override var transactionIdentifier: String? {
     stubbedTransactionIdentifier
   }
 
-  override var transactionState: SKPaymentTransactionState {
+  public override var transactionState: SKPaymentTransactionState {
     stubbedTransactionState
   }
 
-  override var transactionDate: Date? {
+  public override var transactionDate: Date? {
     stubbedTransactionDate
   }
 
-  override var payment: SKPayment {
+  public override var payment: SKPayment {
     stubbedPayment
   }
 }

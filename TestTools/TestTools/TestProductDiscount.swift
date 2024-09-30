@@ -6,13 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-final class TestProductDiscount: SKProductDiscount {
+import StoreKit
+
+public final class TestProductDiscount: SKProductDiscount {
   let stubbedIdentifier: String
   let stubbedPaymentMode: PaymentMode
   let stubbedPrice: NSDecimalNumber
   let stubbedSubscriptionPeriod: TestProductSubscriptionPeriod
 
-  init(
+  public init(
     identifier: String = "identifier",
     paymentMode: PaymentMode,
     price: NSDecimalNumber,
@@ -24,19 +26,19 @@ final class TestProductDiscount: SKProductDiscount {
     stubbedSubscriptionPeriod = subscriptionPeriod
   }
 
-  override var identifier: String? {
+  public override var identifier: String? {
     stubbedIdentifier
   }
 
-  override var paymentMode: SKProductDiscount.PaymentMode {
+  public override var paymentMode: SKProductDiscount.PaymentMode {
     stubbedPaymentMode
   }
 
-  override var price: NSDecimalNumber {
+  public override var price: NSDecimalNumber {
     stubbedPrice
   }
 
-  override var subscriptionPeriod: SKProductSubscriptionPeriod {
+  public override var subscriptionPeriod: SKProductSubscriptionPeriod {
     stubbedSubscriptionPeriod
   }
 }
