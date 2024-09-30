@@ -13,29 +13,40 @@ import StoreKitTest
 import TestTools
 import XCTest
 
-@available(iOS 15.0, *)
 final class IAPEventResolverTests: StoreKitTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   private var eventResolver: IAPEventResolver!
+  private var delegate: TestIAPEventResolverDelegate!
+  private var iapSKProductRequestFactory: TestIAPSKProductsRequestFactory!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() async throws {
     try await super.setUp()
     TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = true
+    delegate = TestIAPEventResolverDelegate()
+    iapSKProductRequestFactory = TestIAPSKProductsRequestFactory()
     IAPEventResolver.configuredDependencies = .init(
       gateKeeperManager: TestGateKeeperManager.self,
-      iapSKProductRequestFactory: IAPSKProductsRequestFactory()
+      iapSKProductRequestFactory: iapSKProductRequestFactory
     )
     eventResolver = IAPEventResolver()
+    eventResolver.delegate = delegate
   }
 
   override func tearDown() {
+    delegate.reset()
+    delegate = nil
     eventResolver = nil
     super.tearDown()
   }
+}
 
-  func testResolveNewNonConsumablePurchaseEvent() async {
+// MARK: - Store Kit 2
+
+@available(iOS 15.0, *)
+extension IAPEventResolverTests {
+  func testResolveNewNonConsumablePurchaseEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
       let product = products.first else {
@@ -73,7 +84,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveNewConsumablePurchaseEvent() async {
+  func testResolveNewConsumablePurchaseEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.consumableProduct1.rawValue]),
       let product = products.first else {
@@ -111,7 +122,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveNewNonRenewingSubscriptionEvent() async {
+  func testResolveNewNonRenewingSubscriptionEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonRenewingSubscription1.rawValue]),
       let product = products.first else {
@@ -149,7 +160,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveNewAutoRenewingSubscriptionEvent() async {
+  func testResolveNewAutoRenewingSubscriptionEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
       let product = products.first else {
@@ -188,7 +199,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveNewStartTrialSubscriptionEvent() async {
+  func testResolveNewStartTrialSubscriptionEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription2.rawValue]),
       let product = products.first else {
@@ -228,7 +239,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveNewAutoSubscriptionEventGKDisabled() async {
+  func testResolveNewAutoSubscriptionEventGKDisabledWithStoreKit2() async {
     TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = false
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
@@ -246,7 +257,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertNil(event)
   }
 
-  func testResolveRestoredPurchaseEvent() async {
+  func testResolveRestoredPurchaseEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]),
       let product = products.first else {
@@ -284,7 +295,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveRestoredAutoRenewingSubscriptionEvent() async {
+  func testResolveRestoredAutoRenewingSubscriptionEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
       let product = products.first else {
@@ -323,7 +334,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveRestoredStartTrialSubscriptionEvent() async {
+  func testResolveRestoredStartTrialSubscriptionEventWithStoreKit2() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription2.rawValue]),
       let product = products.first else {
@@ -363,7 +374,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     XCTAssertEqual(event, expectedEvent)
   }
 
-  func testResolveRestoredAutoSubscriptionEventGKDisabled() async {
+  func testResolveRestoredAutoSubscriptionEventGKDisabledWithStoreKit2() async {
     TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = false
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.autoRenewingSubscription1.rawValue]),
@@ -379,5 +390,368 @@ final class IAPEventResolverTests: StoreKitTestCase {
     await iapTransaction.transaction.finish()
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertNil(event)
+  }
+}
+
+// MARK: - Store Kit 1
+
+@available(iOS 12.2, *)
+extension IAPEventResolverTests {
+  func testResolveNewNonConsumablePurchaseEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.nonConsumableProduct1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1)
+    let transaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    eventResolver.resolveEventFor(transaction: transaction)
+    let expectedEvent = IAPEvent(
+      eventName: .purchased,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 0.99,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "0",
+      originalTransactionID: nil,
+      transactionDate: now,
+      originalTransactionDate: nil,
+      isVerified: false,
+      subscriptionPeriod: nil,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedNewEvent == expectedEvent
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveNewConsumablePurchaseEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.consumableProduct1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 2)
+    let transaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    eventResolver.resolveEventFor(transaction: transaction)
+    let expectedEvent = IAPEvent(
+      eventName: .purchased,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 20,
+      quantity: 2,
+      currency: "USD",
+      transactionID: "0",
+      originalTransactionID: nil,
+      transactionDate: now,
+      originalTransactionDate: nil,
+      isVerified: false,
+      subscriptionPeriod: nil,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedNewEvent == expectedEvent
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveNewNonRenewingSubscriptionEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.nonRenewingSubscription1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1)
+    let transaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    eventResolver.resolveEventFor(transaction: transaction)
+    let expectedEvent = IAPEvent(
+      eventName: .purchased,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 5,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "0",
+      originalTransactionID: nil,
+      transactionDate: now,
+      originalTransactionDate: nil,
+      isVerified: false,
+      subscriptionPeriod: nil,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedNewEvent == expectedEvent
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveNewAutoRenewingSubscriptionEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.autoRenewingSubscription1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1)
+    let transaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    eventResolver.resolveEventFor(transaction: transaction)
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
+    let expectedEvent = IAPEvent(
+      eventName: .subscribe,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 2,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "0",
+      originalTransactionID: nil,
+      transactionDate: now,
+      originalTransactionDate: nil,
+      isVerified: false,
+      subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedNewEvent == expectedEvent
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveNewStartTrialSubscriptionEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.autoRenewingSubscription2
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let sampleDiscount = SKPaymentDiscount(
+      identifier: "FreeTrial",
+      keyIdentifier: "key",
+      nonce: UUID(),
+      signature: "signature",
+      timestamp: 1
+    )
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1, discount: sampleDiscount)
+    let transaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    eventResolver.resolveEventFor(transaction: transaction)
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
+    let introOfferSubscriptionPeriod = IAPSubscriptionPeriod(unit: .month, numUnits: 6)
+    let expectedEvent = IAPEvent(
+      eventName: .startTrial,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 0,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "0",
+      originalTransactionID: nil,
+      transactionDate: now,
+      originalTransactionDate: nil,
+      isVerified: false,
+      subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: true,
+      hasIntroductoryOffer: true,
+      hasFreeTrial: true,
+      introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
+      introductoryOfferPrice: 0.0,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedNewEvent == expectedEvent
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveNewAutoSubscriptionEventGKDisabledWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.autoRenewingSubscription1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = false
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1)
+    let transaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    eventResolver.resolveEventFor(transaction: transaction)
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedNewEvent == nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveRestoredPurchaseEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.nonConsumableProduct1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1)
+    let originalTransaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    let transaction = TestPaymentTransaction(
+      identifier: "1",
+      state: .restored,
+      date: now,
+      payment: payment,
+      originalTransaction: originalTransaction
+    )
+    eventResolver.resolveEventFor(transaction: transaction)
+    let expectedEvent = IAPEvent(
+      eventName: .purchaseRestored,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 0.99,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "1",
+      originalTransactionID: "0",
+      transactionDate: now,
+      originalTransactionDate: now,
+      isVerified: false,
+      subscriptionPeriod: nil,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedRestoredEvent == expectedEvent && self.delegate.capturedNewEvent == nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveRestoredAutoRenewingSubscriptionEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.autoRenewingSubscription1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1)
+    let originalTransaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    let transaction = TestPaymentTransaction(
+      identifier: "1",
+      state: .restored,
+      date: now,
+      payment: payment,
+      originalTransaction: originalTransaction
+    )
+    eventResolver.resolveEventFor(transaction: transaction)
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
+    let expectedEvent = IAPEvent(
+      eventName: .subscribeRestore,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 2,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "1",
+      originalTransactionID: "0",
+      transactionDate: now,
+      originalTransactionDate: now,
+      isVerified: false,
+      subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedRestoredEvent == expectedEvent && self.delegate.capturedNewEvent == nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveRestoredStartTrialSubscriptionEventWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.autoRenewingSubscription2
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    let now = Date()
+    let sampleDiscount = SKPaymentDiscount(
+      identifier: "FreeTrial",
+      keyIdentifier: "key",
+      nonce: UUID(),
+      signature: "signature",
+      timestamp: 1
+    )
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1, discount: sampleDiscount)
+    let originalTransaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    let transaction = TestPaymentTransaction(
+      identifier: "1",
+      state: .restored,
+      date: now,
+      payment: payment,
+      originalTransaction: originalTransaction
+    )
+    eventResolver.resolveEventFor(transaction: transaction)
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
+    let introOfferSubscriptionPeriod = IAPSubscriptionPeriod(unit: .month, numUnits: 6)
+    let expectedEvent = IAPEvent(
+      eventName: .subscribeRestore,
+      productID: productID.rawValue,
+      productTitle: "",
+      productDescription: "",
+      amount: 0,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "1",
+      originalTransactionID: "0",
+      transactionDate: now,
+      originalTransactionDate: now,
+      isVerified: false,
+      subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: true,
+      hasIntroductoryOffer: true,
+      hasFreeTrial: true,
+      introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
+      introductoryOfferPrice: 0.0,
+      storeKitVersion: .version1
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedRestoredEvent == expectedEvent && self.delegate.capturedNewEvent == nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
+
+  func testResolveRestoredAutoSubscriptionEventGKDisabledWithStoreKit1() {
+    let productID = Self.ProductIdentifiers.autoRenewingSubscription1
+    iapSKProductRequestFactory.stubbedResponse = SampleSKProductsResponse.getResponseFor(productID: productID)
+    TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = false
+    let now = Date()
+    let payment = TestPayment(productIdentifier: productID.rawValue, quantity: 1)
+    let originalTransaction = TestPaymentTransaction(identifier: "0", state: .purchased, date: now, payment: payment)
+    let transaction = TestPaymentTransaction(
+      identifier: "1",
+      state: .restored,
+      date: now,
+      payment: payment,
+      originalTransaction: originalTransaction
+    )
+    eventResolver.resolveEventFor(transaction: transaction)
+    let predicate = NSPredicate { _, _ -> Bool in
+      self.delegate.capturedRestoredEvent == nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
   }
 }
