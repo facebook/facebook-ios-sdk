@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 protocol IAPTransactionLoggingCreating {
   func createIAPTransactionLogging() -> IAPTransactionLogging
 }

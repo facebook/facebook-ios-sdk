@@ -8,8 +8,9 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 protocol IAPTransactionLogging {
+  @available(iOS 15.0, *)
   func logNewTransaction(_ transaction: IAPTransaction) async
+  @available(iOS 15.0, *)
   func logRestoredTransaction(_ transaction: IAPTransaction) async
 }
