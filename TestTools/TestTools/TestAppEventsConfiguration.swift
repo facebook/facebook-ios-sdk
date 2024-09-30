@@ -6,36 +6,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-final class TestAppEventsConfiguration: NSObject, _AppEventsConfigurationProtocol {
+public final class TestAppEventsConfiguration: NSObject, _AppEventsConfigurationProtocol {
   static var stubbedDefaultConfiguration: TestAppEventsConfiguration?
 
-  var defaultATEStatus: AdvertisingTrackingStatus = .unspecified
-  var advertiserIDCollectionEnabled = false
-  var eventCollectionEnabled = false
+  public var defaultATEStatus: AdvertisingTrackingStatus = .unspecified
+  public var advertiserIDCollectionEnabled = false
+  public var eventCollectionEnabled = false
+  public var iapObservationTime: UInt64 = 3600000000000
 
-  init(
+  public init(
     defaultATEStatus: AdvertisingTrackingStatus = .unspecified,
     advertiserIDCollectionEnabled: Bool = false,
-    eventCollectionEnabled: Bool = false
+    eventCollectionEnabled: Bool = false,
+    iapObservationTime: UInt64 = 3600000000000
   ) {
     self.defaultATEStatus = defaultATEStatus
     self.advertiserIDCollectionEnabled = advertiserIDCollectionEnabled
     self.eventCollectionEnabled = eventCollectionEnabled
+    self.iapObservationTime = iapObservationTime
   }
 
-  required init(json dict: [String: Any]?) {}
+  public required init(json dict: [String: Any]?) {}
 
-  static func `default`() -> Self {
+  public static func `default`() -> Self {
     guard let stubbed = stubbedDefaultConfiguration as? Self else {
       fatalError("Must have a default configuration")
     }
     return stubbed
   }
 
-  static func reset() {
+  public static func reset() {
     stubbedDefaultConfiguration = nil
   }
 }
