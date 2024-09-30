@@ -10,23 +10,33 @@
 @testable import IAPTestsHostApp
 
 import StoreKitTest
+import TestTools
 import XCTest
 
-@available(iOS 15.0, *)
 final class IAPTransactionObserverTests: StoreKitTestCase {
+
+  // swiftlint:disable implicitly_unwrapped_optional
+  private var queue: TestPaymentQueue!
+  // swiftlint:enable implicitly_unwrapped_optiona
 
   override func setUp() async throws {
     try await super.setUp()
+    queue = TestPaymentQueue()
     IAPTransactionObserver.shared.reset()
     IAPTransactionObserver.shared.configuredDependencies = .init(
       iapTransactionLoggingFactory: TestIAPTransactionLoggingFactory(),
-      paymentQueue: SKPaymentQueue.default()
+      paymentQueue: queue
     )
     IAPTransactionObserver.shared.setObservationTime(time: 10_000_000_000)
     IAPTransactionCache.shared.reset()
     TestIAPTransactionLogger.reset()
   }
+}
 
+// MARK: - Store Kit 2
+
+@available(iOS 15.0, *)
+extension IAPTransactionObserverTests {
   func testObserveRestoredPurchases() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {
@@ -220,5 +230,77 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 30.0)
+  }
+}
+
+// MARK: - Store Kit 1
+
+@available(iOS 12.2, *)
+extension IAPTransactionObserverTests {
+  func testStartObserving() {
+    IAPTransactionObserver.shared.startObserving()
+    XCTAssertTrue(queue.addTransactionObserverWasCalled)
+  }
+
+  func testStopObserving() {
+    IAPTransactionObserver.shared.startObserving()
+    IAPTransactionObserver.shared.stopObserving()
+    XCTAssertTrue(queue.removeTransactionObserverWasCalled)
+  }
+
+  func testStopObservingWhenNotAlreadyObserving() {
+    IAPTransactionObserver.shared.stopObserving()
+    XCTAssertFalse(queue.removeTransactionObserverWasCalled)
+  }
+
+  func testObserveNewPurchasedTransaction() {
+    let transaction = TestPaymentTransaction(state: .purchased)
+    IAPTransactionObserver.shared.paymentQueue(queue, updatedTransactions: [transaction])
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.count, 1)
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.first, transaction)
+  }
+
+  func testObserveNewRestoredTransaction() {
+    let transaction = TestPaymentTransaction(state: .restored)
+    IAPTransactionObserver.shared.paymentQueue(queue, updatedTransactions: [transaction])
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.count, 1)
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.first, transaction)
+  }
+
+  func testObserveNewPurchasingTransaction() {
+    let transaction = TestPaymentTransaction(state: .purchasing)
+    IAPTransactionObserver.shared.paymentQueue(queue, updatedTransactions: [transaction])
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.count, 1)
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.first, transaction)
+  }
+
+  func testObserveNewFailedTransaction() {
+    let transaction = TestPaymentTransaction(state: .failed)
+    IAPTransactionObserver.shared.paymentQueue(queue, updatedTransactions: [transaction])
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.count, 1)
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.first, transaction)
+  }
+
+  func testObserveNewDeferredTransaction() {
+    let transaction = TestPaymentTransaction(state: .deferred)
+    IAPTransactionObserver.shared.paymentQueue(queue, updatedTransactions: [transaction])
+    XCTAssertTrue(TestIAPTransactionLogger.storeKit1Transactions.isEmpty)
+  }
+
+  func testObserveEmptyUpdatedTransactions() {
+    IAPTransactionObserver.shared.paymentQueue(queue, updatedTransactions: [])
+    XCTAssertTrue(TestIAPTransactionLogger.storeKit1Transactions.isEmpty)
+  }
+
+  func testObserveMultipleNewTransactions() {
+    let transactions = [
+      TestPaymentTransaction(state: .failed),
+      TestPaymentTransaction(state: .purchasing),
+      TestPaymentTransaction(state: .purchased),
+      TestPaymentTransaction(state: .restored),
+      TestPaymentTransaction(state: .deferred),
+    ]
+    IAPTransactionObserver.shared.paymentQueue(queue, updatedTransactions: transactions)
+    XCTAssertEqual(TestIAPTransactionLogger.storeKit1Transactions.count, 4)
   }
 }
