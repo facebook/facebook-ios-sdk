@@ -222,34 +222,6 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedParameters)
   }
 
-  @available(iOS 17.0, *)
-  func testLogNewSubscriptionTransactionExpiredSub() async {
-    do {
-      try await testSession.buyProduct(identifier: Self.ProductIdentifiers.autoRenewingSubscription1.rawValue)
-    } catch {
-      return
-    }
-    do {
-      try testSession.expireSubscription(productIdentifier: Self.ProductIdentifiers.autoRenewingSubscription1.rawValue)
-    } catch {
-      return
-    }
-    let transactions = await Transaction.all.getValues()
-    guard let transactionToLog = transactions.first?.iapTransaction else {
-      return
-    }
-    await iapLogger.logNewTransaction(transactionToLog)
-    XCTAssertNil(eventLogger.capturedEventName)
-    XCTAssertNil(eventLogger.capturedValueToSum)
-    XCTAssertTrue(
-      IAPTransactionCache.shared.contains(
-        transactionID: String(transactionToLog.transaction.id),
-        eventName: .subscribe
-      )
-    )
-    XCTAssertNil(eventLogger.capturedParameters)
-  }
-
   func testLogNewSubscriptionTransactionStartTrialWithStartTrialInCache() async {
     guard let (iapTransaction, _) =
       await executeTransactionFor(Self.ProductIdentifiers.autoRenewingSubscription2.rawValue) else {

@@ -24,7 +24,9 @@ extension Transaction {
       if let candidateDate = IAPTransactionCache.shared.newCandidatesDate {
         dateCheck = transaction.purchaseDate >= candidateDate
       }
+      let now = Date()
       return transaction.revocationDate == nil &&
+        transaction.expirationDate ?? now >= now &&
         dateCheck &&
         !unfinishedTransactionIDs.contains(id) &&
         !IAPTransactionCache.shared.contains(transactionID: String(id))

@@ -19,8 +19,8 @@ struct IAPEvent: Equatable {
   let currency: String?
   let transactionID: String?
   let originalTransactionID: String?
-  let transactionDate: Date
-  let originalTransactionDate: Date
+  let transactionDate: Date?
+  let originalTransactionDate: Date?
   let isVerified: Bool
   let subscriptionPeriod: IAPSubscriptionPeriod?
   let isStartTrial: Bool
