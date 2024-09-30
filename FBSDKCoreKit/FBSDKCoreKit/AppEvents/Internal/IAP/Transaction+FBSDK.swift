@@ -22,7 +22,7 @@ extension Transaction {
       let id = transaction.id
       var dateCheck = true
       if let candidateDate = IAPTransactionCache.shared.newCandidatesDate {
-        dateCheck = transaction.purchaseDate >= candidateDate
+        dateCheck = transaction.purchaseDate > candidateDate
       }
       let now = Date()
       return transaction.revocationDate == nil &&

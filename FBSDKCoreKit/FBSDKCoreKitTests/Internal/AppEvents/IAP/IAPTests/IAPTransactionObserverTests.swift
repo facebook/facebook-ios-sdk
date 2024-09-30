@@ -108,7 +108,6 @@ extension IAPTransactionObserverTests {
       return
     }
     await iapTransaction.transaction.finish()
-    let now = Date()
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
       let didLog = TestIAPTransactionLogger.newStoreKit2Transactions.contains {
@@ -117,7 +116,7 @@ extension IAPTransactionObserverTests {
       guard let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate else {
         return false
       }
-      let dateCheck = newCandidateDate >= now
+      let dateCheck = newCandidateDate == iapTransaction.transaction.purchaseDate
       return TestIAPTransactionLogger.restoredStoreKit2Transactions.isEmpty && didLog && dateCheck
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
@@ -138,7 +137,6 @@ extension IAPTransactionObserverTests {
       return
     }
     await iapTransaction.transaction.finish()
-    let now = Date()
     let predicate = NSPredicate { _, _ -> Bool in
       let didLog = TestIAPTransactionLogger.newStoreKit2Transactions.contains {
         $0.transaction.id == iapTransaction.transaction.id
@@ -146,7 +144,7 @@ extension IAPTransactionObserverTests {
       guard let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate else {
         return false
       }
-      let dateCheck = newCandidateDate >= now
+      let dateCheck = newCandidateDate == iapTransaction.transaction.purchaseDate
       return TestIAPTransactionLogger.restoredStoreKit2Transactions.isEmpty && didLog && dateCheck
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
@@ -191,7 +189,6 @@ extension IAPTransactionObserverTests {
   }
 
   func testObserveRestoredAndNewTransactions() async {
-    let now = Date()
     let productIDs = [
       Self.ProductIdentifiers.nonConsumableProduct1.rawValue,
       Self.ProductIdentifiers.nonRenewingSubscription1.rawValue,
@@ -224,7 +221,7 @@ extension IAPTransactionObserverTests {
       let hasRestored = IAPTransactionCache.shared.hasRestoredPurchases
       var dateCheck = false
       if let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate {
-        dateCheck = newCandidateDate >= now
+        dateCheck = newCandidateDate == iapTransaction2.transaction.purchaseDate
       }
       return didRestore && hasRestored && didObserveNew && dateCheck
     }
