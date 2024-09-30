@@ -19,7 +19,8 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     try await super.setUp()
     IAPTransactionObserver.shared.reset()
     IAPTransactionObserver.shared.configuredDependencies = .init(
-      iapTransactionLoggingFactory: TestIAPTransactionLoggingFactory()
+      iapTransactionLoggingFactory: TestIAPTransactionLoggingFactory(),
+      paymentQueue: SKPaymentQueue.default()
     )
     IAPTransactionObserver.shared.setObservationTime(time: 10_000_000_000)
     IAPTransactionCache.shared.reset()
@@ -41,10 +42,10 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
       let hasRestored = IAPTransactionCache.shared.hasRestoredPurchases
-      let didRestore = TestIAPTransactionLogger.restoredTransactions.contains {
+      let didRestore = TestIAPTransactionLogger.restoredStoreKit2Transactions.contains {
         $0.transaction.id == iapTransaction.transaction.id
       }
-      return hasRestored && didRestore && TestIAPTransactionLogger.newTransactions.isEmpty
+      return hasRestored && didRestore && TestIAPTransactionLogger.newStoreKit2Transactions.isEmpty
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -54,8 +55,8 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
       let hasRestored = IAPTransactionCache.shared.hasRestoredPurchases
-      let noTransactions = TestIAPTransactionLogger.restoredTransactions.isEmpty &&
-        TestIAPTransactionLogger.newTransactions.isEmpty
+      let noTransactions = TestIAPTransactionLogger.restoredStoreKit2Transactions.isEmpty &&
+        TestIAPTransactionLogger.newStoreKit2Transactions.isEmpty
       return hasRestored && noTransactions
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
@@ -77,7 +78,8 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     await iapTransaction.transaction.finish()
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
-      TestIAPTransactionLogger.restoredTransactions.isEmpty && !TestIAPTransactionLogger.newTransactions.isEmpty
+      TestIAPTransactionLogger.restoredStoreKit2Transactions.isEmpty &&
+        !TestIAPTransactionLogger.newStoreKit2Transactions.isEmpty
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -99,14 +101,14 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     let now = Date()
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
-      let didLog = TestIAPTransactionLogger.newTransactions.contains {
+      let didLog = TestIAPTransactionLogger.newStoreKit2Transactions.contains {
         $0.transaction.id == iapTransaction.transaction.id
       }
       guard let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate else {
         return false
       }
       let dateCheck = newCandidateDate >= now
-      return TestIAPTransactionLogger.restoredTransactions.isEmpty && didLog && dateCheck
+      return TestIAPTransactionLogger.restoredStoreKit2Transactions.isEmpty && didLog && dateCheck
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -128,14 +130,14 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     await iapTransaction.transaction.finish()
     let now = Date()
     let predicate = NSPredicate { _, _ -> Bool in
-      let didLog = TestIAPTransactionLogger.newTransactions.contains {
+      let didLog = TestIAPTransactionLogger.newStoreKit2Transactions.contains {
         $0.transaction.id == iapTransaction.transaction.id
       }
       guard let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate else {
         return false
       }
       let dateCheck = newCandidateDate >= now
-      return TestIAPTransactionLogger.restoredTransactions.isEmpty && didLog && dateCheck
+      return TestIAPTransactionLogger.restoredStoreKit2Transactions.isEmpty && didLog && dateCheck
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -145,7 +147,7 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     IAPTransactionCache.shared.hasRestoredPurchases = true
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
-      let didNotObserve = TestIAPTransactionLogger.newTransactions.isEmpty
+      let didNotObserve = TestIAPTransactionLogger.newStoreKit2Transactions.isEmpty
       let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate
       return didNotObserve && newCandidateDate == nil
     }
@@ -170,7 +172,7 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     IAPTransactionCache.shared.newCandidatesDate = now
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
-      let didNotObserve = TestIAPTransactionLogger.newTransactions.isEmpty
+      let didNotObserve = TestIAPTransactionLogger.newStoreKit2Transactions.isEmpty
       let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate
       return didNotObserve && newCandidateDate == now
     }
@@ -203,10 +205,10 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
     }
     await iapTransaction2.transaction.finish()
     let predicate = NSPredicate { _, _ -> Bool in
-      let didRestore = TestIAPTransactionLogger.restoredTransactions.contains {
+      let didRestore = TestIAPTransactionLogger.restoredStoreKit2Transactions.contains {
         $0.transaction.id == iapTransaction1.transaction.id
       }
-      let didObserveNew = TestIAPTransactionLogger.newTransactions.contains {
+      let didObserveNew = TestIAPTransactionLogger.newStoreKit2Transactions.contains {
         $0.transaction.id == iapTransaction2.transaction.id
       }
       let hasRestored = IAPTransactionCache.shared.hasRestoredPurchases

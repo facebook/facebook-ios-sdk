@@ -13,9 +13,11 @@ final class IAPTransactionObserver: NSObject {
 
   var configuredDependencies: ObjectDependencies?
   var defaultDependencies: ObjectDependencies? = .init(
-    iapTransactionLoggingFactory: IAPTransactionLoggingFactory()
+    iapTransactionLoggingFactory: IAPTransactionLoggingFactory(),
+    paymentQueue: SKPaymentQueue.default()
   )
 
+  private var isObservingStoreKit1Transactions = false
   private var isObservingStoreKit2Transactions = false
   private var anyTransactionListenerTask: Any?
   private var observationTime: UInt64 = 3_600_000_000_000
@@ -36,6 +38,7 @@ final class IAPTransactionObserver: NSObject {
 extension IAPTransactionObserver: DependentAsObject {
   struct ObjectDependencies {
     var iapTransactionLoggingFactory: IAPTransactionLoggingCreating
+    var paymentQueue: SKPaymentQueue
   }
 }
 
@@ -46,12 +49,14 @@ extension IAPTransactionObserver {
     if #available(iOS 15.0, *) {
       startObservingStoreKit2()
     }
+    startObervingStoreKit1()
   }
 
   func stopObserving() {
     if #available(iOS 15.0, *) {
       stopObservingStoreKit2()
     }
+    stopObservingStoreKit1()
   }
 }
 
@@ -131,6 +136,57 @@ extension IAPTransactionObserver {
       }
       transactionListenerTask?.cancel()
       isObservingStoreKit2Transactions = false
+    }
+  }
+}
+
+// MARK: - Store Kit 1
+
+extension IAPTransactionObserver: SKPaymentTransactionObserver {
+  private func startObervingStoreKit1() {
+    synchronized(self) {
+      guard !isObservingStoreKit1Transactions else {
+        return
+      }
+      guard let dependencies = try? getDependencies() else {
+        return
+      }
+      dependencies.paymentQueue.add(self)
+      isObservingStoreKit1Transactions = true
+    }
+  }
+
+  private func stopObservingStoreKit1() {
+    synchronized(self) {
+      guard isObservingStoreKit1Transactions else {
+        return
+      }
+      guard let dependencies = try? getDependencies() else {
+        return
+      }
+      dependencies.paymentQueue.remove(self)
+      isObservingStoreKit1Transactions = false
+    }
+  }
+
+  private func handleTransaction(_ transaction: SKPaymentTransaction) {
+    guard let dependencies = try? getDependencies() else {
+      return
+    }
+    let logger = dependencies.iapTransactionLoggingFactory.createIAPTransactionLogging()
+    logger.logTransaction(transaction)
+  }
+
+  func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    for transaction in transactions {
+      switch transaction.transactionState {
+      case .purchasing, .purchased, .failed, .restored:
+        handleTransaction(transaction)
+      case .deferred:
+        break
+      @unknown default:
+        break
+      }
     }
   }
 }

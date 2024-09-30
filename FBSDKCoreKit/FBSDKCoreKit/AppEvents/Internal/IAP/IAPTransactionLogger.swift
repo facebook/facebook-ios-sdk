@@ -33,7 +33,6 @@ extension IAPTransactionLogger: DependentAsType {
 
 // MARK: - Private Methods
 
-@available(iOS 15.0, *)
 extension IAPTransactionLogger {
   private func durationOfSubscriptionPeriod(_ subscriptionPeriod: IAPSubscriptionPeriod?) -> String {
     guard let subscriptionPeriod else {
@@ -99,7 +98,7 @@ extension IAPTransactionLogger {
   }
 }
 
-// MARK: - Public APIs
+// MARK: - Store Kit 2
 
 @available(iOS 15.0, *)
 extension IAPTransactionLogger {
@@ -141,6 +140,14 @@ extension IAPTransactionLogger {
       valueToSum: event.amount.doubleValue,
       parameters: parameters
     )
+  }
+}
+
+// MARK: - Store Kit 1
+
+extension IAPTransactionLogger {
+  func logTransaction(_ transaction: SKPaymentTransaction) {
+    // TODO: Implement this
   }
 }
 
