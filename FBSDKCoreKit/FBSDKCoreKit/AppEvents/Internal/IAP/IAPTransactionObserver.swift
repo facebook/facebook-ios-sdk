@@ -194,7 +194,6 @@ extension IAPTransactionObserver: SKPaymentTransactionObserver {
 // MARK: - Testing
 
 #if DEBUG
-@available(iOS 15.0, *)
 extension IAPTransactionObserver {
   func reset() {
     stopObserving()

@@ -9,7 +9,6 @@
 @testable import FBSDKCoreKit
 import Foundation
 
-@available(iOS 15.0, *)
 struct TestIAPTransactionLoggingFactory: IAPTransactionLoggingCreating {
 
   func createIAPTransactionLogging() -> any IAPTransactionLogging {
