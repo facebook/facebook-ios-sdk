@@ -34,3 +34,10 @@ extension Transaction {
     return candidateTransactions
   }
 }
+
+@available(iOS 15.0, *)
+extension Transaction {
+  var isSubscription: Bool {
+    productType == .autoRenewable
+  }
+}

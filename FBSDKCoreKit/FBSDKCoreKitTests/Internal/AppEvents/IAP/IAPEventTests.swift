@@ -27,6 +27,7 @@ final class IAPEventTests: XCTestCase {
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
+      isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
       hasIntroductoryOffer: false,
@@ -47,6 +48,7 @@ final class IAPEventTests: XCTestCase {
     XCTAssertEqual(event1.transactionDate, now)
     XCTAssertEqual(event1.originalTransactionDate, now)
     XCTAssertTrue(event1.isVerified)
+    XCTAssertFalse(event1.isSubscription)
     XCTAssertNil(event1.subscriptionPeriod)
     XCTAssertFalse(event1.isStartTrial)
     XCTAssertFalse(event1.hasIntroductoryOffer)
@@ -70,6 +72,7 @@ final class IAPEventTests: XCTestCase {
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
+      isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
       hasIntroductoryOffer: false,
@@ -91,6 +94,7 @@ final class IAPEventTests: XCTestCase {
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
+      isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
       hasIntroductoryOffer: false,
@@ -117,6 +121,7 @@ final class IAPEventTests: XCTestCase {
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
+      isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
       hasIntroductoryOffer: false,
@@ -138,6 +143,7 @@ final class IAPEventTests: XCTestCase {
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: false,
+      isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
       hasIntroductoryOffer: false,
@@ -164,6 +170,7 @@ final class IAPEventTests: XCTestCase {
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
+      isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
       hasIntroductoryOffer: false,
@@ -185,6 +192,7 @@ final class IAPEventTests: XCTestCase {
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
+      isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
       hasIntroductoryOffer: false,

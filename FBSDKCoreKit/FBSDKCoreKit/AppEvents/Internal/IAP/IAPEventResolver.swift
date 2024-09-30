@@ -46,7 +46,7 @@ extension IAPEventResolver {
       return nil
     }
     var eventName: AppEvents.Name = .purchased
-    if isSubscription(transaction: iapTransaction.transaction) {
+    if iapTransaction.transaction.isSubscription {
       guard dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false) else {
         return nil
       }
@@ -60,18 +60,13 @@ extension IAPEventResolver {
       return nil
     }
     var eventName: AppEvents.Name = .purchaseRestored
-    if isSubscription(transaction: iapTransaction.transaction) {
+    if iapTransaction.transaction.isSubscription {
       guard dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false) else {
         return nil
       }
       eventName = .subscribeRestore
     }
     return await resolveEventFor(iapTransaction: iapTransaction, eventName: eventName)
-  }
-
-  private func isSubscription(transaction: Transaction) -> Bool {
-    let subscriptionCheck = transaction.productType == .autoRenewable
-    return subscriptionCheck
   }
 
   private func isStartTrial(transaction: Transaction) -> Bool {
@@ -122,6 +117,7 @@ extension IAPEventResolver {
       transactionDate: transaction.purchaseDate,
       originalTransactionDate: transaction.originalPurchaseDate,
       isVerified: iapTransaction.isVerified,
+      isSubscription: iapTransaction.transaction.isSubscription,
       subscriptionPeriod: product.subscription?.subscriptionPeriod.iapSubscriptionPeriod,
       isStartTrial: isStartTrial(transaction: iapTransaction.transaction),
       hasIntroductoryOffer: hasIntroductoryOffer,
@@ -229,6 +225,7 @@ extension IAPEventResolver {
       transactionDate: transaction.transactionDate,
       originalTransactionDate: transaction.original?.transactionDate ?? transaction.transactionDate,
       isVerified: false,
+      isSubscription: product?.isSubscription ?? false,
       subscriptionPeriod: product?.subscriptionPeriod?.iapSubscriptionPeriod,
       isStartTrial: isStartTrial,
       hasIntroductoryOffer: hasIntroductoryOffer,
