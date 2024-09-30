@@ -46,6 +46,9 @@ extension IAPTransactionObserver: DependentAsObject {
 
 extension IAPTransactionObserver {
   func startObserving() {
+    if IAPTransactionCache.shared.newCandidatesDate == nil {
+      IAPTransactionCache.shared.newCandidatesDate = Date()
+    }
     if #available(iOS 15.0, *) {
       startObservingStoreKit2()
     }
