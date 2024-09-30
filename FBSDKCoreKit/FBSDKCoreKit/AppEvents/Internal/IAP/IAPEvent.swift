@@ -22,6 +22,7 @@ struct IAPEvent: Equatable {
   let transactionDate: Date?
   let originalTransactionDate: Date?
   let isVerified: Bool
+  let isSubscription: Bool
   let subscriptionPeriod: IAPSubscriptionPeriod?
   let isStartTrial: Bool
   let hasIntroductoryOffer: Bool
@@ -29,10 +30,4 @@ struct IAPEvent: Equatable {
   let introductoryOfferSubscriptionPeriod: IAPSubscriptionPeriod?
   let introductoryOfferPrice: Decimal?
   let storeKitVersion: IAPStoreKitVersion
-
-  var isSubscription: Bool {
-    let resultCheck = eventName == .subscribe || eventName == .subscribeRestore || eventName == .startTrial ||
-      eventName == .subscribeInitiatedCheckout || eventName == .subscribeFailed
-    return resultCheck
-  }
 }
