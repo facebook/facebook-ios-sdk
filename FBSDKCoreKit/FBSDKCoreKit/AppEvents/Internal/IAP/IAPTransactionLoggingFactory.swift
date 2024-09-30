@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 15.0, *)
 struct IAPTransactionLoggingFactory: IAPTransactionLoggingCreating {
 
   func createIAPTransactionLogging() -> any IAPTransactionLogging {

@@ -9,7 +9,6 @@
 import Foundation
 import StoreKit
 
-@available(iOS 15.0, *)
 final class IAPTransactionObserver: NSObject {
 
   var configuredDependencies: ObjectDependencies?
@@ -17,8 +16,8 @@ final class IAPTransactionObserver: NSObject {
     iapTransactionLoggingFactory: IAPTransactionLoggingFactory()
   )
 
-  private var isObservingTransactions = false
-  private var transactionListenerTask: Task<Void, Error>?
+  private var isObservingStoreKit2Transactions = false
+  private var anyTransactionListenerTask: Any?
   private var observationTime: UInt64 = 3_600_000_000_000
 
   static let shared = IAPTransactionObserver()
@@ -32,12 +31,40 @@ final class IAPTransactionObserver: NSObject {
   }
 }
 
-// MARK: - Private Methods
+// MARK: - DependentAsObject
+
+extension IAPTransactionObserver: DependentAsObject {
+  struct ObjectDependencies {
+    var iapTransactionLoggingFactory: IAPTransactionLoggingCreating
+  }
+}
+
+// MARK: - Public APIs
+
+extension IAPTransactionObserver {
+  func startObserving() {
+    if #available(iOS 15.0, *) {
+      startObservingStoreKit2()
+    }
+  }
+
+  func stopObserving() {
+    if #available(iOS 15.0, *) {
+      stopObservingStoreKit2()
+    }
+  }
+}
+
+// MARK: - Store Kit 2
 
 @available(iOS 15.0, *)
 extension IAPTransactionObserver {
+  private var transactionListenerTask: Task<Void, Error>? {
+    anyTransactionListenerTask as? Task<Void, Error>
+  }
+
   private func checkForRestoredPurchases() async {
-    guard isObservingTransactions else {
+    guard isObservingStoreKit2Transactions else {
       return
     }
     guard !IAPTransactionCache.shared.hasRestoredPurchases else {
@@ -50,7 +77,7 @@ extension IAPTransactionObserver {
   }
 
   private func observeNewTransactions() async {
-    guard isObservingTransactions else {
+    guard isObservingStoreKit2Transactions else {
       return
     }
     let newTransactions = await Transaction.getNewCandidateTransactions().sorted { lhs, rhs in
@@ -80,19 +107,14 @@ extension IAPTransactionObserver {
     let logger = dependencies.iapTransactionLoggingFactory.createIAPTransactionLogging()
     await logger.logNewTransaction(transaction)
   }
-}
 
-// MARK: - Public APIs
-
-@available(iOS 15.0, *)
-extension IAPTransactionObserver {
-  func startObserving() {
+  private func startObservingStoreKit2() {
     synchronized(self) {
-      guard !isObservingTransactions else {
+      guard !isObservingStoreKit2Transactions else {
         return
       }
-      isObservingTransactions = true
-      transactionListenerTask = Task {
+      isObservingStoreKit2Transactions = true
+      anyTransactionListenerTask = Task {
         await checkForRestoredPurchases()
         while true {
           await observeNewTransactions()
@@ -102,23 +124,14 @@ extension IAPTransactionObserver {
     }
   }
 
-  func stopObserving() {
+  private func stopObservingStoreKit2() {
     synchronized(self) {
-      guard isObservingTransactions else {
+      guard isObservingStoreKit2Transactions else {
         return
       }
       transactionListenerTask?.cancel()
-      isObservingTransactions = false
+      isObservingStoreKit2Transactions = false
     }
-  }
-}
-
-// MARK: - DependentAsObject
-
-@available(iOS 15.0, *)
-extension IAPTransactionObserver: DependentAsObject {
-  struct ObjectDependencies {
-    var iapTransactionLoggingFactory: IAPTransactionLoggingCreating
   }
 }
 
@@ -129,8 +142,8 @@ extension IAPTransactionObserver: DependentAsObject {
 extension IAPTransactionObserver {
   func reset() {
     stopObserving()
-    isObservingTransactions = false
-    transactionListenerTask = nil
+    isObservingStoreKit2Transactions = false
+    anyTransactionListenerTask = nil
     observationTime = 60_000_000_000
   }
 

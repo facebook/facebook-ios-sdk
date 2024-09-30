@@ -9,7 +9,6 @@
 import Foundation
 import StoreKit
 
-@available(iOS 15.0, *)
 struct IAPTransactionLogger: IAPTransactionLogging {
 
   static var configuredDependencies: TypeDependencies?
@@ -21,6 +20,14 @@ struct IAPTransactionLogger: IAPTransactionLogging {
 
   init() {
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+  }
+}
+
+// MARK: - DependentAsObject
+
+extension IAPTransactionLogger: DependentAsType {
+  struct TypeDependencies {
+    var eventLogger: EventLogging
   }
 }
 
@@ -134,15 +141,6 @@ extension IAPTransactionLogger {
       valueToSum: event.amount.doubleValue,
       parameters: parameters
     )
-  }
-}
-
-// MARK: - DependentAsObject
-
-@available(iOS 15.0, *)
-extension IAPTransactionLogger: DependentAsType {
-  struct TypeDependencies {
-    var eventLogger: EventLogging
   }
 }
 
