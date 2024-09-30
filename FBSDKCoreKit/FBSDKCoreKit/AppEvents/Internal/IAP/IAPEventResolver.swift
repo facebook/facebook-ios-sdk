@@ -107,7 +107,8 @@ struct IAPEventResolver {
       hasIntroductoryOffer: hasIntroductoryOffer,
       hasFreeTrial: hasFreeTrial,
       introductoryOfferSubscriptionPeriod: introOffer?.period.iapSubscriptionPeriod,
-      introductoryOfferPrice: introOffer?.price
+      introductoryOfferPrice: introOffer?.price,
+      storeKitVersion: .version2
     )
   }
 }
