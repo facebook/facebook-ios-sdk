@@ -84,6 +84,12 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNamePurchaseRestored;
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSubscribeRestore;
 
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNamePurchaseFailed;
+
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSubscribeInitiatedCheckout;
+
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSubscribeFailed;
+
 // MARK: - Gaming
 
 /// Log this event when the user has achieved a level in the app.

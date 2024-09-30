@@ -12,8 +12,8 @@ import StoreKit
 struct IAPEvent: Equatable {
   let eventName: AppEvents.Name
   let productID: String
-  let productTitle: String
-  let productDescription: String
+  let productTitle: String?
+  let productDescription: String?
   let amount: Decimal
   let quantity: Int
   let currency: String?

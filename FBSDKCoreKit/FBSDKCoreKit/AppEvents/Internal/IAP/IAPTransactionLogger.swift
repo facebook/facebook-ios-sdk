@@ -50,11 +50,15 @@ extension IAPTransactionLogger {
       .contentID: event.productID,
       .numItems: event.quantity,
       .transactionDate: transactionDate,
-      .productTitle: getTruncatedString(event.productTitle),
-      .description: getTruncatedString(event.productDescription),
       .currency: event.currency ?? "",
       .implicitlyLoggedPurchase: "1",
     ]
+    if let productTitle = event.productTitle {
+      parameters[.productTitle] = getTruncatedString(productTitle)
+    }
+    if let productDescription = event.productDescription {
+      parameters[.description] = getTruncatedString(productDescription)
+    }
     if let transactionID = event.transactionID {
       parameters[.transactionID] = transactionID
     }
