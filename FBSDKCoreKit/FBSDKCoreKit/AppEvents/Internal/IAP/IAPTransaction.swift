@@ -15,6 +15,11 @@ struct IAPTransaction {
   let isVerified: Bool
 }
 
+enum IAPStoreKitVersion: String {
+  case version1
+  case version2
+}
+
 @available(iOS 15.0, *)
 extension VerificationResult<Transaction> {
   var iapTransaction: IAPTransaction {

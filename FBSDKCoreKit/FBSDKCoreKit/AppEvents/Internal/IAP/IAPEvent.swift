@@ -28,6 +28,7 @@ struct IAPEvent: Equatable {
   let hasFreeTrial: Bool
   let introductoryOfferSubscriptionPeriod: IAPSubscriptionPeriod?
   let introductoryOfferPrice: Decimal?
+  let storeKitVersion: IAPStoreKitVersion
 
   var isSubscription: Bool {
     let resultCheck = eventName == .subscribe || eventName == .subscribeRestore || eventName == .startTrial

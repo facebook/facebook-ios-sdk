@@ -65,7 +65,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
-      introductoryOfferPrice: nil
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -102,7 +103,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
-      introductoryOfferPrice: nil
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -139,7 +141,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
-      introductoryOfferPrice: nil
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -177,7 +180,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
-      introductoryOfferPrice: nil
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -216,7 +220,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: true,
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
-      introductoryOfferPrice: 0.0
+      introductoryOfferPrice: 0.0,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -271,7 +276,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
-      introductoryOfferPrice: nil
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -309,7 +315,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: false,
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
-      introductoryOfferPrice: nil
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -348,7 +355,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
       hasIntroductoryOffer: true,
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
-      introductoryOfferPrice: 0.0
+      introductoryOfferPrice: 0.0,
+      storeKitVersion: .version2
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
