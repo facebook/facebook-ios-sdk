@@ -24,14 +24,15 @@ final class IAPEventResolver: NSObject {
   )
 
   weak var delegate: IAPEventResolverDelegate?
-  private static let freeTrialPaymentModeString = "FREE_TRIAL"
-  let gateKeeperAppEventsIfAutoLogSubs = "app_events_if_auto_log_subs"
 
   private var isSubscriptionsEnabled: Bool {
     guard let dependencies = try? Self.getDependencies() else {
       return false
     }
-    return dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false)
+    return dependencies.gateKeeperManager.bool(
+      forKey: IAPConstants.gateKeeperAppEventsIfAutoLogSubs,
+      defaultValue: false
+    )
   }
 }
 
@@ -69,7 +70,7 @@ extension IAPEventResolver {
     if #available(iOS 17.2, *) {
       isFreeTrial = transaction.offer?.paymentMode == .freeTrial
     } else {
-      isFreeTrial = transaction.offerPaymentModeStringRepresentation == Self.freeTrialPaymentModeString
+      isFreeTrial = transaction.offerPaymentModeStringRepresentation == IAPConstants.storeKitFreeTrialPaymentModeString
     }
     return isFreeTrial
   }

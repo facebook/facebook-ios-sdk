@@ -10,10 +10,6 @@ import Foundation
 import StoreKit
 
 final class IAPTransactionCache: NSObject {
-  static let restoredPurchasesKey = "com.facebook.sdk:RestoredPurchasesKey"
-  static let loggedTransactionsKey = "com.facebook.sdk:LoggedTransactionsKey"
-  static let newCandidatesDateKey = "com.facebook.sdk:NewCandidatesDateKey"
-
   var configuredDependencies: ObjectDependencies?
   var defaultDependencies: ObjectDependencies? = .init(
     dataStore: UserDefaults.standard
@@ -36,7 +32,7 @@ extension IAPTransactionCache {
     guard let dependencies = try? getDependencies() else {
       return []
     }
-    guard let data = dependencies.dataStore.fb_data(forKey: IAPTransactionCache.loggedTransactionsKey) else {
+    guard let data = dependencies.dataStore.fb_data(forKey: IAPConstants.loggedTransactionsCacheKey) else {
       return []
     }
     guard let transactions = try? JSONDecoder().decode(Set<IAPCachedTransaction>.self, from: data) else {
@@ -52,7 +48,7 @@ extension IAPTransactionCache {
     guard let data = try? JSONEncoder().encode(loggedTransactions) else {
       return
     }
-    dependencies.dataStore.fb_setObject(data, forKey: IAPTransactionCache.loggedTransactionsKey)
+    dependencies.dataStore.fb_setObject(data, forKey: IAPConstants.loggedTransactionsCacheKey)
   }
 }
 
@@ -64,13 +60,13 @@ extension IAPTransactionCache {
       guard let dependencies = try? getDependencies() else {
         return false
       }
-      return dependencies.dataStore.fb_bool(forKey: IAPTransactionCache.restoredPurchasesKey)
+      return dependencies.dataStore.fb_bool(forKey: IAPConstants.restoredPurchasesCacheKey)
     }
     set {
       guard let dependencies = try? getDependencies() else {
         return
       }
-      dependencies.dataStore.fb_setBool(newValue, forKey: IAPTransactionCache.restoredPurchasesKey)
+      dependencies.dataStore.fb_setBool(newValue, forKey: IAPConstants.restoredPurchasesCacheKey)
     }
   }
 
@@ -80,7 +76,7 @@ extension IAPTransactionCache {
         return nil
       }
       guard let date =
-        dependencies.dataStore.fb_object(forKey: IAPTransactionCache.newCandidatesDateKey) as? Date else {
+        dependencies.dataStore.fb_object(forKey: IAPConstants.newCandidatesDateCacheKey) as? Date else {
         return nil
       }
       return date
@@ -92,7 +88,7 @@ extension IAPTransactionCache {
       guard let newValue else {
         return
       }
-      dependencies.dataStore.fb_setObject(newValue, forKey: IAPTransactionCache.newCandidatesDateKey)
+      dependencies.dataStore.fb_setObject(newValue, forKey: IAPConstants.newCandidatesDateCacheKey)
     }
   }
 
@@ -156,9 +152,9 @@ extension IAPTransactionCache: DependentAsObject {
 #if DEBUG
 extension IAPTransactionCache {
   func reset() {
-    UserDefaults.standard.removeObject(forKey: IAPTransactionCache.restoredPurchasesKey)
-    UserDefaults.standard.removeObject(forKey: IAPTransactionCache.loggedTransactionsKey)
-    UserDefaults.standard.removeObject(forKey: IAPTransactionCache.newCandidatesDateKey)
+    UserDefaults.standard.removeObject(forKey: IAPConstants.restoredPurchasesCacheKey)
+    UserDefaults.standard.removeObject(forKey: IAPConstants.loggedTransactionsCacheKey)
+    UserDefaults.standard.removeObject(forKey: IAPConstants.newCandidatesDateCacheKey)
     configuredDependencies = nil
     loggedTransactions = []
   }

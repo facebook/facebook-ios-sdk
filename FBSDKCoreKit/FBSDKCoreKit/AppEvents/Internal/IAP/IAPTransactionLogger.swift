@@ -19,7 +19,7 @@ final class IAPTransactionLogger: NSObject, IAPTransactionLogging {
   let maxParameterValueLength = 100
 
   override init() {
-    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
+    dateFormatter.dateFormat = IAPConstants.transactionDateFormat
   }
 }
 
