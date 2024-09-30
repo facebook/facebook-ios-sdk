@@ -9,29 +9,55 @@
 @testable import FBSDKCoreKit
 import Foundation
 
-@available(iOS 15.0, *)
-final class TestIAPTransactionLogger: IAPTransactionLogging {
+// MARK: - Store Kit 1
 
-  static var newTransactions: [IAPTransaction] = []
-  static var restoredTransactions: [IAPTransaction] = []
+final class TestIAPTransactionLogger: IAPTransactionLogging {
+  static var storeKit1Transactions: [SKPaymentTransaction] = []
+
+  func logTransaction(_ transaction: SKPaymentTransaction) {
+    synchronized(self) {
+      Self.storeKit1Transactions.append(transaction)
+    }
+  }
+
+  private static func resetStoreKit1() {
+    storeKit1Transactions = []
+  }
+}
+
+// MARK: - Store Kit 2
+
+@available(iOS 15.0, *)
+extension TestIAPTransactionLogger {
+  static var newStoreKit2Transactions: [IAPTransaction] = []
+  static var restoredStoreKit2Transactions: [IAPTransaction] = []
 
   func logNewTransaction(_ transaction: IAPTransaction) async {
     synchronized(self) {
-      Self.newTransactions.append(transaction)
+      Self.newStoreKit2Transactions.append(transaction)
       IAPTransactionCache.shared.addTransaction(transactionID: String(transaction.transaction.id), eventName: .purchased)
     }
   }
 
   func logRestoredTransaction(_ transaction: IAPTransaction) async {
     synchronized(self) {
-      Self.restoredTransactions.append(transaction)
+      Self.restoredStoreKit2Transactions.append(transaction)
       let restored = AppEvents.Name(rawValue: "fb_mobile_purchase_restored")
       IAPTransactionCache.shared.addTransaction(transactionID: String(transaction.transaction.id), eventName: restored)
     }
   }
 
+  private static func resetStoreKit2() {
+    newStoreKit2Transactions = []
+    restoredStoreKit2Transactions = []
+  }
+}
+
+extension TestIAPTransactionLogger {
   static func reset() {
-    newTransactions = []
-    restoredTransactions = []
+    if #available(iOS 15.0, *) {
+      resetStoreKit2()
+    }
+    resetStoreKit1()
   }
 }

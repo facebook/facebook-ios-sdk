@@ -13,4 +13,5 @@ protocol IAPTransactionLogging {
   func logNewTransaction(_ transaction: IAPTransaction) async
   @available(iOS 15.0, *)
   func logRestoredTransaction(_ transaction: IAPTransaction) async
+  func logTransaction(_ transaction: SKPaymentTransaction)
 }
