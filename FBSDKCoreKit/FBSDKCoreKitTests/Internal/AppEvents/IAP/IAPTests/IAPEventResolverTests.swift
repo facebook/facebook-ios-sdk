@@ -24,7 +24,8 @@ final class IAPEventResolverTests: StoreKitTestCase {
     try await super.setUp()
     TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = true
     IAPEventResolver.configuredDependencies = .init(
-      gateKeeperManager: TestGateKeeperManager.self
+      gateKeeperManager: TestGateKeeperManager.self,
+      iapSKProductRequestFactory: IAPSKProductsRequestFactory()
     )
     eventResolver = IAPEventResolver()
   }
@@ -124,7 +125,7 @@ final class IAPEventResolverTests: StoreKitTestCase {
     }
     await iapTransaction.transaction.finish()
     let expectedEvent = IAPEvent(
-      eventName: .subscribe,
+      eventName: .purchased,
       productID: Self.ProductIdentifiers.nonRenewingSubscription1.rawValue,
       productTitle: product.displayName,
       productDescription: product.description,

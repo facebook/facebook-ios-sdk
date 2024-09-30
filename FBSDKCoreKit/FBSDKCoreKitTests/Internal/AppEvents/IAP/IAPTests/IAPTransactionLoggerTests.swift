@@ -34,7 +34,8 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       eventLogger: eventLogger
     )
     IAPEventResolver.configuredDependencies = .init(
-      gateKeeperManager: TestGateKeeperManager.self
+      gateKeeperManager: TestGateKeeperManager.self,
+      iapSKProductRequestFactory: IAPSKProductsRequestFactory()
     )
     iapLogger = IAPTransactionLogger()
   }
@@ -100,12 +101,12 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     await iapLogger.logNewTransaction(iapTransaction)
-    XCTAssertEqual(eventLogger.capturedEventName, .subscribe)
+    XCTAssertEqual(eventLogger.capturedEventName, .purchased)
     XCTAssertEqual(eventLogger.capturedValueToSum, 5)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .subscribe
+        eventName: .purchased
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -123,9 +124,9 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
     XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
-    XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
-    XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "")
-    XCTAssertEqual(capturedParameters[.isStartTrial] as? String, "0")
+    XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
+    XCTAssertNil(capturedParameters[.subscriptionPeriod])
+    XCTAssertNil(capturedParameters[.isStartTrial])
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
@@ -488,12 +489,12 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     await iapLogger.logRestoredTransaction(iapTransaction)
-    XCTAssertEqual(eventLogger.capturedEventName, .subscribeRestore)
+    XCTAssertEqual(eventLogger.capturedEventName, .purchaseRestored)
     XCTAssertEqual(eventLogger.capturedValueToSum, 5)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .subscribeRestore
+        eventName: .purchaseRestored
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -511,9 +512,9 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
     XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
-    XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
-    XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "")
-    XCTAssertEqual(capturedParameters[.isStartTrial] as? String, "0")
+    XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
+    XCTAssertNil(capturedParameters[.subscriptionPeriod])
+    XCTAssertNil(capturedParameters[.isStartTrial])
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])

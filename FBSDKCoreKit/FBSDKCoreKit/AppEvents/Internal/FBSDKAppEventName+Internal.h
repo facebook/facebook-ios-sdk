@@ -11,9 +11,6 @@
 // MARK: - E-Commerce
 
 FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameProductCatalogUpdate;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNamePurchaseFailed;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSubscribeInitiatedCheckout;
-FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameSubscribeFailed;
 
 // MARK: - Push Notifications
 
