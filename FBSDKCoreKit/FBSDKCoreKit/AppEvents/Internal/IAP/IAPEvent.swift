@@ -31,7 +31,8 @@ struct IAPEvent: Equatable {
   let storeKitVersion: IAPStoreKitVersion
 
   var isSubscription: Bool {
-    let resultCheck = eventName == .subscribe || eventName == .subscribeRestore || eventName == .startTrial
+    let resultCheck = eventName == .subscribe || eventName == .subscribeRestore || eventName == .startTrial ||
+      eventName == .subscribeInitiatedCheckout || eventName == .subscribeFailed
     return resultCheck
   }
 }
