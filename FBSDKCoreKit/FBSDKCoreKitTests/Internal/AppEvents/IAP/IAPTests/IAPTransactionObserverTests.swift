@@ -74,6 +74,7 @@ extension IAPTransactionObserverTests {
   }
 
   func testAlreadyObservedRestoredPurchases() async {
+    IAPTransactionCache.shared.newCandidatesDate = Date()
     IAPTransactionCache.shared.hasRestoredPurchases = true
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {
@@ -96,6 +97,7 @@ extension IAPTransactionObserverTests {
   }
 
   func testObserveNewTransactionsAfterTransactionMade() async {
+    IAPTransactionCache.shared.newCandidatesDate = Date()
     IAPTransactionCache.shared.hasRestoredPurchases = true
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {
@@ -152,12 +154,15 @@ extension IAPTransactionObserverTests {
   }
 
   func testObserveEmptyNewTransactions() async {
+    let now = Date()
     IAPTransactionCache.shared.hasRestoredPurchases = true
     IAPTransactionObserver.shared.startObserving()
     let predicate = NSPredicate { _, _ -> Bool in
       let didNotObserve = TestIAPTransactionLogger.newStoreKit2Transactions.isEmpty
-      let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate
-      return didNotObserve && newCandidateDate == nil
+      guard let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate else {
+        return false
+      }
+      return didNotObserve && newCandidateDate > now
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -227,6 +232,33 @@ extension IAPTransactionObserverTests {
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 30.0)
+  }
+
+  func testShouldNotObserveOldTransactions() async {
+    let now = Date()
+    IAPTransactionCache.shared.hasRestoredPurchases = true
+    guard let products =
+      try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {
+      return
+    }
+    guard let result = try? await products.first?.purchase() else {
+      return
+    }
+    guard let iapTransaction = try? getIAPTransactionForPurchaseResult(result: result) else {
+      return
+    }
+    await iapTransaction.transaction.finish()
+    IAPTransactionObserver.shared.startObserving()
+    let predicate = NSPredicate { _, _ -> Bool in
+      guard let newCandidateDate = IAPTransactionCache.shared.newCandidatesDate else {
+        return false
+      }
+      return TestIAPTransactionLogger.restoredStoreKit2Transactions.isEmpty &&
+        TestIAPTransactionLogger.newStoreKit2Transactions.isEmpty &&
+        newCandidateDate > now
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    await fulfillment(of: [expectation], timeout: 20.0)
   }
 }
 
