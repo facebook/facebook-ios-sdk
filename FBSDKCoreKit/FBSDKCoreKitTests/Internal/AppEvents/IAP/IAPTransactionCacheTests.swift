@@ -21,7 +21,7 @@ final class IAPTransactionCacheTests: XCTestCase {
     XCTAssertIdentical(IAPTransactionCache.shared.defaultDependencies?.dataStore, UserDefaults.standard)
     XCTAssertNil(IAPTransactionCache.shared.configuredDependencies)
     XCTAssertFalse(IAPTransactionCache.shared.hasRestoredPurchases)
-    XCTAssertFalse(UserDefaults.standard.fb_bool(forKey: IAPTransactionCache.restoredPurchasesKey))
+    XCTAssertFalse(UserDefaults.standard.fb_bool(forKey: IAPConstants.restoredPurchasesCacheKey))
     XCTAssertTrue(IAPTransactionCache.shared.getLoggedTransactions().isEmpty)
     XCTAssertTrue(IAPTransactionCache.shared.getPersistedTransactions().isEmpty)
   }
@@ -50,17 +50,17 @@ final class IAPTransactionCacheTests: XCTestCase {
   func testHasRestoredPurchases() {
     IAPTransactionCache.shared.hasRestoredPurchases = true
     XCTAssertTrue(IAPTransactionCache.shared.hasRestoredPurchases)
-    XCTAssertTrue(UserDefaults.standard.fb_bool(forKey: IAPTransactionCache.restoredPurchasesKey))
+    XCTAssertTrue(UserDefaults.standard.fb_bool(forKey: IAPConstants.restoredPurchasesCacheKey))
     IAPTransactionCache.shared.hasRestoredPurchases = false
     XCTAssertFalse(IAPTransactionCache.shared.hasRestoredPurchases)
-    XCTAssertFalse(UserDefaults.standard.fb_bool(forKey: IAPTransactionCache.restoredPurchasesKey))
+    XCTAssertFalse(UserDefaults.standard.fb_bool(forKey: IAPConstants.restoredPurchasesCacheKey))
   }
 
   func testNewCandidatesDate() {
     XCTAssertNil(IAPTransactionCache.shared.newCandidatesDate)
     let now = Date()
     IAPTransactionCache.shared.newCandidatesDate = now
-    let persisted = UserDefaults.standard.fb_object(forKey: IAPTransactionCache.newCandidatesDateKey) as? Date
+    let persisted = UserDefaults.standard.fb_object(forKey: IAPConstants.newCandidatesDateCacheKey) as? Date
     XCTAssertEqual(IAPTransactionCache.shared.newCandidatesDate, now)
     XCTAssertEqual(persisted, now)
   }
