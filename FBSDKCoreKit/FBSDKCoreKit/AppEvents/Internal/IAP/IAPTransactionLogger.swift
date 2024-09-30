@@ -9,7 +9,7 @@
 import Foundation
 import StoreKit
 
-struct IAPTransactionLogger: IAPTransactionLogging {
+final class IAPTransactionLogger: NSObject, IAPTransactionLogging {
 
   static var configuredDependencies: TypeDependencies?
   static var defaultDependencies: TypeDependencies? = .init(
@@ -18,7 +18,7 @@ struct IAPTransactionLogger: IAPTransactionLogging {
   let dateFormatter = DateFormatter()
   let maxParameterValueLength = 100
 
-  init() {
+  override init() {
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
   }
 }
@@ -83,6 +83,49 @@ extension IAPTransactionLogger {
     return parameters
   }
 
+  private func logNewEvent(_ event: IAPEvent) {
+    if event.isSubscription &&
+      (IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) ||
+        IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: .subscribeRestore)) {
+      IAPTransactionCache.shared.addTransaction(transactionID: event.transactionID, eventName: event.eventName)
+      return
+    }
+    if event.eventName == .purchased &&
+      IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID) {
+      IAPTransactionCache.shared.addTransaction(transactionID: event.transactionID, eventName: event.eventName)
+      return
+    }
+    IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
+    let parameters = getParameters(for: event)
+    logImplicitTransactionEvent(
+      eventName: event.eventName,
+      valueToSum: event.amount.doubleValue,
+      parameters: parameters
+    )
+  }
+
+  private func logRestoredEvent(_ event: IAPEvent) {
+    if IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) {
+      return
+    }
+    IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
+    let parameters = getParameters(for: event)
+    logImplicitTransactionEvent(
+      eventName: event.eventName,
+      valueToSum: event.amount.doubleValue,
+      parameters: parameters
+    )
+  }
+
+  private func logInitiatedCheckoutOrFailedEvent(_ event: IAPEvent) {
+    let parameters = getParameters(for: event)
+    logImplicitTransactionEvent(
+      eventName: event.eventName,
+      valueToSum: event.amount.doubleValue,
+      parameters: parameters
+    )
+  }
+
   private func logImplicitTransactionEvent(
     eventName: AppEvents.Name,
     valueToSum: Double,
@@ -106,48 +149,40 @@ extension IAPTransactionLogger {
     guard let event = await IAPEventResolver().resolveNewEventFor(iapTransaction: transaction) else {
       return
     }
-    if event.isSubscription &&
-      (IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) ||
-        IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: .subscribeRestore)) {
-      IAPTransactionCache.shared.addTransaction(transactionID: event.transactionID, eventName: event.eventName)
-      return
-    }
-    if event.eventName == .purchased &&
-      IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID) {
-      IAPTransactionCache.shared.addTransaction(transactionID: event.transactionID, eventName: event.eventName)
-      return
-    }
-    IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
-    let parameters = getParameters(for: event)
-    logImplicitTransactionEvent(
-      eventName: event.eventName,
-      valueToSum: event.amount.doubleValue,
-      parameters: parameters
-    )
+    logNewEvent(event)
   }
 
   func logRestoredTransaction(_ transaction: IAPTransaction) async {
     guard let event = await IAPEventResolver().resolveRestoredEventFor(iapTransaction: transaction) else {
       return
     }
-    if IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) {
-      return
-    }
-    IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
-    let parameters = getParameters(for: event)
-    logImplicitTransactionEvent(
-      eventName: event.eventName,
-      valueToSum: event.amount.doubleValue,
-      parameters: parameters
-    )
+    logRestoredEvent(event)
   }
 }
 
 // MARK: - Store Kit 1
 
-extension IAPTransactionLogger {
+extension IAPTransactionLogger: IAPEventResolverDelegate {
   func logTransaction(_ transaction: SKPaymentTransaction) {
-    // TODO: Implement this
+    let resolver = IAPEventResolver()
+    resolver.delegate = self
+    resolver.resolveEventFor(transaction: transaction)
+  }
+
+  func didResolveNew(event: IAPEvent) {
+    logNewEvent(event)
+  }
+
+  func didResolveRestored(event: IAPEvent) {
+    logRestoredEvent(event)
+  }
+
+  func didResolveFailed(event: IAPEvent) {
+    logInitiatedCheckoutOrFailedEvent(event)
+  }
+
+  func didResolveInitiatedCheckout(event: IAPEvent) {
+    logInitiatedCheckoutOrFailedEvent(event)
   }
 }
 
