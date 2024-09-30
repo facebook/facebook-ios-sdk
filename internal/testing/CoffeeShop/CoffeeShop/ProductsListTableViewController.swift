@@ -19,6 +19,8 @@ class ProductsListTableViewController: UITableViewController {
     tableView.showsVerticalScrollIndicator = false
     navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Debug", style: .plain, target: self, action: #selector(showDebugMenu))
     navigationItem.leftBarButtonItem?.accessibilityIdentifier = "debug-bar-button"
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "IAP", style: .plain, target: self, action: #selector(showIAPMenu))
+    navigationItem.rightBarButtonItem?.accessibilityIdentifier = "iap-bar-button"
   }
 
   @objc func showDebugMenu() {
@@ -53,6 +55,29 @@ class ProductsListTableViewController: UITableViewController {
     alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     alert.popoverPresentationController?.sourceView = view
     present(alert, animated: true, completion: nil)
+  }
+
+  @objc func showIAPMenu() {
+    let alert = UIAlertController(title: "Please Choose IAP Implementation", message: nil, preferredStyle: .actionSheet)
+    alert.addAction(UIAlertAction(title: "StoreKit 1", style: .default, handler: { [weak self] _ in
+      self?.showStoreKit1()
+    }))
+    alert.addAction(UIAlertAction(title: "StoreKit 2", style: .default, handler: { [weak self] _ in
+      self?.showStoreKit2()
+    }))
+    alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+    alert.popoverPresentationController?.sourceView = view
+    present(alert, animated: true, completion: nil)
+  }
+
+  @objc func showStoreKit1() {
+    let vc = IAPSK1ViewController()
+    navigationController?.pushViewController(vc, animated: true)
+  }
+
+  @objc func showStoreKit2() {
+    let vc = IAPSK2ViewController()
+    navigationController?.pushViewController(vc, animated: true)
   }
 
   @objc func showLogin() {
