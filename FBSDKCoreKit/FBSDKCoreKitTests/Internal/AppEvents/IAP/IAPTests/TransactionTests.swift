@@ -86,7 +86,7 @@ final class TransactionTests: StoreKitTestCase {
     var candidateTransactions = await Transaction.getNewCandidateTransactions()
     XCTAssertEqual(candidateTransactions.count, 1)
     XCTAssertEqual(candidateTransactions.first?.iapTransaction.transaction.id, transaction3.transaction.id)
-    IAPTransactionCache.shared.addTransaction(transactionID: transaction3.transaction.id, eventName: .purchased)
+    IAPTransactionCache.shared.addTransaction(transactionID: String(transaction3.transaction.id), eventName: .purchased)
     candidateTransactions = await Transaction.getNewCandidateTransactions()
     XCTAssertEqual(candidateTransactions.count, 0)
   }

@@ -52,9 +52,11 @@ extension IAPTransactionLogger {
       .productTitle: getTruncatedString(event.productTitle),
       .description: getTruncatedString(event.productDescription),
       .currency: event.currency ?? "",
-      .transactionID: event.transactionID,
       .implicitlyLoggedPurchase: "1",
     ]
+    if let transactionID = event.transactionID {
+      parameters[.transactionID] = transactionID
+    }
     if event.isSubscription {
       parameters[.inAppPurchaseType] = IAPType.subscription.rawValue
       parameters[.subscriptionPeriod] = durationOfSubscriptionPeriod(event.subscriptionPeriod)

@@ -28,7 +28,7 @@ final class IAPTransactionCacheTests: XCTestCase {
 
   func testCachedTransactionCodable() {
     let cachedTransaction = IAPTransactionCache.IAPCachedTransaction(
-      transactionID: 1,
+      transactionID: "1",
       eventName: AppEvents.Name.purchased.rawValue
     )
     guard let encoded = try? JSONEncoder().encode(cachedTransaction) else {
@@ -66,59 +66,59 @@ final class IAPTransactionCacheTests: XCTestCase {
   }
 
   func testAddTransaction() {
-    IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)
-    IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)
-    IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchaseRestored)
-    IAPTransactionCache.shared.addTransaction(transactionID: 2, eventName: AppEvents.Name.purchased)
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchased))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchaseRestored))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 2, eventName: AppEvents.Name.purchased))
+    IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
+    IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
+    IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchaseRestored)
+    IAPTransactionCache.shared.addTransaction(transactionID: "2", eventName: AppEvents.Name.purchased)
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchaseRestored))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "2", eventName: AppEvents.Name.purchased))
     let persistedTransactions = IAPTransactionCache.shared.getPersistedTransactions()
     let loggedTransactions = IAPTransactionCache.shared.getLoggedTransactions()
     XCTAssertEqual(persistedTransactions, loggedTransactions)
     XCTAssertEqual(persistedTransactions.count, 3)
     let cachedTransaction = IAPTransactionCache.IAPCachedTransaction(
-      transactionID: 1,
+      transactionID: "1",
       eventName: AppEvents.Name.purchased.rawValue
     )
     XCTAssertTrue(persistedTransactions.contains(cachedTransaction))
   }
 
   func testRemoveTransaction() {
-    IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)
-    IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchaseRestored)
-    IAPTransactionCache.shared.addTransaction(transactionID: 2, eventName: AppEvents.Name.purchased)
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchased))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchaseRestored))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 2, eventName: AppEvents.Name.purchased))
+    IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
+    IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchaseRestored)
+    IAPTransactionCache.shared.addTransaction(transactionID: "2", eventName: AppEvents.Name.purchased)
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchaseRestored))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "2", eventName: AppEvents.Name.purchased))
     XCTAssertEqual(IAPTransactionCache.shared.getPersistedTransactions().count, 3)
 
-    IAPTransactionCache.shared.removeTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchased))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchaseRestored))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 2, eventName: AppEvents.Name.purchased))
+    IAPTransactionCache.shared.removeTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchaseRestored))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "2", eventName: AppEvents.Name.purchased))
     XCTAssertEqual(IAPTransactionCache.shared.getPersistedTransactions().count, 2)
 
-    IAPTransactionCache.shared.removeTransaction(transactionID: 1, eventName: AppEvents.Name.purchaseRestored)
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchased))
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchaseRestored))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 2, eventName: AppEvents.Name.purchased))
+    IAPTransactionCache.shared.removeTransaction(transactionID: "1", eventName: AppEvents.Name.purchaseRestored)
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchaseRestored))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "2", eventName: AppEvents.Name.purchased))
     XCTAssertEqual(IAPTransactionCache.shared.getPersistedTransactions().count, 1)
 
-    IAPTransactionCache.shared.removeTransaction(transactionID: 2, eventName: AppEvents.Name.purchased)
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchased))
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchaseRestored))
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 2, eventName: AppEvents.Name.purchased))
+    IAPTransactionCache.shared.removeTransaction(transactionID: "2", eventName: AppEvents.Name.purchased)
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchaseRestored))
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "2", eventName: AppEvents.Name.purchased))
     XCTAssertEqual(IAPTransactionCache.shared.getPersistedTransactions().count, 0)
   }
 
   func testContainsTransaction() {
-    IAPTransactionCache.shared.addTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchaseRestored))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchased))
-    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: 1))
-    IAPTransactionCache.shared.removeTransaction(transactionID: 1, eventName: AppEvents.Name.purchased)
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1, eventName: AppEvents.Name.purchased))
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: 1))
+    IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchaseRestored))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
+    XCTAssertTrue(IAPTransactionCache.shared.contains(transactionID: "1"))
+    IAPTransactionCache.shared.removeTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1"))
   }
 }

@@ -27,7 +27,7 @@ extension Transaction {
       return transaction.revocationDate == nil &&
         dateCheck &&
         !unfinishedTransactionIDs.contains(id) &&
-        !IAPTransactionCache.shared.contains(transactionID: id)
+        !IAPTransactionCache.shared.contains(transactionID: String(id))
     }
     return candidateTransactions
   }

@@ -67,7 +67,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 0)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .startTrial
       )
     )
@@ -84,7 +84,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -104,7 +104,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 5)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .subscribe
       )
     )
@@ -121,7 +121,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "")
@@ -141,7 +141,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 2)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .subscribe
       )
     )
@@ -158,7 +158,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -174,7 +174,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     IAPTransactionCache.shared.addTransaction(
-      transactionID: iapTransaction.transaction.id,
+      transactionID: String(iapTransaction.transaction.id),
       eventName: .startTrial
     )
     await iapLogger.logNewTransaction(iapTransaction)
@@ -182,7 +182,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 2)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .subscribe
       )
     )
@@ -199,7 +199,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -218,7 +218,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
     XCTAssertNil(eventLogger.capturedValueToSum)
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: iapTransaction.transaction.id))
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: String(iapTransaction.transaction.id)))
     XCTAssertNil(eventLogger.capturedParameters)
   }
 
@@ -243,7 +243,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedValueToSum)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: transactionToLog.transaction.id,
+        transactionID: String(transactionToLog.transaction.id),
         eventName: .subscribe
       )
     )
@@ -256,7 +256,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     IAPTransactionCache.shared.addTransaction(
-      transactionID: iapTransaction.transaction.originalID,
+      transactionID: String(iapTransaction.transaction.originalID),
       eventName: .startTrial
     )
     await iapLogger.logNewTransaction(iapTransaction)
@@ -264,7 +264,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedValueToSum)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .startTrial
       )
     )
@@ -277,7 +277,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     IAPTransactionCache.shared.addTransaction(
-      transactionID: iapTransaction.transaction.originalID,
+      transactionID: String(iapTransaction.transaction.originalID),
       eventName: .subscribe
     )
     await iapLogger.logNewTransaction(iapTransaction)
@@ -285,7 +285,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedValueToSum)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .subscribe
       )
     )
@@ -298,7 +298,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     IAPTransactionCache.shared.addTransaction(
-      transactionID: iapTransaction.transaction.originalID,
+      transactionID: String(iapTransaction.transaction.originalID),
       eventName: .subscribeRestore
     )
     await iapLogger.logNewTransaction(iapTransaction)
@@ -306,7 +306,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedValueToSum)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .subscribe
       )
     )
@@ -341,13 +341,13 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNotEqual(renewalTransaction.transaction.originalID, renewalTransaction.transaction.id)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: renewalTransaction.transaction.originalID,
+        transactionID: String(renewalTransaction.transaction.originalID),
         eventName: .subscribe
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: renewalTransaction.transaction.id,
+        transactionID: String(renewalTransaction.transaction.id),
         eventName: .subscribe
       )
     )
@@ -364,7 +364,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, originalTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(originalTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -386,7 +386,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 10)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .purchased
       )
     )
@@ -403,7 +403,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -423,7 +423,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 0.99)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .purchased
       )
     )
@@ -440,7 +440,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -456,7 +456,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     IAPTransactionCache.shared.addTransaction(
-      transactionID: iapTransaction.transaction.originalID,
+      transactionID: String(iapTransaction.transaction.originalID),
       eventName: .purchased
     )
     await iapLogger.logNewTransaction(iapTransaction)
@@ -464,7 +464,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedValueToSum)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .purchased
       )
     )
@@ -483,7 +483,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 0)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .subscribeRestore
       )
     )
@@ -500,7 +500,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -520,7 +520,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 5)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .subscribeRestore
       )
     )
@@ -537,7 +537,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "")
@@ -557,7 +557,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 2)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .subscribeRestore
       )
     )
@@ -574,7 +574,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -590,7 +590,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     IAPTransactionCache.shared.addTransaction(
-      transactionID: iapTransaction.transaction.originalID,
+      transactionID: String(iapTransaction.transaction.originalID),
       eventName: .subscribeRestore
     )
     await iapLogger.logRestoredTransaction(iapTransaction)
@@ -598,7 +598,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedValueToSum)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .subscribeRestore
       )
     )
@@ -614,7 +614,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
     XCTAssertNil(eventLogger.capturedValueToSum)
-    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: iapTransaction.transaction.id))
+    XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: String(iapTransaction.transaction.id)))
     XCTAssertNil(eventLogger.capturedParameters)
   }
 
@@ -630,7 +630,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 10)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .purchaseRestored
       )
     )
@@ -647,7 +647,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -667,7 +667,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 0.99)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .purchaseRestored
       )
     )
@@ -684,7 +684,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -700,7 +700,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
       return
     }
     IAPTransactionCache.shared.addTransaction(
-      transactionID: iapTransaction.transaction.originalID,
+      transactionID: String(iapTransaction.transaction.originalID),
       eventName: .purchaseRestored
     )
     await iapLogger.logRestoredTransaction(iapTransaction)
@@ -708,7 +708,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertNil(eventLogger.capturedValueToSum)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .purchaseRestored
       )
     )
@@ -728,7 +728,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 0.99)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .purchased
       )
     )
@@ -745,7 +745,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -766,13 +766,13 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 0.99)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .purchaseRestored
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .purchased
       )
     )
@@ -789,7 +789,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -810,7 +810,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 2)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .subscribe
       )
     )
@@ -827,7 +827,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -848,13 +848,13 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(eventLogger.capturedValueToSum, 2)
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.originalID,
+        transactionID: String(iapTransaction.transaction.originalID),
         eventName: .subscribeRestore
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
-        transactionID: iapTransaction.transaction.id,
+        transactionID: String(iapTransaction.transaction.id),
         eventName: .subscribe
       )
     )
@@ -871,7 +871,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(capturedParameters[.transactionID] as? UInt64, iapTransaction.transaction.id)
+    XCTAssertEqual(capturedParameters[.transactionID] as? String, String(iapTransaction.transaction.id))
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")

@@ -96,29 +96,41 @@ extension IAPTransactionCache {
     }
   }
 
-  func addTransaction(transactionID: UInt64, eventName: AppEvents.Name) {
+  func addTransaction(transactionID: String?, eventName: AppEvents.Name) {
     synchronized(self) {
+      guard let transactionID else {
+        return
+      }
       let newTransaction = IAPCachedTransaction(transactionID: transactionID, eventName: eventName.rawValue)
       loggedTransactions.insert(newTransaction)
       persist()
     }
   }
 
-  func removeTransaction(transactionID: UInt64, eventName: AppEvents.Name) {
+  func removeTransaction(transactionID: String?, eventName: AppEvents.Name) {
     synchronized(self) {
+      guard let transactionID else {
+        return
+      }
       let oldTransaction = IAPCachedTransaction(transactionID: transactionID, eventName: eventName.rawValue)
       loggedTransactions.remove(oldTransaction)
       persist()
     }
   }
 
-  func contains(transactionID: UInt64, eventName: AppEvents.Name) -> Bool {
+  func contains(transactionID: String?, eventName: AppEvents.Name) -> Bool {
+    guard let transactionID else {
+      return false
+    }
     let transactionCandidate = IAPCachedTransaction(transactionID: transactionID, eventName: eventName.rawValue)
     return loggedTransactions.contains(transactionCandidate)
   }
 
-  func contains(transactionID: UInt64) -> Bool {
-    return loggedTransactions.contains { $0.transactionID == transactionID } // swiftlint:disable:this implicit_return
+  func contains(transactionID: String?) -> Bool {
+    guard let transactionID else {
+      return false
+    }
+    return loggedTransactions.contains { $0.transactionID == transactionID }
   }
 }
 
@@ -126,7 +138,7 @@ extension IAPTransactionCache {
 
 extension IAPTransactionCache {
   struct IAPCachedTransaction: Hashable, Equatable, Codable {
-    var transactionID: UInt64
+    var transactionID: String
     var eventName: String
   }
 }
