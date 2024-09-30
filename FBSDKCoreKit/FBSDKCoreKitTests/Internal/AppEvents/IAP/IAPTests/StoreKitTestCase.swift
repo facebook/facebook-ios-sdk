@@ -12,7 +12,6 @@
 import StoreKitTest
 import XCTest
 
-@available(iOS 14.0, *)
 // swiftlint:disable:this test_classes_should_be_final
 // swiftlint:disable:next prefer_final_classes
 class StoreKitTestCase: XCTestCase {
@@ -36,8 +35,7 @@ class StoreKitTestCase: XCTestCase {
     id.rawValue
   }
 
-  // swiftlint:disable:next implicitly_unwrapped_optional
-  var testSession: SKTestSession!
+  private var anyTestSession: Any?
 
   @available(iOS 15.0, *)
   func getIAPTransactionForPurchaseResult(result: Product.PurchaseResult) throws -> IAPTransaction {
@@ -52,14 +50,33 @@ class StoreKitTestCase: XCTestCase {
   override func setUp() async throws {
     try await super.setUp()
     IAPTransactionCache.shared.reset()
-    testSession = try SKTestSession(configurationFileNamed: Self.configFileName)
+    if #available(iOS 14.0, *) {
+      try setupTestSession()
+    }
+  }
+
+  override func tearDown() {
+    if #available(iOS 14.0, *) {
+      tearDownTestSession()
+    }
+    super.tearDown()
+  }
+}
+
+@available(iOS 14.0, *)
+extension StoreKitTestCase {
+  var testSession: SKTestSession {
+    anyTestSession as! SKTestSession // swiftlint:disable:this force_cast
+  }
+
+  func setupTestSession() throws {
+    anyTestSession = try SKTestSession(configurationFileNamed: Self.configFileName)
     testSession.resetToDefaultState()
     testSession.clearTransactions()
     testSession.disableDialogs = true
   }
 
-  override func tearDown() {
-    testSession = nil
-    super.tearDown()
+  func tearDownTestSession() {
+    anyTestSession = nil
   }
 }

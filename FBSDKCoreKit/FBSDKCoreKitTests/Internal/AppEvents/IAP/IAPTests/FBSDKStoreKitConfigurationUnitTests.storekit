@@ -1,4 +1,14 @@
 {
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
   "identifier" : "C0F1F7F1",
   "nonRenewingSubscriptions" : [
     {
@@ -147,7 +157,10 @@
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Autorenewing Subscription 1",
           "subscriptionGroupID" : "D14ED020",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         }
       ]
     },
@@ -160,7 +173,13 @@
       "subscriptions" : [
         {
           "adHocOffers" : [
-
+            {
+              "internalID" : "A3D5BBE7",
+              "offerID" : "FreeTrial",
+              "paymentMode" : "free",
+              "referenceName" : "FreeTrial",
+              "subscriptionPeriod" : "P6M"
+            }
           ],
           "codeOffers" : [
 
@@ -185,13 +204,16 @@
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Autorenewing Subscription 2",
           "subscriptionGroupID" : "F6CFFE52",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         }
       ]
     }
   ],
   "version" : {
-    "major" : 3,
+    "major" : 4,
     "minor" : 0
   }
 }
