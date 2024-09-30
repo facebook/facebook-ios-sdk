@@ -26,6 +26,13 @@ final class IAPEventResolver: NSObject {
   weak var delegate: IAPEventResolverDelegate?
   private static let freeTrialPaymentModeString = "FREE_TRIAL"
   let gateKeeperAppEventsIfAutoLogSubs = "app_events_if_auto_log_subs"
+
+  private var isSubscriptionsEnabled: Bool {
+    guard let dependencies = try? Self.getDependencies() else {
+      return false
+    }
+    return dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false)
+  }
 }
 
 // MARK: - DependentAsObject
@@ -42,28 +49,16 @@ extension IAPEventResolver: DependentAsType {
 @available(iOS 15.0, *)
 extension IAPEventResolver {
   func resolveNewEventFor(iapTransaction: IAPTransaction) async -> IAPEvent? {
-    guard let dependencies = try? Self.getDependencies() else {
-      return nil
-    }
     var eventName: AppEvents.Name = .purchased
-    if iapTransaction.transaction.isSubscription {
-      guard dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false) else {
-        return nil
-      }
+    if iapTransaction.transaction.isSubscription, isSubscriptionsEnabled {
       eventName = resolveNewSubscriptionEventName(transaction: iapTransaction.transaction)
     }
     return await resolveEventFor(iapTransaction: iapTransaction, eventName: eventName)
   }
 
   func resolveRestoredEventFor(iapTransaction: IAPTransaction) async -> IAPEvent? {
-    guard let dependencies = try? Self.getDependencies() else {
-      return nil
-    }
     var eventName: AppEvents.Name = .purchaseRestored
-    if iapTransaction.transaction.isSubscription {
-      guard dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false) else {
-        return nil
-      }
+    if iapTransaction.transaction.isSubscription, isSubscriptionsEnabled {
       eventName = .subscribeRestore
     }
     return await resolveEventFor(iapTransaction: iapTransaction, eventName: eventName)
@@ -178,13 +173,7 @@ extension IAPEventResolver {
   }
 
   private func resolveEventNameFor(transaction: SKPaymentTransaction, product: SKProduct?) -> AppEvents.Name? {
-    guard let dependencies = try? Self.getDependencies() else {
-      return nil
-    }
-    if product?.isSubscription == true {
-      guard dependencies.gateKeeperManager.bool(forKey: gateKeeperAppEventsIfAutoLogSubs, defaultValue: false) else {
-        return nil
-      }
+    if product?.isSubscription == true, isSubscriptionsEnabled {
       return resolveSubscriptionEventNameFor(transaction: transaction, product: product)
     }
     return resolvePurchaseEventNameFor(transaction: transaction)
