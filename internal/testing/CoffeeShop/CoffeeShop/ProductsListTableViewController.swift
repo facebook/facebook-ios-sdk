@@ -76,8 +76,10 @@ class ProductsListTableViewController: UITableViewController {
   }
 
   @objc func showStoreKit2() {
-    let vc = IAPSK2ViewController()
-    navigationController?.pushViewController(vc, animated: true)
+    if #available(iOS 15.0, *) {
+      let vc = IAPSK2ViewController()
+      navigationController?.pushViewController(vc, animated: true)
+    }
   }
 
   @objc func showLogin() {
