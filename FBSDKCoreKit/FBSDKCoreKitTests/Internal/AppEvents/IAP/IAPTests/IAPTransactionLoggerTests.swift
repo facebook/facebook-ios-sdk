@@ -26,6 +26,7 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
   override func setUp() async throws {
     try await super.setUp()
     dateFormatter = DateFormatter()
+    dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZ"
     IAPTransactionCache.shared.reset()
     TestGateKeeperManager.gateKeepers[autoLogSubscriptionGK] = true

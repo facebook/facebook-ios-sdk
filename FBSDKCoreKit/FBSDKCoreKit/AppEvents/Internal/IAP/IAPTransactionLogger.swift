@@ -19,6 +19,7 @@ final class IAPTransactionLogger: NSObject, IAPTransactionLogging {
   let maxParameterValueLength = 100
 
   override init() {
+    dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
     dateFormatter.dateFormat = IAPConstants.transactionDateFormat
   }
 }
