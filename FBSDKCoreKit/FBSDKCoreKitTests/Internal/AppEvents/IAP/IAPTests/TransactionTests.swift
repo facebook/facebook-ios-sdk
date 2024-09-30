@@ -90,4 +90,32 @@ final class TransactionTests: StoreKitTestCase {
     candidateTransactions = await Transaction.getNewCandidateTransactions()
     XCTAssertEqual(candidateTransactions.count, 0)
   }
+
+  func testGetNewCandidateTransactionsWithExpiredSubscription() async {
+    do {
+      var transaction1: Transaction?
+      if #available(iOS 17.0, *) {
+        transaction1 =
+          try await testSession.buyProduct(identifier: Self.ProductIdentifiers.autoRenewingSubscription1.rawValue)
+      } else {
+        return
+      }
+      await transaction1?.finish()
+    } catch {
+      return
+    }
+    do {
+      if #available(iOS 17.0, *) {
+        try testSession.expireSubscription(
+          productIdentifier: Self.ProductIdentifiers.autoRenewingSubscription1.rawValue
+        )
+      } else {
+        return
+      }
+    } catch {
+      return
+    }
+    let candidateTransactions = await Transaction.getNewCandidateTransactions()
+    XCTAssertEqual(candidateTransactions.count, 0)
+  }
 }

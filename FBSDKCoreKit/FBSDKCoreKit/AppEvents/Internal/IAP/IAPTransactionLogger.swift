@@ -45,10 +45,11 @@ extension IAPTransactionLogger {
   }
 
   private func getParameters(for event: IAPEvent) -> [AppEvents.ParameterName: Any] {
+    let transactionDate = event.transactionDate.map { dateFormatter.string(from: $0) } ?? ""
     var parameters: [AppEvents.ParameterName: Any] = [
       .contentID: event.productID,
       .numItems: event.quantity,
-      .transactionDate: dateFormatter.string(from: event.transactionDate),
+      .transactionDate: transactionDate,
       .productTitle: getTruncatedString(event.productTitle),
       .description: getTruncatedString(event.productDescription),
       .currency: event.currency ?? "",
@@ -95,10 +96,8 @@ extension IAPTransactionLogger {
     guard let event = await IAPEventResolver().resolveNewEventFor(iapTransaction: transaction) else {
       return
     }
-    let now = Date()
     if event.isSubscription &&
-      (now > transaction.transaction.expirationDate ?? now ||
-        IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) ||
+      (IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) ||
         IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: .subscribeRestore)) {
       IAPTransactionCache.shared.addTransaction(transactionID: event.transactionID, eventName: event.eventName)
       return
