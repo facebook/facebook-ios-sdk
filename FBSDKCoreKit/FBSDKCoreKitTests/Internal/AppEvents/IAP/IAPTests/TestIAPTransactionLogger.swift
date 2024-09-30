@@ -18,7 +18,7 @@ final class TestIAPTransactionLogger: IAPTransactionLogging {
   func logNewTransaction(_ transaction: IAPTransaction) async {
     synchronized(self) {
       Self.newTransactions.append(transaction)
-      IAPTransactionCache.shared.addTransaction(transactionID: transaction.transaction.id, eventName: .purchased)
+      IAPTransactionCache.shared.addTransaction(transactionID: String(transaction.transaction.id), eventName: .purchased)
     }
   }
 
@@ -26,7 +26,7 @@ final class TestIAPTransactionLogger: IAPTransactionLogging {
     synchronized(self) {
       Self.restoredTransactions.append(transaction)
       let restored = AppEvents.Name(rawValue: "fb_mobile_purchase_restored")
-      IAPTransactionCache.shared.addTransaction(transactionID: transaction.transaction.id, eventName: restored)
+      IAPTransactionCache.shared.addTransaction(transactionID: String(transaction.transaction.id), eventName: restored)
     }
   }
 

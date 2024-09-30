@@ -22,8 +22,8 @@ final class IAPEventTests: XCTestCase {
       amount: 4.99,
       quantity: 2,
       currency: "USD",
-      transactionID: 1,
-      originalTransactionID: 1,
+      transactionID: "1",
+      originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
@@ -42,8 +42,8 @@ final class IAPEventTests: XCTestCase {
     XCTAssertEqual(event1.amount, 4.99)
     XCTAssertEqual(event1.quantity, 2)
     XCTAssertEqual(event1.currency, "USD")
-    XCTAssertEqual(event1.transactionID, 1)
-    XCTAssertEqual(event1.originalTransactionID, 1)
+    XCTAssertEqual(event1.transactionID, "1")
+    XCTAssertEqual(event1.originalTransactionID, "1")
     XCTAssertEqual(event1.transactionDate, now)
     XCTAssertEqual(event1.originalTransactionDate, now)
     XCTAssertTrue(event1.isVerified)
@@ -65,8 +65,8 @@ final class IAPEventTests: XCTestCase {
       amount: 4.99,
       quantity: 1,
       currency: "USD",
-      transactionID: 1,
-      originalTransactionID: 1,
+      transactionID: "1",
+      originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
@@ -86,8 +86,8 @@ final class IAPEventTests: XCTestCase {
       amount: 4.99,
       quantity: 1,
       currency: "USD",
-      transactionID: 1,
-      originalTransactionID: 1,
+      transactionID: "1",
+      originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
@@ -112,8 +112,8 @@ final class IAPEventTests: XCTestCase {
       amount: 4.99,
       quantity: 1,
       currency: "USD",
-      transactionID: 1,
-      originalTransactionID: 1,
+      transactionID: "1",
+      originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
@@ -133,8 +133,8 @@ final class IAPEventTests: XCTestCase {
       amount: 4.99,
       quantity: 1,
       currency: "USD",
-      transactionID: 1,
-      originalTransactionID: 1,
+      transactionID: "1",
+      originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: false,
@@ -159,8 +159,8 @@ final class IAPEventTests: XCTestCase {
       amount: 4.99,
       quantity: 1,
       currency: "USD",
-      transactionID: 1,
-      originalTransactionID: 1,
+      transactionID: "1",
+      originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,
@@ -180,8 +180,8 @@ final class IAPEventTests: XCTestCase {
       amount: 4.99,
       quantity: 1,
       currency: "USD",
-      transactionID: 1,
-      originalTransactionID: 1,
+      transactionID: "1",
+      originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
       isVerified: true,

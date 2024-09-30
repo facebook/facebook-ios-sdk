@@ -17,8 +17,8 @@ struct IAPEvent: Equatable {
   let amount: Decimal
   let quantity: Int
   let currency: String?
-  let transactionID: UInt64
-  let originalTransactionID: UInt64
+  let transactionID: String?
+  let originalTransactionID: String?
   let transactionDate: Date
   let originalTransactionDate: Date
   let isVerified: Bool
