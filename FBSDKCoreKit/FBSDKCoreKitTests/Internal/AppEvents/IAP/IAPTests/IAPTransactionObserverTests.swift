@@ -17,17 +17,20 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
   private var queue: TestPaymentQueue!
+  private var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
   // swiftlint:enable implicitly_unwrapped_optiona
 
   override func setUp() async throws {
     try await super.setUp()
+    appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
+    appEventsConfigurationProvider.stubbedConfiguration = TestAppEventsConfiguration(iapObservationTime: 10000000000)
     queue = TestPaymentQueue()
     IAPTransactionObserver.shared.reset()
     IAPTransactionObserver.shared.configuredDependencies = .init(
       iapTransactionLoggingFactory: TestIAPTransactionLoggingFactory(),
-      paymentQueue: queue
+      paymentQueue: queue,
+      appEventsConfigurationProvider: appEventsConfigurationProvider
     )
-    IAPTransactionObserver.shared.setObservationTime(time: 10_000_000_000)
     IAPTransactionCache.shared.reset()
     TestIAPTransactionLogger.reset()
   }
@@ -37,6 +40,12 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
 
 @available(iOS 15.0, *)
 extension IAPTransactionObserverTests {
+  func testIAPObservationTime() async {
+    IAPTransactionObserver.shared.startObserving()
+    XCTAssertEqual(IAPTransactionObserver.shared.configuredObservationTime, 10000000000)
+    IAPTransactionObserver.shared.stopObserving()
+  }
+
   func testObserveRestoredPurchases() async {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {

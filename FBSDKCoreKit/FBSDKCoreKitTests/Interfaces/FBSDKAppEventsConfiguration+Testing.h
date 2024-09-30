@@ -20,7 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithDefaultATEStatus:(FBSDKAdvertisingTrackingStatus)defaultATEStatus
            advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
                   eventCollectionEnabled:(BOOL)eventCollectionEnabled
-NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:));
+                      iapObservationTime:(UInt64)iapObservationTime
+NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:iapObservationTime:));
 // UNCRUSTIFY_FORMAT_ON
 
 @end

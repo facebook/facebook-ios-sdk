@@ -13,4 +13,5 @@ enum IAPConstants {
   static let loggedTransactionsCacheKey = "com.facebook.sdk:LoggedTransactionsKey"
   static let newCandidatesDateCacheKey = "com.facebook.sdk:NewCandidatesDateKey"
   static let transactionDateFormat = "yyyy-MM-dd HH:mm:ssZ"
+  static let defaultIAPObservationTime: UInt64 = 3600000000000
 }

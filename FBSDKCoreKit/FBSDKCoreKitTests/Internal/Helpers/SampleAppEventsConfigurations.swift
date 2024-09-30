@@ -52,14 +52,27 @@ final class SampleAppEventsConfigurations: NSObject {
   }
 
   static func create(
+    iapObservationTime: UInt64
+  ) -> _AppEventsConfiguration {
+    create(
+      defaultATEStatus: self.default.defaultATEStatus,
+      advertiserIDCollectionEnabled: self.default.advertiserIDCollectionEnabled,
+      eventCollectionEnabled: self.default.eventCollectionEnabled,
+      iapObservationTime: iapObservationTime
+    )
+  }
+
+  static func create(
     defaultATEStatus: AdvertisingTrackingStatus,
     advertiserIDCollectionEnabled: Bool,
-    eventCollectionEnabled: Bool
+    eventCollectionEnabled: Bool,
+    iapObservationTime: UInt64 = 3600000000000
   ) -> _AppEventsConfiguration {
     _AppEventsConfiguration(
       defaultATEStatus: defaultATEStatus,
       advertiserIDCollectionEnabled: advertiserIDCollectionEnabled,
-      eventCollectionEnabled: eventCollectionEnabled
+      eventCollectionEnabled: eventCollectionEnabled,
+      iapObservationTime: iapObservationTime
     )
   }
 }
