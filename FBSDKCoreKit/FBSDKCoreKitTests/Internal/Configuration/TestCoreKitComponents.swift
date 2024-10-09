@@ -90,7 +90,8 @@ enum TestCoreKitComponents {
     macaRuleMatchingManager: MACARuleMatching = TestMACARuleMatchingManager(),
     blocklistEventsManager: _EventsProcessing = TestBlocklistEventsManager(),
     redactedEventsManager: _EventsProcessing = TestRedactedEventsManager(),
-    sensitiveParamsManager: _AppEventsParameterProcessing = TestSensitiveParamsManager()
+    sensitiveParamsManager: _AppEventsParameterProcessing = TestSensitiveParamsManager(),
+    transactionObserver: _TransactionObserving = IAPTransactionObserver.shared
   ) -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
@@ -168,7 +169,8 @@ enum TestCoreKitComponents {
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
-      sensitiveParamsManager: sensitiveParamsManager
+      sensitiveParamsManager: sensitiveParamsManager,
+      transactionObserver: transactionObserver
     )
   }
 }

@@ -98,7 +98,8 @@ final class TestAppEvents: TestEventLogger,
     macaRuleMatchingManager: MACARuleMatching,
     blocklistEventsManager: _EventsProcessing,
     redactedEventsManager: _EventsProcessing,
-    sensitiveParamsManager: _AppEventsParameterProcessing
+    sensitiveParamsManager: _AppEventsParameterProcessing,
+    transactionObserver: _TransactionObserving
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider

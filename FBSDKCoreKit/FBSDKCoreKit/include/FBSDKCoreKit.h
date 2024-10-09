@@ -212,3 +212,4 @@
 #import <FBSDKCoreKit/UIPasteboard+Pasteboard.h>
 #import <FBSDKCoreKit/WKWebView+WebViewProtocol.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestQueue.h>
+#import <FBSDKCoreKit/FBSDKTransactionObserving.h>

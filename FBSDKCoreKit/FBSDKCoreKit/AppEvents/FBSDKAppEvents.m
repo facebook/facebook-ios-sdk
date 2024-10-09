@@ -111,6 +111,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKAppEventDropDetermining, FBSDKAppEventParametersExtracting, FBSDKAppEventsUtility, FBSDKLoggingNotifying> appEventsUtility;
 @property (nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 @property (nullable, nonatomic) id<FBSDKCAPIReporter> capiReporter;
+@property (nullable, nonatomic) id<FBSDKTransactionObserving> transactionObserver;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
@@ -646,6 +647,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                    blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
                     redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
                    sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
+                      transactionObserver:(nonnull id<FBSDKTransactionObserving>)transactionObserver
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -672,6 +674,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.blocklistEventsManager = blocklistEventsManager;
   self.redactedEventsManager = redactedEventsManager;
   self.sensitiveParamsManager = sensitiveParamsManager;
+  self.transactionObserver = transactionObserver;
  
   NSString *appID = self.appID;
   if (appID) {
@@ -1594,6 +1597,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.blocklistEventsManager = nil;
   self.redactedEventsManager = nil;
   self.sensitiveParamsManager = nil;
+  self.transactionObserver = nil;
   // The actual setter on here has a check to see if the SDK is initialized
   // This is not a useful check for tests so we can just reset the underlying
   // static var.

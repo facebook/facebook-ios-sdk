@@ -87,6 +87,7 @@ final class CoreKitComponents {
   let blocklistEventsManager: _EventsProcessing
   let redactedEventsManager: _EventsProcessing
   let sensitiveParamsManager: _AppEventsParameterProcessing
+  let transactionObserver: _TransactionObserving
 
   // MARK: - Initializers
 
@@ -166,7 +167,8 @@ final class CoreKitComponents {
     macaRuleMatchingManager: MACARuleMatching,
     blocklistEventsManager: _EventsProcessing,
     redactedEventsManager: _EventsProcessing,
-    sensitiveParamsManager: _AppEventsParameterProcessing
+    sensitiveParamsManager: _AppEventsParameterProcessing,
+    transactionObserver: _TransactionObserving
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
@@ -244,6 +246,7 @@ final class CoreKitComponents {
     self.blocklistEventsManager = blocklistEventsManager
     self.redactedEventsManager = redactedEventsManager
     self.sensitiveParamsManager = sensitiveParamsManager
+    self.transactionObserver = transactionObserver
   }
 
   // MARK: - Default components
@@ -352,6 +355,13 @@ final class CoreKitComponents {
     let blocklistEventsManager: _EventsProcessing = BlocklistEventsManager()
     let redactedEventsManager: _EventsProcessing = RedactedEventsManager()
     let sensitiveParamsManager: _AppEventsParameterProcessing = SensitiveParamsManager()
+    IAPTransactionObserver.shared.setDependencies(
+      .init(
+        iapTransactionLoggingFactory: IAPTransactionLoggingFactory(),
+        paymentQueue: SKPaymentQueue.default(),
+        appEventsConfigurationProvider: appEventsConfigurationProvider
+      )
+    )
 
     var aemNetworker: AEMNetworking?
     if #available(iOS 14, *) {
@@ -460,7 +470,8 @@ final class CoreKitComponents {
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
-      sensitiveParamsManager: sensitiveParamsManager
+      sensitiveParamsManager: sensitiveParamsManager,
+      transactionObserver: IAPTransactionObserver.shared
     )
   }()
 }
