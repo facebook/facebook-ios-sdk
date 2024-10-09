@@ -81,6 +81,9 @@ extension IAPTransactionLogger {
     } else {
       parameters[.inAppPurchaseType] = IAPType.product.rawValue
     }
+    if event.storeKitVersion == .version2 {
+      parameters[.validationResult] = event.validationResult?.rawValue ?? IAPValidationResult.unverified.rawValue
+    }
     return parameters
   }
 

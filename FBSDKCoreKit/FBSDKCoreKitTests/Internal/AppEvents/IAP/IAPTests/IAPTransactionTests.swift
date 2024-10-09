@@ -21,9 +21,9 @@ final class IAPTransactionTests: StoreKitTestCase {
       try? await testSession.buyProduct(identifier: Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    let iapTransaction = IAPTransaction(transaction: transaction, isVerified: true)
+    let iapTransaction = IAPTransaction(transaction: transaction, validationResult: .valid)
     XCTAssertEqual(iapTransaction.transaction, transaction)
-    XCTAssertTrue(iapTransaction.isVerified)
+    XCTAssertEqual(iapTransaction.validationResult, .valid)
   }
 
   @available(iOS 17.0, *)
@@ -32,9 +32,9 @@ final class IAPTransactionTests: StoreKitTestCase {
       try? await testSession.buyProduct(identifier: Self.ProductIdentifiers.nonConsumableProduct1.rawValue) else {
       return
     }
-    let iapTransaction = IAPTransaction(transaction: transaction, isVerified: false)
+    let iapTransaction = IAPTransaction(transaction: transaction, validationResult: .invalid)
     XCTAssertEqual(iapTransaction.transaction, transaction)
-    XCTAssertFalse(iapTransaction.isVerified)
+    XCTAssertEqual(iapTransaction.validationResult, .invalid)
   }
 
   @available(iOS 15.0, *)
@@ -51,10 +51,10 @@ final class IAPTransactionTests: StoreKitTestCase {
       let iapTransaction = verificationResult.iapTransaction
       switch verificationResult {
       case let .verified(transaction):
-        XCTAssertTrue(iapTransaction.isVerified)
+        XCTAssertEqual(iapTransaction.validationResult, .valid)
         XCTAssertEqual(iapTransaction.transaction, transaction)
       case let .unverified(transaction, _):
-        XCTAssertFalse(iapTransaction.isVerified)
+        XCTAssertEqual(iapTransaction.validationResult, .invalid)
         XCTAssertEqual(iapTransaction.transaction, transaction)
       }
     default:
