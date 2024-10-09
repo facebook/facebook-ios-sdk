@@ -12,7 +12,7 @@ import StoreKit
 @available(iOS 15.0, *)
 struct IAPTransaction {
   let transaction: Transaction
-  let isVerified: Bool
+  let validationResult: IAPValidationResult
 }
 
 enum IAPStoreKitVersion: String {
@@ -24,10 +24,27 @@ enum IAPStoreKitVersion: String {
 extension VerificationResult<Transaction> {
   var iapTransaction: IAPTransaction {
     switch self {
-    case let .unverified(transaction, _):
-      return IAPTransaction(transaction: transaction, isVerified: false)
+    case let .unverified(transaction, error):
+      var validationResult = IAPValidationResult.unverified
+      switch error {
+      case .revokedCertificate:
+        validationResult = .unverified
+      case .invalidCertificateChain:
+        validationResult = .unverified
+      case .invalidDeviceVerification:
+        validationResult = .invalid
+      case .invalidEncoding:
+        validationResult = .unverified
+      case .invalidSignature:
+        validationResult = .invalid
+      case .missingRequiredProperties:
+        validationResult = .unverified
+      @unknown default:
+        validationResult = .unverified
+      }
+      return IAPTransaction(transaction: transaction, validationResult: validationResult)
     case let .verified(transaction):
-      return IAPTransaction(transaction: transaction, isVerified: true)
+      return IAPTransaction(transaction: transaction, validationResult: .valid)
     }
   }
 }

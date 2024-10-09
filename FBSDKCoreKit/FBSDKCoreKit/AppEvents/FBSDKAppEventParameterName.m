@@ -55,6 +55,7 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameIsStartTrial = @"fb_i
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameHasFreeTrial = @"fb_iap_has_free_trial";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPeriod = @"fb_iap_trial_period";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPrice = @"fb_iap_trial_price";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameValidationResult = @"fb_iap_validation_result";
 
 // MARK: - Time Spent
 

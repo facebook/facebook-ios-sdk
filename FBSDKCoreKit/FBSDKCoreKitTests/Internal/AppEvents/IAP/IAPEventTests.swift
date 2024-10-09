@@ -26,7 +26,7 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true,
+      validationResult: .valid,
       isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
@@ -47,7 +47,7 @@ final class IAPEventTests: XCTestCase {
     XCTAssertEqual(event1.originalTransactionID, "1")
     XCTAssertEqual(event1.transactionDate, now)
     XCTAssertEqual(event1.originalTransactionDate, now)
-    XCTAssertTrue(event1.isVerified)
+    XCTAssertEqual(event1.validationResult, .valid)
     XCTAssertFalse(event1.isSubscription)
     XCTAssertNil(event1.subscriptionPeriod)
     XCTAssertFalse(event1.isStartTrial)
@@ -71,7 +71,7 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true,
+      validationResult: .valid,
       isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
@@ -93,7 +93,7 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true,
+      validationResult: .valid,
       isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
@@ -120,7 +120,7 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true,
+      validationResult: .valid,
       isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
@@ -142,7 +142,7 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: false,
+      validationResult: .invalid,
       isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
@@ -169,7 +169,7 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true,
+      validationResult: .valid,
       isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
@@ -191,7 +191,7 @@ final class IAPEventTests: XCTestCase {
       originalTransactionID: "1",
       transactionDate: now,
       originalTransactionDate: now,
-      isVerified: true,
+      validationResult: .valid,
       isSubscription: false,
       subscriptionPeriod: nil,
       isStartTrial: false,
