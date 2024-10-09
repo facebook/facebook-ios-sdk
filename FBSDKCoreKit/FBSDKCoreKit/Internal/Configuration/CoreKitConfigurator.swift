@@ -113,7 +113,8 @@ private extension CoreKitConfigurator {
       macaRuleMatchingManager: components.macaRuleMatchingManager,
       blocklistEventsManager: components.blocklistEventsManager,
       redactedEventsManager: components.redactedEventsManager,
-      sensitiveParamsManager: components.sensitiveParamsManager
+      sensitiveParamsManager: components.sensitiveParamsManager,
+      transactionObserver: components.transactionObserver
     )
   }
 

@@ -120,7 +120,8 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .macaRuleMatching,
       .blocklistEvents,
       .filterRedactedEvents,
-      .filterSensitiveParams:
+      .filterSensitiveParams,
+      .iapLoggingSK2:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -180,6 +181,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .blocklistEvents: featureName = "BlocklistEvents"
     case .filterRedactedEvents: featureName = "FilterRedactedEvents"
     case .filterSensitiveParams: featureName = "FilterSensitiveParams"
+    case .iapLoggingSK2: featureName = "IAPLoggingSK2"
     @unknown default: featureName = "NONE"
     }
 

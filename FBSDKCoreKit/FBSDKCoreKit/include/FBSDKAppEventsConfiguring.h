@@ -35,6 +35,7 @@
 @protocol FBSDKAppEventParametersExtracting;
 @protocol FBSDKMACARuleMatching;
 @protocol FBSDKEventsProcessing;
+@protocol FBSDKTransactionObserving;
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
 @protocol FBSDKMetadataIndexing;
@@ -79,7 +80,8 @@ NS_SWIFT_NAME(_AppEventsConfiguring)
                    blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
                    redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
                   sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
-NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:protectedModeManager:macaRuleMatchingManager:blocklistEventsManager:redactedEventsManager:sensitiveParamsManager:));
+                      transactionObserver:(nonnull id<FBSDKTransactionObserving>)transactionObserver
+NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:protectedModeManager:macaRuleMatchingManager:blocklistEventsManager:redactedEventsManager:sensitiveParamsManager:transactionObserver:));
 
 #if !TARGET_OS_TV
 

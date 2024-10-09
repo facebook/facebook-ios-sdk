@@ -177,7 +177,8 @@ final class AppEventsTests: XCTestCase {
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
-      sensitiveParamsManager: sensitiveParamsManager
+      sensitiveParamsManager: sensitiveParamsManager,
+      transactionObserver: IAPTransactionObserver.shared
     )
 
     appEvents.configureNonTVComponents(

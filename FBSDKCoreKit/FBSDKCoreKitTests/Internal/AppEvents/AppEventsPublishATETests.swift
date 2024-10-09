@@ -77,7 +77,8 @@ final class AppEventsPublishATETests: XCTestCase {
       macaRuleMatchingManager: TestMACARuleMatchingManager(),
       blocklistEventsManager: TestBlocklistEventsManager(),
       redactedEventsManager: TestRedactedEventsManager(),
-      sensitiveParamsManager: TestSensitiveParamsManager()
+      sensitiveParamsManager: TestSensitiveParamsManager(),
+      transactionObserver: IAPTransactionObserver.shared
     )
 
     appEvents.publishATE()
