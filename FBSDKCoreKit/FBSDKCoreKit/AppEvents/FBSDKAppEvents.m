@@ -1062,6 +1062,15 @@ static BOOL g_explicitEventsLoggedYet = NO;
   }];
 }
 
+- (nullable NSDictionary<NSString *, id> *)addImplicitPurchaseParameters:(nullable NSDictionary<NSString *, id> *)parameters {
+  NSMutableDictionary<NSString *, id> *params = [parameters mutableCopy];
+  if (self.serverConfiguration) {
+    [FBSDKTypeUtility dictionary:params setObject:self.serverConfiguration.implicitPurchaseLoggingEnabled ? @"1" : @"0" forKey:@"is_implicit_purchase_logging_enabled"];
+    [FBSDKTypeUtility dictionary:params setObject:[self.settings isAutoLogAppEventsEnabled] ? @"1" : @"0" forKey:@"is_autolog_app_events_enabled"];
+  }
+  return [params copy];
+}
+
 - (void)    logEvent:(FBSDKAppEventName)eventName
           valueToSum:(NSNumber *)valueToSum
           parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
@@ -1113,6 +1122,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
     return;
   }
   
+  parameters = [self addImplicitPurchaseParameters:parameters];
 
   BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
   if (!isProtectedModeApplied && self.sensitiveParamsManager) {
