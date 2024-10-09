@@ -56,6 +56,8 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameHasFreeTrial = @"fb_i
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPeriod = @"fb_iap_trial_period";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPrice = @"fb_iap_trial_price";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameValidationResult = @"fb_iap_validation_result";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPClientLibraryVersion = @"fb_iap_client_library_version";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPSDKLibraryVersions = @"fb_iap_sdk_supported_library_versions";
 
 // MARK: - Time Spent
 

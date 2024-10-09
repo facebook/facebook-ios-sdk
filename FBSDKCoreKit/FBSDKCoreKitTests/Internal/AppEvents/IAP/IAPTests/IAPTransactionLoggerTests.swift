@@ -100,6 +100,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.hasFreeTrial] as? String, "1")
     XCTAssertEqual(capturedParameters[.trialPeriod] as? String, "P6M")
     XCTAssertEqual(capturedParameters[.trialPrice] as? Double, 0)
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionNonRenewable() async {
@@ -137,6 +139,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionAutoRenewable() async {
@@ -174,6 +178,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionWithStartTrialInCache() async {
@@ -215,6 +221,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionGKDisabled() async {
@@ -253,6 +261,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionStartTrialWithStartTrialInCache() async {
@@ -377,6 +387,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   // MARK: - New Purchases
@@ -416,6 +428,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewPurchaseTransactionNonConsumable() async {
@@ -453,6 +467,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewPurchaseTransactionWithPurchaseInCache() async {
@@ -513,6 +529,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.hasFreeTrial] as? String, "1")
     XCTAssertEqual(capturedParameters[.trialPeriod] as? String, "P6M")
     XCTAssertEqual(capturedParameters[.trialPrice] as? Double, 0)
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredSubscriptionTransactionNonRenewable() async {
@@ -550,6 +568,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredSubscriptionTransactionAutoRenewable() async {
@@ -587,6 +607,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredSubscriptionTransactionWithRestoredInCache() async {
@@ -646,6 +668,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   // MARK: - Restored Purchases
@@ -685,6 +709,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredPurchaseTransactionNonConsumable() async {
@@ -722,6 +748,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredPurchaseTransactionRestoredInCache() async {
@@ -783,6 +811,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogPurchaseRestoredEventAndThenPurchaseEventPurchaseRestoredShouldSucceed() async {
@@ -827,6 +857,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogDuplicateSubscriptionEventFirstOneShouldSucceed() async {
@@ -865,6 +897,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogSubscriptionRestoredEventAndThenSubscriptionEventSubscriptionRestoredShouldSucceed() async {
@@ -909,6 +943,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 }
 
@@ -963,6 +999,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.hasFreeTrial] as? String, "1")
     XCTAssertEqual(capturedParameters[.trialPeriod] as? String, "P6M")
     XCTAssertEqual(capturedParameters[.trialPrice] as? Double, 0)
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionNonRenewableWithStoreKit1() {
@@ -1002,6 +1040,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionAutoRenewableWithStoreKit1() {
@@ -1041,6 +1081,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionWithStartTrialInCacheWithStoreKit1() {
@@ -1084,6 +1126,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionGKDisabledWithStoreKit1() {
@@ -1124,6 +1168,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewSubscriptionTransactionStartTrialWithStartTrialInCacheWithStoreKit1() {
@@ -1241,6 +1287,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewPurchaseTransactionNonConsumableWithStoreKit1() {
@@ -1280,6 +1328,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogNewPurchaseTransactionWithPurchaseInCacheWithStoreKit1() {
@@ -1351,6 +1401,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.hasFreeTrial] as? String, "1")
     XCTAssertEqual(capturedParameters[.trialPeriod] as? String, "P6M")
     XCTAssertEqual(capturedParameters[.trialPrice] as? Double, 0)
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredSubscriptionTransactionNonRenewableWithStoreKit1() {
@@ -1390,6 +1442,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredSubscriptionTransactionAutoRenewableWithStoreKit1() {
@@ -1429,6 +1483,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredSubscriptionTransactionWithRestoredInCacheWithStoreKit1() {
@@ -1492,6 +1548,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   // MARK: - Restored Purchases
@@ -1533,6 +1591,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredPurchaseTransactionNonConsumableWithStoreKit1() {
@@ -1572,6 +1632,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogRestoredPurchaseTransactionRestoredInCacheWithStoreKit1() {
@@ -1637,6 +1699,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogPurchaseRestoredEventAndThenPurchaseEventPurchaseRestoredShouldSucceedWithStoreKit1() {
@@ -1694,6 +1758,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogDuplicateSubscriptionEventFirstOneShouldSucceedWithStoreKit1() {
@@ -1734,6 +1800,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogSubscriptionRestoredEventAndThenSubscriptionEventRestoredShouldSucceedWithStoreKit1() {
@@ -1791,6 +1859,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   // MARK: - Initiated Checkout
@@ -1821,6 +1891,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogInitiatedCheckoutSubscriptionEvent() {
@@ -1849,6 +1921,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogInitiatedCheckoutSubscriptionEventGKDisabled() {
@@ -1878,6 +1952,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   // MARK: - Failed
@@ -1908,6 +1984,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogFailedSubscriptionEvent() {
@@ -1936,6 +2014,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 
   func testLogFailedSubscriptionEventGKDisabled() {
@@ -1965,5 +2045,7 @@ extension IAPTransactionLoggerTests {
     XCTAssertNil(capturedParameters[.hasFreeTrial])
     XCTAssertNil(capturedParameters[.trialPeriod])
     XCTAssertNil(capturedParameters[.trialPrice])
+    XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version1.rawValue)
+    XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
 }

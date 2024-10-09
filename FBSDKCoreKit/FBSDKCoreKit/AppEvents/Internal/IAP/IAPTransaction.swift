@@ -16,8 +16,8 @@ struct IAPTransaction {
 }
 
 enum IAPStoreKitVersion: String {
-  case version1
-  case version2
+  case version1 = "SK1"
+  case version2 = "SK2"
 }
 
 @available(iOS 15.0, *)

@@ -84,6 +84,8 @@ extension IAPTransactionLogger {
     if event.storeKitVersion == .version2 {
       parameters[.validationResult] = event.validationResult?.rawValue ?? IAPValidationResult.unverified.rawValue
     }
+    parameters[.iapClientLibraryVersion] = event.storeKitVersion.rawValue
+    parameters[.iapsdkLibraryVersions] = IAPConstants.IAPSDKLibraryVersions
     return parameters
   }
 
