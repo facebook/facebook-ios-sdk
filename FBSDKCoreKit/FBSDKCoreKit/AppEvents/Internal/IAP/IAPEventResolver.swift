@@ -23,7 +23,8 @@ final class IAPEventResolver: NSObject {
     iapSKProductRequestFactory: IAPSKProductsRequestFactory()
   )
 
-  weak var delegate: IAPEventResolverDelegate?
+  var request: IAPSKProductsRequesting?
+  var delegate: IAPEventResolverDelegate?
 
   private var isSubscriptionsEnabled: Bool {
     guard let dependencies = try? Self.getDependencies() else {
@@ -232,12 +233,12 @@ extension IAPEventResolver {
       return
     }
     let productID = transaction.payment.productIdentifier
-    let request = dependencies.iapSKProductRequestFactory.createRequestWith(
+    request = dependencies.iapSKProductRequestFactory.createRequestWith(
       productIdentifier: productID,
       transaction: transaction
     )
-    request.delegate = self
-    request.start()
+    request?.delegate = self
+    request?.start()
   }
 }
 
@@ -249,6 +250,7 @@ extension IAPEventResolver: SKProductsRequestDelegate {
           let transaction = iapRequest.transaction else {
       return
     }
+    self.request = nil
     let product = response.products.first
     resolveEventFor(transaction: transaction, product: product)
   }
@@ -258,7 +260,12 @@ extension IAPEventResolver: SKProductsRequestDelegate {
           let transaction = iapRequest.transaction else {
       return
     }
+    self.request = nil
     resolveEventFor(transaction: transaction, product: nil)
+  }
+
+  func requestDidFinish(_ request: SKRequest) {
+    self.request = nil
   }
 }
 

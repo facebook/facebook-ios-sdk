@@ -954,9 +954,16 @@ static BOOL g_explicitEventsLoggedYet = NO;
       self.serverConfiguration = serverConfiguration;
 
       if ([self.settings isAutoLogAppEventsEnabled] && self.serverConfiguration.implicitPurchaseLoggingEnabled) {
-        [self.paymentObserver startObservingTransactions];
+        [self.featureChecker checkFeature:FBSDKFeatureIAPLoggingSK2 completionBlock:^(BOOL enabled) {
+          if (enabled) {
+            [self.transactionObserver startObserving];
+          } else {
+            [self.paymentObserver startObservingTransactions];
+          }
+        }];
       } else {
         [self.paymentObserver stopObservingTransactions];
+        [self.transactionObserver stopObserving];
       }
       [self.featureChecker checkFeature:FBSDKFeatureRestrictiveDataFiltering completionBlock:^(BOOL enabled) {
         if (enabled) {

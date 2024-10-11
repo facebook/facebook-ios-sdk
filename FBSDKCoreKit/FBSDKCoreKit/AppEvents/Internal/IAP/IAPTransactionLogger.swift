@@ -15,6 +15,7 @@ final class IAPTransactionLogger: NSObject, IAPTransactionLogging {
   static var defaultDependencies: TypeDependencies? = .init(
     eventLogger: AppEvents.shared
   )
+  var resolver: IAPEventResolver?
   let dateFormatter = DateFormatter()
   let maxParameterValueLength = 100
 
@@ -170,25 +171,29 @@ extension IAPTransactionLogger {
 
 extension IAPTransactionLogger: IAPEventResolverDelegate {
   func logTransaction(_ transaction: SKPaymentTransaction) {
-    let resolver = IAPEventResolver()
-    resolver.delegate = self
-    resolver.resolveEventFor(transaction: transaction)
+    resolver = IAPEventResolver()
+    resolver?.delegate = self
+    resolver?.resolveEventFor(transaction: transaction)
   }
 
   func didResolveNew(event: IAPEvent) {
     logNewEvent(event)
+    resolver = nil
   }
 
   func didResolveRestored(event: IAPEvent) {
     logRestoredEvent(event)
+    resolver = nil
   }
 
   func didResolveFailed(event: IAPEvent) {
     logInitiatedCheckoutOrFailedEvent(event)
+    resolver = nil
   }
 
   func didResolveInitiatedCheckout(event: IAPEvent) {
     logInitiatedCheckoutOrFailedEvent(event)
+    resolver = nil
   }
 }
 
