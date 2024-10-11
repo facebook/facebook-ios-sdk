@@ -59,3 +59,11 @@ targets:
       - "-Wincomplete-implementation"
       - "-Warc-performSelector-leaks"
       - "-fmodules"
+
+schemes:
+  CoffeeShop:
+    build:
+      targets:
+        CoffeeShop: all
+    run:
+      storeKitConfiguration: Coffeeshop/IAP/FBSDKCoffeeShopProducts.storekit
