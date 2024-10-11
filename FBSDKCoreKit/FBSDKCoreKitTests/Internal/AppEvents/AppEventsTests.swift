@@ -33,6 +33,7 @@ final class AppEventsTests: XCTestCase {
   var settings: TestSettings!
   var onDeviceMLModelManager: TestOnDeviceMLModelManager!
   var paymentObserver: TestPaymentObserver!
+  var transactionObserver: TestTransactionObserver!
   var appEventsStateStore: TestAppEventsStateStore!
   var metadataIndexer: TestMetadataIndexer!
   var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
@@ -69,6 +70,7 @@ final class AppEventsTests: XCTestCase {
     onDeviceMLModelManager = TestOnDeviceMLModelManager()
     onDeviceMLModelManager.integrityParametersProcessor = integrityParametersProcessor
     paymentObserver = TestPaymentObserver()
+    transactionObserver = TestTransactionObserver()
     metadataIndexer = TestMetadataIndexer()
 
     graphRequestFactory = TestGraphRequestFactory()
@@ -138,6 +140,7 @@ final class AppEventsTests: XCTestCase {
     appEventsUtility = nil
     internalUtility = nil
     capiReporter = nil
+    transactionObserver = nil
 
     resetTestHelpers()
 
@@ -178,7 +181,7 @@ final class AppEventsTests: XCTestCase {
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
       sensitiveParamsManager: sensitiveParamsManager,
-      transactionObserver: IAPTransactionObserver.shared
+      transactionObserver: transactionObserver
     )
 
     appEvents.configureNonTVComponents(
@@ -1650,9 +1653,45 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: false)
     XCTAssertTrue(
       paymentObserver.didStartObservingTransactions,
-      "fetchConfiguration should start payment observing if the configuration allows it"
+      "fetchConfiguration should start payment observing if the configuration allows it and SK2 is disabled"
+    )
+    XCTAssertFalse(
+      paymentObserver.didStopObservingTransactions,
+      "fetchConfiguration shouldn't stop payment observing if the configuration allows it"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "fetchConfiguration should not start transaction observing if the configuration allows it and SK2 is disabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStopObserving,
+      "fetchConfiguration should not stop transaction observing if the configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationStartsTransactionObservingIfConfigurationAllowed() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    XCTAssertTrue(
+      transactionObserver.didStartObserving,
+      "fetchConfiguration should start transaction observing if the configuration allows it and SK2 is enabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStopObserving,
+      "fetchConfiguration should not stop transaction observing if the configuration allows it"
+    )
+    XCTAssertFalse(
+      paymentObserver.didStartObservingTransactions,
+      "fetchConfiguration should not start payment observing if the configuration allows it and SK2 is enabled"
     )
     XCTAssertFalse(
       paymentObserver.didStopObservingTransactions,
@@ -1660,7 +1699,7 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
-  func testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed() {
+  func testFetchingConfigurationStopsPaymentAndTransactionObservingIfConfigurationDisallowed() {
     settings.isAutoLogAppEventsEnabled = true
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": 0]
@@ -1670,11 +1709,19 @@ final class AppEventsTests: XCTestCase {
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
     XCTAssertFalse(
       paymentObserver.didStartObservingTransactions,
-      "Fetching a configuration shouldn't start payment observing if the configuration disallows it"
+      "Fetching a configuration shouldn't start payment observing if auto log app events is disabled"
     )
     XCTAssertTrue(
       paymentObserver.didStopObservingTransactions,
-      "Fetching a configuration should stop payment observing if the configuration disallows it"
+      "Fetching a configuration should stop payment observing if auto log app events is disabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "Fetching a configuration shouldn't start transaction observing if auto log app events is disabled"
+    )
+    XCTAssertTrue(
+      transactionObserver.didStopObserving,
+      "Fetching a configuration should stop transaction observing if auto log app events is disabled"
     )
   }
 
@@ -1693,6 +1740,14 @@ final class AppEventsTests: XCTestCase {
     XCTAssertTrue(
       paymentObserver.didStopObservingTransactions,
       "Fetching a configuration should stop payment observing if auto log app events is disabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "Fetching a configuration shouldn't start transaction observing if auto log app events is disabled"
+    )
+    XCTAssertTrue(
+      transactionObserver.didStopObserving,
+      "Fetching a configuration should stop transaction observing if auto log app events is disabled"
     )
   }
 
