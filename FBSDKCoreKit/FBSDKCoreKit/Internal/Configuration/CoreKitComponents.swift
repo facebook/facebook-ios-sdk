@@ -83,6 +83,7 @@ final class CoreKitComponents {
   let webViewProvider: _WebViewProviding
   let aemManager: _AutoSetup
   let protectedModeManager: _AppEventsParameterProcessing
+  let bannedParamsManager: MACARuleMatching
   let stdParamEnforcementManager: MACARuleMatching
   let macaRuleMatchingManager: MACARuleMatching
   let blocklistEventsManager: _EventsProcessing
@@ -165,6 +166,7 @@ final class CoreKitComponents {
     webViewProvider: _WebViewProviding,
     aemManager: _AutoSetup,
     protectedModeManager: _AppEventsParameterProcessing,
+    bannedParamsManager: MACARuleMatching,
     stdParamEnforcementManager: MACARuleMatching,
     macaRuleMatchingManager: MACARuleMatching,
     blocklistEventsManager: _EventsProcessing,
@@ -244,6 +246,7 @@ final class CoreKitComponents {
     self.webViewProvider = webViewProvider
     self.aemManager = aemManager
     self.protectedModeManager = protectedModeManager
+    self.bannedParamsManager = bannedParamsManager
     self.stdParamEnforcementManager = stdParamEnforcementManager
     self.macaRuleMatchingManager = macaRuleMatchingManager
     self.blocklistEventsManager = blocklistEventsManager
@@ -355,6 +358,7 @@ final class CoreKitComponents {
     let urlSessionProxyFactory: _URLSessionProxyProviding = _URLSessionProxyFactory()
     let protectedModeManager: _AppEventsParameterProcessing = ProtectedModeManager()
     let stdParamEnforcementManager: MACARuleMatching = StdParamEnforcementManager()
+    let bannedParamsManager: MACARuleMatching = BannedParamsManager()
     let macaRuleMatchingManager: MACARuleMatching = MACARuleMatchingManager()
     let blocklistEventsManager: _EventsProcessing = BlocklistEventsManager()
     let redactedEventsManager: _EventsProcessing = RedactedEventsManager()
@@ -471,6 +475,7 @@ final class CoreKitComponents {
       webViewProvider: _WebViewFactory(),
       aemManager: _AEMManager.shared,
       protectedModeManager: protectedModeManager,
+      bannedParamsManager: bannedParamsManager,
       stdParamEnforcementManager: stdParamEnforcementManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,

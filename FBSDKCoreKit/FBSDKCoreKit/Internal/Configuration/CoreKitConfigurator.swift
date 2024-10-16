@@ -110,6 +110,7 @@ private extension CoreKitConfigurator {
       internalUtility: components.internalUtility,
       capiReporter: components.capiReporter,
       protectedModeManager: components.protectedModeManager,
+      bannedParamsManager: components.bannedParamsManager,
       stdParamEnforcementManager: components.stdParamEnforcementManager,
       macaRuleMatchingManager: components.macaRuleMatchingManager,
       blocklistEventsManager: components.blocklistEventsManager,
