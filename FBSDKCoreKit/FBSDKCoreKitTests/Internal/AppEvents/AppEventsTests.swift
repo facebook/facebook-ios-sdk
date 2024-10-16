@@ -49,6 +49,7 @@ final class AppEventsTests: XCTestCase {
   var internalUtility: TestInternalUtility!
   var capiReporter: TestCAPIReporter!
   var protectedModeManager: TestAppEventsParameterProcessor!
+  var bannedParamsManager: TestBannedParamsManager!
   var stdParamEnforcementManager: TestStdParamEnforcementManager!
   var macaRuleMatchingManager: TestMACARuleMatchingManager!
   var blocklistEventsManager: TestBlocklistEventsManager!
@@ -82,6 +83,7 @@ final class AppEventsTests: XCTestCase {
     eventDeactivationParameterProcessor = TestAppEventsParameterProcessor()
     restrictiveDataFilterParameterProcessor = TestAppEventsParameterProcessor()
     protectedModeManager = TestAppEventsParameterProcessor()
+    bannedParamsManager = TestBannedParamsManager()
     stdParamEnforcementManager = TestStdParamEnforcementManager()
     macaRuleMatchingManager = TestMACARuleMatchingManager()
     blocklistEventsManager = TestBlocklistEventsManager()
@@ -129,6 +131,7 @@ final class AppEventsTests: XCTestCase {
     eventDeactivationParameterProcessor = nil
     restrictiveDataFilterParameterProcessor = nil
     protectedModeManager = nil
+    bannedParamsManager = nil
     stdParamEnforcementManager = nil
     macaRuleMatchingManager = nil
     blocklistEventsManager = nil
@@ -180,6 +183,7 @@ final class AppEventsTests: XCTestCase {
       internalUtility: internalUtility,
       capiReporter: capiReporter,
       protectedModeManager: protectedModeManager,
+      bannedParamsManager: bannedParamsManager,
       stdParamEnforcementManager: stdParamEnforcementManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,

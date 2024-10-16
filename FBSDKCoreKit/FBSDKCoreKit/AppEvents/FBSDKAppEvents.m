@@ -99,6 +99,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> eventDeactivationParameterProcessor;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterParameterProcessor;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> protectedModeManager;
+@property (nullable, nonatomic) id<FBSDKMACARuleMatching> bannedParamsManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> stdParamEnforcementManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> blocklistEventsManager;
@@ -644,6 +645,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                           internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
                      protectedModeManager:(nonnull id<FBSDKAppEventsParameterProcessing>)protectedModeManager
+                      bannedParamsManager:(nonnull id<FBSDKMACARuleMatching>)bannedParamsManager
                stdParamEnforcementManager:(nonnull id<FBSDKMACARuleMatching>)stdParamEnforcementManager
                  macaRuleMatchingManager:(nonnull id<FBSDKMACARuleMatching>)macaRuleMatchingManager
                    blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
@@ -672,6 +674,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.internalUtility = internalUtility;
   self.capiReporter = capiReporter;
   self.protectedModeManager = protectedModeManager;
+  self.bannedParamsManager = bannedParamsManager;
   self.stdParamEnforcementManager = stdParamEnforcementManager;
   self.macaRuleMatchingManager = macaRuleMatchingManager;
   self.blocklistEventsManager = blocklistEventsManager;
@@ -983,6 +986,11 @@ static BOOL g_explicitEventsLoggedYet = NO;
           [self.protectedModeManager enable];
         }
       }];
+      [self.featureChecker checkFeature:FBSDKFeatureBannedParamFiltering completionBlock:^(BOOL enabled) {
+              if (enabled) {
+               [self.bannedParamsManager enable];
+              }
+            }];
       [self.featureChecker checkFeature:FBSDKFeatureStdParamEnforcement completionBlock:^(BOOL enabled) {
               if (enabled) {
                [self.stdParamEnforcementManager enable];
@@ -1151,6 +1159,16 @@ static BOOL g_explicitEventsLoggedYet = NO;
                                    logEntry:@"FBSDKAppEvents: caught exception while processing sensitiveParamsManager."];
     }
   }
+  
+  // remove banned parameters
+    if (self.bannedParamsManager) {
+      @try {
+        parameters = [self.bannedParamsManager processParameters:parameters event:eventName?:@""];
+      } @catch(NSException *exception) {
+        [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                               logEntry:@"FBSDKAppEvents: caght exception while processing bannedParamsManager."];
+      }
+    }
   
   if (self.macaRuleMatchingManager) {
     @try {
@@ -1618,6 +1636,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.appEventsUtility = nil;
   self.internalUtility = nil;
   self.protectedModeManager = nil;
+  self.bannedParamsManager = nil;
   self.stdParamEnforcementManager = nil;
   self.macaRuleMatchingManager = nil;
   self.blocklistEventsManager = nil;
