@@ -74,6 +74,7 @@ final class AppEventsPublishATETests: XCTestCase {
       internalUtility: TestInternalUtility(),
       capiReporter: TestCAPIReporter(),
       protectedModeManager: TestAppEventsParameterProcessor(),
+      stdParamEnforcementManager: TestStdParamEnforcementManager(),
       macaRuleMatchingManager: TestMACARuleMatchingManager(),
       blocklistEventsManager: TestBlocklistEventsManager(),
       redactedEventsManager: TestRedactedEventsManager(),

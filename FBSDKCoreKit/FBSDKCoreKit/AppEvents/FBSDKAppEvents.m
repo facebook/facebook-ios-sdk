@@ -99,6 +99,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> eventDeactivationParameterProcessor;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing, FBSDKEventsProcessing> restrictiveDataFilterParameterProcessor;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> protectedModeManager;
+@property (nullable, nonatomic) id<FBSDKMACARuleMatching> stdParamEnforcementManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> blocklistEventsManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> redactedEventsManager;
@@ -643,6 +644,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                           internalUtility:(nonnull id<FBSDKInternalUtility>)internalUtility
                              capiReporter:(id<FBSDKCAPIReporter>)capiReporter
                      protectedModeManager:(nonnull id<FBSDKAppEventsParameterProcessing>)protectedModeManager
+               stdParamEnforcementManager:(nonnull id<FBSDKMACARuleMatching>)stdParamEnforcementManager
                  macaRuleMatchingManager:(nonnull id<FBSDKMACARuleMatching>)macaRuleMatchingManager
                    blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
                     redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
@@ -670,6 +672,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.internalUtility = internalUtility;
   self.capiReporter = capiReporter;
   self.protectedModeManager = protectedModeManager;
+  self.stdParamEnforcementManager = stdParamEnforcementManager;
   self.macaRuleMatchingManager = macaRuleMatchingManager;
   self.blocklistEventsManager = blocklistEventsManager;
   self.redactedEventsManager = redactedEventsManager;
@@ -980,6 +983,11 @@ static BOOL g_explicitEventsLoggedYet = NO;
           [self.protectedModeManager enable];
         }
       }];
+      [self.featureChecker checkFeature:FBSDKFeatureStdParamEnforcement completionBlock:^(BOOL enabled) {
+              if (enabled) {
+               [self.stdParamEnforcementManager enable];
+              }
+            }];
       [self.featureChecker checkFeature:FBSDKFeatureMACARuleMatching completionBlock:^(BOOL enabled) {
         if (enabled) {
           [self.macaRuleMatchingManager enable];
@@ -1148,6 +1156,16 @@ static BOOL g_explicitEventsLoggedYet = NO;
     @try {
         parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
     } @catch(NSException *exception) {}
+  }
+  
+  // Schematize certain params
+  if (self.stdParamEnforcementManager) {
+    @try {
+      parameters = [self.stdParamEnforcementManager processParameters:parameters event:eventName?:@""];
+    } @catch(NSException *exception) {
+        [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                                     logEntry:@"FBSDKAppEvents: caght exception while processing stdParamEnforcementManager."];
+    }
   }
 
   if (!isImplicitlyLogged && !g_explicitEventsLoggedYet) {
@@ -1600,6 +1618,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.appEventsUtility = nil;
   self.internalUtility = nil;
   self.protectedModeManager = nil;
+  self.stdParamEnforcementManager = nil;
   self.macaRuleMatchingManager = nil;
   self.blocklistEventsManager = nil;
   self.redactedEventsManager = nil;

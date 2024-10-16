@@ -51,6 +51,7 @@ final class TestAppEvents: TestEventLogger,
   var capturedConfigureAppEventsStateStore: _AppEventsStatePersisting?
   var capturedConfigureEventDeactivationParameterProcessor: _AppEventsParameterProcessing?
   var capturedConfigureProtectedModeManager: _AppEventsParameterProcessing?
+  var capturedConfigureStdParamEnforcementManager: MACARuleMatching?
   var capturedConfigureMACARuleMatchingManager: MACARuleMatching?
   var capturedConfigureBlocklistEventsManager: _EventsProcessing?
   var capturedConfigureRedactedEventsManager: _EventsProcessing?
@@ -95,6 +96,7 @@ final class TestAppEvents: TestEventLogger,
     internalUtility: InternalUtilityProtocol,
     capiReporter: CAPIReporter,
     protectedModeManager: _AppEventsParameterProcessing,
+    stdParamEnforcementManager: MACARuleMatching,
     macaRuleMatchingManager: MACARuleMatching,
     blocklistEventsManager: _EventsProcessing,
     redactedEventsManager: _EventsProcessing,
@@ -122,6 +124,7 @@ final class TestAppEvents: TestEventLogger,
     capturedInternalUtility = internalUtility
     capturedCAPIReporter = capiReporter
     capturedConfigureProtectedModeManager = protectedModeManager
+    capturedConfigureStdParamEnforcementManager = stdParamEnforcementManager
     capturedConfigureMACARuleMatchingManager = macaRuleMatchingManager
     capturedConfigureBlocklistEventsManager = blocklistEventsManager
     capturedConfigureRedactedEventsManager = redactedEventsManager
