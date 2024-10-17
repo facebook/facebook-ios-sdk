@@ -46,6 +46,8 @@ NS_SWIFT_NAME(configure(settings:dataStore:graphRequestFactory:graphRequestConne
 
 - (void)loadDomainConfigurationWithCompletionBlock:(nullable FBSDKDomainConfigurationBlock)completionBlock;
 
+- (void)processInvalidDomainsIfNeeded:(NSSet<NSString *> *)domainSet;
+
 @end
 
 NS_ASSUME_NONNULL_END

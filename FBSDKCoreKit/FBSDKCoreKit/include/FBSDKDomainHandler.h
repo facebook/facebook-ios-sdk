@@ -66,6 +66,8 @@ NS_SWIFT_NAME(_DomainHandler)
 - (nullable NSString *)getATTScopeEndpointForGraphPath:(NSString *)graphPath;
 - (BOOL)isDomainHandlingEnabled;
 
+- (void)processInvalidDomainsIfNeeded:(NSSet<NSString *> *)domainSet;
+
 @end
 
 NS_ASSUME_NONNULL_END
