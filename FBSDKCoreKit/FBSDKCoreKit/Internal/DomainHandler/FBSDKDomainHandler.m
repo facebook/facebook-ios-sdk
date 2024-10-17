@@ -227,4 +227,9 @@ static NSString *const kVideoURLPrefix = @"graph-video";
   }
 }
 
+- (void)processInvalidDomainsIfNeeded:(NSSet<NSString *> *)domainSet
+{
+  [self.domainConfigurationProvider processInvalidDomainsIfNeeded:domainSet];
+}
+
 @end
