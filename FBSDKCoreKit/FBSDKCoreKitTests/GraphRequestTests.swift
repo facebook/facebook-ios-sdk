@@ -515,6 +515,66 @@ final class GraphRequestTests: XCTestCase {
     )
   }
 
+  func testGraphRequestIsForDomainReport() {
+    let graphRequestFactory = GraphRequestFactory()
+    guard let appID = settings.appID else {
+      XCTFail("Should have an app id")
+      return
+    }
+    let parameters = ["tracking_domains": [""]]
+    let domainReportRequest1 = graphRequestFactory.createGraphRequest(
+      withGraphPath: "\(appID)/domain_reports",
+      parameters: parameters,
+      tokenString: nil,
+      httpMethod: .post,
+      flags: [.skipClientToken, .disableErrorRecovery]
+    )
+    XCTAssertTrue(
+      GraphRequest.isForDomainReport(request: domainReportRequest1),
+      "Request is for reporting domains"
+    )
+
+    let domainReportRequest2 = GraphRequest(graphPath: "\(appID)/domain_reports", parameters: parameters, httpMethod: .post)
+    XCTAssertTrue(
+      GraphRequest.isForDomainReport(request: domainReportRequest2),
+      "Request is for reporting domains"
+    )
+
+    let failingRequest1 = GraphRequest(graphPath: appID, parameters: [:], httpMethod: .post)
+    XCTAssertFalse(
+      GraphRequest.isForDomainReport(request: failingRequest1),
+      "Request is not for reporting domains. The parameters are wrong"
+    )
+
+    let failingRequest2 = GraphRequest(graphPath: appID, parameters: parameters, httpMethod: .get)
+    XCTAssertFalse(
+      GraphRequest.isForDomainReport(request: failingRequest2),
+      "Request is not for reporting domains. The HTTP Method is wrong"
+    )
+
+    let failingRequest3 = GraphRequest(graphPath: "", parameters: parameters, httpMethod: .post)
+    XCTAssertFalse(
+      GraphRequest.isForDomainReport(request: failingRequest3),
+      "Request is not for reporting domains. The graph path is wrong"
+    )
+
+    let failingRequest4 = GraphRequest(graphPath: appID, parameters: ["fields": "test_field"], httpMethod: .get)
+    XCTAssertFalse(
+      GraphRequest.isForDomainReport(request: failingRequest4),
+      "Request is not for reporting domains. The parameters are wrong"
+    )
+
+    let failingRequest5 = GraphRequest(
+      graphPath: "\(appID)/domain_reports",
+      parameters: ["fields": "test_field"],
+      httpMethod: .post
+    )
+    XCTAssertFalse(
+      GraphRequest.isForDomainReport(request: failingRequest5),
+      "Request is not for reporting domains. The parameters are wrong"
+    )
+  }
+
   func testSerializeURL() throws {
     let baseURL = try InternalUtility.shared.facebookURL(
       withHostPrefix: prefix,
