@@ -372,8 +372,6 @@ private extension CoreKitConfigurator {
   }
 
   func configureDomainHandler() {
-    components.internalUtility.validateDomainConfiguration()
-
     _DomainHandler.sharedInstance().configure(
       domainConfigurationProvider: _DomainConfigurationManager.sharedInstance(),
       settings: components.settings,
@@ -382,6 +380,8 @@ private extension CoreKitConfigurator {
       graphRequestConnectionFactory: components.graphRequestConnectionFactory
     )
     _DomainConfiguration.setDefaultDomainInfo()
+
+    components.internalUtility.validateDomainConfiguration()
   }
 
   func configureGraphRequestQueue() {

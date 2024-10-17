@@ -19,6 +19,7 @@
 
 // TODO: timeout TBD
 #define DOMAIN_CONFIGURATION_MANAGER_CACHE_TIMEOUT (60 * 60)
+#define INVALID_DOMAIN_EXCEPTION_TIMEOUT 5.0
 
 @interface FBSDKDomainConfigurationManager ()
 
@@ -226,6 +227,41 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
   self.domainConfigurationErrorTimestamp = nil;
   
   [self.dataStore fb_removeObjectForKey:DOMAIN_CONFIGURATION_USER_DEFAULTS_KEY];
+}
+
+- (void)processInvalidDomainsIfNeeded:(NSSet<NSString *> *)domainSet {
+  if ([domainSet count] == 0) {
+    return;
+  }
+
+  NSString *message = @"We have pre-populated the tracking domain field for the FBSDK in the Privacy Manifest to help ensure that our services continue to function properly. We do not advise manually adding domains. Listing \"www.facebook.com\" or subdomains of \"facebook.com\" in the tracking domain field of a Privacy Manifest may break functionality.";
+
+  if ([domainSet containsObject:@"www.facebook.com"]) {
+    NSLog(@"%@%@", @"<Warning>: ", message);
+  }
+
+  NSData *jsonData = [FBSDKTypeUtility dataWithJSONObject:[domainSet allObjects] options:0 error:nil];
+  if (!jsonData) {
+    return;
+  }
+
+  NSString *domains = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+  id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:[NSString stringWithFormat:@"%@/domain_reports", self.settings.appID]
+                                                                                 parameters:@{@"tracking_domains" : domains ?: @""}
+                                                                                tokenString:nil
+                                                                                 HTTPMethod:FBSDKHTTPMethodPOST
+                                                                                      flags:FBSDKGraphRequestFlagNone
+                                                          useAlternativeDefaultDomainPrefix:NO];
+
+  [request startWithCompletion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+    if ([domainSet containsObject:@"facebook.com"] || [domainSet containsObject:@"ep2.facebook.com"]) {
+      dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(INVALID_DOMAIN_EXCEPTION_TIMEOUT * NSEC_PER_SEC)),
+        dispatch_get_main_queue(), ^{
+          NSString *errorMsg = [NSString stringWithFormat:@"%@%@", message, @" Developers can set \"Settings.shared.isDomainErrorEnabled\" to \"false\" in order to disable FBSDK Privacy Manifest related errors."];
+          @throw [NSException exceptionWithName:@"InvalidOperationException" reason:errorMsg userInfo:nil];
+        });
+    }
+  }];
 }
 
 #if DEBUG
