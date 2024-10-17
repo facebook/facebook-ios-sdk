@@ -321,7 +321,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
                                                                            batchParameters:parameters];
   if (@available(iOS 14.5, *)) {
     // Add request if it is for fetching the domain config or we have the domain config
-    if ([FBSDKGraphRequest isForFetchingDomainConfiguration:metadata.request] || [self.class didFetchDomainConfiguration]) {
+    if ([FBSDKGraphRequest isForFetchingDomainConfiguration:metadata.request] || [FBSDKGraphRequest isForDomainReport:metadata.request] || [self.class didFetchDomainConfiguration]) {
       [FBSDKTypeUtility array:self.requests addObject:metadata];
     } else {
       [[FBSDKGraphRequestQueue sharedInstance] enqueueRequestMetadata:metadata];

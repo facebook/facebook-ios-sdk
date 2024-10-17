@@ -35,6 +35,8 @@ static id<FBSDKGraphRequestConnectionFactory> class_graphRequestConnectionFactor
 @end
 
 static NSString *const kDomainConfigurationDomainInfoField = @"server_domain_infos";
+static NSString *const kDomainReportsField = @"domain_reports";
+static NSString *const kDomainReportsTrackingDomainsKey = @"tracking_domains";
 
 @implementation FBSDKGraphRequest
 
@@ -373,6 +375,18 @@ useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix
     return NO;
   }
   return YES;
+}
+
++ (BOOL)isForDomainReport:(id<FBSDKGraphRequest>)request
+{
+  NSString *expectedGraphPath = [NSString stringWithFormat:@"%@/%@", self.class.settings.appID, kDomainReportsField];
+  if ([request.graphPath isEqualToString:expectedGraphPath]
+      && [request.HTTPMethod isEqualToString:FBSDKHTTPMethodPOST]
+      && request.parameters
+      && [request.parameters objectForKey:kDomainReportsTrackingDomainsKey]) {
+    return YES;
+  }
+  return NO;
 }
 
 + (BOOL)isAttachment:(id)item
