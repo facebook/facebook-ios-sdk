@@ -48,6 +48,8 @@ useAlternativeDefaultDomainPrefix:(BOOL)useAlternativeDefaultDomainPrefix
 
 + (BOOL)isForFetchingDomainConfiguration:(id<FBSDKGraphRequest>)request 
 NS_SWIFT_NAME(isForFetchingDomainConfiguration(request:));
++ (BOOL)isForDomainReport:(id<FBSDKGraphRequest>)request
+NS_SWIFT_NAME(isForDomainReport(request:));
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl
                     params:(nullable NSDictionary<NSString *, id> *)params
