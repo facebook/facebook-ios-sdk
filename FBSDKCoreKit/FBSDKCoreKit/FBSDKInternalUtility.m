@@ -495,7 +495,7 @@ static NSMapTable *_transientObjects;
 
 - (void)validateDomainConfiguration
 {
-  if (![FBSDKAppEventsUtility.shared isDebugBuild]) {
+  if (![FBSDKAppEventsUtility.shared isDebugBuild] || !self.settings.isDomainErrorEnabled) {
     return;
   }
 
@@ -518,7 +518,7 @@ static NSMapTable *_transientObjects;
       NSDictionary *privacyInfo = [[NSDictionary alloc] initWithContentsOfURL:privacyInfoUrl];
       NSArray *trackingDomains = privacyInfo[@"NSPrivacyTrackingDomains"];
       for (NSString *domain in trackingDomains) {
-        if (self.settings.isDomainErrorEnabled && ([@"facebook.com" isEqualToString:domain] || [@"ep2.facebook.com" isEqualToString:domain])) {
+        if ([@"facebook.com" isEqualToString:domain] || [@"ep2.facebook.com" isEqualToString:domain]) {
           NSString *errorMsg = [NSString stringWithFormat:@"%@%@", message, @" Developers can set \"Settings.shared.isDomainErrorEnabled\" to \"false\" in order to disable FBSDK Privacy Manifest related errors."];
           @throw [NSException exceptionWithName:@"InvalidOperationException" reason:errorMsg userInfo:nil];
         } else if ([@"www.facebook.com" isEqualToString:domain]) {
