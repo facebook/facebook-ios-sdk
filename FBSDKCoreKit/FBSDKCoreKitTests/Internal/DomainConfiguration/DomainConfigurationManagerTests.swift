@@ -195,6 +195,59 @@ final class DomainConfigurationManagerTests: XCTestCase {
     )
   }
 
+  func testSucceedToProcessInvalidDomains() {
+    let connection = TestGraphRequestConnection(
+      shouldExecuteCompletion: true,
+      error: nil,
+      requestConnectionResult: sampleResult
+    )
+    connectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
+    domainConfigurationManager.configure(
+      settings: settings,
+      dataStore: dataStore,
+      graphRequestFactory: requestFactory,
+      graphRequestConnectionFactory: connectionFactory
+    )
+    let domainSet = Set(["facebook.com"])
+    domainConfigurationManager.processInvalidDomainsIfNeeded(domainSet)
+    XCTAssertEqual(
+      1,
+      requestFactory.capturedRequests.count,
+      "Should have only one request"
+    )
+    XCTAssertEqual(
+      1,
+      requestFactory.capturedRequests[0].startCallCount,
+      "Should have been called once"
+    )
+    XCTAssertNotNil(
+      requestFactory.capturedRequests[0].capturedCompletionHandler,
+      "Should have captured a valid completion handler"
+    )
+  }
+
+  func testFailedToProcessInvalidDomains() {
+    let connection = TestGraphRequestConnection(
+      shouldExecuteCompletion: true,
+      error: nil,
+      requestConnectionResult: sampleResult
+    )
+    connectionFactory = TestGraphRequestConnectionFactory(stubbedConnection: connection)
+    domainConfigurationManager.configure(
+      settings: settings,
+      dataStore: dataStore,
+      graphRequestFactory: requestFactory,
+      graphRequestConnectionFactory: connectionFactory
+    )
+    let domainSet: Set<String> = []
+    domainConfigurationManager.processInvalidDomainsIfNeeded(domainSet)
+    XCTAssertEqual(
+      0,
+      requestFactory.capturedRequests.count,
+      "Should have zero request"
+    )
+  }
+
   func testProcessLoadRequestWithErrorResponse() {
     domainConfigurationManager.processLoadRequestResponse(
       sampleResult,
