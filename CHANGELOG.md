@@ -14,6 +14,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 17.4.0
 
+### Updated
+- Updated domain configuration validation
+
 [2024-10-17](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.4.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.3.0...v17.4.0)
 
