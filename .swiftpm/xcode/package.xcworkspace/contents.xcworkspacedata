@@ -5,3 +5,16 @@
       location = "self:">
    </FileRef>
 </Workspace>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '1012927730340729',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v21.0'
+    });
+  };
+</script>
+<script async defer crossorigin="anonymous"
+  src="https://connect.facebook.net/en_US/sdk.js">
+</script>
