@@ -74,4 +74,15 @@ open class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this p
   ) {
     capturedEventName = eventName
   }
+
+  public func logEvent(
+    _ eventName: AppEvents.Name,
+    valueToSum: NSNumber?,
+    parameters: [AppEvents.ParameterName: Any]?,
+    accessToken: AccessToken?
+  ) {
+    capturedEventName = eventName
+    capturedValueToSum = valueToSum?.doubleValue
+    capturedParameters = parameters
+  }
 }

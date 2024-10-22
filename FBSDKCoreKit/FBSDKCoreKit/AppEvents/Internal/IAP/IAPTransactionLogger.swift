@@ -77,7 +77,7 @@ extension IAPTransactionLogger {
       if event.hasIntroductoryOffer {
         parameters[.hasFreeTrial] = event.hasFreeTrial ? "1" : "0"
         parameters[.trialPeriod] = durationOfSubscriptionPeriod(event.introductoryOfferSubscriptionPeriod)
-        parameters[.trialPrice] = event.introductoryOfferPrice?.doubleValue
+        parameters[.trialPrice] = event.introductoryOfferPrice?.currencyNumber
       }
     } else {
       parameters[.inAppPurchaseType] = IAPType.product.rawValue
@@ -106,7 +106,7 @@ extension IAPTransactionLogger {
     let parameters = getParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
-      valueToSum: event.amount.doubleValue,
+      valueToSum: event.amount,
       parameters: parameters
     )
   }
@@ -119,7 +119,7 @@ extension IAPTransactionLogger {
     let parameters = getParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
-      valueToSum: event.amount.doubleValue,
+      valueToSum: event.amount,
       parameters: parameters
     )
   }
@@ -128,20 +128,25 @@ extension IAPTransactionLogger {
     let parameters = getParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
-      valueToSum: event.amount.doubleValue,
+      valueToSum: event.amount,
       parameters: parameters
     )
   }
 
   private func logImplicitTransactionEvent(
     eventName: AppEvents.Name,
-    valueToSum: Double,
+    valueToSum: Decimal,
     parameters: [AppEvents.ParameterName: Any]
   ) {
     guard let dependencies = try? Self.getDependencies() else {
       return
     }
-    dependencies.eventLogger.logEvent(eventName, valueToSum: valueToSum, parameters: parameters)
+    dependencies.eventLogger.logEvent(
+      eventName,
+      valueToSum: valueToSum.currencyNumber,
+      parameters: parameters,
+      accessToken: nil
+    )
     if dependencies.eventLogger.flushBehavior != .explicitOnly {
       dependencies.eventLogger.flush(for: .eagerlyFlushingEvent)
     }
@@ -207,7 +212,17 @@ enum IAPType: String {
 // MARK: - Decimal
 
 extension Decimal {
-  var doubleValue: Double {
-    NSDecimalNumber(decimal: self).doubleValue
+  var currencyNumber: NSDecimalNumber {
+    var decimalNumber = NSDecimalNumber(decimal: self)
+    let behavior = NSDecimalNumberHandler(
+      roundingMode: .plain,
+      scale: 3,
+      raiseOnExactness: false,
+      raiseOnOverflow: false,
+      raiseOnUnderflow: false,
+      raiseOnDivideByZero: false
+    )
+    decimalNumber = decimalNumber.rounding(accordingToBehavior: behavior)
+    return decimalNumber
   }
 }
