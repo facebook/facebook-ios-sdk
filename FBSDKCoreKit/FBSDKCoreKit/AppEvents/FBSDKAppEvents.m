@@ -71,6 +71,9 @@ static NSString *const FBSDKAppEventsPushPayloadCampaignKey = @"campaign";
 static FBSDKAppEvents *_shared = nil;
 static NSString *g_overrideAppID = nil;
 static BOOL g_explicitEventsLoggedYet = NO;
+#if DEBUG
+static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
+#endif
 
 @interface FBSDKAppEvents ()
 
@@ -275,6 +278,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
         accessToken:(nullable FBSDKAccessToken *)accessToken
 {
   [self validateConfiguration];
+  [self checkForAutologgedPurchases];
 
   // A purchase event is just a regular logged event with a given event name
   // and treating the currency value as going into the parameters dictionary.
@@ -1543,6 +1547,18 @@ static BOOL g_explicitEventsLoggedYet = NO;
     }
   }
   [self applicationMovingFromActiveState];
+}
+
+- (void)checkForAutologgedPurchases
+{
+#if DEBUG
+  if ([self.settings isAutoLogAppEventsEnabled] && self.serverConfiguration.implicitPurchaseLoggingEnabled && !g_hasLoggedManualImplicitLoggingWarning) {
+    NSString *message = @"You are manually logging purchase events, but you also have auto-logging turned on. "
+    "If you are manually logging In-App Purchases, we recommend just choosing one set up to avoid duplicate logging";
+    NSLog(@"%@%@", @"<Warning>: ", message);
+    g_hasLoggedManualImplicitLoggingWarning = YES;
+  }
+#endif
 }
 
 #pragma mark - Configuration Validation
