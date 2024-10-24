@@ -46,6 +46,37 @@ extension IAPEventResolver: DependentAsType {
   }
 }
 
+extension IAPEventResolver {
+  func getInitiatedCheckoutEventFrom(event: IAPEvent) -> IAPEvent {
+    var eventName: AppEvents.Name = .initiatedCheckout
+    if event.isSubscription, isSubscriptionsEnabled {
+      eventName = .subscribeInitiatedCheckout
+    }
+    return IAPEvent(
+      eventName: eventName,
+      productID: event.productID,
+      productTitle: event.productTitle,
+      productDescription: event.productDescription,
+      amount: event.amount,
+      quantity: event.quantity,
+      currency: event.currency,
+      transactionID: nil,
+      originalTransactionID: nil,
+      transactionDate: nil,
+      originalTransactionDate: nil,
+      validationResult: nil,
+      isSubscription: event.isSubscription,
+      subscriptionPeriod: event.subscriptionPeriod,
+      isStartTrial: event.isStartTrial,
+      hasIntroductoryOffer: event.hasIntroductoryOffer,
+      hasFreeTrial: event.hasFreeTrial,
+      introductoryOfferSubscriptionPeriod: event.introductoryOfferSubscriptionPeriod,
+      introductoryOfferPrice: event.introductoryOfferPrice,
+      storeKitVersion: event.storeKitVersion
+    )
+  }
+}
+
 // MARK: - Store Kit 2
 
 @available(iOS 15.0, *)
