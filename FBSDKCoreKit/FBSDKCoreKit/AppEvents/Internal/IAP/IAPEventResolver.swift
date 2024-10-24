@@ -66,7 +66,21 @@ extension IAPEventResolver {
     return await resolveEventFor(iapTransaction: iapTransaction, eventName: eventName)
   }
 
-  private func isStartTrial(transaction: Transaction) -> Bool {
+  func resolveFailedEventFor(productID: String) async -> IAPEvent? {
+    guard let product = await getProductFor(productID: productID) else {
+      return nil
+    }
+    var eventName: AppEvents.Name = .purchaseFailed
+    if product.type == .autoRenewable, isSubscriptionsEnabled {
+      eventName = .subscribeFailed
+    }
+    return resolveEventFor(iapTransaction: nil, product: product, eventName: eventName)
+  }
+
+  private func isStartTrial(transaction: Transaction?) -> Bool {
+    guard let transaction else {
+      return false
+    }
     var isFreeTrial = false
     if #available(iOS 17.2, *) {
       isFreeTrial = transaction.offer?.paymentMode == .freeTrial
@@ -81,8 +95,8 @@ extension IAPEventResolver {
     return isFreeTrial ? .startTrial : .subscribe
   }
 
-  private func getProductFor(iapTransaction: IAPTransaction) async -> Product? {
-    guard let products = try? await Product.products(for: [iapTransaction.transaction.productID]),
+  private func getProductFor(productID: String) async -> Product? {
+    guard let products = try? await Product.products(for: [productID]),
           let product = products.first else {
       return nil
     }
@@ -90,33 +104,49 @@ extension IAPEventResolver {
   }
 
   private func resolveEventFor(iapTransaction: IAPTransaction, eventName: AppEvents.Name) async -> IAPEvent? {
-    guard let product = await getProductFor(iapTransaction: iapTransaction) else {
+    guard let product = await getProductFor(productID: iapTransaction.transaction.productID) else {
       return nil
     }
-    let transaction = iapTransaction.transaction
-    var currency = transaction.currencyCode
+    return resolveEventFor(iapTransaction: iapTransaction, product: product, eventName: eventName)
+  }
+
+  private func resolveEventFor(
+    iapTransaction: IAPTransaction?,
+    product: Product,
+    eventName: AppEvents.Name
+  ) -> IAPEvent? {
+    let transaction = iapTransaction?.transaction
+    var currency = transaction?.currencyCode
     if #available(iOS 16.0, *) {
-      currency = transaction.currency?.identifier
+      currency = transaction?.currency?.identifier
     }
     let introOffer = product.subscription?.introductoryOffer
     let hasIntroductoryOffer = introOffer != nil
     let hasFreeTrial = introOffer?.paymentMode == .freeTrial
+    var transactionID: String?
+    if let id = iapTransaction?.transaction.id {
+      transactionID = String(id)
+    }
+    var originalTransactionID: String?
+    if let originalID = iapTransaction?.transaction.originalID {
+      originalTransactionID = String(originalID)
+    }
     return IAPEvent(
       eventName: eventName,
-      productID: transaction.productID,
+      productID: transaction?.productID ?? product.id,
       productTitle: product.displayName,
       productDescription: product.description,
-      amount: transaction.price ?? 0.0,
-      quantity: transaction.purchasedQuantity,
-      currency: currency,
-      transactionID: String(iapTransaction.transaction.id),
-      originalTransactionID: String(iapTransaction.transaction.originalID),
-      transactionDate: transaction.purchaseDate,
-      originalTransactionDate: transaction.originalPurchaseDate,
-      validationResult: iapTransaction.validationResult,
-      isSubscription: iapTransaction.transaction.isSubscription,
+      amount: transaction?.price ?? product.price,
+      quantity: transaction?.purchasedQuantity ?? 0,
+      currency: currency ?? product.priceFormatStyle.currencyCode,
+      transactionID: transactionID,
+      originalTransactionID: originalTransactionID,
+      transactionDate: transaction?.purchaseDate,
+      originalTransactionDate: transaction?.originalPurchaseDate,
+      validationResult: iapTransaction?.validationResult,
+      isSubscription: iapTransaction?.transaction.isSubscription ?? (product.type == .autoRenewable),
       subscriptionPeriod: product.subscription?.subscriptionPeriod.iapSubscriptionPeriod,
-      isStartTrial: isStartTrial(transaction: iapTransaction.transaction),
+      isStartTrial: isStartTrial(transaction: iapTransaction?.transaction),
       hasIntroductoryOffer: hasIntroductoryOffer,
       hasFreeTrial: hasFreeTrial,
       introductoryOfferSubscriptionPeriod: introOffer?.period.iapSubscriptionPeriod,

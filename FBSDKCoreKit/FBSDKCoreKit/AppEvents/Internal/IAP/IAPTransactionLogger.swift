@@ -156,7 +156,8 @@ extension IAPTransactionLogger {
 // MARK: - Store Kit 2
 
 @available(iOS 15.0, *)
-extension IAPTransactionLogger {
+extension IAPTransactionLogger: IAPFailedTransactionLogging {
+
   func logNewTransaction(_ transaction: IAPTransaction) async {
     guard let event = await IAPEventResolver().resolveNewEventFor(iapTransaction: transaction) else {
       return
@@ -169,6 +170,19 @@ extension IAPTransactionLogger {
       return
     }
     logRestoredEvent(event)
+  }
+
+  func logFailedStoreKit2Purchase(productID: String) {
+    Task {
+      await logFailedStoreKit2PurchaseAsync(productID: productID)
+    }
+  }
+
+  private func logFailedStoreKit2PurchaseAsync(productID: String) async {
+    guard let event = await IAPEventResolver().resolveFailedEventFor(productID: productID) else {
+      return
+    }
+    logInitiatedCheckoutOrFailedEvent(event)
   }
 }
 

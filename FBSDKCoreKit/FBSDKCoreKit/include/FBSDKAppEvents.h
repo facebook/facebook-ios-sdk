@@ -280,6 +280,21 @@ NS_SWIFT_NAME(AppEvents)
   NS_SWIFT_NAME(logPurchase(amount:currency:parameters:accessToken:));
 // UNCRUSTIFY_FORMAT_ON
 
+/**
+ Call this API to log when an In-App Purchase fails on Store Kit 2 even if you have auto-logging turned on. A  purchase
+ is considered failed when the call to `product.purchase()` throws or the `Product.PurchaseResult`
+ is not `success` or `pending`
+ 
+ NOTE:  This API is only available in iOS 15.0+ because it is intended to be used with StoreKit 2, which is not available
+ until iOS 15.0
+ 
+ @param productID The product identifier of the product that the user failed to purchase. Can be
+ retrieved using `product.id`
+ */
+// UNCRUSTIFY_FORMAT_OFF
+-(void)logFailedStoreKit2Purchase:(NSString *)productID API_AVAILABLE(ios(15.0));
+// UNCRUSTIFY_FORMAT_ON
+
 /*
  * Push Notifications Logging
  */

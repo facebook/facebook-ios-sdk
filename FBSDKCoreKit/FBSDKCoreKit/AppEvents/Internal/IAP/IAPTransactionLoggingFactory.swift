@@ -8,7 +8,12 @@
 
 import Foundation
 
-struct IAPTransactionLoggingFactory: IAPTransactionLoggingCreating {
+final class IAPTransactionLoggingFactory: IAPTransactionLoggingCreating, IAPFailedTransactionLoggingCreating {
+
+  @available(iOS 15.0, *)
+  func createIAPFailedTransactionLogging() -> any IAPFailedTransactionLogging {
+    return IAPTransactionLogger() // swiftlint:disable:this implicit_return
+  }
 
   func createIAPTransactionLogging() -> any IAPTransactionLogging {
     return IAPTransactionLogger() // swiftlint:disable:this implicit_return

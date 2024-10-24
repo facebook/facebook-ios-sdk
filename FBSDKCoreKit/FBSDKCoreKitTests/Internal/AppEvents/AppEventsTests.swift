@@ -189,7 +189,8 @@ final class AppEventsTests: XCTestCase {
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
       sensitiveParamsManager: sensitiveParamsManager,
-      transactionObserver: transactionObserver
+      transactionObserver: transactionObserver,
+      failedTransactionLoggingFactory: IAPTransactionLoggingFactory()
     )
 
     appEvents.configureNonTVComponents(
