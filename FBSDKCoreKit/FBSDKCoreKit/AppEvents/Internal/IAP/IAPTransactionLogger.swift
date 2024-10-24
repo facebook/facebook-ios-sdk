@@ -13,7 +13,8 @@ final class IAPTransactionLogger: NSObject, IAPTransactionLogging {
 
   static var configuredDependencies: TypeDependencies?
   static var defaultDependencies: TypeDependencies? = .init(
-    eventLogger: AppEvents.shared
+    eventLogger: AppEvents.shared,
+    appStoreReceiptProvider: Bundle(for: ApplicationDelegate.self)
   )
   var resolver: IAPEventResolver?
   let dateFormatter = DateFormatter()
@@ -30,6 +31,7 @@ final class IAPTransactionLogger: NSObject, IAPTransactionLogging {
 extension IAPTransactionLogger: DependentAsType {
   struct TypeDependencies {
     var eventLogger: EventLogging
+    var appStoreReceiptProvider: _AppStoreReceiptProviding
   }
 }
 
@@ -50,6 +52,17 @@ extension IAPTransactionLogger {
     }
     let endIndex = input.index(input.startIndex, offsetBy: maxParameterValueLength)
     return String(input[..<endIndex])
+  }
+
+  private func fetchDeviceReceipt() -> String? {
+    guard let dependencies = try? Self.getDependencies() else {
+      return nil
+    }
+    guard let receiptURL = dependencies.appStoreReceiptProvider.appStoreReceiptURL,
+          let receipt = try? Data(contentsOf: receiptURL) else {
+      return nil
+    }
+    return receipt.base64EncodedString()
   }
 
   private func getParameters(for event: IAPEvent) -> [AppEvents.ParameterName: Any] {
@@ -84,6 +97,9 @@ extension IAPTransactionLogger {
     }
     if event.storeKitVersion == .version2 {
       parameters[.validationResult] = event.validationResult?.rawValue ?? IAPValidationResult.unverified.rawValue
+    }
+    if event.shouldAppendReceipt, let receipt = fetchDeviceReceipt() {
+      parameters[.iapReceiptData] = receipt
     }
     parameters[.iapClientLibraryVersion] = event.storeKitVersion.rawValue
     parameters[.iapsdkLibraryVersions] = IAPConstants.IAPSDKLibraryVersions

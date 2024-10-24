@@ -33,7 +33,8 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
     eventLogger = TestEventLogger()
     iapSKProductRequestFactory = TestIAPSKProductsRequestFactory()
     IAPTransactionLogger.configuredDependencies = .init(
-      eventLogger: eventLogger
+      eventLogger: eventLogger,
+      appStoreReceiptProvider: Bundle.main
     )
     IAPEventResolver.configuredDependencies = .init(
       gateKeeperManager: TestGateKeeperManager.self,
