@@ -13,11 +13,13 @@
 #define FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY @"advertiser_id_collection_enabled"
 #define FBSDK_APP_EVENTS_CONFIGURATION_EVENT_COLLECTION_ENABLED_KEY @"event_collection_enabled"
 #define FBSDK_APP_EVENTS_CONFIGURATION_IAP_OBSERVATION_TIME_KEY @"ios_iap_observation_time"
+#define FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_DEDUP_WINDOW_MILLIS_KEY @"iap_manual_and_auto_log_dedup_window_millis"
 #define FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_DEDUP_KEYS_KEY @"iap_manual_and_auto_log_dedup_keys"
 #define FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_PROD_DEDUP_KEYS_KEY @"prod_keys"
 #define FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_TEST_DEDUP_KEYS_KEY @"test_keys"
 
 const UInt64 kDefaultIAPObservationTime = 3600000000000;
+const UInt64 kDefaultIAPManualAndAutoLogDedupWindow = 60000;
 
 @implementation FBSDKAppEventsConfiguration
 
@@ -37,6 +39,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
       NSNumber *advertiserIDCollectionEnabled = [FBSDKTypeUtility numberValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY]] ?: @(YES);
       NSNumber *eventCollectionEnabled = [FBSDKTypeUtility numberValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_EVENT_COLLECTION_ENABLED_KEY]] ?: @(NO);
       NSNumber *iapObservationTime = [FBSDKTypeUtility numberValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_IAP_OBSERVATION_TIME_KEY]] ?: @(kDefaultIAPObservationTime);
+      NSNumber *iapManualAndAutoLogDedupWindow = [FBSDKTypeUtility numberValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_DEDUP_WINDOW_MILLIS_KEY]] ?: @(kDefaultIAPManualAndAutoLogDedupWindow);
       NSArray *iapManualAndAutologLogDedupKeysResponse = [FBSDKTypeUtility arrayValue:configurations[FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_DEDUP_KEYS_KEY]];
       if (iapManualAndAutologLogDedupKeysResponse == nil) {
         _iapProdDedupConfiguration = [FBSDKAppEventsConfiguration defaultProdIAPDedupConfiguration];
@@ -48,6 +51,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
       _advertiserIDCollectionEnabled = advertiserIDCollectionEnabled.boolValue;
       _eventCollectionEnabled = eventCollectionEnabled.boolValue;
       _iapObservationTime = iapObservationTime.unsignedLongLongValue;
+      _iapManualAndAutoLogDedupWindow = iapManualAndAutoLogDedupWindow.unsignedLongLongValue;
     } @catch (NSException *exception) {
       return FBSDKAppEventsConfiguration.defaultConfiguration;
     }
@@ -59,6 +63,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
            advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
                   eventCollectionEnabled:(BOOL)eventCollectionEnabled
                       iapObservationTime:(UInt64)iapObservationTime
+                 iapManualAndAutoLogDedupWindow:(UInt64)iapManualAndAutoLogDedupWindow
                    iapProdDedupConfiguration:(NSDictionary<NSString *, NSArray<NSString *>*> *)iapProdDedupConfiguration
                iapTestDedupConfiguration:(NSDictionary<NSString *, NSArray<NSString *>*> *)iapTestDedupConfiguration
 {
@@ -67,6 +72,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
     _advertiserIDCollectionEnabled = advertiserIDCollectionEnabled;
     _eventCollectionEnabled = eventCollectionEnabled;
     _iapObservationTime = iapObservationTime;
+    _iapManualAndAutoLogDedupWindow = iapManualAndAutoLogDedupWindow;
     _iapProdDedupConfiguration = [[NSDictionary alloc] initWithDictionary:iapProdDedupConfiguration];
     _iapTestDedupConfiguration = [[NSDictionary alloc] initWithDictionary:iapTestDedupConfiguration];
   }
@@ -79,6 +85,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
                                          advertiserIDCollectionEnabled:YES
                                                 eventCollectionEnabled:NO
                                                     iapObservationTime:kDefaultIAPObservationTime
+                                               iapManualAndAutoLogDedupWindow:kDefaultIAPManualAndAutoLogDedupWindow
                                              iapProdDedupConfiguration:[FBSDKAppEventsConfiguration defaultProdIAPDedupConfiguration]
                                              iapTestDedupConfiguration:[FBSDKAppEventsConfiguration defaultTestIAPDedupConfiguration]];
   return config;
@@ -162,6 +169,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
   BOOL advertisingIDCollectionEnabled = [decoder decodeBoolForKey:FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY];
   BOOL eventCollectionEnabled = [decoder decodeBoolForKey:FBSDK_APP_EVENTS_CONFIGURATION_EVENT_COLLECTION_ENABLED_KEY];
   NSNumber *iapObservationTime = [decoder decodeObjectOfClass:NSNumber.class forKey:FBSDK_APP_EVENTS_CONFIGURATION_IAP_OBSERVATION_TIME_KEY];
+  NSNumber *iapManualAndAutoLogDedupWindow = [decoder decodeObjectOfClass:NSNumber.class forKey:FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_DEDUP_WINDOW_MILLIS_KEY];
   NSSet<Class> *classes = [[NSSet alloc] initWithObjects:
                            NSDictionary.class,
                            NSArray.class,
@@ -173,6 +181,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
                                          advertiserIDCollectionEnabled:advertisingIDCollectionEnabled
                                                 eventCollectionEnabled:eventCollectionEnabled
                                                     iapObservationTime:iapObservationTime.unsignedLongLongValue
+                                               iapManualAndAutoLogDedupWindow:iapManualAndAutoLogDedupWindow.unsignedLongLongValue
                                              iapProdDedupConfiguration:iapProdDedupConfig
                                              iapTestDedupConfiguration:iapTestDedupConfig];
 }
@@ -183,6 +192,7 @@ const UInt64 kDefaultIAPObservationTime = 3600000000000;
   [encoder encodeBool:_advertiserIDCollectionEnabled forKey:FBSDK_APP_EVENTS_CONFIGURATION_ADVERTISER_ID_TRACKING_ENABLED_KEY];
   [encoder encodeBool:_eventCollectionEnabled forKey:FBSDK_APP_EVENTS_CONFIGURATION_EVENT_COLLECTION_ENABLED_KEY];
   [encoder encodeObject:[NSNumber numberWithUnsignedLongLong:_iapObservationTime] forKey:FBSDK_APP_EVENTS_CONFIGURATION_IAP_OBSERVATION_TIME_KEY];
+  [encoder encodeObject:[NSNumber numberWithUnsignedLongLong:_iapManualAndAutoLogDedupWindow] forKey:FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_DEDUP_WINDOW_MILLIS_KEY];
   [encoder encodeObject:_iapProdDedupConfiguration forKey:FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_PROD_DEDUP_KEYS_KEY];
   [encoder encodeObject:_iapTestDedupConfiguration forKey:FBSDK_APP_EVENTS_CONFIGURATION_IAP_MANUAL_AND_AUTO_LOG_TEST_DEDUP_KEYS_KEY];
 }

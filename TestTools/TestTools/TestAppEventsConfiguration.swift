@@ -17,6 +17,7 @@ public final class TestAppEventsConfiguration: NSObject, _AppEventsConfiguration
   public var advertiserIDCollectionEnabled = false
   public var eventCollectionEnabled = false
   public var iapObservationTime: UInt64 = 3600000000000
+  public var iapManualAndAutoLogDedupWindow: UInt64 = 60000
   public var iapProdDedupConfiguration: [String: [String]] = [:]
   public var iapTestDedupConfiguration: [String: [String]] = [:]
 
@@ -25,6 +26,7 @@ public final class TestAppEventsConfiguration: NSObject, _AppEventsConfiguration
     advertiserIDCollectionEnabled: Bool = false,
     eventCollectionEnabled: Bool = false,
     iapObservationTime: UInt64 = 3600000000000,
+    iapManualAndAutoLogDedupWindow: UInt64 = 60000,
     iapProdDedupConfiguration: [String: [String]] = [:],
     iapTestDedupConfiguration: [String: [String]] = [:]
   ) {
@@ -32,6 +34,7 @@ public final class TestAppEventsConfiguration: NSObject, _AppEventsConfiguration
     self.advertiserIDCollectionEnabled = advertiserIDCollectionEnabled
     self.eventCollectionEnabled = eventCollectionEnabled
     self.iapObservationTime = iapObservationTime
+    self.iapManualAndAutoLogDedupWindow = iapManualAndAutoLogDedupWindow
     self.iapProdDedupConfiguration = iapProdDedupConfiguration
     self.iapTestDedupConfiguration = iapTestDedupConfiguration
   }
