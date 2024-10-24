@@ -114,6 +114,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
 @property (nullable, nonatomic) id<FBSDKInternalUtility> internalUtility;
 @property (nullable, nonatomic) id<FBSDKCAPIReporter> capiReporter;
 @property (nullable, nonatomic) id<FBSDKTransactionObserving> transactionObserver;
+@property (nullable, nonatomic) id<FBSDKIAPFailedTransactionLoggingCreating> failedTransactionLoggingFactory;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
@@ -259,6 +260,13 @@ static BOOL g_explicitEventsLoggedYet = NO;
            currency:currency
          parameters:parameters
         accessToken:nil];
+}
+
+-(void)logFailedStoreKit2Purchase:(NSString *)productID
+{
+  if (@available(iOS 15.0, *)) {
+    [[self.failedTransactionLoggingFactory createIAPFailedTransactionLogging] logFailedStoreKit2Purchase:productID];
+  }
 }
 
 - (void)logPurchase:(double)purchaseAmount
@@ -652,6 +660,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
                     redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
                    sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
                       transactionObserver:(nonnull id<FBSDKTransactionObserving>)transactionObserver
+          failedTransactionLoggingFactory:(nonnull id<FBSDKIAPFailedTransactionLoggingCreating>)failedTransactionLoggingFactory
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -681,6 +690,7 @@ static BOOL g_explicitEventsLoggedYet = NO;
   self.redactedEventsManager = redactedEventsManager;
   self.sensitiveParamsManager = sensitiveParamsManager;
   self.transactionObserver = transactionObserver;
+  self.failedTransactionLoggingFactory = failedTransactionLoggingFactory;
  
   NSString *appID = self.appID;
   if (appID) {
