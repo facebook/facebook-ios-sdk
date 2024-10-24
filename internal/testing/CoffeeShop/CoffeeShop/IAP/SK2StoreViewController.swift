@@ -38,6 +38,7 @@ class SK2StoreViewController: UIViewController {
 @available(iOS 15.0, *)
 extension SK2StoreViewController: UITableViewDelegate {
   private func handleFailedPurchase(product: Product) {
+    AppEvents.shared.logFailedStoreKit2Purchase(product.id)
     let message = "Failed to purchase the \(product.displayName)"
     alert(with: "Purchase Failed", message: message)
   }
