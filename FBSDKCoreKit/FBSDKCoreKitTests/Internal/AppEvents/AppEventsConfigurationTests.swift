@@ -56,6 +56,15 @@ final class AppEventsConfigurationTests: XCTestCase {
     XCTAssertEqual(configuration.iapObservationTime, 1800000000000)
   }
 
+  func testCreatingWithDefaultIAPDedupWindow() {
+    XCTAssertEqual(configuration.iapManualAndAutoLogDedupWindow, 60000)
+  }
+
+  func testCreatingWithKnownIAPDedupWindow() {
+    configuration = SampleAppEventsConfigurations.create(iapManualAndAutoLogDedupWindow: 30000)
+    XCTAssertEqual(configuration.iapManualAndAutoLogDedupWindow, 30000)
+  }
+
   func testCreatingWithDefaultIAPProdDedupConfiguration() {
     let expectedConfig = [
       "fb_content_id": ["fb_content_id"],
@@ -226,6 +235,11 @@ final class AppEventsConfigurationTests: XCTestCase {
       .isCodable
     )
     XCTAssertEqual(
+      configuration.iapManualAndAutoLogDedupWindow,
+      decodedObject.iapManualAndAutoLogDedupWindow,
+      .isCodable
+    )
+    XCTAssertEqual(
       configuration.iapProdDedupConfiguration,
       decodedObject.iapProdDedupConfiguration,
       .isCodable
@@ -247,7 +261,10 @@ extension _AppEventsConfiguration {
       return advertiserIDCollectionEnabled == other.advertiserIDCollectionEnabled &&
         eventCollectionEnabled == other.eventCollectionEnabled &&
         defaultATEStatus == other.defaultATEStatus &&
-        iapObservationTime == other.iapObservationTime
+        iapObservationTime == other.iapObservationTime &&
+        iapManualAndAutoLogDedupWindow == other.iapManualAndAutoLogDedupWindow &&
+        iapProdDedupConfiguration == other.iapProdDedupConfiguration &&
+        iapTestDedupConfiguration == other.iapTestDedupConfiguration
     } else {
       return super.isEqual(object)
     }

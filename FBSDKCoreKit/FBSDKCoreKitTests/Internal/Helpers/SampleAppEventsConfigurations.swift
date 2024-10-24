@@ -65,6 +65,17 @@ final class SampleAppEventsConfigurations: NSObject {
   }
 
   static func create(
+    iapManualAndAutoLogDedupWindow: UInt64
+  ) -> _AppEventsConfiguration {
+    create(
+      defaultATEStatus: self.default.defaultATEStatus,
+      advertiserIDCollectionEnabled: self.default.advertiserIDCollectionEnabled,
+      eventCollectionEnabled: self.default.eventCollectionEnabled,
+      iapManualAndAutoLogDedupWindow: iapManualAndAutoLogDedupWindow
+    )
+  }
+
+  static func create(
     iapProdDedupConfiguration: [String: [String]]
   ) -> _AppEventsConfiguration {
     create(
@@ -91,6 +102,7 @@ final class SampleAppEventsConfigurations: NSObject {
     advertiserIDCollectionEnabled: Bool,
     eventCollectionEnabled: Bool,
     iapObservationTime: UInt64 = 3600000000000,
+    iapManualAndAutoLogDedupWindow: UInt64 = 60000,
     iapProdDedupConfiguration: [String: [String]] = [String: [String]](),
     iapTestDedupConfiguration: [String: [String]] = [String: [String]]()
   ) -> _AppEventsConfiguration {
@@ -99,6 +111,7 @@ final class SampleAppEventsConfigurations: NSObject {
       advertiserIDCollectionEnabled: advertiserIDCollectionEnabled,
       eventCollectionEnabled: eventCollectionEnabled,
       iapObservationTime: iapObservationTime,
+      iapManualAndAutoLogDedupWindow: iapManualAndAutoLogDedupWindow,
       iapProdDedupConfiguration: iapProdDedupConfiguration,
       iapTestDedupConfiguration: iapTestDedupConfiguration
     )
