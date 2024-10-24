@@ -26,6 +26,8 @@ NS_SWIFT_NAME(_AppEventsConfiguration)
 @property (nonatomic, readonly, assign) BOOL advertiserIDCollectionEnabled;
 @property (nonatomic, readonly, assign) BOOL eventCollectionEnabled;
 @property (nonatomic, readonly, assign) UInt64 iapObservationTime;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, NSArray<NSString *>*> * iapProdDedupConfiguration;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, NSArray<NSString *>*> * iapTestDedupConfiguration;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

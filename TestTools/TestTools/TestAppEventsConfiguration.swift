@@ -17,17 +17,23 @@ public final class TestAppEventsConfiguration: NSObject, _AppEventsConfiguration
   public var advertiserIDCollectionEnabled = false
   public var eventCollectionEnabled = false
   public var iapObservationTime: UInt64 = 3600000000000
+  public var iapProdDedupConfiguration: [String: [String]] = [:]
+  public var iapTestDedupConfiguration: [String: [String]] = [:]
 
   public init(
     defaultATEStatus: AdvertisingTrackingStatus = .unspecified,
     advertiserIDCollectionEnabled: Bool = false,
     eventCollectionEnabled: Bool = false,
-    iapObservationTime: UInt64 = 3600000000000
+    iapObservationTime: UInt64 = 3600000000000,
+    iapProdDedupConfiguration: [String: [String]] = [:],
+    iapTestDedupConfiguration: [String: [String]] = [:]
   ) {
     self.defaultATEStatus = defaultATEStatus
     self.advertiserIDCollectionEnabled = advertiserIDCollectionEnabled
     self.eventCollectionEnabled = eventCollectionEnabled
     self.iapObservationTime = iapObservationTime
+    self.iapProdDedupConfiguration = iapProdDedupConfiguration
+    self.iapTestDedupConfiguration = iapTestDedupConfiguration
   }
 
   public required init(json dict: [String: Any]?) {}
