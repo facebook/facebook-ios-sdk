@@ -29,7 +29,8 @@ final class IAPTransactionCacheTests: XCTestCase {
   func testCachedTransactionCodable() {
     let cachedTransaction = IAPTransactionCache.IAPCachedTransaction(
       transactionID: "1",
-      eventName: AppEvents.Name.purchased.rawValue
+      eventName: AppEvents.Name.purchased.rawValue,
+      cachedDate: Date()
     )
     guard let encoded = try? JSONEncoder().encode(cachedTransaction) else {
       XCTFail("Failed to encode cachedTransaction")
@@ -66,7 +67,9 @@ final class IAPTransactionCacheTests: XCTestCase {
   }
 
   func testAddTransaction() {
+    let now1 = Date()
     IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
+    let now2 = Date()
     IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
     IAPTransactionCache.shared.addTransaction(transactionID: "1", eventName: AppEvents.Name.purchaseRestored)
     IAPTransactionCache.shared.addTransaction(transactionID: "2", eventName: AppEvents.Name.purchased)
@@ -79,9 +82,16 @@ final class IAPTransactionCacheTests: XCTestCase {
     XCTAssertEqual(persistedTransactions.count, 3)
     let cachedTransaction = IAPTransactionCache.IAPCachedTransaction(
       transactionID: "1",
-      eventName: AppEvents.Name.purchased.rawValue
+      eventName: AppEvents.Name.purchased.rawValue,
+      cachedDate: Date()
     )
     XCTAssertTrue(persistedTransactions.contains(cachedTransaction))
+    guard let oldestCachedTransaction = IAPTransactionCache.shared.oldestCachedTransactionForTests else {
+      XCTFail("oldestCachedTransaction should be set")
+      return
+    }
+    XCTAssertTrue(oldestCachedTransaction.cachedDate > now1)
+    XCTAssertTrue(oldestCachedTransaction.cachedDate < now2)
   }
 
   func testRemoveTransaction() {
@@ -120,5 +130,35 @@ final class IAPTransactionCacheTests: XCTestCase {
     IAPTransactionCache.shared.removeTransaction(transactionID: "1", eventName: AppEvents.Name.purchased)
     XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1", eventName: AppEvents.Name.purchased))
     XCTAssertFalse(IAPTransactionCache.shared.contains(transactionID: "1"))
+  }
+
+  func testTrim() {
+    let calendar = Calendar.current
+    guard let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: Date()) else {
+      return
+    }
+    let oldPurchaseTransaction = IAPTransactionCache.IAPCachedTransaction(
+      transactionID: "1",
+      eventName: AppEvents.Name.purchased.rawValue,
+      cachedDate: thirtyDaysAgo
+    )
+    let oldSubscriptionTransaction = IAPTransactionCache.IAPCachedTransaction(
+      transactionID: "2",
+      eventName: AppEvents.Name.subscribe.rawValue,
+      cachedDate: thirtyDaysAgo
+    )
+    let newPurchaseTransaction = IAPTransactionCache.IAPCachedTransaction(
+      transactionID: "3",
+      eventName: AppEvents.Name.purchased.rawValue,
+      cachedDate: Date()
+    )
+    IAPTransactionCache.shared.addPersistedTransaction(transaction: oldPurchaseTransaction)
+    IAPTransactionCache.shared.addPersistedTransaction(transaction: oldSubscriptionTransaction)
+    IAPTransactionCache.shared.addPersistedTransaction(transaction: newPurchaseTransaction)
+    XCTAssertEqual(IAPTransactionCache.shared.getPersistedTransactions().count, 3)
+    IAPTransactionCache.shared.trimIfNeeded()
+    XCTAssertEqual(IAPTransactionCache.shared.getPersistedTransactions().count, 2)
+    XCTAssertFalse(IAPTransactionCache.shared.getLoggedTransactions().contains(oldPurchaseTransaction))
+    XCTAssertEqual(IAPTransactionCache.shared.oldestCachedTransactionForTests, newPurchaseTransaction)
   }
 }

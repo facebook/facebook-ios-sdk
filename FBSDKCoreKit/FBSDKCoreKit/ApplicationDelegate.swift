@@ -395,6 +395,7 @@ public final class ApplicationDelegate: NSObject {
     applicationObservers.allObjects.forEach { observer in
       observer.applicationDidEnterBackground?(notification.object as? UIApplication)
     }
+    IAPTransactionCache.shared.trimIfNeeded()
   }
 
   func applicationDidBecomeActive(_ notification: Notification?) {
