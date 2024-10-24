@@ -946,6 +946,66 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.iapClientLibraryVersion] as? String, IAPStoreKitVersion.version2.rawValue)
     XCTAssertEqual(capturedParameters[.iapsdkLibraryVersions] as? String, IAPConstants.IAPSDKLibraryVersions)
   }
+
+  func testLogFailedPurchaseWithStoreKit2() async {
+    let productID = Self.ProductIdentifiers.nonConsumableProduct1.rawValue
+    guard let products = try? await Product.products(for: [productID]),
+          let product = products.first else {
+      return
+    }
+    iapLogger.logFailedStoreKit2Purchase(productID: productID)
+    let predicate = NSPredicate { _, _ -> Bool in
+      guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      return self.eventLogger.capturedEventName == .purchaseFailed &&
+        self.eventLogger.capturedValueToSum == 0.99 &&
+        capturedParameters[.contentID] as? String == product.id &&
+        capturedParameters[.numItems] as? Int == 0 &&
+        (capturedParameters[.transactionDate] as? String)?.isEmpty == true &&
+        (capturedParameters[.productTitle] as? String)?.isEmpty == true &&
+        (capturedParameters[.description] as? String)?.isEmpty == true &&
+        capturedParameters[.currency] as? String == product.priceFormatStyle.currencyCode &&
+        capturedParameters[.transactionID] == nil &&
+        capturedParameters[.implicitlyLoggedPurchase] as? String == "1" &&
+        capturedParameters[.inAppPurchaseType] as? String == "inapp" &&
+        capturedParameters[.subscriptionPeriod] == nil &&
+        capturedParameters[.iapClientLibraryVersion] as? String == IAPStoreKitVersion.version2.rawValue &&
+        capturedParameters[.iapsdkLibraryVersions] as? String == IAPConstants.IAPSDKLibraryVersions
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    await fulfillment(of: [expectation], timeout: 20.0)
+  }
+
+  func testLogFailedSubscriptionWithStoreKit2() async {
+    let productID = Self.ProductIdentifiers.autoRenewingSubscription1.rawValue
+    guard let products = try? await Product.products(for: [productID]),
+          let product = products.first else {
+      return
+    }
+    iapLogger.logFailedStoreKit2Purchase(productID: productID)
+    let predicate = NSPredicate { _, _ -> Bool in
+      guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      return self.eventLogger.capturedEventName == .subscribeFailed &&
+        self.eventLogger.capturedValueToSum == 2.0 &&
+        capturedParameters[.contentID] as? String == product.id &&
+        capturedParameters[.numItems] as? Int == 0 &&
+        (capturedParameters[.transactionDate] as? String)?.isEmpty == true &&
+        (capturedParameters[.productTitle] as? String)?.isEmpty == true &&
+        (capturedParameters[.description] as? String)?.isEmpty == true &&
+        capturedParameters[.currency] as? String == product.priceFormatStyle.currencyCode &&
+        capturedParameters[.transactionID] == nil &&
+        capturedParameters[.implicitlyLoggedPurchase] as? String == "1" &&
+        capturedParameters[.inAppPurchaseType] as? String == "subs" &&
+        capturedParameters[.subscriptionPeriod] as? String == "P1Y" &&
+        capturedParameters[.iapClientLibraryVersion] as? String == IAPStoreKitVersion.version2.rawValue &&
+        capturedParameters[.iapsdkLibraryVersions] as? String == IAPConstants.IAPSDKLibraryVersions
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    await fulfillment(of: [expectation], timeout: 20.0)
+  }
 }
 
 // MARK: - Store Kit 1

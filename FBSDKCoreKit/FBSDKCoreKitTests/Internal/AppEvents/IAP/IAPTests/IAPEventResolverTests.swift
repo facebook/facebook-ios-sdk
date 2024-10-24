@@ -445,6 +445,74 @@ extension IAPEventResolverTests {
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
   }
+
+  func testResolveFailedPurchaseEventWithStoreKit2() async {
+    let productID = ProductIdentifiers.nonConsumableProduct1.rawValue
+    guard let products =
+      try? await Product.products(for: [productID]),
+      let product = products.first else {
+      return
+    }
+    let expectedEvent = IAPEvent(
+      eventName: .purchaseFailed,
+      productID: productID,
+      productTitle: product.displayName,
+      productDescription: product.description,
+      amount: 0.99,
+      quantity: 0,
+      currency: "USD",
+      transactionID: nil,
+      originalTransactionID: nil,
+      transactionDate: nil,
+      originalTransactionDate: nil,
+      validationResult: nil,
+      isSubscription: false,
+      subscriptionPeriod: nil,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
+    )
+    let event = await eventResolver.resolveFailedEventFor(productID: productID)
+    XCTAssertEqual(event, expectedEvent)
+  }
+
+  func testResolveFailedSubscriptionEventWithStoreKit2() async {
+    let productID = ProductIdentifiers.autoRenewingSubscription2.rawValue
+    guard let products =
+      try? await Product.products(for: [productID]),
+      let product = products.first else {
+      return
+    }
+    let subscriptionPeriod = IAPSubscriptionPeriod(unit: .year, numUnits: 1)
+    let introOfferSubscriptionPeriod = IAPSubscriptionPeriod(unit: .month, numUnits: 6)
+    let expectedEvent = IAPEvent(
+      eventName: .subscribeFailed,
+      productID: productID,
+      productTitle: product.displayName,
+      productDescription: product.description,
+      amount: 3,
+      quantity: 0,
+      currency: "USD",
+      transactionID: nil,
+      originalTransactionID: nil,
+      transactionDate: nil,
+      originalTransactionDate: nil,
+      validationResult: nil,
+      isSubscription: true,
+      subscriptionPeriod: subscriptionPeriod,
+      isStartTrial: false,
+      hasIntroductoryOffer: true,
+      hasFreeTrial: true,
+      introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
+      introductoryOfferPrice: 0.0,
+      storeKitVersion: .version2
+    )
+    let event = await eventResolver.resolveFailedEventFor(productID: productID)
+    XCTAssertEqual(event, expectedEvent)
+  }
 }
 
 // MARK: - Store Kit 1
