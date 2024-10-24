@@ -90,6 +90,7 @@ final class CoreKitComponents {
   let redactedEventsManager: _EventsProcessing
   let sensitiveParamsManager: _AppEventsParameterProcessing
   let transactionObserver: _TransactionObserving
+  let iapDedupeProcessor: _IAPDedupeProcessing
 
   // MARK: - Initializers
 
@@ -172,7 +173,8 @@ final class CoreKitComponents {
     blocklistEventsManager: _EventsProcessing,
     redactedEventsManager: _EventsProcessing,
     sensitiveParamsManager: _AppEventsParameterProcessing,
-    transactionObserver: _TransactionObserving
+    transactionObserver: _TransactionObserving,
+    iapDedupeProcessor: _IAPDedupeProcessing
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
@@ -253,6 +255,7 @@ final class CoreKitComponents {
     self.redactedEventsManager = redactedEventsManager
     self.sensitiveParamsManager = sensitiveParamsManager
     self.transactionObserver = transactionObserver
+    self.iapDedupeProcessor = iapDedupeProcessor
   }
 
   // MARK: - Default components
@@ -481,7 +484,8 @@ final class CoreKitComponents {
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
       sensitiveParamsManager: sensitiveParamsManager,
-      transactionObserver: IAPTransactionObserver.shared
+      transactionObserver: IAPTransactionObserver.shared,
+      iapDedupeProcessor: IAPDedupeProcessor()
     )
   }()
 }

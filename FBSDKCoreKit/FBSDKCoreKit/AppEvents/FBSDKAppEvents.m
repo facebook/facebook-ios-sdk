@@ -118,6 +118,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 @property (nullable, nonatomic) id<FBSDKCAPIReporter> capiReporter;
 @property (nullable, nonatomic) id<FBSDKTransactionObserving> transactionObserver;
 @property (nullable, nonatomic) id<FBSDKIAPFailedTransactionLoggingCreating> failedTransactionLoggingFactory;
+@property (nullable, nonatomic) id<FBSDKIAPDedupeProcessing> iapDedupeProcessor;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
@@ -665,6 +666,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
                    sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
                       transactionObserver:(nonnull id<FBSDKTransactionObserving>)transactionObserver
           failedTransactionLoggingFactory:(nonnull id<FBSDKIAPFailedTransactionLoggingCreating>)failedTransactionLoggingFactory
+                       iapDedupeProcessor:(nonnull id<FBSDKIAPDedupeProcessing>)iapDedupeProcessor
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -695,6 +697,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   self.sensitiveParamsManager = sensitiveParamsManager;
   self.transactionObserver = transactionObserver;
   self.failedTransactionLoggingFactory = failedTransactionLoggingFactory;
+  self.iapDedupeProcessor = iapDedupeProcessor;
  
   NSString *appID = self.appID;
   if (appID) {
@@ -977,6 +980,13 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
         [self.featureChecker checkFeature:FBSDKFeatureIAPLoggingSK2 completionBlock:^(BOOL enabled) {
           if (enabled) {
             [self.transactionObserver startObserving];
+            [self.featureChecker checkFeature:FBSDKFeatureIOSManualImplicitPurchaseDedupe completionBlock:^(BOOL dedupeEnabled) {
+              if (dedupeEnabled) {
+                [self.iapDedupeProcessor enable];
+              } else {
+                [self.iapDedupeProcessor disable];
+              }
+            }];
           } else {
             [self.paymentObserver startObservingTransactions];
           }
