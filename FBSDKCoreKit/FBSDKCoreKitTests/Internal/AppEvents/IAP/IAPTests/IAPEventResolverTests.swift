@@ -513,6 +513,56 @@ extension IAPEventResolverTests {
     let event = await eventResolver.resolveFailedEventFor(productID: productID)
     XCTAssertEqual(event, expectedEvent)
   }
+
+  func testGetInitiatedCheckoutEventForStoreKit2() {
+    let date = Date()
+    let purchaseEvent = IAPEvent(
+      eventName: .purchased,
+      productID: Self.ProductIdentifiers.nonConsumableProduct1.rawValue,
+      productTitle: "Product Title",
+      productDescription: "Product Description",
+      amount: 0.99,
+      quantity: 1,
+      currency: "USD",
+      transactionID: "1",
+      originalTransactionID: "1",
+      transactionDate: date,
+      originalTransactionDate: date,
+      validationResult: .valid,
+      isSubscription: false,
+      subscriptionPeriod: nil,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
+    )
+    let expectedEvent = IAPEvent(
+      eventName: .initiatedCheckout,
+      productID: Self.ProductIdentifiers.nonConsumableProduct1.rawValue,
+      productTitle: "Product Title",
+      productDescription: "Product Description",
+      amount: 0.99,
+      quantity: 1,
+      currency: "USD",
+      transactionID: nil,
+      originalTransactionID: nil,
+      transactionDate: nil,
+      originalTransactionDate: nil,
+      validationResult: nil,
+      isSubscription: false,
+      subscriptionPeriod: nil,
+      isStartTrial: false,
+      hasIntroductoryOffer: false,
+      hasFreeTrial: false,
+      introductoryOfferSubscriptionPeriod: nil,
+      introductoryOfferPrice: nil,
+      storeKitVersion: .version2
+    )
+    let event = eventResolver.getInitiatedCheckoutEventFrom(event: purchaseEvent)
+    XCTAssertEqual(event, expectedEvent)
+  }
 }
 
 // MARK: - Store Kit 1

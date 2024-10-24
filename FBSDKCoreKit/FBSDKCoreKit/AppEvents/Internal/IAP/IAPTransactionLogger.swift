@@ -90,6 +90,19 @@ extension IAPTransactionLogger {
     return parameters
   }
 
+  private func appendInitiatedCheckoutEventForStoreKit2(event: IAPEvent) {
+    guard event.storeKitVersion == .version2 else {
+      return
+    }
+    let initiatedCheckoutEvent = IAPEventResolver().getInitiatedCheckoutEventFrom(event: event)
+    let initiatedCheckoutParams = getParameters(for: initiatedCheckoutEvent)
+    logImplicitTransactionEvent(
+      eventName: initiatedCheckoutEvent.eventName,
+      valueToSum: initiatedCheckoutEvent.amount,
+      parameters: initiatedCheckoutParams
+    )
+  }
+
   private func logNewEvent(_ event: IAPEvent) {
     if event.isSubscription &&
       (IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) ||
@@ -103,11 +116,12 @@ extension IAPTransactionLogger {
       return
     }
     IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
-    let parameters = getParameters(for: event)
+    appendInitiatedCheckoutEventForStoreKit2(event: event)
+    let newParameters = getParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
       valueToSum: event.amount,
-      parameters: parameters
+      parameters: newParameters
     )
   }
 
@@ -124,7 +138,17 @@ extension IAPTransactionLogger {
     )
   }
 
-  private func logInitiatedCheckoutOrFailedEvent(_ event: IAPEvent) {
+  private func logFailedEvent(_ event: IAPEvent) {
+    appendInitiatedCheckoutEventForStoreKit2(event: event)
+    let parameters = getParameters(for: event)
+    logImplicitTransactionEvent(
+      eventName: event.eventName,
+      valueToSum: event.amount,
+      parameters: parameters
+    )
+  }
+
+  private func logInitiatedCheckoutEvent(_ event: IAPEvent) {
     let parameters = getParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
@@ -182,7 +206,7 @@ extension IAPTransactionLogger: IAPFailedTransactionLogging {
     guard let event = await IAPEventResolver().resolveFailedEventFor(productID: productID) else {
       return
     }
-    logInitiatedCheckoutOrFailedEvent(event)
+    logFailedEvent(event)
   }
 }
 
@@ -206,12 +230,12 @@ extension IAPTransactionLogger: IAPEventResolverDelegate {
   }
 
   func didResolveFailed(event: IAPEvent) {
-    logInitiatedCheckoutOrFailedEvent(event)
+    logFailedEvent(event)
     resolver = nil
   }
 
   func didResolveInitiatedCheckout(event: IAPEvent) {
-    logInitiatedCheckoutOrFailedEvent(event)
+    logInitiatedCheckoutEvent(event)
     resolver = nil
   }
 }
