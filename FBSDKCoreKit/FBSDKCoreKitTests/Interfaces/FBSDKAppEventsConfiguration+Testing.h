@@ -21,7 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
            advertiserIDCollectionEnabled:(BOOL)advertiserIDCollectionEnabled
                   eventCollectionEnabled:(BOOL)eventCollectionEnabled
                       iapObservationTime:(UInt64)iapObservationTime
-NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:iapObservationTime:));
+                   iapProdDedupConfiguration:(NSDictionary<NSString *, NSArray<NSString *>*> *)iapProdDedupConfiguration
+               iapTestDedupConfiguration:(NSDictionary<NSString *, NSArray<NSString *>*> *)iapTestDedupConfiguration
+NS_SWIFT_NAME(init(defaultATEStatus:advertiserIDCollectionEnabled:eventCollectionEnabled:iapObservationTime:iapProdDedupConfiguration:iapTestDedupConfiguration:));
 // UNCRUSTIFY_FORMAT_ON
 
 @end
