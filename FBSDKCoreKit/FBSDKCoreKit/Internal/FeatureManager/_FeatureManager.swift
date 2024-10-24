@@ -121,7 +121,8 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .blocklistEvents,
       .filterRedactedEvents,
       .filterSensitiveParams,
-      .iapLoggingSK2:
+      .iapLoggingSK2,
+      .iosManualImplicitPurchaseDedupe:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -182,6 +183,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .filterRedactedEvents: featureName = "FilterRedactedEvents"
     case .filterSensitiveParams: featureName = "FilterSensitiveParams"
     case .iapLoggingSK2: featureName = "IAPLoggingSK2"
+    case .iosManualImplicitPurchaseDedupe: featureName = "IOSManualImplicitPurchaseDedupe"
     @unknown default: featureName = "NONE"
     }
 
