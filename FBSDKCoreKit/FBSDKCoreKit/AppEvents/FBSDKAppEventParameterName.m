@@ -58,6 +58,7 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPrice = @"fb_iap
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameValidationResult = @"fb_iap_validation_result";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPClientLibraryVersion = @"fb_iap_client_library_version";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPSDKLibraryVersions = @"fb_iap_sdk_supported_library_versions";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPReceiptData = @"receipt_data";
 
 // MARK: - Time Spent
 

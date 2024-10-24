@@ -30,4 +30,8 @@ struct IAPEvent: Equatable {
   let introductoryOfferSubscriptionPeriod: IAPSubscriptionPeriod?
   let introductoryOfferPrice: Decimal?
   let storeKitVersion: IAPStoreKitVersion
+
+  var shouldAppendReceipt: Bool {
+    storeKitVersion == .version1 && IAPConstants.eventsForReceipt.contains(eventName)
+  }
 }
