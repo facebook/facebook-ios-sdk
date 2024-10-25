@@ -60,6 +60,12 @@ NS_SWIFT_NAME(EventLogging)
               valueToSum:(double)valueToSum
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
+- (void)doLogEvent:(FBSDKAppEventName)eventName
+          valueToSum:(nullable NSNumber *)valueToSum
+          parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+  isImplicitlyLogged:(BOOL)isImplicitlyLogged
+           accessToken:(nullable FBSDKAccessToken *)accessToken;
+
 @end
 
 NS_ASSUME_NONNULL_END

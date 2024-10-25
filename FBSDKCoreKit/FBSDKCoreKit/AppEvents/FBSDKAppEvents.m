@@ -295,12 +295,6 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
       valueToSum:@(purchaseAmount)
       parameters:newParameters
      accessToken:accessToken];
-
-  // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
-  // are relatively rare and relatively high value and worth getting across on wire right away.
-  if (self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
-    [self flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
-  }
 }
 
 /*
@@ -988,10 +982,12 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
               }
             }];
           } else {
+            [self.iapDedupeProcessor disable];
             [self.paymentObserver startObservingTransactions];
           }
         }];
       } else {
+        [self.iapDedupeProcessor disable];
         [self.paymentObserver stopObservingTransactions];
         [self.transactionObserver stopObserving];
       }
@@ -1127,6 +1123,31 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
          accessToken:(FBSDKAccessToken *)accessToken
 {
+  if (!isImplicitlyLogged && self.iapDedupeProcessor.isEnabled && [self.iapDedupeProcessor shouldDedupeEvent:eventName]) {
+    [self.iapDedupeProcessor processManualEvent:eventName
+                                     valueToSum:valueToSum
+                                     parameters:parameters
+                                    accessToken:accessToken];
+  } else {
+    [self doLogEvent:eventName
+          valueToSum:valueToSum
+          parameters:parameters
+  isImplicitlyLogged:isImplicitlyLogged
+         accessToken:accessToken];
+    // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
+    // are relatively rare and relatively high value and worth getting across on wire right away.
+    if (eventName == FBSDKAppEventNamePurchased && self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+      [self flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+    }
+  }
+}
+
+- (void)    doLogEvent:(FBSDKAppEventName)eventName
+          valueToSum:(nullable NSNumber *)valueToSum
+          parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+  isImplicitlyLogged:(BOOL)isImplicitlyLogged
+         accessToken:(nullable FBSDKAccessToken *)accessToken
+{
   [self validateConfiguration];
 
   // Kill events if kill-switch is enabled
@@ -1261,7 +1282,9 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   if (!eventDictionary[FBSDKAppEventParameterNameLogTime]) {
     [FBSDKTypeUtility dictionary:eventDictionary setObject:@(self.appEventsUtility.unixTimeNow) forKey:FBSDKAppEventParameterNameLogTime];
   }
-  [FBSDKTypeUtility dictionary:eventDictionary setObject:valueToSum forKey:@"_valueToSum"];
+  if (valueToSum != nil) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:valueToSum forKey:@"_valueToSum"];
+  }
   if (isImplicitlyLogged) {
     [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterNameImplicitlyLogged];
   }

@@ -19,8 +19,18 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(_IAPDedupeProcessing)
 @protocol FBSDKIAPDedupeProcessing
 
+@property (readonly, assign) BOOL isEnabled;
 - (void)enable;
 - (void)disable;
+- (void)processManualEvent:(FBSDKAppEventName)eventName
+          valueToSum:(nullable NSNumber *)valueToSum
+          parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+               accessToken:(nullable FBSDKAccessToken *)accessToken;
+- (void)processImplicitEvent:(FBSDKAppEventName)eventName
+          valueToSum:(nullable NSNumber *)valueToSum
+          parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
+                 accessToken:(nullable FBSDKAccessToken *)accessToken;
+- (BOOL)shouldDedupeEvent:(FBSDKAppEventName)eventName;
 
 @end
 
