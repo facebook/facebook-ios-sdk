@@ -1806,7 +1806,7 @@ final class AppEventsTests: XCTestCase {
     featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
 
     XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
-    XCTAssertFalse(iapDedupeProcessor.disableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
   }
 
   func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenAutologIsDiabled() {
@@ -1821,7 +1821,7 @@ final class AppEventsTests: XCTestCase {
     featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
 
     XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
-    XCTAssertFalse(iapDedupeProcessor.disableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
   }
 
   func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenImplicitPurchaseIsDiabled() {
@@ -1836,7 +1836,7 @@ final class AppEventsTests: XCTestCase {
     featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
 
     XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
-    XCTAssertFalse(iapDedupeProcessor.disableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
   }
 
   func testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled() {

@@ -9,8 +9,11 @@
 import Foundation
 
 final class TestIAPDedupeProcessor: _IAPDedupeProcessing {
+  private(set) var isEnabled = false
   var enableWasCalled = false
   var disableWasCalled = false
+  var processManualEventWasCalled = false
+  var processImplicitEventWasCalled = false
 
   func enable() {
     enableWasCalled = true
@@ -18,5 +21,27 @@ final class TestIAPDedupeProcessor: _IAPDedupeProcessing {
 
   func disable() {
     disableWasCalled = true
+  }
+
+  func shouldDedupeEvent(_ eventName: AppEvents.Name) -> Bool {
+    true
+  }
+
+  func processManualEvent(
+    _ eventName: AppEvents.Name,
+    valueToSum: NSNumber?,
+    parameters: [AppEvents.ParameterName: Any]?,
+    accessToken: AccessToken?
+  ) {
+    processManualEventWasCalled = true
+  }
+
+  func processImplicitEvent(
+    _ eventName: AppEvents.Name,
+    valueToSum: NSNumber?,
+    parameters: [AppEvents.ParameterName: Any]?,
+    accessToken: AccessToken?
+  ) {
+    processImplicitEventWasCalled = true
   }
 }

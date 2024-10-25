@@ -181,14 +181,24 @@ extension IAPTransactionLogger {
     guard let dependencies = try? Self.getDependencies() else {
       return
     }
-    dependencies.eventLogger.logEvent(
-      eventName,
-      valueToSum: valueToSum.currencyNumber,
-      parameters: parameters,
-      accessToken: nil
-    )
-    if dependencies.eventLogger.flushBehavior != .explicitOnly {
-      dependencies.eventLogger.flush(for: .eagerlyFlushingEvent)
+    if IAPDedupeProcessor.shared.isEnabled && IAPDedupeProcessor.shared.shouldDedupeEvent(eventName) {
+      IAPDedupeProcessor.shared.processImplicitEvent(
+        eventName,
+        valueToSum: valueToSum.currencyNumber,
+        parameters: parameters,
+        accessToken: nil
+      )
+    } else {
+      dependencies.eventLogger.doLogEvent(
+        eventName,
+        valueToSum: valueToSum.currencyNumber,
+        parameters: parameters,
+        isImplicitlyLogged: true,
+        accessToken: nil
+      )
+      if dependencies.eventLogger.flushBehavior != .explicitOnly {
+        dependencies.eventLogger.flush(for: .eagerlyFlushingEvent)
+      }
     }
   }
 }

@@ -86,7 +86,7 @@ extension IAPTransactionObserver {
     IAPTransactionCache.shared.hasRestoredPurchases = true
   }
 
-  private func observeNewTransactions() async {
+  func observeNewTransactions() async {
     guard isObservingStoreKit2Transactions else {
       return
     }

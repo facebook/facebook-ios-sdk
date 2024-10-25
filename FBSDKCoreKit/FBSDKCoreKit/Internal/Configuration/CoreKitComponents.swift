@@ -485,7 +485,7 @@ final class CoreKitComponents {
       redactedEventsManager: redactedEventsManager,
       sensitiveParamsManager: sensitiveParamsManager,
       transactionObserver: IAPTransactionObserver.shared,
-      iapDedupeProcessor: IAPDedupeProcessor()
+      iapDedupeProcessor: IAPDedupeProcessor.shared
     )
   }()
 }
