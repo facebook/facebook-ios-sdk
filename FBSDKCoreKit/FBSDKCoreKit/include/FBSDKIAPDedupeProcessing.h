@@ -22,6 +22,8 @@ NS_SWIFT_NAME(_IAPDedupeProcessing)
 @property (readonly, assign) BOOL isEnabled;
 - (void)enable;
 - (void)disable;
+- (void)saveNonProcessedEvents;
+- (void)processSavedEvents;
 - (void)processManualEvent:(FBSDKAppEventName)eventName
           valueToSum:(nullable NSNumber *)valueToSum
           parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters

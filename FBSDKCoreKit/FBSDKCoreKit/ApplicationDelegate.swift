@@ -422,6 +422,9 @@ public final class ApplicationDelegate: NSObject {
     applicationObservers.allObjects.forEach { observer in
       observer.applicationWillResignActive?(notification.object as? UIApplication)
     }
+    if IAPDedupeProcessor.shared.isEnabled {
+      IAPDedupeProcessor.shared.saveNonProcessedEvents()
+    }
   }
 
   // MARK: - Internal Methods

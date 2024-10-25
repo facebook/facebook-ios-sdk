@@ -977,6 +977,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
             [self.featureChecker checkFeature:FBSDKFeatureIOSManualImplicitPurchaseDedupe completionBlock:^(BOOL dedupeEnabled) {
               if (dedupeEnabled) {
                 [self.iapDedupeProcessor enable];
+                [self.iapDedupeProcessor processSavedEvents];
               } else {
                 [self.iapDedupeProcessor disable];
               }
