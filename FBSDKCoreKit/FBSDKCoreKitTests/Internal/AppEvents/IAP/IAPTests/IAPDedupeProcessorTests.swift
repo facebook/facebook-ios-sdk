@@ -443,6 +443,146 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
     )
     XCTAssertNil(dedupKey)
   }
+
+  func testDedupableEventsEqual() {
+    let event1 = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: 10,
+      parameters: [
+        "fb_currency": "USD",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
+      ],
+      isImplicitEvent: true
+    )
+    let event2 = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: 10,
+      parameters: [
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
+        "fb_currency": "USD",
+      ],
+      isImplicitEvent: true
+    )
+    XCTAssertEqual(event1, event2)
+  }
+
+  func testDedupableEventsNotEqual() {
+    let event1 = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: 10,
+      parameters: [
+        "fb_currency": "USD",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
+      ],
+      isImplicitEvent: true
+    )
+    let event2 = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: 10,
+      parameters: [
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
+        "fb_currency": "EUR",
+      ],
+      isImplicitEvent: true
+    )
+    XCTAssertNotEqual(event1, event2)
+  }
+
+  func testEncodeDecodeWithNoNils() {
+    let dedupableEvent = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: 10.50,
+      parameters: [
+        "key_1": "value_1",
+        "key_2": 2,
+        "key_3": false,
+        "key_4": ["value_4", "value_5"],
+        "key_5": [
+          "1": 1,
+          "2": 2,
+        ],
+      ],
+      isImplicitEvent: true,
+      accessToken: SampleAccessTokens.validToken,
+      hasBeenProdDeduped: true,
+      hasBeenTestDeduped: false
+    )
+    guard let data = try? JSONEncoder().encode(dedupableEvent) else {
+      XCTFail("We should be able to encode dedupableEvent")
+      return
+    }
+    guard let decodedEvent = try? JSONDecoder().decode(DedupableEvent.self, from: data) else {
+      XCTFail("We should be able to decode a DedupableEvent")
+      return
+    }
+    XCTAssertEqual(dedupableEvent, decodedEvent)
+  }
+
+  func testEncodeDecodeWithNils() {
+    let dedupableEvent = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: nil,
+      parameters: nil,
+      isImplicitEvent: true,
+      accessToken: nil,
+      hasBeenProdDeduped: true,
+      hasBeenTestDeduped: false
+    )
+    guard let data = try? JSONEncoder().encode(dedupableEvent) else {
+      XCTFail("We should be able to encode dedupableEvent")
+      return
+    }
+    guard let decodedEvent = try? JSONDecoder().decode(DedupableEvent.self, from: data) else {
+      XCTFail("We should be able to decode a DedupableEvent")
+      return
+    }
+    XCTAssertEqual(dedupableEvent, decodedEvent)
+  }
+
+  func testSaveAndProcessEvents() {
+    let implicitEvent = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: 10,
+      parameters: [
+        "fb_currency": "USD",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
+        "fb_content_id": "123456",
+      ],
+      isImplicitEvent: true
+    )
+    let manualEvent = DedupableEvent(
+      eventName: .purchased,
+      valueToSum: 10,
+      parameters: [
+        "fb_currency": "USD",
+        "_logTime": 1729450978,
+        "fb_content_id": "123456",
+      ],
+      isImplicitEvent: false
+    )
+    dedupeProcessor.appendImplicitEvent(implicitEvent)
+    dedupeProcessor.appendManualEvent(manualEvent)
+    dedupeProcessor.saveNonProcessedEvents()
+    XCTAssertNotNil(UserDefaults.standard.fb_object(forKey: IAPConstants.implicitlyLoggedDedupableEventsKey))
+    XCTAssertNotNil(UserDefaults.standard.fb_object(forKey: IAPConstants.manuallyLoggedDedupableEventsKey))
+    dedupeProcessor.processSavedEvents()
+    let predicate = NSPredicate { _, _ -> Bool in
+      guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      return self.eventLogger.capturedEventName == .purchased &&
+        self.eventLogger.capturedValueToSum == 10 &&
+        capturedParameters[.currency] as? String == "USD" &&
+        capturedParameters[.contentID] as? String == "123456" &&
+        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" &&
+        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] as? String == "fb_content_id" &&
+        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
+        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
+        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] != nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    wait(for: [expectation], timeout: 20.0)
+  }
 }
 
 // MARK: - Store Kit 2
