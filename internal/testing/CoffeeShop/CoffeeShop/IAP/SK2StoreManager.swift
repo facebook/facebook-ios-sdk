@@ -61,6 +61,34 @@ extension SK2StoreManager {
         return .failed
       case let .verified(transaction):
         await transaction.finish()
+        if transaction.productType == .autoRenewable {
+          var isStartTrial = false
+          if #available(iOS 17.2, *) {
+            isStartTrial = transaction.offer?.paymentMode == .freeTrial
+          } else {
+            isStartTrial = transaction.offerPaymentModeStringRepresentation == "FREE_TRIAL"
+          }
+          let eventName = isStartTrial ? AppEvents.Name.startTrial : AppEvents.Name.subscribe
+          AppEvents.shared.logEvent(
+            eventName,
+            valueToSum: NSDecimalNumber(decimal: transaction.price ?? 0),
+            parameters: [
+              AppEvents.ParameterName.currency: "USD",
+              AppEvents.ParameterName.contentID: transaction.productID,
+            ],
+            accessToken: nil
+          )
+        } else {
+          AppEvents.shared.logEvent(
+            .purchased,
+            valueToSum: NSDecimalNumber(decimal: transaction.price ?? 0),
+            parameters: [
+              AppEvents.ParameterName.currency: "USD",
+              AppEvents.ParameterName.contentID: transaction.productID,
+            ],
+            accessToken: nil
+          )
+        }
         purchases.append(transaction)
         return .success
       }

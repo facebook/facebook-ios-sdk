@@ -70,6 +70,35 @@ extension SK1StoreManager: SKPaymentTransactionObserver {
       self.productPurchasingDelegate?.purchaseDidSucceed(transaction)
     }
     SKPaymentQueue.default().finishTransaction(transaction)
+    guard let product = availableProducts[transaction.payment.productIdentifier] else {
+      return
+    }
+    if product.subscriptionPeriod?.numberOfUnits ?? 0 > 0 {
+      var eventName = AppEvents.Name.subscribe
+      if product.introductoryPrice?.paymentMode == .freeTrial,
+         transaction.original?.transactionIdentifier == nil {
+        eventName = AppEvents.Name.startTrial
+      }
+      AppEvents.shared.logEvent(
+        eventName,
+        valueToSum: eventName == .startTrial ? 0 : product.price,
+        parameters: [
+          AppEvents.ParameterName.currency: "USD",
+          AppEvents.ParameterName.contentID: product.productIdentifier,
+        ],
+        accessToken: nil
+      )
+    } else {
+      AppEvents.shared.logEvent(
+        .purchased,
+        valueToSum: product.price,
+        parameters: [
+          AppEvents.ParameterName.currency: "USD",
+          AppEvents.ParameterName.contentID: product.productIdentifier,
+        ],
+        accessToken: nil
+      )
+    }
   }
 
   private func handleRestored(transaction: SKPaymentTransaction) {

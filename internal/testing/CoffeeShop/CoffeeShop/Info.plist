@@ -54,7 +54,7 @@
 	<string>6377454b2e5efda7d9ca50b8ff95c62f</string>
 	<key>FacebookDisplayName</key>
 	<string>Coffee Shop</string>
-	<key>LSApplicationQueriesSchemes</key><!-- NOTE: this app is opting out of URL scheme validation infra. -->
+	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
 		<string>fb-messenger-api</string>
@@ -66,6 +66,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>SKIncludeConsumableInAppPurchaseHistory</key>
+	<true/>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>CoffeeShop needs to enable to test</string>
 </dict>
