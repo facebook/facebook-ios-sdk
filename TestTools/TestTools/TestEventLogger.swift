@@ -19,6 +19,7 @@ open class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this p
   public var capturedAccessToken: AccessToken?
   public var capturedValueToSum: Double?
   public var capturedFlushReason: AppEvents.FlushReason?
+  public var capturedEvents: [EventStructForTests] = []
 
   public func flush(for flushReason: AppEvents.FlushReason) {
     flushCallCount += 1
@@ -98,5 +99,21 @@ open class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this p
     capturedParameters = parameters
     capturedIsImplicitlyLogged = isImplicitlyLogged
     capturedAccessToken = accessToken
+    let event = EventStructForTests(
+      eventName: eventName,
+      valueToSum: valueToSum,
+      parameters: parameters,
+      isImplicitEvent: isImplicitlyLogged,
+      accessToken: accessToken
+    )
+    capturedEvents.append(event)
   }
+}
+
+public struct EventStructForTests {
+  public let eventName: AppEvents.Name
+  public let valueToSum: NSNumber?
+  public let parameters: [AppEvents.ParameterName: Any]?
+  public let isImplicitEvent: Bool
+  public let accessToken: AccessToken?
 }
