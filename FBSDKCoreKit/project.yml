@@ -148,6 +148,7 @@ targets:
     sources:
       - path: FBSDKCoreKitTests/Internal/AppEvents/IAP/IAPTests/
     settings:
+      SWIFT_OBJC_BRIDGING_HEADER: FBSDKCoreKitTests/FBSDKCoreKitTests-Bridging-Header.h
       PRODUCT_NAME: IAPTests
       PRODUCT_BUNDLE_IDENTIFIER: com.facebook.sdk.FBSDKCoreKitTests.IAPTests.IAPTests
       MARKETING_VERSION: 1.0
