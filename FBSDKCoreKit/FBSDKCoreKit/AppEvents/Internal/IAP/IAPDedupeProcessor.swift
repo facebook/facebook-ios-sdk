@@ -35,7 +35,8 @@ final class IAPDedupeProcessor: _IAPDedupeProcessing {
   static var configuredDependencies: TypeDependencies?
   static var defaultDependencies: TypeDependencies? = .init(
     eventLogger: AppEvents.shared,
-    appEventsConfigurationProvider: _AppEventsConfigurationManager.shared
+    appEventsConfigurationProvider: _AppEventsConfigurationManager.shared,
+    dataStore: UserDefaults.standard
   )
 
   private static var dedupWindow: TimeInterval {
@@ -61,6 +62,7 @@ extension IAPDedupeProcessor: DependentAsType {
   struct TypeDependencies {
     var eventLogger: EventLogging
     var appEventsConfigurationProvider: _AppEventsConfigurationProviding
+    var dataStore: DataPersisting
   }
 }
 
@@ -83,6 +85,46 @@ extension IAPDedupeProcessor {
     synchronized(self) {
       isEnabled = false
     }
+  }
+
+  func saveNonProcessedEvents() {
+    guard let dependencies = try? Self.getDependencies() else {
+      return
+    }
+    let manualEvents = synchronizedManualEvents
+    manuallyLoggedEvents = []
+    if !manualEvents.isEmpty, let manualData = try? JSONEncoder().encode(manualEvents) {
+      dependencies.dataStore.fb_setObject(manualData, forKey: IAPConstants.manuallyLoggedDedupableEventsKey)
+    }
+    let implicitEvents = synchronizedImplicitEvents
+    implicitlyLoggedEvents = []
+    if !implicitEvents.isEmpty, let implicitData = try? JSONEncoder().encode(implicitEvents) {
+      dependencies.dataStore.fb_setObject(implicitData, forKey: IAPConstants.implicitlyLoggedDedupableEventsKey)
+    }
+  }
+
+  func processSavedEvents() {
+    guard let dependencies = try? Self.getDependencies() else {
+      return
+    }
+    var manualEvents: [DedupableEvent] = []
+    if let data = dependencies.dataStore.fb_data(forKey: IAPConstants.manuallyLoggedDedupableEventsKey),
+       let decodedEvents = try? JSONDecoder().decode([DedupableEvent].self, from: data),
+       !decodedEvents.isEmpty {
+      dependencies.dataStore.fb_removeObject(forKey: IAPConstants.manuallyLoggedDedupableEventsKey)
+      manualEvents = decodedEvents
+    }
+    var implicitEvents: [DedupableEvent] = []
+    if let data = dependencies.dataStore.fb_data(forKey: IAPConstants.implicitlyLoggedDedupableEventsKey),
+       let decodedEvents = try? JSONDecoder().decode([DedupableEvent].self, from: data),
+       !decodedEvents.isEmpty {
+      dependencies.dataStore.fb_removeObject(forKey: IAPConstants.implicitlyLoggedDedupableEventsKey)
+      implicitEvents = decodedEvents
+    }
+    if implicitEvents.isEmpty, manualEvents.isEmpty {
+      return
+    }
+    Self.performDedup(implicitEvents: &implicitEvents, manualEvents: &manualEvents)
   }
 
   func shouldDedupeEvent(_ eventName: AppEvents.Name) -> Bool {
@@ -122,7 +164,7 @@ extension IAPDedupeProcessor {
       if timer == nil {
         DispatchQueue.main.async {
           self.timer = Timer.scheduledTimer(withTimeInterval: Self.dedupWindow, repeats: false) { _ in
-            self.performDedup()
+            self.dedupTimerFired()
           }
         }
       }
@@ -144,24 +186,20 @@ extension IAPDedupeProcessor {
     )
     synchronized(self) {
       implicitlyLoggedEvents.append(event)
-      DispatchQueue.main.async {
-        self.timer = Timer.scheduledTimer(withTimeInterval: Self.dedupWindow, repeats: false) { _ in
-          self.performDedup()
+      if timer == nil {
+        DispatchQueue.main.async {
+          self.timer = Timer.scheduledTimer(withTimeInterval: Self.dedupWindow, repeats: false) { _ in
+            self.dedupTimerFired()
+          }
         }
       }
     }
   }
 
-  func performDedup() {
-    timer?.invalidate()
-    timer = nil
+  class func performDedup(implicitEvents: inout [DedupableEvent], manualEvents: inout [DedupableEvent]) {
     guard let dependencies = try? Self.getDependencies() else {
       return
     }
-    var manualEvents = synchronizedManualEvents
-    manuallyLoggedEvents = []
-    var implicitEvents = synchronizedImplicitEvents
-    implicitlyLoggedEvents = []
     let productionDedupConfig =
       dependencies.appEventsConfigurationProvider.cachedAppEventsConfiguration.iapProdDedupConfiguration
     let testDedupConfig =
@@ -170,7 +208,7 @@ extension IAPDedupeProcessor {
       for (manualIndex, var manualEvent) in manualEvents.enumerated() {
         if !implicitEvent.hasBeenProdDeduped,
            !manualEvent.hasBeenProdDeduped,
-           let dedupKey = Self.areDuplicates(
+           let dedupKey = areDuplicates(
              implicitEvent: implicitEvent,
              manualEvent: manualEvent,
              dedupConfiguration: productionDedupConfig
@@ -186,7 +224,7 @@ extension IAPDedupeProcessor {
         }
         if !implicitEvent.hasBeenTestDeduped,
            !manualEvent.hasBeenTestDeduped,
-           let dedupKey = Self.areDuplicates(
+           let dedupKey = areDuplicates(
              implicitEvent: implicitEvent,
              manualEvent: manualEvent,
              dedupConfiguration: testDedupConfig
@@ -249,8 +287,20 @@ extension IAPDedupeProcessor {
   }
 }
 
+// MARK: - Private Methods
+
 extension IAPDedupeProcessor {
-  private func injectDedupeParameters(
+  private func dedupTimerFired() {
+    timer?.invalidate()
+    timer = nil
+    var implicitEvents = synchronizedImplicitEvents
+    implicitlyLoggedEvents = []
+    var manualEvents = synchronizedManualEvents
+    manuallyLoggedEvents = []
+    Self.performDedup(implicitEvents: &implicitEvents, manualEvents: &manualEvents)
+  }
+
+  private class func injectDedupeParameters(
     nonDedupedEvent: DedupableEvent,
     dedupedEvent: DedupableEvent,
     prodDedupeKey: String? = nil,
@@ -375,7 +425,9 @@ extension IAPDedupeProcessor {
   }
 }
 
-struct DedupableEvent {
+// MARK: - DedupableEvent Struct
+
+struct DedupableEvent: Equatable, Hashable, Codable {
   var eventName: AppEvents.Name
   var valueToSum: NSNumber?
   var parameters: [String: Any]?
@@ -383,7 +435,95 @@ struct DedupableEvent {
   var accessToken: AccessToken?
   var hasBeenProdDeduped = false
   var hasBeenTestDeduped = false
+
+  enum CodingKeys: CodingKey {
+    case eventName
+    case valueToSum
+    case parameters
+    case isImplicitEvent
+    case accessToken
+    case hasBeenProdDeduped
+    case hasBeenTestDeduped
+  }
+
+  init(
+    eventName: AppEvents.Name,
+    valueToSum: NSNumber?,
+    parameters: [String: Any]?,
+    isImplicitEvent: Bool,
+    accessToken: AccessToken? = nil,
+    hasBeenProdDeduped: Bool = false,
+    hasBeenTestDeduped: Bool = false
+  ) {
+    self.eventName = eventName
+    self.valueToSum = valueToSum
+    self.parameters = parameters
+    self.isImplicitEvent = isImplicitEvent
+    self.accessToken = accessToken
+    self.hasBeenProdDeduped = hasBeenProdDeduped
+    self.hasBeenTestDeduped = hasBeenTestDeduped
+  }
+
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let eventNameString = try container.decode(String.self, forKey: .eventName)
+    eventName = AppEvents.Name(eventNameString)
+    if let valueToSumData = try? container.decode(Data.self, forKey: .valueToSum) {
+      valueToSum = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSNumber.self, from: valueToSumData)
+    }
+    if let parametersData = try? container.decode(Data.self, forKey: .parameters) {
+      parameters = try JSONSerialization.jsonObject(with: parametersData, options: []) as? [String: Any]
+    }
+    isImplicitEvent = try container.decode(Bool.self, forKey: .isImplicitEvent)
+    if let accessTokenData = try? container.decode(Data.self, forKey: .accessToken) {
+      accessToken = try NSKeyedUnarchiver.unarchivedObject(ofClass: AccessToken.self, from: accessTokenData)
+    }
+    hasBeenProdDeduped = try container.decode(Bool.self, forKey: .hasBeenProdDeduped)
+    hasBeenTestDeduped = try container.decode(Bool.self, forKey: .hasBeenTestDeduped)
+  }
+
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    try container.encode(eventName.rawValue, forKey: .eventName)
+    if let valueToSum {
+      let valueToSumData = try NSKeyedArchiver.archivedData(withRootObject: valueToSum, requiringSecureCoding: false)
+      try container.encode(valueToSumData, forKey: .valueToSum)
+    }
+    if let parameters {
+      let parametersData = try JSONSerialization.data(withJSONObject: parameters, options: [])
+      try container.encode(parametersData, forKey: .parameters)
+    }
+    try container.encode(isImplicitEvent, forKey: .isImplicitEvent)
+    if let accessToken {
+      let accessTokenData = try NSKeyedArchiver.archivedData(withRootObject: accessToken, requiringSecureCoding: false)
+      try container.encode(accessTokenData, forKey: .accessToken)
+    }
+    try container.encode(hasBeenProdDeduped, forKey: .hasBeenProdDeduped)
+    try container.encode(hasBeenTestDeduped, forKey: .hasBeenTestDeduped)
+  }
+
+  static func == (lhs: DedupableEvent, rhs: DedupableEvent) -> Bool {
+    lhs.eventName == rhs.eventName &&
+      lhs.valueToSum == rhs.valueToSum &&
+      NSDictionary(dictionary: lhs.parameters ?? [:]).isEqual(to: rhs.parameters ?? [:]) &&
+      lhs.isImplicitEvent == rhs.isImplicitEvent &&
+      lhs.accessToken == rhs.accessToken &&
+      lhs.hasBeenProdDeduped == rhs.hasBeenProdDeduped &&
+      lhs.hasBeenTestDeduped == rhs.hasBeenTestDeduped
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(eventName)
+    hasher.combine(valueToSum)
+    hasher.combine(NSDictionary(dictionary: parameters ?? [:]))
+    hasher.combine(isImplicitEvent)
+    hasher.combine(accessToken)
+    hasher.combine(hasBeenProdDeduped)
+    hasher.combine(hasBeenTestDeduped)
+  }
 }
+
+// MARK: - Extension Helpers
 
 extension [AppEvents.ParameterName: Any] {
   var stringKeys: [String: Any] {
@@ -400,3 +540,28 @@ extension [String: Any] {
     }
   }
 }
+
+// MARK: - Testing
+
+#if DEBUG
+extension IAPDedupeProcessor {
+  func reset() {
+    disable()
+    UserDefaults.standard.removeObject(forKey: IAPConstants.implicitlyLoggedDedupableEventsKey)
+    UserDefaults.standard.removeObject(forKey: IAPConstants.manuallyLoggedDedupableEventsKey)
+    Self.configuredDependencies = nil
+    manuallyLoggedEvents = []
+    implicitlyLoggedEvents = []
+    timer?.invalidate()
+    timer = nil
+  }
+
+  func appendManualEvent(_ event: DedupableEvent) {
+    manuallyLoggedEvents.append(event)
+  }
+
+  func appendImplicitEvent(_ event: DedupableEvent) {
+    implicitlyLoggedEvents.append(event)
+  }
+}
+#endif

@@ -14,6 +14,8 @@ final class TestIAPDedupeProcessor: _IAPDedupeProcessing {
   var disableWasCalled = false
   var processManualEventWasCalled = false
   var processImplicitEventWasCalled = false
+  var saveNonProcessedEventsWasCalled = false
+  var processSavedEventsWasCalled = false
 
   func enable() {
     enableWasCalled = true
@@ -21,6 +23,14 @@ final class TestIAPDedupeProcessor: _IAPDedupeProcessing {
 
   func disable() {
     disableWasCalled = true
+  }
+
+  func saveNonProcessedEvents() {
+    saveNonProcessedEventsWasCalled = true
+  }
+
+  func processSavedEvents() {
+    processSavedEventsWasCalled = true
   }
 
   func shouldDedupeEvent(_ eventName: AppEvents.Name) -> Bool {

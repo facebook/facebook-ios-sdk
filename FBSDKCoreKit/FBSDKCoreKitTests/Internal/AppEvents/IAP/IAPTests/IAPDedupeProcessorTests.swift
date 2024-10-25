@@ -61,7 +61,8 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
     IAPTransactionObserver.shared.startObserving()
     IAPDedupeProcessor.configuredDependencies = .init(
       eventLogger: eventLogger,
-      appEventsConfigurationProvider: appEventsConfigurationProvider
+      appEventsConfigurationProvider: appEventsConfigurationProvider,
+      dataStore: UserDefaults.standard
     )
     IAPTransactionLogger.configuredDependencies = .init(
       eventLogger: eventLogger,
@@ -78,7 +79,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
   }
 
   override func tearDown() {
-    dedupeProcessor.disable()
+    dedupeProcessor.reset()
     IAPTransactionObserver.shared.stopObserving()
     TestGateKeeperManager.gateKeepers["app_events_if_auto_log_subs"] = false
     super.tearDown()
@@ -276,7 +277,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       parameters: [
         "fb_currency": "USD",
         "fb_content_id": "12345",
-        "fb_transaction_date": "2024-10-20 19:02:45Z",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
       ],
       isImplicitEvent: true
     )
@@ -305,7 +306,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       parameters: [
         "fb_currency": "USD",
         "fb_content_id": "12345",
-        "fb_transaction_date": "2024-10-20 19:02:45Z",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
       ],
       isImplicitEvent: true
     )
@@ -334,7 +335,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       parameters: [
         "fb_currency": "USD",
         "fb_content_id": "12345",
-        "fb_transaction_date": "2024-10-20 19:02:45Z",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
       ],
       isImplicitEvent: true
     )
@@ -392,7 +393,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       parameters: [
         "fb_currency": "USD",
         "fb_content_id": "12345",
-        "fb_transaction_date": "2024-10-20 19:02:45Z",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
       ],
       isImplicitEvent: true
     )
@@ -421,7 +422,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       parameters: [
         "fb_currency": "USD",
         "fb_content_id": "",
-        "fb_transaction_date": "2024-10-20 19:02:45Z",
+        "fb_transaction_date": "2024-10-20 19:02:50Z",
       ],
       isImplicitEvent: true
     )
