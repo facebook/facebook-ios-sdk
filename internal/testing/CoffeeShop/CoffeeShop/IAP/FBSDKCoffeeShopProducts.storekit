@@ -72,6 +72,21 @@
       "productID" : "com.facebook.coffeeshop.nonconsumable.rewardscard",
       "referenceName" : "Rewards Card",
       "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "70BA8EB6",
+      "localizations" : [
+        {
+          "description" : "Purchase an IAP Coffee Mug",
+          "displayName" : "Coffee Mug",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.facebook.coffeeshop.nonconsumable.coffeemug",
+      "referenceName" : "Coffee Mug",
+      "type" : "NonConsumable"
     }
   ],
   "settings" : {
