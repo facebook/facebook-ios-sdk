@@ -962,7 +962,7 @@ extension IAPTransactionLoggerTests {
       return self.eventLogger.capturedEventName == .purchaseFailed &&
         self.eventLogger.capturedValueToSum == 0.99 &&
         capturedParameters[.contentID] as? String == product.id &&
-        capturedParameters[.numItems] as? Int == 0 &&
+        capturedParameters[.numItems] as? Int == 1 &&
         (capturedParameters[.transactionDate] as? String)?.isEmpty == true &&
         (capturedParameters[.productTitle] as? String)?.isEmpty == true &&
         (capturedParameters[.description] as? String)?.isEmpty == true &&
@@ -992,7 +992,7 @@ extension IAPTransactionLoggerTests {
       return self.eventLogger.capturedEventName == .subscribeFailed &&
         self.eventLogger.capturedValueToSum == 2.0 &&
         capturedParameters[.contentID] as? String == product.id &&
-        capturedParameters[.numItems] as? Int == 0 &&
+        capturedParameters[.numItems] as? Int == 1 &&
         (capturedParameters[.transactionDate] as? String)?.isEmpty == true &&
         (capturedParameters[.productTitle] as? String)?.isEmpty == true &&
         (capturedParameters[.description] as? String)?.isEmpty == true &&

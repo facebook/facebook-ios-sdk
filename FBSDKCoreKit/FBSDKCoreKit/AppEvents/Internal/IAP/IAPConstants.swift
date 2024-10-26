@@ -19,6 +19,13 @@ enum IAPConstants {
   static let IAPSDKLibraryVersions = "SK1-SK2"
   static let eventsForReceipt: Set<AppEvents.Name> = [.purchased, .subscribe, .startTrial]
   static let dedupableEvents: Set<AppEvents.Name> = [.purchased, .subscribe, .startTrial]
+  static let verifiableEvents: Set<AppEvents.Name> = [
+    .purchased,
+    .subscribe,
+    .startTrial,
+    .purchaseRestored,
+    .subscribeRestore,
+  ]
   static let manuallyLoggedDedupableEventsKey = "com.facebook.sdk:ManualDedupableEventsKey"
   static let implicitlyLoggedDedupableEventsKey = "com.facebook.sdk:ImplicitDedupableEventsKey"
 }

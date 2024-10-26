@@ -95,7 +95,7 @@ extension IAPTransactionLogger {
     } else {
       parameters[.inAppPurchaseType] = IAPType.product.rawValue
     }
-    if event.storeKitVersion == .version2 {
+    if event.isClientSideVerifiable {
       parameters[.validationResult] = event.validationResult?.rawValue ?? IAPValidationResult.unverified.rawValue
     }
     if event.shouldAppendReceipt, let receipt = fetchDeviceReceipt() {
