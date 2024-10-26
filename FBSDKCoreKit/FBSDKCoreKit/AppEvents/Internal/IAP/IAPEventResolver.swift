@@ -168,7 +168,7 @@ extension IAPEventResolver {
       productTitle: product.displayName,
       productDescription: product.description,
       amount: transaction?.price ?? product.price,
-      quantity: transaction?.purchasedQuantity ?? 0,
+      quantity: transaction?.purchasedQuantity ?? 1,
       currency: currency ?? product.priceFormatStyle.currencyCode,
       transactionID: transactionID,
       originalTransactionID: originalTransactionID,

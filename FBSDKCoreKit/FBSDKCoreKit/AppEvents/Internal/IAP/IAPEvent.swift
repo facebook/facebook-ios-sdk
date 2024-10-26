@@ -34,4 +34,8 @@ struct IAPEvent: Equatable {
   var shouldAppendReceipt: Bool {
     storeKitVersion == .version1 && IAPConstants.eventsForReceipt.contains(eventName)
   }
+
+  var isClientSideVerifiable: Bool {
+    storeKitVersion == .version2 && IAPConstants.verifiableEvents.contains(eventName)
+  }
 }
