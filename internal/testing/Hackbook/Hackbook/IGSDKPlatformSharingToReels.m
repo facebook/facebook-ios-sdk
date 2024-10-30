@@ -48,6 +48,7 @@ BOOL IGSDKPlatformSharingToReelsPasteboard(NSArray<NSDictionary<NSString *, id> 
     return NO;
   }
 
-  [[UIPasteboard generalPasteboard] addItems:pasteboardItems]; // iOS 10+ setItems:options:
-  return [[UIApplication sharedApplication] openURL:URL]; // iOS 10+ openURL:options:completionHandler:
+  [[UIPasteboard generalPasteboard] setItems:pasteboardItems];
+  [[UIApplication sharedApplication] openURL:URL options:@{} completionHandler:nil];
+  return YES;
 }
