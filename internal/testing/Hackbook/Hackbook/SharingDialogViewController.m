@@ -424,13 +424,8 @@ static void SetSharingContentPlaceID(id<FBSDKSharingContent> sharingContent)
   ImagePicker *imagePicker = [[ImagePicker alloc] init];
   self.imagePicker = imagePicker;
   imagePicker.delegate = self;
-  if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && [sender isKindOfClass:[UIView class]]) {
-    UIView *senderView = (UIView *)sender;
-    UIView *view = self.view;
-    [imagePicker presentFromRect:[view convertRect:senderView.bounds fromView:senderView] inView:self.view];
-  } else {
-    [imagePicker presentWithViewController:self];
-  }
+  const CGRect sourceRect = [self.view convertRect:sender.bounds fromView:sender];
+  [imagePicker presentWithViewController:self sourceView:sender sourceRect:sourceRect];
 }
 
 - (BOOL)canSharePhotoFromLibrary

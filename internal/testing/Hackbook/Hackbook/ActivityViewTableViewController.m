@@ -654,9 +654,14 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
   if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
     [self presentViewController:activityViewController animated:YES completion:NULL];
   } else {
-    const int contentOffsetY = ((UITableView *)self.view).contentOffset.y + ((UITableView *)self.view).contentInset.top;
-    UIPopoverController *popup = [[UIPopoverController alloc] initWithContentViewController:activityViewController];
-    [popup presentPopoverFromRect:CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 4 + contentOffsetY, 0, 0) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    activityViewController.modalPresentationStyle = UIModalPresentationPopover;
+    UIPopoverPresentationController *popoverController = activityViewController.popoverPresentationController;
+    popoverController.sourceView = self.view;
+    const CGFloat contentOffsetY = ((UITableView *)self.view).contentOffset.y + ((UITableView *)self.view).contentInset.top;
+    popoverController.sourceRect = CGRectMake(self.view.frame.size.width / 2, self.view.frame.size.height / 4 + contentOffsetY, 0, 0);
+    popoverController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+
+    [self presentViewController:activityViewController animated:YES completion:nil];
   }
 }
 

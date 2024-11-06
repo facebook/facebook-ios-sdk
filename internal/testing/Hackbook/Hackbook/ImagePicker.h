@@ -8,8 +8,7 @@
 
 @property (nonatomic, weak) id<ImagePickerDelegate> delegate;
 
-- (void)presentFromRect:(CGRect)rect inView:(UIView *)view;
-- (void)presentWithViewController:(UIViewController *)viewController;
+- (void)presentWithViewController:(UIViewController *)viewController sourceView:(UIView *)view sourceRect:(CGRect)rect;
 
 @end
 

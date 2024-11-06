@@ -7,7 +7,6 @@
 @interface ImagePicker () <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 @property (nonatomic, strong) UIActionSheet *actionSheet;
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
-@property (nonatomic, strong) UIPopoverController *popoverController;
 @property (nonatomic, assign) CGRect rect;
 @property (nonatomic, strong) UIView *view;
 @property (nonatomic, strong) UIViewController *viewController;
@@ -43,16 +42,11 @@
 
 #pragma mark - Public API
 
-- (void)presentFromRect:(CGRect)rect inView:(UIView *)view
-{
-  self.rect = rect;
-  self.view = view;
-  [self _presentActionSheet];
-}
-
-- (void)presentWithViewController:(UIViewController *)viewController
+- (void)presentWithViewController:(UIViewController *)viewController sourceView:(UIView *)view sourceRect:(CGRect)rect
 {
   self.viewController = viewController;
+  self.rect = rect;
+  self.view = view;
   [self _presentActionSheet];
 }
 
@@ -96,15 +90,15 @@
     }
     if (imagePickerController) {
       UIView *view = self.view;
-      if (view) {
-        UIPopoverController *popoverController = [[UIPopoverController alloc] initWithContentViewController:imagePickerController];
+      if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
         // This is a hack. Let the action sheet dismiss before presenting the popover controller.
         dispatch_async(dispatch_get_main_queue(), ^{
-          self.popoverController = popoverController;
-          [popoverController presentPopoverFromRect:self.rect
-                                             inView:view
-                           permittedArrowDirections:UIPopoverArrowDirectionAny
-                                           animated:YES];
+          imagePickerController.modalPresentationStyle = UIModalPresentationPopover;
+          UIPopoverPresentationController *popoverController = imagePickerController.popoverPresentationController;
+          popoverController.sourceView = view;
+          popoverController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+          
+          [self.viewController presentViewController:imagePickerController animated:YES completion:nil];
         });
       } else {
         imagePickerController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
@@ -120,8 +114,6 @@
   didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info
 {
   NSAssert1(picker == self.imagePickerController, @"Unexpected imagePickerController: %@", picker);
-  [self.popoverController dismissPopoverAnimated:YES];
-  self.popoverController = nil;
   [self.viewController dismissViewControllerAnimated:YES completion:NULL];
   self.viewController = nil;
   self.imagePickerController = nil;
