@@ -14,6 +14,10 @@
 
 static NSString *const kUIActivityViewControllerActionReuseIdentifier = @"UIActivityViewControllerAction";
 
+// Should be kept in sync with private variable in:
+// FBSDKShareKit/FBSDKShareKit/UserInterface/SocialComposeViewControllerFactory.swift
+static NSString *const kFacebookSocialComposeServiceType = @"com.apple.social.facebook";
+
 typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
   ActivityViewControllerSectionLinks,
   ActivityViewControllerSectionTextWithLinks,
@@ -234,18 +238,13 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 
 - (void)_shareURLPlusQuote:(id)sender
 {
-  if (FBSDKPlatformShareExtensionCanOpen()) {
     NSString *const appID = @"237759909591655"; // Facebook Messenger for iPhone
     NSString *const quote = @"I'd like to stay in touch with you on Messenger. You don't even need a Facebook account to join.";
     NSURL *const URL = [NSURL URLWithString:@"https://m.me/gi/AbYM3HUh6DXyab7Z/"];
 
     NSString *const initialText = FBSDKPlatformShareExtensionInitialText(appID, nil, quote);
-
-    SLComposeViewController *const composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
-    [composeViewController addURL:URL];
-    [composeViewController setInitialText:initialText];
-    [self presentViewController:composeViewController animated:YES completion:nil];
-  }
+  
+  [self _presentActivityViewControllerForActivityItems:@[URL, initialText]];
 }
 
 - (IBAction)_shareURLPlusString:(id)sender
@@ -475,7 +474,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 - (IBAction)_shareSingleURLWithSLComposer:(id)sender
 {
   NSURL *url = [NSURL URLWithString:@"http://www.bing.com/images/search?q=bugs+bunny&qs=OS&sk=IM1&FORM=QBIR&pq=bugbunny&sc=8-8&sp=2&qs=OS&sk=IM1"];
-  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:kFacebookSocialComposeServiceType];
   [composer addURL:url];
   [self presentViewController:composer animated:YES completion:NULL];
 }
@@ -484,7 +483,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 {
   NSURL *url1 = [NSURL URLWithString:@"http://www.apple.com"];
   NSURL *url2 = [NSURL URLWithString:@"http://www.spotify.com"];
-  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:kFacebookSocialComposeServiceType];
   [composer addURL:url1];
   [composer addURL:url2];
   [self presentViewController:composer animated:YES completion:NULL];
@@ -494,7 +493,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 {
   NSURL *url = [NSURL URLWithString:@"https://www.youtube.com/watch?v=2vjPBrBU-TM"];
   NSString *string = @"This text should't show up";
-  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:kFacebookSocialComposeServiceType];
   [composer setInitialText:string];
   [composer addURL:url];
   [self presentViewController:composer animated:YES completion:NULL];
@@ -503,7 +502,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 - (IBAction)_shareURLInTextWithSLComposer:(id)sender
 {
   NSString *string = @"Bugs Bunny is an animated cartoon character. http://en.wikipedia.org/wiki/Bugs_Bunny";
-  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:kFacebookSocialComposeServiceType];
   [composer setInitialText:string];
   [self presentViewController:composer animated:YES completion:NULL];
 }
@@ -520,7 +519,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
   UIImage *image8 = [UIImage imageNamed:@"iphone_connect_btn.jpg"];
   UIImage *image9 = [UIImage imageNamed:@"spacebook.jpg"];
   UIImage *image10 = [UIImage imageNamed:@"hbiOS.jpg"];
-  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:kFacebookSocialComposeServiceType];
   [composer addImage:image1];
   [composer addImage:image2];
   [composer addImage:image3];
@@ -538,7 +537,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 {
   UIImage *image = [UIImage imageNamed:@"bugs_bunny-500x500.jpg"];
   NSURL *url = [NSURL URLWithString:@"http://en.wikipedia.org/wiki/Bugs_Bunny"];
-  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:kFacebookSocialComposeServiceType];
   [composer addImage:image];
   [composer addURL:url];
   [self presentViewController:composer animated:YES completion:NULL];
@@ -554,7 +553,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
   UIImage *image6 = [UIImage imageNamed:@"f8_logo.jpg"];
   NSURL *url1 = [NSURL URLWithString:@"http://www.starwars.com"];
   NSURL *url2 = [NSURL URLWithString:@"http://en.wikipedia.org/wiki/Bugs_Bunny"];
-  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+  SLComposeViewController *composer = [SLComposeViewController composeViewControllerForServiceType:kFacebookSocialComposeServiceType];
   [composer addImage:image1];
   [composer addImage:image2];
   [composer addImage:image3];
