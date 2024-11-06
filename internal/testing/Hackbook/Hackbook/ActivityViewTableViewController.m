@@ -243,7 +243,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
     NSURL *const URL = [NSURL URLWithString:@"https://m.me/gi/AbYM3HUh6DXyab7Z/"];
 
     NSString *const initialText = FBSDKPlatformShareExtensionInitialText(appID, nil, quote);
-  
+
   [self _presentActivityViewControllerForActivityItems:@[URL, initialText]];
 }
 
@@ -386,6 +386,11 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 - (void)_shareVideoFromAssetsLibrary:(id)sender
 {
   NSURL *videoURL = [[NSBundle mainBundle] URLForResource:@"videoviewdemo" withExtension:@"mp4"];
+  // This is expected to use deprecated Asset Library framework
+  // While there are partners with not updated apps we have
+  // to keep this option alive to test the integration on our end
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
   [library writeVideoAtPathToSavedPhotosAlbum:videoURL completionBlock:^(NSURL *assetURL, NSError *error) {
     if (assetURL != nil) {
@@ -394,6 +399,7 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
       [self _showErrorMessage:[NSString stringWithFormat:@"Error copying video to assets library: %@", error]];
     }
   }];
+  #pragma clang diagnostic pop
 }
 
 #pragma mark - Mixed Cases
@@ -588,32 +594,44 @@ typedef NS_ENUM(NSUInteger, ActivityViewControllerSection) {
 
 - (IBAction)_shareMultimediaSDK:(id)sender
 {
+  __weak __typeof(self) weakSelf = self;
   [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
     if (status != PHAuthorizationStatusAuthorized) {
       dispatch_async(dispatch_get_main_queue(), ^{
-        [self _showErrorMessage:@"Photo Access is needed to share multimedia. Enable photo Access for Hackbook in Privacy/Photos"];
+        [weakSelf _showErrorMessage:@"Photo Access is needed to share multimedia. Enable photo Access for Hackbook in Privacy/Photos"];
       });
       return;
     }
     NSURL *videoURL = [[NSBundle mainBundle] URLForResource:@"videoviewdemo" withExtension:@"mp4"];
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    [library writeVideoAtPathToSavedPhotosAlbum:videoURL completionBlock:^(NSURL *assetURL, NSError *error) {
-      dispatch_async(dispatch_get_main_queue(), ^{
-        if (assetURL != nil) {
+    __block PHObjectPlaceholder *placeholder;
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        PHAssetChangeRequest *request = [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:videoURL];
+      placeholder = request.placeholderForCreatedAsset;
+    } completionHandler:^(BOOL success, NSError *error) {
+        __strong __typeof(self) strongSelf = weakSelf;
+        if (!strongSelf) {
+          return;
+        }
+        if (success) {
+          PHFetchResult<PHAsset *> *result = [PHAsset fetchAssetsWithLocalIdentifiers:@[placeholder.localIdentifier] options:nil];
+          PHAsset *asset = result.firstObject;
           FBSDKShareMediaContent *content = [FBSDKShareMediaContent new];
           content.media = @[
             [[FBSDKSharePhoto alloc] initWithImage:[UIImage imageNamed:@"bugs_bunny-500x500.jpg"]
                                    isUserGenerated:YES],
-            [[FBSDKShareVideo alloc] initWithVideoURL:assetURL previewPhoto:nil],
+            [[FBSDKShareVideo alloc] initWithVideoAsset:asset previewPhoto:nil],
           ];
-          FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] initWithViewController:self
+          FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] initWithViewController:strongSelf
                                                                               content:content
-                                                                             delegate:self];
-          [dialog show];
+                                                                             delegate:strongSelf];
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [dialog show];
+          });
         } else {
-          [self _showErrorMessage:[NSString stringWithFormat:@"Error copying video to assets library: %@", error]];
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf _showErrorMessage:[NSString stringWithFormat:@"Error copying video to assets library: %@", error]];
+          });
         }
-      });
     }];
   }];
 }
