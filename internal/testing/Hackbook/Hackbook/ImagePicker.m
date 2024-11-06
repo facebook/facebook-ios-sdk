@@ -5,7 +5,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ImagePicker () <UIActionSheetDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
-@property (nonatomic, strong) UIActionSheet *actionSheet;
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 @property (nonatomic, assign) CGRect rect;
 @property (nonatomic, strong) UIView *view;
@@ -18,7 +17,6 @@
 
 - (void)dealloc
 {
-  _actionSheet.delegate = nil;
   _imagePickerController.delegate = nil;
 }
 
@@ -32,14 +30,6 @@
   }
 }
 
-- (void)setActionSheet:(UIActionSheet *)actionSheet
-{
-  if (_actionSheet != actionSheet) {
-    _actionSheet.delegate = nil;
-    _actionSheet = actionSheet;
-  }
-}
-
 #pragma mark - Public API
 
 - (void)presentWithViewController:(UIViewController *)viewController sourceView:(UIView *)view sourceRect:(CGRect)rect
@@ -48,64 +38,6 @@
   self.rect = rect;
   self.view = view;
   [self _presentActionSheet];
-}
-
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-  NSAssert1(actionSheet == self.actionSheet, @"Unexpected actionSheet: %@", actionSheet);
-  self.actionSheet = nil;
-  if (buttonIndex == actionSheet.cancelButtonIndex) {
-    [self.delegate imagePickerDidCancel:self];
-  } else {
-    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-    self.imagePickerController = imagePickerController;
-    imagePickerController.delegate = self;
-    switch (buttonIndex) {
-      case 0: {
-      #if TARGET_OS_SIMULATOR
-        // If its the simulator, camera is no good
-        [[[UIAlertView alloc] initWithTitle:@"Camera not supported in simulator."
-                                    message:@"(>'_')>"
-                                   delegate:nil
-                          cancelButtonTitle:@"OK"
-                          otherButtonTitles:nil] show];
-        self.imagePickerController = nil;
-        [self.delegate imagePickerDidCancel:self];
-        return;
-      #else
-        imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-      #endif
-        break;
-      }
-      case 1: {
-        imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        break;
-      }
-      default: {
-        NSAssert1(NO, @"Unexpected button index: %li", (long)buttonIndex);
-        break;
-      }
-    }
-    if (imagePickerController) {
-      UIView *view = self.view;
-      if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-        // This is a hack. Let the action sheet dismiss before presenting the popover controller.
-        dispatch_async(dispatch_get_main_queue(), ^{
-          imagePickerController.modalPresentationStyle = UIModalPresentationPopover;
-          UIPopoverPresentationController *popoverController = imagePickerController.popoverPresentationController;
-          popoverController.sourceView = view;
-          popoverController.permittedArrowDirections = UIPopoverArrowDirectionAny;
-          
-          [self.viewController presentViewController:imagePickerController animated:YES completion:nil];
-        });
-      } else {
-        imagePickerController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-        [self.viewController presentViewController:imagePickerController animated:YES completion:NULL];
-      }
-    }
-  }
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -124,18 +56,80 @@
 
 #pragma mark - Helper Methods
 
+- (void)_openImagePickerWithSource:(UIImagePickerControllerSourceType)sourceType
+{
+  UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+  self.imagePickerController = imagePickerController;
+  imagePickerController.delegate = self;
+  #if TARGET_OS_SIMULATOR
+  if (sourceType == UIImagePickerControllerSourceTypeCamera) {
+    // If its the simulator, camera is no good
+    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:@"Camera not supported in simulator."
+                                                                         message:@"(>'_')>"
+                                                                  preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"OK"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    [actionSheet addAction:cancelAction];
+    actionSheet.popoverPresentationController.sourceView = self.view;
+    [self.viewController presentViewController:actionSheet animated:YES completion:nil];
+    self.imagePickerController = nil;
+    [self.delegate imagePickerDidCancel:self];
+    return;
+  }
+  #endif
+  
+  imagePickerController.sourceType = sourceType;
+  if (imagePickerController) {
+    UIView *view = self.view;
+    if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+      // This is a hack. Let the action sheet dismiss before presenting the popover controller.
+      dispatch_async(dispatch_get_main_queue(), ^{
+        imagePickerController.modalPresentationStyle = UIModalPresentationPopover;
+        UIPopoverPresentationController *popoverController = imagePickerController.popoverPresentationController;
+        popoverController.sourceView = view;
+        popoverController.permittedArrowDirections = UIPopoverArrowDirectionAny;
+        
+        [self.viewController presentViewController:imagePickerController animated:YES completion:nil];
+      });
+    } else {
+      imagePickerController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+      [self.viewController presentViewController:imagePickerController animated:YES completion:NULL];
+    }
+  }
+}
+
+- (void)_cancelSelection
+{
+  [self.delegate imagePickerDidCancel:self];
+}
+
 - (void)_presentActionSheet
 {
-  UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:nil
-                                                  otherButtonTitles:
-                                @"Take Photo",
-                                @"Choose Existing",
-                                nil];
-  self.actionSheet = actionSheet;
-  [actionSheet showInView:self.view ?: self.viewController.view];
+  __weak __typeof(self) weakSelf = self;
+  UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:nil
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleActionSheet];
+  actionSheet.popoverPresentationController.sourceView = self.view;
+  UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:@"Take Photo"
+                                                            style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction *action) {
+    [weakSelf _openImagePickerWithSource:UIImagePickerControllerSourceTypeCamera];
+  }];
+  UIAlertAction *chooseExistingAction = [UIAlertAction actionWithTitle:@"Choose Existing"
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction *action) {
+    [weakSelf _openImagePickerWithSource:UIImagePickerControllerSourceTypePhotoLibrary];
+  }];
+  UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction *action) {
+    [weakSelf _cancelSelection];
+  }];
+  [actionSheet addAction:takePhotoAction];
+  [actionSheet addAction:chooseExistingAction];
+  [actionSheet addAction:cancelAction];
+  [self.viewController presentViewController:actionSheet animated:YES completion:nil];
 }
 
 @end
