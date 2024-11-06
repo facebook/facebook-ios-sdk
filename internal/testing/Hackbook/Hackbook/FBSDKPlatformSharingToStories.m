@@ -124,7 +124,7 @@ BOOL FBSDKPlatformSharingToStoriesWhatsAppShare(NSString *_Nullable appID,
     [pasteboardItems addObject:@{FBSDKPlatformSharingToStoriesParamAppID : appID}];
   }
   if (mediaList.count > 0) {
-    [pasteboardItems addObject:@{FBSDKPlatformSharingToStoriesParamWhatsAppMediaList : [NSKeyedArchiver archivedDataWithRootObject:mediaList]}];
+    [pasteboardItems addObject:@{FBSDKPlatformSharingToStoriesParamWhatsAppMediaList : [NSKeyedArchiver archivedDataWithRootObject:mediaList requiringSecureCoding:NO error:nil]}];
   }
   return FBSDKPlatformSharingPasteboard(pasteboardItems, FBSDKPlatformSharingToStoriesScheme);
 }
