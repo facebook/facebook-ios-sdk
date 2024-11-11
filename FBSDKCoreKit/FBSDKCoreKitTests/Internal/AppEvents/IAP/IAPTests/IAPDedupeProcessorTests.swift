@@ -608,13 +608,13 @@ extension IAPDedupeProcessorTests {
   func testDedupWithDuplicatePurchaseEvents() async {
     dedupeProcessor.enable()
     let productID = Self.ProductIdentifiers.nonConsumableProduct1.rawValue
-    guard let (iapTransaction, _) =
+    guard let (iapTransaction, product) =
       await executeTransactionFor(productID) else {
       return
     }
     dedupeProcessor.processManualEvent(
       .purchased,
-      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? 0,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
       parameters: [
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
@@ -642,13 +642,13 @@ extension IAPDedupeProcessorTests {
   func testDedupWithDuplicateSubscribeEvents() async {
     dedupeProcessor.enable()
     let productID = Self.ProductIdentifiers.autoRenewingSubscription1.rawValue
-    guard let (iapTransaction, _) =
+    guard let (iapTransaction, product) =
       await executeTransactionFor(productID) else {
       return
     }
     dedupeProcessor.processManualEvent(
       .subscribe,
-      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? 0,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
       parameters: [
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
@@ -676,13 +676,13 @@ extension IAPDedupeProcessorTests {
   func testDedupWithDuplicateStartTrialEvents() async {
     dedupeProcessor.enable()
     let productID = Self.ProductIdentifiers.autoRenewingSubscription2.rawValue
-    guard let (iapTransaction, _) =
+    guard let (iapTransaction, product) =
       await executeTransactionFor(productID) else {
       return
     }
     dedupeProcessor.processManualEvent(
       .startTrial,
-      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? 0,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
       parameters: [
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
@@ -710,13 +710,13 @@ extension IAPDedupeProcessorTests {
   func testDedupWithDuplicatePurchaseEventsTestDedupConfig() async {
     dedupeProcessor.enable()
     let productID = Self.ProductIdentifiers.nonConsumableProduct1.rawValue
-    guard let (iapTransaction, _) =
+    guard let (iapTransaction, product) =
       await executeTransactionFor(productID) else {
       return
     }
     dedupeProcessor.processManualEvent(
       .purchased,
-      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? 0,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
       parameters: [
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
@@ -745,13 +745,13 @@ extension IAPDedupeProcessorTests {
   func testDedupWithNonDuplicatePurchaseEvents() async {
     dedupeProcessor.enable()
     let productID = Self.ProductIdentifiers.nonConsumableProduct1.rawValue
-    guard let (iapTransaction, _) =
+    guard let (iapTransaction, product) =
       await executeTransactionFor(productID) else {
       return
     }
     dedupeProcessor.processManualEvent(
       .purchased,
-      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? 0,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
       parameters: [
         AppEvents.ParameterName.currency: "USD",
       ],
@@ -777,7 +777,7 @@ extension IAPDedupeProcessorTests {
   func testSeveralManualAndImplicitEventsWithSomeDuplicatesAndSomeNonDuplicates() async {
     dedupeProcessor.enable()
     let productID = Self.ProductIdentifiers.nonConsumableProduct1.rawValue
-    guard let (iapTransaction, _) =
+    guard let (iapTransaction, product) =
       await executeTransactionFor(productID) else {
       return
     }
@@ -788,7 +788,7 @@ extension IAPDedupeProcessorTests {
     }
     dedupeProcessor.processManualEvent(
       .purchased,
-      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? 0,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
       parameters: [
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,

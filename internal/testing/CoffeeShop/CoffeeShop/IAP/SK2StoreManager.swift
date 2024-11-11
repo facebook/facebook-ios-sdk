@@ -71,7 +71,7 @@ extension SK2StoreManager {
           let eventName = isStartTrial ? AppEvents.Name.startTrial : AppEvents.Name.subscribe
           AppEvents.shared.logEvent(
             eventName,
-            valueToSum: NSDecimalNumber(decimal: transaction.price ?? 0),
+            valueToSum: NSDecimalNumber(decimal: transaction.price ?? product.price),
             parameters: [
               AppEvents.ParameterName.currency: "USD",
               AppEvents.ParameterName.contentID: transaction.productID,
@@ -81,7 +81,7 @@ extension SK2StoreManager {
         } else {
           AppEvents.shared.logEvent(
             .purchased,
-            valueToSum: NSDecimalNumber(decimal: transaction.price ?? 0),
+            valueToSum: NSDecimalNumber(decimal: transaction.price ?? product.price),
             parameters: [
               AppEvents.ParameterName.currency: "USD",
               AppEvents.ParameterName.contentID: transaction.productID,
