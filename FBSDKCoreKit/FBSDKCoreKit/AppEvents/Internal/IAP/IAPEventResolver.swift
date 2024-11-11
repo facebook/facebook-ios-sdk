@@ -147,9 +147,11 @@ extension IAPEventResolver {
     eventName: AppEvents.Name
   ) -> IAPEvent? {
     let transaction = iapTransaction?.transaction
-    var currency = transaction?.currencyCode
+    var currency: String?
     if #available(iOS 16.0, *) {
       currency = transaction?.currency?.identifier
+    } else {
+      currency = transaction?.currencyCode
     }
     let introOffer = product.subscription?.introductoryOffer
     let hasIntroductoryOffer = introOffer != nil

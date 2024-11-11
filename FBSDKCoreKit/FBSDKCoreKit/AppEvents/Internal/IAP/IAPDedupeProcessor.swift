@@ -291,6 +291,17 @@ extension IAPDedupeProcessor {
 
 extension IAPDedupeProcessor {
   private func dedupTimerFired() {
+    if #available(iOS 15.0, *) {
+      Task {
+        await IAPTransactionObserver.shared.observeNewTransactions()
+        executeDedupTimerFired()
+      }
+    } else {
+      executeDedupTimerFired()
+    }
+  }
+
+  private func executeDedupTimerFired() {
     timer?.invalidate()
     timer = nil
     var implicitEvents = synchronizedImplicitEvents
