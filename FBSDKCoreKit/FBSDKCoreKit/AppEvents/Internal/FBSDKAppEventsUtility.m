@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#if !FBSDK_IDFA_DISABLED
 #import <AdSupport/AdSupport.h>
+#endif
 
 #import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
@@ -23,7 +25,9 @@
 
 @interface FBSDKAppEventsUtility ()
 
+#if !FBSDK_IDFA_DISABLED
 @property (nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
+#endif
 
 @end
 
@@ -141,6 +145,9 @@ static FBSDKAppEventsUtility *_shared;
 - (nullable NSString *)_advertiserIDFromDynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
                                           shouldUseCachedManager:(BOOL)shouldUseCachedManager
 {
+#if !FBSDK_IDFA_DISABLED
+  return nil;
+#else
   if (!self.settings.isAdvertiserIDCollectionEnabled) {
     return nil;
   }
@@ -154,8 +161,10 @@ static FBSDKAppEventsUtility *_shared;
   ASIdentifierManager *manager = [self _asIdentifierManagerWithShouldUseCachedManager:shouldUseCachedManager
                                                              dynamicFrameworkResolver:dynamicFrameworkResolver];
   return manager.advertisingIdentifier.UUIDString;
+#endif
 }
 
+#if !FBSDK_IDFA_DISABLED
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)shouldUseCachedManager
                                                dynamicFrameworkResolver:(id<FBSDKDynamicFrameworkResolving>)dynamicFrameworkResolver
 {
@@ -172,6 +181,7 @@ static FBSDKAppEventsUtility *_shared;
   }
   return manager;
 }
+#endif
 
 - (BOOL)isStandardEvent:(nullable NSString *)event
 {
