@@ -247,7 +247,8 @@ extension IAPDedupeProcessor {
         valueToSum: implicitEvent.valueToSum,
         parameters: implicitEvent.parameters?.appEventParameterKeys,
         isImplicitlyLogged: implicitEvent.isImplicitEvent,
-        accessToken: implicitEvent.accessToken
+        accessToken: implicitEvent.accessToken,
+        operationalParameters: nil
       )
     }
     for manualEvent in manualEvents {
@@ -256,7 +257,8 @@ extension IAPDedupeProcessor {
         valueToSum: manualEvent.valueToSum,
         parameters: manualEvent.parameters?.appEventParameterKeys,
         isImplicitlyLogged: manualEvent.isImplicitEvent,
-        accessToken: manualEvent.accessToken
+        accessToken: manualEvent.accessToken,
+        operationalParameters: nil
       )
     }
     if dependencies.eventLogger.flushBehavior != .explicitOnly {

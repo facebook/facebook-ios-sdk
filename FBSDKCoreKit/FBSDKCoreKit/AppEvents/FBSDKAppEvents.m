@@ -1134,7 +1134,8 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           valueToSum:valueToSum
           parameters:parameters
   isImplicitlyLogged:isImplicitlyLogged
-         accessToken:accessToken];
+         accessToken:accessToken
+operationalParameters:nil];
     // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
     // are relatively rare and relatively high value and worth getting across on wire right away.
     if (eventName == FBSDKAppEventNamePurchased && self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly) {
@@ -1148,6 +1149,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
          accessToken:(nullable FBSDKAccessToken *)accessToken
+ operationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *)operationalParameters
 {
   [self validateConfiguration];
 

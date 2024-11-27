@@ -10,7 +10,8 @@ import FBSDKCoreKit
 import Foundation
 
 @objcMembers
-open class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this prefer_final_classes
+open class TestEventLogger: NSObject, EventLogging {
+  // swiftlint:disable:this prefer_final_classes
   public var flushCallCount = 0
   public var flushBehavior: AppEvents.FlushBehavior = .auto
   public var capturedEventName: AppEvents.Name?
@@ -20,6 +21,7 @@ open class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this p
   public var capturedValueToSum: Double?
   public var capturedFlushReason: AppEvents.FlushReason?
   public var capturedEvents: [EventStructForTests] = []
+  public var capturedOperationalParameters: [AppOperationalDataType: [String: Any]]?
 
   public func flush(for flushReason: AppEvents.FlushReason) {
     flushCallCount += 1
@@ -87,18 +89,21 @@ open class TestEventLogger: NSObject, EventLogging { // swiftlint:disable:this p
     capturedParameters = parameters
   }
 
+  // swiftlint:disable:next function_parameter_count
   public func doLogEvent(
     _ eventName: AppEvents.Name,
     valueToSum: NSNumber?,
     parameters: [AppEvents.ParameterName: Any]?,
     isImplicitlyLogged: Bool,
-    accessToken: AccessToken?
+    accessToken: AccessToken?,
+    operationalParameters: [AppOperationalDataType: [String: Any]]?
   ) {
     capturedEventName = eventName
     capturedValueToSum = valueToSum?.doubleValue
     capturedParameters = parameters
     capturedIsImplicitlyLogged = isImplicitlyLogged
     capturedAccessToken = accessToken
+    capturedOperationalParameters = operationalParameters
     let event = EventStructForTests(
       eventName: eventName,
       valueToSum: valueToSum,
