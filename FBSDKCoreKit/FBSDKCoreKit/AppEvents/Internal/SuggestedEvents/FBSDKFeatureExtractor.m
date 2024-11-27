@@ -360,6 +360,9 @@ void sum(float *val0, float *val1)
 
 + (float)regextMatch:(NSString *)pattern text:(NSString *)text
 {
+  if (!text) {
+    return 0.0;
+  }
   NSString *validText = [FBSDKTypeUtility coercedToStringValue:text];
   if (!validText) {
     return 0.0;

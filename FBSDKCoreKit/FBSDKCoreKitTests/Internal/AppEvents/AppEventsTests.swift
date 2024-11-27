@@ -33,6 +33,7 @@ final class AppEventsTests: XCTestCase {
   var settings: TestSettings!
   var onDeviceMLModelManager: TestOnDeviceMLModelManager!
   var paymentObserver: TestPaymentObserver!
+  var transactionObserver: TestTransactionObserver!
   var appEventsStateStore: TestAppEventsStateStore!
   var metadataIndexer: TestMetadataIndexer!
   var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
@@ -48,10 +49,13 @@ final class AppEventsTests: XCTestCase {
   var internalUtility: TestInternalUtility!
   var capiReporter: TestCAPIReporter!
   var protectedModeManager: TestAppEventsParameterProcessor!
+  var bannedParamsManager: TestBannedParamsManager!
+  var stdParamEnforcementManager: TestStdParamEnforcementManager!
   var macaRuleMatchingManager: TestMACARuleMatchingManager!
   var blocklistEventsManager: TestBlocklistEventsManager!
   var redactedEventsManager: TestRedactedEventsManager!
   var sensitiveParamsManager: TestSensitiveParamsManager!
+  var iapDedupeProcessor: TestIAPDedupeProcessor!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -69,6 +73,8 @@ final class AppEventsTests: XCTestCase {
     onDeviceMLModelManager = TestOnDeviceMLModelManager()
     onDeviceMLModelManager.integrityParametersProcessor = integrityParametersProcessor
     paymentObserver = TestPaymentObserver()
+    transactionObserver = TestTransactionObserver()
+    iapDedupeProcessor = TestIAPDedupeProcessor()
     metadataIndexer = TestMetadataIndexer()
 
     graphRequestFactory = TestGraphRequestFactory()
@@ -79,6 +85,8 @@ final class AppEventsTests: XCTestCase {
     eventDeactivationParameterProcessor = TestAppEventsParameterProcessor()
     restrictiveDataFilterParameterProcessor = TestAppEventsParameterProcessor()
     protectedModeManager = TestAppEventsParameterProcessor()
+    bannedParamsManager = TestBannedParamsManager()
+    stdParamEnforcementManager = TestStdParamEnforcementManager()
     macaRuleMatchingManager = TestMACARuleMatchingManager()
     blocklistEventsManager = TestBlocklistEventsManager()
     redactedEventsManager = TestRedactedEventsManager()
@@ -125,6 +133,8 @@ final class AppEventsTests: XCTestCase {
     eventDeactivationParameterProcessor = nil
     restrictiveDataFilterParameterProcessor = nil
     protectedModeManager = nil
+    bannedParamsManager = nil
+    stdParamEnforcementManager = nil
     macaRuleMatchingManager = nil
     blocklistEventsManager = nil
     redactedEventsManager = nil
@@ -138,6 +148,8 @@ final class AppEventsTests: XCTestCase {
     appEventsUtility = nil
     internalUtility = nil
     capiReporter = nil
+    transactionObserver = nil
+    iapDedupeProcessor = nil
 
     resetTestHelpers()
 
@@ -174,10 +186,15 @@ final class AppEventsTests: XCTestCase {
       internalUtility: internalUtility,
       capiReporter: capiReporter,
       protectedModeManager: protectedModeManager,
+      bannedParamsManager: bannedParamsManager,
+      stdParamEnforcementManager: stdParamEnforcementManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
-      sensitiveParamsManager: sensitiveParamsManager
+      sensitiveParamsManager: sensitiveParamsManager,
+      transactionObserver: transactionObserver,
+      failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
+      iapDedupeProcessor: iapDedupeProcessor
     )
 
     appEvents.configureNonTVComponents(
@@ -1649,9 +1666,45 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: false)
     XCTAssertTrue(
       paymentObserver.didStartObservingTransactions,
-      "fetchConfiguration should start payment observing if the configuration allows it"
+      "fetchConfiguration should start payment observing if the configuration allows it and SK2 is disabled"
+    )
+    XCTAssertFalse(
+      paymentObserver.didStopObservingTransactions,
+      "fetchConfiguration shouldn't stop payment observing if the configuration allows it"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "fetchConfiguration should not start transaction observing if the configuration allows it and SK2 is disabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStopObserving,
+      "fetchConfiguration should not stop transaction observing if the configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationStartsTransactionObservingIfConfigurationAllowed() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    XCTAssertTrue(
+      transactionObserver.didStartObserving,
+      "fetchConfiguration should start transaction observing if the configuration allows it and SK2 is enabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStopObserving,
+      "fetchConfiguration should not stop transaction observing if the configuration allows it"
+    )
+    XCTAssertFalse(
+      paymentObserver.didStartObservingTransactions,
+      "fetchConfiguration should not start payment observing if the configuration allows it and SK2 is enabled"
     )
     XCTAssertFalse(
       paymentObserver.didStopObservingTransactions,
@@ -1659,7 +1712,7 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
-  func testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed() {
+  func testFetchingConfigurationStopsPaymentAndTransactionObservingIfConfigurationDisallowed() {
     settings.isAutoLogAppEventsEnabled = true
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": 0]
@@ -1669,11 +1722,19 @@ final class AppEventsTests: XCTestCase {
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
     XCTAssertFalse(
       paymentObserver.didStartObservingTransactions,
-      "Fetching a configuration shouldn't start payment observing if the configuration disallows it"
+      "Fetching a configuration shouldn't start payment observing if auto log app events is disabled"
     )
     XCTAssertTrue(
       paymentObserver.didStopObservingTransactions,
-      "Fetching a configuration should stop payment observing if the configuration disallows it"
+      "Fetching a configuration should stop payment observing if auto log app events is disabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "Fetching a configuration shouldn't start transaction observing if auto log app events is disabled"
+    )
+    XCTAssertTrue(
+      transactionObserver.didStopObserving,
+      "Fetching a configuration should stop transaction observing if auto log app events is disabled"
     )
   }
 
@@ -1693,6 +1754,89 @@ final class AppEventsTests: XCTestCase {
       paymentObserver.didStopObservingTransactions,
       "Fetching a configuration should stop payment observing if auto log app events is disabled"
     )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "Fetching a configuration shouldn't start transaction observing if auto log app events is disabled"
+    )
+    XCTAssertTrue(
+      transactionObserver.didStopObserving,
+      "Fetching a configuration should stop transaction observing if auto log app events is disabled"
+    )
+  }
+
+  func testEnablingIAPDedupeShouldEnableIAPDedupe() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertTrue(iapDedupeProcessor.enableWasCalled)
+    XCTAssertFalse(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenDedupeFeatureIsDiabled() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: false)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenIAPSK2FeatureIsDiabled() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: false)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenAutologIsDiabled() {
+    settings.isAutoLogAppEventsEnabled = false
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenImplicitPurchaseIsDiabled() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": 0]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
   }
 
   func testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled() {

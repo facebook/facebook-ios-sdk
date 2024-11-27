@@ -44,7 +44,7 @@ final class AppLinkNavigationTests: XCTestCase {
     eventPoster = TestMeasurementEvent()
     resolver = TestAppLinkResolver()
     settings = TestSettings()
-    settings.sdkVersion = "17.0.3"
+    settings.sdkVersion = "17.4.0"
     urlOpener = URLOpener(canOpenURL: true)
     AppLinkNavigation.defaultResolver = resolver
 
@@ -431,63 +431,73 @@ final class AppLinkNavigationTests: XCTestCase {
     let appLink = AppLink(sourceURL: nil, targets: [target], webURL: nil)
 
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
+    urlOpener.stubNavigation(navigation: navigation)
+    urlOpener.stubNavigationType(navType: .app)
 
-    do {
-      let result = try navigation.navigate()
-      XCTAssertEqual(result, .app, "Should return the correct navigation type")
+    let handler: (AppLinkNavigationType, Error?) -> Void = { navType, error in
+      XCTAssertEqual(navType, .app, "Should return the correct navigation type")
+      XCTAssertNil(
+        error,
+        "Should return nil error"
+      )
       XCTAssertNotNil(
-        urlOpener.capturedOpenURL,
+        self.urlOpener.capturedOpenURL,
         "Should create an open a url for a valid target"
       )
       XCTAssertEqual(
-        urlOpener.capturedOpenURL?.absoluteString,
-        eventPoster.capturedArgs["outputURL"],
+        self.urlOpener.capturedOpenURL?.absoluteString,
+        self.eventPoster.capturedArgs["outputURL"],
         "Should post a notification with the url that was opened"
       )
-    } catch {
-      XCTAssertNil(error)
     }
+    urlOpener.stubHandler(handler: handler)
+    navigation.navigate(handler: nil)
   }
 
   func testUnsuccessfullyNavigatingWithTargetWithWebUrl() {
     urlOpener.stubOpenSuccess(host: .host1, succeeds: false)
     urlOpener.stubOpenSuccess(host: .host2, succeeds: true)
     let target = AppLinkTarget(url: .usingHost1, appStoreId: nil, appName: name)
-    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: .usingHost2.appendingPathExtension(name))
+    let appLink = AppLink(sourceURL: nil, targets: [target], webURL: .usingHost2)
 
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
-
-    do {
-      let result = try navigation.navigate()
-      XCTAssertEqual(result, .browser, "Should return the correct navigation type")
+    urlOpener.stubNavigation(navigation: navigation)
+    urlOpener.stubNavigationType(navType: .browser)
+    let handler: (AppLinkNavigationType, Error?) -> Void = { navType, error in
+      XCTAssertEqual(navType, .browser, "Should return the correct navigation type")
+      XCTAssertNil(
+        error,
+        "Should return nil error"
+      )
       XCTAssertNotNil(
-        urlOpener.capturedOpenURL,
+        self.urlOpener.capturedOpenURL,
         "Should create an open a url for a valid target"
       )
       XCTAssertEqual(
-        urlOpener.capturedOpenURL?.absoluteString,
-        eventPoster.capturedArgs["outputURL"],
+        URL.usingHost2.absoluteString,
+        self.eventPoster.capturedArgs["outputURL"],
         "Should post a notification with the url that was opened"
       )
-    } catch {
-      XCTAssertNil(error)
     }
+    urlOpener.stubHandler(handler: handler)
+    navigation.navigate(handler: nil)
   }
 
   func testUnsuccessfullyNavigatingWithoutTargetAndNoWebURL() {
     let appLink = AppLink(sourceURL: nil, targets: [], webURL: nil)
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: [:])
-
-    do {
-      let result = try navigation.navigate()
+    let handler: (AppLinkNavigationType, Error?) -> Void = { navType, error in
       XCTAssertEqual(
-        result,
+        navType,
         .failure,
         "A correct navigation type is returned when there are not targets, no web url"
       )
-    } catch {
-      XCTAssertNil(error, "An error is not thrown when there are not targets and no web url")
+      XCTAssertNil(
+        error,
+        "Should return nil error"
+      )
     }
+    navigation.navigate(handler: handler)
   }
 
   func testUnsuccessfullyNavigatingWithoutTargetAndWebURL() {
@@ -495,10 +505,18 @@ final class AppLinkNavigationTests: XCTestCase {
     let appLinkData = ["bad link data": Date()]
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData)
 
-    XCTAssertThrowsError(
-      try navigation.navigate(),
-      "An error is thrown when there are not targets, there is a web url and bad link data is provided"
-    )
+    let handler: (AppLinkNavigationType, Error?) -> Void = { navType, error in
+      XCTAssertEqual(
+        navType,
+        .failure,
+        "A correct navigation type is returned when there are not targets, no web url"
+      )
+      XCTAssertNotNil(
+        error,
+        "Should return an error"
+      )
+    }
+    navigation.navigate(handler: handler)
   }
 
   func testUnsuccessfullyNavigatingWithTargetAndBadLinkData() {
@@ -507,10 +525,18 @@ final class AppLinkNavigationTests: XCTestCase {
     let appLinkData = ["bad link data": Date()]
     navigation = AppLinkNavigation(appLink: appLink, extras: [:], appLinkData: appLinkData)
 
-    XCTAssertThrowsError(
-      try navigation.navigate(),
-      "An error is thrown when there are targets, no web url and bad link data is provided"
-    )
+    let handler: (AppLinkNavigationType, Error?) -> Void = { navType, error in
+      XCTAssertEqual(
+        navType,
+        .failure,
+        "A correct navigation type is returned when there are not targets, no web url"
+      )
+      XCTAssertNotNil(
+        error,
+        "Should return an error"
+      )
+    }
+    navigation.navigate(handler: handler)
   }
 
   func testNavigatingToUrlWithoutAppLink() {
@@ -650,34 +676,54 @@ extension AppLinkNavigationTests {
     var capturedOpenURL: URL?
     var openSuccessStubsByHost = [String: Bool]()
     var canOpenURL: Bool
+    var handler: AppLinkNavigationBlock?
+    var navType: AppLinkNavigationType
+    var nagivation: AppLinkNavigation?
 
     init(canOpenURL: Bool = false) {
       self.canOpenURL = canOpenURL
+      navType = .app
     }
 
     fileprivate func stubOpenSuccess(host: String, succeeds: Bool) {
       openSuccessStubsByHost[host] = succeeds
     }
 
+    fileprivate func stubHandler(handler: AppLinkNavigationBlock?) {
+      self.handler = handler
+    }
+
+    fileprivate func stubNavigationType(navType: AppLinkNavigationType) {
+      self.navType = navType
+    }
+
+    fileprivate func stubNavigation(navigation: AppLinkNavigation) {
+      nagivation = navigation
+    }
+
     fileprivate func canOpen(_ url: URL) -> Bool { canOpenURL }
 
-    fileprivate func open(_ url: URL) -> Bool {
+    fileprivate func open(
+      _ url: URL,
+      options: [UIApplication.OpenExternalURLOptionsKey: Any] = [:],
+      completionHandler completion: (
+        (Bool) -> Void)? = nil
+    ) {
       capturedOpenURL = url
 
       guard
         let host = url.host,
-        let didOpen = openSuccessStubsByHost[host]
+        let result = openSuccessStubsByHost[host]
       else {
         fatalError("URL must have a host and an opening success stub: \(url.absoluteString)")
       }
 
-      return didOpen
+      var openedUrl = url
+      if !result {
+        openedUrl = .usingHost2
+      }
+      nagivation?.postNavigateEventNotification(targetURL: openedUrl, error: nil, navigationType: navType)
+      handler?(navType, nil)
     }
-
-    fileprivate func open(
-      _ url: URL,
-      options: [UIApplication.OpenExternalURLOptionsKey: Any],
-      completionHandler completion: ((Bool) -> Void)?
-    ) {}
   }
 }

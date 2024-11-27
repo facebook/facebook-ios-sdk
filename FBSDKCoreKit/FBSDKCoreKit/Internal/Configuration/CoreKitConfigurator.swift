@@ -110,10 +110,15 @@ private extension CoreKitConfigurator {
       internalUtility: components.internalUtility,
       capiReporter: components.capiReporter,
       protectedModeManager: components.protectedModeManager,
+      bannedParamsManager: components.bannedParamsManager,
+      stdParamEnforcementManager: components.stdParamEnforcementManager,
       macaRuleMatchingManager: components.macaRuleMatchingManager,
       blocklistEventsManager: components.blocklistEventsManager,
       redactedEventsManager: components.redactedEventsManager,
-      sensitiveParamsManager: components.sensitiveParamsManager
+      sensitiveParamsManager: components.sensitiveParamsManager,
+      transactionObserver: components.transactionObserver,
+      failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
+      iapDedupeProcessor: components.iapDedupeProcessor
     )
   }
 
@@ -372,8 +377,6 @@ private extension CoreKitConfigurator {
   }
 
   func configureDomainHandler() {
-    components.internalUtility.validateDomainConfiguration()
-
     _DomainHandler.sharedInstance().configure(
       domainConfigurationProvider: _DomainConfigurationManager.sharedInstance(),
       settings: components.settings,
@@ -382,6 +385,8 @@ private extension CoreKitConfigurator {
       graphRequestConnectionFactory: components.graphRequestConnectionFactory
     )
     _DomainConfiguration.setDefaultDomainInfo()
+
+    components.internalUtility.validateDomainConfiguration()
   }
 
   func configureGraphRequestQueue() {

@@ -395,6 +395,7 @@ public final class ApplicationDelegate: NSObject {
     applicationObservers.allObjects.forEach { observer in
       observer.applicationDidEnterBackground?(notification.object as? UIApplication)
     }
+    IAPTransactionCache.shared.trimIfNeeded()
   }
 
   func applicationDidBecomeActive(_ notification: Notification?) {
@@ -420,6 +421,9 @@ public final class ApplicationDelegate: NSObject {
     applicationState = .active
     applicationObservers.allObjects.forEach { observer in
       observer.applicationWillResignActive?(notification.object as? UIApplication)
+    }
+    if IAPDedupeProcessor.shared.isEnabled {
+      IAPDedupeProcessor.shared.saveNonProcessedEvents()
     }
   }
 

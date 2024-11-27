@@ -10,7 +10,38 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.3...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.4.0...HEAD)
+
+## 17.4.0
+
+### Updated
+- Updated domain configuration validation
+
+[2024-10-17](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.4.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.3.0...v17.4.0)
+
+## 17.3.0
+
+### Fixed
+- Fixed Xcode 16 deprecated API issues
+  - UIApplication.open(_ url:) API silently failed in swift.
+  - AppLinks navigation silently failed.
+
+### Changed
+- AppLinkNavigation public APIs have been changed due to the platform API deprecation.
+  AppLinkNavigation now passes back the navigation result via async completionHandler rather than returning the results synchronously.
+
+[2024-09-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.1.0...v17.3.0)
+
+## 17.1.0
+
+### Fixed
+- Migrate ShareDialog from AssetLibrary to Photos for share content represented by PHAsset
+- Fix images being out of order in ShareDialog
+
+[2024-09-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.3...v17.1.0)
 
 ## 17.0.3
 

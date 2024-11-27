@@ -1,0 +1,219 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "C0F1F7F1",
+  "nonRenewingSubscriptions" : [
+    {
+      "displayPrice" : "5",
+      "familyShareable" : false,
+      "internalID" : "15F87AA6",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.fbsdk.nonrenewing.s1",
+      "referenceName" : "Non-renewing Subscription 1",
+      "type" : "NonRenewingSubscription"
+    }
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "49D5C9BC",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.fbsdk.nonconsumable.p1",
+      "referenceName" : "Non Consumable Product 1",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "AEEFA3B1",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.fbsdk.nonconsumable.p2",
+      "referenceName" : "Non Consumable Product 2",
+      "type" : "NonConsumable"
+    },
+    {
+      "displayPrice" : "10",
+      "familyShareable" : false,
+      "internalID" : "A2048D09",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.fbsdk.consumable.p1",
+      "referenceName" : "Consumable Product 1",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "D14ED020",
+      "localizations" : [
+
+      ],
+      "name" : "Group 1",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "666E0D10",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.fbsdk.autorenewing.s1",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Autorenewing Subscription 1",
+          "subscriptionGroupID" : "D14ED020",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    },
+    {
+      "id" : "F6CFFE52",
+      "localizations" : [
+
+      ],
+      "name" : "Group 2",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+            {
+              "internalID" : "A3D5BBE7",
+              "offerID" : "FreeTrial",
+              "paymentMode" : "free",
+              "referenceName" : "FreeTrial",
+              "subscriptionPeriod" : "P6M"
+            }
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "3",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "173A60F7",
+          "introductoryOffer" : {
+            "internalID" : "FA0A223E",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P6M"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.fbsdk.autorenewing.s2",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Autorenewing Subscription 2",
+          "subscriptionGroupID" : "F6CFFE52",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

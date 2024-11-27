@@ -344,8 +344,8 @@ extension ShareDialog {
 
   private var contentImages: [UIImage] {
     if let photoContent = shareContent as? SharePhotoContent {
-      let uniqueImages = Set(photoContent.photos.compactMap(\.image))
-      return Array(uniqueImages)
+      var seen = Set<UIImage>()
+      return photoContent.photos.compactMap(\.image).filter { seen.insert($0).inserted }
     } else if let mediaContent = shareContent as? ShareMediaContent {
       return mediaContent.media.compactMap { ($0 as? SharePhoto)?.image }
     } else {

@@ -47,6 +47,58 @@ final class AppEventsConfigurationTests: XCTestCase {
     XCTAssertTrue(configuration.eventCollectionEnabled, "Event collection enabled should be settable")
   }
 
+  func testCreatingWithDefaultIAPObservationTime() {
+    XCTAssertEqual(configuration.iapObservationTime, 3600000000000)
+  }
+
+  func testCreatingWithKnownIAPObservationTime() {
+    configuration = SampleAppEventsConfigurations.create(iapObservationTime: 1800000000000)
+    XCTAssertEqual(configuration.iapObservationTime, 1800000000000)
+  }
+
+  func testCreatingWithDefaultIAPDedupWindow() {
+    XCTAssertEqual(configuration.iapManualAndAutoLogDedupWindow, 60000)
+  }
+
+  func testCreatingWithKnownIAPDedupWindow() {
+    configuration = SampleAppEventsConfigurations.create(iapManualAndAutoLogDedupWindow: 30000)
+    XCTAssertEqual(configuration.iapManualAndAutoLogDedupWindow, 30000)
+  }
+
+  func testCreatingWithDefaultIAPProdDedupConfiguration() {
+    let expectedConfig = [
+      "fb_content_id": ["fb_content_id"],
+      "fb_content_title": ["fb_content_title"],
+      "fb_description": ["fb_description"],
+      "fb_transaction_id": ["fb_transaction_id"],
+      "_valueToSum": ["_valueToSum"],
+      "fb_currency": ["fb_currency"],
+    ]
+    XCTAssertEqual(configuration.iapProdDedupConfiguration, expectedConfig)
+  }
+
+  func testCreatingWithKnownIAPProdDedupConfiguration() {
+    let config = [
+      "key_1": ["val_1"],
+      "key_2": ["val_2"],
+    ]
+    configuration = SampleAppEventsConfigurations.create(iapProdDedupConfiguration: config)
+    XCTAssertEqual(configuration.iapProdDedupConfiguration, config)
+  }
+
+  func testCreatingWithDefaultIAPTestDedupConfiguration() {
+    XCTAssertTrue(configuration.iapTestDedupConfiguration.isEmpty)
+  }
+
+  func testCreatingWithKnownIAPTestDedupConfiguration() {
+    let config = [
+      "key_1": ["val_1"],
+      "key_2": ["val_2"],
+    ]
+    configuration = SampleAppEventsConfigurations.create(iapTestDedupConfiguration: config)
+    XCTAssertEqual(configuration.iapTestDedupConfiguration, config)
+  }
+
   func testCodingSecurity() {
     XCTAssertTrue(_AppEventsConfiguration.supportsSecureCoding, "Should support secure coding")
   }
@@ -97,6 +149,14 @@ final class AppEventsConfigurationTests: XCTestCase {
       configuration.eventCollectionEnabled,
       "Should use the correct default for event collection"
     )
+    XCTAssertEqual(
+      configuration.iapProdDedupConfiguration,
+      SampleAppEventsConfigurations.default.iapProdDedupConfiguration
+    )
+    XCTAssertEqual(
+      configuration.iapTestDedupConfiguration,
+      SampleAppEventsConfigurations.default.iapTestDedupConfiguration
+    )
   }
 
   func testCreatingWithValidValues() {
@@ -114,6 +174,33 @@ final class AppEventsConfigurationTests: XCTestCase {
       configuration.eventCollectionEnabled,
       "Should use the provided value for event collection"
     )
+    let expectedProdConfig = [
+      "fb_content_id": ["fb_content_id", "fb_product_item_id"],
+      "fb_transaction_id": ["fb_transaction_id", "fb_order_id"],
+    ]
+    let expectedTestConfig = [
+      "test_key_1": ["test_value_0", "test_value_1"],
+    ]
+    XCTAssertEqual(configuration.iapProdDedupConfiguration, expectedProdConfig)
+    XCTAssertEqual(configuration.iapTestDedupConfiguration, expectedTestConfig)
+  }
+
+  func testCreatingWithEmptyDedupConfig() {
+    configuration = _AppEventsConfiguration(json: RawAppEventsConfigurationResponseFixtures.emptyDedupConfig)
+    XCTAssertEqual(
+      configuration.iapProdDedupConfiguration,
+      SampleAppEventsConfigurations.default.iapProdDedupConfiguration
+    )
+    XCTAssertEqual(
+      configuration.iapTestDedupConfiguration,
+      SampleAppEventsConfigurations.default.iapTestDedupConfiguration
+    )
+  }
+
+  func testCreatingWithEmptyProdAndTestDedupConfig() {
+    configuration = _AppEventsConfiguration(json: RawAppEventsConfigurationResponseFixtures.emptyProdAndTestDedupConfig)
+    XCTAssertTrue(configuration.iapProdDedupConfiguration.isEmpty)
+    XCTAssertTrue(configuration.iapTestDedupConfiguration.isEmpty)
   }
 
   // MARK: Coding
@@ -142,6 +229,26 @@ final class AppEventsConfigurationTests: XCTestCase {
       decodedObject.eventCollectionEnabled,
       .isCodable
     )
+    XCTAssertEqual(
+      configuration.iapObservationTime,
+      decodedObject.iapObservationTime,
+      .isCodable
+    )
+    XCTAssertEqual(
+      configuration.iapManualAndAutoLogDedupWindow,
+      decodedObject.iapManualAndAutoLogDedupWindow,
+      .isCodable
+    )
+    XCTAssertEqual(
+      configuration.iapProdDedupConfiguration,
+      decodedObject.iapProdDedupConfiguration,
+      .isCodable
+    )
+    XCTAssertEqual(
+      configuration.iapTestDedupConfiguration,
+      decodedObject.iapTestDedupConfiguration,
+      .isCodable
+    )
   }
 }
 
@@ -153,7 +260,11 @@ extension _AppEventsConfiguration {
     if let other = object as? _AppEventsConfiguration {
       return advertiserIDCollectionEnabled == other.advertiserIDCollectionEnabled &&
         eventCollectionEnabled == other.eventCollectionEnabled &&
-        defaultATEStatus == other.defaultATEStatus
+        defaultATEStatus == other.defaultATEStatus &&
+        iapObservationTime == other.iapObservationTime &&
+        iapManualAndAutoLogDedupWindow == other.iapManualAndAutoLogDedupWindow &&
+        iapProdDedupConfiguration == other.iapProdDedupConfiguration &&
+        iapTestDedupConfiguration == other.iapTestDedupConfiguration
     } else {
       return super.isEqual(object)
     }

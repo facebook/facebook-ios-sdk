@@ -51,6 +51,8 @@ final class TestAppEvents: TestEventLogger,
   var capturedConfigureAppEventsStateStore: _AppEventsStatePersisting?
   var capturedConfigureEventDeactivationParameterProcessor: _AppEventsParameterProcessing?
   var capturedConfigureProtectedModeManager: _AppEventsParameterProcessing?
+  var capturedConfigureBannedParamsManager: MACARuleMatching?
+  var capturedConfigureStdParamEnforcementManager: MACARuleMatching?
   var capturedConfigureMACARuleMatchingManager: MACARuleMatching?
   var capturedConfigureBlocklistEventsManager: _EventsProcessing?
   var capturedConfigureRedactedEventsManager: _EventsProcessing?
@@ -95,10 +97,15 @@ final class TestAppEvents: TestEventLogger,
     internalUtility: InternalUtilityProtocol,
     capiReporter: CAPIReporter,
     protectedModeManager: _AppEventsParameterProcessing,
+    bannedParamsManager: MACARuleMatching,
+    stdParamEnforcementManager: MACARuleMatching,
     macaRuleMatchingManager: MACARuleMatching,
     blocklistEventsManager: _EventsProcessing,
     redactedEventsManager: _EventsProcessing,
-    sensitiveParamsManager: _AppEventsParameterProcessing
+    sensitiveParamsManager: _AppEventsParameterProcessing,
+    transactionObserver: _TransactionObserving,
+    failedTransactionLoggingFactory: IAPFailedTransactionLoggingCreating,
+    iapDedupeProcessor: _IAPDedupeProcessing
   ) {
     capturedConfigureGateKeeperManager = gateKeeperManager
     capturedConfigureAppEventsConfigurationProvider = appEventsConfigurationProvider
@@ -121,6 +128,8 @@ final class TestAppEvents: TestEventLogger,
     capturedInternalUtility = internalUtility
     capturedCAPIReporter = capiReporter
     capturedConfigureProtectedModeManager = protectedModeManager
+    capturedConfigureBannedParamsManager = bannedParamsManager
+    capturedConfigureStdParamEnforcementManager = stdParamEnforcementManager
     capturedConfigureMACARuleMatchingManager = macaRuleMatchingManager
     capturedConfigureBlocklistEventsManager = blocklistEventsManager
     capturedConfigureRedactedEventsManager = redactedEventsManager

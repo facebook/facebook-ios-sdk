@@ -7,6 +7,7 @@
  */
 
 @testable import FBSDKCoreKit
+import TestTools
 
 // swiftlint:disable:next swiftlint_disable_without_this_or_next
 // swiftlint:disable line_length
@@ -86,10 +87,14 @@ enum TestCoreKitComponents {
     webViewProvider: _WebViewProviding = TestWebViewFactory(),
     aemManager: _AutoSetup = TestAEMManager(),
     protectedModeManager: _AppEventsParameterProcessing = TestAppEventsParameterProcessor(),
+    bannedParamsManager: MACARuleMatching = TestBannedParamsManager(),
+    stdParamEnforcementManager: MACARuleMatching = TestStdParamEnforcementManager(),
     macaRuleMatchingManager: MACARuleMatching = TestMACARuleMatchingManager(),
     blocklistEventsManager: _EventsProcessing = TestBlocklistEventsManager(),
     redactedEventsManager: _EventsProcessing = TestRedactedEventsManager(),
-    sensitiveParamsManager: _AppEventsParameterProcessing = TestSensitiveParamsManager()
+    sensitiveParamsManager: _AppEventsParameterProcessing = TestSensitiveParamsManager(),
+    transactionObserver: _TransactionObserving = TestTransactionObserver(),
+    iapDedupeProcessor: _IAPDedupeProcessing = TestIAPDedupeProcessor()
   ) -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
@@ -164,10 +169,14 @@ enum TestCoreKitComponents {
       webViewProvider: webViewProvider,
       aemManager: aemManager,
       protectedModeManager: protectedModeManager,
+      bannedParamsManager: bannedParamsManager,
+      stdParamEnforcementManager: stdParamEnforcementManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
-      sensitiveParamsManager: sensitiveParamsManager
+      sensitiveParamsManager: sensitiveParamsManager,
+      transactionObserver: transactionObserver,
+      iapDedupeProcessor: iapDedupeProcessor
     )
   }
 }

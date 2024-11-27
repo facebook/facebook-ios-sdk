@@ -74,10 +74,15 @@ final class AppEventsPublishATETests: XCTestCase {
       internalUtility: TestInternalUtility(),
       capiReporter: TestCAPIReporter(),
       protectedModeManager: TestAppEventsParameterProcessor(),
+      bannedParamsManager: TestBannedParamsManager(),
+      stdParamEnforcementManager: TestStdParamEnforcementManager(),
       macaRuleMatchingManager: TestMACARuleMatchingManager(),
       blocklistEventsManager: TestBlocklistEventsManager(),
       redactedEventsManager: TestRedactedEventsManager(),
-      sensitiveParamsManager: TestSensitiveParamsManager()
+      sensitiveParamsManager: TestSensitiveParamsManager(),
+      transactionObserver: TestTransactionObserver(),
+      failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
+      iapDedupeProcessor: TestIAPDedupeProcessor()
     )
 
     appEvents.publishATE()

@@ -112,6 +112,8 @@ targets:
       - path: FBSDKCoreKitTests
         excludes:
           - .swiftlint.yml
+          - Internal/AppEvents/IAP/IAPTestsHostApp/**
+          - Internal/AppEvents/IAP/IAPTests/**
     configFiles:
       Debug: Configurations/FBSDKCoreKitTests.xcconfig
       Release: Configurations/FBSDKCoreKitTests.xcconfig
@@ -125,6 +127,38 @@ targets:
       - sdk: Accelerate.framework
     settings:
       GCC_WARN_UNUSED_FUNCTION: NO
+  IAPTestsHostApp:
+    platform: iOS
+    type: application
+    sources:
+      - path: FBSDKCoreKitTests/Internal/AppEvents/IAP/IAPTestsHostApp
+        excludes:
+          - IAPTestsHostApp.xcdatamodeld
+    settings:
+      PRODUCT_NAME: IAPTestsHostApp
+      PRODUCT_BUNDLE_IDENTIFIER: com.facebook.sdk.FBSDKCoreKitTests.IAPTests.IAPTestsHostApp
+      MARKETING_VERSION: 1.0
+      DEVELOPMENT_LANGUAGE: en
+      CURRENT_PROJECT_VERSION: 1.0
+      GENERATE_INFOPLIST_FILE: YES
+      BUILD_LIBRARY_FOR_DISTRIBUTION: NO
+  IAPTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FBSDKCoreKitTests/Internal/AppEvents/IAP/IAPTests/
+    settings:
+      SWIFT_OBJC_BRIDGING_HEADER: FBSDKCoreKitTests/FBSDKCoreKitTests-Bridging-Header.h
+      PRODUCT_NAME: IAPTests
+      PRODUCT_BUNDLE_IDENTIFIER: com.facebook.sdk.FBSDKCoreKitTests.IAPTests.IAPTests
+      MARKETING_VERSION: 1.0
+      DEVELOPMENT_LANGUAGE: en
+      CURRENT_PROJECT_VERSION: 1.0
+      TEST_HOST: $(BUILT_PRODUCTS_DIR)/IAPTestsHostApp.app/IAPTestsHostApp
+      GENERATE_INFOPLIST_FILE: YES
+      BUILD_LIBRARY_FOR_DISTRIBUTION: NO
+    dependencies:
+      - target: IAPTestsHostApp
 
 schemes:
   FBSDKCoreKit-Static:
@@ -138,6 +172,7 @@ schemes:
     test:
       targets:
         - FBSDKCoreKitTests
+        - IAPTests
       gatherCoverageData: true
       coverageTargets:
         - FBSDKCoreKit-Dynamic
