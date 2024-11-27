@@ -10,6 +10,7 @@
 
 #import <FBSDKCoreKit/FBSDKAppEventName.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterName.h>
+#import <FBSDKCoreKit/FBSDKAppOperationalDataType.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushReason.h>
 #import <FBSDKCoreKit/FBSDKAppEventsFlushBehavior.h>
 
@@ -64,7 +65,8 @@ NS_SWIFT_NAME(EventLogging)
           valueToSum:(nullable NSNumber *)valueToSum
           parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
-           accessToken:(nullable FBSDKAccessToken *)accessToken;
+           accessToken:(nullable FBSDKAccessToken *)accessToken
+operationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *)operationalParameters;
 
 @end
 

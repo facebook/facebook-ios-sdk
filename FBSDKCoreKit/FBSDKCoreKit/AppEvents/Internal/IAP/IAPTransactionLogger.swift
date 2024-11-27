@@ -194,7 +194,8 @@ extension IAPTransactionLogger {
         valueToSum: valueToSum.currencyNumber,
         parameters: parameters,
         isImplicitlyLogged: true,
-        accessToken: nil
+        accessToken: nil,
+        operationalParameters: nil
       )
       if dependencies.eventLogger.flushBehavior != .explicitOnly {
         dependencies.eventLogger.flush(for: .eagerlyFlushingEvent)
