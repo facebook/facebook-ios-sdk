@@ -152,7 +152,7 @@ final class AppEventsTests: XCTestCase {
     iapDedupeProcessor = nil
 
     resetTestHelpers()
-
+    IAPTransactionCache.shared.reset()
     super.tearDown()
   }
 
@@ -1797,6 +1797,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled() {
+    let now = Date()
     settings.isAutoLogAppEventsEnabled = false
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": true]
@@ -1820,6 +1821,11 @@ final class AppEventsTests: XCTestCase {
       transactionObserver.didStopObserving,
       "Fetching a configuration should stop transaction observing if auto log app events is disabled"
     )
+    guard let newCandidatesDate = IAPTransactionCache.shared.newCandidatesDate else {
+      XCTFail("newCandidatesDate should have been set")
+      return
+    }
+    XCTAssertTrue(newCandidatesDate > now)
   }
 
   func testEnablingIAPDedupeShouldEnableIAPDedupe() {
@@ -1883,6 +1889,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenImplicitPurchaseIsDiabled() {
+    let now = Date()
     settings.isAutoLogAppEventsEnabled = true
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": 0]
@@ -1895,6 +1902,11 @@ final class AppEventsTests: XCTestCase {
 
     XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
     XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+    guard let newCandidatesDate = IAPTransactionCache.shared.newCandidatesDate else {
+      XCTFail("newCandidatesDate should have been set")
+      return
+    }
+    XCTAssertTrue(newCandidatesDate > now)
   }
 
   func testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled() {
