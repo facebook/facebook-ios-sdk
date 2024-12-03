@@ -109,7 +109,8 @@ open class TestEventLogger: NSObject, EventLogging {
       valueToSum: valueToSum,
       parameters: parameters,
       isImplicitEvent: isImplicitlyLogged,
-      accessToken: accessToken
+      accessToken: accessToken,
+      operationalParameters: operationalParameters
     )
     capturedEvents.append(event)
   }
@@ -121,4 +122,5 @@ public struct EventStructForTests {
   public let parameters: [AppEvents.ParameterName: Any]?
   public let isImplicitEvent: Bool
   public let accessToken: AccessToken?
+  public let operationalParameters: [AppOperationalDataType: [String: Any]]?
 }

@@ -1128,7 +1128,8 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
     [self.iapDedupeProcessor processManualEvent:eventName
                                      valueToSum:valueToSum
                                      parameters:parameters
-                                    accessToken:accessToken];
+                                    accessToken:accessToken
+                          operationalParameters:nil];
   } else {
     [self doLogEvent:eventName
           valueToSum:valueToSum
