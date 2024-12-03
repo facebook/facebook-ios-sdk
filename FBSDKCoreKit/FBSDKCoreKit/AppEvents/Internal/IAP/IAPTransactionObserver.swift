@@ -22,10 +22,21 @@ final class IAPTransactionObserver: NSObject {
   private var isObservingStoreKit2Transactions = false
   private var anyTransactionListenerTask: Any?
   private var observationTime: UInt64 = IAPConstants.defaultIAPObservationTime
+  private var releaseDate: Date
 
   static let shared = IAPTransactionObserver()
 
+  private static func getReleaseDate() -> Date {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd"
+    if let date = dateFormatter.date(from: IAPConstants.sk2ReleaseDate) {
+      return date
+    }
+    return IAPTransactionCache.shared.newCandidatesDate ?? Date()
+  }
+
   private override init() {
+    releaseDate = Self.getReleaseDate()
     super.init()
   }
 
@@ -80,7 +91,12 @@ extension IAPTransactionObserver {
     guard !IAPTransactionCache.shared.hasRestoredPurchases else {
       return
     }
-    for transactionResult in await Transaction.currentEntitlements.getValues() {
+    var candidateRestoredTransactions = await Transaction.currentEntitlements.getValues()
+    candidateRestoredTransactions = candidateRestoredTransactions.filter { result in
+      let transaction = result.iapTransaction.transaction
+      return transaction.purchaseDate > releaseDate
+    }
+    for transactionResult in candidateRestoredTransactions {
       await handleRestoredTransaction(transaction: transactionResult.iapTransaction)
     }
     IAPTransactionCache.shared.hasRestoredPurchases = true
@@ -210,6 +226,11 @@ extension IAPTransactionObserver {
     isObservingStoreKit2Transactions = false
     anyTransactionListenerTask = nil
     observationTime = IAPConstants.defaultIAPObservationTime
+    releaseDate = Self.getReleaseDate()
+  }
+
+  func setReleaseDate(_ date: Date) {
+    releaseDate = date
   }
 
   var configuredObservationTime: UInt64 {
