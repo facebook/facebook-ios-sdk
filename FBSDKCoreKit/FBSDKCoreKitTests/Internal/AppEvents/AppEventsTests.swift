@@ -194,7 +194,8 @@ final class AppEventsTests: XCTestCase {
       sensitiveParamsManager: sensitiveParamsManager,
       transactionObserver: transactionObserver,
       failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
-      iapDedupeProcessor: iapDedupeProcessor
+      iapDedupeProcessor: iapDedupeProcessor,
+      iapTransactionCache: IAPTransactionCache.shared
     )
 
     appEvents.configureNonTVComponents(

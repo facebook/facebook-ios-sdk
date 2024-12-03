@@ -119,6 +119,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 @property (nullable, nonatomic) id<FBSDKTransactionObserving> transactionObserver;
 @property (nullable, nonatomic) id<FBSDKIAPFailedTransactionLoggingCreating> failedTransactionLoggingFactory;
 @property (nullable, nonatomic) id<FBSDKIAPDedupeProcessing> iapDedupeProcessor;
+@property (nullable, nonatomic) id<FBSDKIAPTransactionCaching> iapTransactionCache;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
@@ -661,6 +662,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
                       transactionObserver:(nonnull id<FBSDKTransactionObserving>)transactionObserver
           failedTransactionLoggingFactory:(nonnull id<FBSDKIAPFailedTransactionLoggingCreating>)failedTransactionLoggingFactory
                        iapDedupeProcessor:(nonnull id<FBSDKIAPDedupeProcessing>)iapDedupeProcessor
+                      iapTransactionCache:(nonnull id<FBSDKIAPTransactionCaching>)iapTransactionCache
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -692,6 +694,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   self.transactionObserver = transactionObserver;
   self.failedTransactionLoggingFactory = failedTransactionLoggingFactory;
   self.iapDedupeProcessor = iapDedupeProcessor;
+  self.iapTransactionCache = iapTransactionCache;
  
   NSString *appID = self.appID;
   if (appID) {
