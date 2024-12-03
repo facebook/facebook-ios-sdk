@@ -22,11 +22,19 @@ final class TestAppEventsState: _AppEventsState {
     super.init(coder: coder)
   }
 
-  override func addEvent(_ eventDictionary: [String: Any], isImplicit: Bool) {
+  override func addEvent(
+    _ eventDictionary: [String: Any],
+    isImplicit: Bool,
+    withOperationalParameters: [AppOperationalDataType: [String: Any]]?
+  ) {
     capturedEventDictionary = eventDictionary
     capturedIsImplicit = isImplicit
     isAddEventCalled = true
 
-    super.addEvent(eventDictionary, isImplicit: isImplicit)
+    super.addEvent(
+      eventDictionary,
+      isImplicit: isImplicit,
+      withOperationalParameters: withOperationalParameters
+    )
   }
 }
