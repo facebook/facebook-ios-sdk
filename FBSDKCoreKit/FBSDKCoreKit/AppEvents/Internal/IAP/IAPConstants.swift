@@ -28,4 +28,5 @@ enum IAPConstants {
   ]
   static let manuallyLoggedDedupableEventsKey = "com.facebook.sdk:ManualDedupableEventsKey"
   static let implicitlyLoggedDedupableEventsKey = "com.facebook.sdk:ImplicitDedupableEventsKey"
+  static let sk2ReleaseDate = "2024-11-19" // TODO: Update this to actual release date
 }
