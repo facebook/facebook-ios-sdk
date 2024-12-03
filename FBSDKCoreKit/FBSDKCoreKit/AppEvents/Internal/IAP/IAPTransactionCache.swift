@@ -97,7 +97,8 @@ extension IAPTransactionCache {
 
 // MARK: - Public APIs
 
-extension IAPTransactionCache {
+extension IAPTransactionCache: _IAPTransactionCaching {
+
   var hasRestoredPurchases: Bool {
     get {
       guard let dependencies = try? getDependencies() else {

@@ -82,7 +82,8 @@ final class AppEventsPublishATETests: XCTestCase {
       sensitiveParamsManager: TestSensitiveParamsManager(),
       transactionObserver: TestTransactionObserver(),
       failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
-      iapDedupeProcessor: TestIAPDedupeProcessor()
+      iapDedupeProcessor: TestIAPDedupeProcessor(),
+      iapTransactionCache: IAPTransactionCache.shared
     )
 
     appEvents.publishATE()

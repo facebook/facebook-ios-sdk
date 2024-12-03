@@ -118,7 +118,8 @@ private extension CoreKitConfigurator {
       sensitiveParamsManager: components.sensitiveParamsManager,
       transactionObserver: components.transactionObserver,
       failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
-      iapDedupeProcessor: components.iapDedupeProcessor
+      iapDedupeProcessor: components.iapDedupeProcessor,
+      iapTransactionCache: components.iapTransactionCache
     )
   }
 

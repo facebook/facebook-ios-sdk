@@ -216,3 +216,4 @@
 #import <FBSDKCoreKit/FBSDKIAPFailedTransactionLogging.h>
 #import <FBSDKCoreKit/FBSDKIAPFailedTransactionLoggingCreating.h>
 #import <FBSDKCoreKit/FBSDKIAPDedupeProcessing.h>
+#import <FBSDKCoreKit/FBSDKIAPTransactionCaching.h>
