@@ -177,30 +177,7 @@ withOperationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NS
     && [self.appID isEqualToString:appID]);
 }
 
-- (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents
-{
-  if (self.class.eventProcessors != nil) {
-    for (id<FBSDKEventsProcessing> processor in self.class.eventProcessors) {
-      [processor processEvents:_mutableEvents];
-    }
-  }
-  NSMutableArray<NSMutableDictionary<NSString *, id> *> *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
-  for (NSDictionary<NSString *, id> *eventAndImplicitFlag in _mutableEvents) {
-    const BOOL isImplicitEvent = [eventAndImplicitFlag[FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue];
-    if (!includeImplicitEvents && isImplicitEvent) {
-      continue;
-    }
-    NSMutableDictionary<NSString *, id> *event = eventAndImplicitFlag[@"event"];
-    NSAssert(event != nil, @"event cannot be nil");
-    [event removeObjectForKey:FBSDK_APPEVENTSTATE_RECEIPTDATA_KEY];
-
-    [FBSDKTypeUtility array:events addObject:event];
-  }
-
-  return [FBSDKBasicUtility JSONStringForObject:events error:NULL invalidObjectHandler:NULL];
-}
-
-- (NSDictionary<NSString *, id> *)JSONStringForEventsAndOperationalParametersIncludingImplicitEvents:(BOOL)includeImplicitEvents
+- (NSDictionary<NSString *, NSString *> *)JSONStringForEventsAndOperationalParametersIncludingImplicitEvents:(BOOL)includeImplicitEvents
 {
   if (self.class.eventProcessors != nil) {
     for (id<FBSDKEventsProcessing> processor in self.class.eventProcessors) {
@@ -221,7 +198,6 @@ withOperationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NS
     [FBSDKTypeUtility array:events addObject:event];
     [FBSDKTypeUtility array:operationalParameters addObject:operationalParameter];
   }
-
   NSString *customEvents = [FBSDKBasicUtility JSONStringForObject:events error:NULL invalidObjectHandler:NULL];
   NSString *operationalData = [FBSDKBasicUtility JSONStringForObject:operationalParameters error:NULL invalidObjectHandler:NULL];
   return @{

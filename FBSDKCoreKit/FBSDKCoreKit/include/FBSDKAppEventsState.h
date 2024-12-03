@@ -38,8 +38,7 @@ NS_SWIFT_NAME(_AppEventsState)
 - (void)addEventsFromAppEventState:(FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithAppEventsState:(nullable FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithTokenString:(NSString *)tokenString appID:(NSString *)appID;
-- (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents;
-- (NSDictionary<NSString *, id> *)JSONStringForEventsAndOperationalParametersIncludingImplicitEvents:(BOOL)includeImplicitEvents;
+- (NSDictionary<NSString *, NSString *> *)JSONStringForEventsAndOperationalParametersIncludingImplicitEvents:(BOOL)includeImplicitEvents;
 - (NSString *)extractReceiptData;
 
 @end

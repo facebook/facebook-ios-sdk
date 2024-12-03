@@ -1418,7 +1418,9 @@ operationalParameters:nil];
     }
     NSString *receipt_data = appEventsState.extractReceiptData;
     const BOOL shouldIncludeImplicitEvents = (self.serverConfiguration.implicitLoggingEnabled && self.settings.isAutoLogAppEventsEnabled);
-    NSString *encodedEvents = [appEventsState JSONStringForEventsIncludingImplicitEvents:shouldIncludeImplicitEvents];
+    NSDictionary<NSString *, id> *appEventsData = [appEventsState JSONStringForEventsAndOperationalParametersIncludingImplicitEvents:shouldIncludeImplicitEvents];
+    NSString *encodedEvents = [appEventsData objectForKey:@"custom_events"];
+    NSString *encodedOperationalData = [appEventsData objectForKey:@"operational_parameters"];
     if (!encodedEvents || appEventsState.events.count == 0) {
       [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                              logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];
@@ -1435,6 +1437,9 @@ operationalParameters:nil];
     }
 
     [FBSDKTypeUtility dictionary:postParameters setObject:encodedEvents forKey:@"custom_events"];
+    if (encodedOperationalData != nil) {
+      [FBSDKTypeUtility dictionary:postParameters setObject:encodedOperationalData forKey:@"operational_parameters"];
+    }
     if (appEventsState.numSkipped > 0) {
       [FBSDKTypeUtility dictionary:postParameters setObject:[NSString stringWithFormat:@"%lu", (unsigned long)appEventsState.numSkipped] forKey:@"num_skipped_events"];
     }
