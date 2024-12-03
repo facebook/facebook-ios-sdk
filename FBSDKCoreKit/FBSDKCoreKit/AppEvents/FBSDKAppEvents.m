@@ -991,6 +991,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           }
         }];
       } else {
+        [self.iapTransactionCache setNewCandidatesDate:[NSDate date]];
         [self.iapDedupeProcessor disable];
         [self.paymentObserver stopObservingTransactions];
         [self.transactionObserver stopObserving];

@@ -130,6 +130,7 @@ extension IAPTransactionCache: _IAPTransactionCaching {
         return
       }
       guard let newValue else {
+        dependencies.dataStore.fb_removeObject(forKey: IAPConstants.newCandidatesDateCacheKey)
         return
       }
       dependencies.dataStore.fb_setObject(newValue, forKey: IAPConstants.newCandidatesDateCacheKey)
