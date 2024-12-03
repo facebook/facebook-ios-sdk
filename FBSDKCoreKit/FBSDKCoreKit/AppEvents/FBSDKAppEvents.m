@@ -1109,11 +1109,21 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   }];
 }
 
-- (nullable NSDictionary<NSString *, id> *)addImplicitPurchaseParameters:(nullable NSDictionary<NSString *, id> *)parameters {
-  NSMutableDictionary<NSString *, id> *params = [parameters mutableCopy];
+- (nullable NSDictionary<NSString *, id> *)addImplicitPurchaseParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *)operationalParameters{
+  NSMutableDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *params = [operationalParameters mutableCopy];
+  if (params == nil) {
+    params = [[NSMutableDictionary alloc] initWithDictionary:@{}];
+  }
+  NSMutableDictionary<NSString *, id> *iapParameters = [[params objectForKey:FBSDKAppOperationalDataTypeIAPParameters] mutableCopy];
+  if (iapParameters == nil) {
+    iapParameters = [[NSMutableDictionary alloc] initWithDictionary:@{}];
+  }
   if (self.serverConfiguration) {
-    [FBSDKTypeUtility dictionary:params setObject:self.serverConfiguration.implicitPurchaseLoggingEnabled ? @"1" : @"0" forKey:@"is_implicit_purchase_logging_enabled"];
-    [FBSDKTypeUtility dictionary:params setObject:[self.settings isAutoLogAppEventsEnabled] ? @"1" : @"0" forKey:@"is_autolog_app_events_enabled"];
+    [FBSDKTypeUtility dictionary:iapParameters setObject:self.serverConfiguration.implicitPurchaseLoggingEnabled ? @"1" : @"0" forKey:@"is_implicit_purchase_logging_enabled"];
+    [FBSDKTypeUtility dictionary:iapParameters setObject:[self.settings isAutoLogAppEventsEnabled] ? @"1" : @"0" forKey:@"is_autolog_app_events_enabled"];
+  }
+  if (iapParameters != nil && iapParameters.count > 0) {
+    [FBSDKTypeUtility dictionary:params setObject:iapParameters forKey:FBSDKAppOperationalDataTypeIAPParameters];
   }
   return [params copy];
 }
@@ -1197,7 +1207,7 @@ operationalParameters:nil];
     return;
   }
   
-  parameters = [self addImplicitPurchaseParameters:parameters];
+  operationalParameters = [self addImplicitPurchaseParameters:operationalParameters];
 
   BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
   if (!isProtectedModeApplied && self.sensitiveParamsManager) {
