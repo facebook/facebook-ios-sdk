@@ -135,7 +135,8 @@ extension IAPDedupeProcessor {
     _ eventName: AppEvents.Name,
     valueToSum: NSNumber?,
     parameters: [AppEvents.ParameterName: Any]?,
-    accessToken: AccessToken?
+    accessToken: AccessToken?,
+    operationalParameters: [AppOperationalDataType: [String: Any]]?
   ) {
     var manualParams = parameters
     if manualParams == nil {
@@ -157,7 +158,8 @@ extension IAPDedupeProcessor {
       valueToSum: valueToSum,
       parameters: manualParams?.stringKeys,
       isImplicitEvent: false,
-      accessToken: accessToken
+      accessToken: accessToken,
+      operationalParameters: operationalParameters?.stringKeys
     )
     synchronized(self) {
       manuallyLoggedEvents.append(event)
@@ -175,14 +177,16 @@ extension IAPDedupeProcessor {
     _ eventName: AppEvents.Name,
     valueToSum: NSNumber?,
     parameters: [AppEvents.ParameterName: Any]?,
-    accessToken: AccessToken?
+    accessToken: AccessToken?,
+    operationalParameters: [AppOperationalDataType: [String: Any]]?
   ) {
     let event = DedupableEvent(
       eventName: eventName,
       valueToSum: valueToSum,
       parameters: parameters?.stringKeys,
       isImplicitEvent: true,
-      accessToken: accessToken
+      accessToken: accessToken,
+      operationalParameters: operationalParameters?.stringKeys
     )
     synchronized(self) {
       implicitlyLoggedEvents.append(event)
@@ -248,7 +252,7 @@ extension IAPDedupeProcessor {
         parameters: implicitEvent.parameters?.appEventParameterKeys,
         isImplicitlyLogged: implicitEvent.isImplicitEvent,
         accessToken: implicitEvent.accessToken,
-        operationalParameters: nil
+        operationalParameters: implicitEvent.operationalParameters?.appOperationalDataParameterKeys
       )
     }
     for manualEvent in manualEvents {
@@ -258,7 +262,7 @@ extension IAPDedupeProcessor {
         parameters: manualEvent.parameters?.appEventParameterKeys,
         isImplicitlyLogged: manualEvent.isImplicitEvent,
         accessToken: manualEvent.accessToken,
-        operationalParameters: nil
+        operationalParameters: manualEvent.operationalParameters?.appOperationalDataParameterKeys
       )
     }
     if dependencies.eventLogger.flushBehavior != .explicitOnly {
@@ -321,19 +325,24 @@ extension IAPDedupeProcessor {
     shouldOverrideNonDedupedEventTime: Bool = false
   ) -> DedupableEvent {
     var result = dedupedEvent
-    if result.parameters == nil {
-      result.parameters = [String: Any]()
+    if result.operationalParameters == nil {
+      result.operationalParameters = [String: [String: Any]]()
+    }
+    if result.operationalParameters?[AppOperationalDataType.iapParameters.rawValue] == nil {
+      result.operationalParameters?[AppOperationalDataType.iapParameters.rawValue] = [String: Any]()
     }
     if let prodDedupeKey {
-      result.parameters?["fb_iap_actual_dedup_result"] = "1"
-      result.parameters?["fb_iap_actual_dedup_key_used"] = prodDedupeKey
+      result.operationalParameters?[AppOperationalDataType.iapParameters.rawValue]?["fb_iap_actual_dedup_result"] = "1"
+      // swiftlint:disable:next line_length
+      result.operationalParameters?[AppOperationalDataType.iapParameters.rawValue]?["fb_iap_actual_dedup_key_used"] = prodDedupeKey
     }
     if let testDedupKey {
-      result.parameters?["fb_iap_test_dedup_result"] = "1"
-      result.parameters?["fb_iap_test_dedup_key_used"] = testDedupKey
+      result.operationalParameters?[AppOperationalDataType.iapParameters.rawValue]?["fb_iap_test_dedup_result"] = "1"
+      // swiftlint:disable:next line_length
+      result.operationalParameters?[AppOperationalDataType.iapParameters.rawValue]?["fb_iap_test_dedup_key_used"] = testDedupKey
     }
     if shouldOverrideNonDedupedEventTime || dedupedEvent.parameters?["fb_iap_non_deduped_event_time"] == nil {
-      result.parameters?["fb_iap_non_deduped_event_time"] =
+      result.operationalParameters?[AppOperationalDataType.iapParameters.rawValue]?["fb_iap_non_deduped_event_time"] =
         Self.getUnixTimeStampFromTransactionDate(implicitEvent: nonDedupedEvent)
     }
     return result
@@ -423,13 +432,19 @@ extension IAPDedupeProcessor {
       }
       let dedupKeys = dedupConfiguration[iapKey] ?? [iapKey]
       for dedupKey in dedupKeys {
-        guard let implicitParam = implicitEvent.parameters?[iapKey],
-              let manualParam = manualEvent.parameters?[dedupKey] else {
+        guard let manualParam = manualEvent.parameters?[dedupKey] else {
           continue
         }
-        let implicitValue = String(describing: implicitParam)
+        let implicitParam1 = implicitEvent.parameters?[iapKey] ?? ""
+        let implicitValue1 = String(describing: implicitParam1)
         let manualValue = String(describing: manualParam)
-        if !implicitValue.isEmpty, !manualValue.isEmpty, implicitValue == manualValue {
+        if !implicitValue1.isEmpty, !manualValue.isEmpty, implicitValue1 == manualValue {
+          return dedupKey
+        }
+        // swiftlint:disable:next line_length
+        let implicitParam2 = implicitEvent.operationalParameters?[AppOperationalDataType.iapParameters.rawValue]?[iapKey] ?? ""
+        let implicitValue2 = String(describing: implicitParam2)
+        if !implicitValue2.isEmpty, !manualValue.isEmpty, implicitValue2 == manualValue {
           return dedupKey
         }
       }
@@ -448,6 +463,7 @@ struct DedupableEvent: Equatable, Hashable, Codable {
   var accessToken: AccessToken?
   var hasBeenProdDeduped = false
   var hasBeenTestDeduped = false
+  var operationalParameters: [String: [String: Any]]?
 
   enum CodingKeys: CodingKey {
     case eventName
@@ -457,6 +473,7 @@ struct DedupableEvent: Equatable, Hashable, Codable {
     case accessToken
     case hasBeenProdDeduped
     case hasBeenTestDeduped
+    case operationalParameters
   }
 
   init(
@@ -466,7 +483,8 @@ struct DedupableEvent: Equatable, Hashable, Codable {
     isImplicitEvent: Bool,
     accessToken: AccessToken? = nil,
     hasBeenProdDeduped: Bool = false,
-    hasBeenTestDeduped: Bool = false
+    hasBeenTestDeduped: Bool = false,
+    operationalParameters: [String: [String: Any]]? = nil
   ) {
     self.eventName = eventName
     self.valueToSum = valueToSum
@@ -475,6 +493,7 @@ struct DedupableEvent: Equatable, Hashable, Codable {
     self.accessToken = accessToken
     self.hasBeenProdDeduped = hasBeenProdDeduped
     self.hasBeenTestDeduped = hasBeenTestDeduped
+    self.operationalParameters = operationalParameters
   }
 
   init(from decoder: Decoder) throws {
@@ -493,6 +512,10 @@ struct DedupableEvent: Equatable, Hashable, Codable {
     }
     hasBeenProdDeduped = try container.decode(Bool.self, forKey: .hasBeenProdDeduped)
     hasBeenTestDeduped = try container.decode(Bool.self, forKey: .hasBeenTestDeduped)
+    if let operationalParametersData = try? container.decode(Data.self, forKey: .operationalParameters) {
+      // swiftlint:disable:next line_length
+      operationalParameters = try JSONSerialization.jsonObject(with: operationalParametersData, options: []) as? [String: [String: Any]]
+    }
   }
 
   func encode(to encoder: Encoder) throws {
@@ -513,6 +536,10 @@ struct DedupableEvent: Equatable, Hashable, Codable {
     }
     try container.encode(hasBeenProdDeduped, forKey: .hasBeenProdDeduped)
     try container.encode(hasBeenTestDeduped, forKey: .hasBeenTestDeduped)
+    if let operationalParameters {
+      let operationalParametersData = try JSONSerialization.data(withJSONObject: operationalParameters, options: [])
+      try container.encode(operationalParametersData, forKey: .operationalParameters)
+    }
   }
 
   static func == (lhs: DedupableEvent, rhs: DedupableEvent) -> Bool {
@@ -550,6 +577,22 @@ extension [String: Any] {
   var appEventParameterKeys: [AppEvents.ParameterName: Any] {
     self.reduce(into: [AppEvents.ParameterName: Any]()) { result, pair in
       result[AppEvents.ParameterName(rawValue: pair.key)] = pair.value
+    }
+  }
+}
+
+extension [AppOperationalDataType: [String: Any]] {
+  var stringKeys: [String: [String: Any]] {
+    self.reduce(into: [String: [String: Any]]()) { result, pair in
+      result[pair.key.rawValue] = pair.value
+    }
+  }
+}
+
+extension [String: [String: Any]] {
+  var appOperationalDataParameterKeys: [AppOperationalDataType: [String: Any]] {
+    self.reduce(into: [AppOperationalDataType: [String: Any]]()) { result, pair in
+      result[AppOperationalDataType(rawValue: pair.key)] = pair.value
     }
   }
 }

@@ -186,7 +186,8 @@ extension IAPTransactionLogger {
         eventName,
         valueToSum: valueToSum.currencyNumber,
         parameters: parameters,
-        accessToken: nil
+        accessToken: nil,
+        operationalParameters: nil
       )
     } else {
       dependencies.eventLogger.doLogEvent(

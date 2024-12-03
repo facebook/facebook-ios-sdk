@@ -27,11 +27,13 @@ NS_SWIFT_NAME(_IAPDedupeProcessing)
 - (void)processManualEvent:(FBSDKAppEventName)eventName
           valueToSum:(nullable NSNumber *)valueToSum
           parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-               accessToken:(nullable FBSDKAccessToken *)accessToken;
+               accessToken:(nullable FBSDKAccessToken *)accessToken
+     operationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *)operationalParameters;
 - (void)processImplicitEvent:(FBSDKAppEventName)eventName
           valueToSum:(nullable NSNumber *)valueToSum
           parameters:(nullable NSDictionary<FBSDKAppEventParameterName, id> *)parameters
-                 accessToken:(nullable FBSDKAccessToken *)accessToken;
+                 accessToken:(nullable FBSDKAccessToken *)accessToken
+       operationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *)operationalParameters;
 - (BOOL)shouldDedupeEvent:(FBSDKAppEventName)eventName;
 
 @end

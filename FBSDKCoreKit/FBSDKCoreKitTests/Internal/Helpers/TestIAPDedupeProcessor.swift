@@ -41,7 +41,8 @@ final class TestIAPDedupeProcessor: _IAPDedupeProcessing {
     _ eventName: AppEvents.Name,
     valueToSum: NSNumber?,
     parameters: [AppEvents.ParameterName: Any]?,
-    accessToken: AccessToken?
+    accessToken: AccessToken?,
+    operationalParameters: [AppOperationalDataType: [String: Any]]?
   ) {
     processManualEventWasCalled = true
   }
@@ -50,7 +51,8 @@ final class TestIAPDedupeProcessor: _IAPDedupeProcessing {
     _ eventName: AppEvents.Name,
     valueToSum: NSNumber?,
     parameters: [AppEvents.ParameterName: Any]?,
-    accessToken: AccessToken?
+    accessToken: AccessToken?,
+    operationalParameters: [AppOperationalDataType: [String: Any]]?
   ) {
     processImplicitEventWasCalled = true
   }
