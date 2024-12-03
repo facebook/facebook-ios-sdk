@@ -1336,7 +1336,7 @@ operationalParameters:nil];
       self.appEventsState = [self.appEventsStateProvider createStateWithToken:tokenString appID:appID];
     }
 
-    [self.appEventsState addEvent:eventDictionary isImplicit:isImplicitlyLogged];
+    [self.appEventsState addEvent:eventDictionary isImplicit:isImplicitlyLogged withOperationalParameters:operationalParameters];
     if (!isImplicitlyLogged) {
       NSString *message = [NSString stringWithFormat:@"FBSDKAppEvents: Recording event @ %f: %@",
                            [self.appEventsUtility unixTimeNow],
