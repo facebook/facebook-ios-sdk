@@ -33,6 +33,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     prodDedupConfig = [
       "fb_content_id": ["fb_content_id", "fb_product_item_id"],
+      "fb_transaction_id": ["fb_transaction_id"],
       "fb_content_title": ["fb_content_title"],
       "fb_description": ["fb_description"],
       "_valueToSum": ["_valueToSum", "fb_product_price_amount"],
@@ -669,6 +670,44 @@ extension IAPDedupeProcessorTests {
         iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_content_id" &&
         iapParameters["fb_iap_test_dedup_result"] == nil &&
         iapParameters["fb_iap_test_dedup_key_used"] == nil &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    await fulfillment(of: [expectation], timeout: 20.0)
+  }
+
+  func testDedupWithDuplicatePurchaseEventsOperationalParameters() async {
+    dedupeProcessor.enable()
+    let productID = Self.ProductIdentifiers.nonConsumableProduct1.rawValue
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(productID) else {
+      return
+    }
+    dedupeProcessor.processManualEvent(
+      .purchased,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
+      parameters: [
+        AppEvents.ParameterName.currency: "USD",
+        AppEvents.ParameterName.transactionID: iapTransaction.transaction.id,
+      ],
+      accessToken: nil,
+      operationalParameters: nil
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
+        return false
+      }
+      return self.eventLogger.capturedEventName == .purchased &&
+        self.eventLogger.capturedValueToSum == 0.99 &&
+        capturedParameters[.currency] as? String == "USD" &&
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_transaction_id" &&
+        iapParameters["fb_iap_test_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_test_dedup_key_used"] as? String == "fb_transaction_id" &&
         iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
