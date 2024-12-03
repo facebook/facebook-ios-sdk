@@ -542,47 +542,148 @@ final class AppEventsStateTests: XCTestCase {
   // MARK: - JSONString For Events
 
   func testJSONStringForEventsWithNoEvents() throws {
-    let json = state.jsonStringForEvents(includingImplicitEvents: true)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
     let expected = try BasicUtility.jsonString(for: [], invalidObjectHandler: nil)
     XCTAssertEqual(
-      json,
+      eventsJson,
       expected,
       "Should represent events as empty json array when there are no events"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expected,
+      "Should represent operational params as empty json array when there are no events"
     )
   }
 
   func testJSONStringForEventsIncludingImplicitEvents() throws {
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
     state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
-    let json = state.jsonStringForEvents(includingImplicitEvents: true)
-    let expected = try BasicUtility.jsonString(
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParameters)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
       for: [SampleAppEvents.validEvent, SampleAppEvents.validEvent],
       invalidObjectHandler: nil
     )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [[:], operationalParameters],
+      invalidObjectHandler: nil
+    )
     XCTAssertEqual(
-      json,
-      expected,
-      "Should represent events as empty json array when there are events"
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
     )
   }
 
   func testJSONStringForEventsExcludingImplicitEvents() throws {
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: nil)
-    let json = state.jsonStringForEvents(includingImplicitEvents: false)
-    let expected = try BasicUtility.jsonString(
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParameters)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: operationalParameters)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: false)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
       for: [SampleAppEvents.validEvent],
       invalidObjectHandler: nil
     )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [operationalParameters],
+      invalidObjectHandler: nil
+    )
     XCTAssertEqual(
-      json,
-      expected,
-      "Should represent events as empty json array when there are events"
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
+    )
+  }
+
+  func testJSONStringForEventsIncludingImplicitEventsWithOperationalParameters() throws {
+    let operationalParametersOne: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.productTitle.rawValue: "Product Title",
+      ],
+    ]
+    let operationalParametersTwo: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParametersOne)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParametersTwo)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
+      for: [SampleAppEvents.validEvent, SampleAppEvents.validEvent],
+      invalidObjectHandler: nil
+    )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [operationalParametersOne, operationalParametersTwo],
+      invalidObjectHandler: nil
+    )
+    XCTAssertEqual(
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
+    )
+  }
+
+  func testJSONStringForEventsIncludingImplicitEventsWithNoOperationalParameters() throws {
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
+      for: [SampleAppEvents.validEvent, SampleAppEvents.validEvent],
+      invalidObjectHandler: nil
+    )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [[:], [:]],
+      invalidObjectHandler: nil
+    )
+    XCTAssertEqual(
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
     )
   }
 
   func testJSONStringForEventsSubmitEventsToProcessors() {
-    fullState.jsonStringForEvents(includingImplicitEvents: true)
+    fullState.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
     XCTAssertEqual(
       fullState.events.count,
       eventsProcessor.capturedEvents?.count,

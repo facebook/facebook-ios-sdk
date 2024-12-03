@@ -260,6 +260,63 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  // MARK: - Test for operational parameters
+
+  func testLogEventWithOperationalParameters() {
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    appEvents.doLogEvent(
+      .purchased,
+      valueToSum: 2.99,
+      parameters: nil,
+      isImplicitlyLogged: false,
+      accessToken: nil,
+      operationalParameters: operationalParameters
+    )
+    appEvents.flush()
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    XCTAssertEqual(
+      graphRequestFactory.capturedRequests.first?.graphPath,
+      "mockAppID/activities"
+    )
+    guard let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+      XCTFail("We should have operational parameters")
+      return
+    }
+    XCTAssertTrue(capturedOperationalParameters.contains(AppEvents.ParameterName.transactionID.rawValue))
+  }
+
+  func testLogEventWithNoOperationalParameters() {
+    appEvents.doLogEvent(
+      .purchased,
+      valueToSum: 2.99,
+      parameters: nil,
+      isImplicitlyLogged: false,
+      accessToken: nil,
+      operationalParameters: nil
+    )
+    appEvents.flush()
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    XCTAssertEqual(
+      graphRequestFactory.capturedRequests.first?.graphPath,
+      "mockAppID/activities"
+    )
+    guard let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+      XCTFail("We should have operational parameters")
+      return
+    }
+    XCTAssertEqual(capturedOperationalParameters, "[{}]")
+  }
+
   // MARK: - Tests for publishing ATE
 
   func testPublishingATEWithNilPublisher() {
