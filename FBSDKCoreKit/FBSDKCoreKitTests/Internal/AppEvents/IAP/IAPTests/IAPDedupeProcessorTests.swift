@@ -33,6 +33,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     prodDedupConfig = [
       "fb_content_id": ["fb_content_id", "fb_product_item_id"],
+      "fb_transaction_id": ["fb_transaction_id"],
       "fb_content_title": ["fb_content_title"],
       "fb_description": ["fb_description"],
       "_valueToSum": ["_valueToSum", "fb_product_price_amount"],
@@ -452,7 +453,12 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
         "fb_currency": "USD",
         "fb_transaction_date": "2024-10-20 19:02:50Z",
       ],
-      isImplicitEvent: true
+      isImplicitEvent: true,
+      operationalParameters: [
+        "iap_parameters": [
+          "key_1": "value_1",
+        ],
+      ]
     )
     let event2 = DedupableEvent(
       eventName: .purchased,
@@ -461,7 +467,12 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
         "fb_transaction_date": "2024-10-20 19:02:50Z",
         "fb_currency": "USD",
       ],
-      isImplicitEvent: true
+      isImplicitEvent: true,
+      operationalParameters: [
+        "iap_parameters": [
+          "key_1": "value_1",
+        ],
+      ]
     )
     XCTAssertEqual(event1, event2)
   }
@@ -505,7 +516,12 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       isImplicitEvent: true,
       accessToken: SampleAccessTokens.validToken,
       hasBeenProdDeduped: true,
-      hasBeenTestDeduped: false
+      hasBeenTestDeduped: false,
+      operationalParameters: [
+        "iap_parameters": [
+          "key_1": "value_1",
+        ],
+      ]
     )
     guard let data = try? JSONEncoder().encode(dedupableEvent) else {
       XCTFail("We should be able to encode dedupableEvent")
@@ -526,7 +542,8 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       isImplicitEvent: true,
       accessToken: nil,
       hasBeenProdDeduped: true,
-      hasBeenTestDeduped: false
+      hasBeenTestDeduped: false,
+      operationalParameters: nil
     )
     guard let data = try? JSONEncoder().encode(dedupableEvent) else {
       XCTFail("We should be able to encode dedupableEvent")
@@ -548,7 +565,12 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
         "fb_transaction_date": "2024-10-20 19:02:50Z",
         "fb_content_id": "123456",
       ],
-      isImplicitEvent: true
+      isImplicitEvent: true,
+      operationalParameters: [
+        "iap_parameters": [
+          "key_1": "value_1",
+        ],
+      ]
     )
     let manualEvent = DedupableEvent(
       eventName: .purchased,
@@ -558,7 +580,12 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
         "_logTime": 1729450978,
         "fb_content_id": "123456",
       ],
-      isImplicitEvent: false
+      isImplicitEvent: false,
+      operationalParameters: [
+        "iap_parameters": [
+          "key_1": "value_1",
+        ],
+      ]
     )
     dedupeProcessor.appendImplicitEvent(implicitEvent)
     dedupeProcessor.appendManualEvent(manualEvent)
@@ -570,15 +597,20 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
       guard let capturedParameters = self.eventLogger.capturedParameters else {
         return false
       }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
+        return false
+      }
       return self.eventLogger.capturedEventName == .purchased &&
         self.eventLogger.capturedValueToSum == 10 &&
         capturedParameters[.currency] as? String == "USD" &&
         capturedParameters[.contentID] as? String == "123456" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] as? String == "fb_content_id" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] != nil
+        iapParameters["key_1"] as? String == "value_1" &&
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_content_id" &&
+        iapParameters["fb_iap_test_dedup_result"] == nil &&
+        iapParameters["fb_iap_test_dedup_key_used"] == nil &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     wait(for: [expectation], timeout: 20.0)
@@ -619,21 +651,64 @@ extension IAPDedupeProcessorTests {
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
         return false
       }
       return self.eventLogger.capturedEventName == .purchased &&
         self.eventLogger.capturedValueToSum == 0.99 &&
         capturedParameters[.currency] as? String == "USD" &&
         capturedParameters[.contentID] as? String == productID &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] as? String == "fb_content_id" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] != nil
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_content_id" &&
+        iapParameters["fb_iap_test_dedup_result"] == nil &&
+        iapParameters["fb_iap_test_dedup_key_used"] == nil &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
+    }
+    let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
+    await fulfillment(of: [expectation], timeout: 20.0)
+  }
+
+  func testDedupWithDuplicatePurchaseEventsOperationalParameters() async {
+    dedupeProcessor.enable()
+    let productID = Self.ProductIdentifiers.nonConsumableProduct1.rawValue
+    guard let (iapTransaction, product) =
+      await executeTransactionFor(productID) else {
+      return
+    }
+    dedupeProcessor.processManualEvent(
+      .purchased,
+      valueToSum: iapTransaction.transaction.price?.currencyNumber ?? product.price.currencyNumber,
+      parameters: [
+        AppEvents.ParameterName.currency: "USD",
+        AppEvents.ParameterName.transactionID: iapTransaction.transaction.id,
+      ],
+      accessToken: nil,
+      operationalParameters: nil
+    )
+    let predicate = NSPredicate { _, _ -> Bool in
+      guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
+        return false
+      }
+      return self.eventLogger.capturedEventName == .purchased &&
+        self.eventLogger.capturedValueToSum == 0.99 &&
+        capturedParameters[.currency] as? String == "USD" &&
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_transaction_id" &&
+        iapParameters["fb_iap_test_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_test_dedup_key_used"] as? String == "fb_transaction_id" &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -653,21 +728,26 @@ extension IAPDedupeProcessorTests {
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
         return false
       }
       return self.eventLogger.capturedEventName == .subscribe &&
         self.eventLogger.capturedValueToSum == 2 &&
         capturedParameters[.currency] as? String == "USD" &&
         capturedParameters[.contentID] as? String == productID &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] as? String == "fb_content_id" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] != nil
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_content_id" &&
+        iapParameters["fb_iap_test_dedup_result"] == nil &&
+        iapParameters["fb_iap_test_dedup_key_used"] == nil &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -687,21 +767,26 @@ extension IAPDedupeProcessorTests {
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
         return false
       }
       return self.eventLogger.capturedEventName == .startTrial &&
         self.eventLogger.capturedValueToSum == 0 &&
         capturedParameters[.currency] as? String == "USD" &&
         capturedParameters[.contentID] as? String == productID &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] as? String == "fb_content_id" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] != nil
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_content_id" &&
+        iapParameters["fb_iap_test_dedup_result"] == nil &&
+        iapParameters["fb_iap_test_dedup_key_used"] == nil &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -722,21 +807,26 @@ extension IAPDedupeProcessorTests {
         AppEvents.ParameterName.contentID: productID,
         AppEvents.ParameterName.transactionID: iapTransaction.transaction.id,
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
         return false
       }
       return self.eventLogger.capturedEventName == .purchased &&
         self.eventLogger.capturedValueToSum == 0.99 &&
         capturedParameters[.currency] as? String == "USD" &&
         capturedParameters[.contentID] as? String == productID &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] as? String == "fb_content_id" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] as? String == "1" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] as? String == "fb_transaction_id" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] != nil
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_content_id" &&
+        iapParameters["fb_iap_test_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_test_dedup_key_used"] as? String == "fb_transaction_id" &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -755,7 +845,8 @@ extension IAPDedupeProcessorTests {
       parameters: [
         AppEvents.ParameterName.currency: "USD",
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       guard let capturedParameters = self.eventLogger.capturedParameters else {
@@ -764,11 +855,7 @@ extension IAPDedupeProcessorTests {
       return self.eventLogger.capturedEventName == .purchased &&
         self.eventLogger.capturedValueToSum == 0.99 &&
         capturedParameters[.currency] as? String == "USD" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] == nil
+        self.eventLogger.capturedOperationalParameters == nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     await fulfillment(of: [expectation], timeout: 20.0)
@@ -793,7 +880,8 @@ extension IAPDedupeProcessorTests {
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID,
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let productID3 = Self.ProductIdentifiers.nonRenewingSubscription1.rawValue
     guard let (iapTransaction3, _) =
@@ -807,7 +895,8 @@ extension IAPDedupeProcessorTests {
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID3,
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     dedupeProcessor.processManualEvent(
       .purchased,
@@ -815,7 +904,8 @@ extension IAPDedupeProcessorTests {
       parameters: [
         AppEvents.ParameterName.currency: "USD",
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       var dedupedEvents: [EventStructForTests] = []
@@ -826,10 +916,11 @@ extension IAPDedupeProcessorTests {
         if event.eventName != .purchased {
           continue
         }
-        guard let parameters = event.parameters else {
+        guard let parameters = event.operationalParameters,
+              let iapParameters = parameters[.iapParameters] else {
           continue
         }
-        if parameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" {
+        if iapParameters["fb_iap_actual_dedup_result"] as? String == "1" {
           dedupedEvents.append(event)
         }
       }
@@ -864,21 +955,26 @@ extension IAPDedupeProcessorTests {
         AppEvents.ParameterName.currency: "USD",
         AppEvents.ParameterName.contentID: productID.rawValue,
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       guard let capturedParameters = self.eventLogger.capturedParameters else {
+        return false
+      }
+      guard let capturedOperationalParameters = self.eventLogger.capturedOperationalParameters,
+            let iapParameters = capturedOperationalParameters[.iapParameters] else {
         return false
       }
       return self.eventLogger.capturedEventName == .purchased &&
         self.eventLogger.capturedValueToSum == 0.99 &&
         capturedParameters[.currency] as? String == "USD" &&
         capturedParameters[.contentID] as? String == productID.rawValue &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] as? String == "1" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] as? String == "fb_content_id" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] != nil
+        iapParameters["fb_iap_actual_dedup_result"] as? String == "1" &&
+        iapParameters["fb_iap_actual_dedup_key_used"] as? String == "fb_content_id" &&
+        iapParameters["fb_iap_test_dedup_result"] == nil &&
+        iapParameters["fb_iap_test_dedup_key_used"] == nil &&
+        iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     wait(for: [expectation], timeout: 20.0)
@@ -899,7 +995,8 @@ extension IAPDedupeProcessorTests {
       parameters: [
         AppEvents.ParameterName.currency: "USD",
       ],
-      accessToken: nil
+      accessToken: nil,
+      operationalParameters: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       guard let capturedParameters = self.eventLogger.capturedParameters else {
@@ -908,11 +1005,7 @@ extension IAPDedupeProcessorTests {
       return self.eventLogger.capturedEventName == .purchased &&
         self.eventLogger.capturedValueToSum == 0.99 &&
         capturedParameters[.currency] as? String == "USD" &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_actual_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_result")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_test_dedup_key_used")] == nil &&
-        capturedParameters[AppEvents.ParameterName("fb_iap_non_deduped_event_time")] == nil
+        self.eventLogger.capturedOperationalParameters == nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
     wait(for: [expectation], timeout: 20.0)

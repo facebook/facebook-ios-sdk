@@ -94,7 +94,8 @@ enum TestCoreKitComponents {
     redactedEventsManager: _EventsProcessing = TestRedactedEventsManager(),
     sensitiveParamsManager: _AppEventsParameterProcessing = TestSensitiveParamsManager(),
     transactionObserver: _TransactionObserving = TestTransactionObserver(),
-    iapDedupeProcessor: _IAPDedupeProcessing = TestIAPDedupeProcessor()
+    iapDedupeProcessor: _IAPDedupeProcessing = TestIAPDedupeProcessor(),
+    iapTransactionCache: _IAPTransactionCaching = IAPTransactionCache.shared
   ) -> CoreKitComponents {
     CoreKitComponents(
       accessTokenExpirer: accessTokenExpirer,
@@ -176,7 +177,8 @@ enum TestCoreKitComponents {
       redactedEventsManager: redactedEventsManager,
       sensitiveParamsManager: sensitiveParamsManager,
       transactionObserver: transactionObserver,
-      iapDedupeProcessor: iapDedupeProcessor
+      iapDedupeProcessor: iapDedupeProcessor,
+      iapTransactionCache: iapTransactionCache
     )
   }
 }

@@ -65,7 +65,7 @@ extension IAPTransactionLogger {
     return receipt.base64EncodedString()
   }
 
-  private func getParameters(for event: IAPEvent) -> [AppEvents.ParameterName: Any] {
+  private func getCustomParameters(for event: IAPEvent) -> [AppEvents.ParameterName: Any] {
     let transactionDate = event.transactionDate.map { dateFormatter.string(from: $0) } ?? ""
     var parameters: [AppEvents.ParameterName: Any] = [
       .contentID: event.productID,
@@ -79,9 +79,6 @@ extension IAPTransactionLogger {
     }
     if let productDescription = event.productDescription {
       parameters[.description] = getTruncatedString(productDescription)
-    }
-    if let transactionID = event.transactionID {
-      parameters[.transactionID] = transactionID
     }
     if event.isSubscription {
       parameters[.inAppPurchaseType] = IAPType.subscription.rawValue
@@ -101,9 +98,37 @@ extension IAPTransactionLogger {
     if event.shouldAppendReceipt, let receipt = fetchDeviceReceipt() {
       parameters[.iapReceiptData] = receipt
     }
-    parameters[.iapClientLibraryVersion] = event.storeKitVersion.rawValue
-    parameters[.iapsdkLibraryVersions] = IAPConstants.IAPSDKLibraryVersions
     return parameters
+  }
+
+  private func getOperationalParameters(for event: IAPEvent) -> [AppOperationalDataType: [String: Any]] {
+    var iapParameters = [String: Any]()
+    let transactionDate = event.transactionDate.map { dateFormatter.string(from: $0) } ?? ""
+    iapParameters = [
+      AppEvents.ParameterName.contentID.rawValue: event.productID,
+      AppEvents.ParameterName.transactionDate.rawValue: transactionDate,
+      AppEvents.ParameterName.iapsdkLibraryVersions.rawValue: IAPConstants.IAPSDKLibraryVersions,
+      AppEvents.ParameterName.iapClientLibraryVersion.rawValue: event.storeKitVersion.rawValue,
+    ]
+    if let transactionID = event.transactionID {
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] = transactionID
+    }
+    if event.isClientSideVerifiable {
+      let validationResult = event.validationResult?.rawValue ?? IAPValidationResult.unverified.rawValue
+      iapParameters[AppEvents.ParameterName.validationResult.rawValue] = validationResult
+    }
+    if event.isSubscription {
+      iapParameters[AppEvents.ParameterName.isStartTrial.rawValue] = event.isStartTrial ? "1" : "0"
+      let subscriptionPeriod = durationOfSubscriptionPeriod(event.subscriptionPeriod)
+      iapParameters[AppEvents.ParameterName.subscriptionPeriod.rawValue] = subscriptionPeriod
+      iapParameters[AppEvents.ParameterName.inAppPurchaseType.rawValue] = IAPType.subscription.rawValue
+    } else {
+      iapParameters[AppEvents.ParameterName.inAppPurchaseType.rawValue] = IAPType.product.rawValue
+    }
+    let operationalParameters = [
+      AppOperationalDataType.iapParameters: iapParameters,
+    ]
+    return operationalParameters
   }
 
   private func appendInitiatedCheckoutEventForStoreKit2(event: IAPEvent) {
@@ -111,11 +136,13 @@ extension IAPTransactionLogger {
       return
     }
     let initiatedCheckoutEvent = IAPEventResolver().getInitiatedCheckoutEventFrom(event: event)
-    let initiatedCheckoutParams = getParameters(for: initiatedCheckoutEvent)
+    let initiatedCheckoutParams = getCustomParameters(for: initiatedCheckoutEvent)
+    let initiatedCheckoutOperationalParams = getOperationalParameters(for: initiatedCheckoutEvent)
     logImplicitTransactionEvent(
       eventName: initiatedCheckoutEvent.eventName,
       valueToSum: initiatedCheckoutEvent.amount,
-      parameters: initiatedCheckoutParams
+      parameters: initiatedCheckoutParams,
+      operationalParameters: initiatedCheckoutOperationalParams
     )
   }
 
@@ -133,11 +160,13 @@ extension IAPTransactionLogger {
     }
     IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
     appendInitiatedCheckoutEventForStoreKit2(event: event)
-    let newParameters = getParameters(for: event)
+    let newParameters = getCustomParameters(for: event)
+    let newOperationalParameters = getOperationalParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
       valueToSum: event.amount,
-      parameters: newParameters
+      parameters: newParameters,
+      operationalParameters: newOperationalParameters
     )
   }
 
@@ -146,37 +175,44 @@ extension IAPTransactionLogger {
       return
     }
     IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
-    let parameters = getParameters(for: event)
+    let parameters = getCustomParameters(for: event)
+    let operationalParameters = getOperationalParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
       valueToSum: event.amount,
-      parameters: parameters
+      parameters: parameters,
+      operationalParameters: operationalParameters
     )
   }
 
   private func logFailedEvent(_ event: IAPEvent) {
     appendInitiatedCheckoutEventForStoreKit2(event: event)
-    let parameters = getParameters(for: event)
+    let parameters = getCustomParameters(for: event)
+    let operationalParameters = getOperationalParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
       valueToSum: event.amount,
-      parameters: parameters
+      parameters: parameters,
+      operationalParameters: operationalParameters
     )
   }
 
   private func logInitiatedCheckoutEvent(_ event: IAPEvent) {
-    let parameters = getParameters(for: event)
+    let parameters = getCustomParameters(for: event)
+    let operationalParameters = getOperationalParameters(for: event)
     logImplicitTransactionEvent(
       eventName: event.eventName,
       valueToSum: event.amount,
-      parameters: parameters
+      parameters: parameters,
+      operationalParameters: operationalParameters
     )
   }
 
   private func logImplicitTransactionEvent(
     eventName: AppEvents.Name,
     valueToSum: Decimal,
-    parameters: [AppEvents.ParameterName: Any]
+    parameters: [AppEvents.ParameterName: Any],
+    operationalParameters: [AppOperationalDataType: [String: Any]]?
   ) {
     guard let dependencies = try? Self.getDependencies() else {
       return
@@ -186,7 +222,8 @@ extension IAPTransactionLogger {
         eventName,
         valueToSum: valueToSum.currencyNumber,
         parameters: parameters,
-        accessToken: nil
+        accessToken: nil,
+        operationalParameters: operationalParameters
       )
     } else {
       dependencies.eventLogger.doLogEvent(
@@ -195,7 +232,7 @@ extension IAPTransactionLogger {
         parameters: parameters,
         isImplicitlyLogged: true,
         accessToken: nil,
-        operationalParameters: nil
+        operationalParameters: operationalParameters
       )
       if dependencies.eventLogger.flushBehavior != .explicitOnly {
         dependencies.eventLogger.flush(for: .eagerlyFlushingEvent)

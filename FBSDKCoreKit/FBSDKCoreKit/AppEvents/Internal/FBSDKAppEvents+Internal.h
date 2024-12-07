@@ -52,6 +52,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 @property (nullable, nonatomic) id<FBSDKTransactionObserving> transactionObserver;
 @property (nullable, nonatomic) id<FBSDKIAPFailedTransactionLoggingCreating> failedTransactionLoggingFactory;
 @property (nullable, nonatomic) id<FBSDKIAPDedupeProcessing> iapDedupeProcessor;
+@property (nullable, nonatomic) id<FBSDKIAPTransactionCaching> iapTransactionCache;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;

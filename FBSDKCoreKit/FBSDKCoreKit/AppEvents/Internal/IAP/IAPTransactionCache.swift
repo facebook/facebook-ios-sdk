@@ -97,7 +97,8 @@ extension IAPTransactionCache {
 
 // MARK: - Public APIs
 
-extension IAPTransactionCache {
+extension IAPTransactionCache: _IAPTransactionCaching {
+
   var hasRestoredPurchases: Bool {
     get {
       guard let dependencies = try? getDependencies() else {
@@ -129,6 +130,7 @@ extension IAPTransactionCache {
         return
       }
       guard let newValue else {
+        dependencies.dataStore.fb_removeObject(forKey: IAPConstants.newCandidatesDateCacheKey)
         return
       }
       dependencies.dataStore.fb_setObject(newValue, forKey: IAPConstants.newCandidatesDateCacheKey)

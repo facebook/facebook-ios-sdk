@@ -119,6 +119,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 @property (nullable, nonatomic) id<FBSDKTransactionObserving> transactionObserver;
 @property (nullable, nonatomic) id<FBSDKIAPFailedTransactionLoggingCreating> failedTransactionLoggingFactory;
 @property (nullable, nonatomic) id<FBSDKIAPDedupeProcessing> iapDedupeProcessor;
+@property (nullable, nonatomic) id<FBSDKIAPTransactionCaching> iapTransactionCache;
 
 #if !TARGET_OS_TV
 @property (nullable, nonatomic) id<FBSDKEventProcessing, FBSDKIntegrityParametersProcessorProvider> onDeviceMLModelManager;
@@ -661,6 +662,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
                       transactionObserver:(nonnull id<FBSDKTransactionObserving>)transactionObserver
           failedTransactionLoggingFactory:(nonnull id<FBSDKIAPFailedTransactionLoggingCreating>)failedTransactionLoggingFactory
                        iapDedupeProcessor:(nonnull id<FBSDKIAPDedupeProcessing>)iapDedupeProcessor
+                      iapTransactionCache:(nonnull id<FBSDKIAPTransactionCaching>)iapTransactionCache
 {
   self.gateKeeperManager = gateKeeperManager;
   self.appEventsConfigurationProvider = appEventsConfigurationProvider;
@@ -692,6 +694,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   self.transactionObserver = transactionObserver;
   self.failedTransactionLoggingFactory = failedTransactionLoggingFactory;
   self.iapDedupeProcessor = iapDedupeProcessor;
+  self.iapTransactionCache = iapTransactionCache;
  
   NSString *appID = self.appID;
   if (appID) {
@@ -988,6 +991,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           }
         }];
       } else {
+        [self.iapTransactionCache setNewCandidatesDate:[NSDate date]];
         [self.iapDedupeProcessor disable];
         [self.paymentObserver stopObservingTransactions];
         [self.transactionObserver stopObserving];
@@ -1109,11 +1113,21 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   }];
 }
 
-- (nullable NSDictionary<NSString *, id> *)addImplicitPurchaseParameters:(nullable NSDictionary<NSString *, id> *)parameters {
-  NSMutableDictionary<NSString *, id> *params = [parameters mutableCopy];
+- (nullable NSDictionary<NSString *, id> *)addImplicitPurchaseParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *)operationalParameters{
+  NSMutableDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *params = [operationalParameters mutableCopy];
+  if (params == nil) {
+    params = [[NSMutableDictionary alloc] initWithDictionary:@{}];
+  }
+  NSMutableDictionary<NSString *, id> *iapParameters = [[params objectForKey:FBSDKAppOperationalDataTypeIAPParameters] mutableCopy];
+  if (iapParameters == nil) {
+    iapParameters = [[NSMutableDictionary alloc] initWithDictionary:@{}];
+  }
   if (self.serverConfiguration) {
-    [FBSDKTypeUtility dictionary:params setObject:self.serverConfiguration.implicitPurchaseLoggingEnabled ? @"1" : @"0" forKey:@"is_implicit_purchase_logging_enabled"];
-    [FBSDKTypeUtility dictionary:params setObject:[self.settings isAutoLogAppEventsEnabled] ? @"1" : @"0" forKey:@"is_autolog_app_events_enabled"];
+    [FBSDKTypeUtility dictionary:iapParameters setObject:self.serverConfiguration.implicitPurchaseLoggingEnabled ? @"1" : @"0" forKey:@"is_implicit_purchase_logging_enabled"];
+    [FBSDKTypeUtility dictionary:iapParameters setObject:[self.settings isAutoLogAppEventsEnabled] ? @"1" : @"0" forKey:@"is_autolog_app_events_enabled"];
+  }
+  if (iapParameters != nil && iapParameters.count > 0) {
+    [FBSDKTypeUtility dictionary:params setObject:iapParameters forKey:FBSDKAppOperationalDataTypeIAPParameters];
   }
   return [params copy];
 }
@@ -1128,7 +1142,8 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
     [self.iapDedupeProcessor processManualEvent:eventName
                                      valueToSum:valueToSum
                                      parameters:parameters
-                                    accessToken:accessToken];
+                                    accessToken:accessToken
+                          operationalParameters:nil];
   } else {
     [self doLogEvent:eventName
           valueToSum:valueToSum
@@ -1196,7 +1211,7 @@ operationalParameters:nil];
     return;
   }
   
-  parameters = [self addImplicitPurchaseParameters:parameters];
+  operationalParameters = [self addImplicitPurchaseParameters:operationalParameters];
 
   BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
   if (!isProtectedModeApplied && self.sensitiveParamsManager) {
@@ -1336,7 +1351,7 @@ operationalParameters:nil];
       self.appEventsState = [self.appEventsStateProvider createStateWithToken:tokenString appID:appID];
     }
 
-    [self.appEventsState addEvent:eventDictionary isImplicit:isImplicitlyLogged];
+    [self.appEventsState addEvent:eventDictionary isImplicit:isImplicitlyLogged withOperationalParameters:operationalParameters];
     if (!isImplicitlyLogged) {
       NSString *message = [NSString stringWithFormat:@"FBSDKAppEvents: Recording event @ %f: %@",
                            [self.appEventsUtility unixTimeNow],
@@ -1418,7 +1433,9 @@ operationalParameters:nil];
     }
     NSString *receipt_data = appEventsState.extractReceiptData;
     const BOOL shouldIncludeImplicitEvents = (self.serverConfiguration.implicitLoggingEnabled && self.settings.isAutoLogAppEventsEnabled);
-    NSString *encodedEvents = [appEventsState JSONStringForEventsIncludingImplicitEvents:shouldIncludeImplicitEvents];
+    NSDictionary<NSString *, id> *appEventsData = [appEventsState JSONStringForEventsAndOperationalParametersIncludingImplicitEvents:shouldIncludeImplicitEvents];
+    NSString *encodedEvents = [appEventsData objectForKey:@"custom_events"];
+    NSString *encodedOperationalData = [appEventsData objectForKey:@"operational_parameters"];
     if (!encodedEvents || appEventsState.events.count == 0) {
       [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                              logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];
@@ -1435,6 +1452,9 @@ operationalParameters:nil];
     }
 
     [FBSDKTypeUtility dictionary:postParameters setObject:encodedEvents forKey:@"custom_events"];
+    if (encodedOperationalData != nil) {
+      [FBSDKTypeUtility dictionary:postParameters setObject:encodedOperationalData forKey:@"operational_parameters"];
+    }
     if (appEventsState.numSkipped > 0) {
       [FBSDKTypeUtility dictionary:postParameters setObject:[NSString stringWithFormat:@"%lu", (unsigned long)appEventsState.numSkipped] forKey:@"num_skipped_events"];
     }

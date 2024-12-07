@@ -38,6 +38,7 @@
 @protocol FBSDKTransactionObserving;
 @protocol FBSDKIAPFailedTransactionLoggingCreating;
 @protocol FBSDKIAPDedupeProcessing;
+@protocol FBSDKIAPTransactionCaching;
 #if !TARGET_OS_TV
 @protocol FBSDKEventProcessing;
 @protocol FBSDKMetadataIndexing;
@@ -87,7 +88,8 @@ NS_SWIFT_NAME(_AppEventsConfiguring)
                       transactionObserver:(nonnull id<FBSDKTransactionObserving>)transactionObserver
           failedTransactionLoggingFactory:(nonnull id<FBSDKIAPFailedTransactionLoggingCreating>)failedTransactionLoggingFactory
                        iapDedupeProcessor:(nonnull id<FBSDKIAPDedupeProcessing>)iapDedupeProcessor
-NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:protectedModeManager:bannedParamsManager:stdParamEnforcementManager:macaRuleMatchingManager:blocklistEventsManager:redactedEventsManager:sensitiveParamsManager:transactionObserver:failedTransactionLoggingFactory:iapDedupeProcessor:));
+                      iapTransactionCache:(nonnull id<FBSDKIAPTransactionCaching>)iapTransactionCache
+NS_SWIFT_NAME(configure(gateKeeperManager:appEventsConfigurationProvider:serverConfigurationProvider:graphRequestFactory:featureChecker:primaryDataStore:logger:settings:paymentObserver:timeSpentRecorder:appEventsStateStore:eventDeactivationParameterProcessor:restrictiveDataFilterParameterProcessor:atePublisherFactory:appEventsStateProvider:advertiserIDProvider:userDataStore:appEventsUtility:internalUtility:capiReporter:protectedModeManager:bannedParamsManager:stdParamEnforcementManager:macaRuleMatchingManager:blocklistEventsManager:redactedEventsManager:sensitiveParamsManager:transactionObserver:failedTransactionLoggingFactory:iapDedupeProcessor:iapTransactionCache:));
 
 #if !TARGET_OS_TV
 

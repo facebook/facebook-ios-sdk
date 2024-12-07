@@ -42,7 +42,7 @@ final class AppEventsStateTests: XCTestCase {
       file: file,
       line: line
     )
-    partiallyFullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
+    partiallyFullState.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: nil)
     XCTAssertEqual(
       1,
       partiallyFullState.events.count,
@@ -51,7 +51,7 @@ final class AppEventsStateTests: XCTestCase {
       line: line
     )
     for _ in 0 ..< appEventsStateMaxEvents {
-      fullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
+      fullState.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: nil)
     }
 
     XCTAssertEqual(
@@ -162,8 +162,8 @@ final class AppEventsStateTests: XCTestCase {
   // MARK: - Adding Events
 
   func testAddingDuplicateEvents() {
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
 
     XCTAssertEqual(
       2,
@@ -178,7 +178,7 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   func testAddingSingleImplicitEvent() {
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
     XCTAssertEqual(
       1,
       state.events.count,
@@ -198,11 +198,13 @@ final class AppEventsStateTests: XCTestCase {
   func testAddingMultipleImplicitEvents() {
     state.addEvent(
       SampleAppEvents.validEvent,
-      isImplicit: true
+      isImplicit: true,
+      withOperationalParameters: nil
     )
     state.addEvent(
       SampleAppEvents.validEvent(withName: "event2"),
-      isImplicit: true
+      isImplicit: true,
+      withOperationalParameters: nil
     )
 
     XCTAssertEqual(2, state.events.count, "Should be able to add a valid event")
@@ -216,7 +218,8 @@ final class AppEventsStateTests: XCTestCase {
   func testAddingSingleNonImplicitEvents() {
     state.addEvent(
       SampleAppEvents.validEvent,
-      isImplicit: false
+      isImplicit: false,
+      withOperationalParameters: nil
     )
 
     XCTAssertEqual(1, state.events.count, "Should be able to add a valid event")
@@ -230,11 +233,13 @@ final class AppEventsStateTests: XCTestCase {
   func testAddingMultipleNonImplicitEvents() {
     state.addEvent(
       SampleAppEvents.validEvent,
-      isImplicit: false
+      isImplicit: false,
+      withOperationalParameters: nil
     )
     state.addEvent(
       SampleAppEvents.validEvent(withName: "event2"),
-      isImplicit: false
+      isImplicit: false,
+      withOperationalParameters: nil
     )
     XCTAssertEqual(2, state.events.count, "Should be able to add a valid event")
     XCTAssertEqual(0, state.numSkipped, "Should not skip valid events")
@@ -247,11 +252,13 @@ final class AppEventsStateTests: XCTestCase {
   func testAddingMixtureOfImplicitNonImplicitEvents() {
     state.addEvent(
       SampleAppEvents.validEvent,
-      isImplicit: true
+      isImplicit: true,
+      withOperationalParameters: nil
     )
     state.addEvent(
       SampleAppEvents.validEvent(withName: "event2"),
-      isImplicit: false
+      isImplicit: false,
+      withOperationalParameters: nil
     )
     XCTAssertEqual(2, state.events.count, "Should be able to add a valid event")
     XCTAssertEqual(0, state.numSkipped, "Should not skip valid events")
@@ -261,9 +268,45 @@ final class AppEventsStateTests: XCTestCase {
     )
   }
 
+  func testAddingEventsWithOperationalParameters() {
+    let operationalParametersOne: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    let operationalParametersTwo: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.productTitle.rawValue: "Product",
+      ],
+    ]
+    state.addEvent(
+      SampleAppEvents.validEvent,
+      isImplicit: true,
+      withOperationalParameters: operationalParametersOne
+    )
+    state.addEvent(
+      SampleAppEvents.validEvent(withName: "event2"),
+      isImplicit: false,
+      withOperationalParameters: operationalParametersTwo
+    )
+    XCTAssertEqual(2, state.events.count, "Should be able to add a valid event with operational parameters")
+    guard let eventOneOperationalParameters =
+      state.events.first?["operationalParameters"] as? [AppOperationalDataType: [String: Any]] else {
+      XCTFail("Should have operational parameters")
+      return
+    }
+    guard let eventTwoOperationalParameters =
+      state.events.last?["operationalParameters"] as? [AppOperationalDataType: [String: Any]] else {
+      XCTFail("Should have operational parameters")
+      return
+    }
+    XCTAssertTrue(NSDictionary(dictionary: operationalParametersOne).isEqual(to: eventOneOperationalParameters))
+    XCTAssertTrue(NSDictionary(dictionary: operationalParametersTwo).isEqual(to: eventTwoOperationalParameters))
+  }
+
   func testAddingEventAtMaxCapacity() {
-    fullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
-    fullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
+    fullState.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: nil)
+    fullState.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: nil)
     XCTAssertEqual(
       2,
       fullState.numSkipped,
@@ -272,6 +315,28 @@ final class AppEventsStateTests: XCTestCase {
   }
 
   // MARK: - Events from AppEventState
+
+  func testAddingEventsToStateWithOperationalParameters() {
+    let testState = _AppEventsState(token: name, appID: appId)
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    testState.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: operationalParameters)
+    partiallyFullState.addEvents(fromAppEventState: testState)
+    XCTAssertEqual(
+      2,
+      partiallyFullState.events.count,
+      "Should succesfully add events from another state"
+    )
+    guard let operationalParametersFromTestState =
+      partiallyFullState.events.last?["operationalParameters"] as? [AppOperationalDataType: [String: Any]] else {
+      XCTFail("Should have operational parameters")
+      return
+    }
+    XCTAssertTrue(NSDictionary(dictionary: operationalParametersFromTestState).isEqual(to: operationalParameters))
+  }
 
   func testAddingEventsToDuplicateEvents() {
     partiallyFullState.addEvents(fromAppEventState: partiallyFullState)
@@ -318,7 +383,7 @@ final class AppEventsStateTests: XCTestCase {
 
   func testAddEventsFromEmptyStateToPartiallyFilledState() {
     let emptyState = _AppEventsState(token: name, appID: appId)
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
     state.addEvents(fromAppEventState: emptyState)
 
     XCTAssertEqual(
@@ -379,7 +444,7 @@ final class AppEventsStateTests: XCTestCase {
     let otherFullState = _AppEventsState(token: name, appID: appId)
 
     for _ in 0 ..< (appEventsStateMaxEvents * 2) {
-      otherFullState.addEvent(SampleAppEvents.validEvent, isImplicit: false)
+      otherFullState.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: nil)
     }
 
     fullState.addEvents(fromAppEventState: otherFullState)
@@ -469,7 +534,7 @@ final class AppEventsStateTests: XCTestCase {
   // MARK: - Extract Receipt Data
 
   func testExtractReceiptData() {
-    state.addEvent(["receipt_data": "some_data"], isImplicit: false)
+    state.addEvent(["receipt_data": "some_data"], isImplicit: false, withOperationalParameters: nil)
     let extracted = state.extractReceiptData()
     XCTAssertTrue(extracted == "receipt_1::some_data;;;")
   }
@@ -477,47 +542,148 @@ final class AppEventsStateTests: XCTestCase {
   // MARK: - JSONString For Events
 
   func testJSONStringForEventsWithNoEvents() throws {
-    let json = state.jsonStringForEvents(includingImplicitEvents: true)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
     let expected = try BasicUtility.jsonString(for: [], invalidObjectHandler: nil)
     XCTAssertEqual(
-      json,
+      eventsJson,
       expected,
       "Should represent events as empty json array when there are no events"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expected,
+      "Should represent operational params as empty json array when there are no events"
     )
   }
 
   func testJSONStringForEventsIncludingImplicitEvents() throws {
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
-    let json = state.jsonStringForEvents(includingImplicitEvents: true)
-    let expected = try BasicUtility.jsonString(
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParameters)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
       for: [SampleAppEvents.validEvent, SampleAppEvents.validEvent],
       invalidObjectHandler: nil
     )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [[:], operationalParameters],
+      invalidObjectHandler: nil
+    )
     XCTAssertEqual(
-      json,
-      expected,
-      "Should represent events as empty json array when there are events"
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
     )
   }
 
   func testJSONStringForEventsExcludingImplicitEvents() throws {
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: true)
-    state.addEvent(SampleAppEvents.validEvent, isImplicit: false)
-    let json = state.jsonStringForEvents(includingImplicitEvents: false)
-    let expected = try BasicUtility.jsonString(
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParameters)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: false, withOperationalParameters: operationalParameters)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: false)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
       for: [SampleAppEvents.validEvent],
       invalidObjectHandler: nil
     )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [operationalParameters],
+      invalidObjectHandler: nil
+    )
     XCTAssertEqual(
-      json,
-      expected,
-      "Should represent events as empty json array when there are events"
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
+    )
+  }
+
+  func testJSONStringForEventsIncludingImplicitEventsWithOperationalParameters() throws {
+    let operationalParametersOne: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.productTitle.rawValue: "Product Title",
+      ],
+    ]
+    let operationalParametersTwo: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParametersOne)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: operationalParametersTwo)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
+      for: [SampleAppEvents.validEvent, SampleAppEvents.validEvent],
+      invalidObjectHandler: nil
+    )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [operationalParametersOne, operationalParametersTwo],
+      invalidObjectHandler: nil
+    )
+    XCTAssertEqual(
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
+    )
+  }
+
+  func testJSONStringForEventsIncludingImplicitEventsWithNoOperationalParameters() throws {
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
+    state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
+    let json = state.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
+    let eventsJson = json["custom_events"]
+    let operationalParametersJson = json["operational_parameters"]
+    let expectedEventsJson = try BasicUtility.jsonString(
+      for: [SampleAppEvents.validEvent, SampleAppEvents.validEvent],
+      invalidObjectHandler: nil
+    )
+    let expectedOperationalParametersJson = try BasicUtility.jsonString(
+      for: [[:], [:]],
+      invalidObjectHandler: nil
+    )
+    XCTAssertEqual(
+      eventsJson,
+      expectedEventsJson,
+      "Should represent events correctly"
+    )
+    XCTAssertEqual(
+      operationalParametersJson,
+      expectedOperationalParametersJson,
+      "Should represent operational parameters correctly"
     )
   }
 
   func testJSONStringForEventsSubmitEventsToProcessors() {
-    fullState.jsonStringForEvents(includingImplicitEvents: true)
+    fullState.jsonStringForEventsAndOperationalParameters(includingImplicitEvents: true)
     XCTAssertEqual(
       fullState.events.count,
       eventsProcessor.capturedEvents?.count,

@@ -152,7 +152,7 @@ final class AppEventsTests: XCTestCase {
     iapDedupeProcessor = nil
 
     resetTestHelpers()
-
+    IAPTransactionCache.shared.reset()
     super.tearDown()
   }
 
@@ -194,7 +194,8 @@ final class AppEventsTests: XCTestCase {
       sensitiveParamsManager: sensitiveParamsManager,
       transactionObserver: transactionObserver,
       failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
-      iapDedupeProcessor: iapDedupeProcessor
+      iapDedupeProcessor: iapDedupeProcessor,
+      iapTransactionCache: IAPTransactionCache.shared
     )
 
     appEvents.configureNonTVComponents(
@@ -258,6 +259,63 @@ final class AppEventsTests: XCTestCase {
       atePublisher,
       "Should store the publisher created by the publisher factory"
     )
+  }
+
+  // MARK: - Test for operational parameters
+
+  func testLogEventWithOperationalParameters() {
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    appEvents.doLogEvent(
+      .purchased,
+      valueToSum: 2.99,
+      parameters: nil,
+      isImplicitlyLogged: false,
+      accessToken: nil,
+      operationalParameters: operationalParameters
+    )
+    appEvents.flush()
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    XCTAssertEqual(
+      graphRequestFactory.capturedRequests.first?.graphPath,
+      "mockAppID/activities"
+    )
+    guard let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+      XCTFail("We should have operational parameters")
+      return
+    }
+    XCTAssertTrue(capturedOperationalParameters.contains(AppEvents.ParameterName.transactionID.rawValue))
+  }
+
+  func testLogEventWithNoOperationalParameters() {
+    appEvents.doLogEvent(
+      .purchased,
+      valueToSum: 2.99,
+      parameters: nil,
+      isImplicitlyLogged: false,
+      accessToken: nil,
+      operationalParameters: nil
+    )
+    appEvents.flush()
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    XCTAssertEqual(
+      graphRequestFactory.capturedRequests.first?.graphPath,
+      "mockAppID/activities"
+    )
+    guard let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+      XCTFail("We should have operational parameters")
+      return
+    }
+    XCTAssertEqual(capturedOperationalParameters, "[{}]")
   }
 
   // MARK: - Tests for publishing ATE
@@ -1739,6 +1797,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled() {
+    let now = Date()
     settings.isAutoLogAppEventsEnabled = false
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": true]
@@ -1762,6 +1821,11 @@ final class AppEventsTests: XCTestCase {
       transactionObserver.didStopObserving,
       "Fetching a configuration should stop transaction observing if auto log app events is disabled"
     )
+    guard let newCandidatesDate = IAPTransactionCache.shared.newCandidatesDate else {
+      XCTFail("newCandidatesDate should have been set")
+      return
+    }
+    XCTAssertTrue(newCandidatesDate > now)
   }
 
   func testEnablingIAPDedupeShouldEnableIAPDedupe() {
@@ -1825,6 +1889,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenImplicitPurchaseIsDiabled() {
+    let now = Date()
     settings.isAutoLogAppEventsEnabled = true
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": 0]
@@ -1837,6 +1902,11 @@ final class AppEventsTests: XCTestCase {
 
     XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
     XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+    guard let newCandidatesDate = IAPTransactionCache.shared.newCandidatesDate else {
+      XCTFail("newCandidatesDate should have been set")
+      return
+    }
+    XCTAssertTrue(newCandidatesDate > now)
   }
 
   func testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled() {
