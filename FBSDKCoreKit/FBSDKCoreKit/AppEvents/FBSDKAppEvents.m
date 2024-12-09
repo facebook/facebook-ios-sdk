@@ -991,6 +991,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           }
         }];
       } else {
+        [self.iapTransactionCache setHasRestoredPurchases:YES];
         [self.iapTransactionCache setNewCandidatesDate:[NSDate date]];
         [self.iapDedupeProcessor disable];
         [self.paymentObserver stopObservingTransactions];
@@ -1452,7 +1453,7 @@ operationalParameters:nil];
     }
 
     [FBSDKTypeUtility dictionary:postParameters setObject:encodedEvents forKey:@"custom_events"];
-    if (encodedOperationalData != nil) {
+    if ([self.featureChecker isEnabled:FBSDKFeatureIAPLoggingSK2] && encodedOperationalData != nil) {
       [FBSDKTypeUtility dictionary:postParameters setObject:encodedOperationalData forKey:@"operational_parameters"];
     }
     if (appEventsState.numSkipped > 0) {
