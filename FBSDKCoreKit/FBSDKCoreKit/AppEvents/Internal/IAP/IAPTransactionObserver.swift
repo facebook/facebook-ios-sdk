@@ -115,8 +115,9 @@ extension IAPTransactionObserver {
     for transactionResult in newTransactions {
       await handleNewTransaction(transaction: transactionResult.iapTransaction)
     }
-    IAPTransactionCache.shared.newCandidatesDate = newTransactions.last?.iapTransaction.transaction.purchaseDate ??
-      Date()
+    if let latest = newTransactions.last {
+      IAPTransactionCache.shared.newCandidatesDate = latest.iapTransaction.transaction.purchaseDate
+    }
   }
 
   private func handleRestoredTransaction(transaction: IAPTransaction) async {

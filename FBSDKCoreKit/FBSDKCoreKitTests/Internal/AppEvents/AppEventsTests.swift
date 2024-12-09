@@ -264,6 +264,7 @@ final class AppEventsTests: XCTestCase {
   // MARK: - Test for operational parameters
 
   func testLogEventWithOperationalParameters() {
+    featureManager.enable(feature: .iapLoggingSK2)
     let operationalParameters: [AppOperationalDataType: [String: Any]] = [
       .iapParameters: [
         AppEvents.ParameterName.transactionID.rawValue: "1",
@@ -294,6 +295,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testLogEventWithNoOperationalParameters() {
+    featureManager.enable(feature: .iapLoggingSK2)
     appEvents.doLogEvent(
       .purchased,
       valueToSum: 2.99,
