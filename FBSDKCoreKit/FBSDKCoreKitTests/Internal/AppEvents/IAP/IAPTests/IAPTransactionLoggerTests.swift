@@ -634,53 +634,16 @@ extension IAPTransactionLoggerTests {
   }
 
   func testLogRestoredSubscriptionTransactionNonRenewable() async {
-    guard let (iapTransaction, product) =
+    guard let (iapTransaction, _) =
       await executeTransactionFor(Self.ProductIdentifiers.nonRenewingSubscription1.rawValue) else {
       return
     }
     await iapLogger.logRestoredTransaction(iapTransaction)
-    XCTAssertEqual(eventLogger.capturedEventName, .purchaseRestored)
-    XCTAssertEqual(eventLogger.capturedValueToSum, 5)
-    XCTAssertTrue(
-      IAPTransactionCache.shared.contains(
-        transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchaseRestored
-      )
-    )
-    guard let capturedParameters = eventLogger.capturedParameters else {
-      XCTFail("We should have capturedParameters")
-      return
-    }
-    guard let capturedOperationalParameters = eventLogger.capturedOperationalParameters,
-          let iapParameters = capturedOperationalParameters[.iapParameters] else {
-      XCTFail("We should have capture operational parameters")
-      return
-    }
-    XCTAssertEqual(capturedParameters[.contentID] as? String, product.id)
-    XCTAssertEqual(capturedParameters[.numItems] as? Int, 1)
-    XCTAssertEqual(
-      capturedParameters[.transactionDate] as? String,
-      dateFormatter.string(from: iapTransaction.transaction.purchaseDate)
-    )
-    XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
-    XCTAssertEqual(capturedParameters[.description] as? String, product.description)
-    XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
-    XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
-    XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
-    XCTAssertNil(capturedParameters[.subscriptionPeriod])
-    XCTAssertNil(capturedParameters[.isStartTrial])
-    XCTAssertNil(capturedParameters[.hasFreeTrial])
-    XCTAssertNil(capturedParameters[.trialPeriod])
-    XCTAssertNil(capturedParameters[.trialPrice])
-    XCTAssertEqual(
-      iapParameters[AppEvents.ParameterName.iapClientLibraryVersion.rawValue] as? String,
-      IAPStoreKitVersion.version2.rawValue
-    )
-    XCTAssertEqual(
-      iapParameters[AppEvents.ParameterName.iapsdkLibraryVersions.rawValue] as? String,
-      IAPConstants.IAPSDKLibraryVersions
-    )
+    XCTAssertNil(eventLogger.capturedEventName)
+    let capturedParameters = eventLogger.capturedParameters
+    XCTAssertNil(capturedParameters)
+    let capturedOperationalParameters = eventLogger.capturedOperationalParameters
+    XCTAssertNil(capturedOperationalParameters)
   }
 
   func testLogRestoredSubscriptionTransactionAutoRenewable() async {
@@ -813,48 +776,11 @@ extension IAPTransactionLoggerTests {
       return
     }
     await iapLogger.logRestoredTransaction(iapTransaction)
-    XCTAssertEqual(eventLogger.capturedEventName, .purchaseRestored)
-    XCTAssertEqual(eventLogger.capturedValueToSum, 10)
-    XCTAssertTrue(
-      IAPTransactionCache.shared.contains(
-        transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchaseRestored
-      )
-    )
-    guard let capturedParameters = eventLogger.capturedParameters else {
-      XCTFail("We should have capturedParameters")
-      return
-    }
-    guard let capturedOperationalParameters = eventLogger.capturedOperationalParameters,
-          let iapParameters = capturedOperationalParameters[.iapParameters] else {
-      XCTFail("We should have capture operational parameters")
-      return
-    }
-    XCTAssertEqual(capturedParameters[.contentID] as? String, product.id)
-    XCTAssertEqual(capturedParameters[.numItems] as? Int, 1)
-    XCTAssertEqual(
-      capturedParameters[.transactionDate] as? String,
-      dateFormatter.string(from: iapTransaction.transaction.purchaseDate)
-    )
-    XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
-    XCTAssertEqual(capturedParameters[.description] as? String, product.description)
-    XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
-    XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
-    XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
-    XCTAssertNil(capturedParameters[.subscriptionPeriod])
-    XCTAssertNil(capturedParameters[.isStartTrial])
-    XCTAssertNil(capturedParameters[.hasFreeTrial])
-    XCTAssertNil(capturedParameters[.trialPeriod])
-    XCTAssertNil(capturedParameters[.trialPrice])
-    XCTAssertEqual(
-      iapParameters[AppEvents.ParameterName.iapClientLibraryVersion.rawValue] as? String,
-      IAPStoreKitVersion.version2.rawValue
-    )
-    XCTAssertEqual(
-      iapParameters[AppEvents.ParameterName.iapsdkLibraryVersions.rawValue] as? String,
-      IAPConstants.IAPSDKLibraryVersions
-    )
+    XCTAssertNil(eventLogger.capturedEventName)
+    let capturedParameters = eventLogger.capturedParameters
+    XCTAssertNil(capturedParameters)
+    let capturedOperationalParameters = eventLogger.capturedOperationalParameters
+    XCTAssertNil(capturedOperationalParameters)
   }
 
   func testLogRestoredPurchaseTransactionNonConsumable() async {

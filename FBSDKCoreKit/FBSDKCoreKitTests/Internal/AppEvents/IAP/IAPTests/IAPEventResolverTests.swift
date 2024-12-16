@@ -79,7 +79,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -118,7 +119,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -157,7 +159,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -197,7 +200,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -238,7 +242,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
       introductoryOfferPrice: 0.0,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -279,7 +284,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveNewEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -318,7 +324,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -358,7 +365,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -399,7 +407,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
       introductoryOfferPrice: 0.0,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -440,7 +449,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveRestoredEventFor(iapTransaction: iapTransaction)
     XCTAssertEqual(event, expectedEvent)
@@ -473,7 +483,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveFailedEventFor(productID: productID)
     XCTAssertEqual(event, expectedEvent)
@@ -508,7 +519,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
       introductoryOfferPrice: 0.0,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: product.type.iapProductType
     )
     let event = await eventResolver.resolveFailedEventFor(productID: productID)
     XCTAssertEqual(event, expectedEvent)
@@ -536,7 +548,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: nil
     )
     let expectedEvent = IAPEvent(
       eventName: .initiatedCheckout,
@@ -558,7 +571,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: nil
     )
     let event = eventResolver.getInitiatedCheckoutEventFrom(event: purchaseEvent)
     XCTAssertEqual(event, expectedEvent)
@@ -596,7 +610,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedNewEvent == expectedEvent
@@ -632,7 +647,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedNewEvent == expectedEvent
@@ -668,7 +684,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedNewEvent == expectedEvent
@@ -705,7 +722,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedNewEvent == expectedEvent
@@ -750,7 +768,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
       introductoryOfferPrice: 0.0,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedNewEvent == expectedEvent
@@ -787,7 +806,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     eventResolver.resolveEventFor(transaction: transaction)
     let predicate = NSPredicate { _, _ -> Bool in
@@ -831,7 +851,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedRestoredEvent == expectedEvent && self.delegate.capturedNewEvent == nil
@@ -875,7 +896,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedRestoredEvent == expectedEvent && self.delegate.capturedNewEvent == nil
@@ -927,7 +949,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
       introductoryOfferPrice: 0.0,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedRestoredEvent == expectedEvent && self.delegate.capturedNewEvent == nil
@@ -972,7 +995,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedRestoredEvent == expectedEvent && self.delegate.capturedNewEvent == nil
@@ -1007,7 +1031,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedInitiatedCheckoutEvent == expectedEvent
@@ -1042,7 +1067,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedInitiatedCheckoutEvent == expectedEvent
@@ -1077,7 +1103,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedInitiatedCheckoutEvent == expectedEvent
@@ -1113,7 +1140,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedInitiatedCheckoutEvent == expectedEvent
@@ -1157,7 +1185,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
       introductoryOfferPrice: 0.0,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedInitiatedCheckoutEvent == expectedEvent
@@ -1193,7 +1222,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     eventResolver.resolveEventFor(transaction: transaction)
     let predicate = NSPredicate { _, _ -> Bool in
@@ -1229,7 +1259,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedFailedEvent == expectedEvent
@@ -1264,7 +1295,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedFailedEvent == expectedEvent
@@ -1299,7 +1331,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedFailedEvent == expectedEvent
@@ -1335,7 +1368,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedFailedEvent == expectedEvent
@@ -1379,7 +1413,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: true,
       introductoryOfferSubscriptionPeriod: introOfferSubscriptionPeriod,
       introductoryOfferPrice: 0.0,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     let predicate = NSPredicate { _, _ -> Bool in
       self.delegate.capturedFailedEvent == expectedEvent
@@ -1415,7 +1450,8 @@ extension IAPEventResolverTests {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     eventResolver.resolveEventFor(transaction: transaction)
     let predicate = NSPredicate { _, _ -> Bool in
