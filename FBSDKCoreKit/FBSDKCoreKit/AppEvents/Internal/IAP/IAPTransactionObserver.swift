@@ -116,7 +116,9 @@ extension IAPTransactionObserver {
       await handleNewTransaction(transaction: transactionResult.iapTransaction)
     }
     if let latest = newTransactions.last {
-      IAPTransactionCache.shared.newCandidatesDate = latest.iapTransaction.transaction.purchaseDate
+      synchronized(self) {
+        IAPTransactionCache.shared.newCandidatesDate = latest.iapTransaction.transaction.purchaseDate
+      }
     }
   }
 
