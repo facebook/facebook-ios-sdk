@@ -29,7 +29,7 @@ extension Transaction {
         transaction.expirationDate ?? now >= now &&
         dateCheck &&
         !unfinishedTransactionIDs.contains(id) &&
-        !IAPTransactionCache.shared.contains(transactionID: String(id))
+        !IAPTransactionCache.shared.contains(transactionID: String(id), productID: transaction.productID)
     }
     return candidateTransactions
   }

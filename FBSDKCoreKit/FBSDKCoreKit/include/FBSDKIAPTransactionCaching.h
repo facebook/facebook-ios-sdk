@@ -24,18 +24,22 @@ NS_SWIFT_NAME(_IAPTransactionCaching)
 
 - (void)addTransaction:(nullable NSString *)transactionID
              eventName:(FBSDKAppEventName)eventName
-NS_SWIFT_NAME(addTransaction(transactionID:eventName:));
+             productID:(NSString *)productID
+NS_SWIFT_NAME(addTransaction(transactionID:eventName:productID:));
 
 - (void)removeTransaction:(nullable NSString *)transactionID
                 eventName:(FBSDKAppEventName)eventName
-NS_SWIFT_NAME(removeTransaction(transactionID:eventName:));
+                productID:(NSString *)productID
+NS_SWIFT_NAME(removeTransaction(transactionID:eventName:productID:));
 
 - (BOOL)contains:(nullable NSString *)transactionID
        eventName:(FBSDKAppEventName)eventName
-NS_SWIFT_NAME(contains(transactionID:eventName:));
+       productID:(NSString *)productID
+NS_SWIFT_NAME(contains(transactionID:eventName:productID:));
 
 - (BOOL)contains:(nullable NSString *)transactionID
-NS_SWIFT_NAME(contains(transactionID:));
+       productID:(NSString *)productID
+NS_SWIFT_NAME(contains(transactionID:productID:));
 
 - (void)trimIfNeeded:(BOOL)hasLowMemory
 NS_SWIFT_NAME(trimIfNeeded(hasLowMemory:));
