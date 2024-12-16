@@ -35,7 +35,11 @@ extension TestIAPTransactionLogger {
   func logNewTransaction(_ transaction: IAPTransaction) async {
     synchronized(self) {
       Self.newStoreKit2Transactions.append(transaction)
-      IAPTransactionCache.shared.addTransaction(transactionID: String(transaction.transaction.id), eventName: .purchased)
+      IAPTransactionCache.shared.addTransaction(
+        transactionID: String(transaction.transaction.id),
+        eventName: .purchased,
+        productID: transaction.transaction.productID
+      )
     }
   }
 
@@ -43,7 +47,11 @@ extension TestIAPTransactionLogger {
     synchronized(self) {
       Self.restoredStoreKit2Transactions.append(transaction)
       let restored = AppEvents.Name(rawValue: "fb_mobile_purchase_restored")
-      IAPTransactionCache.shared.addTransaction(transactionID: String(transaction.transaction.id), eventName: restored)
+      IAPTransactionCache.shared.addTransaction(
+        transactionID: String(transaction.transaction.id),
+        eventName: restored,
+        productID: transaction.transaction.productID
+      )
     }
   }
 

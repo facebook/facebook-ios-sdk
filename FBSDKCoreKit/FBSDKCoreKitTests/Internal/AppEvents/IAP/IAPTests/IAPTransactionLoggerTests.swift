@@ -77,7 +77,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .startTrial
+        eventName: .startTrial,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -127,7 +128,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchased
+        eventName: .purchased,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -177,7 +179,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -223,7 +226,8 @@ extension IAPTransactionLoggerTests {
     }
     IAPTransactionCache.shared.addTransaction(
       transactionID: String(iapTransaction.transaction.id),
-      eventName: .startTrial
+      eventName: .startTrial,
+      productID: iapTransaction.transaction.productID
     )
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribe)
@@ -231,7 +235,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -282,7 +287,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchased
+        eventName: .purchased,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -328,7 +334,8 @@ extension IAPTransactionLoggerTests {
     }
     IAPTransactionCache.shared.addTransaction(
       transactionID: String(iapTransaction.transaction.originalID),
-      eventName: .startTrial
+      eventName: .startTrial,
+      productID: iapTransaction.transaction.productID
     )
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -336,7 +343,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .startTrial
+        eventName: .startTrial,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -349,7 +357,8 @@ extension IAPTransactionLoggerTests {
     }
     IAPTransactionCache.shared.addTransaction(
       transactionID: String(iapTransaction.transaction.originalID),
-      eventName: .subscribe
+      eventName: .subscribe,
+      productID: iapTransaction.transaction.productID
     )
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -357,7 +366,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -370,7 +380,8 @@ extension IAPTransactionLoggerTests {
     }
     IAPTransactionCache.shared.addTransaction(
       transactionID: String(iapTransaction.transaction.originalID),
-      eventName: .subscribeRestore
+      eventName: .subscribeRestore,
+      productID: iapTransaction.transaction.productID
     )
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -378,7 +389,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -413,13 +425,15 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(renewalTransaction.transaction.originalID),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: renewalTransaction.transaction.productID
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(renewalTransaction.transaction.id),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: renewalTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -471,7 +485,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchased
+        eventName: .purchased,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -521,7 +536,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchased
+        eventName: .purchased,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -567,7 +583,8 @@ extension IAPTransactionLoggerTests {
     }
     IAPTransactionCache.shared.addTransaction(
       transactionID: String(iapTransaction.transaction.originalID),
-      eventName: .purchased
+      eventName: .purchased,
+      productID: iapTransaction.transaction.productID
     )
     await iapLogger.logNewTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -575,7 +592,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .purchased
+        eventName: .purchased,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -594,7 +612,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -657,7 +676,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -703,7 +723,8 @@ extension IAPTransactionLoggerTests {
     }
     IAPTransactionCache.shared.addTransaction(
       transactionID: String(iapTransaction.transaction.originalID),
-      eventName: .subscribeRestore
+      eventName: .subscribeRestore,
+      productID: iapTransaction.transaction.productID
     )
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -711,7 +732,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -729,7 +751,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -771,7 +794,7 @@ extension IAPTransactionLoggerTests {
   // MARK: - Restored Purchases
 
   func testLogRestoredPurchaseTransactionConsumable() async {
-    guard let (iapTransaction, product) =
+    guard let (iapTransaction, _) =
       await executeTransactionFor(Self.ProductIdentifiers.consumableProduct1.rawValue) else {
       return
     }
@@ -794,7 +817,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -840,7 +864,8 @@ extension IAPTransactionLoggerTests {
     }
     IAPTransactionCache.shared.addTransaction(
       transactionID: String(iapTransaction.transaction.originalID),
-      eventName: .purchaseRestored
+      eventName: .purchaseRestored,
+      productID: iapTransaction.transaction.productID
     )
     await iapLogger.logRestoredTransaction(iapTransaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -848,7 +873,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -868,7 +894,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .purchased
+        eventName: .purchased,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -919,13 +946,15 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .purchased
+        eventName: .purchased,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -976,7 +1005,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1027,13 +1057,15 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.originalID),
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: iapTransaction.transaction.productID
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: String(iapTransaction.transaction.id),
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: iapTransaction.transaction.productID
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1174,7 +1206,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .startTrial
+        eventName: .startTrial,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1226,7 +1259,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchased
+        eventName: .purchased,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1278,7 +1312,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1326,7 +1361,8 @@ extension IAPTransactionLoggerTests {
     let transaction = TestPaymentTransaction(identifier: transactionID, state: .purchased, date: now, payment: payment)
     IAPTransactionCache.shared.addTransaction(
       transactionID: transactionID,
-      eventName: .startTrial
+      eventName: .startTrial,
+      productID: productID.rawValue
     )
     iapLogger.logTransaction(transaction)
     XCTAssertEqual(eventLogger.capturedEventName, .subscribe)
@@ -1334,7 +1370,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1387,7 +1424,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchased
+        eventName: .purchased,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1442,7 +1480,8 @@ extension IAPTransactionLoggerTests {
     let transaction = TestPaymentTransaction(identifier: transactionID, state: .purchased, date: now, payment: payment)
     IAPTransactionCache.shared.addTransaction(
       transactionID: transactionID,
-      eventName: .startTrial
+      eventName: .startTrial,
+      productID: productID.rawValue
     )
     iapLogger.logTransaction(transaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -1450,7 +1489,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .startTrial
+        eventName: .startTrial,
+        productID: productID.rawValue
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -1465,7 +1505,8 @@ extension IAPTransactionLoggerTests {
     let transaction = TestPaymentTransaction(identifier: transactionID, state: .purchased, date: now, payment: payment)
     IAPTransactionCache.shared.addTransaction(
       transactionID: transactionID,
-      eventName: .subscribe
+      eventName: .subscribe,
+      productID: productID.rawValue
     )
     iapLogger.logTransaction(transaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -1473,7 +1514,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: productID.rawValue
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -1488,7 +1530,8 @@ extension IAPTransactionLoggerTests {
     let transaction = TestPaymentTransaction(identifier: transactionID, state: .purchased, date: now, payment: payment)
     IAPTransactionCache.shared.addTransaction(
       transactionID: transactionID,
-      eventName: .subscribeRestore
+      eventName: .subscribeRestore,
+      productID: productID.rawValue
     )
     iapLogger.logTransaction(transaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -1496,7 +1539,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: productID.rawValue
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -1517,7 +1561,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchased
+        eventName: .purchased,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1569,7 +1614,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchased
+        eventName: .purchased,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1617,7 +1663,8 @@ extension IAPTransactionLoggerTests {
     let transaction = TestPaymentTransaction(identifier: transactionID, state: .purchased, date: now, payment: payment)
     IAPTransactionCache.shared.addTransaction(
       transactionID: transactionID,
-      eventName: .purchased
+      eventName: .purchased,
+      productID: productID.rawValue
     )
     iapLogger.logTransaction(transaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -1625,7 +1672,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchased
+        eventName: .purchased,
+        productID: productID.rawValue
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -1653,7 +1701,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1705,7 +1754,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1757,7 +1807,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1805,7 +1856,8 @@ extension IAPTransactionLoggerTests {
     let transaction = TestPaymentTransaction(identifier: transactionID, state: .restored, date: now, payment: payment)
     IAPTransactionCache.shared.addTransaction(
       transactionID: transactionID,
-      eventName: .subscribeRestore
+      eventName: .subscribeRestore,
+      productID: productID.rawValue
     )
     iapLogger.logTransaction(transaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -1813,7 +1865,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: productID.rawValue
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -1833,7 +1886,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1887,7 +1941,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1939,7 +1994,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -1987,7 +2043,8 @@ extension IAPTransactionLoggerTests {
     let transaction = TestPaymentTransaction(identifier: transactionID, state: .restored, date: now, payment: payment)
     IAPTransactionCache.shared.addTransaction(
       transactionID: transactionID,
-      eventName: .purchaseRestored
+      eventName: .purchaseRestored,
+      productID: productID.rawValue
     )
     iapLogger.logTransaction(transaction)
     XCTAssertNil(eventLogger.capturedEventName)
@@ -1995,7 +2052,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: productID.rawValue
       )
     )
     XCTAssertNil(eventLogger.capturedParameters)
@@ -2017,7 +2075,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchased
+        eventName: .purchased,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -2081,13 +2140,15 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchaseRestored
+        eventName: .purchaseRestored,
+        productID: productID.rawValue
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .purchased
+        eventName: .purchased,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -2140,7 +2201,8 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
@@ -2204,13 +2266,15 @@ extension IAPTransactionLoggerTests {
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribeRestore
+        eventName: .subscribeRestore,
+        productID: productID.rawValue
       )
     )
     XCTAssertTrue(
       IAPTransactionCache.shared.contains(
         transactionID: transactionID,
-        eventName: .subscribe
+        eventName: .subscribe,
+        productID: productID.rawValue
       )
     )
     guard let capturedParameters = eventLogger.capturedParameters else {
