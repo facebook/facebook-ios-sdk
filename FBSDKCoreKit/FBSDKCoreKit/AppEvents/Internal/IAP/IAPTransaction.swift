@@ -20,6 +20,13 @@ enum IAPStoreKitVersion: String {
   case version2 = "SK2"
 }
 
+enum IAPProductType: String {
+  case consumable = "Consumable"
+  case nonConsumable = "NonConsumable"
+  case autoRenewable = "AutoRenewable"
+  case nonRenewable = "NonRenewable"
+}
+
 @available(iOS 15.0, *)
 extension VerificationResult<Transaction> {
   var iapTransaction: IAPTransaction {

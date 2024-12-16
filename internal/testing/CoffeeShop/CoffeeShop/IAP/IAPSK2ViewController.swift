@@ -39,6 +39,8 @@ class IAPSK2ViewController: IAPSKViewController {
 
   private func executePurchaseRestoredTestCase1() {
     UserDefaults.standard.set(false, forKey: "com.facebook.sdk:RestoredPurchasesKey")
+    UserDefaults.standard.removeObject(forKey: "com.facebook.sdk:LoggedTransactionsKey")
+    UserDefaults.standard.removeObject(forKey: "com.facebook.sdk:NewCandidatesDateKey")
   }
 
   private func executePurchaseRestoredTestCase2() {

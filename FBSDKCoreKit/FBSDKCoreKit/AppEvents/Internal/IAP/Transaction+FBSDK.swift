@@ -41,3 +41,17 @@ extension Transaction {
     productType == .autoRenewable
   }
 }
+
+@available(iOS 15.0, *)
+extension Product.ProductType {
+  var iapProductType: IAPProductType {
+    switch self {
+    case .autoRenewable: return .autoRenewable
+    case .nonRenewable: return .nonRenewable
+    case .consumable: return .consumable
+    case .nonConsumable: return .nonConsumable
+    default:
+      return .nonConsumable
+    }
+  }
+}

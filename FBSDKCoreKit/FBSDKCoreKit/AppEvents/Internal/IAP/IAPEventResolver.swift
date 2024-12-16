@@ -72,7 +72,8 @@ extension IAPEventResolver {
       hasFreeTrial: event.hasFreeTrial,
       introductoryOfferSubscriptionPeriod: event.introductoryOfferSubscriptionPeriod,
       introductoryOfferPrice: event.introductoryOfferPrice,
-      storeKitVersion: event.storeKitVersion
+      storeKitVersion: event.storeKitVersion,
+      productType: event.productType
     )
   }
 }
@@ -184,7 +185,8 @@ extension IAPEventResolver {
       hasFreeTrial: hasFreeTrial,
       introductoryOfferSubscriptionPeriod: introOffer?.period.iapSubscriptionPeriod,
       introductoryOfferPrice: introOffer?.price,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: iapTransaction?.transaction.productType.iapProductType ?? product.type.iapProductType
     )
   }
 }
@@ -286,7 +288,8 @@ extension IAPEventResolver {
       hasFreeTrial: hasFreeTrial,
       introductoryOfferSubscriptionPeriod: product?.introductoryPrice?.subscriptionPeriod.iapSubscriptionPeriod,
       introductoryOfferPrice: product?.introductoryPrice?.price.decimalValue,
-      storeKitVersion: .version1
+      storeKitVersion: .version1,
+      productType: nil
     )
     didResolve(event: event, for: transaction)
   }

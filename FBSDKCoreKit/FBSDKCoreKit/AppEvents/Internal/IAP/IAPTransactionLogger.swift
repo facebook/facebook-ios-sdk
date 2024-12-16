@@ -125,6 +125,9 @@ extension IAPTransactionLogger {
     } else {
       iapParameters[AppEvents.ParameterName.inAppPurchaseType.rawValue] = IAPType.product.rawValue
     }
+    if let productType = event.productType {
+      iapParameters[AppEvents.ParameterName.productClassification.rawValue] = productType.rawValue
+    }
     let operationalParameters = [
       AppOperationalDataType.iapParameters: iapParameters,
     ]
@@ -175,6 +178,9 @@ extension IAPTransactionLogger {
       return
     }
     IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
+    if event.productType == .nonRenewable || event.productType == .consumable {
+      return
+    }
     let parameters = getCustomParameters(for: event)
     let operationalParameters = getOperationalParameters(for: event)
     logImplicitTransactionEvent(
