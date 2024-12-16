@@ -126,7 +126,15 @@ extension IAPDedupeProcessor {
     if implicitEvents.isEmpty, manualEvents.isEmpty {
       return
     }
-    Self.performDedup(implicitEvents: &implicitEvents, manualEvents: &manualEvents)
+    synchronized(self) {
+      for event in manualEvents {
+        manuallyLoggedEvents.append(event)
+      }
+      for event in implicitEvents {
+        implicitlyLoggedEvents.append(event)
+      }
+      scheduleDedupTimer()
+    }
   }
 
   func shouldDedupeEvent(_ eventName: AppEvents.Name) -> Bool {
@@ -165,13 +173,7 @@ extension IAPDedupeProcessor {
     )
     synchronized(self) {
       manuallyLoggedEvents.append(event)
-      if timer == nil {
-        DispatchQueue.main.async {
-          self.timer = Timer.scheduledTimer(withTimeInterval: Self.dedupWindow, repeats: false) { _ in
-            self.dedupTimerFired()
-          }
-        }
-      }
+      scheduleDedupTimer()
     }
   }
 
@@ -192,13 +194,7 @@ extension IAPDedupeProcessor {
     )
     synchronized(self) {
       implicitlyLoggedEvents.append(event)
-      if timer == nil {
-        DispatchQueue.main.async {
-          self.timer = Timer.scheduledTimer(withTimeInterval: Self.dedupWindow, repeats: false) { _ in
-            self.dedupTimerFired()
-          }
-        }
-      }
+      scheduleDedupTimer()
     }
   }
 
@@ -298,6 +294,16 @@ extension IAPDedupeProcessor {
 // MARK: - Private Methods
 
 extension IAPDedupeProcessor {
+  private func scheduleDedupTimer() {
+    if timer == nil {
+      DispatchQueue.main.async {
+        self.timer = Timer.scheduledTimer(withTimeInterval: Self.dedupWindow, repeats: false) { _ in
+          self.dedupTimerFired()
+        }
+      }
+    }
+  }
+
   private func dedupTimerFired() {
     if #available(iOS 15.0, *) {
       Task {

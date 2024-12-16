@@ -613,7 +613,7 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
         iapParameters["fb_iap_non_deduped_event_time"] != nil
     }
     let expectation = XCTNSPredicateExpectation(predicate: predicate, object: nil)
-    wait(for: [expectation], timeout: 20.0)
+    wait(for: [expectation], timeout: 90.0)
   }
 }
 
