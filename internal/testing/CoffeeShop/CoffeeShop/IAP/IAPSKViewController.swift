@@ -88,9 +88,11 @@ class IAPSKViewController: UIViewController {
 }
 
 extension UIViewController {
-  func alert(with title: String, message: String) {
+  func alert(with title: String, message: String, handler: (() -> Void)? = nil) {
     let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let action = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+    let action = UIAlertAction(title: "OK", style: .cancel, handler: { alert in
+      if let handler { handler() }
+    })
     alertController.addAction(action)
     navigationController?.present(alertController, animated: true, completion: nil)
   }

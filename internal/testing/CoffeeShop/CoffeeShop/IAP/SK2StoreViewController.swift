@@ -45,7 +45,18 @@ extension SK2StoreViewController: UITableViewDelegate {
 
   private func handleSuccessPurchase(product: Product) {
     let message = "You successfully purchased the \(product.displayName)"
-    alert(with: "Purchase Success", message: message)
+    alert(with: "Purchase Success", message: message, handler: {
+      Task {
+        for await transactionVerification in Transaction.unfinished {
+          switch transactionVerification {
+          case .unverified:
+            return
+          case let .verified(transaction):
+            await transaction.finish()
+          }
+        }
+      }
+    })
   }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

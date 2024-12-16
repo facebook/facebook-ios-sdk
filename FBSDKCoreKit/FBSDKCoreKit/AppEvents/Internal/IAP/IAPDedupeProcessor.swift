@@ -91,6 +91,8 @@ extension IAPDedupeProcessor {
     guard let dependencies = try? Self.getDependencies() else {
       return
     }
+    timer?.invalidate()
+    timer = nil
     let manualEvents = synchronizedManualEvents
     manuallyLoggedEvents = []
     if !manualEvents.isEmpty, let manualData = try? JSONEncoder().encode(manualEvents) {
