@@ -104,11 +104,14 @@ extension IAPTransactionLogger {
   private func getOperationalParameters(for event: IAPEvent) -> [AppOperationalDataType: [String: Any]] {
     var iapParameters = [String: Any]()
     let transactionDate = event.transactionDate.map { dateFormatter.string(from: $0) } ?? ""
+    let consumablesInPurchaseHistory =
+      Bundle.main.fb_object(forInfoDictionaryKey: IAPConstants.consumablesInPurchaseHistoryKey) as? Bool ?? false
     iapParameters = [
       AppEvents.ParameterName.contentID.rawValue: event.productID,
       AppEvents.ParameterName.transactionDate.rawValue: transactionDate,
       AppEvents.ParameterName.iapsdkLibraryVersions.rawValue: IAPConstants.IAPSDKLibraryVersions,
       AppEvents.ParameterName.iapClientLibraryVersion.rawValue: event.storeKitVersion.rawValue,
+      AppEvents.ParameterName.consumablesInPurchaseHistory.rawValue: consumablesInPurchaseHistory ? "1" : "0",
     ]
     if let transactionID = event.transactionID {
       iapParameters[AppEvents.ParameterName.transactionID.rawValue] = transactionID

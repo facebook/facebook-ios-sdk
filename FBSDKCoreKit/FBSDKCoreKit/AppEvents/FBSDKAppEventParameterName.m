@@ -60,6 +60,7 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPClientLibraryVersi
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPSDKLibraryVersions = @"fb_iap_sdk_supported_library_versions";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPReceiptData = @"receipt_data";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameProductClassification = @"fb_iap_product_classification";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameConsumablesInPurchaseHistory = @"fb_iap_consumables_in_purchase_history";
 
 // MARK: - Time Spent
 
