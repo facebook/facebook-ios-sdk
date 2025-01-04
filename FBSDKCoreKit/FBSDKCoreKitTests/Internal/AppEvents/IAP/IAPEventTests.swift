@@ -34,7 +34,8 @@ final class IAPEventTests: XCTestCase {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: .nonConsumable
     )
     XCTAssertEqual(event1.eventName.rawValue, AppEvents.Name.purchased.rawValue)
     XCTAssertEqual(event1.productID, "com.fbsdk.p1")
@@ -79,7 +80,8 @@ final class IAPEventTests: XCTestCase {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: .nonConsumable
     )
     let event2 = IAPEvent(
       eventName: .purchaseRestored,
@@ -101,7 +103,8 @@ final class IAPEventTests: XCTestCase {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: .nonConsumable
     )
     XCTAssertNotEqual(event1, event2)
   }
@@ -128,7 +131,8 @@ final class IAPEventTests: XCTestCase {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: .nonConsumable
     )
     let event2 = IAPEvent(
       eventName: .purchased,
@@ -150,7 +154,8 @@ final class IAPEventTests: XCTestCase {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: .nonConsumable
     )
     XCTAssertNotEqual(event1, event2)
   }
@@ -177,7 +182,8 @@ final class IAPEventTests: XCTestCase {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: .nonConsumable
     )
     let event2 = IAPEvent(
       eventName: .purchased,
@@ -199,7 +205,8 @@ final class IAPEventTests: XCTestCase {
       hasFreeTrial: false,
       introductoryOfferSubscriptionPeriod: nil,
       introductoryOfferPrice: nil,
-      storeKitVersion: .version2
+      storeKitVersion: .version2,
+      productType: .nonConsumable
     )
     XCTAssertEqual(event1, event2)
   }

@@ -137,13 +137,14 @@ extension IAPTransactionCache: _IAPTransactionCaching {
     }
   }
 
-  func addTransaction(transactionID: String?, eventName: AppEvents.Name) {
+  func addTransaction(transactionID: String?, eventName: AppEvents.Name, productID: String) {
     synchronized(self) {
       guard let transactionID else {
         return
       }
       let newTransaction = IAPCachedTransaction(
         transactionID: transactionID,
+        productID: productID,
         eventName: eventName.rawValue,
         cachedDate: Date()
       )
@@ -155,13 +156,14 @@ extension IAPTransactionCache: _IAPTransactionCaching {
     }
   }
 
-  func removeTransaction(transactionID: String?, eventName: AppEvents.Name) {
+  func removeTransaction(transactionID: String?, eventName: AppEvents.Name, productID: String) {
     synchronized(self) {
       guard let transactionID else {
         return
       }
       let oldTransaction = IAPCachedTransaction(
         transactionID: transactionID,
+        productID: productID,
         eventName: eventName.rawValue,
         cachedDate: Date()
       )
@@ -170,23 +172,24 @@ extension IAPTransactionCache: _IAPTransactionCaching {
     }
   }
 
-  func contains(transactionID: String?, eventName: AppEvents.Name) -> Bool {
+  func contains(transactionID: String?, eventName: AppEvents.Name, productID: String) -> Bool {
     guard let transactionID else {
       return false
     }
     let transactionCandidate = IAPCachedTransaction(
       transactionID: transactionID,
+      productID: productID,
       eventName: eventName.rawValue,
       cachedDate: Date()
     )
     return loggedTransactions.contains(transactionCandidate)
   }
 
-  func contains(transactionID: String?) -> Bool {
+  func contains(transactionID: String?, productID: String) -> Bool {
     guard let transactionID else {
       return false
     }
-    return loggedTransactions.contains { $0.transactionID == transactionID }
+    return loggedTransactions.contains { $0.transactionID == transactionID && $0.productID == productID }
   }
 
   func trimIfNeeded(hasLowMemory: Bool = false) {
@@ -214,6 +217,7 @@ extension IAPTransactionCache: _IAPTransactionCaching {
 extension IAPTransactionCache {
   struct IAPCachedTransaction: Hashable, Equatable, Codable {
     var transactionID: String
+    var productID: String
     var eventName: String
     var cachedDate: Date
 
@@ -224,12 +228,13 @@ extension IAPTransactionCache {
     }
 
     static func == (lhs: IAPCachedTransaction, rhs: IAPCachedTransaction) -> Bool {
-      lhs.transactionID == rhs.transactionID && lhs.eventName == rhs.eventName
+      lhs.transactionID == rhs.transactionID && lhs.eventName == rhs.eventName && lhs.productID == rhs.productID
     }
 
     func hash(into hasher: inout Hasher) {
       hasher.combine(transactionID)
       hasher.combine(eventName)
+      hasher.combine(productID)
     }
   }
 }

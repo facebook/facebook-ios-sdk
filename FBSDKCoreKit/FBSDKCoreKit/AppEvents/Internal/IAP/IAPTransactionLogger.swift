@@ -104,11 +104,14 @@ extension IAPTransactionLogger {
   private func getOperationalParameters(for event: IAPEvent) -> [AppOperationalDataType: [String: Any]] {
     var iapParameters = [String: Any]()
     let transactionDate = event.transactionDate.map { dateFormatter.string(from: $0) } ?? ""
+    let consumablesInPurchaseHistory =
+      Bundle.main.fb_object(forInfoDictionaryKey: IAPConstants.consumablesInPurchaseHistoryKey) as? Bool ?? false
     iapParameters = [
       AppEvents.ParameterName.contentID.rawValue: event.productID,
       AppEvents.ParameterName.transactionDate.rawValue: transactionDate,
       AppEvents.ParameterName.iapsdkLibraryVersions.rawValue: IAPConstants.IAPSDKLibraryVersions,
       AppEvents.ParameterName.iapClientLibraryVersion.rawValue: event.storeKitVersion.rawValue,
+      AppEvents.ParameterName.consumablesInPurchaseHistory.rawValue: consumablesInPurchaseHistory ? "1" : "0",
     ]
     if let transactionID = event.transactionID {
       iapParameters[AppEvents.ParameterName.transactionID.rawValue] = transactionID
@@ -124,6 +127,9 @@ extension IAPTransactionLogger {
       iapParameters[AppEvents.ParameterName.inAppPurchaseType.rawValue] = IAPType.subscription.rawValue
     } else {
       iapParameters[AppEvents.ParameterName.inAppPurchaseType.rawValue] = IAPType.product.rawValue
+    }
+    if let productType = event.productType {
+      iapParameters[AppEvents.ParameterName.productClassification.rawValue] = productType.rawValue
     }
     let operationalParameters = [
       AppOperationalDataType.iapParameters: iapParameters,
@@ -148,17 +154,42 @@ extension IAPTransactionLogger {
 
   private func logNewEvent(_ event: IAPEvent) {
     if event.isSubscription &&
-      (IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) ||
-        IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: .subscribeRestore)) {
-      IAPTransactionCache.shared.addTransaction(transactionID: event.transactionID, eventName: event.eventName)
+      (
+        IAPTransactionCache.shared.contains(
+          transactionID: event.originalTransactionID,
+          eventName: event.eventName,
+          productID: event.productID
+        ) ||
+          IAPTransactionCache.shared.contains(
+            transactionID: event.originalTransactionID,
+            eventName: .subscribeRestore,
+            productID: event.productID
+          )
+      ) {
+      IAPTransactionCache.shared.addTransaction(
+        transactionID: event.transactionID,
+        eventName: event.eventName,
+        productID: event.productID
+      )
       return
     }
     if event.eventName == .purchased &&
-      IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID) {
-      IAPTransactionCache.shared.addTransaction(transactionID: event.transactionID, eventName: event.eventName)
+      IAPTransactionCache.shared.contains(
+        transactionID: event.originalTransactionID,
+        productID: event.productID
+      ) {
+      IAPTransactionCache.shared.addTransaction(
+        transactionID: event.transactionID,
+        eventName: event.eventName,
+        productID: event.productID
+      )
       return
     }
-    IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
+    IAPTransactionCache.shared.addTransaction(
+      transactionID: event.originalTransactionID,
+      eventName: event.eventName,
+      productID: event.productID
+    )
     appendInitiatedCheckoutEventForStoreKit2(event: event)
     let newParameters = getCustomParameters(for: event)
     let newOperationalParameters = getOperationalParameters(for: event)
@@ -171,10 +202,21 @@ extension IAPTransactionLogger {
   }
 
   private func logRestoredEvent(_ event: IAPEvent) {
-    if IAPTransactionCache.shared.contains(transactionID: event.originalTransactionID, eventName: event.eventName) {
+    if IAPTransactionCache.shared.contains(
+      transactionID: event.originalTransactionID,
+      eventName: event.eventName,
+      productID: event.productID
+    ) {
       return
     }
-    IAPTransactionCache.shared.addTransaction(transactionID: event.originalTransactionID, eventName: event.eventName)
+    IAPTransactionCache.shared.addTransaction(
+      transactionID: event.originalTransactionID,
+      eventName: event.eventName,
+      productID: event.productID
+    )
+    if event.productType == .nonRenewable || event.productType == .consumable {
+      return
+    }
     let parameters = getCustomParameters(for: event)
     let operationalParameters = getOperationalParameters(for: event)
     logImplicitTransactionEvent(

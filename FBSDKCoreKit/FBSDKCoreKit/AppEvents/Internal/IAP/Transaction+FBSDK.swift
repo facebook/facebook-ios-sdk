@@ -29,7 +29,7 @@ extension Transaction {
         transaction.expirationDate ?? now >= now &&
         dateCheck &&
         !unfinishedTransactionIDs.contains(id) &&
-        !IAPTransactionCache.shared.contains(transactionID: String(id))
+        !IAPTransactionCache.shared.contains(transactionID: String(id), productID: transaction.productID)
     }
     return candidateTransactions
   }
@@ -39,5 +39,19 @@ extension Transaction {
 extension Transaction {
   var isSubscription: Bool {
     productType == .autoRenewable
+  }
+}
+
+@available(iOS 15.0, *)
+extension Product.ProductType {
+  var iapProductType: IAPProductType {
+    switch self {
+    case .autoRenewable: return .autoRenewable
+    case .nonRenewable: return .nonRenewable
+    case .consumable: return .consumable
+    case .nonConsumable: return .nonConsumable
+    default:
+      return .nonConsumable
+    }
   }
 }

@@ -17,7 +17,6 @@ enum IAPConstants {
   static let defaultIAPObservationTime: UInt64 = 3600000000000
   static let defaultIAPDedupeWindow: TimeInterval = 60
   static let IAPSDKLibraryVersions = "SK1-SK2"
-  static let eventsForReceipt: Set<AppEvents.Name> = [.purchased, .subscribe, .startTrial]
   static let dedupableEvents: Set<AppEvents.Name> = [.purchased, .subscribe, .startTrial]
   static let verifiableEvents: Set<AppEvents.Name> = [
     .purchased,
@@ -29,4 +28,5 @@ enum IAPConstants {
   static let manuallyLoggedDedupableEventsKey = "com.facebook.sdk:ManualDedupableEventsKey"
   static let implicitlyLoggedDedupableEventsKey = "com.facebook.sdk:ImplicitDedupableEventsKey"
   static let sk2ReleaseDate = "2024-11-19" // TODO: Update this to actual release date
+  static let consumablesInPurchaseHistoryKey = "SKIncludeConsumableInAppPurchaseHistory"
 }
