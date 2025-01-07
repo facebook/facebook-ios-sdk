@@ -1306,8 +1306,6 @@ operationalParameters:nil];
   }
   if (isImplicitlyLogged) {
     [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterNameImplicitlyLogged];
-  } else {
-    [FBSDKTypeUtility dictionary:eventDictionary setObject:@"0" forKey:FBSDKAppEventParameterNameImplicitlyLogged];
   }
 
   NSString *currentViewControllerName;
