@@ -1321,26 +1321,6 @@ final class AppEventsTests: XCTestCase {
 
   // MARK: - Tests for log event
 
-  func testLogInternalEventImplicit() throws {
-    appEvents.logInternalEvent(
-      eventName,
-      isImplicitlyLogged: true
-    )
-    let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
-    XCTAssertEqual(capturedParameters["_implicitlyLogged"] as? String, "1")
-  }
-
-  func testLogInternalEventNotImplicit() throws {
-    appEvents.logInternalEvent(
-      eventName,
-      isImplicitlyLogged: false
-    )
-    let capturedParameters = try XCTUnwrap(appEventsStateProvider.state?.capturedEventDictionary)
-    XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
-    XCTAssertEqual(capturedParameters["_implicitlyLogged"] as? String, "0")
-  }
-
   func testLogEventWithValueToSum() throws {
     appEvents.logEvent(
       eventName,
@@ -1363,7 +1343,7 @@ final class AppEventsTests: XCTestCase {
 
     XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertNil(capturedParameters["_valueToSum"])
-    XCTAssertEqual(capturedParameters["_implicitlyLogged"] as? String, "0")
+    XCTAssertNil(capturedParameters["_implicitlyLogged"])
 
     validateAEMReporterCalled(
       eventName: eventName,
@@ -1384,7 +1364,7 @@ final class AppEventsTests: XCTestCase {
 
     XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertEqual(capturedParameters["_valueToSum"] as? Double, purchaseAmount)
-    XCTAssertEqual(capturedParameters["_implicitlyLogged"] as? String, "0")
+    XCTAssertNil(capturedParameters["_implicitlyLogged"])
 
     validateAEMReporterCalled(
       eventName: eventName,
@@ -1408,7 +1388,7 @@ final class AppEventsTests: XCTestCase {
 
     XCTAssertEqual(capturedParameters["_eventName"] as? String, eventName.rawValue)
     XCTAssertNil(capturedParameters["_valueToSum"])
-    XCTAssertEqual(capturedParameters["_implicitlyLogged"] as? String, "0")
+    XCTAssertNil(capturedParameters["_implicitlyLogged"])
 
     validateAEMReporterCalled(
       eventName: eventName,
