@@ -1739,9 +1739,9 @@ final class AppEventsTests: XCTestCase {
       transactionObserver.didStartObserving,
       "fetchConfiguration should not start transaction observing if the configuration allows it and SK2 is disabled"
     )
-    XCTAssertFalse(
+    XCTAssertTrue(
       transactionObserver.didStopObserving,
-      "fetchConfiguration should not stop transaction observing if the configuration allows it"
+      "fetchConfiguration should stop transaction observing if the configuration disallows it"
     )
   }
 

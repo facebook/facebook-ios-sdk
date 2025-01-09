@@ -987,6 +987,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
             }];
           } else {
             [self.iapDedupeProcessor disable];
+            [self.transactionObserver stopObserving];
             [self.paymentObserver startObservingTransactions];
           }
         }];
