@@ -418,6 +418,11 @@ public final class ApplicationDelegate: NSObject {
     applicationObservers.allObjects.forEach { observer in
       observer.applicationDidBecomeActive?(notification?.object as? UIApplication)
     }
+    if #available(iOS 15.0, *) {
+      Task {
+        await IAPTransactionObserver.shared.observeNewTransactions()
+      }
+    }
   }
 
   func applicationWillResignActive(_ notification: Notification) {

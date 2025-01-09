@@ -104,6 +104,7 @@ extension IAPTransactionLogger {
   private func getOperationalParameters(for event: IAPEvent) -> [AppOperationalDataType: [String: Any]] {
     var iapParameters = [String: Any]()
     let transactionDate = event.transactionDate.map { dateFormatter.string(from: $0) } ?? ""
+    let originalTransactionDate = event.originalTransactionDate.map { dateFormatter.string(from: $0) } ?? ""
     let consumablesInPurchaseHistory =
       Bundle.main.fb_object(forInfoDictionaryKey: IAPConstants.consumablesInPurchaseHistoryKey) as? Bool ?? false
     iapParameters = [
@@ -116,6 +117,10 @@ extension IAPTransactionLogger {
     if let transactionID = event.transactionID {
       iapParameters[AppEvents.ParameterName.transactionID.rawValue] = transactionID
     }
+    if let originalTransactionID = event.originalTransactionID {
+      iapParameters[AppEvents.ParameterName.originalTransactionID.rawValue] = originalTransactionID
+    }
+    iapParameters[AppEvents.ParameterName.originalTransactionDate.rawValue] = originalTransactionDate
     if event.isClientSideVerifiable {
       let validationResult = event.validationResult?.rawValue ?? IAPValidationResult.unverified.rawValue
       iapParameters[AppEvents.ParameterName.validationResult.rawValue] = validationResult
@@ -204,7 +209,6 @@ extension IAPTransactionLogger {
   private func logRestoredEvent(_ event: IAPEvent) {
     if IAPTransactionCache.shared.contains(
       transactionID: event.originalTransactionID,
-      eventName: event.eventName,
       productID: event.productID
     ) {
       return
