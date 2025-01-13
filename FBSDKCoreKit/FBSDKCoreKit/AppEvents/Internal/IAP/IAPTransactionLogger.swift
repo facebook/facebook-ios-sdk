@@ -263,7 +263,12 @@ extension IAPTransactionLogger {
     guard let dependencies = try? Self.getDependencies() else {
       return
     }
-    if IAPDedupeProcessor.shared.isEnabled && IAPDedupeProcessor.shared.shouldDedupeEvent(eventName) {
+    if IAPDedupeProcessor.shared.isEnabled &&
+      IAPDedupeProcessor.shared.shouldDedupeEvent(
+        eventName,
+        valueToSum: valueToSum.currencyNumber,
+        parameters: parameters
+      ) {
       IAPDedupeProcessor.shared.processImplicitEvent(
         eventName,
         valueToSum: valueToSum.currencyNumber,

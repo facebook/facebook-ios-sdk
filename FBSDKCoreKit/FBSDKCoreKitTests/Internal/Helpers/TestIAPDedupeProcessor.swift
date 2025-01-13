@@ -33,7 +33,11 @@ final class TestIAPDedupeProcessor: _IAPDedupeProcessing {
     processSavedEventsWasCalled = true
   }
 
-  func shouldDedupeEvent(_ eventName: AppEvents.Name) -> Bool {
+  func shouldDedupeEvent(
+    _ eventName: AppEvents.Name,
+    valueToSum: NSNumber?,
+    parameters: [AppEvents.ParameterName: Any]?
+  ) -> Bool {
     true
   }
 

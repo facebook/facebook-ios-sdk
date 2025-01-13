@@ -1140,7 +1140,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   isImplicitlyLogged:(BOOL)isImplicitlyLogged
          accessToken:(FBSDKAccessToken *)accessToken
 {
-  if (!isImplicitlyLogged && self.iapDedupeProcessor.isEnabled && [self.iapDedupeProcessor shouldDedupeEvent:eventName]) {
+  if (!isImplicitlyLogged && self.iapDedupeProcessor.isEnabled && [self.iapDedupeProcessor shouldDedupeEvent:eventName valueToSum:valueToSum parameters:parameters]) {
     [self.iapDedupeProcessor processManualEvent:eventName
                                      valueToSum:valueToSum
                                      parameters:parameters
