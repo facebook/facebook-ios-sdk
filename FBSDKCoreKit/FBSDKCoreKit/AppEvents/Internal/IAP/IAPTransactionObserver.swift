@@ -150,9 +150,13 @@ extension IAPTransactionObserver {
       isObservingStoreKit2Transactions = true
       anyTransactionListenerTask = Task {
         await checkForRestoredPurchases()
-        while true {
+        while !Task.isCancelled {
           await observeNewTransactions()
-          try await Task.sleep(nanoseconds: observationTime)
+          do {
+            try await Task.sleep(nanoseconds: observationTime)
+          } catch {
+            break
+          }
         }
       }
     }
