@@ -137,8 +137,33 @@ extension IAPDedupeProcessor {
     }
   }
 
-  func shouldDedupeEvent(_ eventName: AppEvents.Name) -> Bool {
-    IAPConstants.dedupableEvents.contains(eventName)
+  func shouldDedupeEvent(
+    _ eventName: AppEvents.Name,
+    valueToSum: NSNumber?,
+    parameters: [AppEvents.ParameterName: Any]?
+  ) -> Bool {
+    guard IAPConstants.dedupableEvents.contains(eventName) else {
+      return false
+    }
+    guard let dependencies = try? Self.getDependencies() else {
+      return false
+    }
+    guard let parameters = parameters?.stringKeys.keys else {
+      return false
+    }
+    let productionDedupConfig =
+      dependencies.appEventsConfigurationProvider.cachedAppEventsConfiguration.iapProdDedupConfiguration
+    let testDedupConfig =
+      dependencies.appEventsConfigurationProvider.cachedAppEventsConfiguration.iapTestDedupConfiguration
+    let valueParameters = Set(productionDedupConfig[Self.valueToSumKey] ?? [Self.valueToSumKey])
+    let currencyKey = AppEvents.ParameterName.currency.rawValue
+    let currencyParameters = Set(productionDedupConfig[currencyKey] ?? [currencyKey])
+    let iapParameters = Set(
+      productionDedupConfig.filter { $0.key != Self.valueToSumKey && $0.key != currencyKey }.values.flatMap { $0 } +
+        testDedupConfig.values.flatMap { $0 }
+    )
+    let valueCheck = valueToSum != nil || !valueParameters.isDisjoint(with: parameters)
+    return valueCheck && !currencyParameters.isDisjoint(with: parameters) && !iapParameters.isDisjoint(with: parameters)
   }
 
   func processManualEvent(

@@ -95,19 +95,153 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
   }
 
   func testShouldDedupePurchaseEvent() {
-    XCTAssertTrue(dedupeProcessor.shouldDedupeEvent(.purchased))
+    let validParameters = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+    ]
+    XCTAssertTrue(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: 2.99,
+        parameters: validParameters
+      )
+    )
+  }
+
+  func testShouldDedupePurchaseEventWithValueParameter() {
+    let validParameters: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+      AppEvents.ParameterName("_valueToSum"): 2.99,
+    ]
+    XCTAssertTrue(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: nil,
+        parameters: validParameters
+      )
+    )
+  }
+
+  func testShouldDedupePurchaseEventWithAlternateValueParameter() {
+    let validParameters: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+      AppEvents.ParameterName("fb_product_price_amount"): 2.99,
+    ]
+    XCTAssertTrue(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: nil,
+        parameters: validParameters
+      )
+    )
+  }
+
+  func testShouldDedupePurchaseEventWithAlternateCurrencyParameter() {
+    let validParameters = [
+      AppEvents.ParameterName("fb_product_price_currency"): "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+    ]
+    XCTAssertTrue(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: 2.99,
+        parameters: validParameters
+      )
+    )
   }
 
   func testShouldDedupeSubscribeEvent() {
-    XCTAssertTrue(dedupeProcessor.shouldDedupeEvent(.subscribe))
+    let validParameters = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+    ]
+    XCTAssertTrue(
+      dedupeProcessor.shouldDedupeEvent(
+        .subscribe,
+        valueToSum: 2.99,
+        parameters: validParameters
+      )
+    )
   }
 
   func testShouldDedupeStartTrialEvent() {
-    XCTAssertTrue(dedupeProcessor.shouldDedupeEvent(.startTrial))
+    let validParameters = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+    ]
+    XCTAssertTrue(
+      dedupeProcessor.shouldDedupeEvent(
+        .startTrial,
+        valueToSum: 2.99,
+        parameters: validParameters
+      )
+    )
   }
 
   func testShouldNotDedupeRestoredEvent() {
-    XCTAssertFalse(dedupeProcessor.shouldDedupeEvent(.purchaseRestored))
+    let validParameters = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+    ]
+    XCTAssertFalse(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchaseRestored,
+        valueToSum: 2.99,
+        parameters: validParameters
+      )
+    )
+  }
+
+  func testShouldNotDedupePurchaseEventMissingValue() {
+    let validParameters = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName.transactionID: "123456789",
+    ]
+    XCTAssertFalse(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: nil,
+        parameters: validParameters
+      )
+    )
+  }
+
+  func testShouldNotDedupePurchaseEventMissingCurrency() {
+    let invalidParameters = [
+      AppEvents.ParameterName.transactionID: "123456789",
+    ]
+    XCTAssertFalse(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: 2.99,
+        parameters: invalidParameters
+      )
+    )
+  }
+
+  func testShouldNotDedupePurchaseEventMissingIAPKey() {
+    let invalidParameters = [
+      AppEvents.ParameterName.currency: "USD",
+    ]
+    XCTAssertFalse(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: 2.99,
+        parameters: invalidParameters
+      )
+    )
+  }
+
+  func testShouldNotDedupePurchaseEventMissingParameters() {
+    XCTAssertFalse(
+      dedupeProcessor.shouldDedupeEvent(
+        .purchased,
+        valueToSum: 2.99,
+        parameters: nil
+      )
+    )
   }
 
   func testAreDuplicatesContentID() {
