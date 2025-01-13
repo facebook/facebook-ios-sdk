@@ -10,7 +10,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.4.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.0...HEAD)
+
+## 18.0.0
+
+### Added
+- Improved support for in-app purchase events for Original StoreKit APIs and StoreKit 2 APIs
+
+[2025-01-10](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.4.0...v18.0.0)
 
 ## 17.4.0
 
