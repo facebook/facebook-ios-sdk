@@ -165,13 +165,18 @@ extension IAPEventResolver {
     if let originalID = iapTransaction?.transaction.originalID {
       originalTransactionID = String(originalID)
     }
+    let quantity = transaction?.purchasedQuantity ?? 1
+    var amount = transaction?.price ?? product.price
+    if product.type == .consumable, quantity > 1, amount == product.price {
+      amount = product.price * Decimal(quantity)
+    }
     return IAPEvent(
       eventName: eventName,
       productID: transaction?.productID ?? product.id,
       productTitle: product.displayName,
       productDescription: product.description,
-      amount: transaction?.price ?? product.price,
-      quantity: transaction?.purchasedQuantity ?? 1,
+      amount: amount,
+      quantity: quantity,
       currency: currency ?? product.priceFormatStyle.currencyCode,
       transactionID: transactionID,
       originalTransactionID: originalTransactionID,
