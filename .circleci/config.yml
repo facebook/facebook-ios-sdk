@@ -89,3 +89,4 @@ workflows:
       - publish-cocoapods:
           <<: *onlyRunOnTags
           <<: *requiresSetup
+fodboldbane
