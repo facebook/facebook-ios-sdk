@@ -11,7 +11,7 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>A20D666FF4B08EFE53F147818C2D4D17E2242912</key>
-		<string>ssh://projects.git.vip.facebook.com/data/gitrepos/ios-sdk</string>
+		<string>ssh://git.vip.facebook.com/data/gitrepos/ios-sdk</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>FacebookSDK.xcworkspace</string>
@@ -21,7 +21,7 @@
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://projects.git.vip.facebook.com/data/gitrepos/ios-sdk</string>
+	<string>ssh://git.vip.facebook.com/data/gitrepos/ios-sdk</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>

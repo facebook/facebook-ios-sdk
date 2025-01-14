@@ -17,6 +17,88 @@ extension Profile {
     return formatter
   }()
 
+  var profileToData: Data? {
+
+    var profileDict: [String: Any?] = [
+      Field.identifier.rawValue: userID,
+      Field.firstName.rawValue: firstName,
+      Field.middleName.rawValue: middleName,
+      Field.lastName.rawValue: lastName,
+      Field.fullName.rawValue: name,
+      Field.link.rawValue: linkURL?.absoluteString,
+      Field.email.rawValue: email,
+      Field.friends.rawValue: friendIDs,
+      Field.hometown.rawValue: hometown,
+      Field.gender.rawValue: gender,
+    ]
+
+    if let birthday = birthday {
+      profileDict[Field.birthday.rawValue] = Self.dateFormatter.string(from: birthday)
+    }
+
+    if let location = location {
+      var locationDict = [String: String]()
+      locationDict[ResponseKey.identifier.rawValue] = location.id
+      locationDict[ResponseKey.name.rawValue] = location.name
+      profileDict[ResponseKey.location.rawValue] = locationDict
+    }
+
+    if let hometown = hometown {
+      var hometownDict = [String: String]()
+      hometownDict[ResponseKey.identifier.rawValue] = hometown.id
+      hometownDict[ResponseKey.name.rawValue] = hometown.name
+      profileDict[ResponseKey.hometown.rawValue] = hometownDict
+    }
+
+    if let ageRange = ageRange {
+      var ageRangeDict = [String: Any]()
+      ageRangeDict[UserAgeRangeKey.min.rawValue] = ageRange.min?.intValue
+      ageRangeDict[UserAgeRangeKey.max.rawValue] = ageRange.max?.intValue
+      profileDict[ResponseKey.ageRange.rawValue] = ageRangeDict
+    }
+
+    if let imageURL = imageURL {
+      var pictureAttributes = [String: Any]()
+      pictureAttributes[PictureKey.height.rawValue] = 100
+      pictureAttributes[PictureKey.width.rawValue] = 100
+      pictureAttributes[PictureKey.isSilhouette.rawValue] = false
+      pictureAttributes[PictureKey.url.rawValue] = imageURL.absoluteString
+      profileDict[Field.picture.rawValue] = [ResponseKey.data.rawValue: pictureAttributes]
+    }
+
+    return try? JSONSerialization.data(withJSONObject: profileDict.compactMapValues { $0 }, options: [])
+  }
+
+  var userFriendsData: Data? {
+    var userFriendsDict = [String: Any]()
+    var userData = [[String: String]]()
+
+    if let friendIDs = friendIDs {
+      for friendID in friendIDs {
+        let friend = [ResponseKey.identifier.rawValue: friendID]
+        userData.append(friend)
+      }
+    }
+
+    userFriendsDict[ResponseKey.data.rawValue] = userData
+    return try? JSONSerialization.data(withJSONObject: userFriendsDict, options: [])
+  }
+
+  var pictureData: Data? {
+    var pictureDict = [String: Any]()
+    var pictureData = [String: Any]()
+
+    if let imageURL = imageURL {
+      pictureData[PictureKey.height.rawValue] = 100
+      pictureData[PictureKey.width.rawValue] = 100
+      pictureData[PictureKey.isSilhouette.rawValue] = false
+      pictureData[PictureKey.url.rawValue] = imageURL.absoluteString
+    }
+
+    pictureDict[ResponseKey.data.rawValue] = pictureData
+    return try? JSONSerialization.data(withJSONObject: pictureDict, options: [])
+  }
+
   /**
    Loads the current profile and passes it to the completion block.
 
@@ -101,7 +183,16 @@ extension Profile {
     else { return nil }
 
     let rawLinkURL = response[ResponseKey.link.rawValue] as? String
-    let linkURL = (response[ResponseKey.link.rawValue] as? URL) ?? (rawLinkURL.flatMap(URL.init(string:)))
+
+    var linkURL = (response[ResponseKey.link.rawValue] as? URL) ?? (rawLinkURL.flatMap(URL.init(string:)))
+
+    #if swift(>=5.9)
+    if #available(iOS 17.0, *) {
+      linkURL = (response[ResponseKey.link.rawValue] as? URL) ?? rawLinkURL.flatMap { str in
+        URL(string: str, encodingInvalidCharacters: false)
+      }
+    }
+    #endif
 
     let friendsResponse = response[ResponseKey.friends.rawValue] as? [String: Any]
     let friends = friendsResponse.flatMap(friendIdentifiers(from:))
@@ -188,6 +279,7 @@ extension Profile {
     case name
     case email
     case data
+    case permissions
   }
 
   private enum URLValues {
@@ -210,6 +302,29 @@ extension Profile {
     case hometown
     case location
     case gender
+    case permissions
+    case picture
+  }
+
+  private enum UserAgeRangeKey: String {
+    case min
+    case max
+  }
+
+  private enum PictureKey: String {
+    case height
+    case width
+    case isSilhouette = "is_silhouette"
+    case url
+  }
+
+  private enum PermissionKey: String {
+    case permission
+    case status
+  }
+
+  private enum PermissionStatusValue: String {
+    case granted
   }
 
   private static let expirationInterval = TimeInterval(

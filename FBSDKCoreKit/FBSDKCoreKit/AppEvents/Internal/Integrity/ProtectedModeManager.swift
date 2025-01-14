@@ -9,9 +9,10 @@
 import Foundation
 
 @objc(FBSDKProtectedModeManager)
-final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
+public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
   private var isEnabled = false
-  private let standardParametersDefault: Set<String> = [
+  private static let pmKey = AppEvents.ParameterName(rawValue: "pm")
+  let standardParametersDefault: Set<String> = [
     "_currency",
     "_valueToSum",
     "fb_availability",
@@ -20,9 +21,7 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
     "fb_checkout_date",
     "fb_city",
     "fb_condition_of_vehicle",
-    "fb_content_category",
     "fb_content_ids",
-    "fb_content_name",
     "fb_content_type",
     "fb_contents",
     "fb_country",
@@ -65,9 +64,7 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
     "fb_region",
     "fb_returning_arrival_date",
     "fb_returning_departure_date",
-    "fb_search_string",
     "fb_state_of_vehicle",
-    "fb_status",
     "fb_suggested_destinations",
     "fb_suggested_home_listings",
     "fb_suggested_hotels",
@@ -159,7 +156,7 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
     serverConfigurationProvider: _ServerConfigurationManager.shared
   )
 
-  func enable() {
+  public func enable() {
     guard let dependencies = try? getDependencies() else {
       return
     }
@@ -178,7 +175,7 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
     isEnabled = true
   }
 
-  @objc func processParameters(
+  @objc public func processParameters(
     _ parameters: [AppEvents.ParameterName: Any]?,
     eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
@@ -195,9 +192,16 @@ final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
         params.removeValue(forKey: appEventsParameterName)
       }
     }
-    let pmKey = AppEvents.ParameterName(rawValue: "pm")
-    params[pmKey] = true
+    params[ProtectedModeManager.pmKey] = true
     return params
+  }
+
+  @objc public static func isProtectedModeApplied(parameters: [AppEvents.ParameterName: Any]?) -> Bool {
+    guard let parameters else {
+      return false
+    }
+    return parameters.keys.contains(ProtectedModeManager.pmKey) &&
+      parameters[ProtectedModeManager.pmKey] as? Bool == true
   }
 }
 

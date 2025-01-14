@@ -69,6 +69,8 @@ final class CoreKitConfiguratorTests: XCTestCase {
     _ModelManager.reset()
     Profile.resetDependencies()
     _AEMManager.shared.reset()
+    GraphRequestQueue.sharedInstance().reset()
+    _DomainConfigurationManager.sharedInstance().reset()
   }
 
   func testConfiguringAccessToken() {
@@ -187,6 +189,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEvents.shared.internalUtility,
       "AppEvents should not have an internal utility by default"
     )
+    XCTAssertNil(
+      AppEvents.shared.sensitiveParamsManager,
+      "AppEvents should not have a sensitiveParamsManager by default"
+    )
 
     configurator.performConfiguration()
 
@@ -266,6 +272,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
       AppEvents.shared.internalUtility === components.internalUtility,
       "AppEvents should be configured with the internal utility"
     )
+    XCTAssertTrue(
+      AppEvents.shared.sensitiveParamsManager === components.sensitiveParamsManager,
+      "AppEvents should be configured with sensitiveParamsManager"
+    )
   }
 
   func testConfiguringNonTVAppEvents() {
@@ -279,6 +289,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
     XCTAssertNil(
       AppEvents.shared.skAdNetworkReporter,
+      "AppEvents should not have a StoreKit ad network reporter by default"
+    )
+    XCTAssertNil(
+      AppEvents.shared.skAdNetworkReporterV2,
       "AppEvents should not have a StoreKit ad network reporter by default"
     )
     XCTAssertNil(
@@ -307,6 +321,10 @@ final class CoreKitConfiguratorTests: XCTestCase {
     XCTAssertTrue(
       AppEvents.shared.skAdNetworkReporter === components.skAdNetworkReporter,
       "AppEvents should be configured with StoreKit ad network reporter"
+    )
+    XCTAssertTrue(
+      AppEvents.shared.skAdNetworkReporterV2 === components.skAdNetworkReporterV2,
+      "AppEvents should be configured with StoreKit ad network reporter v2"
     )
     XCTAssertTrue(
       AppEvents.shared.codelessIndexer === components.codelessIndexer,
@@ -386,14 +404,22 @@ final class CoreKitConfiguratorTests: XCTestCase {
       _AppEventsState.eventProcessors,
       "_AppEventsState's event processors should be configured"
     )
-    XCTAssertEqual(processors.count, 2, "_AppEventsState should have two event processors")
+    XCTAssertEqual(processors.count, 4, "_AppEventsState should have three event processors")
     XCTAssertTrue(
-      processors.first === components.eventDeactivationManager,
+      processors[0] === components.eventDeactivationManager,
       "_AppEventsState's event processors should be configured with the event deactivation manager"
     )
     XCTAssertTrue(
-      processors.last === components.restrictiveDataFilterManager,
+      processors[1] === components.blocklistEventsManager,
+      "_AppEventsState's event processors should be configured with the blocklist events manager"
+    )
+    XCTAssertTrue(
+      processors[2] === components.restrictiveDataFilterManager,
       "_AppEventsState's event processors should be configured with the restrictive data filter manager"
+    )
+    XCTAssertTrue(
+      processors[3] === components.redactedEventsManager,
+      "_AppEventsState's event processors should be configured with the redacted events manager"
     )
   }
 
@@ -1368,6 +1394,68 @@ final class CoreKitConfiguratorTests: XCTestCase {
       FBWebDialogView.errorFactory,
       components.errorFactory,
       "FBWebDialogView should be configured with the error factory"
+    )
+  }
+
+  func testConfiguringDomainHandler() {
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().settings,
+      "_DomainConfigurationManager should not have settings by default"
+    )
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().dataStore,
+      "_DomainConfigurationManager should not have a dataStore by default"
+    )
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().graphRequestFactory,
+      "_DomainConfigurationManager should not have a graphRequestFactory by default"
+    )
+    XCTAssertNil(
+      _DomainConfigurationManager.sharedInstance().graphRequestConnectionFactory,
+      "_DomainConfigurationManager should not have a graphRequestConnectionFactory by default"
+    )
+
+    configurator.performConfiguration()
+
+    XCTAssertTrue(
+      _DomainConfigurationManager.sharedInstance().settings === components.settings,
+      "Should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      _DomainConfigurationManager.sharedInstance().dataStore === components.defaultDataStore,
+      "Should be configured with the graph request connection factory"
+    )
+    XCTAssertTrue(
+      _DomainConfigurationManager.sharedInstance().graphRequestFactory === components.graphRequestFactory,
+      "Should be configured with the graph request connection factory"
+    )
+    let connectionFactory = _DomainConfigurationManager.sharedInstance().graphRequestConnectionFactory
+    XCTAssertTrue(
+      connectionFactory === components.graphRequestConnectionFactory,
+      "Should be configured with the graph request connection factory"
+    )
+  }
+
+  func testConfiguringGraphRequestQueue() {
+    XCTAssertNil(
+      GraphRequestQueue.sharedInstance().graphRequestConnectionFactory,
+      "GraphRequestQueue should not have a graphRequestConnectionFactory by default"
+    )
+    guard let requests = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
+      XCTFail("GraphRequestQueue should be backed by [GraphRequestMetadata]")
+      return
+    }
+    XCTAssertTrue(
+      requests.isEmpty,
+      "GraphRequestQueue should have no requests by default"
+    )
+
+    configurator.performConfiguration()
+
+    let connectionFactory = GraphRequestQueue.sharedInstance().graphRequestConnectionFactory
+    XCTAssertTrue(
+      connectionFactory === components.graphRequestConnectionFactory,
+      "Should be configured with the graph request connection factory"
     )
   }
 }

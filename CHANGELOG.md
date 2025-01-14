@@ -10,7 +10,108 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.3...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.0...HEAD)
+
+## 18.0.0
+
+### Added
+- Improved support for in-app purchase events for Original StoreKit APIs and StoreKit 2 APIs
+
+[2025-01-10](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.4.0...v18.0.0)
+
+## 17.4.0
+
+### Updated
+- Updated domain configuration validation
+
+[2024-10-17](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.4.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.3.0...v17.4.0)
+
+## 17.3.0
+
+### Fixed
+- Fixed Xcode 16 deprecated API issues
+  - UIApplication.open(_ url:) API silently failed in swift.
+  - AppLinks navigation silently failed.
+
+### Changed
+- AppLinkNavigation public APIs have been changed due to the platform API deprecation.
+  AppLinkNavigation now passes back the navigation result via async completionHandler rather than returning the results synchronously.
+
+[2024-09-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.1.0...v17.3.0)
+
+## 17.1.0
+
+### Fixed
+- Migrate ShareDialog from AssetLibrary to Photos for share content represented by PHAsset
+- Fix images being out of order in ShareDialog
+
+[2024-09-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.3...v17.1.0)
+
+## 17.0.3
+
+### Fixed
+- Fix infinite recursion when enabling `.graphAPIDebugInfo` logging behavior.
+
+[2024-08-02](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.3) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.2...v17.0.3)
+
+## 17.0.2
+
+### Fixed
+- Improved invalid access token issues
+- Fixed ATE value issues when status is unspecified
+
+[2024-05-22](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.1...v17.0.2)
+
+## 17.0.1
+
+### Updated
+- Updated privacy manifests
+
+[2024-04-26](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v17.0.0...v17.0.1)
+
+## 17.0.0
+
+### Added
+
+- Added privacy manifests
+
+[2024-02-16](https://github.com/facebook/facebook-ios-sdk/releases/tag/v17.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.4.0...v17.0.0)
+
+## 16.4.0
+
+### Added
+
+- More support on integrity
+
+[2024-01-31](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.4.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.3.1...v16.4.0)
+
+## 16.3.1
+
+[2023-12-07](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.3.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.2.1...v16.3.1)
+
+## 16.2.1
+
+[2023-10-12](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.2.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.2.0...v16.2.1)
+
+## 16.2.0
+
+### Changed
+
+- Update the implementation for SKAdNetwork to use the latest Apple API
+
+[2023-09-21](https://github.com/facebook/facebook-ios-sdk/releases/tag/v16.2.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v16.1.3...v16.2.0)
 
 ## 16.1.3
 

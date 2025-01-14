@@ -11,7 +11,7 @@ options:
   tabWidth: 2
   indentWidth: 2
   defaultConfig: Debug
-  xcodeVersion: '14.0'
+  xcodeVersion: '15.3'
 
 attributes:
   ORGANIZATIONNAME: Facebook

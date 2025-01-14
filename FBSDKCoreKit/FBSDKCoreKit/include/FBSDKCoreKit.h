@@ -89,6 +89,10 @@
 #import <FBSDKCoreKit/FBSDKDeviceInformationProviding.h>
 #import <FBSDKCoreKit/FBSDKDialogConfiguration.h>
 #import <FBSDKCoreKit/FBSDKDialogConfigurationMapBuilding.h>
+#import <FBSDKCoreKit/FBSDKDomainConfiguration.h>
+#import <FBSDKCoreKit/FBSDKDomainConfigurationManager.h>
+#import <FBSDKCoreKit/FBSDKDomainConfigurationProviding.h>
+#import <FBSDKCoreKit/FBSDKDomainHandler.h>
 #import <FBSDKCoreKit/FBSDKDynamicFrameworkLoaderProxy.h>
 #import <FBSDKCoreKit/FBSDKErrorConfiguration.h>
 #import <FBSDKCoreKit/FBSDKErrorConfigurationProtocol.h>
@@ -171,6 +175,7 @@
 #import <FBSDKCoreKit/FBSDKServerConfigurationProviding.h>
 #import <FBSDKCoreKit/FBSDKSettingsLogging.h>
 #import <FBSDKCoreKit/FBSDKSKAdNetworkReporter.h>
+#import <FBSDKCoreKit/FBSDKSKAdNetworkReporterV2.h>
 #import <FBSDKCoreKit/FBSDKSourceApplicationTracking.h>
 #import <FBSDKCoreKit/FBSDKSuggestedEventsIndexer.h>
 #import <FBSDKCoreKit/FBSDKSuggestedEventsIndexerProtocol.h>
@@ -206,3 +211,9 @@
 #import <FBSDKCoreKit/UIApplication+URLOpener.h>
 #import <FBSDKCoreKit/UIPasteboard+Pasteboard.h>
 #import <FBSDKCoreKit/WKWebView+WebViewProtocol.h>
+#import <FBSDKCoreKit/FBSDKGraphRequestQueue.h>
+#import <FBSDKCoreKit/FBSDKTransactionObserving.h>
+#import <FBSDKCoreKit/FBSDKIAPFailedTransactionLogging.h>
+#import <FBSDKCoreKit/FBSDKIAPFailedTransactionLoggingCreating.h>
+#import <FBSDKCoreKit/FBSDKIAPDedupeProcessing.h>
+#import <FBSDKCoreKit/FBSDKIAPTransactionCaching.h>

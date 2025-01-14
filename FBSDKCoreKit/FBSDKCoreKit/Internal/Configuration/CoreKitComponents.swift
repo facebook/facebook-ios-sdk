@@ -71,6 +71,7 @@ final class CoreKitComponents {
   let sessionDataTaskProvider: URLSessionProviding
   let settings: SettingsProtocol & SettingsLogging
   let skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
+  let skAdNetworkReporterV2: (_AppEventsReporter & SKAdNetworkReporting)?
   let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol
   let swizzler: _Swizzling.Type
   let timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording
@@ -82,7 +83,15 @@ final class CoreKitComponents {
   let webViewProvider: _WebViewProviding
   let aemManager: _AutoSetup
   let protectedModeManager: _AppEventsParameterProcessing
+  let bannedParamsManager: MACARuleMatching
+  let stdParamEnforcementManager: MACARuleMatching
   let macaRuleMatchingManager: MACARuleMatching
+  let blocklistEventsManager: _EventsProcessing
+  let redactedEventsManager: _EventsProcessing
+  let sensitiveParamsManager: _AppEventsParameterProcessing
+  let transactionObserver: _TransactionObserving
+  let iapDedupeProcessor: _IAPDedupeProcessing
+  let iapTransactionCache: _IAPTransactionCaching
 
   // MARK: - Initializers
 
@@ -147,6 +156,7 @@ final class CoreKitComponents {
     sessionDataTaskProvider: URLSessionProviding,
     settings: SettingsLogging & SettingsProtocol,
     skAdNetworkReporter: (SKAdNetworkReporting & _AppEventsReporter)?,
+    skAdNetworkReporterV2: (SKAdNetworkReporting & _AppEventsReporter)?,
     suggestedEventsIndexer: _SuggestedEventsIndexerProtocol,
     swizzler: _Swizzling.Type,
     timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
@@ -158,7 +168,15 @@ final class CoreKitComponents {
     webViewProvider: _WebViewProviding,
     aemManager: _AutoSetup,
     protectedModeManager: _AppEventsParameterProcessing,
-    macaRuleMatchingManager: MACARuleMatching
+    bannedParamsManager: MACARuleMatching,
+    stdParamEnforcementManager: MACARuleMatching,
+    macaRuleMatchingManager: MACARuleMatching,
+    blocklistEventsManager: _EventsProcessing,
+    redactedEventsManager: _EventsProcessing,
+    sensitiveParamsManager: _AppEventsParameterProcessing,
+    transactionObserver: _TransactionObserving,
+    iapDedupeProcessor: _IAPDedupeProcessing,
+    iapTransactionCache: _IAPTransactionCaching
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
@@ -220,6 +238,7 @@ final class CoreKitComponents {
     self.sessionDataTaskProvider = sessionDataTaskProvider
     self.settings = settings
     self.skAdNetworkReporter = skAdNetworkReporter
+    self.skAdNetworkReporterV2 = skAdNetworkReporterV2
     self.suggestedEventsIndexer = suggestedEventsIndexer
     self.swizzler = swizzler
     self.timeSpentRecorder = timeSpentRecorder
@@ -231,7 +250,15 @@ final class CoreKitComponents {
     self.webViewProvider = webViewProvider
     self.aemManager = aemManager
     self.protectedModeManager = protectedModeManager
+    self.bannedParamsManager = bannedParamsManager
+    self.stdParamEnforcementManager = stdParamEnforcementManager
     self.macaRuleMatchingManager = macaRuleMatchingManager
+    self.blocklistEventsManager = blocklistEventsManager
+    self.redactedEventsManager = redactedEventsManager
+    self.sensitiveParamsManager = sensitiveParamsManager
+    self.transactionObserver = transactionObserver
+    self.iapDedupeProcessor = iapDedupeProcessor
+    self.iapTransactionCache = iapTransactionCache
   }
 
   // MARK: - Default components
@@ -336,7 +363,19 @@ final class CoreKitComponents {
     let settings: SettingsProtocol & SettingsLogging = Settings.shared
     let urlSessionProxyFactory: _URLSessionProxyProviding = _URLSessionProxyFactory()
     let protectedModeManager: _AppEventsParameterProcessing = ProtectedModeManager()
+    let stdParamEnforcementManager: MACARuleMatching = StdParamEnforcementManager()
+    let bannedParamsManager: MACARuleMatching = BannedParamsManager()
     let macaRuleMatchingManager: MACARuleMatching = MACARuleMatchingManager()
+    let blocklistEventsManager: _EventsProcessing = BlocklistEventsManager()
+    let redactedEventsManager: _EventsProcessing = RedactedEventsManager()
+    let sensitiveParamsManager: _AppEventsParameterProcessing = SensitiveParamsManager()
+    IAPTransactionObserver.shared.setDependencies(
+      .init(
+        iapTransactionLoggingFactory: IAPTransactionLoggingFactory(),
+        paymentQueue: SKPaymentQueue.default(),
+        appEventsConfigurationProvider: appEventsConfigurationProvider
+      )
+    )
 
     var aemNetworker: AEMNetworking?
     if #available(iOS 14, *) {
@@ -345,6 +384,13 @@ final class CoreKitComponents {
 
     var skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
     skAdNetworkReporter = _SKAdNetworkReporter(
+      graphRequestFactory: graphRequestFactory,
+      dataStore: UserDefaults.standard,
+      conversionValueUpdater: SKAdNetwork.self
+    )
+
+    var skAdNetworkReporterV2: (_AppEventsReporter & SKAdNetworkReporting)?
+    skAdNetworkReporterV2 = _SKAdNetworkReporterV2(
       graphRequestFactory: graphRequestFactory,
       dataStore: UserDefaults.standard,
       conversionValueUpdater: SKAdNetwork.self
@@ -423,6 +469,7 @@ final class CoreKitComponents {
       sessionDataTaskProvider: URLSession.shared,
       settings: settings,
       skAdNetworkReporter: skAdNetworkReporter,
+      skAdNetworkReporterV2: skAdNetworkReporterV2,
       suggestedEventsIndexer: suggestedEventsIndexer,
       swizzler: _Swizzler.self,
       timeSpentRecorder: timeSpentRecorder,
@@ -434,7 +481,15 @@ final class CoreKitComponents {
       webViewProvider: _WebViewFactory(),
       aemManager: _AEMManager.shared,
       protectedModeManager: protectedModeManager,
-      macaRuleMatchingManager: macaRuleMatchingManager
+      bannedParamsManager: bannedParamsManager,
+      stdParamEnforcementManager: stdParamEnforcementManager,
+      macaRuleMatchingManager: macaRuleMatchingManager,
+      blocklistEventsManager: blocklistEventsManager,
+      redactedEventsManager: redactedEventsManager,
+      sensitiveParamsManager: sensitiveParamsManager,
+      transactionObserver: IAPTransactionObserver.shared,
+      iapDedupeProcessor: IAPDedupeProcessor.shared,
+      iapTransactionCache: IAPTransactionCache.shared
     )
   }()
 }

@@ -90,10 +90,15 @@ static FBSDKAppEventsConfigurationManager *_shared;
       return;
     }
     self.isLoadingConfiguration = true;
+    
     id<FBSDKGraphRequest> request = [self.graphRequestFactory createGraphRequestWithGraphPath:appID
                                                                                    parameters:@{
                                        @"fields" : [NSString stringWithFormat:@"app_events_config.os_version(%@)", UIDevice.currentDevice.systemVersion]
-                                     }];
+                                     }
+                                                                                  tokenString:nil
+                                                                                   HTTPMethod:FBSDKHTTPMethodGET
+                                                                                        flags:FBSDKGraphRequestFlagNone
+                                                            useAlternativeDefaultDomainPrefix:NO];
     id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
     requestConnection.timeout = kTimeout;
     [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {

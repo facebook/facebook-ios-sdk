@@ -60,9 +60,9 @@ extension Settings {
     let backingKeyPath: ReferenceWritableKeyPath<Settings, Bool?> // swiftlint:disable:this discouraged_optional_boolean
     let defaultValue: Bool
 
-    static let isAutoLogAppEventsEnabled = Self(
-      persistenceKey: .isAutoLogAppEventsEnabled,
-      backingKeyPath: \._isAutoLogAppEventsEnabled,
+    static let isAutoLogAppEventsEnabledLocally = Self(
+      persistenceKey: .isAutoLogAppEventsEnabledLocally,
+      backingKeyPath: \._isAutoLogAppEventsEnabledLocally,
       defaultValue: true
     )
 
@@ -97,6 +97,7 @@ extension Settings {
 
   func setPersistedBooleanProperty(_ property: PersistedBooleanValue, to value: Bool) {
     validateConfiguration()
+    self[keyPath: property.backingKeyPath] = value
     // swiftformat:disable:next redundantSelf
     self.dataStore?.fb_setObject(value, forKey: property.persistenceKey.rawValue)
     logIfSDKSettingsChanged()

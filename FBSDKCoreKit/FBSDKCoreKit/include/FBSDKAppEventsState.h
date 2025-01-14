@@ -8,6 +8,7 @@
 
 #import <FBSDKCoreKit/FBSDKEventsProcessing.h>
 #import <Foundation/Foundation.h>
+#import <FBSDKCoreKit/FBSDKAppOperationalDataType.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -33,11 +34,11 @@ NS_SWIFT_NAME(_AppEventsState)
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithToken:(nullable NSString *)tokenString appID:(nullable NSString *)appID NS_DESIGNATED_INITIALIZER;
 
-- (void)addEvent:(NSDictionary<NSString *, id> *)eventDictionary isImplicit:(BOOL)isImplicit;
+- (void)addEvent:(NSDictionary<NSString *, id> *)eventDictionary isImplicit:(BOOL)isImplicit withOperationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *)operationalParameters;
 - (void)addEventsFromAppEventState:(FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithAppEventsState:(nullable FBSDKAppEventsState *)appEventsState;
 - (BOOL)isCompatibleWithTokenString:(NSString *)tokenString appID:(NSString *)appID;
-- (NSString *)JSONStringForEventsIncludingImplicitEvents:(BOOL)includeImplicitEvents;
+- (NSDictionary<NSString *, NSString *> *)JSONStringForEventsAndOperationalParametersIncludingImplicitEvents:(BOOL)includeImplicitEvents;
 - (NSString *)extractReceiptData;
 
 @end

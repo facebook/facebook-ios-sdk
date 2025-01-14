@@ -50,11 +50,19 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameInAppPurchaseType = @
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameProductTitle = @"fb_content_title";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTransactionID = @"fb_transaction_id";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTransactionDate = @"fb_transaction_date";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameOriginalTransactionID = @"fb_original_transaction_id";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameOriginalTransactionDate = @"fb_original_transaction_date";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameSubscriptionPeriod = @"fb_iap_subs_period";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameIsStartTrial = @"fb_iap_is_start_trial";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameHasFreeTrial = @"fb_iap_has_free_trial";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPeriod = @"fb_iap_trial_period";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTrialPrice = @"fb_iap_trial_price";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameValidationResult = @"fb_iap_validation_result";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPClientLibraryVersion = @"fb_iap_client_library_version";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPSDKLibraryVersions = @"fb_iap_sdk_supported_library_versions";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameIAPReceiptData = @"receipt_data";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameProductClassification = @"fb_iap_product_classification";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameConsumablesInPurchaseHistory = @"fb_iap_consumables_in_purchase_history";
 
 // MARK: - Time Spent
 

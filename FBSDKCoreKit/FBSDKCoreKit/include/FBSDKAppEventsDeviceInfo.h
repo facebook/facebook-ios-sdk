@@ -30,7 +30,6 @@ NS_SWIFT_NAME(_AppEventsDeviceInfo)
 // group1
 @property (nonatomic) NSString *carrierName;
 @property (nonatomic) NSString *timeZoneAbbrev;
-@property (nonatomic) unsigned long long remainingDiskSpaceGB;
 @property (nonatomic) NSString *timeZoneName;
 
 // Persistent data, but we maintain it to make rebuilding the device info as fast as possible.
@@ -40,7 +39,6 @@ NS_SWIFT_NAME(_AppEventsDeviceInfo)
 @property (nonatomic) NSString *sysVersion;
 @property (nonatomic) NSString *machine;
 @property (nonatomic) NSString *language;
-@property (nonatomic) unsigned long long totalDiskSpaceGB;
 @property (nonatomic) unsigned long long coreCount;
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;

@@ -55,7 +55,7 @@
 
 - (NSURL *)_redirectURLWithActionID:(NSString *)actionID methodName:(NSString *)methodName error:(NSError **)errorRef
 {
-  NSDictionary<NSString *, id> *queryParameters = nil;
+  NSDictionary<NSString *, id> *queryParameters = @{};
   if (actionID) {
     NSDictionary<NSString *, id> *bridgeArgs = @{ @"action_id" : actionID };
     NSString *bridgeArgsString = [FBSDKBasicUtility JSONStringForObject:bridgeArgs

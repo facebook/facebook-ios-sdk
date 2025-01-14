@@ -33,6 +33,7 @@ final class AppEventsTests: XCTestCase {
   var settings: TestSettings!
   var onDeviceMLModelManager: TestOnDeviceMLModelManager!
   var paymentObserver: TestPaymentObserver!
+  var transactionObserver: TestTransactionObserver!
   var appEventsStateStore: TestAppEventsStateStore!
   var metadataIndexer: TestMetadataIndexer!
   var appEventsConfigurationProvider: TestAppEventsConfigurationProvider!
@@ -41,13 +42,20 @@ final class AppEventsTests: XCTestCase {
   var appEventsStateProvider: TestAppEventsStateProvider!
   var advertiserIDProvider: TestAdvertiserIDProvider!
   var skAdNetworkReporter: TestAppEventsReporter!
+  var skAdNetworkReporterV2: TestAppEventsReporter!
   var serverConfigurationProvider: TestServerConfigurationProvider!
   var userDataStore: TestUserDataStore!
   var appEventsUtility: TestAppEventsUtility!
   var internalUtility: TestInternalUtility!
   var capiReporter: TestCAPIReporter!
   var protectedModeManager: TestAppEventsParameterProcessor!
+  var bannedParamsManager: TestBannedParamsManager!
+  var stdParamEnforcementManager: TestStdParamEnforcementManager!
   var macaRuleMatchingManager: TestMACARuleMatchingManager!
+  var blocklistEventsManager: TestBlocklistEventsManager!
+  var redactedEventsManager: TestRedactedEventsManager!
+  var sensitiveParamsManager: TestSensitiveParamsManager!
+  var iapDedupeProcessor: TestIAPDedupeProcessor!
   // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
@@ -65,6 +73,8 @@ final class AppEventsTests: XCTestCase {
     onDeviceMLModelManager = TestOnDeviceMLModelManager()
     onDeviceMLModelManager.integrityParametersProcessor = integrityParametersProcessor
     paymentObserver = TestPaymentObserver()
+    transactionObserver = TestTransactionObserver()
+    iapDedupeProcessor = TestIAPDedupeProcessor()
     metadataIndexer = TestMetadataIndexer()
 
     graphRequestFactory = TestGraphRequestFactory()
@@ -75,13 +85,19 @@ final class AppEventsTests: XCTestCase {
     eventDeactivationParameterProcessor = TestAppEventsParameterProcessor()
     restrictiveDataFilterParameterProcessor = TestAppEventsParameterProcessor()
     protectedModeManager = TestAppEventsParameterProcessor()
+    bannedParamsManager = TestBannedParamsManager()
+    stdParamEnforcementManager = TestStdParamEnforcementManager()
     macaRuleMatchingManager = TestMACARuleMatchingManager()
+    blocklistEventsManager = TestBlocklistEventsManager()
+    redactedEventsManager = TestRedactedEventsManager()
+    sensitiveParamsManager = TestSensitiveParamsManager()
     appEventsConfigurationProvider = TestAppEventsConfigurationProvider()
     appEventsStateProvider = TestAppEventsStateProvider()
     atePublisherFactory = TestATEPublisherFactory()
     timeSpentRecorder = TestTimeSpentRecorder()
     advertiserIDProvider = TestAdvertiserIDProvider()
     skAdNetworkReporter = TestAppEventsReporter()
+    skAdNetworkReporterV2 = TestAppEventsReporter()
     serverConfigurationProvider = TestServerConfigurationProvider(
       configuration: ServerConfigurationFixtures.defaultConfiguration
     )
@@ -94,7 +110,7 @@ final class AppEventsTests: XCTestCase {
     // Must be stubbed before the configure method is called
     atePublisher = TestATEPublisher()
     atePublisherFactory.stubbedPublisher = atePublisher
-
+    DomainHandlerTests.configureDomainHandlerForTesting()
     configureAppEvents()
     appEvents.loggingOverrideAppID = mockAppID
   }
@@ -117,18 +133,26 @@ final class AppEventsTests: XCTestCase {
     eventDeactivationParameterProcessor = nil
     restrictiveDataFilterParameterProcessor = nil
     protectedModeManager = nil
+    bannedParamsManager = nil
+    stdParamEnforcementManager = nil
     macaRuleMatchingManager = nil
+    blocklistEventsManager = nil
+    redactedEventsManager = nil
+    sensitiveParamsManager = nil
     appEventsStateProvider = nil
     advertiserIDProvider = nil
     skAdNetworkReporter = nil
+    skAdNetworkReporterV2 = nil
     serverConfigurationProvider = nil
     userDataStore = nil
     appEventsUtility = nil
     internalUtility = nil
     capiReporter = nil
+    transactionObserver = nil
+    iapDedupeProcessor = nil
 
     resetTestHelpers()
-
+    IAPTransactionCache.shared.reset()
     super.tearDown()
   }
 
@@ -162,18 +186,30 @@ final class AppEventsTests: XCTestCase {
       internalUtility: internalUtility,
       capiReporter: capiReporter,
       protectedModeManager: protectedModeManager,
-      macaRuleMatchingManager: macaRuleMatchingManager
+      bannedParamsManager: bannedParamsManager,
+      stdParamEnforcementManager: stdParamEnforcementManager,
+      macaRuleMatchingManager: macaRuleMatchingManager,
+      blocklistEventsManager: blocklistEventsManager,
+      redactedEventsManager: redactedEventsManager,
+      sensitiveParamsManager: sensitiveParamsManager,
+      transactionObserver: transactionObserver,
+      failedTransactionLoggingFactory: IAPTransactionLoggingFactory(),
+      iapDedupeProcessor: iapDedupeProcessor,
+      iapTransactionCache: IAPTransactionCache.shared
     )
 
     appEvents.configureNonTVComponents(
       onDeviceMLModelManager: onDeviceMLModelManager,
       metadataIndexer: metadataIndexer,
       skAdNetworkReporter: skAdNetworkReporter,
+      skAdNetworkReporterV2: skAdNetworkReporterV2,
       codelessIndexer: TestCodelessEvents.self,
       swizzler: TestSwizzler.self,
       aemReporter: TestAEMReporter.self
     )
   }
+
+  // MARK: - Tests for configurations
 
   func testConfiguringSetsSwizzlerDependency() {
     XCTAssertIdentical(
@@ -224,6 +260,67 @@ final class AppEventsTests: XCTestCase {
       "Should store the publisher created by the publisher factory"
     )
   }
+
+  // MARK: - Test for operational parameters
+
+  func testLogEventWithOperationalParameters() {
+    featureManager.enable(feature: .iapLoggingSK2)
+    let operationalParameters: [AppOperationalDataType: [String: Any]] = [
+      .iapParameters: [
+        AppEvents.ParameterName.transactionID.rawValue: "1",
+      ],
+    ]
+    appEvents.doLogEvent(
+      .purchased,
+      valueToSum: 2.99,
+      parameters: nil,
+      isImplicitlyLogged: false,
+      accessToken: nil,
+      operationalParameters: operationalParameters
+    )
+    appEvents.flush()
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    XCTAssertEqual(
+      graphRequestFactory.capturedRequests.first?.graphPath,
+      "mockAppID/activities"
+    )
+    guard let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+      XCTFail("We should have operational parameters")
+      return
+    }
+    XCTAssertTrue(capturedOperationalParameters.contains(AppEvents.ParameterName.transactionID.rawValue))
+  }
+
+  func testLogEventWithNoOperationalParameters() {
+    featureManager.enable(feature: .iapLoggingSK2)
+    appEvents.doLogEvent(
+      .purchased,
+      valueToSum: 2.99,
+      parameters: nil,
+      isImplicitlyLogged: false,
+      accessToken: nil,
+      operationalParameters: nil
+    )
+    appEvents.flush()
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    XCTAssertEqual(
+      graphRequestFactory.capturedRequests.first?.graphPath,
+      "mockAppID/activities"
+    )
+    guard let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+      XCTFail("We should have operational parameters")
+      return
+    }
+    XCTAssertEqual(capturedOperationalParameters, "[{}]")
+  }
+
+  // MARK: - Tests for publishing ATE
 
   func testPublishingATEWithNilPublisher() {
     appEvents.atePublisher = nil
@@ -556,6 +653,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testActivateAppWithInitializedSDK() throws {
+    TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: false)
     appEvents.activateApp()
 
     XCTAssertTrue(
@@ -584,6 +682,39 @@ final class AppEventsTests: XCTestCase {
     XCTAssertNotNil(capiReporter.capturedEvent)
   }
 
+  func testActivateAppWithAppEventsKillSwitchEnabled() throws {
+    TestGateKeeperManager.setGateKeeperValue(key: "app_events_killswitch", value: true)
+    appEvents.activateApp()
+
+    XCTAssertTrue(
+      timeSpentRecorder.restoreWasCalled,
+      "Activating App with initialized SDK should restore recording time spent data."
+    )
+    XCTAssertTrue(
+      timeSpentRecorder.capturedCalledFromActivateApp,
+      """
+      Activating App with initialized SDK should indicate its \
+      calling from activateApp when restoring recording time spent data.
+      """
+    )
+
+    // The publish call happens after both configurations are fetched
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    appEventsConfigurationProvider.lastCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    serverConfigurationProvider.secondCapturedCompletionBlock?(nil, nil)
+
+    let request = graphRequestFactory.capturedRequests.first
+    XCTAssertNil(
+      request,
+      "No request should be made when the FBSDKGateKeeperAppEventsKillSwitch is enabled"
+    )
+    XCTAssertNil(
+      capiReporter.capturedEvent,
+      "The capiReporter should not be invoked when the FBSDKGateKeeperAppEventsKillSwitch is enabled"
+    )
+  }
+
   func testApplicationBecomingActiveRestoresTimeSpentRecording() {
     appEvents.applicationDidBecomeActive()
     XCTAssertTrue(
@@ -599,11 +730,37 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
-  func testApplicationTerminatingSuspendsTimeSpentRecording() {
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+  func testApplicationMovingFromActiveStateSuspendsTimeSpentRecording() {
+    appEvents.applicationMovingFromActiveState()
     XCTAssertTrue(
       timeSpentRecorder.suspendWasCalled,
-      "When application terminates or moves from active state, the time spent recording should be suspended."
+      "When application moves from active state, the time spent recording should be suspended."
+    )
+  }
+
+  func testApplicationTerminatingSuspendsTimeSpentRecording() {
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastInstallResponsemockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertFalse(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPing123")
+    )
+  }
+
+  func testApplicationTerminatingWithoutInstallResponse() {
+    settings.appID = "123"
+    primaryDataStore.set(Date(), forKey: "com.facebook.sdk:lastAttributionPingmockAppID")
+    appEvents.applicationTerminating()
+    XCTAssertTrue(
+      timeSpentRecorder.suspendWasCalled,
+      "When application terminates, the time spent recording should be suspended."
+    )
+    XCTAssertTrue(
+      primaryDataStore.capturedRemoveObjectKeys.contains("com.facebook.sdk:lastAttributionPingmockAppID")
     )
   }
 
@@ -623,7 +780,7 @@ final class AppEventsTests: XCTestCase {
       isImplicitlyLogged: false,
       accessToken: SampleAccessTokens.validToken
     )
-    appEvents.applicationMovingFromActiveStateOrTerminating()
+    appEvents.applicationMovingFromActiveState()
 
     XCTAssertTrue(
       !appEventsStateStore.capturedPersistedState.isEmpty,
@@ -830,6 +987,27 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testLogEventProcessParametersWithSensitiveParamsManager() {
+    let parameters: [AppEvents.ParameterName: String] = [.init("key"): "value"]
+    appEvents.logEvent(
+      eventName,
+      valueToSum: NSNumber(value: purchaseAmount),
+      parameters: parameters,
+      isImplicitlyLogged: false,
+      accessToken: nil
+    )
+    XCTAssertEqual(
+      sensitiveParamsManager.capturedEventName,
+      eventName,
+      "AppEvents instance should submit the event name to the SensitiveParamsManager."
+    )
+    XCTAssertEqual(
+      sensitiveParamsManager.capturedParameters as? [AppEvents.ParameterName: String],
+      parameters,
+      "AppEvents instance should submit the parameters to the SensitiveParamsManager."
+    )
+  }
+
   // MARK: - Test for log push notification
 
   func testLogPushNotificationOpen() throws {
@@ -926,6 +1104,7 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testRequestForCustomAudienceThirdPartyIDWithTrackingDisallowed() {
+    settings.isAdvertiserTrackingEnabled = false
     settings.advertisingTrackingStatus = .disallowed
 
     XCTAssertNil(
@@ -943,9 +1122,41 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testRequestForCustomAudienceThirdPartyIDWithTrackingUnspecified() {
+    settings.isAdvertiserTrackingEnabled = false
+    settings.advertisingTrackingStatus = .unspecified
+
+    if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(
+          accessToken: SampleAccessTokens.validToken
+        ),
+        """
+        Should not create a request for third party Any if tracking is not enabled \
+        even if there is a current access token
+        """
+      )
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
+        "Should not create a request for third party Any if tracking is not enabled"
+      )
+    } else {
+      XCTAssertNotNil(
+        appEvents.requestForCustomAudienceThirdPartyID(
+          accessToken: SampleAccessTokens.validToken
+        ),
+        "Should create a request for third party Any if tracking is unspecified in iOS < 17"
+      )
+      XCTAssertNil(
+        appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
+        "Should not create a request for third party Any if tracking is unspecified in iOS < 17"
+      )
+    }
+  }
+
   func testRequestForCustomAudienceThirdPartyIDWithLimitedEventAndDataUsage() {
     settings.isEventDataUsageLimited = true
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertNil(
       appEvents.requestForCustomAudienceThirdPartyID(
@@ -964,7 +1175,7 @@ final class AppEventsTests: XCTestCase {
 
   func testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithoutAdvertiserID() {
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
 
     XCTAssertNil(
       appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil),
@@ -975,7 +1186,7 @@ final class AppEventsTests: XCTestCase {
   func testRequestForCustomAudienceThirdPartyIDWithoutAccessTokenWithAdvertiserID() {
     let advertiserID = "abc123"
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     advertiserIDProvider.advertiserID = advertiserID
 
     appEvents.requestForCustomAudienceThirdPartyID(accessToken: nil)
@@ -989,7 +1200,7 @@ final class AppEventsTests: XCTestCase {
   func testRequestForCustomAudienceThirdPartyIDWithAccessTokenWithoutAdvertiserID() {
     let token = SampleAccessTokens.validToken
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     appEventsUtility.stubbedTokenStringToUse = token.tokenString
     appEvents.loggingOverrideAppID = token.appID
 
@@ -1011,7 +1222,7 @@ final class AppEventsTests: XCTestCase {
     let expectedGraphPath = "\(token.appID)/custom_audience_third_party_id"
     let advertiserID = "abc123"
     settings.isEventDataUsageLimited = false
-    settings.advertisingTrackingStatus = .allowed
+    settings.isAdvertiserTrackingEnabled = true
     advertiserIDProvider.advertiserID = advertiserID
     appEventsUtility.stubbedTokenStringToUse = token.tokenString
 
@@ -1224,6 +1435,7 @@ final class AppEventsTests: XCTestCase {
 
   func testLogEventWillRecordAndUpdateWithSKAdNetworkReporter() {
     appEvents.logEvent(eventName, valueToSum: purchaseAmount)
+    featureManager.completeCheck(forFeature: .skAdNetworkV4, with: false)
     XCTAssertEqual(
       eventName.rawValue,
       skAdNetworkReporter.capturedEvent,
@@ -1232,6 +1444,27 @@ final class AppEventsTests: XCTestCase {
     XCTAssertEqual(
       purchaseAmount,
       skAdNetworkReporter.capturedValue?.doubleValue,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
+    )
+    validateAEMReporterCalled(
+      eventName: eventName,
+      currency: nil,
+      value: purchaseAmount,
+      parameters: [:]
+    )
+  }
+
+  func testLogEventWillRecordAndUpdateWithSKAdNetworkReporterV2() {
+    appEvents.logEvent(eventName, valueToSum: purchaseAmount)
+    featureManager.completeCheck(forFeature: .skAdNetworkV4, with: true)
+    XCTAssertEqual(
+      eventName.rawValue,
+      skAdNetworkReporterV2.capturedEvent,
+      "Logging a event should invoke the SKAdNetwork reporter with the expected event name"
+    )
+    XCTAssertEqual(
+      purchaseAmount,
+      skAdNetworkReporterV2.capturedValue?.doubleValue,
       "Logging a event should invoke the SKAdNetwork reporter with the expected event value"
     )
     validateAEMReporterCalled(
@@ -1344,6 +1577,78 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
+  func testEnablingBlocklistEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .blocklistEvents, with: true)
+
+    XCTAssertTrue(
+      blocklistEventsManager.enabledWasCalled,
+      "Should enable blocklist events when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingBlocklistEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.blocklistEvents),
+      "Fetching a configuration should check if the BlocklistEvents feature is enabled"
+    )
+  }
+
+  func testEnablingRedactedEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .filterRedactedEvents, with: true)
+
+    XCTAssertTrue(
+      redactedEventsManager.enabledWasCalled,
+      "Should enable redacted events when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingRedactedEvents() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.filterRedactedEvents),
+      "Fetching a configuration should check if the RedactedEvents feature is enabled"
+    )
+  }
+
+  func testEnablingSensitiveParamsFiltering() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    let configuration = TestServerConfiguration(appID: name)
+
+    serverConfigurationProvider.capturedCompletionBlock?(configuration, nil)
+    featureManager.completeCheck(forFeature: .filterSensitiveParams, with: true)
+
+    XCTAssertTrue(
+      sensitiveParamsManager.enabledWasCalled,
+      "Should enable sensitive parameter filtering when the feature is enabled and the server configuration allows it"
+    )
+  }
+
+  func testFetchingConfigurationIncludingSensitiveParamsFiltering() {
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.filterSensitiveParams),
+      "Fetching a configuration should check if the SensitiveParams feature is enabled"
+    )
+  }
+
   func testFetchingConfigurationIncludingEventDeactivation() {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
@@ -1421,9 +1726,45 @@ final class AppEventsTests: XCTestCase {
     appEvents.fetchServerConfiguration(nil)
     appEventsConfigurationProvider.firstCapturedBlock?()
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: false)
     XCTAssertTrue(
       paymentObserver.didStartObservingTransactions,
-      "fetchConfiguration should start payment observing if the configuration allows it"
+      "fetchConfiguration should start payment observing if the configuration allows it and SK2 is disabled"
+    )
+    XCTAssertFalse(
+      paymentObserver.didStopObservingTransactions,
+      "fetchConfiguration shouldn't stop payment observing if the configuration allows it"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "fetchConfiguration should not start transaction observing if the configuration allows it and SK2 is disabled"
+    )
+    XCTAssertTrue(
+      transactionObserver.didStopObserving,
+      "fetchConfiguration should stop transaction observing if the configuration disallows it"
+    )
+  }
+
+  func testFetchingConfigurationStartsTransactionObservingIfConfigurationAllowed() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    XCTAssertTrue(
+      transactionObserver.didStartObserving,
+      "fetchConfiguration should start transaction observing if the configuration allows it and SK2 is enabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStopObserving,
+      "fetchConfiguration should not stop transaction observing if the configuration allows it"
+    )
+    XCTAssertFalse(
+      paymentObserver.didStartObservingTransactions,
+      "fetchConfiguration should not start payment observing if the configuration allows it and SK2 is enabled"
     )
     XCTAssertFalse(
       paymentObserver.didStopObservingTransactions,
@@ -1431,7 +1772,7 @@ final class AppEventsTests: XCTestCase {
     )
   }
 
-  func testFetchingConfigurationStopsPaymentObservingIfConfigurationDisallowed() {
+  func testFetchingConfigurationStopsPaymentAndTransactionObservingIfConfigurationDisallowed() {
     settings.isAutoLogAppEventsEnabled = true
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": 0]
@@ -1441,15 +1782,24 @@ final class AppEventsTests: XCTestCase {
     serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
     XCTAssertFalse(
       paymentObserver.didStartObservingTransactions,
-      "Fetching a configuration shouldn't start payment observing if the configuration disallows it"
+      "Fetching a configuration shouldn't start payment observing if auto log app events is disabled"
     )
     XCTAssertTrue(
       paymentObserver.didStopObservingTransactions,
-      "Fetching a configuration should stop payment observing if the configuration disallows it"
+      "Fetching a configuration should stop payment observing if auto log app events is disabled"
+    )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "Fetching a configuration shouldn't start transaction observing if auto log app events is disabled"
+    )
+    XCTAssertTrue(
+      transactionObserver.didStopObserving,
+      "Fetching a configuration should stop transaction observing if auto log app events is disabled"
     )
   }
 
   func testFetchingConfigurationStopPaymentObservingIfAutoLogAppEventsDisabled() {
+    let now = Date()
     settings.isAutoLogAppEventsEnabled = false
     let serverConfiguration = ServerConfigurationFixtures.configuration(
       withDictionary: ["implicitPurchaseLoggingEnabled": true]
@@ -1465,6 +1815,100 @@ final class AppEventsTests: XCTestCase {
       paymentObserver.didStopObservingTransactions,
       "Fetching a configuration should stop payment observing if auto log app events is disabled"
     )
+    XCTAssertFalse(
+      transactionObserver.didStartObserving,
+      "Fetching a configuration shouldn't start transaction observing if auto log app events is disabled"
+    )
+    XCTAssertTrue(
+      transactionObserver.didStopObserving,
+      "Fetching a configuration should stop transaction observing if auto log app events is disabled"
+    )
+    guard let newCandidatesDate = IAPTransactionCache.shared.newCandidatesDate else {
+      XCTFail("newCandidatesDate should have been set")
+      return
+    }
+    XCTAssertTrue(newCandidatesDate > now)
+  }
+
+  func testEnablingIAPDedupeShouldEnableIAPDedupe() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertTrue(iapDedupeProcessor.enableWasCalled)
+    XCTAssertFalse(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenDedupeFeatureIsDiabled() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: false)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenIAPSK2FeatureIsDiabled() {
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: false)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenAutologIsDiabled() {
+    settings.isAutoLogAppEventsEnabled = false
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": true]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+  }
+
+  func testEnablingIAPDedupeShouldNotEnableIAPDedupeWhenImplicitPurchaseIsDiabled() {
+    let now = Date()
+    settings.isAutoLogAppEventsEnabled = true
+    let serverConfiguration = ServerConfigurationFixtures.configuration(
+      withDictionary: ["implicitPurchaseLoggingEnabled": 0]
+    )
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(serverConfiguration, nil)
+    featureManager.completeCheck(forFeature: .iapLoggingSK2, with: true)
+    featureManager.completeCheck(forFeature: .iosManualImplicitPurchaseDedupe, with: true)
+
+    XCTAssertFalse(iapDedupeProcessor.enableWasCalled)
+    XCTAssertTrue(iapDedupeProcessor.disableWasCalled)
+    guard let newCandidatesDate = IAPTransactionCache.shared.newCandidatesDate else {
+      XCTFail("newCandidatesDate should have been set")
+      return
+    }
+    XCTAssertTrue(newCandidatesDate > now)
   }
 
   func testFetchingConfigurationIncludingSKAdNetworkIfSKAdNetworkReportEnabled() {
@@ -1490,6 +1934,10 @@ final class AppEventsTests: XCTestCase {
     featureManager.completeCheck(
       forFeature: .skAdNetworkConversionValue,
       with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkV4,
+      with: false
     )
     XCTAssertTrue(
       skAdNetworkReporter.enableWasCalled,
@@ -1528,6 +1976,83 @@ final class AppEventsTests: XCTestCase {
     XCTAssertFalse(
       featureManager.capturedFeaturesContains(.skAdNetwork),
       "fetchConfiguration should NOT check if the SKAdNetwork feature is disabled when SKAdNetworkReport is disabled"
+    )
+  }
+
+  // | SKAdNetwork | SKAdNetworkConversionValue | SKAdNetworkV4 |
+  // |   Enabled   |         Enabled            |    Enabled    |
+  // swiftlint:disable:next line_length
+  func testFetchingConfigurationEnablesSKAdNetworkReporterWhenSKAdNetworkReportAndConversionValueEnabledAndSKAdNetworkReportV4Enabled() {
+    settings.isSKAdNetworkReportEnabled = true
+    featureManager.enable(feature: .skAdNetworkV4)
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: true
+    )
+    XCTAssertTrue(
+      skAdNetworkReporterV2.enableWasCalled,
+      """
+      Fetching a configuration should enable SKAdNetworkReporterV2 when SKAdNetworkReport \
+      SKAdNetworkConversionValue and SKAdNetworkReportV4 are enabled
+      """
+    )
+  }
+
+  // | SKAdNetwork | SKAdNetworkConversionValue | SKAdNetworkV4 |
+  // |   Enabled   |         Disabled           |   Disabled    |
+  // swiftlint:disable:next line_length
+  func testFetchingConfigurationDoesNotEnableSKAdNetworkReporterWhenSKAdNetworkConversionValueIsDisabledAndSKAdNetworkV4IsDisabled() {
+    settings.isSKAdNetworkReportEnabled = true
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .skAdNetwork,
+      with: true
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkConversionValue,
+      with: false
+    )
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkV4,
+      with: false
+    )
+    XCTAssertFalse(
+      skAdNetworkReporterV2.enableWasCalled,
+      """
+      Fetching a configuration should NOT enable SKAdNetworkReporterV2 if SKAdNetworkConversionValue \
+      is disabled and SKAdNetworkV4 is disabled
+      """
+    )
+  }
+
+  // | SKAdNetwork | SKAdNetworkConversionValue | SKAdNetworkV4 |
+  // |   Disabled  |         Disabled           |    Enabled    |
+  func testFetchingConfigurationNotIncludingSKAdNetworkIfSKAdNetworkReportDisabledAndSKAdNetworkV4IsEnabled() {
+    settings.isSKAdNetworkReportEnabled = false
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+
+    featureManager.completeCheck(
+      forFeature: .skAdNetworkV4,
+      with: true
+    )
+
+    XCTAssertFalse(
+      featureManager.capturedFeaturesContains(.skAdNetwork),
+      """
+      FetchConfiguration should NOT check if the SKAdNetwork feature is disabled when SKAdNetworkReport \
+      is disabled and SKAdNetworkV4 is enabled
+      """
     )
   }
 
