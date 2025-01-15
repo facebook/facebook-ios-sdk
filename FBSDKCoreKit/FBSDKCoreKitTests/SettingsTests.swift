@@ -285,6 +285,11 @@ final class SettingsTests: XCTestCase {
       return
     }
     if #available(iOS 14, *) {
+      #if targetEnvironment(macCatalyst)
+      // On Mac Catalyst, tracking should always be considered authorized
+      XCTAssertTrue(settings.advertisingTrackingStatus == .allowed)
+      XCTAssertTrue(settings.isAdvertiserTrackingEnabled)
+      #else
       let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
       switch status {
       case .notDetermined:
@@ -303,6 +308,21 @@ final class SettingsTests: XCTestCase {
         XCTAssertTrue(settings.advertisingTrackingStatus == .unspecified)
         XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
       }
+      #endif
+    }
+  }
+
+  func testAdvertiserTrackingStatusOnMacCatalyst() {
+    if !_DomainHandler.sharedInstance().isDomainHandlingEnabled() {
+      return
+    }
+    if #available(iOS 14, *) {
+      #if targetEnvironment(macCatalyst)
+      // Test that .notDetermined is handled correctly on Mac Catalyst
+      let status: ATTrackingManager.AuthorizationStatus = .notDetermined
+      XCTAssertTrue(settings.advertisingTrackingStatus == .allowed)
+      XCTAssertTrue(settings.isAdvertiserTrackingEnabled)
+      #endif
     }
   }
 
