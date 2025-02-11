@@ -195,6 +195,9 @@ withOperationalParameters:(nullable NSDictionary<FBSDKAppOperationalDataType, NS
     NSAssert(event != nil, @"event cannot be nil");
     [event removeObjectForKey:FBSDK_APPEVENTSTATE_RECEIPTDATA_KEY];
     NSMutableDictionary<FBSDKAppOperationalDataType, NSDictionary<NSString *, id> *> *operationalParameter = eventAndImplicitFlag[FBSDK_OPERATIONAL_PARAMETERS_KEY];
+    if (operationalParameter == nil) {
+      operationalParameter = [[NSMutableDictionary alloc] initWithDictionary:@{}];
+    }
     [FBSDKTypeUtility array:events addObject:event];
     [FBSDKTypeUtility array:operationalParameters addObject:operationalParameter];
   }
