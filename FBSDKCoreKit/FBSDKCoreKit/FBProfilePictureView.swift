@@ -201,10 +201,15 @@ public final class FBProfilePictureView: UIView {
     // The login shim flow doesn't provide a valid access token to fetch the image, it
     // leverages limited login implementation
     if #available(iOS 14, *) {
+      #if targetEnvironment(macCatalyst)
+      // Mac Catalyst should be considered authorized since ATTrackingManager
+      // returns incorrect status on this platform
+      #else
       let trackingAuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
       if trackingAuthorizationStatus != .authorized {
         return
       }
+      #endif
     }
 
     updateImageWithAccessToken()

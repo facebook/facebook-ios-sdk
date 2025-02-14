@@ -834,6 +834,49 @@ final class LoginManagerTests: XCTestCase {
 
   // MARK: Login Parameters
 
+  func testLoginTrackingEnabledLoginParamsOnMacCatalyst() throws {
+    #if targetEnvironment(macCatalyst)
+    let configuration = LoginConfiguration(
+      permissions: ["public_profile", "email"],
+      tracking: .enabled
+    )
+    let logger = try XCTUnwrap(
+      LoginManagerLogger(
+        loggingToken: "123",
+        tracking: .enabled
+      )
+    )
+    loginManager.logger = logger
+
+    internalUtility.stubbedAppURL = sampleURL
+    let parameters = try XCTUnwrap(
+      loginManager.logInParameters(
+        configuration: configuration,
+        loggingToken: "",
+        authenticationMethod: "sfvc_auth"
+      )
+    )
+
+    try validateCommonLoginParameters(parameters)
+    XCTAssertEqual(
+      parameters["response_type"],
+      "id_token,token_or_nonce,signed_request,graph_domain,user_token_nonce"
+    )
+    let scopes = parameters["scope"]?
+      .split(separator: ",")
+      .sorted()
+      .joined(separator: ",")
+    XCTAssertEqual(
+      scopes,
+      "email,openid,public_profile"
+    )
+    XCTAssertNotNil(parameters["nonce"])
+    // Mac Catalyst should not send tracking parameters since it's always considered authorized
+    XCTAssertNil(parameters["tp"], "Mac Catalyst should not send tracking parameters")
+    XCTAssertNil(parameters["is_limited_login_shim"], "Mac Catalyst should not use limited login shim")
+    #endif
+  }
+
   func testLoginTrackingEnabledLoginParams() throws {
     let configuration = LoginConfiguration(
       permissions: ["public_profile", "email"],
