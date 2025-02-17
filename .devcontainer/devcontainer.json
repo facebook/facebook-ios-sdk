@@ -1,0 +1,10 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+  }
+}
+"ghcr.io/nikiforovall/devcontainer-features/dotnet-aspire:1": {}
+
+"ghcr.io/devcontainers-extra/features/amplify-cli:2": {}
+"latest" (default)
+
