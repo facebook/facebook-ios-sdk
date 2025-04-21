@@ -1,21 +1,12 @@
-// Copyright (c) Meta Platforms, Inc. and affiliates.
+// Copyright (c) Meta Platforms, Inc.
 // All rights reserved.
 //
-// This source code is licensed under the license found in the
-// LICENSE file in the root directory of this source tree.
 
 // Cocoa Touch Framework
 MACH_O_TYPE = staticlib
 SKIP_INSTALL = YES
 CODE_SIGNING_REQUIRED = NO
-CODE_SIGN_IDENTITY =
-
-// Language
-CLANG_WARN_DOCUMENTATION_COMMENTS = YES
 
 // Packaging
-DEFINES_MODULE = YES
-
-// Whether function calls should be position-dependent
-// (should always be disabled for library code)
+DEFINES_MODULE = NO
 GCC_DYNAMIC_NO_PIC = NO
