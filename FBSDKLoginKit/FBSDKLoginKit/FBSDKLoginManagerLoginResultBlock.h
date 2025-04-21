@@ -7,16 +7,5 @@
  */
 
 #if !TARGET_OS_TV
+FBSDKLoginManagerLoginResult;
 
-@class FBSDKLoginManagerLoginResult;
-
-/**
- Describes the call back to the FBSDKLoginManager
- @param result the result of the authorization
- @param error the authorization error, if any.
- */
-typedef void (^ FBSDKLoginManagerLoginResultBlock)(FBSDKLoginManagerLoginResult *_Nullable result,
-  NSError *_Nullable error)
-NS_SWIFT_NAME(LoginManagerLoginResultBlock);
-
-#endif
