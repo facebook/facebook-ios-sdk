@@ -195,6 +195,18 @@ static BOOL _isConfigured = NO;
       return;
     }
 
+    if (@available(iOS 14.5, *)) {
+      NSString *defaultAdvertiserID = @"00000000-0000-0000-0000-000000000000";
+      BOOL isAdvertiserIDMissingOrDefault = !self.advertiserIDProvider.advertiserID
+      || [self.advertiserIDProvider.advertiserID isEqualToString:defaultAdvertiserID];
+
+      if (handler && isAdvertiserIDMissingOrDefault) {
+        NSError *error = [[NSError alloc] initWithDomain:@"ATTrackingManager.AuthorizationStatus must be `authorized` for deferred deep linking to work. Read more at: https://developer.apple.com/documentation/apptrackingtransparency" code:-1 userInfo:nil];
+        handler(nil, error);
+        return;
+      }
+    }
+
     // Deferred app links are only currently used for engagement ads, thus we consider the app to be an advertising one.
     // If this is considered for organic, non-ads scenarios, we'll need to retrieve the FBAppEventsUtility.shouldAccessAdvertisingID
     // before we make this call.
