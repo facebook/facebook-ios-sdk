@@ -148,7 +148,7 @@ extension Target {
 
     static let aem = target(
         name: .aem,
-        dependencies: [.Prefixed.aem],
+        dependencies: [.Prefixed.aem, .Prefixed.basics],
         resources: [
            .copy("Resources/PrivacyInfo.xcprivacy"),
         ]
