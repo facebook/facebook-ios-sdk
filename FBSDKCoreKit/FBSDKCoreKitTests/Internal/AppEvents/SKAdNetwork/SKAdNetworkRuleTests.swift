@@ -114,26 +114,74 @@ final class SKAdNetworkRuleTests: XCTestCase {
             ],
           ],
         ],
+        [
+          "event_name": "Subscribe",
+          "values": [
+            [
+              "currency": "USD",
+              "amount": 110.0,
+            ],
+          ],
+        ],
       ],
     ]
 
     guard let rule = SKAdNetworkRule(json: ruleData) else { return XCTFail("Unwraping Error") }
-    let matchedEventSet: Set = ["fb_mobile_purchase", "fb_skadnetwork_test1", "fb_adnetwork_test2"]
+    let matchedEventSet: Set = [
+      "fb_mobile_purchase",
+      "fb_skadnetwork_test1",
+      "fb_adnetwork_test2",
+      "Subscribe",
+    ]
     let unmatchedEventSet: Set = ["fb_mobile_purchase", "fb_skadnetwork_test2"]
 
     XCTAssertTrue(
-      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000.0]])
+      rule.isMatched(
+        withRecordedEvents: matchedEventSet,
+        recordedValues: [
+          "fb_mobile_purchase": ["USD": 1000.0],
+          "Subscribe": ["USD": 110.1],
+        ]
+      )
+    )
+
+    XCTAssertFalse(
+      rule.isMatched(
+        withRecordedEvents: matchedEventSet,
+        recordedValues: [
+          "fb_mobile_purchase": ["USD": 1000.0],
+          "Subscribe": ["USD": 110.0],
+        ]
+      )
     )
     XCTAssertFalse(rule.isMatched(withRecordedEvents: [], recordedValues: [:]))
     XCTAssertFalse(rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: [:]))
     XCTAssertFalse(
-      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 50]])
+      rule.isMatched(
+        withRecordedEvents: matchedEventSet,
+        recordedValues: [
+          "fb_mobile_purchase": ["USD": 50],
+          "Subscribe": ["USD": 110.1],
+        ]
+      )
     )
     XCTAssertFalse(
-      rule.isMatched(withRecordedEvents: matchedEventSet, recordedValues: ["fb_mobile_purchase": ["JPY": 1000]])
+      rule.isMatched(
+        withRecordedEvents: matchedEventSet,
+        recordedValues: [
+          "fb_mobile_purchase": ["JPY": 1000],
+          "Subscribe": ["USD": 110.1],
+        ]
+      )
     )
     XCTAssertFalse(
-      rule.isMatched(withRecordedEvents: unmatchedEventSet, recordedValues: ["fb_mobile_purchase": ["USD": 1000]])
+      rule.isMatched(
+        withRecordedEvents: unmatchedEventSet,
+        recordedValues: [
+          "fb_mobile_purchase": ["USD": 1000],
+          "Subscribe": ["USD": 110.1],
+        ]
+      )
     )
   }
 }
