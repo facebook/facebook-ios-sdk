@@ -176,7 +176,8 @@ final class SKAdNetworkRuleTests: XCTestCase {
     )
     XCTAssertFalse(
       rule.isMatched(
-        withRecordedEvents: unmatchedEventSet,
+        withRecordedEvents:
+        unmatchedEventSet,
         recordedValues: [
           "fb_mobile_purchase": ["USD": 1000],
           "Subscribe": ["USD": 110.1],
