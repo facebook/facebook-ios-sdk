@@ -1,0 +1,7 @@
+git fork https://github.com/facebook/facebook-ios-sdk.git
+git clone https://github.com/Jimi3-km/facebook-ios-sdk.git
+cd facebook-ios-sdk
+git checkout -b fix-issue-2559
+git add .
+git commit -m "Fix: Add support for attribution URL in Instagram story sharing"
+git push origin fix-issue-2559
