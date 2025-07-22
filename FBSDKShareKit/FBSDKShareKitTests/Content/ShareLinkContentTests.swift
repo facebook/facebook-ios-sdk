@@ -16,6 +16,7 @@ final class ShareLinkContentTests: XCTestCase {
   func testProperties() {
     let content = ShareModelTestUtility.linkContent
     XCTAssertEqual(content.contentURL, ShareModelTestUtility.contentURL)
+    XCTAssertEqual(content.entityURI, ShareModelTestUtility.entityURI)
     XCTAssertEqual(content.hashtag, ShareModelTestUtility.hashtag)
     XCTAssertEqual(content.peopleIDs, ShareModelTestUtility.peopleIDs)
     XCTAssertEqual(content.placeID, ShareModelTestUtility.placeID)
