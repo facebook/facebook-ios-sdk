@@ -41,7 +41,8 @@ BOOL FBSDKPlatformSharingToStoriesCamera(NSString *_Nullable appID,
                                          NSData *_Nullable stickerImage,
                                          NSString *_Nullable backgroundTopColor,
                                          NSString *_Nullable backgroundBottomColor,
-                                         NSString *_Nullable contentURL);
+                                         NSString *_Nullable contentURL,
+                                         NSString *_Nullable entityURI);
 
 BOOL FBSDKPlatformSharingToStoriesComposer(NSString *_Nullable appID,
                                            NSString *_Nullable proxiedAppID,

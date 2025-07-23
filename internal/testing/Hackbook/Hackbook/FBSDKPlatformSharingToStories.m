@@ -14,6 +14,7 @@ NSString *const FBSDKPlatformSharingToStoriesParamStickerImage = @"com.facebook.
 NSString *const FBSDKPlatformSharingToStoriesParamBackgroundTopColor = @"com.facebook.sharedSticker.backgroundTopColor";
 NSString *const FBSDKPlatformSharingToStoriesParamBackgroundBottomColor = @"com.facebook.sharedSticker.backgroundBottomColor";
 NSString *const FBSDKPlatformSharingToStoriesParamContentURL = @"com.facebook.sharedSticker.contentURL";
+NSString *const FBSDKPlatformSharingToStoriesParamEntityURI = @"com.facebook.sharedSticker.entityURI";
 
 NSString *const FBSDKPlatformSharingToStoriesParamProxiedAppID = @"com.facebook.sharedSticker.proxiedAppID";
 NSString *const FBSDKPlatformSharingToStoriesParamBackgroundVideoURL = @"com.facebook.sharedSticker.backgroundVideoURL";
@@ -58,7 +59,8 @@ BOOL FBSDKPlatformSharingToStoriesCamera(NSString *_Nullable appID,
                                          NSData *_Nullable stickerImage,
                                          NSString *_Nullable backgroundTopColor,
                                          NSString *_Nullable backgroundBottomColor,
-                                         NSString *_Nullable contentURL)
+                                         NSString *_Nullable contentURL,
+                                         NSString *_Nullable entityURI)
 {
   NSMutableArray<NSDictionary<NSString *, id> *> *const pasteboardItems = [NSMutableArray new];
   if (appID.length > 0) {
@@ -84,6 +86,9 @@ BOOL FBSDKPlatformSharingToStoriesCamera(NSString *_Nullable appID,
   }
   if (contentURL.length > 0) {
     [pasteboardItems addObject:@{FBSDKPlatformSharingToStoriesParamContentURL : contentURL}];
+  }
+  if (entityURI.length > 0) {
+    [pasteboardItems addObject:@{FBSDKPlatformSharingToStoriesParamEntityURI : entityURI}];
   }
   return FBSDKPlatformSharingPasteboard(pasteboardItems, FBSDKPlatformSharingToStoriesScheme);
 }

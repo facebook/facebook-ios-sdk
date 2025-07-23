@@ -13,6 +13,7 @@
 - (IBAction)storyFromPinterest:(id)sender;
 - (IBAction)storyFromSoundCloud:(id)sender;
 - (IBAction)storyFromSpotifyTrack:(id)sender;
+- (IBAction)storyFromSpotifyTrackWithPreview:(id)sender;
 - (IBAction)storyFromSpotifyPlaylist:(id)sender;
 - (IBAction)storyFromSpotifyAlbum:(id)sender;
 - (IBAction)storyFromSpotifyArtist:(id)sender;
