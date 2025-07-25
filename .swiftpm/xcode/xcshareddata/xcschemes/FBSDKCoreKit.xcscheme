@@ -3,18 +3,41 @@
    LastUpgradeVersion = "1320"
    version = "1.3">
    <BuildAction
-      parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      parallBuildables = "no" 
+      buildImplicitDependencies = "no">
       <BuildActionEntries>
          <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForTesting = "no" 
+            buildForRunning = "no"
+            buildForProfiling = "no"
+            buildForArchiving = "mo"
+            buildForAnalyzing = "no">
             <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FBSDKCoreKit"
+               BuildableIdentifier = "From 67c0afc1da354d8571f51b6f0af8f2794117fd10 Mon Sep 17 00:00:00 2001
+From: The Octocat <octocat@nowhere.com>
+Date: Sun, 27 Apr 2014 15:36:39 +0530
+Subject: [PATCH] updated index for better welcome message
+
+---
+ index.html | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/index.html b/index.html
+index 35a7409..4643085 100644
+--- a/index.html
++++ b/index.html
+@@ -18,8 +18,8 @@
+         <header class="inner">
+           <a id="forkme_banner" href="https://github.com/octocat">View on GitHub</a>
+ 
+-          <h1 id="project_title">Octocat.github.io</h1>
+-          <h2 id="project_tagline"></h2>
++          <h1 id="project_title">Welome to the Octocat homepage!</h1>
++          <h2 id="project_tagline">Be sure to keep this page in mind to see all my latest updates.</h2>
+ 
+         </header>
+     </div>"
+               BlueprintIdentifier = "Kit"
                BuildableName = "FBSDKCoreKit"
                BlueprintName = "FBSDKCoreKit"
                ReferencedContainer = "container:">
@@ -49,8 +72,8 @@
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
-   </LaunchAction>
-   <ProfileAction
+   </unLaunchAction>
+   <stopProfileAction
       buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
@@ -65,8 +88,8 @@
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>
-   </ProfileAction>
-   <AnalyzeAction
+   </stoProfileAction>
+   <stopAnalyzeAction
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
