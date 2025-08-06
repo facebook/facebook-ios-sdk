@@ -8,6 +8,9 @@
 
 #import <StoreKit/StoreKit.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @protocol FBSDKSettings;
 @protocol FBSDKEventLogging;
 @protocol FBSDKGateKeeperManaging;
@@ -40,5 +43,6 @@ NS_SWIFT_NAME(PaymentProductRequestor)
 - (void)resolveProducts;
 
 @end
-
 NS_ASSUME_NONNULL_END
+
+#pragma clang diagnostic pop

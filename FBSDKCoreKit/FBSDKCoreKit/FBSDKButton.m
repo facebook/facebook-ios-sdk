@@ -16,6 +16,9 @@
 #define HEIGHT_TO_PADDING 0.23
 #define HEIGHT_TO_TEXT_PADDING_CORRECTION 0.08
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface FBSDKButton ()
 
 @property (nonatomic) BOOL skipIntrinsicContentSizing;
@@ -114,17 +117,6 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
 
 #pragma mark - Layout
 
-- (CGRect)imageRectForContentRect:(CGRect)contentRect
-{
-  if (self.hidden || CGRectIsEmpty(self.bounds)) {
-    return CGRectZero;
-  }
-  CGRect imageRect = UIEdgeInsetsInsetRect(contentRect, self.imageEdgeInsets);
-  CGFloat margin = [self _marginForHeight:[self _heightForContentRect:contentRect]];
-  imageRect = CGRectInset(imageRect, margin, margin);
-  imageRect.size.width = CGRectGetHeight(imageRect);
-  return imageRect;
-}
 
 - (CGSize)intrinsicContentSize
 {
@@ -154,35 +146,6 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
   self.bounds = bounds;
 }
 
-- (CGRect)titleRectForContentRect:(CGRect)contentRect
-{
-  if (self.hidden || CGRectIsEmpty(self.bounds)) {
-    return CGRectZero;
-  }
-  CGRect imageRect = [self imageRectForContentRect:contentRect];
-  CGFloat height = [self _heightForContentRect:contentRect];
-  CGFloat padding = [self _paddingForHeight:height];
-  CGFloat titleX = CGRectGetMaxX(imageRect) + padding;
-  CGRect titleRect = CGRectMake(titleX, 0.0, CGRectGetWidth(contentRect) - titleX, CGRectGetHeight(contentRect));
-
-  UIEdgeInsets titleEdgeInsets = UIEdgeInsetsZero;
-  if (!self.layer.needsLayout) {
-    UILabel *titleLabel = self.titleLabel;
-    if (titleLabel.textAlignment == NSTextAlignmentCenter) {
-      // if the text is centered, we need to adjust the frame for the titleLabel based on the size of the text in order
-      // to keep the text centered in the button without adding extra blank space to the right when unnecessary
-      // 1. the text fits centered within the button without colliding with the image (imagePaddingWidth)
-      // 2. the text would run into the image, so adjust the insets to effectively left align it (textPaddingWidth)
-      CGSize titleSize = [self textSizeForText:titleLabel.text font:titleLabel.font constrainedSize:titleRect.size lineBreakMode:titleLabel.lineBreakMode];
-      CGFloat titlePaddingWidth = (CGRectGetWidth(titleRect) - titleSize.width) / 2;
-      CGFloat imagePaddingWidth = titleX / 2;
-      CGFloat inset = MIN(titlePaddingWidth, imagePaddingWidth);
-      titleEdgeInsets.left -= inset;
-      titleEdgeInsets.right += inset;
-    }
-  }
-  return UIEdgeInsetsInsetRect(titleRect, titleEdgeInsets);
-}
 
 #pragma mark - Subclass Methods
 
@@ -485,5 +448,7 @@ static Class<FBSDKAccessTokenProviding> _accessTokenProvider;
 {
   return floorf(height * HEIGHT_TO_TEXT_PADDING_CORRECTION);
 }
+
+#pragma clang diagnostic pop
 
 @end
