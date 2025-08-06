@@ -10,11 +10,16 @@
 
 #import "SKProductsRequest+FBSDKProductsRequest.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @implementation FBSDKProductRequestFactory
 
 - (nonnull id<FBSDKProductsRequest>)createWithProductIdentifiers:(nonnull NSSet<NSString *> *)identifiers
 {
   return [[SKProductsRequest alloc] initWithProductIdentifiers:identifiers];
 }
+
+#pragma clang diagnostic pop
 
 @end

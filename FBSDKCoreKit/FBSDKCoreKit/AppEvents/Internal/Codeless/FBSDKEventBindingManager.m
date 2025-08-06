@@ -30,6 +30,9 @@
 #define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
 #define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface FBSDKEventBindingManager ()
 
 @property (nonnull, nonatomic) id<FBSDKEventLogging> eventLogger;
@@ -465,6 +468,8 @@
 {
   return _validClasses;
 }
+
+#pragma clang diagnostic pop
 
 #if DEBUG
 

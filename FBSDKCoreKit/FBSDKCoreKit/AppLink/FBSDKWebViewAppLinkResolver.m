@@ -20,6 +20,9 @@
 #import "FBSDKErrorReporter.h"
 #import "FBSDKWebViewAppLinkResolverWebViewDelegate.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 /**
  Describes the callback for appLinkFromURLInBackground.
  @param result the results from following redirects
@@ -298,5 +301,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 }
 
 @end
+
+#pragma clang diagnostic pop
 
 #endif

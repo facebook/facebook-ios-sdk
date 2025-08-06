@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @class FBSDKPaymentProductRequestor;
 @class SKPaymentTransaction;
 
@@ -30,3 +33,5 @@ NS_SWIFT_NAME(createRequestor(transaction:));
 @end
 
 NS_ASSUME_NONNULL_END
+
+#pragma clang diagnostic pop

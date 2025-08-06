@@ -19,6 +19,9 @@
 #import "FBSDKViewHierarchy.h"
 #import "FBSDKViewHierarchyMacros.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface FBSDKCodelessIndexer ()
 
 @property (class, nullable, nonatomic) id<FBSDKGraphRequestFactory> graphRequestFactory;
@@ -516,6 +519,8 @@ static id<FBSDKSettings> _settings;
     CODELESS_VIEW_TREE_VISIBILITY_KEY : view.isHidden ? @4 : @0
   };
 }
+
+#pragma clang diagnostic pop
 
 #if DEBUG
 

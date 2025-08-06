@@ -43,7 +43,7 @@ class IAPSKViewController: UIViewController {
     let y = view.frame.minY + 100
     segmentedControl.frame = CGRectMake(x, y, width, height)
     segmentedControl.layer.cornerRadius = 5.0
-    segmentedControl.backgroundColor = UIColor.lightGray
+    segmentedControl.backgroundColor = .lightGray
     segmentedControl.tintColor = UIColor.white
     segmentedControl.addTarget(self, action: #selector(changeSegment), for: .valueChanged)
     return segmentedControl

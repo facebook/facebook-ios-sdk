@@ -14,6 +14,8 @@ import Foundation
 
  @warning INTERNAL - DO NOT USE
  */
+
+@available(iOS, deprecated: 18.0)
 @objc(FBSDKPaymentProductRequestorFactory)
 public final class _PaymentProductRequestorFactory: NSObject, _PaymentProductRequestorCreating {
 
@@ -35,6 +37,7 @@ public final class _PaymentProductRequestorFactory: NSObject, _PaymentProductReq
   }
 }
 
+@available(iOS, deprecated: 18.0)
 extension _PaymentProductRequestorFactory: DependentAsType {
   struct TypeDependencies {
     var settings: SettingsProtocol
