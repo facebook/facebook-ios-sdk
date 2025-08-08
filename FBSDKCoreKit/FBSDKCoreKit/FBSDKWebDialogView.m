@@ -21,6 +21,9 @@
 
 #define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @interface FBSDKWebDialogView () <WKNavigationDelegate>
 
 @property (nonatomic, strong) UIButton *closeButton;
@@ -253,6 +256,8 @@ static id<FBSDKErrorCreating> _errorFactory;
   [self.loadingView stopAnimating];
   [self.delegate webDialogViewDidFinishLoad:self];
 }
+
+#pragma clang diagnostic pop
 
 #if DEBUG
 

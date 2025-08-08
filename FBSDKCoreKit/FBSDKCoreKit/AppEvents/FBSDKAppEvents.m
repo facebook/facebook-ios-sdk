@@ -43,6 +43,9 @@
 
 #endif
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 @protocol FBSDKCAPIReporter;
 
 // Event parameter values internal to this file
@@ -1689,6 +1692,8 @@ operationalParameters:nil];
                                                           useAlternativeDefaultDomainPrefix:NO];
   return request;
 }
+
+#pragma clang diagnostic pop
 
 #pragma mark - Testability
 

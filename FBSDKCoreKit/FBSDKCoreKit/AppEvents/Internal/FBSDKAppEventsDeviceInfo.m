@@ -25,6 +25,9 @@
 
 #define FB_ARRAY_COUNT(x) sizeof(x) / sizeof(x[0])
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 static const u_int FB_GROUP1_RECHECK_DURATION = 30 * 60; // seconds
 
 @interface FBSDKAppEventsDeviceInfo ()
@@ -196,8 +199,6 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
   return value;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)_getCarrier
 {
 #if TARGET_OS_SIMULATOR
