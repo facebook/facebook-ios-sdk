@@ -32,6 +32,11 @@ public final class ShareLinkContent: NSObject {
    URI for the resource available at the URL which will be used to identify resources
    **/
   public var entityURI: String?
+  
+  /**
+   Boolean which decides if we are allowed to add music to the attachment
+   **/
+  public var isMusicAttachmentAllowed: Bool = false
 
   /// Hashtag for the content being shared.
   public var hashtag: Hashtag?
@@ -81,6 +86,10 @@ extension ShareLinkContent: SharingContent {
 
     if let uri = entityURI {
       updatedParameters["entity_uri"] = uri
+    }
+
+    if isMusicAttachmentAllowed {
+      updatedParameters["is_music_attachment_allowed"] = isMusicAttachmentAllowed
     }
 
     if let quote = quote {

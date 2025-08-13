@@ -36,12 +36,14 @@ enum ShareModelTestUtility {
   static let video = ShareVideo(videoURL: videoURL)
   static let videoURL = URL(string: "assets-library://asset/asset.mp4?id=86C6970B-1266-42D0-91E8-4E68127D3864&ext=mp4")!
   static let videoWithPreviewPhoto = ShareVideo(videoURL: videoURL, previewPhoto: photoWithImageURL)
+  static let isMusicAttachmentAllowed: Bool = true
   // swiftlint:enable force_unwrapping
 
   static var linkContent: ShareLinkContent {
     let linkContent = linkContentWithoutQuote
     linkContent.quote = quote
     linkContent.entityURI = entityURI
+    linkContent.isMusicAttachmentAllowed = isMusicAttachmentAllowed
     return linkContent
   }
 
