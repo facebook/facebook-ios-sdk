@@ -230,8 +230,20 @@ static FBSDKAppEventsUtility *_shared;
   if (!campaignIDs) {
     return;
   }
+  
+  NSMutableArray<NSString *> *res = [NSMutableArray new];
+  NSString *cacheCampaignIDs = [self getCampaignIDs];
+  if (cacheCampaignIDs) {
+    res = [[cacheCampaignIDs componentsSeparatedByString:@","] mutableCopy];
+  }
+  [res insertObject:campaignIDs atIndex:0];
+  // Only Keep the most recent 3 campaign IDs
+  while (res.count > 3) {
+    [res removeLastObject];
+  }
+  NSString *resString = [res componentsJoinedByString:@","];
     
-  [self.dataStore fb_setObject:campaignIDs forKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY];
+  [self.dataStore fb_setObject:resString forKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY];
 }
 
 - (nullable NSString *)getCampaignIDs
