@@ -10,7 +10,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.1...HEAD)
+
+## 18.0.1
+
+### Added
+- Added additional capability for link attachments to have music attached
+
+[2025-08-17](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.0...v18.0.1)
 
 ## 18.0.0
 
