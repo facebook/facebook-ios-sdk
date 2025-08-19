@@ -100,7 +100,7 @@ static FBSDKAppEventsUtility *_shared;
   if (userID) {
     [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
-    
+
   [FBSDKTypeUtility dictionary:parameters setObject:[self getCampaignIDs] forKey:@"campaign_ids"];
 
   [self.internalUtility extendDictionaryWithDataProcessingOptions:parameters];
@@ -225,25 +225,13 @@ static FBSDKAppEventsUtility *_shared;
   if (!applinkData) {
     return;
   }
-    
+
   NSString *campaignIDs = [FBSDKTypeUtility dictionary:applinkData objectForKey:@"campaign_ids" ofType:NSString.class];
   if (!campaignIDs) {
     return;
   }
-  
-  NSMutableArray<NSString *> *res = [NSMutableArray new];
-  NSString *cacheCampaignIDs = [self getCampaignIDs];
-  if (cacheCampaignIDs) {
-    res = [[cacheCampaignIDs componentsSeparatedByString:@","] mutableCopy];
-  }
-  [res insertObject:campaignIDs atIndex:0];
-  // Only Keep the most recent 3 campaign IDs
-  while (res.count > 3) {
-    [res removeLastObject];
-  }
-  NSString *resString = [res componentsJoinedByString:@","];
-    
-  [self.dataStore fb_setObject:resString forKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY];
+
+  [self.dataStore fb_setObject:campaignIDs forKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY];
 }
 
 - (nullable NSString *)getCampaignIDs
