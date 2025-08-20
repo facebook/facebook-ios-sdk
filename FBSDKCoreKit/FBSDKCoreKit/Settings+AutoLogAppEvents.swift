@@ -16,16 +16,20 @@ extension Settings {
     guard let dependencies = try? getDependencies() else {
       return true
     }
+
+    if let locallyEnabled = checkClientSideConfiguration(dependencies) {
+      return locallyEnabled
+    }
+
     guard let migratedAutoLogValues = dependencies
       .serverConfigurationProvider.cachedServerConfiguration().migratedAutoLogValues else {
       return isAutoLogAppEventsEnabledLocally
     }
+
     if let migratedAutoLogEnabled = migratedAutoLogValues[AutoLogAppEventServerFlags.ENABLE.rawValue] as? NSNumber {
       return migratedAutoLogEnabled.boolValue
     }
-    if let locallyEnabled = checkClientSideConfiguration(dependencies) {
-      return locallyEnabled
-    }
+
     if let migratedDefault = migratedAutoLogValues[AutoLogAppEventServerFlags.DEFAUT.rawValue] as? NSNumber {
       return migratedDefault.boolValue
     }
