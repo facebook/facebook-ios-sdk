@@ -12,6 +12,7 @@ final class BannedParamsManager: NSObject, MACARuleMatching {
   private var isEnabled = false
   private var blockedParamsConfig = Set<String>()
   private static let stdParamsBlockedKey = "standard_params_blocked"
+  private static let bannedParamsKey = "_bannedParams"
   var configuredDependencies: ObjectDependencies?
   var defaultDependencies: ObjectDependencies? = .init(
     serverConfigurationProvider: _ServerConfigurationManager.shared
@@ -36,11 +37,17 @@ final class BannedParamsManager: NSObject, MACARuleMatching {
     }
     guard let params = params else { return params }
 
-    let updatedParams = params.mutableCopy() as? NSMutableDictionary
-    for param in blockedParamsConfig {
-      updatedParams?.removeObject(forKey: param)
+    let mutableParams = NSMutableDictionary(dictionary: params)
+    let removedParams = blockedParamsConfig.compactMap { paramKey -> String? in
+      guard mutableParams[paramKey] != nil else { return nil }
+
+      mutableParams.removeObject(forKey: paramKey)
+      return paramKey
     }
-    return updatedParams
+    if !removedParams.isEmpty {
+      mutableParams[BannedParamsManager.bannedParamsKey] = removedParams
+    }
+    return mutableParams
   }
 
   private func configureBlockedParams(dependencies: ObjectDependencies) {
