@@ -12,6 +12,7 @@ import Foundation
 public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
   private var isEnabled = false
   private static let pmKey = AppEvents.ParameterName(rawValue: "pm")
+  private static let pmMetadataKey = AppEvents.ParameterName(rawValue: "pm_metadata")
   let standardParametersDefault: Set<String> = [
     "_currency",
     "_valueToSum",
@@ -147,6 +148,8 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     "pm",
     "_audiencePropertyIds",
     "cs_maca",
+    "pm_metadata",
+    "_bannedParams",
   ]
   private var standardParameters: Set<String> = []
 
@@ -187,11 +190,14 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     }
 
     var params = parameters
+    var modified = false
     parameters.keys.forEach { appEventsParameterName in
       if !standardParameters.contains(appEventsParameterName.rawValue) {
         params.removeValue(forKey: appEventsParameterName)
+        modified = true
       }
     }
+    params[ProtectedModeManager.pmMetadataKey] = ["cd": modified]
     params[ProtectedModeManager.pmKey] = true
     return params
   }
