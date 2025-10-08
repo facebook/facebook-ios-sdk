@@ -66,6 +66,7 @@ final class BannedParamsManagerTests: XCTestCase {
 
     let expectedFilteredParams: NSDictionary = [
       AppEvents.ParameterName(rawValue: "something_else"): "THIS_IS_FINE",
+      "_bannedParams": ["predicted_ltv"],
     ]
 
     let filteredParams = bannedParamsManager.processParameters(parameters, event: "test_event")
@@ -80,7 +81,9 @@ final class BannedParamsManagerTests: XCTestCase {
       AppEvents.ParameterName(rawValue: "predicted_ltv"): "NOT_COMPLIANT",
     ]
 
-    let expectedFilteredParams: NSDictionary = [:]
+    let expectedFilteredParams: NSDictionary = [
+      "_bannedParams": ["predicted_ltv"],
+    ]
 
     let filteredParams = bannedParamsManager.processParameters(parameters, event: "test_event")
     XCTAssertEqual(filteredParams, expectedFilteredParams)
