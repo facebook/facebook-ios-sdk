@@ -295,7 +295,7 @@ final class GameRequestDialogTests: XCTestCase {
 
     XCTAssertEqual(
       capturedRequest.scheme,
-      URLScheme.https.rawValue,
+      URLSchemeEnum.https.rawValue,
       "Should use the expected scheme"
     )
     XCTAssertEqual(

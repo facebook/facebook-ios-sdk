@@ -169,10 +169,10 @@ final class LoginManagerLogger {
   func willAttemptAppSwitchingBehavior(urlScheme: String) {
     let isURLSchemeRegistered = InternalUtility.shared.isRegisteredURLScheme(urlScheme)
     let isFacebookAppCanOpenURLSchemeRegistered = InternalUtility.shared.isRegisteredCanOpenURLScheme(
-      URLScheme.facebookAPI.rawValue
+      URLSchemeEnum.facebookAPI.rawValue
     )
     let isMessengerAppCanOpenURLSchemeRegistered = InternalUtility.shared.isRegisteredCanOpenURLScheme(
-      URLScheme.messengerApp.rawValue
+      URLSchemeEnum.messengerApp.rawValue
     )
 
     let urlSchemeParameters: [String: Bool] = [

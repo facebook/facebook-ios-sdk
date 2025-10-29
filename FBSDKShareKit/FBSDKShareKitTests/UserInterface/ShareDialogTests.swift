@@ -380,7 +380,7 @@ final class ShareDialogTests: XCTestCase {
     )
 
     XCTAssertEqual(bridgeAPIRequestFactory.capturedProtocolType, .web, .Showing.bridgeAPIRequest)
-    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLScheme.https.rawValue, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLSchemeEnum.https.rawValue, .Showing.bridgeAPIRequest)
     XCTAssertEqual(bridgeAPIRequestFactory.capturedMethodName, components.methodName, .Showing.bridgeAPIRequest)
     XCTAssertEqual(
       bridgeAPIRequestFactory.capturedParameters as? [String: String],
@@ -425,7 +425,7 @@ final class ShareDialogTests: XCTestCase {
     TestShareUtility.capturedAsyncWebPhotoContentCompletion?(true, "test", parameters)
 
     XCTAssertEqual(bridgeAPIRequestFactory.capturedProtocolType, .web, .Showing.bridgeAPIRequest)
-    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLScheme.https.rawValue, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLSchemeEnum.https.rawValue, .Showing.bridgeAPIRequest)
     XCTAssertEqual(bridgeAPIRequestFactory.capturedMethodName, "test", .Showing.bridgeAPIRequest)
     XCTAssertEqual(
       bridgeAPIRequestFactory.capturedParameters as? [String: String],

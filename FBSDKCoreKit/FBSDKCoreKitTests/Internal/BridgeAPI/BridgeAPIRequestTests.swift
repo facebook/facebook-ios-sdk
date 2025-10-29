@@ -46,7 +46,7 @@ final class BridgeAPIRequestTests: XCTestCase {
 
   private func makeRequest(
     protocolType: FBSDKBridgeAPIProtocolType = .web,
-    scheme: URLScheme = .https
+    scheme: URLSchemeEnum = .https
   ) -> _BridgeAPIRequest? {
     _BridgeAPIRequest(
       protocolType: protocolType,
@@ -75,20 +75,20 @@ final class BridgeAPIRequestTests: XCTestCase {
 
   func testOpenableURL() {
     XCTAssertNotNil(
-      makeRequest(protocolType: .native, scheme: .facebookAPI),
+      makeRequest(protocolType: FBSDKBridgeAPIProtocolType.native, scheme: URLSchemeEnum.facebookAPI),
       "BridgeAPIRequests should only be created for openable URLs"
     )
   }
 
   func testProperties() throws {
-    let request = try XCTUnwrap(makeRequest())
+    let request: _BridgeAPIRequest = try XCTUnwrap(makeRequest())
 
-    XCTAssertEqual(request.protocolType, .web, "A request should use the provided protocol type")
+    XCTAssertEqual(request.protocolType, FBSDKBridgeAPIProtocolType.web, "A request should use the provided protocol type")
     XCTAssertTrue(
       request.protocol is BridgeAPIProtocolWebV1,
       "A request should use a protocol based on its protocol type"
     )
-    XCTAssertEqual(request.scheme, .https, "A request should use the provided scheme")
+    XCTAssertEqual(request.scheme, URLSchemeEnum.https, "A request should use the provided scheme")
     XCTAssertEqual(request.methodName, "methodName", "A request should use the provided method name")
 
     let parametersMessage = "A request should use the provided parameters"
@@ -103,7 +103,7 @@ final class BridgeAPIRequestTests: XCTestCase {
   }
 
   func testUnopenableRequestURL() throws {
-    let request = try XCTUnwrap(makeRequest())
+    let request: _BridgeAPIRequest = try XCTUnwrap(makeRequest())
     internalURLOpener.canOpenURL = false
 
     XCTAssertThrowsError(
@@ -113,7 +113,7 @@ final class BridgeAPIRequestTests: XCTestCase {
   }
 
   func testCopying() throws {
-    let request = try XCTUnwrap(makeRequest())
+    let request: _BridgeAPIRequest = try XCTUnwrap(makeRequest())
     let copy = try XCTUnwrap(request.copy() as AnyObject)
     XCTAssertTrue(request === copy, "Instances should be provided as copies of themselves")
   }

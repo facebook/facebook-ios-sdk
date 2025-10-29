@@ -78,7 +78,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
 
     if !Self.hasCheckedCanOpenURLSchemeRegistered {
       Self.hasCheckedCanOpenURLSchemeRegistered = true
-      internalUtility.checkRegisteredCanOpenURLScheme(URLScheme.messengerApp.rawValue)
+      internalUtility.checkRegisteredCanOpenURLScheme(URLSchemeEnum.messengerApp.rawValue)
     }
 
     shareContent = content
@@ -162,7 +162,7 @@ public class MessageDialog: NSObject, SharingDialog { // swiftlint:disable:this 
 
     guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
       with: .native,
-      scheme: URLScheme.messengerApp.rawValue,
+      scheme: URLSchemeEnum.messengerApp.rawValue,
       methodName: ShareBridgeAPI.MethodName.share,
       parameters: parameters,
       userInfo: nil

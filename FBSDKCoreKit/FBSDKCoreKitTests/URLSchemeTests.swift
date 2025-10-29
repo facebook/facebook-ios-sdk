@@ -12,10 +12,10 @@ import XCTest
 
 final class URLSchemeTests: XCTestCase {
   func testSchemeRawValues() {
-    XCTAssertEqual(URLScheme.facebookAPI.rawValue, "fbapi")
-    XCTAssertEqual(URLScheme.messengerApp.rawValue, "fb-messenger-share-api")
-    XCTAssertEqual(URLScheme.https.rawValue, "https")
-    XCTAssertEqual(URLScheme.http.rawValue, "http")
-    XCTAssertEqual(URLScheme.web.rawValue, "web")
+    XCTAssertEqual(URLSchemeEnum.facebookAPI.rawValue, "fbapi")
+    XCTAssertEqual(URLSchemeEnum.messengerApp.rawValue, "fb-messenger-share-api")
+    XCTAssertEqual(URLSchemeEnum.https.rawValue, "https")
+    XCTAssertEqual(URLSchemeEnum.http.rawValue, "http")
+    XCTAssertEqual(URLSchemeEnum.web.rawValue, "web")
   }
 }

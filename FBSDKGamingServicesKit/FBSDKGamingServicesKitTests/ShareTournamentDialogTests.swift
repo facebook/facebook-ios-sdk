@@ -124,7 +124,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
     }
 
     let query = try XCTUnwrap(dialogURL.query)
-    XCTAssertEqual(dialogURL.scheme, URLScheme.https.rawValue)
+    XCTAssertEqual(dialogURL.scheme, URLSchemeEnum.https.rawValue)
     XCTAssertEqual(dialogURL.host, "fb.gg")
     XCTAssertEqual(dialogURL.path, "/me/instant_tournament/\(SampleAccessTokens.defaultAppID)")
     XCTAssertNotNil(query, "Query should not be null")
@@ -187,7 +187,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
       return XCTFail("The bridge opener should be called with a valid url")
     }
 
-    XCTAssertEqual(dialogURL.scheme, URLScheme.https.rawValue)
+    XCTAssertEqual(dialogURL.scheme, URLSchemeEnum.https.rawValue)
     XCTAssertEqual(dialogURL.host, "fb.gg")
     XCTAssertEqual(dialogURL.path, "/me/instant_tournament/\(SampleAccessTokens.defaultAppID)")
     XCTAssertNotNil(dialogURL.query)
@@ -217,7 +217,7 @@ final class ShareTournamentDialogTests: XCTestCase, ShareTournamentDialogDelegat
       return XCTFail("The bridge opener should be called with a valid url")
     }
 
-    XCTAssertEqual(dialogURL.scheme, URLScheme.https.rawValue)
+    XCTAssertEqual(dialogURL.scheme, URLSchemeEnum.https.rawValue)
     XCTAssertEqual(dialogURL.host, "fb.gg")
     XCTAssertEqual(dialogURL.path, "/me/instant_tournament/\(SampleAccessTokens.defaultAppID)")
     XCTAssertNotNil(dialogURL.query)

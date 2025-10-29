@@ -95,7 +95,7 @@ public final class _BridgeAPI: NSObject,
       pendingRequestCompletionBlock = nil
       let openedURLError: Error
 
-      if request.scheme.hasPrefix(URLScheme.http.rawValue) {
+      if request.scheme.hasPrefix(URLSchemeEnum.http.rawValue) {
         openedURLError = errorFactory.error(
           code: CoreError.errorBrowserUnavailable.rawValue,
           message: "the app switch failed because the browser is unavailable",
@@ -450,7 +450,7 @@ extension _BridgeAPI {
     from fromViewController: UIViewController?,
     handler: @escaping SuccessBlock
   ) {
-    guard url.scheme?.hasPrefix(URLScheme.http.rawValue) == true else {
+    guard url.scheme?.hasPrefix(URLSchemeEnum.http.rawValue) == true else {
       return open(url, sender: sender, handler: handler)
     }
 

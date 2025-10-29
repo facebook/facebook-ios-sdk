@@ -118,7 +118,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
 
     let url = try bridge.requestURL(
       actionID: Values.actionID,
-      scheme: URLScheme.https.rawValue,
+      scheme: URLSchemeEnum.https.rawValue,
       methodName: Values.methodName,
       parameters: queryParameters
     )

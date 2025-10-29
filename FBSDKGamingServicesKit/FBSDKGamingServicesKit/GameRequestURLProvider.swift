@@ -22,7 +22,7 @@ public final class GameRequestURLProvider: NSObject {
     guard let dependencies = try? getDependencies() else { return nil }
 
     var components = URLComponents()
-    components.scheme = URLScheme.https.rawValue
+    components.scheme = URLSchemeEnum.https.rawValue
     components.host = URLValues.host
     components.path = "\(URLValues.path)\(dependencies.accessTokenWallet.current?.appID ?? "")"
     components.queryItems = Self.getQueryArray(from: queryDictionary)
