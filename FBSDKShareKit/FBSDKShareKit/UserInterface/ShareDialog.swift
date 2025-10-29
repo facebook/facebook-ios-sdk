@@ -166,7 +166,7 @@ extension ShareDialog {
 
     let internalUtility = try getDependencies().internalUtility
 
-    internalUtility.checkRegisteredCanOpenURLScheme(URLScheme.facebookAPI.rawValue)
+    internalUtility.checkRegisteredCanOpenURLScheme(URLSchemeEnum.facebookAPI.rawValue)
     hasValidatedURLSchemeRegistration = true
   }
 
@@ -318,7 +318,7 @@ extension ShareDialog {
     }
 
     var components = URLComponents()
-    components.scheme = URLScheme.facebookAPI.rawValue
+    components.scheme = URLSchemeEnum.facebookAPI.rawValue
     components.path = "/"
 
     var canOpenURL = false
@@ -334,7 +334,7 @@ extension ShareDialog {
     guard let urlOpener = Self.internalURLOpener else { return false }
 
     var components = URLComponents()
-    components.scheme = URLScheme.facebookAPI.rawValue
+    components.scheme = URLSchemeEnum.facebookAPI.rawValue
     components.path = "/"
 
     guard let url = components.url else { return false }
@@ -444,7 +444,7 @@ extension ShareDialog {
           success,
           let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
             with: .web,
-            scheme: URLScheme.https.rawValue,
+            scheme: URLSchemeEnum.https.rawValue,
             methodName: methodName,
             parameters: parameters,
             userInfo: nil
@@ -469,7 +469,7 @@ extension ShareDialog {
       let components = dependencies.shareUtility.buildWebShareBridgeComponents(for: content)
       guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
         with: .web,
-        scheme: URLScheme.https.rawValue,
+        scheme: URLSchemeEnum.https.rawValue,
         methodName: components.methodName,
         parameters: components.parameters,
         userInfo: nil
@@ -505,7 +505,7 @@ extension ShareDialog {
     let parameters = dependencies.shareUtility.feedShareDictionary(for: content)
     guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
       with: .web,
-      scheme: URLScheme.https.rawValue,
+      scheme: URLSchemeEnum.https.rawValue,
       methodName: Self.feedMethodName,
       parameters: parameters,
       userInfo: nil
@@ -578,7 +578,7 @@ extension ShareDialog {
 
     guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
       with: .native,
-      scheme: URLScheme.facebookAPI.rawValue,
+      scheme: URLSchemeEnum.facebookAPI.rawValue,
       methodName: methodName,
       parameters: parameters,
       userInfo: nil

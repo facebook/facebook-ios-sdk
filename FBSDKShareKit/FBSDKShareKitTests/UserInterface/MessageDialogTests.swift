@@ -301,7 +301,7 @@ final class MessageDialogTests: XCTestCase {
 
     // Creating bridge API request
     XCTAssertEqual(bridgeAPIRequestFactory.capturedProtocolType, .native, .showingValidDialog)
-    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLScheme.messengerApp.rawValue, .showingValidDialog)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLSchemeEnum.messengerApp.rawValue, .showingValidDialog)
     XCTAssertEqual(bridgeAPIRequestFactory.capturedMethodName, ShareBridgeAPI.MethodName.share, .showingValidDialog)
     XCTAssertEqual(bridgeAPIRequestFactory.capturedParameters as? [String: String], parameters, .showingValidDialog)
     XCTAssertNil(bridgeAPIRequestFactory.capturedUserInfo, .showingValidDialog)

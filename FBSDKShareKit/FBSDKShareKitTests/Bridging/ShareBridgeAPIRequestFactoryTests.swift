@@ -18,7 +18,7 @@ final class ShareBridgeAPIRequestFactoryTests: XCTestCase {
     XCTAssertNotNil(
       factory.bridgeAPIRequest(
         with: .web,
-        scheme: URLScheme.https.rawValue,
+        scheme: URLSchemeEnum.https.rawValue,
         methodName: nil,
         parameters: nil,
         userInfo: nil

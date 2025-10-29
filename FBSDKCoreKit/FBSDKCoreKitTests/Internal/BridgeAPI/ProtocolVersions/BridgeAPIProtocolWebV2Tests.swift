@@ -23,7 +23,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
   enum Values {
     static let actionID = "123"
     static let methodName = "open"
-    static let scheme = URLScheme.https
+    static let scheme = URLSchemeEnum.https
     static let bundleIdentifier = "bundle.identifier"
   }
 
@@ -191,7 +191,7 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
 
     _ = try? bridge.requestURL(
       actionID: Values.actionID,
-      scheme: URLScheme.https.rawValue,
+      scheme: URLSchemeEnum.https.rawValue,
       methodName: Values.methodName,
       parameters: validQueryParameters
     )

@@ -497,7 +497,7 @@ extension BridgeAPITests {
     }
 
     if canHandleBridgeApiResponse {
-      appURLSchemeProvider.appURLScheme = URLScheme.http.rawValue
+      appURLSchemeProvider.appURLScheme = URLSchemeEnum.http.rawValue
       api.pendingRequestCompletionBlock = nil
     } else {
       appURLSchemeProvider.appURLScheme = "foo"
