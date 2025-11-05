@@ -487,19 +487,24 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 
 - (nullable NSString *)loggingOverrideAppID
 {
-  return g_overrideAppID;
+  @synchronized (self) {
+    return g_overrideAppID;
+  }
 }
 
 - (void)setLoggingOverrideAppID:(nullable NSString *)appID
 {
   [self validateConfiguration];
-
-  if (![g_overrideAppID isEqualToString:appID]) {
+  
+  
+  if (![[self loggingOverrideAppID] isEqualToString:appID]) {
     if (g_explicitEventsLoggedYet) {
       [self.logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                              logEntry:@"AppEvents.shared.loggingOverrideAppID should only be set prior to any events being logged."];
     }
-    g_overrideAppID = appID;
+    @synchronized (self) {
+      g_overrideAppID = appID;
+    }
   }
 }
 
@@ -1735,7 +1740,9 @@ operationalParameters:nil];
   // The actual setter on here has a check to see if the SDK is initialized
   // This is not a useful check for tests so we can just reset the underlying
   // static var.
-  g_overrideAppID = nil;
+  @synchronized (self) {
+    g_overrideAppID = nil;
+  }
 
 #if !TARGET_OS_TV
   self.onDeviceMLModelManager = nil;
