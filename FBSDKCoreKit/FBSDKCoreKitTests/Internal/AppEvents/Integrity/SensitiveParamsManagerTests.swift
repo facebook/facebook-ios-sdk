@@ -55,7 +55,7 @@ final class SensitiveParamsManagerTests: XCTestCase {
     sensitiveParamsManager.resetDependencies()
     XCTAssertTrue(
       sensitiveParamsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
-      "Should use the shared server configuration manger by default"
+      "Should use the shared server configuration manager by default"
     )
   }
 

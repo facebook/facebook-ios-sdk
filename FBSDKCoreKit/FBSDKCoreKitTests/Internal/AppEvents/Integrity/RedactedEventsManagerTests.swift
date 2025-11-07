@@ -86,7 +86,7 @@ final class RedactedEventsManagerTests: XCTestCase {
     redactedEventsManager.resetDependencies()
     XCTAssertTrue(
       redactedEventsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
-      "Should use the shared server configuration manger by default"
+      "Should use the shared server configuration manager by default"
     )
   }
 

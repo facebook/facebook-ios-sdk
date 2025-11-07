@@ -72,7 +72,7 @@ final class BlocklistEventsManagerTests: XCTestCase {
     blocklistEventsManager.resetDependencies()
     XCTAssertTrue(
       blocklistEventsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
-      "Should use the shared server configuration manger by default"
+      "Should use the shared server configuration manager by default"
     )
   }
 

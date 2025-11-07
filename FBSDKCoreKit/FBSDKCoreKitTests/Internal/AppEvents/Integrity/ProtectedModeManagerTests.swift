@@ -166,7 +166,7 @@ final class ProtectedModeManagerTests: XCTestCase {
     XCTAssertEqual(
       protectedModeManager.processParameters(sampleParameters, eventName: AppEvents.Name.addedToCart)?.count,
       4,
-      "It should not do the parameter filtering without enbaled"
+      "It should not do the parameter filtering without enabled"
     )
   }
 

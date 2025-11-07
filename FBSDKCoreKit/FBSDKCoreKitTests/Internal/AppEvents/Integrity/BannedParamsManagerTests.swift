@@ -44,7 +44,7 @@ final class BannedParamsManagerTests: XCTestCase {
     bannedParamsManager.resetDependencies()
     XCTAssertTrue(
       bannedParamsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
-      "Should use the shared server configuration manger by default"
+      "Should use the shared server configuration manager by default"
     )
   }
 

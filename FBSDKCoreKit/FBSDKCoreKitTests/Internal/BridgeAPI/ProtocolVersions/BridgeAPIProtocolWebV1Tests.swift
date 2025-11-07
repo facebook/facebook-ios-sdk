@@ -228,7 +228,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
     XCTAssertEqual(
       response as? [String: String],
       [Keys.completionGesture: Values.cancel],
-      "Should indicate a cancelation when there's a cancellation error code"
+      "Should indicate a cancellation when there's a cancellation error code"
     )
   }
 }
