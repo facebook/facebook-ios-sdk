@@ -36,6 +36,11 @@ internal final class NativeAppLoginHandler {
       return false
     }
 
+    // Check if app switch is enabled by the app (opt-in model)
+    guard configuration.appSwitch == .enabled else {
+      return false
+    }
+
     // Only attempt native app login for enabled tracking
     // Limited tracking users must use browser for privacy compliance
     guard configuration.tracking == .enabled else {
