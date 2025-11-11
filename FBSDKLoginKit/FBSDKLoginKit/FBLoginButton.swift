@@ -55,6 +55,9 @@ public final class FBLoginButton: FBButton {
   /// Gets or sets the desired tracking preference to use for login attempts. Defaults to `.enabled`
   public var loginTracking: LoginTracking = .enabled
 
+  /// Gets or sets the app switch behavior. Defaults to `.disabled`
+  public var appSwitch: AppSwitch = .disabled
+
   /**
    Gets or sets an optional nonce to use for login attempts. A valid nonce must be a non-empty string without whitespace.
    An invalid nonce will not be set. Instead, default unique nonces will be used for login attempts.
@@ -330,6 +333,7 @@ public final class FBLoginButton: FBButton {
       nonce: nonce,
       messengerPageId: messengerPageId,
       authType: authType,
+      appSwitch: appSwitch,
       codeVerifier: codeVerifier
     )
   }

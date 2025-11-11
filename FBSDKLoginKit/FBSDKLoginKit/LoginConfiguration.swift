@@ -21,6 +21,9 @@ public final class LoginConfiguration: NSObject {
   /// The tracking  preference. Defaults to `.enabled`.
   public let tracking: LoginTracking
 
+  /// The app switch behavior. Defaults to `.disabled`.
+  public let appSwitch: AppSwitch
+
   /// The requested permissions for the login attempt. Defaults to an empty set.
   public let requestedPermissions: Set<FBPermission>
 
@@ -67,6 +70,35 @@ public final class LoginConfiguration: NSObject {
    @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
    Creation of the configuration will fail if the nonce is invalid.
    @param messengerPageId the associated page id  to use for a login attempt.
+   @param appSwitch the app switch behavior to use for a login attempt.
+   */
+  @objc(initWithPermissions:tracking:nonce:messengerPageId:appSwitch:)
+  public convenience init?(
+    permissions: [String],
+    tracking: LoginTracking,
+    nonce: String,
+    messengerPageId: String?,
+    appSwitch: AppSwitch
+  ) {
+    self.init(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: nonce,
+      messengerPageId: messengerPageId,
+      authType: .rerequest,
+      appSwitch: appSwitch,
+      codeVerifier: CodeVerifier()
+    )
+  }
+
+  /**
+   Attempts to initialize a new configuration with the expected parameters.
+
+   @param permissions the requested permissions for a login attempt. Permissions must be an array of strings that do not contain whitespace.
+   @param tracking the tracking preference to use for a login attempt.
+   @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
+   Creation of the configuration will fail if the nonce is invalid.
+   @param messengerPageId the associated page id  to use for a login attempt.
    @param authType auth_type param to use for login.
    */
   @objc(initWithPermissions:tracking:nonce:messengerPageId:authType:)
@@ -83,6 +115,38 @@ public final class LoginConfiguration: NSObject {
       nonce: nonce,
       messengerPageId: messengerPageId,
       authType: authType,
+      appSwitch: .disabled,
+      codeVerifier: CodeVerifier()
+    )
+  }
+
+  /**
+   Attempts to initialize a new configuration with the expected parameters.
+
+   @param permissions the requested permissions for a login attempt. Permissions must be an array of strings that do not contain whitespace.
+   @param tracking the tracking preference to use for a login attempt.
+   @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
+   Creation of the configuration will fail if the nonce is invalid.
+   @param messengerPageId the associated page id  to use for a login attempt.
+   @param authType auth_type param to use for login.
+   @param appSwitch the app switch behavior to use for a login attempt.
+   */
+  @objc(initWithPermissions:tracking:nonce:messengerPageId:authType:appSwitch:)
+  public convenience init?(
+    permissions: [String],
+    tracking: LoginTracking,
+    nonce: String,
+    messengerPageId: String?,
+    authType: LoginAuthType?,
+    appSwitch: AppSwitch
+  ) {
+    self.init(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: nonce,
+      messengerPageId: messengerPageId,
+      authType: authType,
+      appSwitch: appSwitch,
       codeVerifier: CodeVerifier()
     )
   }
@@ -106,6 +170,33 @@ public final class LoginConfiguration: NSObject {
       tracking: tracking,
       nonce: nonce,
       messengerPageId: nil
+    )
+  }
+
+  /**
+   Attempts to initialize a new configuration with the expected parameters.
+
+   @param permissions the requested permissions for a login attempt. Permissions must be an array of strings that do not contain whitespace.
+   @param tracking the tracking preference to use for a login attempt.
+   @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
+   @param appSwitch the app switch behavior to use for a login attempt.
+   Creation of the configuration will fail if the nonce is invalid.
+   */
+  @objc(initWithPermissions:tracking:nonce:appSwitch:)
+  public convenience init?(
+    permissions: [String],
+    tracking: LoginTracking,
+    nonce: String,
+    appSwitch: AppSwitch
+  ) {
+    self.init(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: nonce,
+      messengerPageId: nil,
+      authType: .rerequest,
+      appSwitch: appSwitch,
+      codeVerifier: CodeVerifier()
     )
   }
 
@@ -136,6 +227,32 @@ public final class LoginConfiguration: NSObject {
    @param permissions the requested permissions for the login attempt. Permissions must be an array of strings that do not contain whitespace.
    @param tracking the tracking preference to use for a login attempt.
    @param messengerPageId the associated page id  to use for a login attempt.
+   @param appSwitch the app switch behavior to use for a login attempt.
+   */
+  @objc(initWithPermissions:tracking:messengerPageId:appSwitch:)
+  public convenience init?(
+    permissions: [String],
+    tracking: LoginTracking,
+    messengerPageId: String?,
+    appSwitch: AppSwitch
+  ) {
+    self.init(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: UUID().uuidString,
+      messengerPageId: messengerPageId,
+      authType: .rerequest,
+      appSwitch: appSwitch,
+      codeVerifier: CodeVerifier()
+    )
+  }
+
+  /**
+   Attempts to initialize a new configuration with the expected parameters.
+
+   @param permissions the requested permissions for the login attempt. Permissions must be an array of strings that do not contain whitespace.
+   @param tracking the tracking preference to use for a login attempt.
+   @param messengerPageId the associated page id  to use for a login attempt.
    @param authType auth_type param to use for login.
    */
   @objc(initWithPermissions:tracking:messengerPageId:authType:)
@@ -157,21 +274,51 @@ public final class LoginConfiguration: NSObject {
   /**
    Attempts to initialize a new configuration with the expected parameters.
 
+   @param permissions the requested permissions for the login attempt. Permissions must be an array of strings that do not contain whitespace.
+   @param tracking the tracking preference to use for a login attempt.
+   @param messengerPageId the associated page id  to use for a login attempt.
+   @param authType auth_type param to use for login.
+   @param appSwitch the app switch behavior to use for a login attempt.
+   */
+  @objc(initWithPermissions:tracking:messengerPageId:authType:appSwitch:)
+  public convenience init?(
+    permissions: [String],
+    tracking: LoginTracking,
+    messengerPageId: String?,
+    authType: LoginAuthType?,
+    appSwitch: AppSwitch
+  ) {
+    self.init(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: UUID().uuidString,
+      messengerPageId: messengerPageId,
+      authType: authType,
+      appSwitch: appSwitch,
+      codeVerifier: CodeVerifier()
+    )
+  }
+
+  /**
+   Attempts to initialize a new configuration with the expected parameters.
+
    @param permissions the requested permissions for a login attempt. Permissions must be an array of strings that do not contain whitespace.
    @param tracking the tracking preference to use for a login attempt.
    @param nonce an optional nonce to use for the login attempt. A valid nonce must be a non-empty string without whitespace.
    Creation of the configuration will fail if the nonce is invalid.
    @param messengerPageId the associated page id  to use for a login attempt.
    @param authType auth_type param to use for login.
+   @param appSwitch the app switch behavior to use for a login attempt. Defaults to `.disabled`.
    @param codeVerifier The code verifier used in the PKCE process.
    */
-  @objc(initWithPermissions:tracking:nonce:messengerPageId:authType:codeVerifier:)
+  @objc(initWithPermissions:tracking:nonce:messengerPageId:authType:appSwitch:codeVerifier:)
   public init?(
     permissions: [String],
     tracking: LoginTracking,
     nonce: String,
     messengerPageId: String?,
     authType: LoginAuthType?,
+    appSwitch: AppSwitch,
     codeVerifier: CodeVerifier
   ) {
 
@@ -198,6 +345,7 @@ public final class LoginConfiguration: NSObject {
 
     requestedPermissions = permissions
     self.tracking = tracking
+    self.appSwitch = appSwitch
     self.nonce = nonce
     self.messengerPageId = messengerPageId
     self.authType = authType
@@ -226,6 +374,30 @@ public final class LoginConfiguration: NSObject {
   /**
    Attempts to initialize a new configuration with the expected parameters.
 
+   @param permissions the requested permissions for the login attempt. Permissions must be an array of strings that do not contain whitespace.
+   @param tracking the tracking preference to use for a login attempt.
+   @param appSwitch the app switch behavior to use for a login attempt.
+   */
+  @objc(initWithPermissions:tracking:appSwitch:)
+  public convenience init?(
+    permissions: [String],
+    tracking: LoginTracking,
+    appSwitch: AppSwitch
+  ) {
+    self.init(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: UUID().uuidString,
+      messengerPageId: nil,
+      authType: .rerequest,
+      appSwitch: appSwitch,
+      codeVerifier: CodeVerifier()
+    )
+  }
+
+  /**
+   Attempts to initialize a new configuration with the expected parameters.
+
    @param tracking the login tracking preference to use for a login attempt.
    */
   @objc(initWithTracking:)
@@ -233,6 +405,25 @@ public final class LoginConfiguration: NSObject {
     self.init(
       permissions: [],
       tracking: tracking
+    )
+  }
+
+  /**
+   Attempts to initialize a new configuration with the expected parameters.
+
+   @param tracking the login tracking preference to use for a login attempt.
+   @param appSwitch the app switch behavior to use for a login attempt.
+   */
+  @objc(initWithTracking:appSwitch:)
+  public convenience init?(tracking: LoginTracking, appSwitch: AppSwitch) {
+    self.init(
+      permissions: [],
+      tracking: tracking,
+      nonce: UUID().uuidString,
+      messengerPageId: nil,
+      authType: .rerequest,
+      appSwitch: appSwitch,
+      codeVerifier: CodeVerifier()
     )
   }
 
@@ -247,6 +438,7 @@ public final class LoginConfiguration: NSObject {
     Creation of the configuration will fail if the nonce is invalid. Defaults to a `UUID` string.
    - parameter messengerPageId: An optional page id to use for a login attempt. Defaults to `nil`
    - parameter authType: An optional auth type to use for a login attempt. Defaults to `.rerequest`
+   - parameter appSwitch: The app switch behavior to use for a login attempt. Defaults to `.disabled`
    - parameter codeVerifier: An optional codeVerifier used for the PKCE process.
    If not provided, this will be randomly generated.
    */
@@ -256,6 +448,7 @@ public final class LoginConfiguration: NSObject {
     nonce: String = UUID().uuidString,
     messengerPageId: String? = nil,
     authType: LoginAuthType? = .rerequest,
+    appSwitch: AppSwitch = .disabled,
     codeVerifier: CodeVerifier = CodeVerifier()
   ) {
     self.init(
@@ -264,6 +457,7 @@ public final class LoginConfiguration: NSObject {
       nonce: nonce,
       messengerPageId: messengerPageId,
       authType: authType,
+      appSwitch: appSwitch,
       codeVerifier: codeVerifier
     )
   }
