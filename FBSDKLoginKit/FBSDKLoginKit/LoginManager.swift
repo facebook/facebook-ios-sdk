@@ -64,6 +64,7 @@ public final class LoginManager: NSObject {
   private enum LoggerAuthenticationMethod {
     static let browser = "browser_auth"
     static let safariViewController = "sfvc_auth"
+    static let nativeAppSwitch = "native_app_switch_auth"
   }
 
   var configuredDependencies: ObjectDependencies?
@@ -269,6 +270,53 @@ public final class LoginManager: NSObject {
   private func logIn() {
     usedSafariSession = false
 
+    // Try native app login first if conditions are met
+    if let configuration = configuration {
+      let serverConfigurationProvider = ServerConfigurationProvider()
+      let nativeHandler = NativeAppLoginHandler(
+        loginManager: self,
+        configuration: configuration,
+        defaultAudience: defaultAudience,
+        logger: logger
+      )
+
+      if nativeHandler.shouldAttemptNativeAppLogin() {
+        // Log app switching behavior for telemetry
+        // swiftformat:disable:next redundantSelf
+        let urlScheme = "fb\(self.settings?.appID ?? "")\(self.settings?.appURLSchemeSuffix ?? "")"
+        logger?.willAttemptAppSwitchingBehavior(urlScheme: urlScheme)
+
+        nativeHandler.performNativeAppLogin(
+          loggingToken: serverConfigurationProvider.loggingToken,
+          handler: { [weak self] didOpen, error in
+            guard let self = self else { return }
+
+            if didOpen, error == nil {
+              // Native app opened successfully!
+              // Set state and wait for URL callback
+              self.state = .performingLogin
+            } else {
+              // Native app failed, fall back to browser login
+              self.performBrowserLogIn { [weak self] didPerformLogIn, potentialError in
+                guard let self = self else { return }
+                if didPerformLogIn {
+                  self.state = .performingLogin
+                } else if let error = potentialError as NSError?,
+                          CanceledLoginErrorDomains.isValidDomain(error.domain) {
+                  self.handleImplicitCancelOfLogIn()
+                } else {
+                  let error = potentialError ?? NSError(domain: LoginErrorDomain, code: LoginError.unknown.rawValue)
+                  self.invokeHandler(error: error)
+                }
+              }
+            }
+          }
+        )
+        return
+      }
+    }
+
+    // No native app login attempted, use browser
     performBrowserLogIn { [self] didPerformLogIn, potentialError in
       if didPerformLogIn {
         state = .performingLogin
@@ -654,6 +702,7 @@ public final class LoginManager: NSObject {
     let shouldUseSafariViewController = serverConfigurationProvider.shouldUseSafariViewController(
       forDialogName: "login"
     )
+
     let authenticationMethod = shouldUseSafariViewController
       ? LoggerAuthenticationMethod.safariViewController
       : LoggerAuthenticationMethod.browser
