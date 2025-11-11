@@ -27,6 +27,11 @@ final class LoginConfigurationTests: XCTestCase {
       .enabled,
       "Tracking should default to enabled when unspecified"
     )
+    XCTAssertEqual(
+      configuration.appSwitch,
+      .disabled,
+      "App switch should default to disabled when unspecified (opt-in model)"
+    )
     XCTAssertNotNil(
       configuration.nonce,
       "A configuration should be created with a default nonce"
@@ -200,6 +205,265 @@ final class LoginConfigurationTests: XCTestCase {
       configuration?.codeVerifier.value,
       codeVerifier.value,
       "Should create a configuration with the provided code verifier"
+    )
+  }
+
+  // MARK: - AppSwitch Tests
+
+  func testCreatingWithAppSwitchEnabled() {
+    let configuration = LoginConfiguration(appSwitch: .enabled)
+    XCTAssertEqual(
+      configuration?.appSwitch,
+      .enabled,
+      "Should create a configuration with enabled app switch (opt-in)"
+    )
+  }
+
+  func testCreatingWithAppSwitchDisabled() {
+    let configuration = LoginConfiguration(appSwitch: .disabled)
+    XCTAssertEqual(
+      configuration?.appSwitch,
+      .disabled,
+      "Should create a configuration with disabled app switch"
+    )
+  }
+
+  func testCreatingWithAllParametersIncludingAppSwitch() {
+    let permissions = ["email", "public_profile"]
+    let tracking = LoginTracking.enabled
+    let nonce = "test_nonce_12345"
+    let messengerPageId = "messenger_page_123"
+    let authType = LoginAuthType.rerequest
+    let appSwitch = AppSwitch.disabled
+    let codeVerifier = CodeVerifier()
+
+    let configuration = LoginConfiguration(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: nonce,
+      messengerPageId: messengerPageId,
+      authType: authType,
+      appSwitch: appSwitch,
+      codeVerifier: codeVerifier
+    )
+
+    XCTAssertNotNil(configuration, "Should create a configuration with all parameters")
+    XCTAssertEqual(
+      configuration?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      "Should set the requested permissions"
+    )
+    XCTAssertEqual(configuration?.tracking, tracking, "Should set the tracking preference")
+    XCTAssertEqual(configuration?.nonce, nonce, "Should set the nonce")
+    XCTAssertEqual(configuration?.messengerPageId, messengerPageId, "Should set the messenger page ID")
+    XCTAssertEqual(configuration?.authType, authType, "Should set the auth type")
+    XCTAssertEqual(configuration?.appSwitch, appSwitch, "Should set the app switch behavior")
+    XCTAssertEqual(configuration?.codeVerifier.value, codeVerifier.value, "Should set the code verifier")
+  }
+
+  func testCreatingWithPermissionsTrackingMessengerPageIdAuthTypeAndAppSwitch() {
+    let permissions = ["email"]
+    let messengerPageId = "12345"
+    let authType = LoginAuthType.rerequest
+    let appSwitch = AppSwitch.disabled
+
+    let configuration = LoginConfiguration(
+      permissions: permissions,
+      tracking: .enabled,
+      messengerPageId: messengerPageId,
+      authType: authType,
+      appSwitch: appSwitch
+    )
+
+    XCTAssertEqual(
+      configuration?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      "Should create a configuration with the provided permissions"
+    )
+    XCTAssertEqual(
+      configuration?.tracking,
+      .enabled,
+      "Should create a configuration with the provided tracking preference"
+    )
+    XCTAssertEqual(
+      configuration?.messengerPageId,
+      messengerPageId,
+      "Should create a configuration with the provided messenger page ID"
+    )
+    XCTAssertEqual(
+      configuration?.authType,
+      authType,
+      "Should create a configuration with the provided auth type"
+    )
+    XCTAssertEqual(
+      configuration?.appSwitch,
+      appSwitch,
+      "Should create a configuration with the provided app switch behavior"
+    )
+  }
+
+  func testAppSwitchDefaultsToDisabledWhenNotSpecified() {
+    let configurations = [
+      LoginConfiguration(),
+      LoginConfiguration(tracking: .enabled),
+      LoginConfiguration(permissions: ["email"], tracking: .enabled),
+      LoginConfiguration(
+        permissions: ["email"],
+        tracking: .enabled,
+        messengerPageId: "123",
+        authType: .rerequest
+      ),
+    ]
+
+    configurations.forEach { configuration in
+      XCTAssertEqual(
+        configuration?.appSwitch,
+        .disabled,
+        "App switch should default to disabled when not explicitly specified (opt-in model)"
+      )
+    }
+  }
+
+  func testAppSwitchWithLimitedTracking() {
+    let configuration = LoginConfiguration(
+      tracking: .limited,
+      appSwitch: .disabled
+    )
+
+    XCTAssertEqual(
+      configuration?.tracking,
+      .limited,
+      "Should create a configuration with limited tracking"
+    )
+    XCTAssertEqual(
+      configuration?.appSwitch,
+      .disabled,
+      "Should create a configuration with disabled app switch even with limited tracking"
+    )
+  }
+
+  func testCreatingWithPermissionsTrackingNonceAndAppSwitch() {
+    let permissions = ["email", "public_profile"]
+    let tracking = LoginTracking.enabled
+    let nonce = "test_nonce_12345"
+    let appSwitch = AppSwitch.disabled
+
+    let configuration = LoginConfiguration(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: nonce,
+      appSwitch: appSwitch
+    )
+
+    XCTAssertNotNil(configuration, "Should create a configuration with permissions, tracking, nonce, and appSwitch")
+    XCTAssertEqual(
+      configuration?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      "Should set the requested permissions"
+    )
+    XCTAssertEqual(configuration?.tracking, tracking, "Should set the tracking preference")
+    XCTAssertEqual(configuration?.nonce, nonce, "Should set the nonce")
+    XCTAssertEqual(configuration?.appSwitch, appSwitch, "Should set the app switch behavior")
+    XCTAssertEqual(
+      configuration?.authType,
+      .rerequest,
+      "Auth type should default to rerequest when not specified"
+    )
+  }
+
+  func testCreatingWithPermissionsTrackingNonceMessengerPageIdAndAppSwitch() {
+    let permissions = ["email"]
+    let tracking = LoginTracking.limited
+    let nonce = "nonce_abc123"
+    let messengerPageId = "messenger_page_456"
+    let appSwitch = AppSwitch.disabled
+
+    let configuration = LoginConfiguration(
+      permissions: permissions,
+      tracking: tracking,
+      nonce: nonce,
+      messengerPageId: messengerPageId,
+      appSwitch: appSwitch
+    )
+
+    XCTAssertNotNil(
+      configuration,
+      "Should create a configuration with permissions, tracking, nonce, messengerPageId, and appSwitch"
+    )
+    XCTAssertEqual(
+      configuration?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      "Should set the requested permissions"
+    )
+    XCTAssertEqual(configuration?.tracking, tracking, "Should set the tracking preference")
+    XCTAssertEqual(configuration?.nonce, nonce, "Should set the nonce")
+    XCTAssertEqual(configuration?.messengerPageId, messengerPageId, "Should set the messenger page ID")
+    XCTAssertEqual(configuration?.appSwitch, appSwitch, "Should set the app switch behavior")
+    XCTAssertEqual(
+      configuration?.authType,
+      .rerequest,
+      "Auth type should default to rerequest when not specified"
+    )
+  }
+
+  func testCreatingWithPermissionsTrackingMessengerPageIdAndAppSwitch() {
+    let permissions = ["email", "user_friends"]
+    let tracking = LoginTracking.enabled
+    let messengerPageId = "page_789"
+    let appSwitch = AppSwitch.disabled
+
+    let configuration = LoginConfiguration(
+      permissions: permissions,
+      tracking: tracking,
+      messengerPageId: messengerPageId,
+      appSwitch: appSwitch
+    )
+
+    XCTAssertNotNil(
+      configuration,
+      "Should create a configuration with permissions, tracking, messengerPageId, and appSwitch"
+    )
+    XCTAssertEqual(
+      configuration?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      "Should set the requested permissions"
+    )
+    XCTAssertEqual(configuration?.tracking, tracking, "Should set the tracking preference")
+    XCTAssertNotNil(configuration?.nonce, "Nonce should be auto-generated when not specified")
+    XCTAssertEqual(configuration?.messengerPageId, messengerPageId, "Should set the messenger page ID")
+    XCTAssertEqual(configuration?.appSwitch, appSwitch, "Should set the app switch behavior")
+    XCTAssertEqual(
+      configuration?.authType,
+      .rerequest,
+      "Auth type should default to rerequest when not specified"
+    )
+  }
+
+  func testCreatingWithPermissionsTrackingAndAppSwitch() {
+    let permissions = ["email"]
+    let tracking = LoginTracking.limited
+    let appSwitch = AppSwitch.disabled
+
+    let configuration = LoginConfiguration(
+      permissions: permissions,
+      tracking: tracking,
+      appSwitch: appSwitch
+    )
+
+    XCTAssertNotNil(configuration, "Should create a configuration with permissions, tracking, and appSwitch")
+    XCTAssertEqual(
+      configuration?.requestedPermissions,
+      FBPermission.permissions(fromRawPermissions: Set(permissions)),
+      "Should set the requested permissions"
+    )
+    XCTAssertEqual(configuration?.tracking, tracking, "Should set the tracking preference")
+    XCTAssertNotNil(configuration?.nonce, "Nonce should be auto-generated when not specified")
+    XCTAssertNil(configuration?.messengerPageId, "Messenger page ID should be nil when not specified")
+    XCTAssertEqual(configuration?.appSwitch, appSwitch, "Should set the app switch behavior")
+    XCTAssertEqual(
+      configuration?.authType,
+      .rerequest,
+      "Auth type should default to rerequest when not specified"
     )
   }
 }
