@@ -10,7 +10,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.2...HEAD)
+
+## 18.0.2
+- Reintroduced fast app switching capabilities
+
+[2025-11-13](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.1...v18.0.2)
 
 ## 18.0.1
 
