@@ -40,6 +40,34 @@ static dispatch_queue_t serialQueue;
                state:(nullable NSString *)state
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
+{
+  __block NSString *externalId = nil;
+  dispatch_sync(serialQueue, ^{
+    externalId = [FBSDKTypeUtility dictionary:hashedUserData objectForKey:FBSDKAppEventExternalId ofType:NSString.class];
+  });
+  [self setUserEmail:email
+           firstName:firstName
+            lastName:lastName
+               phone:phone
+         dateOfBirth:dateOfBirth
+              gender:gender
+                city:city
+               state:state
+                 zip:zip
+             country:country
+          externalId:externalId];
+}
+
+- (void)setUserEmail:(nullable NSString *)email
+           firstName:(nullable NSString *)firstName
+            lastName:(nullable NSString *)lastName
+               phone:(nullable NSString *)phone
+         dateOfBirth:(nullable NSString *)dateOfBirth
+              gender:(nullable NSString *)gender
+                city:(nullable NSString *)city
+               state:(nullable NSString *)state
+                 zip:(nullable NSString *)zip
+             country:(nullable NSString *)country
           externalId:(nullable NSString *)externalId
 {
   NSMutableDictionary<NSString *, NSString *> *ud = [NSMutableDictionary new];

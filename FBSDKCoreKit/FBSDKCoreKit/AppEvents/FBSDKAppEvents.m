@@ -495,8 +495,8 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 - (void)setLoggingOverrideAppID:(nullable NSString *)appID
 {
   [self validateConfiguration];
-  
-  
+
+
   if (![[self loggingOverrideAppID] isEqualToString:appID]) {
     if (g_explicitEventsLoggedYet) {
       [self.logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -539,16 +539,15 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
              country:(nullable NSString *)country
 {
   [self.userDataStore setUserEmail:email
-                         firstName:firstName
-                          lastName:lastName
-                             phone:phone
-                       dateOfBirth:dateOfBirth
-                            gender:gender
-                              city:city
-                             state:state
-                               zip:zip
-                           country:country
-                        externalId:nil];
+           firstName:firstName
+            lastName:lastName
+               phone:phone
+         dateOfBirth:dateOfBirth
+              gender:gender
+                city:city
+               state:state
+                 zip:zip
+             country:country];
 }
 
 - (nullable NSString *)getUserData
@@ -703,7 +702,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   self.failedTransactionLoggingFactory = failedTransactionLoggingFactory;
   self.iapDedupeProcessor = iapDedupeProcessor;
   self.iapTransactionCache = iapTransactionCache;
- 
+
   NSString *appID = self.appID;
   if (appID) {
     self.atePublisher = [atePublisherFactory createPublisherWithAppID:appID];
@@ -1220,7 +1219,7 @@ operationalParameters:nil];
   if (isImplicitlyLogged && self.serverConfiguration && !self.serverConfiguration.isImplicitLoggingSupported) {
     return;
   }
-  
+
   operationalParameters = [self addImplicitPurchaseParameters:operationalParameters];
 
   BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
@@ -1232,7 +1231,7 @@ operationalParameters:nil];
                                    logEntry:@"FBSDKAppEvents: caught exception while processing sensitiveParamsManager."];
     }
   }
-  
+
   // remove banned parameters
     if (self.bannedParamsManager) {
       @try {
@@ -1242,13 +1241,13 @@ operationalParameters:nil];
                                logEntry:@"FBSDKAppEvents: caght exception while processing bannedParamsManager."];
       }
     }
-  
+
   if (self.macaRuleMatchingManager) {
     @try {
         parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
     } @catch(NSException *exception) {}
   }
-  
+
   // Schematize certain params
   if (self.stdParamEnforcementManager) {
     @try {
@@ -1303,8 +1302,8 @@ operationalParameters:nil];
         parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
     } @catch(NSException *exception) {}
   }
-  
-  
+
+
   NSMutableDictionary<FBSDKAppEventParameterName, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters ?: @{}];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterNameEventName];
   if (!eventDictionary[FBSDKAppEventParameterNameLogTime]) {
@@ -1371,7 +1370,7 @@ operationalParameters:nil];
     }
 
     [self checkPersistedEvents];
-    
+
     if (nil != [self.appEventsUtility getCampaignIDs]) {
        [self flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
        return;
