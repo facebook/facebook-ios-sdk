@@ -42,6 +42,32 @@ final class TestUserDataStore: NSObject, _UserDataPersisting {
     city: String?,
     state: String?,
     zip: String?,
+    country: String?
+  ) {
+    capturedEmail = email
+    capturedFirstName = firstName
+    capturedLastName = lastName
+    capturedPhone = phone
+    capturedDateOfBirth = dateOfBirth
+    capturedGender = gender
+    capturedCity = city
+    capturedState = state
+    capturedZip = zip
+    capturedCountry = country
+    // External ID is not passed in this method, preserve existing behavior
+    capturedExternalId = nil
+  }
+
+  func setUser( // swiftlint:disable:this function_parameter_count
+    email: String?,
+    firstName: String?,
+    lastName: String?,
+    phone: String?,
+    dateOfBirth: String?,
+    gender: String?,
+    city: String?,
+    state: String?,
+    zip: String?,
     country: String?,
     externalId: String?
   ) {
