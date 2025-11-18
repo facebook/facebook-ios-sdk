@@ -179,97 +179,97 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "worldhelloworld", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldhellworld", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
 
     rule.operator = .notContains
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldhelloworld", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "WorldHelloWorld", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "worldhellworld", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
 
     rule.operator = .startsWith
     XCTAssertTrue(
       rule.isMatched(withStringValue: "helloworld", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "HelloWorld", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldhelloworld", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
 
     rule.operator = .caseInsensitiveContains
     XCTAssertTrue(
       rule.isMatched(withStringValue: "worldHELLOworld", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldhellworld", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
 
     rule.operator = .caseInsensitiveNotContains
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldHELLOworld", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "worldHELLworld", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
 
     rule.operator = .caseInsensitiveStartsWith
     XCTAssertTrue(
       rule.isMatched(withStringValue: "HELLOworld", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "worldHELLOworld", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
 
     rule.operator = .equal
     XCTAssertTrue(
       rule.isMatched(withStringValue: "hello", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "Hello", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "hellw", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
 
     rule.operator = .notEqual
     XCTAssertFalse(
       rule.isMatched(withStringValue: "hello", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "Hello", numericalValue: nil),
-      "Shoule not expect parameter matched with the value"
+      "Should not expect parameter matched with the value"
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "hellw", numericalValue: nil),
-      "Shoule expect parameter matched with the value"
+      "Should expect parameter matched with the value"
     )
   }
 
@@ -283,57 +283,57 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: 90),
-      "Shoule expect parameter matched with value"
+      "Should expect parameter matched with value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: nil, numericalValue: 100),
-      "Shoule not expect parameter matched with value"
+      "Should not expect parameter matched with value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: nil, numericalValue: 101),
-      "Shoule not expect parameter matched with value"
+      "Should not expect parameter matched with value"
     )
 
     rule.operator = .lessThanOrEqual
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: 99),
-      "Shoule expect parameter matched with value"
+      "Should expect parameter matched with value"
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: 100),
-      "Shoule expect parameter matched with value"
+      "Should expect parameter matched with value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: nil, numericalValue: 100.1),
-      "Shoule not expect parameter matched with value"
+      "Should not expect parameter matched with value"
     )
 
     rule.operator = .greaterThan
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: 101.5),
-      "Shoule expect parameter matched with value"
+      "Should expect parameter matched with value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: nil, numericalValue: 100),
-      "Shoule not expect parameter matched with value"
+      "Should not expect parameter matched with value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: nil, numericalValue: 99),
-      "Shoule not expect parameter matched with value"
+      "Should not expect parameter matched with value"
     )
 
     rule.operator = .greaterThanOrEqual
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: 101.5),
-      "Shoule expect parameter matched with value"
+      "Should expect parameter matched with value"
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: nil, numericalValue: 100),
-      "Shoule expect parameter matched with value"
+      "Should expect parameter matched with value"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: nil, numericalValue: 99),
-      "Shoule not expect parameter matched with value"
+      "Should not expect parameter matched with value"
     )
   }
 
@@ -347,29 +347,29 @@ final class AEMAdvertiserSingleEntryRuleTests: XCTestCase {
     )
     XCTAssertTrue(
       rule.isMatched(withStringValue: "aaa", numericalValue: nil),
-      "Shoule expect parameter matched with item in the array"
+      "Should expect parameter matched with item in the array"
     )
     XCTAssertFalse(
       rule.isMatched(withStringValue: "bbb", numericalValue: nil),
-      "Shoule not expect parameter matched with item in the array"
+      "Should not expect parameter matched with item in the array"
     )
 
     rule.operator = .caseInsensitiveIsAny
     XCTAssertTrue(
       rule.isMatched(withStringValue: "abc", numericalValue: nil),
-      "Shoule expect parameter matched with item in the array"
+      "Should expect parameter matched with item in the array"
     )
 
     rule.operator = .isNotAny
     XCTAssertTrue(
       rule.isMatched(withStringValue: "xxxx", numericalValue: nil),
-      "Shoule expect parameter matched with item in the array"
+      "Should expect parameter matched with item in the array"
     )
 
     rule.operator = .caseInsensitiveIsNotAny
     XCTAssertTrue(
       rule.isMatched(withStringValue: "ab", numericalValue: nil),
-      "Shoule expect parameter matched with item in the array"
+      "Should expect parameter matched with item in the array"
     )
   }
 
