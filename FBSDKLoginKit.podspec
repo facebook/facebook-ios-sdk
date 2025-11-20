@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKLoginKit'
-  s.version      = '18.0.1'
+  s.version      = '18.0.2'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API'
 
   s.description  = <<-DESC
@@ -49,7 +49,7 @@ Pod::Spec.new do |s|
 
   s.source = {
     http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Dynamic.xcframework.zip",
-    sha1: '2e5810ca112f28576be8faa6d5bc177160ff6663'
+    sha1: 'ef0c48daa6157fec5f2373458d58cb1396557c71'
   }
   s.vendored_frameworks = 'XCFrameworks/FBSDKLoginKit.xcframework'
   s.dependency "FBSDKCoreKit", "#{s.version}"
