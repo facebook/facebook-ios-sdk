@@ -29,8 +29,8 @@ final class LoginConfigurationTests: XCTestCase {
     )
     XCTAssertEqual(
       configuration.appSwitch,
-      .disabled,
-      "App switch should default to disabled when unspecified (opt-in model)"
+      .enabled,
+      "App switch should default to enabled when unspecified (opt-out model)"
     )
     XCTAssertNotNil(
       configuration.nonce,
@@ -302,7 +302,7 @@ final class LoginConfigurationTests: XCTestCase {
     )
   }
 
-  func testAppSwitchDefaultsToDisabledWhenNotSpecified() {
+  func testAppSwitchDefaultsToEnabledWhenNotSpecified() {
     let configurations = [
       LoginConfiguration(),
       LoginConfiguration(tracking: .enabled),
@@ -318,8 +318,8 @@ final class LoginConfigurationTests: XCTestCase {
     configurations.forEach { configuration in
       XCTAssertEqual(
         configuration?.appSwitch,
-        .disabled,
-        "App switch should default to disabled when not explicitly specified (opt-in model)"
+        .enabled,
+        "App switch should default to enabled when not explicitly specified (opt-out model)"
       )
     }
   }

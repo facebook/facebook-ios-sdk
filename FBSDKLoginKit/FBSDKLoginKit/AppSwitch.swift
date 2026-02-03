@@ -10,10 +10,10 @@
 /// App switch allows users to switch to the Facebook app for authentication if installed.
 @objc(FBSDKAppSwitch)
 public enum AppSwitch: UInt {
-  /// Do not use app switch. Use browser-based login (Safari View Controller). This is the default.
+  /// Do not use app switch. Use browser-based login (Safari View Controller).
   case disabled
 
   /// Use app switch if the Facebook app is installed.
-  /// This allows users to switch to the Facebook app for authentication.
+  /// This allows users to switch to the Facebook app for authentication. This is the default.
   case enabled
 }

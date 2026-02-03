@@ -21,7 +21,7 @@ public final class LoginConfiguration: NSObject {
   /// The tracking  preference. Defaults to `.enabled`.
   public let tracking: LoginTracking
 
-  /// The app switch behavior. Defaults to `.disabled`.
+  /// The app switch behavior. Defaults to `.enabled`.
   public let appSwitch: AppSwitch
 
   /// The requested permissions for the login attempt. Defaults to an empty set.
@@ -115,7 +115,7 @@ public final class LoginConfiguration: NSObject {
       nonce: nonce,
       messengerPageId: messengerPageId,
       authType: authType,
-      appSwitch: .disabled,
+      appSwitch: .enabled,
       codeVerifier: CodeVerifier()
     )
   }
@@ -308,7 +308,7 @@ public final class LoginConfiguration: NSObject {
    Creation of the configuration will fail if the nonce is invalid.
    @param messengerPageId the associated page id  to use for a login attempt.
    @param authType auth_type param to use for login.
-   @param appSwitch the app switch behavior to use for a login attempt. Defaults to `.disabled`.
+   @param appSwitch the app switch behavior to use for a login attempt. Defaults to `.enabled`.
    @param codeVerifier The code verifier used in the PKCE process.
    */
   @objc(initWithPermissions:tracking:nonce:messengerPageId:authType:appSwitch:codeVerifier:)
@@ -438,7 +438,7 @@ public final class LoginConfiguration: NSObject {
     Creation of the configuration will fail if the nonce is invalid. Defaults to a `UUID` string.
    - parameter messengerPageId: An optional page id to use for a login attempt. Defaults to `nil`
    - parameter authType: An optional auth type to use for a login attempt. Defaults to `.rerequest`
-   - parameter appSwitch: The app switch behavior to use for a login attempt. Defaults to `.disabled`
+   - parameter appSwitch: The app switch behavior to use for a login attempt. Defaults to `.enabled`
    - parameter codeVerifier: An optional codeVerifier used for the PKCE process.
    If not provided, this will be randomly generated.
    */
@@ -448,7 +448,7 @@ public final class LoginConfiguration: NSObject {
     nonce: String = UUID().uuidString,
     messengerPageId: String? = nil,
     authType: LoginAuthType? = .rerequest,
-    appSwitch: AppSwitch = .disabled,
+    appSwitch: AppSwitch = .enabled,
     codeVerifier: CodeVerifier = CodeVerifier()
   ) {
     self.init(
