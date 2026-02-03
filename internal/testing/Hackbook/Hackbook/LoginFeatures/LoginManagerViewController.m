@@ -11,6 +11,7 @@
 @property (nonatomic, strong) IBOutlet UIButton *loginButton;
 @property (nonatomic, strong) IBOutlet UILabel *attLabel;
 @property (nonatomic, strong) IBOutlet UISwitch *trackingLimitedSwitch;
+@property (nonatomic, strong) IBOutlet UISwitch *fastAppSwitchSwitch;
 @property (nonatomic, strong) IBOutlet UITextField *nonceTextField;
 @property (nonatomic, strong) IBOutlet UIButton *defaultAudienceButton;
 @property (nonatomic) FBSDKDefaultAudience defaultAudience;
@@ -26,13 +27,18 @@
   [self updateLoginButton];
 
   [self configureDefaultAudienceButton];
-  
+
   [self setATTLabelText];
 }
 
 - (FBSDKLoginTracking)tracking
 {
   return self.trackingLimitedSwitch.isOn ? FBSDKLoginTrackingLimited : FBSDKLoginTrackingEnabled;
+}
+
+- (FBSDKAppSwitch)appSwitch
+{
+  return self.fastAppSwitchSwitch.isOn ? FBSDKAppSwitchEnabled : FBSDKAppSwitchDisabled;
 }
 
 - (NSString *)nonce
@@ -45,10 +51,16 @@
   if (self.nonce && self.nonce.length > 0) {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.selectedPermissions
                                                        tracking:self.tracking
-                                                          nonce:self.nonce];
+                                                          nonce:self.nonce
+                                                  messengerPageId:nil
+                                                       authType:FBSDKLoginAuthTypeRerequest
+                                                      appSwitch:self.appSwitch];
   } else {
     return [[FBSDKLoginConfiguration alloc] initWithPermissions:self.selectedPermissions
-                                                       tracking:self.tracking];
+                                                       tracking:self.tracking
+                                                  messengerPageId:nil
+                                                       authType:FBSDKLoginAuthTypeRerequest
+                                                      appSwitch:self.appSwitch];
   }
 }
 
@@ -132,7 +144,7 @@
     // for the Authorized status
     attLabelText = @"Authorized";
   }
-  
+
   [self.attLabel setText:[NSString stringWithFormat:@"ATT Status: %@", attLabelText]];
 }
 
