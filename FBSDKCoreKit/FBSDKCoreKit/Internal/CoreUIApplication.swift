@@ -18,10 +18,11 @@ import UIKit
 @objc public final class CoreUIApplication: NSObject {
   public static let shared: _InternalURLOpener = {
     #if DEBUG
-    TestUIApplication()
-    #else
-    UIApplication.shared
+    if NSClassFromString("XCTestCase") != nil {
+      return TestUIApplication()
+    }
     #endif
+    return UIApplication.shared
   }()
 }
 
