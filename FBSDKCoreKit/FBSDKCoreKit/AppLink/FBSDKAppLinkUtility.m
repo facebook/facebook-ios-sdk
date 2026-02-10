@@ -186,6 +186,14 @@ static BOOL _isConfigured = NO;
   [self validateConfiguration];
   NSAssert(NSThread.isMainThread, @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
 
+  // Only invoked for the first time being installed
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  if ([defaults boolForKey:@"fbsdk_ddl_has_launched_before"]) {
+    // not the first time launching the app, give up
+    return;
+  }
+  [defaults setBool:YES forKey:@"fbsdk_ddl_has_launched_before"]; // to prevent the future calls
+
   [self.appEventsConfigurationProvider loadAppEventsConfigurationWithBlock:^{
     if ([self.appEventsDropDeterminer shouldDropAppEvents]) {
       if (handler) {
@@ -193,18 +201,6 @@ static BOOL _isConfigured = NO;
         handler(nil, error);
       }
       return;
-    }
-
-    if (@available(iOS 14.5, *)) {
-      NSString *defaultAdvertiserID = @"00000000-0000-0000-0000-000000000000";
-      BOOL isAdvertiserIDMissingOrDefault = !self.advertiserIDProvider.advertiserID
-      || [self.advertiserIDProvider.advertiserID isEqualToString:defaultAdvertiserID];
-
-      if (handler && isAdvertiserIDMissingOrDefault) {
-        NSError *error = [[NSError alloc] initWithDomain:@"ATTrackingManager.AuthorizationStatus must be `authorized` for deferred deep linking to work. Read more at: https://developer.apple.com/documentation/apptrackingtransparency" code:-1 userInfo:nil];
-        handler(nil, error);
-        return;
-      }
     }
 
     // Deferred app links are only currently used for engagement ads, thus we consider the app to be an advertising one.
