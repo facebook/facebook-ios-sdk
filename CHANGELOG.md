@@ -10,7 +10,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.2...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.3...HEAD)
+
+## 18.0.3
+- Added anonymous deferral deeplink support
+
+[2026-02-10](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.3) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.2...v18.0.3)
 
 ## 18.0.2
 - Reintroduced fast app switching capabilities
