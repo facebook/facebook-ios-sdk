@@ -12,7 +12,7 @@ import Foundation
  Main completion handling of any Gaming Service (Friend Finder, Image/Video Upload).
 
  @param success whether the call to the service was considered a success.
- @param error the error that occured during the service call, if any.
+ @param error the error that occurred during the service call, if any.
  */
 public typealias GamingServiceCompletionHandler = (_ success: Bool, _ error: Error?) -> Void
 public typealias FBSDKGamingServiceCompletionHandler = GamingServiceCompletionHandler
@@ -22,7 +22,7 @@ public typealias FBSDKGamingServiceCompletionHandler = GamingServiceCompletionHa
 
  @param success whether the call to the service was considered a success.
  @param result the result that was returned by the service, if any.
- @param error the error that occured during the service call, if any.
+ @param error the error that occurred during the service call, if any.
  */
 public typealias GamingServiceResultCompletion = (_ success: Bool, _ result: [String: Any]?, _ error: Error?) -> Void
 public typealias FBSDKGamingServiceResultCompletion = GamingServiceResultCompletion

@@ -12,14 +12,14 @@ import Foundation
 public protocol GamingPayloadDelegate: NSObjectProtocol {
   /**
    Delegate method will be triggered when a `GamingPayloadObserver` parses a url with a payload and game request ID
-   @param payload The payload recieved in the url
-   @param gameRequestID The game request ID recieved in the url
+   @param payload The payload received in the url
+   @param gameRequestID The game request ID received in the url
    */
   @objc optional func parsedGameRequestURLContaining(_ payload: GamingPayload, gameRequestID: String)
 
   /**
    Delegate method will be triggered when a `GamingPayloadObserver` parses a gaming context url with a payload and game context token ID. The current gaming context will be update with the context ID.
-   @param payload The payload recieved in the url
+   @param payload The payload received in the url
    */
   @objc optional func parsedGamingContextURLContaining(_ payload: GamingPayload)
 

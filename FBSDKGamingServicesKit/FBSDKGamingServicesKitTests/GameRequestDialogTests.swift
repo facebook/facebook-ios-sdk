@@ -260,7 +260,7 @@ final class GameRequestDialogTests: XCTestCase {
     let expectedError = TestSDKError(
       type: .general,
       code: CoreError.errorBridgeAPIInterruption.rawValue,
-      message: "Error occured while interacting with Gaming Services, Failed to open bridge.",
+      message: "Error occurred while interacting with Gaming Services, Failed to open bridge.",
       underlyingError: error
     )
     let capturedError = try XCTUnwrap(
