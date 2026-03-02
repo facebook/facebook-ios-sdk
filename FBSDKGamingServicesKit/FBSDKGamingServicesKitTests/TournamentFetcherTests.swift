@@ -95,7 +95,7 @@ final class TournamentFetcherTests: XCTestCase {
       switch result {
       case let .failure(error):
         guard case .invalidAuthToken = error else {
-          return XCTFail("Was expecting invalid auth token error, instead recieved:\(error)")
+          return XCTFail("Was expecting invalid auth token error, instead received:\(error)")
         }
 
       case .success:
@@ -115,7 +115,7 @@ final class TournamentFetcherTests: XCTestCase {
       switch result {
       case let .failure(error):
         guard case .invalidAccessToken = error else {
-          return XCTFail("Was expecting invalid access token error, instead recieved:\(error)")
+          return XCTFail("Was expecting invalid access token error, instead received:\(error)")
         }
 
       case .success:

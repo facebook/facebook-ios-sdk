@@ -47,11 +47,11 @@ public final class GamingPayloadObserver: NSObject {
   private func parseURLForPayloadEntryData(appLinkUrl: AppLinkURL) -> [String: String]? {
     let expectedParameters = Keys.allCases.map { $0.rawValue }
     let urlParameters = appLinkUrl.appLinkExtras
-    let recievedParameters = urlParameters?.filter { expectedParameters.contains($0.key) }
-    let containsPayload = recievedParameters?[Keys.gamingPayload.rawValue] != nil
+    let receivedParameters = urlParameters?.filter { expectedParameters.contains($0.key) }
+    let containsPayload = receivedParameters?[Keys.gamingPayload.rawValue] != nil
 
     if containsPayload, recievedParameters?.keys.count ?? 0 > 1 {
-      return recievedParameters as? [String: String]
+      return receivedParameters as? [String: String]
     }
     return [:]
   }
