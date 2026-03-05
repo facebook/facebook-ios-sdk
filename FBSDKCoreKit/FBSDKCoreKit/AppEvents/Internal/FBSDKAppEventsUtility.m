@@ -24,6 +24,7 @@
 @interface FBSDKAppEventsUtility ()
 
 @property (nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
+@property (nullable, nonatomic) NSString *cachedAdvertiserIdentifierString;
 
 @end
 
@@ -151,9 +152,18 @@ static FBSDKAppEventsUtility *_shared;
     }
   }
 
+  // Return cached advertiser ID string if available to avoid expensive IPC on the main thread.
+  // The advertising identifier is stable for the lifetime of the app process and only changes
+  // when the user resets it via Settings, so caching per-session is safe.
+  if (self.cachedAdvertiserIdentifierString) {
+    return self.cachedAdvertiserIdentifierString;
+  }
+
   ASIdentifierManager *manager = [self _asIdentifierManagerWithShouldUseCachedManager:shouldUseCachedManager
                                                              dynamicFrameworkResolver:dynamicFrameworkResolver];
-  return manager.advertisingIdentifier.UUIDString;
+  NSString *advertiserID = manager.advertisingIdentifier.UUIDString;
+  self.cachedAdvertiserIdentifierString = advertiserID;
+  return advertiserID;
 }
 
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)shouldUseCachedManager
