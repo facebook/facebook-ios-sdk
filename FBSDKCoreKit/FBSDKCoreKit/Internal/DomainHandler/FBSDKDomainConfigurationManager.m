@@ -181,6 +181,7 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
 - (void)_didProcessConfigurationFromNetwork:(FBSDKDomainConfiguration *)domainConfiguration
                                       error:(NSError *)error
 {
+  NSArray<FBSDKDomainConfigurationBlock> *completionBlocksCopy;
   @synchronized(self) {
     if (error) {
       // Only set the error if we don't have previously fetched app settings.
@@ -207,12 +208,14 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
       [self.dataStore fb_setObject:data forKey:DOMAIN_CONFIGURATION_USER_DEFAULTS_KEY];
     }
     _loadingDomainConfiguration = NO;
+
+    completionBlocksCopy = [_completionBlocks copy];
+    [_completionBlocks removeAllObjects];
   }
 
-  for (FBSDKDomainConfigurationBlock completionBlock in _completionBlocks) {
+  for (FBSDKDomainConfigurationBlock completionBlock in completionBlocksCopy) {
     completionBlock();
   }
-  [_completionBlocks removeAllObjects];
 }
 
 - (BOOL)_domainConfigurationTimestampIsValid:(NSDate *)timestamp
