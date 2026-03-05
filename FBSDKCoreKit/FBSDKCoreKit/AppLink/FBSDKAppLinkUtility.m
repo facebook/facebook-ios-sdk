@@ -190,6 +190,9 @@ static BOOL _isConfigured = NO;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   if ([defaults boolForKey:@"fbsdk_ddl_has_launched_before"]) {
     // not the first time launching the app, give up
+    if (handler) {
+      handler(nil, nil);
+    }
     return;
   }
   [defaults setBool:YES forKey:@"fbsdk_ddl_has_launched_before"]; // to prevent the future calls
