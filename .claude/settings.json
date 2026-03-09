@@ -1,0 +1,32 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/format-swift.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-header.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/lint-swift.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-regenerate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
