@@ -27,7 +27,9 @@ namespace fbsdk {
   static void *MAllocateMemory(size_t nbytes)
   {
     void *ptr = nullptr;
-    assert(nbytes > 0);
+    if (nbytes == 0) {
+      nbytes = 64;
+    }
   #ifdef __ANDROID__
     ptr = memalign(64, nbytes);
   #else
@@ -75,6 +77,9 @@ namespace fbsdk {
 
     MAT_ALWAYS_INLINE int size(int dim) const
     {
+      if (dim < 0 || dim >= (int)sizes_.size()) {
+        return 0;
+      }
       return sizes_[dim];
     }
 

@@ -146,7 +146,11 @@ namespace fbsdk {
     int input_size = x.size(2);
     int kernel_size = w.size(0);
     int output_size = w.size(2);
-    MTensor y({n_examples, seq_len - kernel_size + 1, output_size});
+    int output_len = seq_len - kernel_size + 1;
+    if (output_len <= 0 || input_size <= 0 || output_size <= 0 || n_examples <= 0) {
+      return MTensor();
+    }
+    MTensor y({n_examples, output_len, output_size});
     MTensor temp_x({kernel_size, input_size});
     MTensor temp_w({kernel_size, input_size});
     const float *x_data = x.data();
@@ -157,7 +161,7 @@ namespace fbsdk {
     float sum;
     for (int n = 0; n < n_examples; n++) {
       for (int o = 0; o < output_size; o++) {
-        for (int i = 0; i < seq_len - kernel_size + 1; i++) {
+        for (int i = 0; i < output_len; i++) {
           for (int m = 0; m < kernel_size; m++) {
             for (int k = 0; k < input_size; k++) {
               temp_x_data[m * input_size + k] = x_data[n * (seq_len * input_size) + (m + i) * input_size + k];
@@ -165,7 +169,7 @@ namespace fbsdk {
             }
           }
           vDSP_dotpr(temp_x_data, 1, temp_w_data, 1, &sum, (size_t)(kernel_size * input_size));
-          y_data[(n * (output_size * (seq_len - kernel_size + 1)) + i * output_size + o)] = sum;
+          y_data[(n * (output_size * output_len) + i * output_size + o)] = sum;
         }
       }
     }
@@ -182,6 +186,9 @@ namespace fbsdk {
     int input_len = x.size(1);
     int n_channel = x.size(2);
     int output_len = input_len - pool_size + 1;
+    if (output_len <= 0 || n_channel <= 0 || n_examples <= 0) {
+      return MTensor();
+    }
     MTensor y({n_examples, output_len, n_channel});
     const float *x_data = x.data();
     float *y_data = y.mutable_data();
@@ -295,17 +302,29 @@ namespace fbsdk {
 
     // conv0
     MTensor c0 = conv1D(embed_x, convs_0_weight); // (1, 126, 32)
+    if (c0.count() == 0) {
+      return MTensor();
+    }
     addmv(c0, conv0b_t);
     relu(c0);
 
     // conv1
     MTensor c1 = conv1D(c0, convs_1_weight); // (1, 124, 64)
+    if (c1.count() == 0) {
+      return MTensor();
+    }
     addmv(c1, conv1b_t);
     relu(c1);
     c1 = maxPool1D(c1, 2); // (1, 123, 64)
+    if (c1.count() == 0) {
+      return MTensor();
+    }
 
     // conv2
     MTensor c2 = conv1D(c1, convs_2_weight); // (1, 121, 64)
+    if (c2.count() == 0) {
+      return MTensor();
+    }
     addmv(c2, conv2b_t);
     relu(c2);
 
