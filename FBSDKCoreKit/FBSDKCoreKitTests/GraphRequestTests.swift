@@ -15,7 +15,7 @@ final class GraphRequestTests: XCTestCase {
 
   let path = "me"
   let parameters = ["fields": ""]
-  let version = "v17.0"
+  let version = "v21.0"
   let prefix = "graph."
   let settings = TestSettings()
   var factory = TestGraphRequestConnectionFactory()
