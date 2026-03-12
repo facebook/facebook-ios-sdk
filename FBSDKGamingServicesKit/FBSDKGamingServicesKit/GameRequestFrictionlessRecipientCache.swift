@@ -16,9 +16,9 @@ final class GameRequestFrictionlessRecipientCache {
   var configuredDependencies: ObjectDependencies?
 
   var defaultDependencies: ObjectDependencies? = .init(
+    accessTokenWallet: AccessToken.self,
     graphRequestFactory: GraphRequestFactory(),
-    notificationCenter: NotificationCenter.default,
-    accessTokenWallet: AccessToken.self
+    notificationCenter: NotificationCenter.default
   )
 
   // Custom implementation of dependency setting to perform additional work
@@ -93,8 +93,8 @@ final class GameRequestFrictionlessRecipientCache {
 
 extension GameRequestFrictionlessRecipientCache: DependentAsObject {
   struct ObjectDependencies {
+    var accessTokenWallet: _AccessTokenProviding.Type
     var graphRequestFactory: GraphRequestFactoryProtocol
     var notificationCenter: NotificationDelivering
-    var accessTokenWallet: _AccessTokenProviding.Type
   }
 }
