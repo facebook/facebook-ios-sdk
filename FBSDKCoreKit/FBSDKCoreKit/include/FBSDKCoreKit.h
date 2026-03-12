@@ -21,6 +21,7 @@
 #import <FBSDKCoreKit/FBSDKAppEventParameterProduct.h>
 #import <FBSDKCoreKit/FBSDKAppEventParameterValue.h>
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#import <FBSDKCoreKit/FBSDKAppOperationalDataType.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfiguration.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfigurationManager.h>
 #import <FBSDKCoreKit/FBSDKAppEventsConfigurationProtocol.h>
