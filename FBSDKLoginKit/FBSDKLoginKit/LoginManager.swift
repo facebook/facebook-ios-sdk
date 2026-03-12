@@ -71,9 +71,7 @@ public final class LoginManager: NSObject {
 
   lazy var defaultDependencies: ObjectDependencies? = {
     let keychainStoreFactory = KeychainStoreFactory()
-    guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
-      fatalError("Unable to find main bundle identifier. Cannot create keychain service identifier")
-    }
+    let bundleIdentifier = Bundle.main.bundleIdentifier ?? "com.facebook.sdk.unknown"
 
     let keychainStore = keychainStoreFactory.createKeychainStore(
       service: "com.facebook.sdk.loginmanager.\(bundleIdentifier)",
