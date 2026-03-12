@@ -177,6 +177,8 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
     completionBlocks = []
   }
 
+  // Intentionally synchronous in DEBUG builds to ensure deterministic execution
+  // order during unit tests. In Release builds, work is dispatched asynchronously.
   private static func dispatchOnQueue(
     _ queue: DispatchQueue,
     block: @escaping (() -> Void)
