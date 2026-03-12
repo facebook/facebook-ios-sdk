@@ -66,7 +66,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
 
   internal func load(withBlock block: @escaping (Bool) -> Void) {
     guard let appID = settings?.appID else {
-      print("App ID is not valid")
+      _Logger.singleShotLogEntry(.developerErrors, logEntry: "App ID is not valid")
       block(false)
       return
     }
@@ -92,7 +92,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
         flags: [],
         useAlternativeDefaultDomainPrefix: false
       ) else {
-        print("Fail to create CAPI Gateway Settings API request")
+        _Logger.singleShotLogEntry(.developerErrors, logEntry: "Fail to create CAPI Gateway Settings API request")
         self.executeBlocks(isEnabled: false)
         self.isLoadingConfig = false
         return
@@ -100,7 +100,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
       graphRequest.start { _, result, error in
         FBSDKAppEventsCAPIManager.dispatchOnQueue(FBSDKAppEventsCAPIManager.serialQueue) {
           if let error = error {
-            print(error.localizedDescription)
+            _Logger.singleShotLogEntry(.developerErrors, logEntry: error.localizedDescription)
             self.executeBlocks(isEnabled: false)
             self.isLoadingConfig = false
             return
@@ -111,7 +111,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
             let data = res["data"] as? [[String: Any]],
             let configuration = data.first
           else {
-            print("CAPI Gateway Settings API response is not a valid json")
+            _Logger.singleShotLogEntry(.developerErrors, logEntry: "CAPI Gateway Settings API response is not a valid json")
             self.executeBlocks(isEnabled: false)
             self.isLoadingConfig = false
             return
@@ -134,7 +134,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
               ofType: NSString.self
             ) as? String
           else {
-            print("CAPI Gateway Settings API response doesn't have valid data")
+            _Logger.singleShotLogEntry(.developerErrors, logEntry: "CAPI Gateway Settings API response doesn't have valid data")
             self.executeBlocks(isEnabled: false)
             self.isLoadingConfig = false
             return
