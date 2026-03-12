@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import CommonCrypto
 import FBSDKCoreKit_Basics
 import Security
 
@@ -120,25 +119,16 @@ final class AuthenticationTokenFactory: AuthenticationTokenCreating {
           return
         }
 
-        let signatureBytesSize = SecKeyGetBlockSize(key)
-        var digest = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
-
-        signedData.withUnsafeBytes { signedBytes in
-          _ = CC_SHA256(signedBytes.baseAddress, UInt32(signedData.count), &digest)
-        }
-
-        let mutableSignatureData = NSMutableData(data: signatureData)
-
-        let status = SecKeyRawVerify(
+        var error: Unmanaged<CFError>?
+        let isValid = SecKeyVerifySignature(
           key,
-          SecPadding.PKCS1SHA256,
-          digest,
-          digest.count,
-          mutableSignatureData.mutableBytes.assumingMemoryBound(to: UInt8.self),
-          signatureBytesSize
+          .rsaSignatureMessagePKCS1v15SHA256,
+          signedData as CFData,
+          signatureData as CFData,
+          &error
         )
 
-        completion(status == errSecSuccess)
+        completion(isValid)
       }
     }
   }
