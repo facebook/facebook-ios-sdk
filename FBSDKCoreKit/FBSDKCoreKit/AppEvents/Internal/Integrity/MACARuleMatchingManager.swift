@@ -10,7 +10,7 @@ import Foundation
 
 @objc(FBSDKMACARuleMatchingManager)
 final class MACARuleMatchingManager: NSObject, MACARuleMatching {
-  private var isEnable = false
+  private var isEnabled = false
   private var macaRules = [String]()
 
   private let keys = [
@@ -38,7 +38,7 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   )
 
   func enable() {
-    guard !isEnable,
+    guard !isEnabled,
           let dependencies = try? getDependencies() else {
       return
     }
@@ -47,7 +47,7 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
       .cachedServerConfiguration()
       .protectedModeRules?["maca_rules"] as? [String] {
       macaRules = macaRulesFromServer
-      isEnable = true
+      isEnabled = true
     }
   }
 
@@ -259,15 +259,13 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   }
 
   @objc func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary? {
-    guard isEnable, let params = params, var res = params.mutableCopy() as? [String: Any]
+    guard isEnabled, let params = params, var res = params.mutableCopy() as? [String: Any]
     else { return params }
 
-    if isEnable {
-      generateInfo(params: &res, event: event)
-      res["cs_maca"] = true
-      res["_audiencePropertyIds"] = getMatchPropertyIDs(params: res)
-      removeGeneratedInfo(params: &res)
-    }
+    generateInfo(params: &res, event: event)
+    res["cs_maca"] = true
+    res["_audiencePropertyIds"] = getMatchPropertyIDs(params: res)
+    removeGeneratedInfo(params: &res)
 
     return res as NSDictionary
   }
