@@ -136,7 +136,9 @@ final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
     if rawResponse == nil {
       let base64Data = !data.isEmpty ? data.base64EncodedString(options: .lineLength64Characters) : ""
       if !base64Data.isEmpty {
+        #if DEBUG
         print("fb_response_invalid_utf8")
+        #endif
       }
     }
 
@@ -191,7 +193,9 @@ final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
          addFormData {
         body.append(withKey: key, formValue: string)
       } else {
+        #if DEBUG
         print("Unsupported attachment:\(String(describing: value)), skipping.")
+        #endif
       }
     }
   }
