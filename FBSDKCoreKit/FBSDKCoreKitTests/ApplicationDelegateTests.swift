@@ -66,6 +66,7 @@ final class ApplicationDelegateTests: XCTestCase {
       refreshDate: nil
     )
     components = TestCoreKitComponents.makeComponents(
+      aemManager: aemManager,
       appEvents: appEvents,
       backgroundEventLogger: backgroundEventLogger,
       defaultDataStore: userDataStore,
@@ -74,8 +75,7 @@ final class ApplicationDelegateTests: XCTestCase {
       notificationCenter: notificationCenter,
       paymentObserver: paymentObserver,
       serverConfigurationProvider: serverConfigurationProvider,
-      settings: settings,
-      aemManager: aemManager
+      settings: settings
     )
     configurator = TestCoreKitConfigurator(components: components)
     _DomainConfiguration.setDefaultDomainInfo()
