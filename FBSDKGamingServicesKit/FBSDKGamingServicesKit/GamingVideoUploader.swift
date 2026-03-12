@@ -112,7 +112,7 @@ public final class GamingVideoUploader: NSObject {
         errorFactory.error(
           code: CoreError.errorAccessTokenRequired.rawValue,
           userInfo: nil,
-          message: "A valid access token is required to upload Images",
+          message: "A valid access token is required to upload Videos",
           underlyingError: nil
         )
       )
