@@ -525,7 +525,7 @@ public final class ApplicationDelegate: NSObject {
       if !AppLinkUtility.isMatchURLScheme("fb\(components.settings.appID ?? "nil")") {
         let warning = "You haven't set the Auto App Link URL scheme: fb<YOUR APP ID>"
         parameters[.schemeWarning] = warning
-        print(warning)
+        _Logger.singleShotLogEntry(.developerErrors, logEntry: warning)
       }
 
       components.appEvents.logInternalEvent(
