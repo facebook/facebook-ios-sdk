@@ -426,7 +426,7 @@ public final class ApplicationDelegate: NSObject {
   }
 
   func applicationWillResignActive(_ notification: Notification) {
-    applicationState = .active
+    applicationState = .inactive
     applicationObservers.allObjects.forEach { observer in
       observer.applicationWillResignActive?(notification.object as? UIApplication)
     }
