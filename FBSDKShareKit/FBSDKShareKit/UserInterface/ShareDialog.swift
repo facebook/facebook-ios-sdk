@@ -122,33 +122,33 @@ public class ShareDialog: NSObject, SharingDialog { // swiftlint:disable:this pr
 
 extension ShareDialog: DependentAsType {
   struct TypeDependencies {
-    var internalURLOpener: ShareInternalURLOpening
-    var internalUtility: InternalUtilityProtocol
-    var settings: SettingsProtocol
-    var shareUtility: (ShareUtilityProtocol & ShareValidating).Type
     var bridgeAPIRequestFactory: BridgeAPIRequestCreating
     var bridgeAPIRequestOpener: BridgeAPIRequestOpening
-    var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol
-    var windowFinder: _WindowFinding
     var errorFactory: ErrorCreating
     var eventLogger: ShareEventLogging
+    var internalURLOpener: ShareInternalURLOpening
+    var internalUtility: InternalUtilityProtocol
     var mediaLibrarySearcher: MediaLibrarySearching
+    var settings: SettingsProtocol
+    var shareUtility: (ShareUtilityProtocol & ShareValidating).Type
+    var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol
+    var windowFinder: _WindowFinding
   }
 
   static var configuredDependencies: TypeDependencies?
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
-    internalURLOpener: ShareUIApplication.shared,
-    internalUtility: InternalUtility.shared,
-    settings: Settings.shared,
-    shareUtility: _ShareUtility.self,
     bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
     bridgeAPIRequestOpener: _BridgeAPI.shared,
-    socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
-    windowFinder: InternalUtility.shared,
     errorFactory: _ErrorFactory(),
     eventLogger: AppEvents.shared,
-    mediaLibrarySearcher: PHImageManager.default()
+    internalURLOpener: ShareUIApplication.shared,
+    internalUtility: InternalUtility.shared,
+    mediaLibrarySearcher: PHImageManager.default(),
+    settings: Settings.shared,
+    shareUtility: _ShareUtility.self,
+    socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
+    windowFinder: InternalUtility.shared
   )
 
   #if DEBUG

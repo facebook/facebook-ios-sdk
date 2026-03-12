@@ -54,17 +54,17 @@ final class ShareDialogTests: XCTestCase {
 
     ShareDialog.setDependencies(
       .init(
-        internalURLOpener: internalURLOpener,
-        internalUtility: internalUtility,
-        settings: settings,
-        shareUtility: TestShareUtility.self,
         bridgeAPIRequestFactory: bridgeAPIRequestFactory,
         bridgeAPIRequestOpener: bridgeAPIRequestOpener,
-        socialComposeViewControllerFactory: socialComposeViewControllerFactory,
-        windowFinder: windowFinder,
         errorFactory: errorFactory,
         eventLogger: eventLogger,
-        mediaLibrarySearcher: mediaLibrarySearcher
+        internalURLOpener: internalURLOpener,
+        internalUtility: internalUtility,
+        mediaLibrarySearcher: mediaLibrarySearcher,
+        settings: settings,
+        shareUtility: TestShareUtility.self,
+        socialComposeViewControllerFactory: socialComposeViewControllerFactory,
+        windowFinder: windowFinder
       )
     )
 
