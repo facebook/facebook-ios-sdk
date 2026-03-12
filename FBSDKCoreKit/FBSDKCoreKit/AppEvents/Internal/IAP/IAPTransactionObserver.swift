@@ -65,7 +65,7 @@ extension IAPTransactionObserver: _TransactionObserving {
     if #available(iOS 15.0, *) {
       startObservingStoreKit2()
     }
-    startObervingStoreKit1()
+    startObservingStoreKit1()
   }
 
   func stopObserving() {
@@ -176,7 +176,7 @@ extension IAPTransactionObserver {
 // MARK: - Store Kit 1
 
 extension IAPTransactionObserver: SKPaymentTransactionObserver {
-  private func startObervingStoreKit1() {
+  private func startObservingStoreKit1() {
     synchronized(self) {
       guard !isObservingStoreKit1Transactions else {
         return
