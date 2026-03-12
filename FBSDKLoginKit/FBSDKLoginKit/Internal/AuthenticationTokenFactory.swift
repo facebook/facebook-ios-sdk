@@ -148,7 +148,11 @@ final class AuthenticationTokenFactory: AuthenticationTokenCreating {
       let status = SecTrustCreateWithCertificates(cert, policy, &trust)
 
       if status == errSecSuccess, let trust = trust {
-        publicKey = SecTrustCopyPublicKey(trust)
+        if #available(iOS 14.0, *) {
+          publicKey = SecTrustCopyKey(trust)
+        } else {
+          publicKey = SecTrustCopyPublicKey(trust)
+        }
       }
 
       completion(publicKey)
