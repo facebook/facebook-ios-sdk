@@ -223,7 +223,12 @@ public final class _WebDialog: NSObject {
     }
 
     if insets.top == 0 {
-      insets.top = UIApplication.shared.statusBarFrame.size.height
+      if #available(iOS 13.0, *),
+         let windowScene = dialogView?.window?.windowScene {
+        insets.top = windowScene.statusBarManager?.statusBarFrame.size.height ?? 0
+      } else {
+        insets.top = UIApplication.shared.statusBarFrame.size.height
+      }
     }
 
     applicationFrame?.origin.x += insets.left
