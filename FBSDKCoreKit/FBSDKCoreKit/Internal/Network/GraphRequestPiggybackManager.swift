@@ -44,10 +44,10 @@ final class GraphRequestPiggybackManager: _GraphRequestPiggybackManaging {
   var configuredDependencies: ObjectDependencies?
 
   var defaultDependencies: ObjectDependencies? = .init(
-    tokenWallet: AccessToken.self,
-    settings: Settings.shared,
+    graphRequestFactory: GraphRequestFactory(),
     serverConfigurationProvider: _ServerConfigurationManager.shared,
-    graphRequestFactory: GraphRequestFactory()
+    settings: Settings.shared,
+    tokenWallet: AccessToken.self
   )
 
   func addPiggybackRequests(_ connection: GraphRequestConnecting) {
@@ -279,9 +279,9 @@ final class GraphRequestPiggybackManager: _GraphRequestPiggybackManaging {
 
 extension GraphRequestPiggybackManager: DependentAsObject {
   struct ObjectDependencies {
-    let tokenWallet: _AccessTokenProviding.Type
-    let settings: SettingsProtocol
-    let serverConfigurationProvider: _ServerConfigurationProviding
     let graphRequestFactory: GraphRequestFactoryProtocol
+    let serverConfigurationProvider: _ServerConfigurationProviding
+    let settings: SettingsProtocol
+    let tokenWallet: _AccessTokenProviding.Type
   }
 }
