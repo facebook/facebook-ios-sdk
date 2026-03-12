@@ -32,8 +32,8 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   var configuredDependencies: ObjectDependencies?
 
   var defaultDependencies: ObjectDependencies? = .init(
-    serverConfigurationProvider: _ServerConfigurationManager.shared,
     deviceInformationProvider: _AppEventsDeviceInfo.shared,
+    serverConfigurationProvider: _ServerConfigurationManager.shared,
     settings: Settings.shared
   )
 
@@ -297,8 +297,8 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
 
 extension MACARuleMatchingManager: DependentAsObject {
   struct ObjectDependencies {
-    var serverConfigurationProvider: _ServerConfigurationProviding
     var deviceInformationProvider: _DeviceInformationProviding
+    var serverConfigurationProvider: _ServerConfigurationProviding
     var settings: SettingsProtocol
   }
 }
