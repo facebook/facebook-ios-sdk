@@ -138,7 +138,7 @@ public final class AuthenticationTokenClaims: NSObject {
           let dependencies = try? AuthenticationTokenClaims.getDependencies(),
           let audience = claimsDictionary[Keys.aud] as? String,
           audience == dependencies.settings.appID,
-          // Validate expireation
+          // Validate expiration
           let expiration = claimsDictionary[Keys.exp] as? Double,
           expiration > currentTime,
           // Validate 'issued at' timestamp
