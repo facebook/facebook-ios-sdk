@@ -88,11 +88,13 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
 - (void)emitToNSLog
 {
   if (_active) {
-    for (NSString *key in g_stringsToReplace.keyEnumerator) {
-      [_internalContents replaceOccurrencesOfString:key
-                                         withString:g_stringsToReplace[key]
-                                            options:NSLiteralSearch
-                                              range:NSMakeRange(0, _internalContents.length)];
+    @synchronized([self class]) {
+      for (NSString *key in g_stringsToReplace.keyEnumerator) {
+        [_internalContents replaceOccurrencesOfString:key
+                                           withString:g_stringsToReplace[key]
+                                              options:NSLiteralSearch
+                                                range:NSMakeRange(0, _internalContents.length)];
+      }
     }
 
     // Xcode 4.4 hangs on extremely long NSLog output (http://openradar.appspot.com/11972490).  Truncate if needed.
@@ -145,12 +147,18 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
     // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
     // we send in as an object, the dictionary will try to copy it.
     NSNumber *tagAsNumber = @((unsigned long)(__bridge void *)timestampTag);
-    NSNumber *startTimeNumber = g_startTimesWithTags[tagAsNumber];
+    NSNumber *startTimeNumber;
+
+    @synchronized(self) {
+      startTimeNumber = g_startTimesWithTags[tagAsNumber];
+      if (startTimeNumber != nil) {
+        [g_startTimesWithTags removeObjectForKey:tagAsNumber]; // served its purpose, remove
+      }
+    }
 
     // Only log if there's been an associated start time.
     if (startTimeNumber != nil) {
       uint64_t elapsed = [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds] - startTimeNumber.unsignedLongLongValue;
-      [g_startTimesWithTags removeObjectForKey:tagAsNumber]; // served its purpose, remove
 
       // Log string is appended with "%d msec", with nothing intervening.  This gives the most control to the caller.
       logString = [NSString stringWithFormat:@"%@%llu msec", logString, elapsed];
@@ -164,21 +172,23 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
                     withTag:(NSObject *)timestampTag
 {
   if ([FBSDKSettings.sharedSettings.loggingBehaviors containsObject:loggingBehavior]) {
-    if (!g_startTimesWithTags) {
-      g_startTimesWithTags = [NSMutableDictionary new];
+    @synchronized(self) {
+      if (!g_startTimesWithTags) {
+        g_startTimesWithTags = [NSMutableDictionary new];
+      }
+
+      if (g_startTimesWithTags.count >= 1000) {
+        [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:
+         @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong."];
+      }
+
+      uint64_t currTime = [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds];
+
+      // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
+      // we send in as an object, the dictionary will try to copy it.
+      unsigned long tagAsNumber = (unsigned long)(__bridge void *)timestampTag;
+      [FBSDKTypeUtility dictionary:g_startTimesWithTags setObject:@(currTime) forKey:@(tagAsNumber)];
     }
-
-    if (g_startTimesWithTags.count >= 1000) {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:
-       @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong."];
-    }
-
-    uint64_t currTime = [FBSDKInternalUtility.sharedUtility currentTimeInMilliseconds];
-
-    // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
-    // we send in as an object, the dictionary will try to copy it.
-    unsigned long tagAsNumber = (unsigned long)(__bridge void *)timestampTag;
-    [FBSDKTypeUtility dictionary:g_startTimesWithTags setObject:@(currTime) forKey:@(tagAsNumber)];
   }
 }
 
@@ -188,11 +198,13 @@ static NSMutableDictionary<NSNumber *, id> *g_startTimesWithTags = nil;
   // Strings sent in here never get cleaned up, but that's OK, don't ever expect too many.
 
   if (FBSDKSettings.sharedSettings.loggingBehaviors.count > 0) { // otherwise there's no logging.
-    if (!g_stringsToReplace) {
-      g_stringsToReplace = [NSMutableDictionary new];
-    }
+    @synchronized(self) {
+      if (!g_stringsToReplace) {
+        g_stringsToReplace = [NSMutableDictionary new];
+      }
 
-    [g_stringsToReplace setValue:replaceWith forKey:replace];
+      [g_stringsToReplace setValue:replaceWith forKey:replace];
+    }
   }
 }
 
