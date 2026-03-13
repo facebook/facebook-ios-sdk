@@ -82,7 +82,10 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    */
   public var isAutoLogAppEventsEnabled: Bool {
     get { checkAutoLogAppEventsEnabled() }
-    set { isAutoLogAppEventsEnabledLocally = newValue }
+    set {
+      _isAutoLogAppEventsExplicitlySet = true
+      isAutoLogAppEventsEnabledLocally = newValue
+    }
   }
 
   /**
@@ -97,6 +100,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   // swiftlint:disable:next identifier_name discouraged_optional_boolean
   internal var _isAutoLogAppEventsEnabledLocally: Bool?
+  internal var _isAutoLogAppEventsExplicitlySet = false
 
   /**
    Controls the `fb_codeless_debug` logging event.
@@ -356,8 +360,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     get { advertisingTrackingStatus == .allowed }
 
     @available(
-      *,
-      deprecated,
+      iOS,
+      deprecated: 17.0,
       message: """
         The setAdvertiserTrackingEnabled flag is not used for FBSDK v17+ on iOS 17+ \
         as the FBSDK v17+ now relies on ATTrackingManager.trackingAuthorizationStatus.
