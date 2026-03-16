@@ -13,6 +13,11 @@ import Social
 import UIKit
 
 final class TestSocialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol {
+  var stubbedCanMakeSocialComposeViewController = false
+  var canMakeSocialComposeViewController: Bool {
+    stubbedCanMakeSocialComposeViewController
+  }
+
   var stubbedSocialComposeViewController: SLComposeViewController?
 
   func makeSocialComposeViewController() -> SLComposeViewController {

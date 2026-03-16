@@ -307,7 +307,10 @@ extension ShareDialog {
   }
 
   private var canShowShareSheet: Bool {
-    Self.internalUtility?.isFacebookAppInstalled ?? false
+    guard Self.internalUtility?.isFacebookAppInstalled ?? false,
+          let dependencies = try? Self.getDependencies()
+    else { return false }
+    return dependencies.socialComposeViewControllerFactory.canMakeSocialComposeViewController
   }
 
   private var canAttributeThroughShareSheet: Bool {

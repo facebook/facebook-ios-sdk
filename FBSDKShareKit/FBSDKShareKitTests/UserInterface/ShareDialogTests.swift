@@ -620,6 +620,7 @@ final class ShareDialogTests: XCTestCase {
     content.quote = "a quote"
     dialog.shareContent = content
     internalUtility.isFacebookAppInstalled = true
+    socialComposeViewControllerFactory.stubbedCanMakeSocialComposeViewController = true
 
     internalURLOpener.canOpenURL = true
     settings.appID = "appID"
@@ -638,6 +639,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testPassingValidationForLinkQuoteWithValidShareExtensionVersion() {
     internalUtility.isFacebookAppInstalled = true
+    socialComposeViewControllerFactory.stubbedCanMakeSocialComposeViewController = true
 
     validate(
       shareContent: ShareModelTestUtility.linkContent,
@@ -661,6 +663,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testThatValidateWithErrorReturnsTrueForMMPIfAValidShareExtensionVersionIsAvailable() {
     internalUtility.isFacebookAppInstalled = true
+    socialComposeViewControllerFactory.stubbedCanMakeSocialComposeViewController = true
 
     validate(
       shareContent: ShareModelTestUtility.mediaContent,
