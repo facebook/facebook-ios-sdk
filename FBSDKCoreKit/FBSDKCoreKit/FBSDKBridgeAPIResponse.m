@@ -90,7 +90,7 @@
   NSDictionary<NSString *, NSString *> *const queryParameters = [FBSDKBasicUtility dictionaryWithQueryString:responseURL.query];
   id<FBSDKBridgeAPIProtocol> protocol = request.protocol;
   BOOL cancelled = NO;
-  NSError *error;
+  NSError *error = nil;
   NSDictionary<NSString *, id> *responseParameters = [protocol responseParametersForActionID:request.actionID
                                                                              queryParameters:queryParameters
                                                                                    cancelled:&cancelled
