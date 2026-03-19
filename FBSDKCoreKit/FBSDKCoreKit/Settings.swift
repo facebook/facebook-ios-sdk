@@ -410,6 +410,12 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   }
 
   private var _advertisingTrackingStatusFromATT: AdvertisingTrackingStatus {
+    #if targetEnvironment(macCatalyst)
+    // ATTrackingManager is unavailable on Mac Catalyst and always
+    // returns .notDetermined. Treat Catalyst as tracking-allowed
+    // since ATT does not apply on macOS.
+    return .allowed
+    #else
     var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
     if #available(iOS 14.0, *) {
       let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
@@ -425,6 +431,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
       }
     }
     return advertisingTrackingStatus
+    #endif
   }
 
   private lazy var _advertisingTrackingStatus: AdvertisingTrackingStatus = {
