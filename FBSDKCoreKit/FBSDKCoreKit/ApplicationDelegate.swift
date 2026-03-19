@@ -161,7 +161,6 @@ public final class ApplicationDelegate: NSObject {
   }
 
   private func logInitialization() {
-    components.settings.logWarnings()
     components.settings.logIfSDKSettingsChanged()
     components.settings.recordInstall()
   }

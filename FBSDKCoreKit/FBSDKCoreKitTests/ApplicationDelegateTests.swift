@@ -221,11 +221,6 @@ final class ApplicationDelegateTests: XCTestCase {
   func testInitializingSdkPerformsSettingsLogging() {
     delegate.initializeSDK()
     XCTAssertEqual(
-      settings.logWarningsCallCount,
-      1,
-      "Should have settings log warnings upon initialization"
-    )
-    XCTAssertEqual(
       settings.logIfSDKSettingsChangedCallCount,
       1,
       "Should have settings log if there were changes upon initialization"

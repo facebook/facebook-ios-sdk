@@ -21,7 +21,6 @@ public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var userAgentSuffix: String?
   public var displayName: String?
   public var facebookDomainPart: String?
-  public var logWarningsCallCount = 0
   public var logIfSDKSettingsChangedCallCount = 0
   public var recordInstallCallCount = 0
   public var appURLSchemeSuffix: String?
@@ -47,10 +46,6 @@ public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public static var loggingBehaviors = Set<LoggingBehavior>()
   public var persistableDataProcessingOptions: [String: Any]?
   public var isDomainErrorEnabled = true
-
-  public func logWarnings() {
-    logWarningsCallCount += 1
-  }
 
   public func logIfSDKSettingsChanged() {
     logIfSDKSettingsChangedCallCount += 1
