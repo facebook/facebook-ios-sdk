@@ -621,7 +621,15 @@ extension ShareDialog {
         if let postID = response.responseParameters?[ShareBridgeAPI.PostIDKey.results] {
           results[ShareBridgeAPI.PostIDKey.results] = postID
         }
-        invokeDelegateDidComplete(results: results)
+
+        // If there is no explicit completion gesture indicating success and no
+        // post ID in the results, treat as cancellation. The Facebook app may
+        // not send completionGesture:"cancel" in all cancellation scenarios.
+        if completionGesture == nil, results.isEmpty {
+          invokeDelegateDidCancel()
+        } else {
+          invokeDelegateDidComplete(results: results)
+        }
       }
 
       dependencies.internalUtility.unregisterTransientObject(self)
