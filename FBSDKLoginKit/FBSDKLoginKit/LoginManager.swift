@@ -497,6 +497,12 @@ public final class LoginManager: NSObject {
     dependencies.authenticationTokenWallet.current = parameters.authenticationToken
     dependencies.accessTokenWallet.current = loginResult?.token
     dependencies.profileProvider.current = parameters.profile
+
+    // Initialize BackgroundRefreshManager when a Limited Login session is established.
+    // This ensures the foreground notification observer is registered for auto-refresh.
+    if hasNewAuthenticationToken, !hasNewOrUpdatedAccessToken {
+      _ = BackgroundRefreshManager.shared
+    }
   }
 
   // Returns an error if a stored challenge cannot be obtained from the completion parameters
