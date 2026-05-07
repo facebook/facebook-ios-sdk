@@ -150,19 +150,29 @@ extension LoginManager {
     existingPermissions: Set<String>,
     completion: @escaping (Profile?, Error?) -> Void
   ) {
-    let refresher = LimitedLoginRefresher()
-    refresher.refresh(
-      existingToken: existingToken,
-      existingUserID: existingUserID,
-      scopes: Array(existingPermissions)
-    ) { result in
-      switch result {
-      case let .success(profile):
-        completion(profile, nil)
-      case let .failure(error):
-        completion(nil, error)
+    let retryHandler = RefreshRetryHandler()
+    retryHandler.executeWithRetry(
+      operation: { attemptCompletion in
+        let refresher = LimitedLoginRefresher()
+        refresher.refresh(
+          existingToken: existingToken,
+          existingUserID: existingUserID,
+          scopes: Array(existingPermissions)
+        ) { result in
+          attemptCompletion(result)
+          _ = refresher // prevent deallocation during async operation
+        }
+      },
+      completion: { result in
+        switch result {
+        case let .success(profile):
+          completion(profile, nil)
+        case let .failure(error):
+          completion(nil, error)
+        }
+        _ = retryHandler // prevent deallocation during retry chain
       }
-    }
+    )
   }
 
   private func performExplicitRefresh(

@@ -688,6 +688,22 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     }
   }
 
+  /// Controls whether Limited Login sessions are automatically refreshed when the app enters the foreground.
+  ///
+  /// When enabled, the SDK will attempt a silent background refresh of the Limited Login session
+  /// each time the app comes to the foreground, subject to the interval defined by
+  /// `limitedLoginAutoRefreshInterval`.
+  ///
+  /// The default value is `false`.
+  public var isLimitedLoginAutoRefreshEnabled = false
+
+  /// The minimum interval between automatic Limited Login background refreshes, in seconds.
+  ///
+  /// This value is only used when `isLimitedLoginAutoRefreshEnabled` is `true`.
+  ///
+  /// The default value is `86400.0` (24 hours).
+  public var limitedLoginAutoRefreshInterval: TimeInterval = 86_400.0
+
   /// Controls whether to show domain errors.
   public var isDomainErrorEnabled = true
 

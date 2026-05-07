@@ -28,9 +28,6 @@ final class BackgroundRefreshManager {
 
   static let shared = BackgroundRefreshManager()
 
-  // TODO: Replace with Settings.shared.limitedLoginAutoRefreshInterval when the property is added to FBSDKCoreKit.
-  private static let defaultAutoRefreshInterval: TimeInterval = 86_400.0
-
   private var lastBackgroundRefresh: Date?
   private var isRefreshing = false
   private let lock = NSLock()
@@ -57,7 +54,9 @@ final class BackgroundRefreshManager {
   // MARK: - Refresh Logic
 
   func attemptBackgroundRefresh() {
-    // TODO: Check Settings.shared.isLimitedLoginAutoRefreshEnabled when the property is added to FBSDKCoreKit.
+    guard Settings.shared.isLimitedLoginAutoRefreshEnabled else {
+      return
+    }
 
     // Must be a Limited Login session with an AuthenticationToken
     guard let profile = Profile.current,
@@ -76,7 +75,7 @@ final class BackgroundRefreshManager {
 
     // Enforce minimum interval between background refreshes
     if let lastRefresh = lastBackgroundRefresh,
-       Date().timeIntervalSince(lastRefresh) < Self.defaultAutoRefreshInterval {
+       Date().timeIntervalSince(lastRefresh) < Settings.shared.limitedLoginAutoRefreshInterval {
       lock.unlock()
       return
     }

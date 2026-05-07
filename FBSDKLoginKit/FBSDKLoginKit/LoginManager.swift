@@ -396,6 +396,7 @@ public final class LoginManager: NSObject {
     dependencies.authenticationTokenWallet.current = nil
     dependencies.profileProvider.current = nil
     storeUserTokenNonce(nil)
+    cleanupLimitedLoginRefreshState()
   }
 
   // MARK: - Helpers

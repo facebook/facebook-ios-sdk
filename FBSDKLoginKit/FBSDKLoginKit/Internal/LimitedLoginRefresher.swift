@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import AuthenticationServices
 import FBSDKCoreKit
 import Foundation
 
@@ -23,6 +24,15 @@ struct DefaultAuthenticationTokenClaimsProvider: AuthenticationTokenClaimsProvid
 // MARK: - Core Class
 
 final class LimitedLoginRefresher {
+
+  /// Retained during the async authentication session.
+  @available(iOS 13.0, *)
+  private var silentAuthSession: SilentAuthenticationSession? {
+    get { _silentAuthSession as? SilentAuthenticationSession }
+    set { _silentAuthSession = newValue }
+  }
+
+  private var _silentAuthSession: Any?
 
   func generateRefreshNonce() -> String {
     UUID().uuidString
@@ -72,10 +82,10 @@ final class LimitedLoginRefresher {
     )
   }
 
-  /// Orchestrates the full refresh flow: build URL, parse response, and process token.
+  /// Orchestrates the full refresh flow: build URL, start silent auth session,
+  /// parse response, and process token.
   ///
   /// This is the top-level method called by `LoginManager.performSilentRefresh`.
-  /// The `SilentAuthenticationSession` integration will be wired in a later step.
   ///
   /// - Parameters:
   ///   - existingToken: The current `AuthenticationToken` to refresh.
@@ -90,17 +100,91 @@ final class LimitedLoginRefresher {
     scopes: [String] = [LoginEndpoints.openIDScope],
     completion: @escaping (Result<Profile, LimitedLoginRefreshError>) -> Void
   ) {
-    let nonce = generateRefreshNonce()
+    RefreshDebugLogger.logRefreshStarted()
 
-    guard let url = buildRefreshURL(existingToken: existingToken, nonce: nonce, scopes: scopes) else {
-      completion(.failure(.invalidResponse))
+    // GateKeeper check
+    guard RefreshGateKeeperCheck.isSilentRefreshEnabled() else {
+      RefreshDebugLogger.logGateKeeperDisabled()
+      completion(.failure(.featureDisabled))
       return
     }
 
-    // SilentAuthenticationSession will be integrated here in a later step.
-    // For now, the flow continues from a callback URL via parseRefreshResponse + processRefreshedToken.
-    _ = url
-    _ = nonce
+    // Rate limiter check
+    guard RefreshRateLimiter.shared.canAttemptRefresh() else {
+      let waitTime = RefreshRateLimiter.shared.timeUntilNextAllowedAttempt()
+      RefreshDebugLogger.logRateLimited(waitTime: waitTime)
+      completion(.failure(.rateLimited))
+      return
+    }
+
+    // Platform check
+    guard #available(iOS 13.0, *) else {
+      RefreshDebugLogger.logUnsupportedPlatform()
+      completion(.failure(.unsupportedPlatform))
+      return
+    }
+
+    RefreshRateLimiter.shared.recordAttempt()
+
+    let nonce = generateRefreshNonce()
+
+    guard let url = buildRefreshURL(existingToken: existingToken, nonce: nonce, scopes: scopes) else {
+      RefreshRateLimiter.shared.recordFailure()
+      let error = LimitedLoginRefreshError.invalidResponse
+      RefreshDebugLogger.logRefreshFailed(error)
+      completion(.failure(error))
+      return
+    }
+
+    guard let dependencies = try? Self.getDependencies() else {
+      RefreshRateLimiter.shared.recordFailure()
+      let error = LimitedLoginRefreshError.unknown
+      RefreshDebugLogger.logRefreshFailed(error)
+      completion(.failure(error))
+      return
+    }
+
+    let callbackURLScheme = "fb" + (dependencies.settings.appID ?? "")
+
+    let session = SilentAuthenticationSession()
+    silentAuthSession = session
+
+    session.start(url: url, callbackURLScheme: callbackURLScheme) { [weak self] result in
+      guard let self = self else { return }
+      self.silentAuthSession = nil
+
+      switch result {
+      case let .success(callbackURL):
+        let parseResult = self.parseRefreshResponse(callbackURL)
+        switch parseResult {
+        case let .success(tokenString):
+          self.processRefreshedToken(tokenString, nonce: nonce, existingUserID: existingUserID) { processResult in
+            switch processResult {
+            case let .success(profile):
+              RefreshRateLimiter.shared.recordSuccess()
+              RefreshDebugLogger.logRefreshSucceeded()
+              completion(.success(profile))
+            case let .failure(error):
+              RefreshRateLimiter.shared.recordFailure()
+              if case .userMismatch = error {
+                RefreshDebugLogger.logUserMismatch(expected: existingUserID, actual: "unknown")
+              }
+              RefreshDebugLogger.logRefreshFailed(error)
+              completion(.failure(error))
+            }
+          }
+        case let .failure(error):
+          RefreshRateLimiter.shared.recordFailure()
+          RefreshDebugLogger.logRefreshFailed(error)
+          completion(.failure(error))
+        }
+
+      case let .failure(error):
+        RefreshRateLimiter.shared.recordFailure()
+        RefreshDebugLogger.logRefreshFailed(error)
+        completion(.failure(error))
+      }
+    }
   }
 }
 

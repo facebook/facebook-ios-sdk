@@ -102,6 +102,8 @@ public protocol SettingsProtocol {
   var shouldUseCachedValuesForExpensiveMetadata: Bool { get set }
   var persistableDataProcessingOptions: [DataProcessingOptionKey.RawValue: Any]? { get }
   var isDomainErrorEnabled: Bool { get set }
+  var isLimitedLoginAutoRefreshEnabled: Bool { get set }
+  var limitedLoginAutoRefreshInterval: TimeInterval { get set }
 
   /**
    Sets the data processing options.
