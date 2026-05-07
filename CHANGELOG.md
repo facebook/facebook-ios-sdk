@@ -10,6 +10,16 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
+### Added
+- **Limited Login Refresh**: silently refresh Limited Login sessions when the app
+  enters the foreground, keeping `Profile.current` and `AuthenticationToken.current`
+  fresh without requiring user re-authentication. Opt in via
+  `Settings.shared.isLimitedLoginAutoRefreshEnabled` (default `false`) and configure
+  the throttle via `Settings.shared.limitedLoginAutoRefreshInterval` (default `86400`
+  seconds / 24 hours). Call
+  `LoginManager.refreshLimitedLogin(from:fallbackPolicy:completion:)` for on-demand
+  refresh.
+
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.3...HEAD)
 
 ## 18.0.3

@@ -18,7 +18,7 @@ enum RefreshDebugLogger {
   }
 
   static func logGateKeeperDisabled() {
-    _Logger.singleShotLogEntry(.developerErrors, logEntry: "Silent refresh disabled via GK: platform_login_oidc_prompt_none")
+    _Logger.singleShotLogEntry(.developerErrors, logEntry: "Silent refresh disabled via feature gate: FBSDKFeatureLimitedLoginRefresh")
   }
 
   static func logRateLimited(waitTime: TimeInterval) {
