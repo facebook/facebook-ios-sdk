@@ -123,7 +123,8 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .filterSensitiveParams,
       .iapLoggingSK2,
       .iosManualImplicitPurchaseDedupe,
-      .loginFastAppSwitch:
+      .loginFastAppSwitch,
+      .limitedLoginRefresh:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -177,6 +178,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .appEventsCloudbridge: featureName = "AppEventsCloudbridge"
     case .login: featureName = "LoginKit"
     case .loginFastAppSwitch: featureName = "FBLoginFAS"
+    case .limitedLoginRefresh: featureName = "LimitedLoginRefresh"
     case .share: featureName = "ShareKit"
     case .gamingServices: featureName = "GamingServicesKit"
     case .protectedMode: featureName = "ProtectedMode"
