@@ -50,7 +50,6 @@ public final class LoginManager: NSObject {
   }
 
   private static let clientStateChallengeLength = UInt(20)
-  private static let oAuthPath = "/dialog/oauth"
 
   private enum CanceledLoginErrorDomains {
     static let safariServices = "com.apple.SafariServices.Authentication"
@@ -562,8 +561,8 @@ public final class LoginManager: NSObject {
     let cbtInMilliseconds = round(1000 * Date().timeIntervalSince1970)
     let nullableParameters: [String: String?] = [
       "client_id": dependencies.settings.appID,
-      "display": "touch",
-      "sdk": "ios",
+      "display": LoginEndpoints.displayValueTouch,
+      "sdk": LoginEndpoints.sdkValueIOS,
       "return_scopes": "true",
       "sdk_version": FBSDK_VERSION_STRING,
       "fbapp_pres": NSNumber(value: dependencies.internalUtility.isFacebookAppInstalled).stringValue,
@@ -578,7 +577,7 @@ public final class LoginManager: NSObject {
     var parameters = nullableParameters.compactMapValues { $0 }
 
     var permissions = configuration.requestedPermissions
-    if let openIDPermission = FBPermission(string: "openid") {
+    if let openIDPermission = FBPermission(string: LoginEndpoints.openIDScope) {
       permissions.insert(openIDPermission)
     }
     parameters["scope"] = permissions.map(\.value).joined(separator: ",")
@@ -588,7 +587,7 @@ public final class LoginManager: NSObject {
     }
 
     if let redirectURL = try? dependencies.internalUtility.appURL(
-      withHost: "authorize",
+      withHost: LoginEndpoints.redirectHost,
       path: "",
       queryParameters: [:]
     ) {
@@ -609,8 +608,8 @@ public final class LoginManager: NSObject {
 
     switch configuration.tracking {
     case .limited:
-      parameters["response_type"] = "id_token,graph_domain,user_token_nonce"
-      parameters["tp"] = "ios_14_do_not_track"
+      parameters["response_type"] = LoginEndpoints.responseTypeLimitedLogin
+      parameters["tp"] = LoginEndpoints.trackingValueDoNotTrack
 
     case .enabled:
       if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
@@ -640,15 +639,15 @@ public final class LoginManager: NSObject {
   }
 
   private func addTrackingParameters(parameters: inout [String: String], configuration: LoginConfiguration) {
-    parameters["response_type"] = "id_token,token_or_nonce,signed_request,graph_domain,user_token_nonce"
+    parameters["response_type"] = LoginEndpoints.responseTypeFullLogin
     parameters["code_challenge"] = configuration.codeVerifier.challenge
-    parameters["code_challenge_method"] = "S256"
+    parameters["code_challenge_method"] = LoginEndpoints.pkceMethodS256
     storeExpectedCodeVerifier(configuration.codeVerifier)
   }
 
   private func addLimitedLoginShimParameters(parameters: inout [String: String], configuration: LoginConfiguration) {
     addTrackingParameters(parameters: &parameters, configuration: configuration)
-    parameters["tp"] = "ios_14_do_not_track"
+    parameters["tp"] = LoginEndpoints.trackingValueDoNotTrack
     parameters["is_limited_login_shim"] = "true"
   }
 
@@ -734,15 +733,15 @@ public final class LoginManager: NSObject {
         var hostPrefix = "m."
         switch configuration.tracking {
         case .limited:
-          hostPrefix = "limited."
+          hostPrefix = LoginEndpoints.limitedHostPrefix
         case .enabled:
           if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
-            hostPrefix = "limited."
+            hostPrefix = LoginEndpoints.limitedHostPrefix
           }
         }
         authenticationURL = try dependencies.internalUtility.facebookURL(
           hostPrefix: hostPrefix,
-          path: Self.oAuthPath,
+          path: LoginEndpoints.oAuthPath,
           queryParameters: parameters
         )
       } catch {
@@ -1007,7 +1006,7 @@ extension LoginManager: URLOpening {
   }
 
   public func isAuthenticationURL(_ url: URL) -> Bool {
-    url.path.hasSuffix(Self.oAuthPath)
+    url.path.hasSuffix(LoginEndpoints.oAuthPath)
   }
 
   public func shouldStopPropagation(of url: URL) -> Bool {
