@@ -7,8 +7,6 @@
 XCODEBUILD_WARNINGS_ALLOWLIST = [
     "warning: Input PNG is already optimized for iPhone OS.  Copying source file to destination...",
     # Pika Warnings:
-    # "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-11-macos-noasserts.xctoolchain",
-    # "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-13-macos-noasserts.xctoolchain",
     "warning: failed to load toolchain: could not find Info.plist in /Users/facebook/Library/Developer/Toolchains/pika-",
     # Deprecation Warnings:
     "is deprecated and will be removed in the next major release",
@@ -16,4 +14,6 @@ XCODEBUILD_WARNINGS_ALLOWLIST = [
     "warning: 'prefer_self_in_static_references' is not a valid rule identifier",
     "warning: 'web' is deprecated: The web sharing mode is deprecated. Consider using automatic sharing mode instead.",
     "warning: 'feedWeb' is deprecated: The feed web sharing mode is deprecated. Consider using automatic sharing mode instead.",
+    # Build system warnings (Xcode 16+):
+    "warning: tasks in 'Copy Headers' are delayed by unsandboxed script phases",
 ]

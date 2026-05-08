@@ -5,6 +5,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 
+import json
 import os
 import pathlib
 import subprocess
@@ -13,16 +14,44 @@ import sys
 from xcodebuild_warnings_allowlist import XCODEBUILD_WARNINGS_ALLOWLIST
 
 
+def find_iphone_simulator_destination():
+    """Dynamically find an available iPhone simulator instead of hardcoding a model."""
+    result = subprocess.run(
+        ["/usr/bin/xcrun", "simctl", "list", "--json", "devices", "available"],
+        capture_output=True,
+        check=False,
+        encoding="utf-8",
+    )
+    if result.returncode != 0:
+        return "iPhone 16"
+
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return "iPhone 16"
+
+    for runtime_devices in data.get("devices", {}).values():
+        for device in runtime_devices:
+            name = device.get("name", "")
+            if name.startswith("iPhone") and "SE" not in name:
+                return name
+
+    return "iPhone 16"
+
+
 def main():
     base_dir = git_base_dir() if is_git_dir() else generic_base_dir()
     os.chdir(base_dir)
+
+    destination = find_iphone_simulator_destination()
+    print(f"Using simulator destination: {destination}")
 
     xcodebuild_command = " ".join(
         [
             "xcodebuild clean build-for-testing",
             "-workspace FacebookSDK.xcworkspace",
             "-scheme BuildAllKits-Dynamic",
-            "-destination 'platform=iOS Simulator,name=iPhone 13'",
+            f"-destination 'platform=iOS Simulator,name={destination}'",
         ]
     )
 

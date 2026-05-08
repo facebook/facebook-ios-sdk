@@ -42,10 +42,24 @@ else
   SCHEME=$(map_scheme "$1")
 fi
 
-DESTINATION="platform=iOS Simulator,name=iPhone 16"
 WORKSPACE="FacebookSDK.xcworkspace"
 
-echo "Building scheme: $SCHEME"
+# Find the first available iPhone simulator destination dynamically
+DEVICE_NAME=$(xcodebuild -scheme "$SCHEME" -workspace "$WORKSPACE" -showdestinations 2>/dev/null \
+  | grep 'iOS Simulator' \
+  | grep -o 'name:[^,}]*' \
+  | grep 'iPhone' \
+  | head -1 \
+  | sed 's/name://;s/^[[:space:]]*//;s/[[:space:]]*$//')
+
+if [ -z "$DEVICE_NAME" ]; then
+  echo "Warning: No iPhone simulator found via -showdestinations, defaulting to 'iPhone 16'" >&2
+  DEVICE_NAME="iPhone 16"
+fi
+
+DESTINATION="platform=iOS Simulator,name=$DEVICE_NAME"
+
+echo "Building scheme: $SCHEME (destination: $DEVICE_NAME)"
 
 # Build the xcodebuild command
 XCODEBUILD_CMD="xcodebuild build \

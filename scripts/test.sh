@@ -50,7 +50,7 @@ DEVICE_NAME=$(xcodebuild -scheme "$SCHEME" -workspace "$WORKSPACE" -showdestinat
   | grep -o 'name:[^,}]*' \
   | grep 'iPhone' \
   | head -1 \
-  | sed 's/name://')
+  | sed 's/name://;s/^[[:space:]]*//;s/[[:space:]]*$//')
 
 if [ -z "$DEVICE_NAME" ]; then
   echo "Error: No iPhone simulator destination found" >&2
