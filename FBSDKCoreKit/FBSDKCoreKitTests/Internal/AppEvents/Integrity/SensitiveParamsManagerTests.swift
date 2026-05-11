@@ -349,4 +349,19 @@ final class SensitiveParamsManagerTests: XCTestCase {
       parameters[AppEvents.ParameterName(rawValue: "default_param_2")]
     )
   }
+
+  func testProcessParametersCorrectAfterEnable() {
+    sensitiveParamsManager.enable()
+
+    let parameters: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName(rawValue: "default_param_1"): "sensitive",
+    ]
+    let eventName = AppEvents.Name(rawValue: "test_event_name_1")
+    let result = sensitiveParamsManager.processParameters(parameters, eventName: eventName)
+
+    XCTAssertNotNil(result)
+    XCTAssertEqual(result?.keys.contains(AppEvents.ParameterName(rawValue: "default_param_1")), false)
+    XCTAssertEqual(result?[AppEvents.ParameterName.currency] as? String, "USD")
+  }
 }

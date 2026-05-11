@@ -10,6 +10,7 @@ import Foundation
 
 final class SensitiveParamsManager: NSObject, _AppEventsParameterProcessing {
 
+  private let lock = NSLock()
   private var isEnabled = false
   private var sensitiveParamsConfig = [String: Set<String>]()
   private var defaultSensitiveParams = Set<String>()
@@ -31,17 +32,25 @@ final class SensitiveParamsManager: NSObject, _AppEventsParameterProcessing {
       .cachedServerConfiguration()
       .protectedModeRules?[SensitiveParamsManager.sensitiveParamsKey] as? [[String: Any]]
     else { return }
+    lock.lock()
     configureSensitiveParams(sensitiveParams: sensitiveParams)
     if !sensitiveParamsConfig.isEmpty || !defaultSensitiveParams.isEmpty {
       isEnabled = true
     }
+    lock.unlock()
   }
 
   func processParameters(
     _ parameters: [AppEvents.ParameterName: Any]?,
     eventName: AppEvents.Name?
   ) -> [AppEvents.ParameterName: Any]? {
-    guard isEnabled,
+    lock.lock()
+    let enabled = isEnabled
+    let configSnapshot = sensitiveParamsConfig
+    let defaultSnapshot = defaultSensitiveParams
+    lock.unlock()
+
+    guard enabled,
           var parameters,
           !parameters.isEmpty
     else {
@@ -49,11 +58,10 @@ final class SensitiveParamsManager: NSObject, _AppEventsParameterProcessing {
     }
     var filteredSensitiveParams = filterSensitiveParams(
       parameters: &parameters,
-      sensitiveParams: defaultSensitiveParams
+      sensitiveParams: defaultSnapshot
     )
     if let eventName,
-       sensitiveParamsConfig.keys.contains(eventName.rawValue),
-       let sensitiveParams = sensitiveParamsConfig[eventName.rawValue] {
+       let sensitiveParams = configSnapshot[eventName.rawValue] {
       let result = filterSensitiveParams(parameters: &parameters, sensitiveParams: sensitiveParams)
       filteredSensitiveParams = filteredSensitiveParams.union(result)
     }
