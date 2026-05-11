@@ -622,10 +622,12 @@ extension ShareDialog {
           results[ShareBridgeAPI.PostIDKey.results] = postID
         }
 
-        // If there is no explicit completion gesture indicating success and no
-        // post ID in the results, treat as cancellation. The Facebook app may
-        // not send completionGesture:"cancel" in all cancellation scenarios.
-        if completionGesture == nil, results.isEmpty {
+        // For link shares only: if there is no completion gesture and no
+        // post ID, treat as cancellation. The Facebook app may not send
+        // completionGesture:"cancel" in all cancellation scenarios.
+        // Photo and video shares may legitimately return neither field
+        // on success, so we only apply this heuristic for links.
+        if completionGesture == nil, results.isEmpty, shareContent is ShareLinkContent {
           invokeDelegateDidCancel()
         } else {
           invokeDelegateDidComplete(results: results)

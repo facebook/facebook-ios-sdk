@@ -290,6 +290,68 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertFalse(dialog.show())
   }
 
+  // MARK: - Native completion handling
+
+  func testNativeLinkShareWithNoGestureAndNoPostIDTreatedAsCancelled() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    internalUtility.isFacebookAppInstalled = true
+
+    dialog = createEmptyDialog(mode: .native)
+    dialog.shareContent = ShareModelTestUtility.linkContent
+    dialog.fromViewController = UIViewController()
+    _ = dialog.show()
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(
+      delegate.sharerDidCancelCalled,
+      "A native link share with no completion gesture and no post ID should be treated as cancelled"
+    )
+    XCTAssertFalse(delegate.sharerDidCompleteCalled)
+  }
+
+  func testNativePhotoShareWithNoGestureAndNoPostIDTreatedAsComplete() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    internalUtility.isFacebookAppInstalled = true
+
+    dialog = createEmptyDialog(mode: .native)
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
+    dialog.fromViewController = UIViewController()
+    _ = dialog.show()
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(
+      delegate.sharerDidCompleteCalled,
+      "A native photo share with no completion gesture and no post ID should be treated as complete"
+    )
+    XCTAssertFalse(delegate.sharerDidCancelCalled)
+  }
+
+  func testNativeVideoShareWithNoGestureAndNoPostIDTreatedAsComplete() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    internalUtility.isFacebookAppInstalled = true
+
+    dialog = createEmptyDialog(mode: .native)
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
+    dialog.fromViewController = UIViewController()
+    _ = dialog.show()
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(
+      delegate.sharerDidCompleteCalled,
+      "A native video share with no completion gesture and no post ID should be treated as complete"
+    )
+    XCTAssertFalse(delegate.sharerDidCancelCalled)
+  }
+
   // MARK: - Browser mode
 
   func testCanShowBrowser() {
