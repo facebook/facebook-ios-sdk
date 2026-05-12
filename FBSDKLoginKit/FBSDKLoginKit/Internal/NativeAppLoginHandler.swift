@@ -41,14 +41,15 @@ internal final class NativeAppLoginHandler {
       return false
     }
 
-    // Check if FAS is enabled via server-side GK (killswitch for classic login FAS)
-    guard _FeatureManager.shared.isEnabled(.loginFastAppSwitch) else {
-      return false
-    }
-
-    // Limited tracking users must use browser - LL FAS not yet enabled
-    guard configuration.tracking == .enabled else {
-      return false
+    // Check the appropriate FAS GK based on tracking mode
+    if configuration.tracking == .limited {
+      guard _FeatureManager.shared.isEnabled(.limitedLoginFastAppSwitch) else {
+        return false
+      }
+    } else {
+      guard _FeatureManager.shared.isEnabled(.loginFastAppSwitch) else {
+        return false
+      }
     }
 
     // Limited login shim requests should not use fast app switch

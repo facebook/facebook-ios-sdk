@@ -80,6 +80,8 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureLoginFastAppSwitch = 0x02010000,
   /// Limited Login Refresh
   FBSDKFeatureLimitedLoginRefresh = 0x02020000,
+  /// Fast App Switch for Limited Login
+  FBSDKFeatureLimitedLoginFastAppSwitch = 0x02030000,
 
   // Features in ShareKit
   /// Essential of ShareKit

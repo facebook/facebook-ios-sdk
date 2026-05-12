@@ -124,6 +124,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
       .iapLoggingSK2,
       .iosManualImplicitPurchaseDedupe,
       .loginFastAppSwitch,
+      .limitedLoginFastAppSwitch,
       .limitedLoginRefresh:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
@@ -179,6 +180,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .login: featureName = "LoginKit"
     case .loginFastAppSwitch: featureName = "FBLoginFAS"
     case .limitedLoginRefresh: featureName = "LimitedLoginRefresh"
+    case .limitedLoginFastAppSwitch: featureName = "LimitedLoginFAS"
     case .share: featureName = "ShareKit"
     case .gamingServices: featureName = "GamingServicesKit"
     case .protectedMode: featureName = "ProtectedMode"

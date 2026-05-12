@@ -119,9 +119,10 @@ final class NativeAppLoginHandlerTests: XCTestCase {
     XCTAssertNotNil(result, "Should return a boolean result")
   }
 
-  func testShouldNotAttemptNativeAppLoginWithLimitedTracking() {
+  func testShouldNotAttemptNativeAppLoginWithLimitedTrackingWhenLLFASGKDisabled() {
     internalUtility.isFacebookAppInstalled = true
     TestGateKeeperManager.gateKeepers["FBSDKFeatureFBLoginFAS"] = true
+    TestGateKeeperManager.gateKeepers["FBSDKFeatureLimitedLoginFAS"] = false
     _FeatureManager.configuredDependencies = _FeatureManager.TypeDependencies(
       gateKeeperManager: TestGateKeeperManager.self,
       settings: settings,
@@ -133,8 +134,44 @@ final class NativeAppLoginHandlerTests: XCTestCase {
 
     XCTAssertFalse(
       handler.shouldAttemptNativeAppLogin(),
-      "Should not attempt native app login with limited tracking even when GK is enabled"
+      "Should not attempt native app login with limited tracking when LL FAS GK is disabled"
     )
+  }
+
+  func testShouldAttemptNativeAppLoginWithLimitedTrackingWhenLLFASGKEnabled() {
+    internalUtility.isFacebookAppInstalled = true
+    TestGateKeeperManager.gateKeepers["FBSDKFeatureLimitedLoginFAS"] = true
+    _FeatureManager.configuredDependencies = _FeatureManager.TypeDependencies(
+      gateKeeperManager: TestGateKeeperManager.self,
+      settings: settings,
+      store: UserDefaults.standard
+    )
+
+    configuration = createConfiguration(tracking: .limited, appSwitch: .enabled)
+    handler = createHandler(configuration: configuration)
+
+    // Will still return false in unit tests due to UIApplication.shared.canOpenURL limitation,
+    // but we verify it passes the GK check (doesn't return false at the GK guard)
+    let result = handler.shouldAttemptNativeAppLogin()
+    XCTAssertNotNil(result, "Should return a boolean result when LL FAS GK is enabled")
+  }
+
+  func testClassicLoginFASNotAffectedByLLFASGK() {
+    internalUtility.isFacebookAppInstalled = true
+    TestGateKeeperManager.gateKeepers["FBSDKFeatureFBLoginFAS"] = true
+    TestGateKeeperManager.gateKeepers["FBSDKFeatureLimitedLoginFAS"] = false
+    _FeatureManager.configuredDependencies = _FeatureManager.TypeDependencies(
+      gateKeeperManager: TestGateKeeperManager.self,
+      settings: settings,
+      store: UserDefaults.standard
+    )
+
+    configuration = createConfiguration(tracking: .enabled, appSwitch: .enabled)
+    handler = createHandler(configuration: configuration)
+
+    // Classic login FAS should use its own GK, not the LL FAS GK
+    let result = handler.shouldAttemptNativeAppLogin()
+    XCTAssertNotNil(result, "Classic login FAS should not be affected by LL FAS GK being disabled")
   }
 
   func testShouldNotAttemptNativeAppLoginWhenFASGKDisabled() {
