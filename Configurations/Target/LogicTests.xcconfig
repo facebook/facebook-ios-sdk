@@ -8,6 +8,8 @@
 
 // Code signing
 CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+CODE_SIGNING_ALLOWED = NO
+CODE_SIGNING_REQUIRED = NO
 
 // Packaging
 WRAPPER_EXTENSION = xctest
