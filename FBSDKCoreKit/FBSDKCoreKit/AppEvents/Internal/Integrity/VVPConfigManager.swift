@@ -18,9 +18,10 @@ import Foundation
 /// Integrity managers) and exposes a typed in-memory model used by the
 /// per-event hook.
 ///
-/// This file owns parsing + lifecycle. The per-event detection runtime,
-/// customData filter, content-id sanitization, and `vvp` / `vvp_md` payload
-/// tagging land in D2.
+/// This file owns parsing + lifecycle + the per-event detection /
+/// enforcement runtime: filters customData against `standardParams`,
+/// sanitizes `fb_content_id(s)` values to `"_removed_"`, and tags the
+/// outgoing dict with `vvp = "1"` plus a JSON-encoded `vvp_md` payload.
 final class VVPConfigManager: NSObject, MACARuleMatching {
 
   // MARK: - Wire-shape constants
@@ -43,6 +44,27 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
   /// JSON-encoded VVP config string. Mirror of the JS pixel plugin and the
   /// server-side `GraphApplicationProtectedModeRulesNode::VVP_CONFIG`.
   private static let vvpConfigKey = "vvp_config"
+  // Outgoing payload keys appended to the event params dict when VVP enforces.
+  // Mirror of the JS plugin's `vvp` / `vvp_md` and the server-side
+  // `AdsPixelRequestParams::VVP_CLIENT_SIDE_ENFORCED / VVP_CLIENT_SIDE_METADATA`.
+  static let vvpKey = "vvp"
+  static let vvpMetadataKey = "vvp_md"
+  private static let vvpAppliedValue = "1"
+
+  // Sub-buckets inside the JSON-encoded vvp_md payload — mirror PHP
+  // `SIEventContextParams::RESTRICTED_PARAMS` ("rp") prefixed with "vp_".
+  private static let vpRpKey = "vp_rp"
+  private static let vpRpEvKey = "vp_rp_ev"
+
+  // Sentinel pushed to vp_rp_ev when an event-name rule fires; we never
+  // echo the actual event name back (it can itself be sensitive).
+  private static let eventNameSentinel = "1"
+
+  // CustomData keys whose values are sanitized (replaced with sanitizedValue)
+  // instead of being deleted outright when VVP enforces. Mirror of PHP
+  // `SignalsIntegrityVVPUtils::APP_CONTENT_ID_KEYS`.
+  private static let contentIdSanitizeKeys: Set<String> = ["fb_content_ids", "fb_content_id"]
+  private static let sanitizedValue = "_removed_"
 
   // MARK: - Lifecycle state
 
@@ -69,11 +91,136 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     }
   }
 
-  /// Per-event hook stub. Returns input unchanged in D2 (skeleton); D3 fills in
-  /// the detection + enforcement runtime that mutates `params` to filter
-  /// customData, sanitize content IDs, and tag `vvp` / `vvp_md`.
+  /// Per-event hook. Runs detection over the rules and, on a positive match,
+  /// filters customData against `standardParams` (with `fb_content_id(s)`
+  /// sanitized to `"_removed_"` rather than dropped), then tags the payload
+  /// with `vvp = "1"` plus a JSON-encoded `vvp_md` describing which keys /
+  /// event-name triggered the match. Returns the mutated dict.
+  ///
+  /// Mirrors the JS pixel plugin lines 215-240 and the Android
+  /// `VVPManager.processParametersForVVP`. Returns `params` unchanged when
+  /// disabled, no event name, no config, out-of-scope, or no rule matches.
   func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary? {
-    params
+    guard isEnabled, let cfg = config, let event = event, let params = params, !params.isEmpty else {
+      return params
+    }
+
+    // inScopeEventNames gate (RETAIL apps only — NON_RETAIL leaves this nil).
+    if let inScope = cfg.inScopeEventNames, !inScope.contains(event) {
+      return params
+    }
+
+    let result = detectMatches(eventName: event, customData: params, rules: cfg.rules)
+    if !result.matched {
+      return params
+    }
+
+    let mutated = NSMutableDictionary(dictionary: params)
+
+    // Sanitize / filter customData. Skipped when standardParams is empty —
+    // otherwise we'd drop everything (no allowlist means "keep nothing",
+    // which is not the intended fallback).
+    if !cfg.standardParams.isEmpty {
+      // Snapshot keys first since we mutate in the loop.
+      for key in params.allKeys {
+        guard let strKey = key as? String else { continue }
+        if cfg.standardParams.contains(strKey) {
+          continue
+        }
+        if VVPConfigManager.contentIdSanitizeKeys.contains(strKey) {
+          // Preserve the key on the payload (downstream attribution expects
+          // it) but scrub the actual identifier.
+          mutated[strKey] = VVPConfigManager.sanitizedValue
+        } else {
+          mutated.removeObject(forKey: key)
+        }
+      }
+    }
+
+    mutated[VVPConfigManager.vvpKey] = VVPConfigManager.vvpAppliedValue
+
+    // Emit vvp_md only when there's something to report. JSON shape mirrors
+    // the JS plugin: { vp_rp: [...customData keys], vp_rp_ev: ["1"] }.
+    // Empty buckets are omitted; the entire field is omitted if both empty.
+    if !result.cdKeys.isEmpty || !result.evNames.isEmpty {
+      var md: [String: [String]] = [:]
+      if !result.cdKeys.isEmpty {
+        // Sorted for deterministic test/wire ordering.
+        md[VVPConfigManager.vpRpKey] = result.cdKeys.sorted()
+      }
+      if !result.evNames.isEmpty {
+        md[VVPConfigManager.vpRpEvKey] = result.evNames.sorted()
+      }
+      if let mdData = try? JSONSerialization.data(withJSONObject: md, options: [.sortedKeys]),
+         let mdString = String(data: mdData, encoding: .utf8) {
+        mutated[VVPConfigManager.vvpMetadataKey] = mdString
+      }
+    }
+
+    return mutated
+  }
+
+  // MARK: - Detection
+
+  /// Result of running the rules over a single event. `matched` is true if any
+  /// rule fired; `cdKeys` is the set of customData keys that matched (sanitized
+  /// or dropped during enforcement below); `evNames` is the sentinel `["1"]` set if any
+  /// PLACE_EVENT_NAME rule fired (sentinel — never echo the actual event name).
+  struct DetectionResult: Equatable {
+    let matched: Bool
+    let cdKeys: Set<String>
+    let evNames: Set<String>
+  }
+
+  func detectMatches(
+    eventName: String,
+    customData: NSDictionary?,
+    rules: [VVPRule]
+  ) -> DetectionResult {
+    var matched = false
+    var cdKeys = Set<String>()
+    var evNames = Set<String>()
+
+    for rule in rules {
+      switch rule.place {
+      case VVPConfigManager.placeEventName:
+        guard let kr = rule.keyRegex, regexMatches(kr, eventName) else { continue }
+        // keyNegativeRegex suppression — `utm_*`-style false positives.
+        if let kneg = rule.keyNegativeRegex, regexMatches(kneg, eventName) {
+          continue
+        }
+        matched = true
+        // Sentinel — never echo the actual event name to the wire.
+        evNames.insert(VVPConfigManager.eventNameSentinel)
+      case VVPConfigManager.placeCustomData:
+        guard let customData = customData else { continue }
+        for (k, v) in customData {
+          guard let key = k as? String else { continue }
+          let keyOk = rule.keyRegex.map { regexMatches($0, key) } ?? true
+          let valOk = rule.valueRegex.map { regexMatches($0, String(describing: v)) } ?? true
+          if !keyOk || !valOk {
+            continue
+          }
+          // keyNegativeRegex suppression applies only on the key side. Lets
+          // the server allowlist e.g. `utm_content_id` despite matching the
+          // positive `content` keyRegex.
+          if let kneg = rule.keyNegativeRegex, regexMatches(kneg, key) {
+            continue
+          }
+          matched = true
+          cdKeys.insert(key)
+        }
+      default:
+        // Unknown places are filtered out at parse time but defend here too.
+        continue
+      }
+    }
+    return DetectionResult(matched: matched, cdKeys: cdKeys, evNames: evNames)
+  }
+
+  private func regexMatches(_ regex: NSRegularExpression, _ s: String) -> Bool {
+    let range = NSRange(s.startIndex ..< s.endIndex, in: s)
+    return regex.firstMatch(in: s, options: [], range: range) != nil
   }
 
   // MARK: - Config loading

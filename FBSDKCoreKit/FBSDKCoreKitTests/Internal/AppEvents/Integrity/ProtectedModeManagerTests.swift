@@ -155,6 +155,8 @@ final class ProtectedModeManagerTests: XCTestCase {
       "cs_maca",
       "pm_metadata",
       "_bannedParams",
+      "vvp",
+      "vvp_md",
       "add_to_messaging_customer_base_for_whatsapp",
     ]
     XCTAssertEqual(

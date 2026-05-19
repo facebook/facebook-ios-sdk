@@ -295,12 +295,334 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertNil(cfg?.inScopeEventNames)
   }
 
-  // MARK: - processParameters (D2: stub passthrough; D3 adds enforcement)
+  // MARK: - Enforcement processParameters
 
-  func testProcessParametersStubReturnsInputUnchanged() {
+  func testProcessParametersReturnsInputWhenDisabled() {
+    let params: NSDictionary = ["foo": "bar"]
+    let out = manager.processParameters(params, event: "Purchase")
+    XCTAssertEqual(out, params)
+    XCTAssertNil((out as? [String: Any])?["vvp"])
+  }
+
+  func testProcessParametersReturnsInputUnchangedWhenNoMatch() {
     install(vvpConfig: Self.validNonRetailConfig)
     manager.enable()
-    let params: NSDictionary = ["fb_content_ids": "tt1234567", "fb_value": 1.99]
-    XCTAssertEqual(manager.processParameters(params, event: "Purchase"), params)
+    // Value doesn't match the IMDb-style regex → no detection → no mutation.
+    let params: NSDictionary = ["fb_content_ids": "sku-42", "fb_currency": "USD"]
+    let out = manager.processParameters(params, event: "Purchase")
+    XCTAssertEqual(out, params)
+  }
+
+  func testProcessParametersOutOfScopeRetailEventNoOps() {
+    install(vvpConfig: Self.validRetailConfig)
+    manager.enable()
+    let params: NSDictionary = ["content_id": "tt1234567"]
+    let out = manager.processParameters(params, event: "ViewContent")
+    XCTAssertEqual(out, params)
+  }
+
+  func testProcessParametersInScopeRetailEventEnforces() {
+    install(vvpConfig: Self.validRetailConfig)
+    manager.enable()
+    let params: NSDictionary = ["content_id": "tt1234567", "fb_currency": "USD"]
+    let out = manager.processParameters(params, event: "Purchase")
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertNotNil(out?["vvp_md"] as? String)
+  }
+
+  // MARK: - Tagging (vvp + vvp_md)
+
+  func testProcessParametersTagsVvpAndEmitsVpRpOnValueMatch() {
+    install(vvpConfig: Self.validNonRetailConfig)
+    manager.enable()
+    let params: NSDictionary = ["fb_content_ids": "tt1234567", "fb_currency": "USD"]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    let mdString = out?["vvp_md"] as? String
+    XCTAssertNotNil(mdString)
+    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
+    XCTAssertEqual(md?["vp_rp"] as? [String], ["fb_content_ids"])
+    XCTAssertNil(md?["vp_rp_ev"]) // omitted when empty
+  }
+
+  func testProcessParametersEmitsVpRpEvSentinelOnEventNameMatch() {
+    let cfg = """
+      {"enabled": true,
+       "rules": [{"place": 3, "keyRegex": "video_view", "valueRegex": ""}],
+       "standardParams": {"foo": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = ["foo": "bar"]
+
+    let out = manager.processParameters(params, event: "video_view_started")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    let mdString = out?["vvp_md"] as? String
+    XCTAssertNotNil(mdString)
+    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
+    // Sentinel — never echoes the actual event name.
+    XCTAssertEqual(md?["vp_rp_ev"] as? [String], ["1"])
+    XCTAssertNil(md?["vp_rp"]) // omitted when empty
+  }
+
+  func testProcessParametersEmitsBothBucketsWhenBothFire() {
+    let cfg = """
+      {"enabled": true,
+       "rules": [
+         {"place": 3, "keyRegex": "video_view", "valueRegex": ""},
+         {"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}
+       ],
+       "standardParams": {"fb_content_ids": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = ["fb_content_ids": "tt1234567"]
+
+    let out = manager.processParameters(params, event: "video_view_started")
+
+    let mdString = out?["vvp_md"] as? String
+    XCTAssertNotNil(mdString)
+    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
+    XCTAssertEqual(md?["vp_rp"] as? [String], ["fb_content_ids"])
+    XCTAssertEqual(md?["vp_rp_ev"] as? [String], ["1"])
+  }
+
+  func testProcessParametersVvpMdKeysAreSorted() {
+    // Two matched cdKeys → vp_rp must come back sorted (deterministic for tests/wire).
+    let cfg = """
+      {"enabled": true,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"alpha": true, "zebra": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = ["zebra": "tt9876543", "alpha": "tt1234567"]
+
+    let out = manager.processParameters(params, event: "Purchase")
+    let mdString = out?["vvp_md"] as? String
+    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
+    XCTAssertEqual(md?["vp_rp"] as? [String], ["alpha", "zebra"])
+  }
+
+  // MARK: - Sanitization / customData filter
+
+  func testProcessParametersSanitizesFbContentIdsInsteadOfDropping() {
+    install(vvpConfig: Self.validNonRetailConfig)
+    manager.enable()
+    let params: NSDictionary = [
+      "fb_content_ids": "tt1234567",
+      "fb_currency": "USD",
+      "video_title": "Finding Nemo",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    // Standard param preserved verbatim.
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+    // Content-ID key kept on payload, value scrubbed.
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "_removed_")
+    // Other non-standard key dropped.
+    XCTAssertNil(out?["video_title"])
+    // Tag still added.
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+  }
+
+  func testProcessParametersSanitizesFbContentIdSingularToo() {
+    let cfg = """
+      {"enabled": true,
+       "rules": [{"place": 1, "keyRegex": "^fb_content_id$", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = ["fb_content_id": "tt9876543", "fb_currency": "USD"]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["fb_content_id"] as? String, "_removed_")
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+  }
+
+  func testProcessParametersSkipsCustomDataFilterWhenStandardParamsEmpty() {
+    let cfg = """
+      {"enabled": true,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = ["fb_content_ids": "tt1234567", "video_title": "Nemo"]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    // vvp=1 still emitted, but no filtering since allowlist empty.
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "tt1234567") // un-sanitized
+    XCTAssertEqual(out?["video_title"] as? String, "Nemo") // not dropped
+  }
+
+  func testProcessParametersPreservesUnderscoreFrameworkKeysWhenInAllowlist() {
+    // Confirms framework metadata (e.g. _logTime) survives if the server-side
+    // standardParams allowlist includes it. iOS callers typically pass these
+    // keys through, so the server is expected to allowlist them.
+    let cfg = """
+      {"enabled": true,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"_logTime": true, "_implicitlyLogged": true, "fb_content_ids": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = [
+      "_logTime": NSNumber(value: 1700000000),
+      "_implicitlyLogged": "0",
+      "fb_content_ids": "tt1234567",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+    XCTAssertEqual(out?["_logTime"] as? NSNumber, NSNumber(value: 1700000000))
+    XCTAssertEqual(out?["_implicitlyLogged"] as? String, "0")
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "_removed_")
+  }
+
+  // MARK: - detectMatches (direct unit-level coverage)
+
+  func testDetectMatchesPureCustomDataMatch() {
+    install(vvpConfig: Self.validNonRetailConfig)
+    manager.enable()
+    let result = manager.detectMatches(
+      eventName: "Purchase",
+      customData: ["fb_content_ids": "tt9876543"],
+      rules: manager.config?.rules ?? []
+    )
+    XCTAssertTrue(result.matched)
+    XCTAssertEqual(result.cdKeys, ["fb_content_ids"])
+    XCTAssertTrue(result.evNames.isEmpty)
+  }
+
+  func testDetectMatchesPureEventNameMatch() {
+    let json = """
+      {"enabled": true, "rules": [{"place": 3, "keyRegex": "VideoView", "valueRegex": ""}],
+       "standardParams": {}}
+      """
+    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    let result = manager.detectMatches(
+      eventName: "VideoView",
+      customData: nil,
+      rules: cfg.rules
+    )
+    XCTAssertTrue(result.matched)
+    XCTAssertEqual(result.evNames, ["1"]) // sentinel — never echoes the event name
+    XCTAssertTrue(result.cdKeys.isEmpty)
+  }
+
+  func testDetectMatchesNoMatch() {
+    install(vvpConfig: Self.validNonRetailConfig)
+    manager.enable()
+    let result = manager.detectMatches(
+      eventName: "Purchase",
+      customData: ["fb_value": 1.99],
+      rules: manager.config?.rules ?? []
+    )
+    XCTAssertFalse(result.matched)
+    XCTAssertTrue(result.cdKeys.isEmpty)
+    XCTAssertTrue(result.evNames.isEmpty)
+  }
+
+  // MARK: - keyNegativeRegex enforcement
+
+  /// Mirror of the PHP guard added in SignalsIntegrityVVPUtils: a key that
+  /// matches both `keyRegex` AND `keyNegativeRegex` must NOT fire — lets the
+  /// server allowlist `utm_*` style false positives whose names satisfy the
+  /// positive content/video regex.
+  func testDetectMatchesCustomDataKeyNegativeRegexSuppressesMatch() {
+    let json = """
+      {"enabled": true,
+       "rules": [{"place": 1,
+                  "keyRegex": "(\\\\b|_)(video|content)(\\\\b|_)",
+                  "valueRegex": "",
+                  "keyNegativeRegex": "(\\\\b|_)(utm|url|refer)(\\\\b|_)"}],
+       "standardParams": {}}
+      """
+    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    let result = manager.detectMatches(
+      eventName: "Purchase",
+      customData: ["utm_content_id": "anything", "video_id": "tt1234567"],
+      rules: cfg.rules
+    )
+    XCTAssertTrue(result.matched)
+    // `utm_content_id` matches positive keyRegex but is suppressed by negative.
+    XCTAssertEqual(result.cdKeys, ["video_id"])
+  }
+
+  func testDetectMatchesCustomDataKeyNegativeRegexNilDoesNotSuppress() {
+    // Sanity: when keyNegativeRegex is absent, the legacy positive-only behavior is preserved.
+    let json = """
+      {"enabled": true,
+       "rules": [{"place": 1,
+                  "keyRegex": "(\\\\b|_)(video|content)(\\\\b|_)",
+                  "valueRegex": ""}],
+       "standardParams": {}}
+      """
+    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    let result = manager.detectMatches(
+      eventName: "Purchase",
+      customData: ["utm_content_id": "anything", "video_id": "tt1234567"],
+      rules: cfg.rules
+    )
+    XCTAssertTrue(result.matched)
+    XCTAssertEqual(result.cdKeys, ["utm_content_id", "video_id"])
+  }
+
+  func testDetectMatchesEventNameKeyNegativeRegexSuppressesMatch() {
+    let json = """
+      {"enabled": true,
+       "rules": [{"place": 3,
+                  "keyRegex": "video",
+                  "valueRegex": "",
+                  "keyNegativeRegex": "utm"}],
+       "standardParams": {}}
+      """
+    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    // Event name matches positive AND negative -> suppressed.
+    let suppressed = manager.detectMatches(
+      eventName: "utm_video_view",
+      customData: nil,
+      rules: cfg.rules
+    )
+    XCTAssertFalse(suppressed.matched)
+    XCTAssertTrue(suppressed.evNames.isEmpty)
+
+    // Event name matches positive only -> fires.
+    let fired = manager.detectMatches(
+      eventName: "video_view_started",
+      customData: nil,
+      rules: cfg.rules
+    )
+    XCTAssertTrue(fired.matched)
+    XCTAssertEqual(fired.evNames, ["1"])
+  }
+
+  func testProcessParametersKeyNegativeRegexSuppressesEnforcement() {
+    // End-to-end: a single-rule config whose only matching key is suppressed
+    // by keyNegativeRegex must leave the payload untouched (no vvp tag, no
+    // sanitization).
+    let json = """
+      {"enabled": true,
+       "rules": [{"place": 1,
+                  "keyRegex": "content",
+                  "valueRegex": "",
+                  "keyNegativeRegex": "utm"}],
+       "standardParams": {"fb_currency": true}}
+      """
+    install(vvpConfig: json)
+    manager.enable()
+    let params: NSDictionary = ["utm_content_id": "x", "fb_currency": "USD"]
+    let out = manager.processParameters(params, event: "Purchase")
+    XCTAssertEqual(out, params)
+    XCTAssertNil(out?["vvp"])
+    XCTAssertNil(out?["vvp_md"])
   }
 }
