@@ -93,39 +93,39 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
 
   func defaultStatus(for feature: SDKFeature) -> Bool {
     switch feature {
-    case
-      .restrictiveDataFiltering,
-      .eventDeactivation,
-      .instrument,
-      .crashReport,
-      .crashShield,
-      .errorReport,
-      .AAM,
-      .privacyProtection,
-      .suggestedEvents,
-      .intelligentIntegrity,
-      .modelRequest,
-      .ateLogging,
-      .AEM,
-      .aemConversionFiltering,
-      .aemCatalogMatching,
-      .aemAdvertiserRuleMatchInServer,
-      .aemAutoSetup,
-      .aemAutoSetupProxy,
-      .appEventsCloudbridge,
-      .skAdNetwork,
-      .skAdNetworkV4,
-      .skAdNetworkConversionValue,
-      .protectedMode,
-      .macaRuleMatching,
-      .blocklistEvents,
-      .filterRedactedEvents,
-      .filterSensitiveParams,
-      .iapLoggingSK2,
-      .iosManualImplicitPurchaseDedupe,
-      .loginFastAppSwitch,
-      .limitedLoginFastAppSwitch,
-      .limitedLoginRefresh:
+    case .restrictiveDataFiltering,
+         .eventDeactivation,
+         .instrument,
+         .crashReport,
+         .crashShield,
+         .errorReport,
+         .AAM,
+         .privacyProtection,
+         .suggestedEvents,
+         .intelligentIntegrity,
+         .modelRequest,
+         .ateLogging,
+         .AEM,
+         .aemConversionFiltering,
+         .aemCatalogMatching,
+         .aemAdvertiserRuleMatchInServer,
+         .aemAutoSetup,
+         .aemAutoSetupProxy,
+         .appEventsCloudbridge,
+         .skAdNetwork,
+         .skAdNetworkV4,
+         .skAdNetworkConversionValue,
+         .protectedMode,
+         .VVP,
+         .macaRuleMatching,
+         .blocklistEvents,
+         .filterRedactedEvents,
+         .filterSensitiveParams,
+         .iapLoggingSK2,
+         .iosManualImplicitPurchaseDedupe,
+         .loginFastAppSwitch,
+         .limitedLoginFastAppSwitch,
+         .limitedLoginRefresh:
       return false
     case .none, .login, .share, .core, .appEvents, .codelessEvents, .gamingServices:
       return true
@@ -184,6 +184,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .share: featureName = "ShareKit"
     case .gamingServices: featureName = "GamingServicesKit"
     case .protectedMode: featureName = "ProtectedMode"
+    case .VVP: featureName = "VVP"
     case .macaRuleMatching: featureName = "MACARuleMatching"
     case .blocklistEvents: featureName = "BlocklistEvents"
     case .filterRedactedEvents: featureName = "FilterRedactedEvents"
