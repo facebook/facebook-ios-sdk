@@ -12,11 +12,11 @@ import UIKit
 // swiftformat:disable indent
 @objcMembers
 final class TestAppEvents: TestEventLogger,
-                           _SourceApplicationTracking,
-                           _AppEventsConfiguring,
-                           _ApplicationActivating,
-                           _ApplicationLifecycleObserving,
-                           _ApplicationStateSetting {
+  _SourceApplicationTracking,
+  _AppEventsConfiguring,
+  _ApplicationActivating,
+  _ApplicationLifecycleObserving,
+  _ApplicationStateSetting {
   // swiftformat:enable indent
   var wasActivateAppCalled = false
   var wasStartObservingApplicationLifecycleNotificationsCalled = false
@@ -54,6 +54,7 @@ final class TestAppEvents: TestEventLogger,
   var capturedConfigureBannedParamsManager: MACARuleMatching?
   var capturedConfigureStdParamEnforcementManager: MACARuleMatching?
   var capturedConfigureMACARuleMatchingManager: MACARuleMatching?
+  var capturedConfigureVVPConfigManager: MACARuleMatching?
   var capturedConfigureBlocklistEventsManager: _EventsProcessing?
   var capturedConfigureRedactedEventsManager: _EventsProcessing?
   var capturedConfigureSensitiveParamsManager: _AppEventsParameterProcessing?
@@ -100,6 +101,7 @@ final class TestAppEvents: TestEventLogger,
     bannedParamsManager: MACARuleMatching,
     stdParamEnforcementManager: MACARuleMatching,
     macaRuleMatchingManager: MACARuleMatching,
+    vvpConfigManager: MACARuleMatching,
     blocklistEventsManager: _EventsProcessing,
     redactedEventsManager: _EventsProcessing,
     sensitiveParamsManager: _AppEventsParameterProcessing,
@@ -132,6 +134,7 @@ final class TestAppEvents: TestEventLogger,
     capturedConfigureBannedParamsManager = bannedParamsManager
     capturedConfigureStdParamEnforcementManager = stdParamEnforcementManager
     capturedConfigureMACARuleMatchingManager = macaRuleMatchingManager
+    capturedConfigureVVPConfigManager = vvpConfigManager
     capturedConfigureBlocklistEventsManager = blocklistEventsManager
     capturedConfigureRedactedEventsManager = redactedEventsManager
     capturedConfigureSensitiveParamsManager = sensitiveParamsManager

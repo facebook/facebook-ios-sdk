@@ -16,13 +16,15 @@ final class CoreKitComponents {
   let aemNetworker: AEMNetworking?
   let aemReporter: _AEMReporterProtocol.Type
   let appEventParametersExtractor: _AppEventParametersExtracting
-  let appEvents: _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
+  let appEvents:
+    _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
     & _ApplicationActivating & _ApplicationStateSetting & EventLogging
   let appEventsConfigurationProvider: _AppEventsConfigurationProviding
   let appEventsDropDeterminer: _AppEventDropDetermining
   let appEventsStateProvider: _AppEventsStateProviding
   let appEventsStateStore: _AppEventsStatePersisting
-  let appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting
+  let appEventsUtility:
+    _AppEventDropDetermining & _AppEventParametersExtracting
     & _AppEventsUtilityProtocol & _LoggingNotifying
   let appLinkEventPoster: _AppLinkEventPosting
   let appLinkFactory: _AppLinkCreating
@@ -91,6 +93,7 @@ final class CoreKitComponents {
   let urlSessionProxyFactory: _URLSessionProxyProviding
   let userDataStore: _UserDataPersisting
   let userIDProvider: _UserIDProviding
+  let vvpConfigManager: MACARuleMatching
   let webViewProvider: _WebViewProviding
 
   // MARK: - Initializers
@@ -176,6 +179,7 @@ final class CoreKitComponents {
     urlSessionProxyFactory: _URLSessionProxyProviding,
     userDataStore: _UserDataPersisting,
     userIDProvider: _UserIDProviding,
+    vvpConfigManager: MACARuleMatching,
     webViewProvider: _WebViewProviding
   ) {
     self.accessTokenExpirer = accessTokenExpirer
@@ -258,6 +262,7 @@ final class CoreKitComponents {
     self.urlSessionProxyFactory = urlSessionProxyFactory
     self.userDataStore = userDataStore
     self.userIDProvider = userIDProvider
+    self.vvpConfigManager = vvpConfigManager
     self.webViewProvider = webViewProvider
   }
 
@@ -330,12 +335,14 @@ final class CoreKitComponents {
     let accessTokenExpirer: _AccessTokenExpiring = _AccessTokenExpirer(notificationCenter: NotificationCenter.default)
     let accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type = AccessToken.self
     let advertiserIDProvider: _AdvertiserIDProviding = _AppEventsUtility.shared
-    let appEvents: _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
+    let appEvents:
+      _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
       & _ApplicationActivating & _ApplicationStateSetting & EventLogging = AppEvents.shared
     let appEventsConfigurationProvider: _AppEventsConfigurationProviding = _AppEventsConfigurationManager.shared
     let appEventsStateProvider: _AppEventsStateProviding = AppEventsStateFactory()
     let appEventsStateStore: _AppEventsStatePersisting = _AppEventsStateManager.shared
-    let appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtility
+    let appEventsUtility:
+      _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtility
       & _LoggingNotifying = _AppEventsUtility.shared
     let authenticationTokenWallet: _AuthenticationTokenProviding.Type = AuthenticationToken.self
     let crashHandler: CrashHandlerProtocol = CrashHandler.shared
@@ -366,6 +373,7 @@ final class CoreKitComponents {
     let stdParamEnforcementManager: MACARuleMatching = StdParamEnforcementManager()
     let bannedParamsManager: MACARuleMatching = BannedParamsManager()
     let macaRuleMatchingManager: MACARuleMatching = MACARuleMatchingManager()
+    let vvpConfigManager: MACARuleMatching = VVPConfigManager()
     let blocklistEventsManager: _EventsProcessing = BlocklistEventsManager()
     let redactedEventsManager: _EventsProcessing = RedactedEventsManager()
     let sensitiveParamsManager: _AppEventsParameterProcessing = SensitiveParamsManager()
@@ -489,6 +497,7 @@ final class CoreKitComponents {
       urlSessionProxyFactory: urlSessionProxyFactory,
       userDataStore: userDataStore,
       userIDProvider: AppEvents.shared,
+      vvpConfigManager: vvpConfigManager,
       webViewProvider: _WebViewFactory()
     )
   }()

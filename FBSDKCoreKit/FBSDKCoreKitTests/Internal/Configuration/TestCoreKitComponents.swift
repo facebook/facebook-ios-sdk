@@ -95,6 +95,7 @@ enum TestCoreKitComponents {
     urlSessionProxyFactory: _URLSessionProxyProviding = TestURLSessionProxyFactory(),
     userDataStore: _UserDataPersisting = TestUserDataStore(),
     userIDProvider: _UserIDProviding = TestUserIDProvider(),
+    vvpConfigManager: MACARuleMatching = TestVVPConfigManager(),
     webViewProvider: _WebViewProviding = TestWebViewFactory()
   ) -> CoreKitComponents {
     CoreKitComponents(
@@ -178,6 +179,7 @@ enum TestCoreKitComponents {
       urlSessionProxyFactory: urlSessionProxyFactory,
       userDataStore: userDataStore,
       userIDProvider: userIDProvider,
+      vvpConfigManager: vvpConfigManager,
       webViewProvider: webViewProvider
     )
   }

@@ -108,6 +108,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> bannedParamsManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> stdParamEnforcementManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
+@property (nullable, nonatomic) id<FBSDKMACARuleMatching> vvpConfigManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> blocklistEventsManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> redactedEventsManager;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> sensitiveParamsManager;
@@ -663,6 +664,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
                       bannedParamsManager:(nonnull id<FBSDKMACARuleMatching>)bannedParamsManager
                stdParamEnforcementManager:(nonnull id<FBSDKMACARuleMatching>)stdParamEnforcementManager
                  macaRuleMatchingManager:(nonnull id<FBSDKMACARuleMatching>)macaRuleMatchingManager
+                        vvpConfigManager:(nonnull id<FBSDKMACARuleMatching>)vvpConfigManager
                    blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
                     redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
                    sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
@@ -695,6 +697,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   self.bannedParamsManager = bannedParamsManager;
   self.stdParamEnforcementManager = stdParamEnforcementManager;
   self.macaRuleMatchingManager = macaRuleMatchingManager;
+  self.vvpConfigManager = vvpConfigManager;
   self.blocklistEventsManager = blocklistEventsManager;
   self.redactedEventsManager = redactedEventsManager;
   self.sensitiveParamsManager = sensitiveParamsManager;
@@ -1035,6 +1038,11 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           [self.macaRuleMatchingManager enable];
         }
       }];
+      [self.featureChecker checkFeature:FBSDKFeatureVVP completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.vvpConfigManager enable];
+        }
+      }];
       [self.featureChecker checkFeature:FBSDKFeatureBlocklistEvents completionBlock:^(BOOL enabled) {
         if (enabled) {
           [self.blocklistEventsManager enable];
@@ -1301,6 +1309,18 @@ operationalParameters:nil];
     @try {
         parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
     } @catch(NSException *exception) {}
+  }
+
+  // VPPA Video Viewing Protections — must run AFTER ProtectedMode so the
+  // `vvp` / `vvp_md` tags survive ProtectedMode's standard-params filter
+  // (those keys are added to ProtectedMode's allowlist for that reason).
+  if (self.vvpConfigManager) {
+    @try {
+      parameters = [self.vvpConfigManager processParameters:parameters event:eventName ?: @""];
+    } @catch (NSException *exception) {
+      [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                             logEntry:@"FBSDKAppEvents: caught exception while processing vvpConfigManager."];
+    }
   }
 
 
@@ -1732,6 +1752,7 @@ operationalParameters:nil];
   self.bannedParamsManager = nil;
   self.stdParamEnforcementManager = nil;
   self.macaRuleMatchingManager = nil;
+  self.vvpConfigManager = nil;
   self.blocklistEventsManager = nil;
   self.redactedEventsManager = nil;
   self.sensitiveParamsManager = nil;

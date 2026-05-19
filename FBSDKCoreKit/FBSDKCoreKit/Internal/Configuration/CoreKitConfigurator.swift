@@ -113,6 +113,7 @@ private extension CoreKitConfigurator {
       bannedParamsManager: components.bannedParamsManager,
       stdParamEnforcementManager: components.stdParamEnforcementManager,
       macaRuleMatchingManager: components.macaRuleMatchingManager,
+      vvpConfigManager: components.vvpConfigManager,
       blocklistEventsManager: components.blocklistEventsManager,
       redactedEventsManager: components.redactedEventsManager,
       sensitiveParamsManager: components.sensitiveParamsManager,

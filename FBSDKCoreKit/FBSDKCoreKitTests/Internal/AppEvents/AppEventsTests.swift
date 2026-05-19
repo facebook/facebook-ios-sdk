@@ -7,7 +7,6 @@
  */
 
 @testable import FBSDKCoreKit
-
 import FBAEMKit
 import TestTools
 import XCTest
@@ -52,6 +51,7 @@ final class AppEventsTests: XCTestCase {
   var bannedParamsManager: TestBannedParamsManager!
   var stdParamEnforcementManager: TestStdParamEnforcementManager!
   var macaRuleMatchingManager: TestMACARuleMatchingManager!
+  var vvpConfigManager: TestVVPConfigManager!
   var blocklistEventsManager: TestBlocklistEventsManager!
   var redactedEventsManager: TestRedactedEventsManager!
   var sensitiveParamsManager: TestSensitiveParamsManager!
@@ -88,6 +88,7 @@ final class AppEventsTests: XCTestCase {
     bannedParamsManager = TestBannedParamsManager()
     stdParamEnforcementManager = TestStdParamEnforcementManager()
     macaRuleMatchingManager = TestMACARuleMatchingManager()
+    vvpConfigManager = TestVVPConfigManager()
     blocklistEventsManager = TestBlocklistEventsManager()
     redactedEventsManager = TestRedactedEventsManager()
     sensitiveParamsManager = TestSensitiveParamsManager()
@@ -189,6 +190,7 @@ final class AppEventsTests: XCTestCase {
       bannedParamsManager: bannedParamsManager,
       stdParamEnforcementManager: stdParamEnforcementManager,
       macaRuleMatchingManager: macaRuleMatchingManager,
+      vvpConfigManager: vvpConfigManager,
       blocklistEventsManager: blocklistEventsManager,
       redactedEventsManager: redactedEventsManager,
       sensitiveParamsManager: sensitiveParamsManager,
@@ -286,8 +288,10 @@ final class AppEventsTests: XCTestCase {
       graphRequestFactory.capturedRequests.first?.graphPath,
       "mockAppID/activities"
     )
-    guard let capturedOperationalParameters =
-      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+    guard
+      let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String
+    else {
       XCTFail("We should have operational parameters")
       return
     }
@@ -312,8 +316,10 @@ final class AppEventsTests: XCTestCase {
       graphRequestFactory.capturedRequests.first?.graphPath,
       "mockAppID/activities"
     )
-    guard let capturedOperationalParameters =
-      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String else {
+    guard
+      let capturedOperationalParameters =
+      graphRequestFactory.capturedRequests.first?.parameters["operational_parameters"] as? String
+    else {
       XCTFail("We should have operational parameters")
       return
     }

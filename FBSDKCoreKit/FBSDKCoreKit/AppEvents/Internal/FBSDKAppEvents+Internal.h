@@ -40,6 +40,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsDialogOutcomeValue_Failed;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> bannedParamsManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> stdParamEnforcementManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
+@property (nullable, nonatomic) id<FBSDKMACARuleMatching> vvpConfigManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> blocklistEventsManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> redactedEventsManager;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> sensitiveParamsManager;
