@@ -211,6 +211,43 @@ final class LimitedLoginRefresherTests: XCTestCase {
     )
   }
 
+  func testRefreshURLIncludesDpopJktWhenProviderReturnsThumbprint() throws {
+    LimitedLoginRefresher.dpopJktProvider = { "stub_thumbprint_43_chars__________________________a" }
+    defer { LimitedLoginRefresher.dpopJktProvider = LimitedLoginRefresher.defaultDPoPJktProvider }
+
+    _ = refresher.buildRefreshURL(
+      existingToken: existingToken,
+      nonce: Values.nonce,
+      scopes: ["public_profile"]
+    )
+
+    let queryParams = try XCTUnwrap(internalUtility.capturedFacebookURLQueryParameters)
+    XCTAssertEqual(
+      queryParams["dpop_jkt"],
+      "stub_thumbprint_43_chars__________________________a",
+      "Silent refresh must send dpop_jkt so the server can re-bind cnf.jkt to the current device key"
+    )
+  }
+
+  func testRefreshURLOmitsDpopJktWhenProviderReturnsNil() throws {
+    // Provider returns nil when the gate is closed or the keypair is unavailable —
+    // the request must still go through, just without the re-bind hint.
+    LimitedLoginRefresher.dpopJktProvider = { nil }
+    defer { LimitedLoginRefresher.dpopJktProvider = LimitedLoginRefresher.defaultDPoPJktProvider }
+
+    _ = refresher.buildRefreshURL(
+      existingToken: existingToken,
+      nonce: Values.nonce,
+      scopes: ["public_profile"]
+    )
+
+    let queryParams = try XCTUnwrap(internalUtility.capturedFacebookURLQueryParameters)
+    XCTAssertNil(
+      queryParams["dpop_jkt"],
+      "Absence of dpop_jkt is the signal to the server to keep the existing cnf.jkt carry-forward"
+    )
+  }
+
   // MARK: - D4: Parse Refresh Response
 
   func testParseSuccessResponse() {

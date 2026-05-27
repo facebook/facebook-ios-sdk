@@ -59,7 +59,7 @@ final class LimitedLoginRefresher {
     scopeSet.insert(LoginEndpoints.openIDScope)
     let scopeString = scopeSet.joined(separator: ",")
 
-    let parameters: [String: String] = [
+    var parameters: [String: String] = [
       "client_id": dependencies.settings.appID ?? "",
       "redirect_uri": redirectURL.absoluteString,
       "display": LoginEndpoints.displayValueTouch,
@@ -75,11 +75,40 @@ final class LimitedLoginRefresher {
       "state": UUID().uuidString,
     ]
 
+    // Include the current device's DPoP key thumbprint so the server can re-bind
+    // the refreshed id_token to it via the cnf.jkt carry-forward override. This
+    // self-heals the device-key-loss case (app reinstall, keychain reset): the
+    // existing id_token_hint's cnf.jkt points at the OLD key, and without this
+    // re-bind silent refresh would carry forward the stale thumbprint, leaving
+    // the user permanently unable to use .directOnly. Gated by the same feature
+    // flag as the rest of the Limited Login Refresh feature.
+    if let thumbprint = Self.dpopJktProvider() {
+      parameters[LoginEndpoints.dpopJktParam] = thumbprint
+    }
+
     return try? dependencies.internalUtility.facebookURL(
       hostPrefix: LoginEndpoints.limitedHostPrefix,
       path: LoginEndpoints.oAuthPath,
       queryParameters: parameters
     )
+  }
+
+  /// Test seam for `dpop_jkt` emission on silent refresh. Production reads from
+  /// `DPoPKeyManager.shared`, gated behind `FBSDKFeatureLimitedLoginRefresh` so
+  /// the kill switch stops *all* DPoP emission, not just at-login emission.
+  /// Tests can swap this to inject a deterministic value (or nil to simulate
+  /// "no DPoP available"). Reset in tearDown.
+  static var dpopJktProvider: () -> String? = defaultDPoPJktProvider
+
+  static let defaultDPoPJktProvider: () -> String? = {
+    guard #available(iOS 13.0, *) else { return nil }
+
+    guard RefreshGateKeeperCheck.isSilentRefreshEnabled() else { return nil }
+
+    let manager = DPoPKeyManager.shared
+    guard (try? manager.generateKeyPairIfNeeded()) != nil else { return nil }
+
+    return manager.getJWKThumbprint()
   }
 
   /// Orchestrates the full refresh flow: build URL, start silent auth session,
