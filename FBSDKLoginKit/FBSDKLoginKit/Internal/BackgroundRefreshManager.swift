@@ -12,13 +12,19 @@ import UIKit
 
 /// Manages automatic background refresh of Limited Login sessions.
 ///
-/// When enabled, this class observes `UIApplication.willEnterForegroundNotification`
-/// and automatically triggers a silent Limited Login refresh if:
+/// This class observes `UIApplication.willEnterForegroundNotification` and triggers
+/// a DPoP-bound refresh of the Limited Login session if:
 /// - A Limited Login profile is active (Profile.current exists, AccessToken.current is nil)
 /// - An AuthenticationToken is present
 /// - Enough time has elapsed since the last background refresh
 ///
-/// The refresh runs silently (`.silentOnly`) and fails without user-facing errors.
+/// The refresh runs via `.directOnly` (a DPoP-bound HTTPS POST with no UI). Tokens
+/// without a `cnf.jkt` binding fall through as `.notDPoPBound` and the manager
+/// makes no further attempt for that foreground; the next interactive login will
+/// mint a bound token and unblock subsequent foregrounds. The server-side feature
+/// flag (`FBSDKFeatureLimitedLoginRefresh`) is the kill switch — when off, every
+/// attempt returns `.featureDisabled` and is a no-op.
+///
 /// On success, `Profile.current` and `AuthenticationToken.current` are updated,
 /// which automatically posts `ProfileDidChange` via the Profile setter.
 ///
@@ -54,10 +60,6 @@ final class BackgroundRefreshManager {
   // MARK: - Refresh Logic
 
   func attemptBackgroundRefresh() {
-    guard Settings.shared.isLimitedLoginAutoRefreshEnabled else {
-      return
-    }
-
     // Must be a Limited Login session with an AuthenticationToken
     guard let profile = Profile.current,
           profile.isLimited,
@@ -83,7 +85,7 @@ final class BackgroundRefreshManager {
     isRefreshing = true
     lock.unlock()
 
-    LoginManager().refreshLimitedLogin(from: nil, fallbackPolicy: .silentOnly) { [weak self] result in
+    LoginManager().refreshLimitedLogin(from: nil, fallbackPolicy: .directOnly) { [weak self] result in
       guard let self else { return }
 
       self.lock.lock()

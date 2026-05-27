@@ -47,7 +47,6 @@ public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var persistableDataProcessingOptions: [String: Any]?
   public var isDomainErrorEnabled = true
   public var addToMessagingCustomerBaseForWhatsApp: NSNumber?
-  public var isLimitedLoginAutoRefreshEnabled = false
   public var limitedLoginAutoRefreshInterval: TimeInterval = 86_400.0
 
   public func logIfSDKSettingsChanged() {
