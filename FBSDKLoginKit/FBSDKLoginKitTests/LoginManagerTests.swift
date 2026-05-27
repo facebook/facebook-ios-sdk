@@ -962,6 +962,129 @@ final class LoginManagerTests: XCTestCase {
     XCTAssertNil(parameters["code_challenge_method"])
   }
 
+  // MARK: - DPoP (dpop_jkt)
+
+  func testLimitedLoginParametersIncludeDpopJkt() throws {
+    LoginManager.dpopJktProvider = { "stub_thumbprint_43_chars__________________________a" }
+    LoginManager.directRefreshIsEnabled = { true }
+    defer {
+      LoginManager.dpopJktProvider = LoginManager.defaultDPoPJktProvider
+      LoginManager.directRefreshIsEnabled = { RefreshGateKeeperCheck.isSilentRefreshEnabled() }
+    }
+
+    let configuration = LoginConfiguration(
+      permissions: ["public_profile"],
+      tracking: .limited,
+      nonce: "some_nonce"
+    )
+    internalUtility.stubbedAppURL = sampleURL
+    let parameters = try XCTUnwrap(
+      loginManager.logInParameters(
+        configuration: configuration,
+        loggingToken: "",
+        authenticationMethod: "browser_auth"
+      )
+    )
+
+    XCTAssertEqual(parameters["dpop_jkt"], "stub_thumbprint_43_chars__________________________a")
+  }
+
+  func testLimitedLoginParametersOmitDpopJktWhenFeatureFlagDisabled() throws {
+    // Kill-switch coverage: when the FBSDKFeatureLimitedLoginRefresh flag is off,
+    // the SDK must not bind tokens to a device key — otherwise the kill switch
+    // wouldn't actually stop all the new behavior, just the refresh paths.
+    LoginManager.dpopJktProvider = { "should_not_appear_when_flag_off" }
+    LoginManager.directRefreshIsEnabled = { false }
+    defer {
+      LoginManager.dpopJktProvider = LoginManager.defaultDPoPJktProvider
+      LoginManager.directRefreshIsEnabled = { RefreshGateKeeperCheck.isSilentRefreshEnabled() }
+    }
+
+    let configuration = LoginConfiguration(
+      permissions: ["public_profile"],
+      tracking: .limited,
+      nonce: "some_nonce"
+    )
+    internalUtility.stubbedAppURL = sampleURL
+    let parameters = try XCTUnwrap(
+      loginManager.logInParameters(
+        configuration: configuration,
+        loggingToken: "",
+        authenticationMethod: "browser_auth"
+      )
+    )
+
+    XCTAssertNil(parameters["dpop_jkt"])
+  }
+
+  func testLimitedLoginParametersOmitDpopJktWhenProviderReturnsNil() throws {
+    LoginManager.dpopJktProvider = { nil }
+    defer { LoginManager.dpopJktProvider = LoginManager.defaultDPoPJktProvider }
+
+    let configuration = LoginConfiguration(
+      permissions: ["public_profile"],
+      tracking: .limited,
+      nonce: "some_nonce"
+    )
+    internalUtility.stubbedAppURL = sampleURL
+    let parameters = try XCTUnwrap(
+      loginManager.logInParameters(
+        configuration: configuration,
+        loggingToken: "",
+        authenticationMethod: "browser_auth"
+      )
+    )
+
+    XCTAssertNil(parameters["dpop_jkt"])
+  }
+
+  func testEnabledTrackingDpopJktDependsOnATTStatus() throws {
+    // .enabled tracking takes one of two paths depending on runtime ATT state:
+    // - ATT authorized → classic full login (access_token, no id_token) → dpop_jkt is irrelevant
+    // - ATT denied → Limited Login shim (issues an id_token via the dialog) → MUST send dpop_jkt
+    //   so the resulting id_token can be DPoP-bound for `.directOnly` refresh.
+    // Mirrors the runtime branching in the `is_limited_login_shim` assertions elsewhere
+    // in this file.
+    LoginManager.dpopJktProvider = { "stub_thumbprint_43_chars__________________________a" }
+    LoginManager.directRefreshIsEnabled = { true }
+    defer {
+      LoginManager.dpopJktProvider = LoginManager.defaultDPoPJktProvider
+      LoginManager.directRefreshIsEnabled = { RefreshGateKeeperCheck.isSilentRefreshEnabled() }
+    }
+
+    let configuration = LoginConfiguration(
+      permissions: ["public_profile"],
+      tracking: .enabled,
+      nonce: "some_nonce"
+    )
+    internalUtility.stubbedAppURL = sampleURL
+    let parameters = try XCTUnwrap(
+      loginManager.logInParameters(
+        configuration: configuration,
+        loggingToken: "",
+        authenticationMethod: "browser_auth"
+      )
+    )
+
+    if #available(iOS 14, *), ATTrackingManager.trackingAuthorizationStatus != .authorized {
+      XCTAssertEqual(
+        parameters["dpop_jkt"],
+        "stub_thumbprint_43_chars__________________________a",
+        "Limited Login shim path (ATT denied) issues an id_token; must send dpop_jkt"
+      )
+      XCTAssertEqual(
+        parameters["is_limited_login_shim"],
+        "true",
+        "Sanity: this branch should be exercising the shim path"
+      )
+    } else {
+      XCTAssertNil(
+        parameters["dpop_jkt"],
+        "Classic full login (ATT authorized) doesn't issue an id_token; dpop_jkt is irrelevant"
+      )
+    }
+  }
+
   func testLoginParamsWithNilConfiguration() {
     var capturedResult: LoginManagerLoginResult?
     var capturedError: Error?

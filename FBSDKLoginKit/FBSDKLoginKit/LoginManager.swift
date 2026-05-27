@@ -617,6 +617,7 @@ public final class LoginManager: NSObject {
     case .limited:
       parameters["response_type"] = LoginEndpoints.responseTypeLimitedLogin
       parameters["tp"] = LoginEndpoints.trackingValueDoNotTrack
+      addDPoPJktIfAvailable(parameters: &parameters)
 
     case .enabled:
       if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
@@ -656,6 +657,55 @@ public final class LoginManager: NSObject {
     addTrackingParameters(parameters: &parameters, configuration: configuration)
     parameters["tp"] = LoginEndpoints.trackingValueDoNotTrack
     parameters["is_limited_login_shim"] = "true"
+    // The shim path also issues a Limited Login id_token (the SDK fell back to
+    // Limited Login because ATT is denied). It must send dpop_jkt for the same
+    // reason the explicit `.limited` path does — otherwise the resulting token
+    // has no cnf.jkt and `.directOnly` refresh is impossible.
+    addDPoPJktIfAvailable(parameters: &parameters)
+  }
+
+  /// Generates (or reuses) the device's DPoP P-256 key pair and adds the JWK Thumbprint
+  /// to the OAuth request as `dpop_jkt`, gating the entire emission behind the
+  /// `FBSDKFeatureLimitedLoginRefresh` feature flag.
+  ///
+  /// The flag is the kill switch for the entire Limited Login Refresh feature: if it's
+  /// disabled (or fetch failed and we're falling back to the SDK default of `false`), we
+  /// don't bind tokens to a device key. This trades faster ramp-up (immediate post-flip
+  /// adoption requires pre-bound tokens) for full kill-switch coverage of the new behavior.
+  ///
+  /// Silent no-op on iOS < 13, when the gate is closed, or on any keypair-generation
+  /// failure — the server treats absence of `dpop_jkt` as "this client does not support
+  /// direct refresh", so the request still completes and a non-bound token is issued.
+  private func addDPoPJktIfAvailable(parameters: inout [String: String]) {
+    // `directRefreshIsEnabled` (in LoginManager+LimitedLoginRefresh) wraps the
+    // same `RefreshGateKeeperCheck.isSilentRefreshEnabled()` call — using the
+    // shared seam keeps the test surface uniform and makes the kill-switch
+    // story explicit (one toggle disables both at-login emission and refresh).
+    guard Self.directRefreshIsEnabled() else { return }
+
+    guard let thumbprint = Self.dpopJktProvider() else { return }
+
+    parameters[LoginEndpoints.dpopJktParam] = thumbprint
+  }
+
+  /// Gates `dpop_jkt` emission (and, in extensions, the direct refresh path) behind
+  /// the same GateKeeper used by silent refresh — keeping at-login binding and
+  /// at-refresh use of that binding atomically rollable. Tests inject `{ true }` /
+  /// `{ false }` to bypass the runtime feature flag.
+  static var directRefreshIsEnabled: () -> Bool = { RefreshGateKeeperCheck.isSilentRefreshEnabled() }
+
+  /// Test seam for `addDPoPJktIfAvailable`. Production produces the thumbprint from
+  /// `DPoPKeyManager.shared`; tests can swap this to inject a deterministic value
+  /// (or nil to simulate "no DPoP available"). Reset in tearDown.
+  static var dpopJktProvider: () -> String? = defaultDPoPJktProvider
+
+  static let defaultDPoPJktProvider: () -> String? = {
+    guard #available(iOS 13.0, *) else { return nil }
+
+    let manager = DPoPKeyManager.shared
+    guard (try? manager.generateKeyPairIfNeeded()) != nil else { return nil }
+
+    return manager.getJWKThumbprint()
   }
 
   func validateReauthentication(

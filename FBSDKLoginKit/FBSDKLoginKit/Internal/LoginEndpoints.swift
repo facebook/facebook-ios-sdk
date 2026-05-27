@@ -29,4 +29,8 @@ enum LoginEndpoints {
   static let sdkValueIOS = "ios"
   static let pkceMethodS256 = "S256"
   static let openIDScope = "openid"
+
+  /// Parameter name for the JWK Thumbprint (RFC 7638) of the device's DPoP key,
+  /// sent with Limited Login so the server can bind the issued id_token to the key.
+  static let dpopJktParam = "dpop_jkt"
 }
