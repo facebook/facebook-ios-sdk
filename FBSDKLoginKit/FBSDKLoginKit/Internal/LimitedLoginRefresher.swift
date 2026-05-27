@@ -106,7 +106,21 @@ final class LimitedLoginRefresher {
     guard RefreshGateKeeperCheck.isSilentRefreshEnabled() else { return nil }
 
     let manager = DPoPKeyManager.shared
-    guard (try? manager.generateKeyPairIfNeeded()) != nil else { return nil }
+    do {
+      _ = try manager.generateKeyPairIfNeeded()
+    } catch {
+      // Silent refresh still proceeds without `dpop_jkt` — the resulting
+      // token will not be DPoP-bound and subsequent `.directOnly` refreshes
+      // will fail with `.notDPoPBound`. Same root cause and remediation as
+      // the login-time provider in `LoginManager.defaultDPoPJktProvider`.
+      _Logger.singleShotLogEntry(
+        .developerErrors,
+        logEntry: "FBSDKLoginKit: DPoP key generation failed during silent "
+          + "refresh — `dpop_jkt` will be omitted. Underlying error: \(error). "
+          + "See LimitedLoginRefreshError.dpopKeyGenerationFailed for diagnosis."
+      )
+      return nil
+    }
 
     return manager.getJWKThumbprint()
   }

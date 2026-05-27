@@ -703,7 +703,23 @@ public final class LoginManager: NSObject {
     guard #available(iOS 13.0, *) else { return nil }
 
     let manager = DPoPKeyManager.shared
-    guard (try? manager.generateKeyPairIfNeeded()) != nil else { return nil }
+    do {
+      _ = try manager.generateKeyPairIfNeeded()
+    } catch {
+      // Login still proceeds — `dpop_jkt` becomes optional and the resulting
+      // token will have no `cnf.jkt`, surfacing later as `.notDPoPBound` on
+      // any `.directOnly` refresh. Log so integrators can find the root cause
+      // (almost always a missing `keychain-access-groups` entitlement on the
+      // host app — see `LimitedLoginRefreshError.dpopKeyGenerationFailed`).
+      _Logger.singleShotLogEntry(
+        .developerErrors,
+        logEntry: "FBSDKLoginKit: DPoP key generation failed at login — "
+          + "`dpop_jkt` will be omitted and the resulting token will not be "
+          + "DPoP-bound. Underlying error: \(error). "
+          + "See LimitedLoginRefreshError.dpopKeyGenerationFailed for diagnosis."
+      )
+      return nil
+    }
 
     return manager.getJWKThumbprint()
   }

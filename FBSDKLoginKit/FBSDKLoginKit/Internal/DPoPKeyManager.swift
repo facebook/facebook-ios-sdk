@@ -167,7 +167,7 @@ final class KeychainDPoPKeyStore: DPoPKeyStoring {
         .privateKeyUsage,
         nil
       ) else {
-        throw LimitedLoginRefreshError.unknown
+        throw LimitedLoginRefreshError.dpopKeyGenerationFailed
       }
 
       attributes[kSecAttrTokenID as String] = kSecAttrTokenIDSecureEnclave

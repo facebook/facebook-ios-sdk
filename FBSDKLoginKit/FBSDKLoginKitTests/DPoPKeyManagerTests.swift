@@ -29,7 +29,7 @@ final class InMemoryDPoPKeyStore: DPoPKeyStoring {
     ]
     var error: Unmanaged<CFError>?
     guard let newKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error) else {
-      throw LimitedLoginRefreshError.unknown
+      throw LimitedLoginRefreshError.dpopKeyGenerationFailed
     }
     key = newKey
     return newKey

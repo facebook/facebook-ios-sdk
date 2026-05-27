@@ -38,7 +38,8 @@ final class RefreshRetryHandler {
       return currentAttempt == 0
     case .loginRequired, .consentRequired, .userMismatch,
          .rateLimited, .cancelled, .noCurrentToken, .notLimitedLogin,
-         .featureDisabled, .unsupportedPlatform, .notDPoPBound, .unknown:
+         .featureDisabled, .unsupportedPlatform, .notDPoPBound,
+         .dpopKeyGenerationFailed, .unknown:
       return false
     }
   }

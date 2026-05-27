@@ -79,14 +79,32 @@ public enum LimitedLoginRefreshError: Int, Error, Sendable {
   /// thumbprint to the token at issuance time). Typical causes:
   /// (a) the token was issued before the SDK supported DPoP key binding;
   /// (b) the device's DPoP keypair was wiped (e.g. app reinstall) and no longer
-  ///     matches the token's `cnf.jkt`; or
-  /// (c) the server-side feature flag was off when the token was issued.
+  ///     matches the token's `cnf.jkt`;
+  /// (c) the keychain was unavailable when the token was minted, so `dpop_jkt`
+  ///     was silently omitted from the login request (see `.dpopKeyGenerationFailed`);
+  ///     or
+  /// (d) the server-side feature flag was off when the token was issued.
   /// Recovery: complete a fresh Limited Login (e.g. via `.explicitOnly` or
   /// `.automatic`) to mint a newly-bound token. Under `.automatic`, this case
   /// falls through to silent refresh, which sends `dpop_jkt` to mint a freshly
   /// bound token; if silent then requires user interaction it falls back to
   /// explicit.
   case notDPoPBound
+
+  /// The SDK could not generate or load the DPoP private key from the keychain.
+  /// The most common cause is the host app lacking a `keychain-access-groups`
+  /// entitlement (e.g. an unsigned simulator build, or a development build with
+  /// no `DEVELOPMENT_TEAM`/`CODE_SIGN_ENTITLEMENTS` configured). Other causes:
+  /// device locked before first unlock, Secure Enclave access denied, keychain
+  /// corruption.
+  ///
+  /// When this happens at login time, `dpop_jkt` is silently omitted and the
+  /// resulting token has no `cnf.jkt` — subsequent `.directOnly` refreshes will
+  /// return `.notDPoPBound`. When it happens at refresh time, the SDK surfaces
+  /// this case directly. Inspect device console logs filtered to
+  /// `com.facebook.sdk` for the underlying `OSStatus` / `CFError` from
+  /// `SecKeyCreateRandomKey` / `SecAccessControlCreateWithFlags`.
+  case dpopKeyGenerationFailed
 
   /// An error the SDK could not classify into one of the cases above.
   case unknown
@@ -132,9 +150,16 @@ extension LimitedLoginRefreshError: LocalizedError {
     case .notDPoPBound:
       return "The current Limited Login token has no DPoP key binding (no `cnf.jkt` claim), "
         + "so the .directOnly path cannot use it. Typical causes: token issued before DPoP "
-        + "binding rolled out, device key wiped (e.g. app reinstall), or feature flag was "
-        + "off at issuance. Recovery: complete a fresh Limited Login via .explicitOnly or "
-        + ".automatic to mint a newly-bound token."
+        + "binding rolled out, device key wiped (e.g. app reinstall), keychain unavailable "
+        + "at login (see .dpopKeyGenerationFailed), or feature flag was off at issuance. "
+        + "Recovery: complete a fresh Limited Login via .explicitOnly or .automatic to "
+        + "mint a newly-bound token."
+    case .dpopKeyGenerationFailed:
+      return "Failed to generate or load the DPoP private key from the keychain. The most "
+        + "likely cause is a missing `keychain-access-groups` entitlement on the host app — "
+        + "ensure the app has a valid `DEVELOPMENT_TEAM` and a `CODE_SIGN_ENTITLEMENTS` plist "
+        + "with a `keychain-access-groups` entry (e.g. `$(AppIdentifierPrefix)*`). Check "
+        + "device console logs filtered to `com.facebook.sdk` for the underlying OSStatus."
     case .unknown:
       return "An unknown error occurred during Limited Login refresh."
     }
