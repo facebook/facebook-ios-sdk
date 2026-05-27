@@ -171,6 +171,72 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
     XCTAssertNil(AuthenticationTokenClaims(encodedClaims: encoded, nonce: nonce))
   }
 
+  // MARK: - cnf.jkt (DPoP binding)
+
+  func testDecodeClaimsWithCnfJktParsesCorrectly() throws {
+    var values = try XCTUnwrap(claimsValues)
+    values["cnf"] = ["jkt": "abc123_thumbprint"]
+
+    let data = try TypeUtility.data(withJSONObject: values, options: [])
+    let encoded = base64URLEncodeData(data)
+    let decoded = try XCTUnwrap(AuthenticationTokenClaims(encodedClaims: encoded, nonce: nonce))
+
+    XCTAssertEqual(decoded.cnfJkt, "abc123_thumbprint")
+  }
+
+  func testDecodeClaimsWithoutCnfReturnsNilThumbprint() throws {
+    let values = try XCTUnwrap(claimsValues)
+    let data = try TypeUtility.data(withJSONObject: values, options: [])
+    let encoded = base64URLEncodeData(data)
+    let decoded = try XCTUnwrap(AuthenticationTokenClaims(encodedClaims: encoded, nonce: nonce))
+
+    XCTAssertNil(decoded.cnfJkt)
+  }
+
+  func testDecodeClaimsWithEmptyCnfJktReturnsNil() throws {
+    var values = try XCTUnwrap(claimsValues)
+    values["cnf"] = ["jkt": ""]
+
+    let data = try TypeUtility.data(withJSONObject: values, options: [])
+    let encoded = base64URLEncodeData(data)
+    let decoded = try XCTUnwrap(AuthenticationTokenClaims(encodedClaims: encoded, nonce: nonce))
+
+    XCTAssertNil(decoded.cnfJkt)
+  }
+
+  func testDecodeClaimsWithCnfButNoJktReturnsNil() throws {
+    var values = try XCTUnwrap(claimsValues)
+    values["cnf"] = ["other_key": "value"]
+
+    let data = try TypeUtility.data(withJSONObject: values, options: [])
+    let encoded = base64URLEncodeData(data)
+    let decoded = try XCTUnwrap(AuthenticationTokenClaims(encodedClaims: encoded, nonce: nonce))
+
+    XCTAssertNil(decoded.cnfJkt)
+  }
+
+  func testDecodeClaimsWithMalformedCnfReturnsNil() throws {
+    var values = try XCTUnwrap(claimsValues)
+    values["cnf"] = "not_a_dict"
+
+    let data = try TypeUtility.data(withJSONObject: values, options: [])
+    let encoded = base64URLEncodeData(data)
+    let decoded = try XCTUnwrap(AuthenticationTokenClaims(encodedClaims: encoded, nonce: nonce))
+
+    XCTAssertNil(decoded.cnfJkt)
+  }
+
+  func testDecodeClaimsWithNonStringCnfJktReturnsNil() throws {
+    var values = try XCTUnwrap(claimsValues)
+    values["cnf"] = ["jkt": 12345]
+
+    let data = try TypeUtility.data(withJSONObject: values, options: [])
+    let encoded = base64URLEncodeData(data)
+    let decoded = try XCTUnwrap(AuthenticationTokenClaims(encodedClaims: encoded, nonce: nonce))
+
+    XCTAssertNil(decoded.cnfJkt)
+  }
+
   // swiftlint:disable:next identifier_name
   func _testDecodeRandomClaims() throws {
     try XCTSkipIf(true) // see T98167812
