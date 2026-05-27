@@ -143,26 +143,20 @@ final class LimitedLoginRefresher {
     scopes: [String] = [LoginEndpoints.openIDScope],
     completion: @escaping (Result<Profile, LimitedLoginRefreshError>) -> Void
   ) {
-    RefreshDebugLogger.logRefreshStarted()
-
     // GateKeeper check
     guard RefreshGateKeeperCheck.isSilentRefreshEnabled() else {
-      RefreshDebugLogger.logGateKeeperDisabled()
       completion(.failure(.featureDisabled))
       return
     }
 
     // Rate limiter check
     guard RefreshRateLimiter.shared.canAttemptRefresh() else {
-      let waitTime = RefreshRateLimiter.shared.timeUntilNextAllowedAttempt()
-      RefreshDebugLogger.logRateLimited(waitTime: waitTime)
       completion(.failure(.rateLimited))
       return
     }
 
     // Platform check
     guard #available(iOS 13.0, *) else {
-      RefreshDebugLogger.logUnsupportedPlatform()
       completion(.failure(.unsupportedPlatform))
       return
     }
@@ -173,17 +167,13 @@ final class LimitedLoginRefresher {
 
     guard let url = buildRefreshURL(existingToken: existingToken, nonce: nonce, scopes: scopes) else {
       RefreshRateLimiter.shared.recordFailure()
-      let error = LimitedLoginRefreshError.invalidResponse
-      RefreshDebugLogger.logRefreshFailed(error)
-      completion(.failure(error))
+      completion(.failure(.invalidResponse))
       return
     }
 
     guard let dependencies = try? Self.getDependencies() else {
       RefreshRateLimiter.shared.recordFailure()
-      let error = LimitedLoginRefreshError.unknown
-      RefreshDebugLogger.logRefreshFailed(error)
-      completion(.failure(error))
+      completion(.failure(.unknown))
       return
     }
 
@@ -205,26 +195,19 @@ final class LimitedLoginRefresher {
             switch processResult {
             case let .success(profile):
               RefreshRateLimiter.shared.recordSuccess()
-              RefreshDebugLogger.logRefreshSucceeded()
               completion(.success(profile))
             case let .failure(error):
               RefreshRateLimiter.shared.recordFailure()
-              if case .userMismatch = error {
-                RefreshDebugLogger.logUserMismatch(expected: existingUserID, actual: "unknown")
-              }
-              RefreshDebugLogger.logRefreshFailed(error)
               completion(.failure(error))
             }
           }
         case let .failure(error):
           RefreshRateLimiter.shared.recordFailure()
-          RefreshDebugLogger.logRefreshFailed(error)
           completion(.failure(error))
         }
 
       case let .failure(error):
         RefreshRateLimiter.shared.recordFailure()
-        RefreshDebugLogger.logRefreshFailed(error)
         completion(.failure(error))
       }
     }
