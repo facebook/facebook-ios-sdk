@@ -24,7 +24,8 @@ final class LimitedLoginRefreshErrorTests: XCTestCase {
     XCTAssertEqual(LimitedLoginRefreshError.cancelled.rawValue, 9)
     XCTAssertEqual(LimitedLoginRefreshError.featureDisabled.rawValue, 10)
     XCTAssertEqual(LimitedLoginRefreshError.unsupportedPlatform.rawValue, 11)
-    XCTAssertEqual(LimitedLoginRefreshError.unknown.rawValue, 12)
+    XCTAssertEqual(LimitedLoginRefreshError.notDPoPBound.rawValue, 12)
+    XCTAssertEqual(LimitedLoginRefreshError.unknown.rawValue, 13)
   }
 
   func testLocalizedDescriptions() {
@@ -41,6 +42,7 @@ final class LimitedLoginRefreshErrorTests: XCTestCase {
       .cancelled,
       .featureDisabled,
       .unsupportedPlatform,
+      .notDPoPBound,
       .unknown,
     ]
 
@@ -75,6 +77,7 @@ final class LimitedLoginRefreshErrorTests: XCTestCase {
       .cancelled,
       .featureDisabled,
       .unsupportedPlatform,
+      .notDPoPBound,
       .unknown,
     ]
 

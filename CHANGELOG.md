@@ -19,6 +19,24 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   seconds / 24 hours). Call
   `LoginManager.refreshLimitedLogin(from:fallbackPolicy:completion:)` for on-demand
   refresh.
+- **Direct refresh path** (`RefreshFallbackPolicy.directOnly`): truly silent
+  Limited Login refresh via a DPoP-bound HTTPS POST (RFC 9449). No
+  `ASWebAuthenticationSession`, no Apple consent modal, no Facebook UI. Requires
+  the current id_token to carry a `cnf.jkt` claim (server stamps this at issuance
+  when `dpop_jkt` is sent — see below). Returns `LimitedLoginRefreshError.notDPoPBound`
+  if the precondition isn't met.
+- **Three-tier `.automatic` cascade**: `direct → silent → explicit`. Tries
+  `.directOnly` first; on `.notDPoPBound` skips silent (it can't help) and goes
+  straight to explicit; on other direct failures tries silent, then falls back to
+  explicit on `.loginRequired`/`.consentRequired`. `.featureDisabled` is never
+  cascaded — the kill switch is respected.
+- **Device-key binding at login**: Limited Login (and Limited Login shim, when ATT
+  is denied for `.enabled` tracking) now sends a P-256 JWK Thumbprint as `dpop_jkt`,
+  which the server stamps into the issued id_token's `cnf.jkt` claim. Silent
+  refresh also re-emits `dpop_jkt` so the server can re-bind the token after a
+  device-key change (e.g. app reinstall). All gated by the
+  `FBSDKFeatureLimitedLoginRefresh` feature flag — when off, no DPoP key is
+  generated or transmitted.
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.3...HEAD)
 
