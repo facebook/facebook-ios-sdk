@@ -633,6 +633,205 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertNil(out?["video_title"])
   }
 
+  // MARK: - contents[].id sanitization
+
+  func testProcessParametersScrubsIdInContentsArrayEntries() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": false,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true, "fb_content": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let contentsJson = """
+      [{"id":"sku_19738928","quantity":1,"item_price":50.0,"brand":"PUMA"},\
+      {"id":"sku_19736278","quantity":2,"item_price":100.0,"brand":"Jordan"}]
+      """
+    let params: NSDictionary = [
+      "movie_id": "tt1234567",
+      "fb_currency": "USD",
+      "fb_content": contentsJson,
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+    let resultStr = out?["fb_content"] as? String
+    XCTAssertNotNil(resultStr)
+    let decoded = try? JSONSerialization.jsonObject(
+      with: resultStr!.data(using: .utf8)!, options: []
+    ) as? [[String: Any]]
+    XCTAssertEqual(decoded?.count, 2)
+    XCTAssertEqual(decoded?[0]["id"] as? String, "_removed_")
+    XCTAssertEqual(decoded?[0]["quantity"] as? Int, 1)
+    XCTAssertEqual(decoded?[0]["brand"] as? String, "PUMA")
+    XCTAssertEqual(decoded?[1]["id"] as? String, "_removed_")
+    XCTAssertEqual(decoded?[1]["quantity"] as? Int, 2)
+    XCTAssertEqual(decoded?[1]["brand"] as? String, "Jordan")
+  }
+
+  func testProcessParametersScrubsIdInContentsNativeArray() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": false,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true, "fb_content": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let contents: [[String: Any]] = [
+      ["id": "sku_123", "quantity": 1, "item_price": 50.0],
+    ]
+    let params: NSDictionary = [
+      "movie_id": "tt1234567",
+      "fb_currency": "USD",
+      "fb_content": contents,
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    let resultArr = out?["fb_content"] as? [[String: Any]]
+    XCTAssertNotNil(resultArr)
+    XCTAssertEqual(resultArr?.count, 1)
+    XCTAssertEqual(resultArr?[0]["id"] as? String, "_removed_")
+    XCTAssertEqual(resultArr?[0]["quantity"] as? Int, 1)
+  }
+
+  func testProcessParametersContentsNoOpWhenMissing() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": false,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = [
+      "movie_id": "tt1234567",
+      "fb_currency": "USD",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertNil(out?["fb_content"])
+  }
+
+  func testProcessParametersContentsNoOpOnMalformedJson() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": false,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true, "fb_content": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = [
+      "movie_id": "tt1234567",
+      "fb_content": "not_json_at_all",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertEqual(out?["fb_content"] as? String, "not_json_at_all")
+  }
+
+  func testProcessParametersContentsDoesNotAddIdWhenEntryHadNone() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": false,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true, "fb_content": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let contentsJson = """
+      [{"quantity":1,"item_price":10.0},{"id":"tt9999","quantity":2}]
+      """
+    let params: NSDictionary = [
+      "movie_id": "tt1234567",
+      "fb_content": contentsJson,
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    let resultStr = out?["fb_content"] as? String
+    XCTAssertNotNil(resultStr)
+    let decoded = try? JSONSerialization.jsonObject(
+      with: resultStr!.data(using: .utf8)!, options: []
+    ) as? [[String: Any]]
+    XCTAssertEqual(decoded?.count, 2)
+    XCTAssertNil(decoded?[0]["id"])
+    XCTAssertEqual(decoded?[0]["quantity"] as? Int, 1)
+    XCTAssertEqual(decoded?[1]["id"] as? String, "_removed_")
+    XCTAssertEqual(decoded?[1]["quantity"] as? Int, 2)
+  }
+
+  func testProcessParametersContentsNotScrubedInShadowMode() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": true,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true, "fb_content": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let contentsJson = """
+      [{"id":"sku_19738928","quantity":1}]
+      """
+    let params: NSDictionary = [
+      "movie_id": "tt1234567",
+      "fb_content": contentsJson,
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    let resultStr = out?["fb_content"] as? String
+    XCTAssertNotNil(resultStr)
+    let decoded = try? JSONSerialization.jsonObject(
+      with: resultStr!.data(using: .utf8)!, options: []
+    ) as? [[String: Any]]
+    XCTAssertEqual(decoded?[0]["id"] as? String, "sku_19738928")
+  }
+
+  func testProcessParametersContentsAndTopLevelContentIdsBothScrubbed() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": false,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true, "fb_content": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let contentsJson = """
+      [{"id":"tt1234567","quantity":1}]
+      """
+    let params: NSDictionary = [
+      "fb_content_ids": "tt1234567",
+      "fb_currency": "USD",
+      "fb_content": contentsJson,
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "_removed_")
+    let resultStr = out?["fb_content"] as? String
+    XCTAssertNotNil(resultStr)
+    let decoded = try? JSONSerialization.jsonObject(
+      with: resultStr!.data(using: .utf8)!, options: []
+    ) as? [[String: Any]]
+    XCTAssertEqual(decoded?[0]["id"] as? String, "_removed_")
+    XCTAssertEqual(decoded?[0]["quantity"] as? Int, 1)
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+  }
+
   // MARK: - detectMatches (direct unit-level coverage)
 
   func testDetectMatchesPureCustomDataMatch() {

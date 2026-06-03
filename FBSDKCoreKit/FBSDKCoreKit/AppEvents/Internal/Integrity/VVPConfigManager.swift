@@ -67,6 +67,14 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
   private static let contentIdSanitizeKeys: Set<String> = ["fb_content_ids", "fb_content_id"]
   private static let sanitizedValue = "_removed_"
 
+  // The contents-array key whose nested `id` fields are scrubbed. Mirrors
+  // `CustomEvents::FB_CONTENT` on the app server and the JS pixel's
+  // `customData.contents`. The value is either a JSON-encoded string or a
+  // native array of dicts; each entry's `id` is replaced with
+  // `sanitizedValue` while leaving siblings (quantity, item_price, …)
+  // intact.
+  private static let contentsKey = "fb_content"
+
   // MARK: - Lifecycle state
 
   private var isEnabled = false
@@ -138,6 +146,14 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
         }
         mutated.removeObject(forKey: key)
       }
+
+      // Scrub `id` inside each entry of the contents array. `fb_content`
+      // is in the standardParams allowlist (so the loop above keeps it),
+      // but each entry's nested `id` carries the same video identifier
+      // the top-level `fb_content_ids` would. Mirrors the JS pixel
+      // plugin and server-side
+      // `SignalsIntegrityVVPPreprocessor::scrubIdInContentsArray`.
+      VVPConfigManager.scrubIdInContentsArray(mutated)
     }
 
     mutated[VVPConfigManager.vvpKey] = VVPConfigManager.vvpAppliedValue
@@ -224,6 +240,50 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
   private func regexMatches(_ regex: NSRegularExpression, _ s: String) -> Bool {
     let range = NSRange(s.startIndex ..< s.endIndex, in: s)
     return regex.firstMatch(in: s, options: [], range: range) != nil
+  }
+
+  // MARK: - Contents scrubbing
+
+  static func scrubIdInContentsArray(_ mutated: NSMutableDictionary) {
+    guard let rawContents = mutated[contentsKey] else { return }
+
+    var contentsArr: [[String: Any]]?
+    var wasString = false
+
+    if let str = rawContents as? String {
+      wasString = true
+      guard let data = str.data(using: .utf8),
+            let parsed = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
+      else {
+        return
+      }
+      contentsArr = parsed
+    } else if let arr = rawContents as? [[String: Any]] {
+      contentsArr = arr
+    }
+
+    guard let entries = contentsArr else { return }
+
+    var didMutate = false
+    var scrubbed: [[String: Any]] = []
+    for var entry in entries {
+      if entry["id"] != nil {
+        entry["id"] = sanitizedValue
+        didMutate = true
+      }
+      scrubbed.append(entry)
+    }
+
+    guard didMutate else { return }
+
+    if wasString {
+      if let data = try? JSONSerialization.data(withJSONObject: scrubbed, options: []),
+         let jsonString = String(data: data, encoding: .utf8) {
+        mutated[contentsKey] = jsonString
+      }
+    } else {
+      mutated[contentsKey] = scrubbed
+    }
   }
 
   // MARK: - Config loading
