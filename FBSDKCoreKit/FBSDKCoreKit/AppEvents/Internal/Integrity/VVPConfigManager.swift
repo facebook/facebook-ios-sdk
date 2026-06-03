@@ -101,7 +101,8 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
   /// `VVPManager.processParametersForVVP`. Returns `params` unchanged when
   /// disabled, no event name, no config, out-of-scope, or no rule matches.
   func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary? {
-    guard isEnabled, let cfg = config, let event = event, let params = params, !params.isEmpty else {
+    // swiftformat:disable:next isEmpty
+    guard isEnabled, let cfg = config, let event = event, let params = params, params.count > 0 else { // swiftlint:disable:this empty_count
       return params
     }
 
@@ -124,16 +125,14 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
       // Snapshot keys first since we mutate in the loop.
       for key in params.allKeys {
         guard let strKey = key as? String else { continue }
+        if VVPConfigManager.contentIdSanitizeKeys.contains(strKey) {
+          mutated[strKey] = VVPConfigManager.sanitizedValue
+          continue
+        }
         if cfg.standardParams.contains(strKey) {
           continue
         }
-        if VVPConfigManager.contentIdSanitizeKeys.contains(strKey) {
-          // Preserve the key on the payload (downstream attribution expects
-          // it) but scrub the actual identifier.
-          mutated[strKey] = VVPConfigManager.sanitizedValue
-        } else {
-          mutated.removeObject(forKey: key)
-        }
+        mutated.removeObject(forKey: key)
       }
     }
 

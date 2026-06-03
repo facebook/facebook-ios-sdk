@@ -487,6 +487,35 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertEqual(out?["fb_content_ids"] as? String, "_removed_")
   }
 
+  func testProcessParametersContentIdSanitizedEvenWhenInStandardParams() {
+    // Content-ID keys must always be sanitized to "_removed_" regardless of
+    // whether the server's standardParams allowlist includes them. The
+    // allowlist keeps the key on the payload for downstream attribution, but
+    // the value must be scrubbed when VVP fires. This test covers both
+    // fb_content_ids and fb_content_id in the same payload.
+    let cfg = """
+      {"enabled": true,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_content_ids": true, "fb_content_id": true, "fb_currency": true}}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = [
+      "fb_content_ids": "tt1234567",
+      "fb_content_id": "tt7654321",
+      "fb_currency": "USD",
+      "custom_key": "should_be_dropped",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "_removed_")
+    XCTAssertEqual(out?["fb_content_id"] as? String, "_removed_")
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+    XCTAssertNil(out?["custom_key"])
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+  }
+
   // MARK: - detectMatches (direct unit-level coverage)
 
   func testDetectMatchesPureCustomDataMatch() {
