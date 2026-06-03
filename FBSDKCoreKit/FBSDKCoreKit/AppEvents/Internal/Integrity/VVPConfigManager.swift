@@ -32,6 +32,7 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
 
   // Wire field names — match the server-side `TVVPAppConfig` / `TVVPAppRule` shape.
   private static let enabledKey = "enabled"
+  private static let isShadowEnabledKey = "isShadowEnabled"
   private static let rulesKey = "rules"
   private static let standardParamsKey = "standardParams"
   private static let inScopeEventNamesKey = "inScopeEventNames"
@@ -118,10 +119,13 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
 
     let mutated = NSMutableDictionary(dictionary: params)
 
-    // Sanitize / filter customData. Skipped when standardParams is empty —
-    // otherwise we'd drop everything (no allowlist means "keep nothing",
-    // which is not the intended fallback).
-    if !cfg.standardParams.isEmpty {
+    // Sanitize / filter customData. Skipped entirely in shadow mode so we
+    // emit adoption tags without mutating advertiser data — only the explicit
+    // enforce path (isShadowEnabled == false) touches the payload. Mirrors JS
+    // plugin's shadow-vs-enforce split. Also skipped when standardParams is
+    // empty — otherwise we'd drop everything (no allowlist means "keep
+    // nothing", which is not the intended fallback).
+    if !cfg.isShadowEnabled, !cfg.standardParams.isEmpty {
       // Snapshot keys first since we mutate in the loop.
       for key in params.allKeys {
         guard let strKey = key as? String else { continue }
@@ -258,10 +262,18 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     let rules = parseRules(root)
     if rules.isEmpty { return nil }
 
+    let isShadowEnabled: Bool
+    if let raw = root[isShadowEnabledKey] {
+      isShadowEnabled = (raw as? Bool) ?? true
+    } else {
+      isShadowEnabled = true
+    }
+
     return VVPConfig(
       rules: rules,
       standardParams: parseStandardParams(root),
-      inScopeEventNames: parseInScopeEventNames(root)
+      inScopeEventNames: parseInScopeEventNames(root),
+      isShadowEnabled: isShadowEnabled
     )
   }
 
@@ -366,6 +378,11 @@ struct VVPConfig: Equatable {
   /// `nil` = no event-name gate (NON_RETAIL); non-nil restricts detection to
   /// this set (RETAIL purchase-funnel allowlist).
   let inScopeEventNames: Set<String>?
+  /// Drives the shadow-vs-enforce split. Fail-open: a missing or null wire
+  /// value coerces to `true` (shadow) so a misconfigured/legacy server payload
+  /// never accidentally mutates advertiser data — only an explicit `false`
+  /// selects the enforcing path. Mirrors JS `config.isShadowEnabled !== false`.
+  let isShadowEnabled: Bool
 }
 
 extension VVPConfigManager: DependentAsObject {

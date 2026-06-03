@@ -16,6 +16,7 @@ final class VVPConfigManagerTests: XCTestCase {
   private static let validNonRetailConfig = """
     {
       "enabled": true,
+      "isShadowEnabled": false,
       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "\\\\btt\\\\d{7,}\\\\b"}],
       "standardParams": {"fb_currency": true, "fb_value": true},
       "inScopeEventNames": null
@@ -25,9 +26,19 @@ final class VVPConfigManagerTests: XCTestCase {
   private static let validRetailConfig = """
     {
       "enabled": true,
+      "isShadowEnabled": false,
       "rules": [{"place": 1, "keyRegex": "content_id", "valueRegex": "tt\\\\d+"}],
       "standardParams": {"fb_currency": true},
       "inScopeEventNames": ["Purchase", "AddToCart"]
+    }
+    """
+
+  private static let shadowDefaultNonRetailConfig = """
+    {
+      "enabled": true,
+      "rules": [{"place": 1, "keyRegex": "", "valueRegex": "\\\\btt\\\\d{7,}\\\\b"}],
+      "standardParams": {"fb_currency": true, "fb_value": true},
+      "inScopeEventNames": null
     }
     """
 
@@ -295,6 +306,44 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertNil(cfg?.inScopeEventNames)
   }
 
+  // MARK: - isShadowEnabled parsing (fail-open default)
+
+  func testParseConfigParsesExplicitIsShadowEnabledTrue() {
+    let json = """
+      {"enabled": true,
+       "isShadowEnabled": true,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true}}
+      """
+    let cfg = VVPConfigManager.parseConfig(jsonString: json)
+    XCTAssertNotNil(cfg)
+    XCTAssertTrue(cfg!.isShadowEnabled)
+  }
+
+  func testParseConfigParsesExplicitIsShadowEnabledFalse() {
+    let cfg = VVPConfigManager.parseConfig(jsonString: Self.validNonRetailConfig)
+    XCTAssertNotNil(cfg)
+    XCTAssertFalse(cfg!.isShadowEnabled)
+  }
+
+  func testParseConfigDefaultsIsShadowEnabledToTrueWhenMissing() {
+    let cfg = VVPConfigManager.parseConfig(jsonString: Self.shadowDefaultNonRetailConfig)
+    XCTAssertNotNil(cfg)
+    XCTAssertTrue(cfg!.isShadowEnabled)
+  }
+
+  func testParseConfigDefaultsIsShadowEnabledToTrueWhenNSNull() {
+    let json = """
+      {"enabled": true,
+       "isShadowEnabled": null,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
+       "standardParams": {"fb_currency": true}}
+      """
+    let cfg = VVPConfigManager.parseConfig(jsonString: json)
+    XCTAssertNotNil(cfg)
+    XCTAssertTrue(cfg!.isShadowEnabled)
+  }
+
   // MARK: - Enforcement processParameters
 
   func testProcessParametersReturnsInputWhenDisabled() {
@@ -433,6 +482,7 @@ final class VVPConfigManagerTests: XCTestCase {
   func testProcessParametersSanitizesFbContentIdSingularToo() {
     let cfg = """
       {"enabled": true,
+       "isShadowEnabled": false,
        "rules": [{"place": 1, "keyRegex": "^fb_content_id$", "valueRegex": "tt\\\\d+"}],
        "standardParams": {"fb_currency": true}}
       """
@@ -470,6 +520,7 @@ final class VVPConfigManagerTests: XCTestCase {
     // keys through, so the server is expected to allowlist them.
     let cfg = """
       {"enabled": true,
+       "isShadowEnabled": false,
        "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
        "standardParams": {"_logTime": true, "_implicitlyLogged": true, "fb_content_ids": true}}
       """
@@ -495,6 +546,7 @@ final class VVPConfigManagerTests: XCTestCase {
     // fb_content_ids and fb_content_id in the same payload.
     let cfg = """
       {"enabled": true,
+       "isShadowEnabled": false,
        "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
        "standardParams": {"fb_content_ids": true, "fb_content_id": true, "fb_currency": true}}
       """
@@ -514,6 +566,71 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertEqual(out?["fb_currency"] as? String, "USD")
     XCTAssertNil(out?["custom_key"])
     XCTAssertEqual(out?["vvp"] as? String, "1")
+  }
+
+  // MARK: - isShadowEnabled enforcement gate
+
+  func testProcessParametersShadowModeEmitsAdoptionTagsWithoutMutatingCustomData() {
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": true,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "\\\\btt\\\\d{7,}\\\\b"}],
+       "standardParams": {"fb_currency": true, "fb_value": true},
+       "inScopeEventNames": null}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = [
+      "fb_content_ids": "tt1234567",
+      "fb_currency": "USD",
+      "video_title": "Finding Nemo",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    // Adoption tags emitted...
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertNotNil(out?["vvp_md"] as? String)
+    // ...but customData is left untouched in shadow mode.
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "tt1234567")
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+    XCTAssertEqual(out?["video_title"] as? String, "Finding Nemo")
+  }
+
+  func testProcessParametersDefaultsToShadowModeWhenIsShadowEnabledOmitted() {
+    install(vvpConfig: Self.shadowDefaultNonRetailConfig)
+    manager.enable()
+    let params: NSDictionary = [
+      "fb_content_ids": "tt1234567",
+      "video_title": "Finding Nemo",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    // Default = shadow => no mutation.
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "tt1234567")
+    XCTAssertEqual(out?["video_title"] as? String, "Finding Nemo")
+  }
+
+  func testProcessParametersEnforceMutatesOnlyWhenExplicitFalse() {
+    install(vvpConfig: Self.validNonRetailConfig)
+    manager.enable()
+    let params: NSDictionary = [
+      "fb_content_ids": "tt1234567",
+      "fb_currency": "USD",
+      "video_title": "Finding Nemo",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    // standardParam preserved.
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+    // content-ID key kept, value sanitized.
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "_removed_")
+    // Non-standard non-content-ID key dropped.
+    XCTAssertNil(out?["video_title"])
   }
 
   // MARK: - detectMatches (direct unit-level coverage)
@@ -640,6 +757,7 @@ final class VVPConfigManagerTests: XCTestCase {
     // sanitization).
     let json = """
       {"enabled": true,
+       "isShadowEnabled": false,
        "rules": [{"place": 1,
                   "keyRegex": "content",
                   "valueRegex": "",
