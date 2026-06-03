@@ -200,11 +200,11 @@ public enum RefreshFallbackPolicy: Int, Sendable {
   /// options when lower-friction ones cannot recover. Order:
   ///
   /// 1. `.directOnly` (truly silent, DPoP-bound HTTPS POST).
-  /// 2. If `.directOnly` returned `.notDPoPBound` (the precondition isn't met), skip
-  ///    `.silentOnly` (it can't fix this) and go straight to `.explicitOnly`.
-  /// 3. If `.directOnly` returned any other failure, try `.silentOnly`
-  ///    (`prompt=none` via ASWebAuthenticationSession).
-  /// 4. If `.silentOnly` returned `.loginRequired` or `.consentRequired`, fall back
+  /// 2. On any failure other than `.featureDisabled` (including `.notDPoPBound`),
+  ///    fall back to `.silentOnly` (`prompt=none` via ASWebAuthenticationSession).
+  ///    Silent re-sends `dpop_jkt` to mint a freshly bound token, so it can recover
+  ///    both a missing binding (`.notDPoPBound`) and transient direct-endpoint failures.
+  /// 3. If `.silentOnly` returns `.loginRequired` or `.consentRequired`, fall back
   ///    to `.explicitOnly`. Otherwise propagate the result.
   ///
   /// `.featureDisabled` is *never* recovered — the kill switch is respected.

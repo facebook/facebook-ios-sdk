@@ -18,11 +18,12 @@ import Foundation
 /// operators flip per app_id. SDK GK lookups don't carry a user_id, so this
 /// gate has to be app-keyed.
 ///
-/// Note: there is also a **user-keyed** privacy GK
-/// (`platform_login_oidc_prompt_none_fb`) enforced server-side on the OAuth
-/// dialog and refresh endpoints. That one is *not* consulted from the SDK and
-/// is independent of this check; both must be open for the feature to work
-/// end-to-end.
+/// Note: a historical user-keyed privacy GK
+/// (`platform_login_oidc_prompt_none_fb`) once gated the server-side OAuth dialog
+/// and refresh endpoints, but it was unified away in D104182324 — www now
+/// evaluates the same app-keyed `mobile_sdk_limited_login_refresh_enabled`
+/// (per app_id), so the SDK and server gate on one dial and roll out together.
+/// No separate privacy GK needs to be open.
 ///
 /// Despite the historical method name (`isSilentRefreshEnabled`), this gate
 /// covers the entire Limited Login Refresh feature: the silent path, the direct
