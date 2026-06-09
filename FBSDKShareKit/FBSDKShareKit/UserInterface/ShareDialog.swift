@@ -238,30 +238,15 @@ extension ShareDialog {
     }
   }
 
-  private var shouldDefaultToShareSheet: Bool {
-    if shareContent is ShareCameraEffectContent {
-      return false
-    } else {
-      return ShareDialogConfiguration().defaultShareMode == "share_sheet"
-    }
-  }
-
   private func showAutomatic() throws {
-    let defaultToShareSheet = shouldDefaultToShareSheet
-    let useNativeDialog = shouldUseNativeDialog
-
-    if defaultToShareSheet,
-       doesNotThrow(try showShareSheet()) {
+    // Prefer native dialog when the Facebook app is installed.
+    // SLComposeViewController is deprecated and may produce false
+    // cancellations with newer Facebook app versions.
+    if doesNotThrow(try showNative()) {
       return
     }
 
-    if useNativeDialog,
-       doesNotThrow(try showNative()) {
-      return
-    }
-
-    if !defaultToShareSheet,
-       doesNotThrow(try showShareSheet()) {
+    if doesNotThrow(try showShareSheet()) {
       return
     }
 
@@ -277,19 +262,7 @@ extension ShareDialog {
       return
     }
 
-    let showWebError: Error
-    do {
-      try showWeb()
-      return
-    } catch {
-      showWebError = error
-    }
-
-    if !useNativeDialog {
-      try showNative()
-    } else {
-      throw showWebError
-    }
+    try showWeb()
   }
 
   // This method helps us turn a chain of validation methods into a predicate
@@ -622,16 +595,7 @@ extension ShareDialog {
           results[ShareBridgeAPI.PostIDKey.results] = postID
         }
 
-        // For link shares only: if there is no completion gesture and no
-        // post ID, treat as cancellation. The Facebook app may not send
-        // completionGesture:"cancel" in all cancellation scenarios.
-        // Photo and video shares may legitimately return neither field
-        // on success, so we only apply this heuristic for links.
-        if completionGesture == nil, results.isEmpty, shareContent is ShareLinkContent {
-          invokeDelegateDidCancel()
-        } else {
-          invokeDelegateDidComplete(results: results)
-        }
+        invokeDelegateDidComplete(results: results)
       }
 
       dependencies.internalUtility.unregisterTransientObject(self)
@@ -713,15 +677,6 @@ extension ShareDialog {
     )
     webDialog?.delegate = self
     webDialog?.show()
-  }
-
-  private var shouldUseNativeDialog: Bool {
-    if shareContent is ShareCameraEffectContent {
-      return true
-    } else {
-      return ShareDialogConfiguration()
-        .shouldUseNativeDialog(forDialogName: DialogConfigurationName.share)
-    }
   }
 
   private var shouldUseSafariViewController: Bool {

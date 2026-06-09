@@ -292,7 +292,7 @@ final class ShareDialogTests: XCTestCase {
 
   // MARK: - Native completion handling
 
-  func testNativeLinkShareWithNoGestureAndNoPostIDTreatedAsCancelled() {
+  func testNativeLinkShareWithNoGestureAndNoPostIDTreatedAsComplete() {
     let request = TestBridgeAPIRequest()
     bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
     internalUtility.isFacebookAppInstalled = true
@@ -306,10 +306,10 @@ final class ShareDialogTests: XCTestCase {
     bridgeAPIRequestOpener.capturedCompletionBlock?(response)
 
     XCTAssertTrue(
-      delegate.sharerDidCancelCalled,
-      "A native link share with no completion gesture and no post ID should be treated as cancelled"
+      delegate.sharerDidCompleteCalled,
+      "A native link share with no completion gesture and no post ID should be treated as complete"
     )
-    XCTAssertFalse(delegate.sharerDidCompleteCalled)
+    XCTAssertFalse(delegate.sharerDidCancelCalled)
   }
 
   func testNativePhotoShareWithNoGestureAndNoPostIDTreatedAsComplete() {
