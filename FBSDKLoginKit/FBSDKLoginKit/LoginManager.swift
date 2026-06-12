@@ -630,6 +630,10 @@ public final class LoginManager: NSObject {
     parameters["nonce"] = configuration.nonce
     storeExpectedNonce(configuration.nonce)
 
+    if authenticationMethod == "native_app_auth" {
+      parameters["ios_fast_app_switch"] = "true"
+    }
+
     let nanoseconds = clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
     let seconds = Double(nanoseconds) / 1_000_000_000.0
 
