@@ -173,100 +173,138 @@ extension LoginManager {
     let existingUserID = currentProfile.userID
     let existingPermissions = currentProfile.permissions ?? []
 
-    switch fallbackPolicy {
-    case .silentOnly:
-      performSilentRefresh(
+    // Rate limiting is enforced ONCE per user-initiated refresh, here at the
+    // entry point — NOT inside the individual tiers. Otherwise a leading tier's
+    // own `recordAttempt()` / `recordFailure()` would rate-limit the very next
+    // tier in the cascade (e.g. direct's attempt blocking silent), collapsing
+    // the fallback. The tiers are pure mechanism and never touch the limiter.
+    guard RefreshRateLimiter.shared.canAttemptRefresh() else {
+      completion(nil, nil, LimitedLoginRefreshError.rateLimited)
+      return
+    }
+    RefreshRateLimiter.shared.recordAttempt()
+
+    let tiers = refreshTiers(
+      for: fallbackPolicy,
+      viewController: viewController,
+      existingToken: existingToken,
+      existingUserID: existingUserID,
+      existingPermissions: existingPermissions
+    )
+
+    runCascade(tiers[...]) { profile, path, error in
+      if error == nil {
+        RefreshRateLimiter.shared.recordSuccess()
+      } else {
+        RefreshRateLimiter.shared.recordFailure()
+      }
+      completion(profile, path, error)
+    }
+  }
+
+  // MARK: - Cascade
+
+  /// One refresh mechanism: the `path` it reports on success, plus a `run`
+  /// closure that performs it and calls back with `(Profile?, Error?)`. Tiers are
+  /// pure mechanism — they do NOT consult the rate limiter (that happens once, at
+  /// the entry point in `performRefresh`).
+  private struct RefreshTier {
+    let path: RefreshPath
+    let run: (_ completion: @escaping (Profile?, Error?) -> Void) -> Void
+  }
+
+  /// Builds the ordered tier list for a policy. `.automatic` is the full
+  /// `direct → silent → explicit` cascade; the `*Only` policies are a single
+  /// tier. The walker (`runCascade`) is identical for all of them.
+  private func refreshTiers(
+    for fallbackPolicy: RefreshFallbackPolicy,
+    viewController: UIViewController?,
+    existingToken: AuthenticationToken,
+    existingUserID: String,
+    existingPermissions: Set<String>
+  ) -> [RefreshTier] {
+    let direct = RefreshTier(path: .direct) { completion in
+      self.performDirectRefresh(
         existingToken: existingToken,
         existingUserID: existingUserID,
-        existingPermissions: existingPermissions,
-        completion: tagging(.silent, completion)
+        completion: completion
       )
-
-    case .explicitOnly:
-      performExplicitRefresh(
-        from: viewController,
-        existingUserID: existingUserID,
-        existingPermissions: existingPermissions,
-        completion: tagging(.explicit, completion)
-      )
-
-    case .directOnly:
-      performDirectRefresh(
-        existingToken: existingToken,
-        existingUserID: existingUserID,
-        completion: tagging(.direct, completion)
-      )
-
-    case .automatic:
-      performAutomaticCascade(
-        viewController: viewController,
+    }
+    let silent = RefreshTier(path: .silent) { completion in
+      self.performSilentRefresh(
         existingToken: existingToken,
         existingUserID: existingUserID,
         existingPermissions: existingPermissions,
         completion: completion
       )
     }
-  }
+    let explicit = RefreshTier(path: .explicit) { completion in
+      self.performExplicitRefresh(
+        from: viewController,
+        existingUserID: existingUserID,
+        existingPermissions: existingPermissions,
+        completion: completion
+      )
+    }
 
-  /// Wraps a leaf-method `(Profile?, Error?)` callback so it forwards `path`
-  /// only on success, matching the cascade's contract.
-  private func tagging(
-    _ path: RefreshPath,
-    _ completion: @escaping (Profile?, RefreshPath?, Error?) -> Void
-  ) -> (Profile?, Error?) -> Void {
-    { profile, error in
-      completion(profile, error == nil ? path : nil, error)
+    switch fallbackPolicy {
+    case .directOnly: return [direct]
+    case .silentOnly: return [silent]
+    case .explicitOnly: return [explicit]
+    case .automatic: return [direct, silent, explicit]
     }
   }
 
-  /// Three-tier cascade: direct → silent → explicit.
+  /// Whether a failed tier should escalate to the next one, given that next
+  /// tier's path. One table, applied uniformly — no per-leg branching.
   ///
-  /// - Direct succeeds → done.
-  /// - Direct returns `.featureDisabled` → surface, do NOT cascade (kill switch).
-  /// - Direct returns any other failure (including `.notDPoPBound`) → try silent.
-  ///   Silent attaches `dpop_jkt` to mint a freshly bound token, so it can recover
-  ///   both from missing-binding and from transient failures on the direct endpoint.
-  /// - Silent returns `.loginRequired` or `.consentRequired` → fall back to explicit.
-  /// - Silent returns `.featureDisabled` → surface, do NOT cascade.
-  /// - Silent succeeds, or fails for any other reason → propagate.
-  private func performAutomaticCascade(
-    viewController: UIViewController?,
-    existingToken: AuthenticationToken,
-    existingUserID: String,
-    existingPermissions: Set<String>,
+  /// - The kill switch (`.featureDisabled`) is always terminal.
+  /// - Escalating to a lower-friction tier (`.direct` / `.silent` — no Facebook
+  ///   UI) is worth it after *any* other failure, so the cascade keeps falling
+  ///   forward (e.g. a direct failure, including `.notDPoPBound`, advances to
+  ///   silent, which re-sends `dpop_jkt` to mint a freshly bound token).
+  /// - Escalating to the interactive `.explicit` tier happens only when the user
+  ///   genuinely must re-authenticate (`.loginRequired` / `.consentRequired`) —
+  ///   never for transient / infrastructure errors, which would otherwise pop a
+  ///   login dialog on a blip.
+  static func shouldEscalate(after error: LimitedLoginRefreshError, to nextPath: RefreshPath) -> Bool {
+    if case .featureDisabled = error {
+      return false
+    }
+    switch nextPath {
+    case .direct, .silent:
+      return true
+    case .explicit:
+      return error == .loginRequired || error == .consentRequired
+    }
+  }
+
+  /// Runs the tiers in order: the first success wins; on failure, advance to the
+  /// next tier only when `shouldEscalate` says so and one remains — otherwise
+  /// surface the error. This is the single place the cascade order and escalation
+  /// policy live, replacing the old hand-rolled per-tier nested closures.
+  private func runCascade(
+    _ tiers: ArraySlice<RefreshTier>,
     completion: @escaping (Profile?, RefreshPath?, Error?) -> Void
   ) {
-    performDirectRefresh(
-      existingToken: existingToken,
-      existingUserID: existingUserID
-    ) { directProfile, directError in
-      if directError == nil {
-        completion(directProfile, .direct, nil)
+    guard let tier = tiers.first else {
+      completion(nil, nil, LimitedLoginRefreshError.unknown)
+      return
+    }
+
+    tier.run { profile, error in
+      guard let error = error else {
+        completion(profile, tier.path, nil)
         return
       }
 
-      if case .featureDisabled = directError as? LimitedLoginRefreshError {
-        // Kill switch is active — do not attempt other paths.
-        completion(directProfile, nil, directError)
-        return
-      }
-
-      self.performSilentRefresh(
-        existingToken: existingToken,
-        existingUserID: existingUserID,
-        existingPermissions: existingPermissions
-      ) { silentProfile, silentError in
-        switch silentError as? LimitedLoginRefreshError {
-        case .loginRequired, .consentRequired:
-          self.performExplicitRefresh(
-            from: viewController,
-            existingUserID: existingUserID,
-            existingPermissions: existingPermissions,
-            completion: self.tagging(.explicit, completion)
-          )
-        default:
-          completion(silentProfile, silentError == nil ? .silent : nil, silentError)
-        }
+      let remaining = tiers.dropFirst()
+      if let nextTier = remaining.first,
+         let refreshError = error as? LimitedLoginRefreshError,
+         Self.shouldEscalate(after: refreshError, to: nextTier.path) {
+        self.runCascade(remaining, completion: completion)
+      } else {
+        completion(nil, nil, error)
       }
     }
   }
@@ -318,15 +356,10 @@ extension LoginManager {
       return
     }
 
-    guard RefreshRateLimiter.shared.canAttemptRefresh() else {
-      completion(nil, LimitedLoginRefreshError.rateLimited)
-      return
-    }
-
     // The direct path requires the existing token to carry a `cnf.jkt` claim.
-    // If it doesn't, surface `.notDPoPBound` so callers (notably `.automatic`)
-    // can route directly to explicit refresh — silent refresh wouldn't help
-    // because it doesn't bind keys; only a fresh login does.
+    // If it doesn't, surface `.notDPoPBound` so the cascade escalates: silent
+    // re-sends `dpop_jkt` to mint a freshly bound token, and if that still needs
+    // user interaction it falls through to explicit.
     guard Self.directRefreshCnfJktExtractor(existingToken) != nil else {
       completion(nil, LimitedLoginRefreshError.notDPoPBound)
       return
@@ -340,8 +373,6 @@ extension LoginManager {
       return
     }
 
-    RefreshRateLimiter.shared.recordAttempt()
-
     Self.directRefreshPerformer(existingToken.tokenString, appID) { result in
       switch result {
       case let .success(newTokenString):
@@ -353,16 +384,13 @@ extension LoginManager {
         ) { processResult in
           switch processResult {
           case let .success(profile):
-            RefreshRateLimiter.shared.recordSuccess()
             completion(profile, nil)
           case let .failure(error):
-            RefreshRateLimiter.shared.recordFailure()
             completion(nil, error)
           }
           _ = refresher // keep refresher alive across async work
         }
       case let .failure(error):
-        RefreshRateLimiter.shared.recordFailure()
         completion(nil, error)
       }
     }

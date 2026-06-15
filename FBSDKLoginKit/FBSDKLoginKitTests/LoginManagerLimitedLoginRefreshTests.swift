@@ -270,6 +270,58 @@ final class LoginManagerLimitedLoginRefreshTests: XCTestCase {
     wait(for: [exp], timeout: 5)
   }
 
+  // MARK: - Cascade escalation policy
+
+  func testEscalatesToLowerFrictionTierOnAnyNonKillSwitchFailure() {
+    // direct / silent show no Facebook UI — worth trying after ANY non-killswitch
+    // failure, so the cascade keeps falling forward (this is what was broken: a
+    // direct failure must be able to reach silent).
+    for nextPath in [RefreshPath.direct, .silent] {
+      XCTAssertTrue(LoginManager.shouldEscalate(after: .networkError, to: nextPath))
+      XCTAssertTrue(LoginManager.shouldEscalate(after: .timeout, to: nextPath))
+      XCTAssertTrue(LoginManager.shouldEscalate(after: .notDPoPBound, to: nextPath))
+      XCTAssertTrue(LoginManager.shouldEscalate(after: .invalidResponse, to: nextPath))
+      XCTAssertTrue(LoginManager.shouldEscalate(after: .loginRequired, to: nextPath))
+    }
+  }
+
+  func testEscalatesToExplicitOnlyForInteractiveAuthErrors() {
+    // The explicit tier shows interactive UI — only escalate to it when the user
+    // genuinely must re-authenticate.
+    XCTAssertTrue(LoginManager.shouldEscalate(after: .loginRequired, to: .explicit))
+    XCTAssertTrue(LoginManager.shouldEscalate(after: .consentRequired, to: .explicit))
+    // Transient / infrastructure errors must NOT pop a login dialog.
+    XCTAssertFalse(LoginManager.shouldEscalate(after: .networkError, to: .explicit))
+    XCTAssertFalse(LoginManager.shouldEscalate(after: .timeout, to: .explicit))
+    XCTAssertFalse(LoginManager.shouldEscalate(after: .rateLimited, to: .explicit))
+    XCTAssertFalse(LoginManager.shouldEscalate(after: .notDPoPBound, to: .explicit))
+    XCTAssertFalse(LoginManager.shouldEscalate(after: .invalidResponse, to: .explicit))
+  }
+
+  func testFeatureDisabledNeverEscalates() {
+    // Kill switch is terminal regardless of the next tier.
+    for nextPath in [RefreshPath.direct, .silent, .explicit] {
+      XCTAssertFalse(LoginManager.shouldEscalate(after: .featureDisabled, to: nextPath))
+    }
+  }
+
+  // MARK: - Rate limiting is per user-initiated refresh (entry point), not per tier
+
+  func testAutomaticRateLimitIsCheckedOnceAtEntryPoint() {
+    // Push the shared limiter into its denied window.
+    RefreshRateLimiter.shared.recordAttempt()
+
+    // The entry point must short-circuit with .rateLimited. (Before rate limiting
+    // was lifted to the entry, .automatic ran the per-tier limiter inside direct,
+    // which surfaced a different, misleading error through the cascade.)
+    let exp = expectation(description: "completion")
+    loginManager.refreshLimitedLogin(fallbackPolicy: .automatic) { result in
+      Self.assertFailure(result, equals: .rateLimited)
+      exp.fulfill()
+    }
+    wait(for: [exp], timeout: 5)
+  }
+
   // MARK: - Helpers
 
   private static func assertFailure(

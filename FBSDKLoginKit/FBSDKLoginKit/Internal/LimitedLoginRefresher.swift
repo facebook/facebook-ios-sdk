@@ -149,30 +149,22 @@ final class LimitedLoginRefresher {
       return
     }
 
-    // Rate limiter check
-    guard RefreshRateLimiter.shared.canAttemptRefresh() else {
-      completion(.failure(.rateLimited))
-      return
-    }
-
     // Platform check
     guard #available(iOS 13.0, *) else {
       completion(.failure(.unsupportedPlatform))
       return
     }
 
-    RefreshRateLimiter.shared.recordAttempt()
-
+    // Rate limiting is enforced once per user-initiated refresh at the
+    // LoginManager entry point — this leaf is pure mechanism.
     let nonce = generateRefreshNonce()
 
     guard let url = buildRefreshURL(existingToken: existingToken, nonce: nonce, scopes: scopes) else {
-      RefreshRateLimiter.shared.recordFailure()
       completion(.failure(.invalidResponse))
       return
     }
 
     guard let dependencies = try? Self.getDependencies() else {
-      RefreshRateLimiter.shared.recordFailure()
       completion(.failure(.unknown))
       return
     }
@@ -194,20 +186,16 @@ final class LimitedLoginRefresher {
           self.processRefreshedToken(tokenString, nonce: nonce, existingUserID: existingUserID) { processResult in
             switch processResult {
             case let .success(profile):
-              RefreshRateLimiter.shared.recordSuccess()
               completion(.success(profile))
             case let .failure(error):
-              RefreshRateLimiter.shared.recordFailure()
               completion(.failure(error))
             }
           }
         case let .failure(error):
-          RefreshRateLimiter.shared.recordFailure()
           completion(.failure(error))
         }
 
       case let .failure(error):
-        RefreshRateLimiter.shared.recordFailure()
         completion(.failure(error))
       }
     }

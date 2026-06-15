@@ -135,8 +135,9 @@ extension LimitedLoginRefreshError: LocalizedError {
     case .timeout:
       return "The refresh request timed out after 30 seconds. Retry."
     case .rateLimited:
+      let seconds = Int(RefreshRateLimiter.shared.timeUntilNextAllowedAttempt().rounded(.up))
       return "Refresh attempts are being throttled by the client-side rate limiter. "
-        + "Inspect RefreshRateLimiter.shared.timeUntilNextAllowedAttempt() before retrying."
+        + "Try again in \(seconds) second\(seconds == 1 ? "" : "s")."
     case .invalidResponse:
       return "The server's refresh response could not be parsed (missing id_token, "
         + "malformed JSON, or claims failing OIDC validation)."
