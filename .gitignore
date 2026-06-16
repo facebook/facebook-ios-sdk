@@ -90,3 +90,8 @@ infer-out
 internal/scripts/Runner/Package.resolved
 internal/scripts/Runner/.build
 internal/scripts/Runner/.swiftpm
+
+# Xcode's generated SPM workspace and shared schemes — committing these (the
+# schemes are shared, not per-user) injects the SDK's schemes into the scheme
+# list of every app that consumes it via SPM (#2515).
+.swiftpm/
