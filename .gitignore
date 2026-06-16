@@ -80,6 +80,10 @@ TestAppIdAndSecret.xcconfig
 *.sw?
 *.un~
 
+# Python
+__pycache__/
+*.py[cod]
+
 # buck
 buck-out/
 .buckd/
