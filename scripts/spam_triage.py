@@ -71,6 +71,9 @@ NEW_ACCOUNT_DAYS = 30
 ESTABLISHED_ACCOUNT_DAYS = 365
 
 SPAM_LABEL = "possible-spam"
+# Applied to high-confidence spam that we close, so the closure is clearly
+# attributed/auditable (distinct from `possible-spam`, which flags for review).
+CONFIRMED_SPAM_LABEL = "spam"
 
 SPAM_COMMENT = """\
 Hi! This GitHub repository is for the Facebook iOS SDK (code + bug reports related to the SDK). \
@@ -324,14 +327,39 @@ def ensure_label():
          "--description", "Auto-flagged likely spam, pending human review", "--force"],
         capture_output=True, text=True,
     )
+    subprocess.run(
+        ["gh", "label", "create", CONFIRMED_SPAM_LABEL, "--repo", REPO, "--color", "3f1307",
+         "--description", "Spamming issues created by bots for higher ranking in SEO/LLM SEO or other reasons.",
+         "--force"],
+        capture_output=True, text=True,
+    )
 
 
 def do_close(n):
+    # Replace ALL existing labels with just `spam` BEFORE closing. Confirmed spam
+    # isn't a real bug/enhancement, so strip the template labels (bug, enhancement,
+    # needs-triage, …) and leave only `spam` so the closure is cleanly attributed
+    # and auditable. The PUT labels endpoint sets the full label set atomically.
+    #
+    # If the relabel fails (e.g. a transient GitHub secondary rate-limit during a
+    # bulk run) skip the close and return False so this issue is retried on the
+    # next run: we never close an issue without the `spam` label, and one transient
+    # error can't abort the rest of the run. Returns True only once it is closed.
+    try:
+        subprocess.run(
+            ["gh", "api", "--method", "PUT", f"repos/{REPO}/issues/{n}/labels",
+             "-f", f"labels[]={CONFIRMED_SPAM_LABEL}"],
+            check=True, capture_output=True, text=True,
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"  - relabel #{n} FAILED, skipping close (will retry next run): {e.stderr.strip()[:120]}")
+        return False
     subprocess.run(
         ["gh", "issue", "close", str(n), "--repo", REPO, "--reason", "not planned",
          "--comment", SPAM_COMMENT],
         check=True, capture_output=True, text=True,
     )
+    return True
 
 
 def do_label(n):
@@ -414,8 +442,10 @@ def main():
             closed += 1
             continue
         try:
-            do_close(n)
-            closed += 1
+            if do_close(n):
+                closed += 1
+            else:
+                out.append(f"  - close #{n} SKIPPED: could not apply '{CONFIRMED_SPAM_LABEL}' label (will retry next run)")
         except subprocess.CalledProcessError as e:
             out.append(f"  - close #{n} FAILED: {e.stderr.strip()[:120]}")
 
