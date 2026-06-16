@@ -163,6 +163,35 @@ public final class ApplicationDelegate: NSObject {
   private func logInitialization() {
     components.settings.logIfSDKSettingsChanged()
     components.settings.recordInstall()
+    validateAppConfiguration()
+  }
+
+  /// Surfaces a clear developer-facing warning when the App ID or Client Token is
+  /// missing, empty, or whitespace-only at initialization, rather than letting the
+  /// misconfiguration surface later as opaque authentication / Graph API failures
+  /// (see GitHub issue #3639). This only logs via `.developerErrors` and never
+  /// aborts initialization. Note: apps that configure the App ID / Client Token
+  /// *after* `initializeSDK()` runs will see one spurious `.developerErrors` entry
+  /// at launch (logging is on by default); the warning is diagnostic only and does
+  /// not affect functionality.
+  private func validateAppConfiguration() {
+    let appID = components.settings.appID
+    if (appID?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) ?? true {
+      _Logger.singleShotLogEntry(
+        .developerErrors,
+        logEntry: "Invalid Facebook App ID configuration: the App ID is missing or empty. Set "
+          + "FacebookAppID in your Info.plist (or Settings.shared.appID) before using the SDK."
+      )
+    }
+
+    let clientToken = components.settings.clientToken
+    if (clientToken?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) ?? true {
+      _Logger.singleShotLogEntry(
+        .developerErrors,
+        logEntry: "Invalid Facebook Client Token configuration: the Client Token is missing or empty. Set "
+          + "FacebookClientToken in your Info.plist (or Settings.shared.clientToken) before using the SDK."
+      )
+    }
   }
 
   private func enableInstrumentation() {
