@@ -49,6 +49,45 @@ final class UserDataStoreTests: XCTestCase {
     )
   }
 
+  func testSettingZipAndDateOfBirthHashesNormalizedValue() throws {
+    // Regression test for GitHub issue #2219: `zip` and `dateOfBirth` were not
+    // handled by `normalizeData:type:`, so both fell through to the empty string
+    // and were stored as SHA-256 of "" instead of the user's value.
+    let emptyStringHash = try XCTUnwrap(
+      BasicUtility.sha256Hash(NSString(utf8String: ""))
+    )
+
+    let zip = "98101"
+    let dateOfBirth = "01/01/1990"
+    let expectedZipHash = try XCTUnwrap(
+      BasicUtility.sha256Hash(NSString(utf8String: zip))
+    )
+    let expectedDateOfBirthHash = try XCTUnwrap(
+      BasicUtility.sha256Hash(NSString(utf8String: dateOfBirth))
+    )
+
+    store.setUserData(zip, forType: .zip)
+    store.setUserData(dateOfBirth, forType: .dateOfBirth)
+
+    let retrieved = try XCTUnwrap(
+      store.getUserData(),
+      "Should be able to retrieve stored user data"
+    )
+
+    XCTAssertTrue(
+      retrieved.contains(expectedZipHash),
+      "Should hash the normalized zip value, not the empty string"
+    )
+    XCTAssertTrue(
+      retrieved.contains(expectedDateOfBirthHash),
+      "Should hash the normalized date of birth value, not the empty string"
+    )
+    XCTAssertFalse(
+      retrieved.contains(emptyStringHash),
+      "Should not store SHA-256 of the empty string for zip or date of birth"
+    )
+  }
+
   func testClearingUserDataByType() throws {
     store.setUserData(email, forType: .email)
     store.setUserData(firstName, forType: .firstName)

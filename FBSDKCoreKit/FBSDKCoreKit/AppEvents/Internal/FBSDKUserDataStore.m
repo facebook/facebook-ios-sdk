@@ -247,7 +247,7 @@ static dispatch_queue_t serialQueue;
 {
   NSString *normalizedData = @"";
   NSSet<FBSDKAppEventUserDataType> *set = [NSSet setWithArray:
-                                           @[FBSDKAppEventEmail, FBSDKAppEventFirstName, FBSDKAppEventLastName, FBSDKAppEventCity, FBSDKAppEventState, FBSDKAppEventCountry]];
+                                           @[FBSDKAppEventEmail, FBSDKAppEventFirstName, FBSDKAppEventLastName, FBSDKAppEventCity, FBSDKAppEventState, FBSDKAppEventCountry, FBSDKAppEventDateOfBirth, FBSDKAppEventZip]];
   if ([set containsObject:type]) {
     normalizedData = [data stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceCharacterSet];
     normalizedData = normalizedData.lowercaseString;
