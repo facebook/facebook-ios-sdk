@@ -10,39 +10,40 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-### Added
-- **Limited Login Refresh**: automatically refreshes Limited Login sessions when
-  the app enters the foreground, keeping `Profile.current` and
-  `AuthenticationToken.current` fresh without requiring user re-authentication.
-  Auto-refresh is always on (no opt-in); tune the minimum interval between
-  foreground refreshes via `Settings.shared.limitedLoginAutoRefreshInterval`
-  (default `86400` seconds / 24 hours). Call
-  `LoginManager.refreshLimitedLogin(from:fallbackPolicy:completion:)` for on-demand
-  refresh. The whole feature is governed by the `FBSDKFeatureLimitedLoginRefresh`
-  server-side kill switch.
-- **Direct refresh path** (`RefreshFallbackPolicy.directOnly`): truly silent
-  Limited Login refresh via a DPoP-bound HTTPS POST (RFC 9449). No
-  `ASWebAuthenticationSession`, no Apple consent modal, no Facebook UI. Requires
-  the current id_token to carry a `cnf.jkt` claim (the server stamps this at
-  issuance when `dpop_jkt` is sent — see below). Returns
-  `LimitedLoginRefreshError.notDPoPBound` if the precondition isn't met. This is
-  the path used by the always-on foreground auto-refresh.
-- **Three-tier `.automatic` cascade**: `direct → silent → explicit`. Tries
-  `.directOnly` first; on any failure other than `.featureDisabled` (including
-  `.notDPoPBound`) falls back to `.silentOnly`, which re-sends `dpop_jkt` to mint a
-  freshly bound token and so recovers a missing binding as well as transient direct
-  failures; if silent then returns `.loginRequired` or `.consentRequired`, falls
-  back to `.explicitOnly`. `.featureDisabled` is never cascaded — the kill switch is
-  respected.
-- **Device-key binding at login**: Limited Login (and Limited Login shim, when ATT
-  is denied for `.enabled` tracking) now sends a P-256 JWK Thumbprint as `dpop_jkt`,
-  which the server stamps into the issued id_token's `cnf.jkt` claim. Silent
-  refresh also re-emits `dpop_jkt` so the server can re-bind the token after a
-  device-key change (e.g. app reinstall). All gated by the
-  `FBSDKFeatureLimitedLoginRefresh` feature flag — when off, no DPoP key is
-  generated or transmitted.
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.0...HEAD)
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.3...HEAD)
+## 18.1.0
+
+### Added
+- **Limited Login Refresh**: Limited Login sessions now refresh automatically
+  when the app returns to the foreground, keeping `Profile.current` and
+  `AuthenticationToken.current` up to date without prompting the user to
+  re-authenticate. Tune the minimum interval between automatic refreshes via
+  `Settings.shared.limitedLoginAutoRefreshInterval` (default: 24 hours), or
+  trigger an on-demand refresh with
+  `LoginManager.refreshLimitedLogin(from:fallbackPolicy:completion:)`. The refresh
+  strategy is configurable via `RefreshFallbackPolicy` (`.automatic`,
+  `.directOnly`, `.silentOnly`, `.explicitOnly`). Rolling out gradually.
+- Diagnostic warning at initialization when the App ID or Client Token is missing
+  or empty (#3639).
+
+### Changed
+- `ShareDialog` in `.automatic` mode now prefers the native share dialog over the
+  deprecated `SLComposeViewController`.
+
+### Fixed
+- Photo and video sharing incorrectly reported as cancelled in native mode (#2267).
+- Fixed crashes from concurrent access in `SensitiveParamsManager` (#3626) and
+  during server-configuration archiving.
+- Fixed a main-thread hang when persisting time-spent data on backgrounding (#2349).
+- Fixed automatic access-token refresh not firing on its timer.
+- Fixed user data for `zip` and `dateOfBirth` being stored as a hash of the empty
+  string (#2219).
+- The SDK's Swift Package no longer injects its own Xcode schemes into consuming
+  projects (#2515).
+
+[2026-06-18](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.3...v18.1.0)
 
 ## 18.0.3
 - Added anonymous deferral deeplink support
