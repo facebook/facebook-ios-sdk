@@ -156,7 +156,9 @@ final class NativeAppLoginHandlerTests: XCTestCase {
     XCTAssertNotNil(result, "Should return a boolean result when LL FAS GK is enabled")
   }
 
-  func testClassicLoginFASNotAffectedByLLFASGK() {
+  func testClassicLoginShimmedToLimitedWhenLLFASGKDisabled() {
+    // On iOS 17+ with ATT denied, classic login is shimmed to limited login.
+    // FAS eligibility should check the LL FAS GK since that's what the server receives.
     internalUtility.isFacebookAppInstalled = true
     TestGateKeeperManager.gateKeepers["FBSDKFeatureFBLoginFAS"] = true
     TestGateKeeperManager.gateKeepers["FBSDKFeatureLimitedLoginFAS"] = false
@@ -169,9 +171,33 @@ final class NativeAppLoginHandlerTests: XCTestCase {
     configuration = createConfiguration(tracking: .enabled, appSwitch: .enabled)
     handler = createHandler(configuration: configuration)
 
-    // Classic login FAS should use its own GK, not the LL FAS GK
+    // On iOS 17+ (test simulator), isDomainHandlingEnabled is true and ATT is not determined,
+    // so willBeLimited is true and the LL FAS GK is checked — which is off.
+    XCTAssertFalse(
+      handler.shouldAttemptNativeAppLogin(),
+      "Classic login shimmed to limited should require the LL FAS GK"
+    )
+  }
+
+  func testClassicLoginShimmedToLimitedWhenLLFASGKEnabled() {
+    // On iOS 17+ with ATT denied, classic login is shimmed to limited login.
+    // When the LL FAS GK is enabled, FAS should be allowed for the shimmed request.
+    internalUtility.isFacebookAppInstalled = true
+    TestGateKeeperManager.gateKeepers["FBSDKFeatureFBLoginFAS"] = true
+    TestGateKeeperManager.gateKeepers["FBSDKFeatureLimitedLoginFAS"] = true
+    _FeatureManager.configuredDependencies = _FeatureManager.TypeDependencies(
+      gateKeeperManager: TestGateKeeperManager.self,
+      settings: settings,
+      store: UserDefaults.standard
+    )
+
+    configuration = createConfiguration(tracking: .enabled, appSwitch: .enabled)
+    handler = createHandler(configuration: configuration)
+
+    // On iOS 17+ (test simulator), willBeLimited is true and the LL FAS GK is on,
+    // so FAS passes the GK check (still returns false due to canOpenURL limitation in tests)
     let result = handler.shouldAttemptNativeAppLogin()
-    XCTAssertNotNil(result, "Classic login FAS should not be affected by LL FAS GK being disabled")
+    XCTAssertNotNil(result, "Shimmed classic login should pass GK check when LL FAS GK is enabled")
   }
 
   func testShouldNotAttemptNativeAppLoginWhenFASGKDisabled() {

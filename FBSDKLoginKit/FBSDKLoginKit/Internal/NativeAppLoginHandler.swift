@@ -41,8 +41,12 @@ internal final class NativeAppLoginHandler {
       return false
     }
 
-    // Check the appropriate FAS GK based on tracking mode
-    if configuration.tracking == .limited {
+    // On iOS 17+ with ATT denied the SDK shims classic login into limited login,
+    // so FAS eligibility must match what the server will actually receive.
+    let willBeLimited = configuration.tracking == .limited
+      || (_DomainHandler.sharedInstance().isDomainHandlingEnabled() && !Settings.shared.isAdvertiserTrackingEnabled)
+
+    if willBeLimited {
       guard _FeatureManager.shared.isEnabled(.limitedLoginFastAppSwitch) else {
         return false
       }
@@ -50,11 +54,6 @@ internal final class NativeAppLoginHandler {
       guard _FeatureManager.shared.isEnabled(.loginFastAppSwitch) else {
         return false
       }
-    }
-
-    // Limited login shim requests should not use fast app switch
-    if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
-      return false
     }
 
     // Check if Facebook app is installed using fbapi scheme
