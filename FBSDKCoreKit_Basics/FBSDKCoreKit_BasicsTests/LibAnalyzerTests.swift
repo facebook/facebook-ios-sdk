@@ -28,7 +28,7 @@ final class LibAnalyzerTests: XCTestCase {
     ]
     var result = LibAnalyzer.symbolicateCallstack(callstack, methodMapping: methodMapping)
 
-    XCTAssertNotNil(result, "Should return a value if both paramaters were passed")
+    XCTAssertNotNil(result, "Should return a value if both parameters were passed")
     XCTAssertEqual(
       result,
       ["-[FBSDKWebViewAppLinkResolver appLinkFromALData:destination:]+3110632+0", "(2 DEV METHODS)"]
