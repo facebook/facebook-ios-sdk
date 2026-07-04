@@ -1131,7 +1131,7 @@ final class SettingsTests: XCTestCase {
   }
 
   func testAutoLogAppEventsEnabledFromServer_1() {
-    // set true for the server-side overriden value
+    // set true for the server-side overridden value
     let migratedAutoLogValues = ["auto_log_app_events_enabled": NSNumber(true)]
     serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
     // set false in info.plist
@@ -1139,12 +1139,12 @@ final class SettingsTests: XCTestCase {
     configureSettings()
     XCTAssertTrue(
       settings.isAutoLogAppEventsEnabled,
-      "Should favor the server-side overriden value over others"
+      "Should favor the server-side overridden value over others"
     )
   }
 
   func testAutoLogAppEventsEnabledFromServer_2() {
-    // set true for the server-side overriden value
+    // set true for the server-side overridden value
     let migratedAutoLogValues = ["auto_log_app_events_enabled": String("Some_Value")]
     serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
     configureSettings()
@@ -1180,7 +1180,7 @@ final class SettingsTests: XCTestCase {
   }
 
   func testAutoLogAppEventsEnabledFromLocal_2() {
-    // set true for the server-side overriden value
+    // set true for the server-side overridden value
     let migratedAutoLogValues = ["auto_log_app_events_default": NSNumber(true)]
     serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
     // set false in memory store
