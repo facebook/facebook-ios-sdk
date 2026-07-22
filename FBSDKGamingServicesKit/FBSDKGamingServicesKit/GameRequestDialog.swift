@@ -154,7 +154,7 @@ public final class GameRequestDialog: NSObject {
     let bridgeAPIError = errorFactory.error(
       code: CoreError.errorBridgeAPIInterruption.rawValue,
       userInfo: nil,
-      message: "Error occured while interacting with Gaming Services, Failed to open bridge.",
+      message: "Error occurred while interacting with Gaming Services, Failed to open bridge.",
       underlyingError: error
     )
     handleDialogError(bridgeAPIError)
