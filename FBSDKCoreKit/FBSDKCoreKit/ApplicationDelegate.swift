@@ -80,6 +80,10 @@ public final class ApplicationDelegate: NSObject {
     configurator.performConfiguration()
     initializeTokenCache()
     initializeProfile()
+    // Arm the App Events persist-on-close observers synchronously, before SDK setup is deferred
+    // past the first frame. This ensures events logged during the deferral window are persisted
+    // (and re-sent next launch) rather than lost if the app is closed before doSDKSetup runs.
+    components.appEvents.startObservingApplicationStatePersistenceNotifications()
     if #available(iOS 14.5, *) {
       fetchDomainConfiguration {
         // The completion now fires from the cached/default domain configuration without waiting on

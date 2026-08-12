@@ -239,6 +239,32 @@ final class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testInitializeSDKArmsEventPersistenceBeforeDeferredSetup() throws {
+    guard #available(iOS 14.5, *) else {
+      throw XCTSkip("SDK setup is only deferred past the first frame on iOS 14.5+")
+    }
+    var scheduledWork: (() -> Void)?
+    delegate.scheduleAfterFirstFrame = { scheduledWork = $0 }
+
+    delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
+
+    XCTAssertTrue(
+      appEvents.wasStartObservingApplicationStatePersistenceNotificationsCalled,
+      "The App Events persist-on-close observers should be armed synchronously during init, before the deferred setup runs"
+    )
+    XCTAssertFalse(
+      appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
+      "The remaining lifecycle observers should still be deferred with doSDKSetup, not run during initializeSDK"
+    )
+
+    scheduledWork?()
+
+    XCTAssertTrue(
+      appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
+      "The remaining lifecycle observers should be registered once the deferred setup fires"
+    )
+  }
+
   func testInitializingSdkAddsBridgeApiObserver() {
     delegate.initializeSDK()
 

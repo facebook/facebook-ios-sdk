@@ -20,6 +20,7 @@ final class TestAppEvents: TestEventLogger,
   // swiftformat:enable indent
   var wasActivateAppCalled = false
   var wasStartObservingApplicationLifecycleNotificationsCalled = false
+  var wasStartObservingApplicationStatePersistenceNotificationsCalled = false
   var capturedApplicationState: UIApplication.State = .inactive
   var wasRegisterAutoResetSourceApplicationCalled = false
   var capturedSetSourceApplication: String?
@@ -32,6 +33,10 @@ final class TestAppEvents: TestEventLogger,
 
   func startObservingApplicationLifecycleNotifications() {
     wasStartObservingApplicationLifecycleNotificationsCalled = true
+  }
+
+  func startObservingApplicationStatePersistenceNotifications() {
+    wasStartObservingApplicationStatePersistenceNotificationsCalled = true
   }
 
   func setApplicationState(_ state: UIApplication.State) {

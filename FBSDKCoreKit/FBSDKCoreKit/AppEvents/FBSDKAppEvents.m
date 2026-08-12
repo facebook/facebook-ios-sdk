@@ -88,6 +88,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 @property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
 @property (nonatomic) FBSDKAppEventsState *appEventsState;
 @property (nonatomic) BOOL _isUnityInitialized; // not publicly readable
+@property (nonatomic) BOOL isObservingApplicationStatePersistence;
 
 // Dependencies
 
@@ -181,8 +182,15 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   return self;
 }
 
-- (void)startObservingApplicationLifecycleNotifications
+- (void)startObservingApplicationStatePersistenceNotifications
 {
+  // Idempotent: this may be called during synchronous init and again from
+  // startObservingApplicationLifecycleNotifications; register the persist observers only once.
+  if (self.isObservingApplicationStatePersistence) {
+    return;
+  }
+  self.isObservingApplicationStatePersistence = YES;
+
   [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationMovingFromActiveState)
@@ -194,6 +202,13 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
    selector:@selector(applicationTerminating)
    name:UIApplicationWillTerminateNotification
    object:NULL];
+}
+
+- (void)startObservingApplicationLifecycleNotifications
+{
+  // The persist-on-close observers are armed here too (idempotently) so a lone call still
+  // registers the full set; when init arms them earlier this is a no-op.
+  [self startObservingApplicationStatePersistenceNotifications];
 
   [NSNotificationCenter.defaultCenter
    addObserver:self
