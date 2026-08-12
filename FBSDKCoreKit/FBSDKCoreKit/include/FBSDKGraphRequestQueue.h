@@ -10,6 +10,8 @@
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestMetadata.h>
 
+@protocol FBSDKSettings;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -28,7 +30,8 @@ NS_SWIFT_NAME(GraphRequestQueue)
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)configureWithGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
-  NS_SWIFT_NAME(configure(graphRequestConnectionFactory:));
+                                          settings:(nullable id<FBSDKSettings>)settings
+  NS_SWIFT_NAME(configure(graphRequestConnectionFactory:settings:));
 
 /**
  @method

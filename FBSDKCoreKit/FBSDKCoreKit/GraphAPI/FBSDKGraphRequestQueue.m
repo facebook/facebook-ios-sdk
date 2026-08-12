@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
+
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKGraphRequestQueue.h"
 #import "FBSDKLogger+Internal.h"
@@ -14,6 +16,7 @@
 
 @property (nonatomic, strong) NSMutableArray<FBSDKGraphRequestMetadata *> *requestsQueue;
 @property (nullable, nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nullable, nonatomic, weak) id<FBSDKSettings> settings;
 @property (nonatomic, strong) FBSDKLogger *logger;
 
 @end
@@ -40,8 +43,10 @@
 }
 
 - (void)configureWithGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                                          settings:(nullable id<FBSDKSettings>)settings
 {
   self.graphRequestConnectionFactory = graphRequestConnectionFactory;
+  self.settings = settings;
 }
 
 - (void)enqueueRequest:(id<FBSDKGraphRequest>)request
@@ -74,6 +79,13 @@
     if (self.requestsQueue.count == 0) {
       return;
     }
+    // Do not flush until the SDK is configured to make requests. Issuing a batch (or single) graph
+    // request without an app ID / client token raises an exception, so keep the requests queued and
+    // flush them once a valid configuration is set (e.g. FacebookAppID at launch, or a later
+    // Settings.appID / Settings.clientToken assignment, which re-invokes flush).
+    if (![self canFlushRequests]) {
+      return;
+    }
     NSArray<FBSDKGraphRequestMetadata *> *requestsToFlush = [self.requestsQueue copy];
     [self.requestsQueue removeAllObjects];
     id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
@@ -83,6 +95,13 @@
     [self logFlushingRequests:requestsToFlush];
     [requestConnection start];
   }
+}
+
+- (BOOL)canFlushRequests
+{
+  // A batch request requires an app ID, and a token-less request requires a client token; without
+  // both, starting the connection raises. Treat the SDK as flushable only when both are present.
+  return self.settings.appID.length > 0 && self.settings.clientToken.length > 0;
 }
 
 - (void)logEnqueueRequest:(id<FBSDKGraphRequest>)request
@@ -119,6 +138,7 @@
 - (void)reset
 {
   self.graphRequestConnectionFactory = nil;
+  self.settings = nil;
   [self.requestsQueue removeAllObjects];
 }
 

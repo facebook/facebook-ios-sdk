@@ -23,7 +23,6 @@
 
 @interface FBSDKDomainConfigurationManager ()
 
-@property (nonatomic) NSMutableArray<FBSDKDomainConfigurationBlock> *completionBlocks;
 @property (nullable, nonatomic) FBSDKDomainConfiguration *domainConfiguration;
 @property (nonatomic) BOOL loadingDomainConfiguration;
 @property (nullable, nonatomic) NSError *domainConfigurationError;
@@ -45,7 +44,6 @@ static const NSTimeInterval kTimeout = 4.0;
 - (instancetype)initWithDomainConfiguration:(nullable FBSDKDomainConfiguration *)domainConfiguration
 {
   if ((self = [super init])) {
-    _completionBlocks = [NSMutableArray new];
     _domainConfiguration = domainConfiguration;
   }
   return self;
@@ -86,6 +84,10 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
 }
 
 - (void)loadDomainConfigurationWithCompletionBlock:(nullable FBSDKDomainConfigurationBlock)completionBlock {
+  BOOL shouldStartRequest = NO;
+  NSString *appID = nil;
+  id<FBSDKGraphRequestFactory> graphRequestFactory = nil;
+  id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory = nil;
   @try {
     @synchronized(self) {
       // load the configuration from NSUserDefaults
@@ -105,40 +107,73 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
         }
       }
 
-      if (self.requeryFinishedForAppStart &&
-          (self.domainConfiguration && [self _domainConfigurationTimestampIsValid:self.domainConfiguration.timestamp]) &&
-          self.domainConfiguration.version >= FBSDKDomainConfigurationVersion) {
-        // we have a valid domain configuration, use that
-        if (completionBlock) {
-          completionBlock();
-        }
-      }else{
-        // hold onto the completion block
-        if (completionBlock) {
-          [FBSDKTypeUtility array:self.completionBlocks addObject:[completionBlock copy]];
-        }
+      BOOL hasValidConfiguration = self.requeryFinishedForAppStart
+        && (self.domainConfiguration && [self _domainConfigurationTimestampIsValid:self.domainConfiguration.timestamp])
+        && self.domainConfiguration.version >= FBSDKDomainConfigurationVersion;
 
-        // check if we are already loading
-        if (!self.loadingDomainConfiguration) {
-          // load the configuration from the network
-          self.loadingDomainConfiguration = YES;
-          id<FBSDKGraphRequest> request = [self requestToLoadDomainConfiguration:self.settings.appID];
-
-          // start request with specified timeout instead of the default 180s
-          id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
-          requestConnection.timeout = kTimeout;
-          [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
-            self.requeryFinishedForAppStart = YES;
-            [self processLoadRequestResponse:result error:error];
-          }];
-          [requestConnection start];
-        }
+      // Kick off a background refresh unless we already have a valid, fresh configuration or a
+      // request is already in flight. The completion is NOT gated on this request: routing proceeds
+      // immediately on the cached (or ATT-safe default) configuration while the refresh runs.
+      if (!hasValidConfiguration && !self.loadingDomainConfiguration) {
+        self.loadingDomainConfiguration = YES;
+        // Capture the dependencies used by the background refresh here, while holding the lock, so
+        // the off-main work is self-contained and unaffected by any later re-`configure`.
+        appID = self.settings.appID;
+        graphRequestFactory = self.graphRequestFactory;
+        graphRequestConnectionFactory = self.graphRequestConnectionFactory;
+        shouldStartRequest = YES;
       }
     }
   } @catch (NSException *exception) {}
+
+  // Complete from the cached/default configuration without waiting on the network. Firing on the
+  // main queue keeps the completion off the caller's synchronous launch frame.
+  if (completionBlock) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      completionBlock();
+    });
+  }
+
+  // Building and starting the request is expensive on the launch frame, so run it off the main
+  // thread. Keeping it outside the lock also ensures a concurrent routing read
+  // (cachedDomainConfiguration) never stalls waiting on the request start.
+  if (shouldStartRequest) {
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+      [self startDomainConfigurationRequestWithGraphRequestFactory:graphRequestFactory
+                                    graphRequestConnectionFactory:graphRequestConnectionFactory
+                                                            appID:appID];
+    });
+  }
 }
 
 #pragma mark - Internal
+
+- (void)startDomainConfigurationRequestWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                                                        appID:(nullable NSString *)appID
+{
+  @try {
+    id<FBSDKGraphRequest> request = [self requestToLoadDomainConfigurationWithGraphRequestFactory:graphRequestFactory
+                                                                                           appID:appID];
+
+    // start request with specified timeout instead of the default 180s
+    id<FBSDKGraphRequestConnecting> requestConnection = [graphRequestConnectionFactory createGraphRequestConnection];
+    requestConnection.timeout = kTimeout;
+    [requestConnection addRequest:request completion:^(id<FBSDKGraphRequestConnecting> connection, id result, NSError *error) {
+      self.requeryFinishedForAppStart = YES;
+      [self processLoadRequestResponse:result error:error];
+    }];
+    [requestConnection start];
+  } @catch (NSException *exception) {
+    // If the request could not be built or started, clear the loading flag so a later load can
+    // retry instead of being deduped away for the rest of the process.
+    NSString *msg = [NSString stringWithFormat:@"Failed to start domain configuration request: %@", exception];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:msg];
+    @synchronized(self) {
+      self.loadingDomainConfiguration = NO;
+    }
+  }
+}
 
 - (void)processLoadRequestResponse:(id)result error:(nullable NSError *)error
 {
@@ -166,22 +201,22 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
   } @catch (NSException *exception) {}
 }
 
-- (id<FBSDKGraphRequest>)requestToLoadDomainConfiguration:(NSString *)appID
+- (id<FBSDKGraphRequest>)requestToLoadDomainConfigurationWithGraphRequestFactory:(id<FBSDKGraphRequestFactory>)graphRequestFactory
+                                                                          appID:(nullable NSString *)appID
 {
   NSDictionary<NSString *, NSString *> *parameters = @{ @"fields" : @"" };
   NSString *graphPath = [NSString stringWithFormat:@"%@/%@", appID, DOMAIN_CONFIGURATION_DOMAIN_INFO_FIELD];
-  return [self.graphRequestFactory createGraphRequestWithGraphPath:graphPath
-                                                        parameters:parameters
-                                                       tokenString:nil
-                                                        HTTPMethod:nil
-                                                             flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery
-                                 useAlternativeDefaultDomainPrefix:NO];
+  return [graphRequestFactory createGraphRequestWithGraphPath:graphPath
+                                                   parameters:parameters
+                                                  tokenString:nil
+                                                   HTTPMethod:nil
+                                                        flags:FBSDKGraphRequestFlagSkipClientToken | FBSDKGraphRequestFlagDisableErrorRecovery
+                            useAlternativeDefaultDomainPrefix:NO];
 }
 
 - (void)_didProcessConfigurationFromNetwork:(FBSDKDomainConfiguration *)domainConfiguration
                                       error:(NSError *)error
 {
-  NSArray<FBSDKDomainConfigurationBlock> *completionBlocksCopy;
   @synchronized(self) {
     if (error) {
       // Only set the error if we don't have previously fetched app settings.
@@ -208,13 +243,6 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
       [self.dataStore fb_setObject:data forKey:DOMAIN_CONFIGURATION_USER_DEFAULTS_KEY];
     }
     _loadingDomainConfiguration = NO;
-
-    completionBlocksCopy = [_completionBlocks copy];
-    [_completionBlocks removeAllObjects];
-  }
-
-  for (FBSDKDomainConfigurationBlock completionBlock in completionBlocksCopy) {
-    completionBlock();
   }
 }
 
@@ -272,6 +300,8 @@ graphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphReque
 - (void)reset
 {
   [self clearCache];
+  self.loadingDomainConfiguration = NO;
+  self.requeryFinishedForAppStart = NO;
   self.settings = nil;
   self.dataStore = nil;
   self.graphRequestFactory = nil;

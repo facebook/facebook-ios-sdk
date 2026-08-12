@@ -17,6 +17,7 @@ final class GraphRequestQueueTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var connection: TestGraphRequestConnection!
   var connectionFactory: TestGraphRequestConnectionFactory!
+  var settings: TestSettings!
   var graphRequestQueue: GraphRequestQueue!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -25,8 +26,12 @@ final class GraphRequestQueueTests: XCTestCase {
     connectionFactory = TestGraphRequestConnectionFactory(
       stubbedConnection: connection
     )
+    settings = TestSettings()
+    settings.appID = "test-app-id"
+    settings.clientToken = "test-client-token"
     GraphRequestQueue.sharedInstance().configure(
-      graphRequestConnectionFactory: connectionFactory
+      graphRequestConnectionFactory: connectionFactory,
+      settings: settings
     )
     graphRequestQueue = GraphRequestQueue.sharedInstance()
     super.setUp()
@@ -35,6 +40,7 @@ final class GraphRequestQueueTests: XCTestCase {
   override func tearDown() {
     GraphRequestQueue.sharedInstance().reset()
     connectionFactory = nil
+    settings = nil
     super.tearDown()
   }
 
@@ -240,5 +246,61 @@ final class GraphRequestQueueTests: XCTestCase {
       requests.isEmpty,
       "Queue should be empty after flush"
     )
+  }
+
+  func testFlushRetainsRequestsWhenAppIDMissing() {
+    settings.appID = nil
+    graphRequestQueue.enqueueRequests([makeTestRequestMetadata(), makeTestRequestMetadata()])
+
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      connection.startCallCount,
+      0,
+      "Should not start a request when there is no app ID to flush with"
+    )
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      2,
+      "Should retain the queued requests when it cannot flush them"
+    )
+  }
+
+  func testFlushRetainsRequestsWhenClientTokenMissing() {
+    settings.clientToken = nil
+    graphRequestQueue.enqueueRequests([makeTestRequestMetadata(), makeTestRequestMetadata()])
+
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      connection.startCallCount,
+      0,
+      "Should not start a request when there is no client token to flush with"
+    )
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      2,
+      "Should retain the queued requests when it cannot flush them"
+    )
+  }
+
+  func testFlushDrainsRetainedRequestsOnceConfigured() {
+    settings.appID = nil
+    graphRequestQueue.enqueueRequests([makeTestRequestMetadata(), makeTestRequestMetadata()])
+    graphRequestQueue.flush()
+    XCTAssertEqual(connection.startCallCount, 0, "Precondition: requests are retained while unconfigured")
+
+    settings.appID = "test-app-id"
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      connection.startCallCount,
+      1,
+      "Should flush the retained requests once an app ID and client token are available"
+    )
+    guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
+      return XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+    }
+    XCTAssertTrue(requests.isEmpty, "Queue should be empty after a successful flush")
   }
 }

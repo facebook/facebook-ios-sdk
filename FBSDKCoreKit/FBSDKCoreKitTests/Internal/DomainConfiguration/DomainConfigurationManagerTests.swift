@@ -141,6 +141,14 @@ final class DomainConfigurationManagerTests: XCTestCase {
       graphRequestConnectionFactory: connectionFactory
     )
     domainConfigurationManager.loadDomainConfiguration {}
+    // The network refresh now runs off the main thread, so wait for it to report the error.
+    let erroredOut = XCTNSPredicateExpectation(
+      predicate: NSPredicate { _, _ in
+        self.domainConfigurationManager.domainConfigurationError != nil
+      },
+      object: nil
+    )
+    wait(for: [erroredOut], timeout: 5.0)
     XCTAssertNil(
       domainConfigurationManager.domainConfiguration,
       "Should not have domainConfiguration when have error"
@@ -176,6 +184,14 @@ final class DomainConfigurationManagerTests: XCTestCase {
       graphRequestConnectionFactory: connectionFactory
     )
     domainConfigurationManager.loadDomainConfiguration {}
+    // The network refresh now runs off the main thread, so wait for it to populate the config.
+    let refreshed = XCTNSPredicateExpectation(
+      predicate: NSPredicate { _, _ in
+        self.domainConfigurationManager.domainConfiguration != nil
+      },
+      object: nil
+    )
+    wait(for: [refreshed], timeout: 5.0)
     XCTAssertNotNil(
       domainConfigurationManager.domainConfiguration,
       "Should have the domainConfiguration on success"

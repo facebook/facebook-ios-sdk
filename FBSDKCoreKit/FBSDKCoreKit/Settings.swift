@@ -256,6 +256,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
       validateConfiguration()
       _appID = newValue
       logIfSDKSettingsChanged()
+      // Flush any requests that were queued before the SDK was configured to make them.
+      GraphRequestQueue.sharedInstance().flush()
     }
   }
 
@@ -285,7 +287,11 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    */
   public var clientToken: String? {
     get { getPersistedStringProperty(.clientToken) }
-    set { setPersistedStringProperty(.clientToken, to: newValue) }
+    set {
+      setPersistedStringProperty(.clientToken, to: newValue)
+      // Flush any requests that were queued before the SDK was configured to make them.
+      GraphRequestQueue.sharedInstance().flush()
+    }
   }
 
   // swiftlint:disable:next identifier_name

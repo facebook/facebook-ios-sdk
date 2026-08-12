@@ -393,7 +393,8 @@ private extension CoreKitConfigurator {
 
   func configureGraphRequestQueue() {
     GraphRequestQueue.sharedInstance().configure(
-      graphRequestConnectionFactory: components.graphRequestConnectionFactory
+      graphRequestConnectionFactory: components.graphRequestConnectionFactory,
+      settings: components.settings
     )
   }
 }

@@ -102,7 +102,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     // Configure _DomainHandler for testing
     DomainHandlerTests.configureDomainHandlerForTesting()
     GraphRequestQueue.sharedInstance().configure(
-      graphRequestConnectionFactory: TestGraphRequestConnectionFactory(stubbedConnection: connection)
+      graphRequestConnectionFactory: TestGraphRequestConnectionFactory(stubbedConnection: connection),
+      settings: settings
     )
   }
 

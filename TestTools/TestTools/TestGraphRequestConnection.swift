@@ -61,6 +61,8 @@ public final class TestGraphRequestConnection: NSObject, GraphRequestConnecting 
   public var capturedCompletions = [Completion]()
   public var startCallCount = 0
   public var cancelCallCount = 0
+  // Records whether `start()` was invoked on the main thread. `nil` until `start()` runs.
+  public private(set) var startCalledOnMainThread: Bool?
 
   // Enables us to use the internal requests property
   public var graphRequests = [Request]()
@@ -79,6 +81,7 @@ public final class TestGraphRequestConnection: NSObject, GraphRequestConnecting 
   }
 
   public func start() {
+    startCalledOnMainThread = Thread.isMainThread
     startCallCount += 1
     if shouldExecuteCompletion {
       for completion in capturedCompletions {
