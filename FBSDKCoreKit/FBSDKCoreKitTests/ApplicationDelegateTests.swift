@@ -120,6 +120,8 @@ final class ApplicationDelegateTests: XCTestCase {
       components: components,
       configurator: configurator
     )
+    // Run deferred SDK setup synchronously so tests can assert on it without a rendered frame.
+    delegate.scheduleAfterFirstFrame = { $0() }
   }
 
   func resetTestDependencies() {
@@ -207,6 +209,34 @@ final class ApplicationDelegateTests: XCTestCase {
         "Should not load the domain configuration on initializing the SDK unless we have iOS 14.5+"
       )
     }
+  }
+
+  func testInitializeSDKDefersSetupUntilAfterFirstFrame() throws {
+    guard #available(iOS 14.5, *) else {
+      throw XCTSkip("Domain configuration gating only runs on iOS 14.5+")
+    }
+    var scheduledWork: (() -> Void)?
+    delegate.scheduleAfterFirstFrame = { scheduledWork = $0 }
+
+    delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
+
+    XCTAssertNotNil(
+      scheduledWork,
+      "SDK setup should be scheduled to run after the first frame"
+    )
+    XCTAssertEqual(
+      settings.logIfSDKSettingsChangedCallCount,
+      0,
+      "SDK setup should be deferred until the scheduled block runs, not during initializeSDK"
+    )
+
+    scheduledWork?()
+
+    XCTAssertEqual(
+      settings.logIfSDKSettingsChangedCallCount,
+      1,
+      "SDK setup should run once the scheduled block fires"
+    )
   }
 
   func testInitializingSdkAddsBridgeApiObserver() {

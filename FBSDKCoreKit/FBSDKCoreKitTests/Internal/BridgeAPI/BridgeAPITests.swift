@@ -87,6 +87,8 @@ final class BridgeAPITests: XCTestCase {
       components: components,
       configurator: TestCoreKitConfigurator(components: components)
     )
+    // Run deferred SDK setup synchronously so there is no dependency on a rendered frame.
+    delegate.scheduleAfterFirstFrame = { $0() }
     delegate.initializeSDK()
   }
 

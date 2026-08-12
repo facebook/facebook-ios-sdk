@@ -32,6 +32,11 @@ public final class ApplicationDelegate: NSObject {
     }
   }
 
+  // Schedules SDK setup to run after the first frame is rendered so it does not serialize ahead of
+  // the initial render. Overridden in tests to run synchronously.
+  @nonobjc
+  var scheduleAfterFirstFrame: FirstFrameScheduling = ApplicationDelegate.runAfterFirstFrame
+
   private static let kitsBitmaskKey = "com.facebook.sdk.kits.bitmask"
 
   /// Gets the singleton instance.
@@ -77,9 +82,14 @@ public final class ApplicationDelegate: NSObject {
     initializeProfile()
     if #available(iOS 14.5, *) {
       fetchDomainConfiguration {
-        GraphRequestConnection.setDidFetchDomainConfiguration()
-        self.doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
-        GraphRequestQueue.sharedInstance().flush() // Flush any queued requests
+        // The completion now fires from the cached/default domain configuration without waiting on
+        // the network. Defer SDK setup until after the first frame so it does not serialize ahead
+        // of the initial render.
+        self.scheduleAfterFirstFrame {
+          GraphRequestConnection.setDidFetchDomainConfiguration()
+          self.doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
+          GraphRequestQueue.sharedInstance().flush() // Flush any queued requests
+        }
       }
     } else {
       doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
@@ -388,6 +398,17 @@ public final class ApplicationDelegate: NSObject {
     _DomainHandler.sharedInstance().loadDomainConfiguration(completionBlock: completionBlock)
   }
 
+  @nonobjc
+  static func runAfterFirstFrame(_ work: @escaping () -> Void) {
+    // An app launched into the background never renders a first frame, so there is nothing to defer
+    // to — run setup immediately rather than stalling it until a frame that never comes.
+    if UIApplication.shared.applicationState == .background {
+      work()
+      return
+    }
+    FirstFrameScheduler.schedule(work)
+  }
+
   private func initializeProfile() {
     components.profileSetter.current = components.profileSetter.fetchCachedProfile()
   }
@@ -600,4 +621,45 @@ fileprivate extension AppEvents.ParameterName {
   static let isShareLibraryIncluded = Self("share_lib_included")
   static let isTVLibraryIncluded = Self("tv_lib_included")
   static let schemeWarning = Self("SchemeWarning")
+}
+
+/// Schedules a block of work to run after the first frame is rendered. Injectable so tests can run
+/// the work synchronously.
+typealias FirstFrameScheduling = (@escaping () -> Void) -> Void
+
+/// Runs a block once, after the next rendered frame. A one-shot `CADisplayLink` fires on the next
+/// display refresh; a fallback timer guarantees the block still runs if no frame is produced, so
+/// SDK setup is never dropped.
+private final class FirstFrameScheduler {
+  private var displayLink: CADisplayLink?
+  private var work: (() -> Void)?
+
+  private static let fallbackDelay: TimeInterval = 1.0
+
+  static func schedule(_ work: @escaping () -> Void) {
+    let scheduler = FirstFrameScheduler()
+    scheduler.work = work
+
+    // The display link retains `scheduler`, and the run loop retains the link once added, so the
+    // scheduler stays alive until it fires and invalidates the link.
+    let displayLink = CADisplayLink(target: scheduler, selector: #selector(handleFrame))
+    scheduler.displayLink = displayLink
+    displayLink.add(to: .main, forMode: .common)
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + fallbackDelay) { [weak scheduler] in
+      scheduler?.fire()
+    }
+  }
+
+  @objc private func handleFrame() {
+    fire()
+  }
+
+  private func fire() {
+    guard let work = work else { return }
+    self.work = nil
+    displayLink?.invalidate()
+    displayLink = nil
+    work()
+  }
 }
