@@ -284,6 +284,22 @@ final class GraphRequestQueueTests: XCTestCase {
     )
   }
 
+  func testLegacyConfigureSuppliesRealSettings() {
+    graphRequestQueue.reset()
+
+    graphRequestQueue.configure(graphRequestConnectionFactory: connectionFactory)
+
+    XCTAssertNotNil(
+      graphRequestQueue.settings,
+      "The legacy signature must forward real settings, otherwise the queue can never flush"
+    )
+    XCTAssertIdentical(
+      graphRequestQueue.settings,
+      Settings.shared,
+      "Should forward the shared settings, the same instance the SDK's own configuration passes"
+    )
+  }
+
   func testFlushDrainsRetainedRequestsOnceConfigured() {
     settings.appID = nil
     graphRequestQueue.enqueueRequests([makeTestRequestMetadata(), makeTestRequestMetadata()])

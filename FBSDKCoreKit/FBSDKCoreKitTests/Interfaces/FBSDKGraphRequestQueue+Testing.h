@@ -8,12 +8,15 @@
 
 #import <FBSDKCoreKit/FBSDKGraphRequestQueue.h>
 
+@protocol FBSDKSettings;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKGraphRequestQueue (Testing)
 
 @property (nonatomic, strong) NSMutableArray<FBSDKGraphRequestMetadata *> *requestsQueue;
 @property (nullable, nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
+@property (nullable, nonatomic, weak) id<FBSDKSettings> settings;
 
 - (void)reset;
 

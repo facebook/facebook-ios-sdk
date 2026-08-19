@@ -49,6 +49,14 @@
   self.settings = settings;
 }
 
+- (void)configureWithGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+{
+  // Settings must be non-nil: `canFlushRequests` reads `appID` and `clientToken` from it, and a
+  // nil leaves the queue permanently unable to flush.
+  [self configureWithGraphRequestConnectionFactory:graphRequestConnectionFactory
+                                          settings:FBSDKSettings.sharedSettings];
+}
+
 - (void)enqueueRequest:(id<FBSDKGraphRequest>)request
         completion:(FBSDKGraphRequestCompletion)completion
 {
