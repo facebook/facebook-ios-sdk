@@ -75,12 +75,13 @@ main() {
       "FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
       "FBSDKCoreKit/FBSDKCoreKitTests/AppLinkNavigationTests.swift"
       "FBAEMKit/FBAEMKit/AEMNetworker.swift"
+      "Package.swift"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
       "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
-      "FBAEMKit/FBAEMKit/_AEMNetworker.swift"
+      "FBAEMKit/FBAEMKit/AEMNetworker.swift"
     )
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
