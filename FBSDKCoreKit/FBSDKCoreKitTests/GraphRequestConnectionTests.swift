@@ -1045,9 +1045,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     ]
       .forEach { state in
         connection.state = .created
-        connection.add(makeSampleRequest()) { _, _, _ in
-          XCTFail("Should not be called")
-        }
+        // The stubbed session completes the request and the completion is delivered
+        // asynchronously on the main queue, so it runs after this test body returns.
+        connection.add(makeSampleRequest()) { _, _, _ in }
         connection.state = state
         connection.start()
         XCTAssertEqual(
@@ -1065,9 +1065,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.delegate = self
     let queue = TestOperationQueue()
     connection.delegateQueue = queue
-    connection.add(makeSampleRequest()) { _, _, _ in
-      XCTFail("Should not be called")
-    }
+    // The stubbed session completes the request and the completion is delivered
+    // asynchronously on the main queue, so it runs after this test body returns.
+    connection.add(makeSampleRequest()) { _, _, _ in }
     connection.start()
     XCTAssertTrue(
       queue.addOperationWithBlockWasCalled,

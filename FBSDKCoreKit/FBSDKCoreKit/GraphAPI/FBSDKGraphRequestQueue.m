@@ -12,12 +12,20 @@
 #import "FBSDKGraphRequestQueue.h"
 #import "FBSDKLogger+Internal.h"
 
+/// The Graph API rejects a batch of more than 50 sub-requests outright, with no partial results.
+static const NSUInteger kMaxRequestsPerBatch = 50;
+
+/// Upper bound on the queue so a queue that never opens cannot grow without limit.
+static const NSUInteger kMaxQueuedRequests = 1000;
+
 @interface FBSDKGraphRequestQueue ()
 
 @property (nonatomic, strong) NSMutableArray<FBSDKGraphRequestMetadata *> *requestsQueue;
 @property (nullable, nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nullable, nonatomic, weak) id<FBSDKSettings> settings;
 @property (nonatomic, strong) FBSDKLogger *logger;
+@property (nonatomic, strong) id<FBSDKErrorCreating> errorFactory;
+@property (nonatomic) NSUInteger numDroppedRequests;
 
 @end
 
@@ -28,6 +36,7 @@
   if (self = [super init]) {
     _requestsQueue = [NSMutableArray new];
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
+    _errorFactory = [FBSDKErrorFactory new];
   }
   return self;
 }
@@ -75,9 +84,32 @@
 
 - (void)enqueueRequestMetadata:(FBSDKGraphRequestMetadata *)requestMetadata
 {
+  NSUInteger droppedTotal = 0;
   @synchronized (self) {
-    [self logEnqueueRequest:requestMetadata.request];
-    [FBSDKTypeUtility array:self.requestsQueue addObject:requestMetadata];
+    if (self.requestsQueue.count < kMaxQueuedRequests) {
+      [self logEnqueueRequest:requestMetadata.request];
+      [FBSDKTypeUtility array:self.requestsQueue addObject:requestMetadata];
+      return;
+    }
+    self.numDroppedRequests += 1;
+    droppedTotal = self.numDroppedRequests;
+  }
+
+  // A dropped request is never sent, so its completion must be invoked here -- the flush path,
+  // which normally invokes it via `addRequest:completion:`, will never see this request. Delivery
+  // is dispatched to the main queue to match how a completed request's handler is invoked, and so
+  // that the handler runs after the caller has finished submitting rather than part way through it.
+  // The connection argument is nil because no connection was ever created for this request.
+  NSString *msg = [NSString stringWithFormat:
+                   @"FBSDKGraphRequestQueue full (%lu); dropping request. Total dropped: %lu",
+                   (unsigned long)kMaxQueuedRequests, (unsigned long)droppedTotal];
+  [self.logger.class singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:msg];
+  FBSDKGraphRequestCompletion completionHandler = requestMetadata.completionHandler;
+  if (completionHandler) {
+    NSError *error = [self.errorFactory unknownErrorWithMessage:msg userInfo:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      completionHandler(nil, nil, error);
+    });
   }
 }
 
@@ -96,12 +128,18 @@
     }
     NSArray<FBSDKGraphRequestMetadata *> *requestsToFlush = [self.requestsQueue copy];
     [self.requestsQueue removeAllObjects];
-    id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
-    for (FBSDKGraphRequestMetadata *metadata in requestsToFlush) {
-      [requestConnection addRequest:metadata.request completion:metadata.completionHandler];
-    }
     [self logFlushingRequests:requestsToFlush];
-    [requestConnection start];
+
+    NSUInteger total = requestsToFlush.count;
+    for (NSUInteger offset = 0; offset < total; offset += kMaxRequestsPerBatch) {
+      NSUInteger length = MIN(kMaxRequestsPerBatch, total - offset);
+      NSArray<FBSDKGraphRequestMetadata *> *chunk = [requestsToFlush subarrayWithRange:NSMakeRange(offset, length)];
+      id<FBSDKGraphRequestConnecting> requestConnection = [self.graphRequestConnectionFactory createGraphRequestConnection];
+      for (FBSDKGraphRequestMetadata *metadata in chunk) {
+        [requestConnection addRequest:metadata.request completion:metadata.completionHandler];
+      }
+      [requestConnection start];
+    }
   }
 }
 

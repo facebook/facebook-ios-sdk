@@ -9,6 +9,7 @@
 #import <FBSDKCoreKit/FBSDKGraphRequestQueue.h>
 
 @protocol FBSDKSettings;
+@protocol FBSDKErrorCreating;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSMutableArray<FBSDKGraphRequestMetadata *> *requestsQueue;
 @property (nullable, nonatomic, strong) id<FBSDKGraphRequestConnectionFactory> graphRequestConnectionFactory;
 @property (nullable, nonatomic, weak) id<FBSDKSettings> settings;
+@property (nonatomic, strong) id<FBSDKErrorCreating> errorFactory;
 
 - (void)reset;
 

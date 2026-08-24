@@ -284,6 +284,56 @@ final class GraphRequestQueueTests: XCTestCase {
     )
   }
 
+  func testFlushSplitsBatchesLargerThanTheGraphAPILimit() {
+    let perBatchFactory = PerCallConnectionFactory()
+    graphRequestQueue.configure(graphRequestConnectionFactory: perBatchFactory, settings: settings)
+    graphRequestQueue.enqueueRequests((0 ..< 120).map { _ in makeTestRequestMetadata() })
+
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      perBatchFactory.connections.map(\.capturedRequests.count),
+      [50, 50, 20],
+      "Should split into batches of at most 50; the Graph API rejects a larger batch outright"
+    )
+    XCTAssertEqual(
+      perBatchFactory.connections.map(\.startCallCount),
+      [1, 1, 1],
+      "Should start each batch exactly once"
+    )
+  }
+
+  func testEnqueueDropsRequestsBeyondTheQueueLimit() {
+    graphRequestQueue.enqueueRequests((0 ..< 1005).map { _ in makeTestRequestMetadata() })
+
+    guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
+      return XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+    }
+    XCTAssertEqual(requests.count, 1000, "Should bound the queue rather than growing without limit")
+  }
+
+  func testEnqueueCompletesDroppedRequestsWithAnError() {
+    graphRequestQueue.enqueueRequests((0 ..< 1000).map { _ in makeTestRequestMetadata() })
+
+    var capturedError: Error?
+    let completed = expectation(description: "dropped request completion")
+    graphRequestQueue.enqueue(makeTestRequest()) { _, _, error in
+      XCTAssertTrue(Thread.isMainThread, "Should deliver on the main queue, as a sent request does")
+      capturedError = error
+      completed.fulfill()
+    }
+
+    XCTAssertNil(
+      capturedError,
+      "Should not complete before the caller has finished submitting the request"
+    )
+    wait(for: [completed], timeout: 1)
+    XCTAssertNotNil(
+      capturedError,
+      "Should report an error for a dropped request rather than completing as though it succeeded"
+    )
+  }
+
   func testLegacyConfigureSuppliesRealSettings() {
     graphRequestQueue.reset()
 
@@ -318,5 +368,18 @@ final class GraphRequestQueueTests: XCTestCase {
       return XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
     }
     XCTAssertTrue(requests.isEmpty, "Queue should be empty after a successful flush")
+  }
+}
+
+// The shared `TestGraphRequestConnectionFactory` vends one connection for every call, which
+// collapses the batches into a single list of requests. This vends a fresh connection per call so
+// a test can assert what each individual batch received.
+private final class PerCallConnectionFactory: NSObject, GraphRequestConnectionFactoryProtocol {
+  var connections = [TestGraphRequestConnection]()
+
+  func createGraphRequestConnection() -> GraphRequestConnecting {
+    let connection = TestGraphRequestConnection()
+    connections.append(connection)
+    return connection
   }
 }
