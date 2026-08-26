@@ -26,6 +26,13 @@ final class AppLinkUtilityTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
+    // `fetchDeferredAppLink:` gates on this key in `NSUserDefaults.standardUserDefaults` and sets it
+    // on first call, so the deferred-app-link request is made once per install and never again. The
+    // default outlives the test process, which made `testGraphRequestFactoryAfterGraphRequest` pass
+    // on a clean simulator and fail on every run afterwards -- including in CI, where nothing erases
+    // the simulator between runs. Clearing it here makes the test independent of what ran before it.
+    UserDefaults.standard.removeObject(forKey: "fbsdk_ddl_has_launched_before")
+
     appEventsConfigurationProvider.stubbedConfiguration = SampleAppEventsConfigurations.valid
     configureUtility(infoDictionaryProvider: bundle)
   }
