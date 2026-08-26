@@ -38,7 +38,7 @@ final class StdParamEnforcementManager: NSObject, MACARuleMatching {
     }
     guard let params = params else { return params }
 
-    var updatedParams = params.mutableCopy() as? NSMutableDictionary
+    let updatedParams = params.mutableCopy() as? NSMutableDictionary
     for (key, value) in params {
       let strKey = String(describing: key)
       let strValue = String(describing: value)

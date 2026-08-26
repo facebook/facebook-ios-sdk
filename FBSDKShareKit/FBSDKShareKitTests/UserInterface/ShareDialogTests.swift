@@ -299,7 +299,8 @@ final class ShareDialogTests: XCTestCase {
 
     dialog = createEmptyDialog(mode: .native)
     dialog.shareContent = ShareModelTestUtility.linkContent
-    dialog.fromViewController = UIViewController()
+    let viewController = UIViewController()
+    dialog.fromViewController = viewController
     _ = dialog.show()
 
     let response = BridgeAPIResponse(request: request, error: nil)
@@ -319,7 +320,8 @@ final class ShareDialogTests: XCTestCase {
 
     dialog = createEmptyDialog(mode: .native)
     dialog.shareContent = ShareModelTestUtility.photoContentWithImages
-    dialog.fromViewController = UIViewController()
+    let viewController = UIViewController()
+    dialog.fromViewController = viewController
     _ = dialog.show()
 
     let response = BridgeAPIResponse(request: request, error: nil)
@@ -339,7 +341,8 @@ final class ShareDialogTests: XCTestCase {
 
     dialog = createEmptyDialog(mode: .native)
     dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
-    dialog.fromViewController = UIViewController()
+    let viewController = UIViewController()
+    dialog.fromViewController = viewController
     _ = dialog.show()
 
     let response = BridgeAPIResponse(request: request, error: nil)
