@@ -252,6 +252,70 @@ final class FeatureManagerTests: XCTestCase {
       )
     }
   }
+
+  func testResolvesAgainstARealGateKeeperPayload() {
+    // The other tests here use a gate keeper double, which answers whatever key it is asked
+    // for and so cannot notice a wrong key. This drives the real `_GateKeeperManager` with the
+    // payload shape `{app-id}/mobile_sdk_gk` actually returns, so the whole chain runs:
+    // featureName(for:) -> "FBSDKFeature" + name -> a lookup that only succeeds if the name
+    // matches what the server publishes. Before this fix both features resolved the key
+    // "FBSDKFeatureNONE", which is absent from any payload, and fell back to false.
+    _GateKeeperManager.reset()
+    _GateKeeperManager.parse(
+      result: [
+        "data": [
+          [
+            "gatekeepers": [
+              // FBSDKFeatureAppEvents is deliberately absent: the real payload does not
+              // include it, and the grandparent resolves through defaultStatus(for:) instead.
+              ["key": "FBSDKFeaturePrivacyProtection", "value": true],
+              ["key": "FBSDKFeatureStdParamEnforcement", "value": true],
+              ["key": "FBSDKFeatureBannedParamFiltering", "value": true],
+            ],
+          ],
+        ],
+      ],
+      error: nil
+    )
+
+    _FeatureManager.setDependencies(
+      .init(
+        gateKeeperManager: _GateKeeperManager.self,
+        settings: settings,
+        store: store
+      )
+    )
+
+    XCTAssertTrue(
+      manager.isEnabled(.stdParamEnforcement),
+      "Should resolve FBSDKFeatureStdParamEnforcement from the payload, not a key that is absent from it"
+    )
+    XCTAssertTrue(
+      manager.isEnabled(.bannedParamFiltering),
+      "Should resolve FBSDKFeatureBannedParamFiltering from the payload, not a key that is absent from it"
+    )
+
+    _GateKeeperManager.reset()
+  }
+
+  func testFeatureNamesMatchTheirGateKeepers() {
+    // The gate keeper key is "FBSDKFeature" + featureName(for:), so a feature that is
+    // missing from that switch falls through to "NONE" and reads a gate keeper that does
+    // not exist -- returning the default rather than the server's value, silently. These
+    // two did exactly that, and were off on iOS while enabled server side.
+    let expected: [(SDKFeature, String)] = [
+      (.stdParamEnforcement, "StdParamEnforcement"),
+      (.bannedParamFiltering, "BannedParamFiltering"),
+    ]
+
+    for (feature, name) in expected {
+      XCTAssertEqual(
+        _FeatureManager.shared.featureName(for: feature),
+        name,
+        "\(name) must resolve to its own gate keeper, not fall through to NONE"
+      )
+    }
+  }
 }
 
 // swiftformat:disable extensionaccesscontrol

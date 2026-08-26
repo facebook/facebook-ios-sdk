@@ -121,6 +121,8 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
          .blocklistEvents,
          .filterRedactedEvents,
          .filterSensitiveParams,
+         .stdParamEnforcement,
+         .bannedParamFiltering,
          .iapLoggingSK2,
          .iosManualImplicitPurchaseDedupe,
          .loginFastAppSwitch,
@@ -189,6 +191,8 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .blocklistEvents: featureName = "BlocklistEvents"
     case .filterRedactedEvents: featureName = "FilterRedactedEvents"
     case .filterSensitiveParams: featureName = "FilterSensitiveParams"
+    case .stdParamEnforcement: featureName = "StdParamEnforcement"
+    case .bannedParamFiltering: featureName = "BannedParamFiltering"
     case .iapLoggingSK2: featureName = "IAPLoggingSK2"
     case .iosManualImplicitPurchaseDedupe: featureName = "IOSManualImplicitPurchaseDedupe"
     @unknown default: featureName = "NONE"
