@@ -48,8 +48,18 @@ def rec_path(path)
   end.select { |x| x }.flatten(1)
 end
 
+SDK_VERSION_FILE = 'FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/include/FBSDKVersions.h'.freeze
+
+# Resolved here rather than left as a shell substitution in the jazzy argument: an
+# unreadable version used to reach jazzy as --module-version "" and publish docs
+# stamped with no version at all, which nothing downstream would have flagged.
 def sdk_version
-  "$(grep -Eo 'FBSDK_VERSION_STRING @\".*\"' \"FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h\" | awk -F'\"' '{print $2}')"
+  version = `grep -Eo 'FBSDK_VERSION_STRING @".*"' "#{SDK_VERSION_FILE}" | awk -F'"' '{print $2}'`.strip
+  if version.empty?
+    abort("ERROR: no FBSDK_VERSION_STRING found in #{SDK_VERSION_FILE}\n" \
+          "       This is the canonical version definition; if it moved, update this script.")
+  end
+  version
 end
 
 def generateSourceKittenOutputForObjC(kit)

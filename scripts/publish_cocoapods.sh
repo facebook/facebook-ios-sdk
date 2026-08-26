@@ -10,7 +10,19 @@ set -u # flag undefined variables as errors
 set -o pipefail # propogate errors in pipeline to be the result of the pipeline
 # set -x # echo commands run (commented out for now since its noisy)
 
-CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h | awk -F'"' '{print $2}')
+VERSION_FILE="FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/include/FBSDKVersions.h"
+
+# `|| true` so a non-match does not trip `set -o pipefail` before the check below runs.
+# Without it the script exits 1 with no output at all, and the release guide invokes this
+# inside `until scripts/publish_cocoapods.sh; do sleep 60; done` -- so a version that cannot
+# be read looks like a transient failure and retries forever instead of saying what is wrong.
+CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$VERSION_FILE" 2>/dev/null | awk -F'"' '{print $2}' || true)
+
+if [ -z "$CURRENT_VERSION" ]; then
+  echo "ERROR: no FBSDK_VERSION_STRING found in $VERSION_FILE" >&2
+  echo "       This is the canonical version definition; if it moved, update this script." >&2
+  exit 1
+fi
 
 push_specs_and_update() {
   for spec in "$@"; do

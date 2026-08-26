@@ -86,8 +86,17 @@ main() {
     SDK_POD_SPECS=("${SDK_KITS[@]}")
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
 
-    SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
-    SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_DEFAULT_GRAPH_API_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
+    # `|| true` so a non-match does not trip `set -o pipefail` here. Without it every
+    # run.sh subcommand aborts at startup with exit 1 and no output at all, which says
+    # nothing about the actual problem.
+    SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" 2>/dev/null | awk -F'"' '{print $2}' || true)
+    SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_DEFAULT_GRAPH_API_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" 2>/dev/null | awk -F'"' '{print $2}' || true)
+
+    if [ -z "$SDK_CURRENT_VERSION" ] || [ -z "$SDK_CURRENT_GRAPH_API_VERSION" ]; then
+      echo "ERROR: could not read the SDK version from $SDK_MAIN_VERSION_FILE" >&2
+      echo "       This is the canonical version definition; if it moved, update SDK_MAIN_VERSION_FILE." >&2
+      exit 1
+    fi
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-ios-sdk"
 
