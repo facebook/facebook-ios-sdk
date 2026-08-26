@@ -15,7 +15,7 @@ final class GraphRequestTests: XCTestCase {
 
   let path = "me"
   let parameters = ["fields": ""]
-  let version = "v21.0"
+  let version = FBSDK_DEFAULT_GRAPH_API_VERSION
   let prefix = "graph."
   let settings = TestSettings()
   var factory = TestGraphRequestConnectionFactory()

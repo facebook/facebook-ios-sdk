@@ -80,8 +80,8 @@ main() {
 
     SDK_GRAPH_API_VERSION_FILES=(
       "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
-      "FBSDKCoreKit/FBSDKCoreKitTests/GraphRequestTests.swift"
       "FBAEMKit/FBAEMKit/AEMNetworker.swift"
+      "samples/FacebookLoginSample/FacebookLoginSample/LoginDetailsViewController.swift"
     )
 
     SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
