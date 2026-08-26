@@ -71,20 +71,17 @@ main() {
 
     SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
-      "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
-      "FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/FBSDKCrashHandler.m"
+      "FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/include/FBSDKVersions.h"
       "FBSDKCoreKit/FBSDKCoreKitTests/AppLinkNavigationTests.swift"
-      "FBAEMKit/FBAEMKit/AEMNetworker.swift"
       "Package.swift"
     )
 
     SDK_GRAPH_API_VERSION_FILES=(
-      "FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
-      "FBAEMKit/FBAEMKit/AEMNetworker.swift"
+      "FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/include/FBSDKVersions.h"
       "samples/FacebookLoginSample/FacebookLoginSample/LoginDetailsViewController.swift"
     )
 
-    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/include/FBSDKCoreKitVersions.h"
+    SDK_MAIN_VERSION_FILE="FBSDKCoreKit_Basics/FBSDKCoreKit_Basics/include/FBSDKVersions.h"
 
     SDK_POD_SPECS=("${SDK_KITS[@]}")
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")

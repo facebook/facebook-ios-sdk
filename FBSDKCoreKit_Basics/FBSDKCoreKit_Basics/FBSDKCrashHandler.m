@@ -18,12 +18,10 @@
 #import "FBSDKInfoDictionaryProviding.h"
 #import "FBSDKLibAnalyzer.h"
 #import "FBSDKTypeUtility.h"
+#import "FBSDKVersions.h"
 
 #define FBSDK_MAX_CRASH_LOGS 5
 #define FBSDK_CRASH_PATH_NAME @"instrument"
-#ifndef FBSDK_VERSION_STRING
- #define FBSDK_VERSION_STRING @"18.1.0"
-#endif
 
 static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 static NSString *mappingTableIdentifier = NULL;
