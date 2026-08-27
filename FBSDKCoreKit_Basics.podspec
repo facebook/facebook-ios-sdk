@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKCoreKit_Basics'
-  s.version      = '18.1.0'
+  s.version      = '18.1.1'
   s.summary      = 'The kernal module for the Core Facebook SDK'
 
   s.description  = <<-DESC
@@ -48,7 +48,7 @@ Pod::Spec.new do |s|
 
   s.source = {
     http: "https://github.com/facebook/facebook-ios-sdk/releases/download/v#{s.version}/FacebookSDK_Dynamic.xcframework.zip",
-    sha1: '036c0132da62087e5acb382453a7149318ad6031'
+    sha1: '93b84392c4bcc4399e9abd4c50b80e6a3c9f95c2'
   }
   s.vendored_frameworks = 'XCFrameworks/FBSDKCoreKit_Basics.xcframework'
 end
