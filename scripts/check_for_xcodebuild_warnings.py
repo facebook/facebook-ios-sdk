@@ -21,6 +21,23 @@ from xcodebuild_warnings_allowlist import XCODEBUILD_WARNINGS_ALLOWLIST
 BASELINE_FILE = "scripts/xcodebuild_warnings_baseline.txt"
 
 
+def is_diagnostic_context(line: str) -> bool:
+    """True for the source-context lines a compiler prints beneath a diagnostic.
+
+    Swift echoes the offending source under each diagnostic, and the caret line repeats
+    the message:
+
+         93 |   case helpRequest(ParsableCommand.Type? = nil)
+            |        `- warning: associated value 'helpRequest' ...
+
+    Both contain "warning: " and would otherwise be recorded as warnings in their own
+    right. They are not: they are a second rendering of the diagnostic immediately above.
+    Counting them also makes the baseline unstable, because how much context a build
+    prints varies, so the count drifts with no warning having been added or removed.
+    """
+    return re.match(r"^\s*(\d+\s*)?\|", line) is not None
+
+
 def normalize(warning: str) -> str:
     """Reduce a warning to something stable across machines and edits.
 
@@ -80,6 +97,11 @@ def write_baseline(base_dir: str, signatures) -> pathlib.Path:
         "# Shrinking this file is the point. Fix warnings, then --update-baseline\n"
         "# --prune-baseline and land the smaller file.\n"
         "#\n"
+        "# To shrink it, read which entries a CI run reports as no longer occurring and drop\n"
+        "# exactly those. A local run cannot distinguish a warning that was fixed from one\n"
+        "# that only ever appears on the build host, so --prune-baseline from a laptop will\n"
+        "# discard entries that are still real in CI.\n"
+        "#\n"
         "# --update-baseline adds to this file rather than replacing it, because not every\n"
         "# warning appears in every environment: SDK-header warnings surface on the build\n"
         "# host but not always on a laptop. Replacing from a local run would drop those and\n"
@@ -126,7 +148,11 @@ def main():
     parser.add_argument(
         "--prune-baseline",
         action="store_true",
-        help="with --update-baseline, write only what this run saw, dropping entries it did not",
+        help=(
+            "with --update-baseline, write only what this run saw. Prune from CI, not a "
+            "laptop: a local run cannot tell a fixed warning from one that only occurs on "
+            "the build host, and would drop both"
+        ),
     )
     args = parser.parse_args()
 
@@ -152,7 +178,9 @@ def main():
     output_lines = completed_process.stdout.decode().splitlines()
 
     warning_lines = {
-        line for line in output_lines if "warning: " in line or "error: " in line
+        line
+        for line in output_lines
+        if ("warning: " in line or "error: " in line) and not is_diagnostic_context(line)
     }
 
     # Make the output prettier by removing the base_dir from the warning file paths

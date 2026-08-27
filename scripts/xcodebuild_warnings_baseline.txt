@@ -9,6 +9,11 @@
 # Shrinking this file is the point. Fix warnings, then --update-baseline
 # --prune-baseline and land the smaller file.
 #
+# To shrink it, read which entries a CI run reports as no longer occurring and drop
+# exactly those. A local run cannot distinguish a warning that was fixed from one
+# that only ever appears on the build host, so --prune-baseline from a laptop will
+# discard entries that are still real in CI.
+#
 # --update-baseline adds to this file rather than replacing it, because not every
 # warning appears in every environment: SDK-header warnings surface on the build
 # host but not always on a laptop. Replacing from a local run would drop those and
@@ -29,7 +34,6 @@
 1	<SDK>/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/Developer/Library/Frameworks/StoreKitTest.framework/Headers/SKTestTransaction.h: warning: 'SKPaymentTransactionState' is deprecated: first deprecated in iOS 18.0 - Use PurchaseResult from Product.purchase(confirmIn:options:).
 1	FBAEMKit/FBAEMKitTests/Helpers/TestBundle.swift: warning: class 'TestBundle' must restate inherited '@unchecked Sendable' conformance
 1	FBSDKCoreKit/FBSDKCoreKit.xcodeproj: FBSDKCoreKitTests: ld: warning: ignoring duplicate libraries: '-lc++'
-2	FBSDKCoreKit/FBSDKCoreKit/Internal/FeatureManager/_FeatureManager.swift: warning: switch must be exhaustive
 1	FBSDKCoreKit/FBSDKCoreKit/Internal/Network/GraphRequestPiggybackManager.swift: warning: capture of 'dependencies' with non-Sendable type 'GraphRequestPiggybackManager.ObjectDependencies' in a '@Sendable' closure
 3	FBSDKCoreKit/FBSDKCoreKitTests/Interfaces/PaymentProductRequestor+Testing.h: warning: 'SKPaymentTransaction' is deprecated: first deprecated in iOS 18.0 - Use PurchaseResult from Product.purchase(confirmIn:options:).
 3	FBSDKCoreKit/FBSDKCoreKitTests/Interfaces/PaymentProductRequestor+Testing.h: warning: 'SKProduct' is deprecated: first deprecated in iOS 18.0 - Use Product.
@@ -53,16 +57,3 @@
 1	TestTools/TestTools/TestProductSubscriptionPeriod.swift: warning: class 'TestProductSubscriptionPeriod' must restate inherited '@unchecked Sendable' conformance
 1	TestTools/TestTools/TestProductsResponse.swift: warning: class 'TestProductsResponse' must restate inherited '@unchecked Sendable' conformance
 1	TestTools/TestTools/TestSDKError.swift: warning: class 'TestSDKError' must restate inherited '@unchecked Sendable' conformance
-2	| `- warning: 'SKPayment' is deprecated: first deprecated in iOS 18.0 - Use Product.purchase(confirmIn:options:).
-1	| `- warning: 'SKPaymentDiscount' is deprecated: first deprecated in iOS 18.0 - Create a Product.PurchaseOption.promotionalOffer to use in Product.purchase(confirmIn:options:).
-1	| `- warning: 'SKPaymentQueue' is deprecated: first deprecated in iOS 18.0 - No longer supported.
-5	| `- warning: 'SKPaymentTransaction' is deprecated: first deprecated in iOS 18.0 - Use PurchaseResult from Product.purchase(confirmIn:options:).
-2	| `- warning: 'SKPaymentTransactionObserver' is deprecated: first deprecated in iOS 18.0 - Use StoreKit 2 Transaction APIs.
-1	| `- warning: 'SKPaymentTransactionState' is deprecated: first deprecated in iOS 18.0 - Use PurchaseResult from Product.purchase(confirmIn:options:).
-5	| `- warning: 'SKProduct' is deprecated: first deprecated in iOS 18.0 - Use Product.
-3	| `- warning: 'SKProductDiscount' is deprecated: first deprecated in iOS 18.0 - Use Product.SubscriptionOffer.
-1	| `- warning: 'SKProductDiscountPaymentMode' is deprecated: first deprecated in iOS 18.0 - Use Product.SubscriptionOffer.PaymentMode.
-1	| `- warning: 'SKProductPeriodUnit' is deprecated: first deprecated in iOS 18.0 - Use Product.SubscriptionPeriod.Unit.
-2	| `- warning: 'SKProductSubscriptionPeriod' is deprecated: first deprecated in iOS 18.0 - Use Product.SubscriptionPeriod.
-1	| `- warning: 'SKProductsRequest' is deprecated: first deprecated in iOS 18.0 - Use Product.products(for:).
-2	| `- warning: 'SKProductsResponse' is deprecated: first deprecated in iOS 18.0 - Get products using Product.products(for:).
