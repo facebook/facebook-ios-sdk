@@ -16,5 +16,5 @@
 // FBSDKCoreKitVersions.h forwards this header, so both names remain available to
 // FBSDKCoreKit consumers exactly as before.
 
-#define FBSDK_VERSION_STRING @"18.1.0"
+#define FBSDK_VERSION_STRING @"18.1.1"
 #define FBSDK_DEFAULT_GRAPH_API_VERSION @"v26.0"

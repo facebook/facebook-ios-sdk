@@ -10,7 +10,23 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.1...HEAD)
+
+## 18.1.1
+
+### Changed
+- The default Graph API version is now v26.0
+- SDK initialization no longer blocks on the network or on the first frame, so less work
+  happens during app launch
+- Queued graph requests are flushed in bounded batches
+
+### Fixed
+- Fast App Switching eligibility when ATT is denied, on iOS 17 and later
+- Two `SDKFeature` values were not resolved correctly
+- Recurring typos in `FBSDKGamingServicesKit`, `FBSDKLoginKit`, and tests
+
+[2026-08-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.1.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.0...v18.1.1)
 
 ## 18.1.0
 
