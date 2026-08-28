@@ -36,6 +36,7 @@ file_name:
     FBSDKAppEventConversionsAPITransformer.swift,
     AppLinkNavigationTestDependencies.swift,
     ValueClamping.swift,
+    GraphRequestConnectionTests+DomainRouting.swift,
   ]
 type_name:
   excluded: [
