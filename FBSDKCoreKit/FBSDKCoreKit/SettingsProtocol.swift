@@ -26,8 +26,6 @@ public protocol SettingsProtocol {
   var appURLSchemeSuffix: String? { get set }
   var isDataProcessingRestricted: Bool { get }
   var isAutoLogAppEventsEnabled: Bool { get }
-  // swiftlint:disable:next swiftlint_disable_without_this_or_next
-  // swiftlint:disable let_var_whitespace
   @available(
     *,
     deprecated,
@@ -37,10 +35,7 @@ public protocol SettingsProtocol {
       """
   )
   var codelessDebugLogEnabled: Bool { get set }
-  // swiftlint:enable let_var_whitespace
   var isCodelessDebugLogEnabled: Bool { get set }
-  // swiftlint:disable:next swiftlint_disable_without_this_or_next
-  // swiftlint:disable let_var_whitespace
   @available(
     *,
     deprecated,
@@ -50,10 +45,7 @@ public protocol SettingsProtocol {
       """
   )
   var advertiserIDCollectionEnabled: Bool { get set }
-  // swiftlint:enable let_var_whitespace
   var isAdvertiserIDCollectionEnabled: Bool { get set }
-  // swiftlint:disable:next swiftlint_disable_without_this_or_next
-  // swiftlint:disable let_var_whitespace
   @available(
     *,
     deprecated,
@@ -63,7 +55,6 @@ public protocol SettingsProtocol {
       """
   )
   var isSetATETimeExceedsInstallTime: Bool { get }
-  // swiftlint:enable let_var_whitespace
   var isATETimeSufficientlyDelayed: Bool { get }
   var isSKAdNetworkReportEnabled: Bool { get }
   var advertisingTrackingStatus: AdvertisingTrackingStatus { get }
@@ -73,8 +64,6 @@ public protocol SettingsProtocol {
   var shouldUseTokenOptimizations: Bool { get set }
   var graphAPIVersion: String { get set }
   var isGraphErrorRecoveryEnabled: Bool { get set }
-  // swiftlint:disable:next swiftlint_disable_without_this_or_next
-  // swiftlint:disable let_var_whitespace
   @available(
     *,
     deprecated,
@@ -84,10 +73,7 @@ public protocol SettingsProtocol {
       """
   )
   var graphAPIDebugParamValue: String? { get }
-  // swiftlint:enable let_var_whitespace
   var graphAPIDebugParameterValue: String? { get }
-  // swiftlint:disable:next swiftlint_disable_without_this_or_next
-  // swiftlint:disable let_var_whitespace
   @available(
     *,
     deprecated,
@@ -97,7 +83,6 @@ public protocol SettingsProtocol {
       """
   )
   var advertiserTrackingEnabled: Bool { get set }
-  // swiftlint:enable let_var_whitespace
   var isAdvertiserTrackingEnabled: Bool { get set }
   var shouldUseCachedValuesForExpensiveMetadata: Bool { get set }
   var persistableDataProcessingOptions: [DataProcessingOptionKey.RawValue: Any]? { get }

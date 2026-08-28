@@ -54,9 +54,6 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     quality.fb_clamped(to: 0.0 ... 1.0)
   }
 
-  // swiftlint:disable:next swiftlint_disable_without_this_or_next
-  // swiftlint:disable let_var_whitespace
-
   /**
    Controls the automatic logging of basic app events such as `activateApp` and `deactivateApp`.
 
@@ -728,8 +725,6 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
       }
     }
   }
-
-  // swiftlint:enable let_var_whitespace
 
   #if DEBUG
   func reset() {
