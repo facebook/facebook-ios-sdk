@@ -19,7 +19,7 @@ final class BridgeAPITests: XCTestCase {
   let sampleAnnotation = "foo"
 
   let sampleURL = SampleURLs.valid
-  let validBridgeResponseURL = URL(string: "http://bridge")! // swiftlint:disable:this force_unwrapping
+  let validBridgeResponseURL = URL(string: "http://bridge")!
 
   // swiftlint:disable implicitly_unwrapped_optional
   var logger: TestLogger!

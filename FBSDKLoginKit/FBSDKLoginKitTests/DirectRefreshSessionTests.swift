@@ -27,7 +27,6 @@ final class DirectRefreshSessionTests: XCTestCase {
 
   // Default stub URL used by `makeRefreshSession()`. Individual tests can
   // override by passing a different builder to `makeRefreshSession(urlBuilder:)`.
-  // swiftlint:disable:next force_unwrapping
   private static let stubURL = URL(string: "https://limited.facebook.com/limited_login/refresh/")!
 
   // Captures the (hostPrefix, path) passed to the URL builder so tests can

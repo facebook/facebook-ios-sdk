@@ -281,9 +281,7 @@ fileprivate extension String {
 // MARK: - Test Values
 
 fileprivate extension URL {
-  // swiftlint:disable force_unwrapping
   static let videoAsset = URL(string: "assets-library://blah-blah-blah/video.mpg")!
   static let remoteVideo = URL(string: "https://facebook.com/myVideo.mpg")!
   static let localVideo = URL(string: "file:///Users/anyone/myVideo.mpg")!
-  // swiftlint:enable force_unwrapping
 }

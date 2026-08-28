@@ -42,7 +42,7 @@ final class LoginManagerTests: XCTestCase {
   ]
   // @lint-ignore FBOBJCDISCOURAGEDFUNCTION
   let formatter = DateFormatter()
-  let sampleURL = URL(string: "https://example.com")! // swiftlint:disable:this force_unwrapping
+  let sampleURL = URL(string: "https://example.com")!
 
   override func setUp() {
     super.setUp()
@@ -771,17 +771,17 @@ final class LoginManagerTests: XCTestCase {
   func testIsAuthenticationURL() {
     XCTAssertFalse(
       loginManager.isAuthenticationURL(
-        URL(string: "https://www.facebook.com/some/test/url")! // swiftlint:disable:this force_unwrapping
+        URL(string: "https://www.facebook.com/some/test/url")!
       )
     )
     XCTAssertTrue(
       loginManager.isAuthenticationURL(
-        URL(string: "https://www.facebook.com/v9.0/dialog/oauth/?test=test")! // swiftlint:disable:this force_unwrapping
+        URL(string: "https://www.facebook.com/v9.0/dialog/oauth/?test=test")!
       )
     )
     XCTAssertFalse(
       loginManager.isAuthenticationURL(
-        URL(string: "123")! // swiftlint:disable:this force_unwrapping
+        URL(string: "123")!
       )
     )
   }
@@ -793,7 +793,7 @@ final class LoginManagerTests: XCTestCase {
     url = URL(string: "fb\(appID)://")! // swiftlint:disable:this force_unwrapping
     XCTAssertFalse(loginManager.shouldStopPropagation(of: url))
 
-    url = URL(string: "https://no-op/")! // swiftlint:disable:this force_unwrapping
+    url = URL(string: "https://no-op/")!
     XCTAssertFalse(loginManager.shouldStopPropagation(of: url))
   }
 

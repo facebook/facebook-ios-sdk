@@ -256,8 +256,6 @@ fileprivate extension String {
 // MARK: - Test Values
 
 fileprivate extension URL {
-  // swiftlint:disable force_unwrapping
   static let remoteImage = URL(string: "https://facebook.com/myPhoto.png")!
   static let localImage = URL(string: "file:///Users/anyone/myPhoto.png")!
-  // swiftlint:enable force_unwrapping
 }

@@ -16,7 +16,7 @@ final class DeviceLoginManagerTests: XCTestCase {
   let fakeAppID = "123"
   let fakeClientToken = "abc"
   let permissions = ["email", "public_profile"]
-  let redirectURL = URL(string: "https://www.example.com")! // swiftlint:disable:this force_unwrapping
+  let redirectURL = URL(string: "https://www.example.com")!
 
   // swiftlint:disable implicitly_unwrapped_optional
   var poller: TestDevicePoller!
@@ -514,7 +514,7 @@ final class DeviceLoginManagerTests: XCTestCase {
     DeviceLoginCodeInfo(
       identifier: "identifier",
       loginCode: "loginCode",
-      verificationURL: URL(string: "https://www.facebook.com")!, // swiftlint:disable:this force_unwrapping
+      verificationURL: URL(string: "https://www.facebook.com")!,
       expirationDate: Date.distantFuture,
       pollingInterval: 10
     )

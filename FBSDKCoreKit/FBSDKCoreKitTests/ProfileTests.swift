@@ -24,7 +24,7 @@ final class ProfileTests: XCTestCase {
   var imageURL: URL!
   // swiftlint:enable implicitly_unwrapped_optional
 
-  let stubbedURL = URL(string: "testProfile.com")! // swiftlint:disable:this force_unwrapping
+  let stubbedURL = URL(string: "testProfile.com")!
   let accessTokenKey = "access_token"
   let pictureModeKey = "type"
   let widthKey = "width"

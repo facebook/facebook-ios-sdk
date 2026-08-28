@@ -855,8 +855,8 @@ final class InternalUtilityTests: XCTestCase {
 
   func testIsBrowserURLWithNonBrowserURL() {
     [
-      URL(string: "file://foo")!, // swiftlint:disable:this force_unwrapping
-      URL(string: "example://bar")!, // swiftlint:disable:this force_unwrapping
+      URL(string: "file://foo")!,
+      URL(string: "example://bar")!,
     ]
       .forEach { url in
         XCTAssertFalse(

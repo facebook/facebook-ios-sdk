@@ -132,7 +132,7 @@ final class AppLinkUtilityTests: XCTestCase {
   }
 
   func testWithNoPromoCode() {
-    let url = URL(string: "myapp://somelink/?someparam=somevalue")! // swiftlint:disable:this force_unwrapping
+    let url = URL(string: "myapp://somelink/?someparam=somevalue")!
     let promoCode = AppLinkUtility.appInvitePromotionCode(from: url)
     XCTAssertNil(promoCode)
   }

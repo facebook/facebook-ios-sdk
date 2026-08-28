@@ -20,7 +20,7 @@ final class AuthenticationTokenFactoryTests: XCTestCase {
   let signature = "rTaqfx5Dz0UbzxZ3vBhitgtetWKBJ3-egz5n6l4ngLYqQ7ywapDvS7cM1NRGAh9drT8QeoxKPm0H_1B1LJBNyx-Fiseetfs7XANuocwTx9k7so3bi_EW0V-RYoDTgg5asS9Ra2qYM829xMYkhBHXp1HwHo0uHz1tafQ1hTsxtzH29t23_EnPpnVx5jvu-UeAEL4Q7VeIIfkweQYzuT3cowWAs-Vhyvl9I39Z4Uh_3ZhkpBJW1CblPW3ekHoySC61qwePM9Fk0q3N7K45LtktIMR5biV0RvJceTGOssHGhjaQ3hzpRq318MZKfBtg6C-Ryhh8SmOkuDrrj-VNdoVHKg" // swiftlint:disable:this line_length
   let certificateKey = "some_key"
 
-  let sampleURL = URL(string: "https://example.com")! // swiftlint:disable:this force_unwrapping
+  let sampleURL = URL(string: "https://example.com")!
 
   // MARK: - Creation
 

@@ -393,14 +393,12 @@ final class WebDialogViewTests: XCTestCase, WebDialogViewDelegate {
   // MARK: - Helpers
 
   enum URLs {
-    // swiftlint:disable force_unwrapping
     static let connectURL = URL(string: "fbconnect://foo")!
     static let connectURLWithQuery = URL(string: "fbconnect://foo?bar=baz")!
     static let connectURLWithFragment = URL(string: "fbconnect://foo#fragment")!
     static let connectURLWithQueryAndFragment = URL(string: "fbconnect://foo?bar=baz#fragment")!
     static let cancelURLWithoutError = URL(string: "fbconnect://cancel")!
     static let cancelURLWithError = URL(string: "fbconnect://cancel?error_code=999&error_msg=anErrorOhNO")!
-    // swiftlint:enable force_unwrapping
   }
 
   var activityIndicatorView: UIActivityIndicatorView {

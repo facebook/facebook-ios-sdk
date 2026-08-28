@@ -14,7 +14,7 @@ import XCTest
 
 final class GamingVideoUploaderTests: XCTestCase {
 
-  var videoURL = URL(string: "file://video.mp4")! // swiftlint:disable:this force_unwrapping
+  var videoURL = URL(string: "file://video.mp4")!
   lazy var configuration = createConfiguration(url: videoURL)
   let fileHandle = TestFileHandler()
   let fileHandleFactory = TestFileHandleFactory()
@@ -74,7 +74,7 @@ final class GamingVideoUploaderTests: XCTestCase {
   }
 
   func testBadVideoURLFails() {
-    videoURL = URL(string: "file://not-a-video.mp4")! // swiftlint:disable:this force_unwrapping
+    videoURL = URL(string: "file://not-a-video.mp4")!
 
     var wasCompletionCalled = false
     GamingVideoUploader.uploadVideo(configuration: configuration) { _, _, error in

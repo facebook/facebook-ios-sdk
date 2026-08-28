@@ -12,7 +12,7 @@ import XCTest
 
 final class GamingVideoUploaderConfigurationTests: XCTestCase {
 
-  let url = URL(string: "file://video.mp4")! // swiftlint:disable:this force_unwrapping
+  let url = URL(string: "file://video.mp4")!
   let caption = "Cool Video"
   lazy var configuration = GamingVideoUploaderConfiguration(videoURL: url, caption: caption)
 

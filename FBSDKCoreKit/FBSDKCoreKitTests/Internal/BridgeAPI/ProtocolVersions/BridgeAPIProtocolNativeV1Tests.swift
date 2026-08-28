@@ -16,7 +16,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
   let scheme = "com.testscheme"
   let methodName = UUID().uuidString
   let methodVersion = UUID().uuidString
-  let sampleURL = URL(string: "https://example.com")! // swiftlint:disable:this force_unwrapping
+  let sampleURL = URL(string: "https://example.com")!
   // swiftlint:disable implicitly_unwrapped_optional
   var pasteboard: TestPasteboard!
   var errorFactory: TestErrorFactory!

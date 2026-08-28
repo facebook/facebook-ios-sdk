@@ -14,13 +14,13 @@ import XCTest
 
 final class AppInviteContentTests: XCTestCase {
 
-  // swiftlint:disable implicitly_unwrapped_optional force_unwrapping
+  // swiftlint:disable implicitly_unwrapped_optional
   var content: AppInviteContent!
   let appLinkURL = URL(string: "https://fb.me/1595011414049078")!
   let appInvitePreviewImageURL = URL(string: "https://fbstatic-a.akamaihd.net/rsrc.php/v2/y6/r/YQEGe6GxI_M.png")!
   var validator: TestShareUtility.Type!
   var errorFactory: TestErrorFactory!
-  // swiftlint:enable implicitly_unwrapped_optional force_unwrapping
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()

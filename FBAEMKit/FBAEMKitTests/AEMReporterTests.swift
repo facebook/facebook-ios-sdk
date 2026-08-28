@@ -62,7 +62,7 @@ final class AEMReporterTests: XCTestCase {
     isConversionFilteringEligible: true
   )! // swiftlint:disable:this force_unwrapping
   lazy var reportFilePath = BasicUtility.persistenceFilePath(name)
-  let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")! // swiftlint:disable:this force_unwrapping
+  let urlWithInvocation = URL(string: "fb123://test.com?al_applink_data=%7B%22acs_token%22%3A+%22test_token_1234567%22%2C+%22campaign_ids%22%3A+%22test_campaign_1234%22%2C+%22advertiser_id%22%3A+%22test_advertiserid_12345%22%7D")!
   let sampleCatalogOptimizationDictionary = ["data": [["content_id_belongs_to_catalog_id": true]]]
   let aggregationRequestTimestampToNotDelay = Date().addingTimeInterval(-100)
   let analyticsAppID = "analytics_123"

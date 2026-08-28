@@ -18,7 +18,7 @@ final class CustomUpdateContentTests: XCTestCase {
   var payload = "data123"
   var localization = ["data123": "test"]
 
-  var gif = FacebookGIF(withUrl: URL(string: "www.test.com")!) // swiftlint:disable:this force_unwrapping
+  var gif = FacebookGIF(withUrl: URL(string: "www.test.com")!)
   var validImage = UIImage(
     named: "customColorSilhouette",
     in: Bundle(for: CustomUpdateContentTests.self),

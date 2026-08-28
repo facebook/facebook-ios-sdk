@@ -14,7 +14,7 @@ import XCTest
 final class AuthenticationStatusUtilityTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional
-  let url = URL(string: "m.facebook.com/platform/oidc/status/")! // swiftlint:disable:this force_unwrapping
+  let url = URL(string: "m.facebook.com/platform/oidc/status/")!
   var sessionDataTask: TestSessionDataTask!
   var sessionDataTaskProvider: TestSessionProvider!
   // swiftlint:enable implicitly_unwrapped_optional

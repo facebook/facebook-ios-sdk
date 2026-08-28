@@ -16,7 +16,7 @@ final class GamingServiceControllerTests: XCTestCase {
 
   let urlOpener = TestURLOpener()
   let settings = TestSettings()
-  let url = URL(string: "fb123://community/")! // swiftlint:disable:this force_unwrapping
+  let url = URL(string: "fb123://community/")!
   var capturedSuccess = false
   var capturedResults = [Any]()
   var serviceError: Error?
@@ -102,7 +102,7 @@ final class GamingServiceControllerTests: XCTestCase {
   }
 
   func testInValidCallbackURLWithImproperURL() {
-    let inValidURL = URL(string: "antsarecool.com")! // swiftlint:disable:this force_unwrapping
+    let inValidURL = URL(string: "antsarecool.com")!
     XCTAssertFalse(
       gamingService.isValidCallbackURL(inValidURL, forService: ""),
       "Should return false if url parameter doesn't match the fb and appID prefix"

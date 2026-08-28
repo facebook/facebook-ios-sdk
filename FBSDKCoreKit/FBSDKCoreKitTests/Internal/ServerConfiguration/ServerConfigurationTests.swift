@@ -540,7 +540,6 @@ final class ServerConfigurationTests: XCTestCase {
     let mutableLoggingToken = NSMutableString(string: "token123")
     let mutableDefaultShareMode = NSMutableString(string: "native")
 
-    // swiftlint:disable:next line_length
     let config = _ServerConfiguration(
       appID: "123",
       appName: "test",
