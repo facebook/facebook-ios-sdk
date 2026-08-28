@@ -1,4 +1,5 @@
 excluded:
+  - .git # sl leaves conflict backups under .git/sl/origbackups
   - internal
   - samples
   - testing
@@ -36,8 +37,6 @@ file_name:
     AppLinkNavigationTestDependencies.swift,
     ValueClamping.swift,
   ]
-trailing_comma:
-  mandatory_comma: true
 type_name:
   excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
   allowed_symbols: "_"
@@ -128,14 +127,15 @@ only_rules:
   - force_try
   - force_unwrapping
   - function_body_length
+  - function_name_whitespace
   - function_parameter_count
   - generic_type_name
   - identifier_name
   - implicit_getter
+  - implicit_optional_initialization
   - implicit_return
   - implicitly_unwrapped_optional
   - inclusive_language
-  - inert_defer
   - is_disjoint
   - joined_default_parameter
   - large_tuple
@@ -165,7 +165,6 @@ only_rules:
   - nsobject_prefer_isequal
   - opening_brace
   - operator_usage_whitespace
-  - operator_whitespace
   - orphaned_doc_comment
   - overridden_super_call
   - override_in_extension
@@ -184,7 +183,6 @@ only_rules:
   - redundant_discardable_let
   - redundant_nil_coalescing
   - redundant_objc_attribute
-  - redundant_optional_initialization
   - redundant_set_access_control
   - redundant_string_enum_value
   - redundant_type_annotation
@@ -194,13 +192,15 @@ only_rules:
   - shorthand_operator
   - single_test_class
   - sorted_first_last
-  - sorted_imports
+  # sorted_imports and trailing_comma are owned by SwiftFormat (`sortedImports` with
+  # `--importgrouping testable-first`, and `trailingCommas`). Enabling them here too makes
+  # the two tools disagree: `swiftlint --fix` produces edits that `swiftformat .` reverts,
+  # which fails the swiftformat CI check.
   - statement_position
   - superfluous_disable_command
   - switch_case_alignment
   - syntactic_sugar
   - trailing_closure
-  - trailing_comma
   - trailing_newline
   - trailing_semicolon
   - trailing_whitespace
@@ -210,7 +210,6 @@ only_rules:
   - unneeded_break_in_switch
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
-  - unused_capture_list
   - unused_closure_parameter
   - unused_control_flow_label
   - unused_enumerated
