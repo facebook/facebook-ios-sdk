@@ -213,10 +213,10 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
         evNames.insert(VVPConfigManager.eventNameSentinel)
       case VVPConfigManager.placeCustomData:
         guard let customData = customData else { continue }
-        for (k, v) in customData {
-          guard let key = k as? String else { continue }
+        for (rawKey, rawValue) in customData {
+          guard let key = rawKey as? String else { continue }
           let keyOk = rule.keyRegex.map { regexMatches($0, key) } ?? true
-          let valOk = rule.valueRegex.map { regexMatches($0, String(describing: v)) } ?? true
+          let valOk = rule.valueRegex.map { regexMatches($0, String(describing: rawValue)) } ?? true
           if !keyOk || !valOk {
             continue
           }
@@ -237,9 +237,9 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     return DetectionResult(matched: matched, cdKeys: cdKeys, evNames: evNames)
   }
 
-  private func regexMatches(_ regex: NSRegularExpression, _ s: String) -> Bool {
-    let range = NSRange(s.startIndex ..< s.endIndex, in: s)
-    return regex.firstMatch(in: s, options: [], range: range) != nil
+  private func regexMatches(_ regex: NSRegularExpression, _ string: String) -> Bool {
+    let range = NSRange(string.startIndex ..< string.endIndex, in: string)
+    return regex.firstMatch(in: string, options: [], range: range) != nil
   }
 
   // MARK: - Contents scrubbing
@@ -386,11 +386,11 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     var out = Set<String>()
     // Server emits {key: true} for every entry; preserve the contract by only
     // including keys whose value is truthy.
-    for (k, v) in dict {
-      if let b = v as? Bool, b {
-        out.insert(k)
-      } else if let n = v as? NSNumber, n.boolValue {
-        out.insert(k)
+    for (key, value) in dict {
+      if let flag = value as? Bool, flag {
+        out.insert(key)
+      } else if let number = value as? NSNumber, number.boolValue {
+        out.insert(key)
       }
     }
     return out
@@ -402,8 +402,8 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     guard let arr = raw as? [Any] else { return nil }
     var out = Set<String>()
     for entry in arr {
-      if let s = entry as? String, !s.isEmpty {
-        out.insert(s)
+      if let name = entry as? String, !name.isEmpty {
+        out.insert(name)
       }
     }
     return out

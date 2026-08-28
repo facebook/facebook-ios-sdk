@@ -100,6 +100,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   // swiftlint:disable:next identifier_name discouraged_optional_boolean
   internal var _isAutoLogAppEventsEnabledLocally: Bool?
+  // swiftlint:disable:next identifier_name
   internal var _isAutoLogAppEventsExplicitlySet = false
 
   /**
