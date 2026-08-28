@@ -111,12 +111,11 @@ final class VVPConfigManagerTests: XCTestCase {
 
   // MARK: - parseConfig — top-level shape
 
-  func testParseConfigValidNonRetail() {
-    let cfg = VVPConfigManager.parseConfig(jsonString: Self.validNonRetailConfig)
-    XCTAssertNotNil(cfg)
-    XCTAssertEqual(cfg?.rules.count, 1)
-    XCTAssertEqual(cfg?.standardParams, ["fb_currency", "fb_value"])
-    XCTAssertNil(cfg?.inScopeEventNames)
+  func testParseConfigValidNonRetail() throws {
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: Self.validNonRetailConfig))
+    XCTAssertEqual(cfg.rules.count, 1)
+    XCTAssertEqual(cfg.standardParams, ["fb_currency", "fb_value"])
+    XCTAssertNil(cfg.inScopeEventNames)
   }
 
   func testParseConfigValidRetailHasInScopeEventNames() {
@@ -308,40 +307,36 @@ final class VVPConfigManagerTests: XCTestCase {
 
   // MARK: - isShadowEnabled parsing (fail-open default)
 
-  func testParseConfigParsesExplicitIsShadowEnabledTrue() {
+  func testParseConfigParsesExplicitIsShadowEnabledTrue() throws {
     let json = """
       {"enabled": true,
        "isShadowEnabled": true,
        "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
        "standardParams": {"fb_currency": true}}
       """
-    let cfg = VVPConfigManager.parseConfig(jsonString: json)
-    XCTAssertNotNil(cfg)
-    XCTAssertTrue(cfg!.isShadowEnabled)
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: json))
+    XCTAssertTrue(cfg.isShadowEnabled)
   }
 
-  func testParseConfigParsesExplicitIsShadowEnabledFalse() {
-    let cfg = VVPConfigManager.parseConfig(jsonString: Self.validNonRetailConfig)
-    XCTAssertNotNil(cfg)
-    XCTAssertFalse(cfg!.isShadowEnabled)
+  func testParseConfigParsesExplicitIsShadowEnabledFalse() throws {
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: Self.validNonRetailConfig))
+    XCTAssertFalse(cfg.isShadowEnabled)
   }
 
-  func testParseConfigDefaultsIsShadowEnabledToTrueWhenMissing() {
-    let cfg = VVPConfigManager.parseConfig(jsonString: Self.shadowDefaultNonRetailConfig)
-    XCTAssertNotNil(cfg)
-    XCTAssertTrue(cfg!.isShadowEnabled)
+  func testParseConfigDefaultsIsShadowEnabledToTrueWhenMissing() throws {
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: Self.shadowDefaultNonRetailConfig))
+    XCTAssertTrue(cfg.isShadowEnabled)
   }
 
-  func testParseConfigDefaultsIsShadowEnabledToTrueWhenNSNull() {
+  func testParseConfigDefaultsIsShadowEnabledToTrueWhenNSNull() throws {
     let json = """
       {"enabled": true,
        "isShadowEnabled": null,
        "rules": [{"place": 1, "keyRegex": "", "valueRegex": "tt\\\\d+"}],
        "standardParams": {"fb_currency": true}}
       """
-    let cfg = VVPConfigManager.parseConfig(jsonString: json)
-    XCTAssertNotNil(cfg)
-    XCTAssertTrue(cfg!.isShadowEnabled)
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: json))
+    XCTAssertTrue(cfg.isShadowEnabled)
   }
 
   // MARK: - Enforcement processParameters
@@ -381,7 +376,7 @@ final class VVPConfigManagerTests: XCTestCase {
 
   // MARK: - Tagging (vvp + vvp_md)
 
-  func testProcessParametersTagsVvpAndEmitsVpRpOnValueMatch() {
+  func testProcessParametersTagsVvpAndEmitsVpRpOnValueMatch() throws {
     install(vvpConfig: Self.validNonRetailConfig)
     manager.enable()
     let params: NSDictionary = ["fb_content_ids": "tt1234567", "fb_currency": "USD"]
@@ -389,14 +384,14 @@ final class VVPConfigManagerTests: XCTestCase {
     let out = manager.processParameters(params, event: "Purchase")
 
     XCTAssertEqual(out?["vvp"] as? String, "1")
-    let mdString = out?["vvp_md"] as? String
-    XCTAssertNotNil(mdString)
-    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
-    XCTAssertEqual(md?["vp_rp"] as? [String], ["fb_content_ids"])
-    XCTAssertNil(md?["vp_rp_ev"]) // omitted when empty
+    let mdString = try XCTUnwrap(out?["vvp_md"] as? String)
+    let mdData = try XCTUnwrap(mdString.data(using: .utf8))
+    let metadata = try JSONSerialization.jsonObject(with: mdData) as? [String: Any]
+    XCTAssertEqual(metadata?["vp_rp"] as? [String], ["fb_content_ids"])
+    XCTAssertNil(metadata?["vp_rp_ev"]) // omitted when empty
   }
 
-  func testProcessParametersEmitsVpRpEvSentinelOnEventNameMatch() {
+  func testProcessParametersEmitsVpRpEvSentinelOnEventNameMatch() throws {
     let cfg = """
       {"enabled": true,
        "rules": [{"place": 3, "keyRegex": "video_view", "valueRegex": ""}],
@@ -409,15 +404,15 @@ final class VVPConfigManagerTests: XCTestCase {
     let out = manager.processParameters(params, event: "video_view_started")
 
     XCTAssertEqual(out?["vvp"] as? String, "1")
-    let mdString = out?["vvp_md"] as? String
-    XCTAssertNotNil(mdString)
-    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
+    let mdString = try XCTUnwrap(out?["vvp_md"] as? String)
+    let mdData = try XCTUnwrap(mdString.data(using: .utf8))
+    let metadata = try JSONSerialization.jsonObject(with: mdData) as? [String: Any]
     // Sentinel — never echoes the actual event name.
-    XCTAssertEqual(md?["vp_rp_ev"] as? [String], ["1"])
-    XCTAssertNil(md?["vp_rp"]) // omitted when empty
+    XCTAssertEqual(metadata?["vp_rp_ev"] as? [String], ["1"])
+    XCTAssertNil(metadata?["vp_rp"]) // omitted when empty
   }
 
-  func testProcessParametersEmitsBothBucketsWhenBothFire() {
+  func testProcessParametersEmitsBothBucketsWhenBothFire() throws {
     let cfg = """
       {"enabled": true,
        "rules": [
@@ -432,14 +427,14 @@ final class VVPConfigManagerTests: XCTestCase {
 
     let out = manager.processParameters(params, event: "video_view_started")
 
-    let mdString = out?["vvp_md"] as? String
-    XCTAssertNotNil(mdString)
-    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
-    XCTAssertEqual(md?["vp_rp"] as? [String], ["fb_content_ids"])
-    XCTAssertEqual(md?["vp_rp_ev"] as? [String], ["1"])
+    let mdString = try XCTUnwrap(out?["vvp_md"] as? String)
+    let mdData = try XCTUnwrap(mdString.data(using: .utf8))
+    let metadata = try JSONSerialization.jsonObject(with: mdData) as? [String: Any]
+    XCTAssertEqual(metadata?["vp_rp"] as? [String], ["fb_content_ids"])
+    XCTAssertEqual(metadata?["vp_rp_ev"] as? [String], ["1"])
   }
 
-  func testProcessParametersVvpMdKeysAreSorted() {
+  func testProcessParametersVvpMdKeysAreSorted() throws {
     // Two matched cdKeys → vp_rp must come back sorted (deterministic for tests/wire).
     let cfg = """
       {"enabled": true,
@@ -451,9 +446,10 @@ final class VVPConfigManagerTests: XCTestCase {
     let params: NSDictionary = ["zebra": "tt9876543", "alpha": "tt1234567"]
 
     let out = manager.processParameters(params, event: "Purchase")
-    let mdString = out?["vvp_md"] as? String
-    let md = try? JSONSerialization.jsonObject(with: mdString!.data(using: .utf8)!) as? [String: Any]
-    XCTAssertEqual(md?["vp_rp"] as? [String], ["alpha", "zebra"])
+    let mdString = try XCTUnwrap(out?["vvp_md"] as? String)
+    let mdData = try XCTUnwrap(mdString.data(using: .utf8))
+    let metadata = try JSONSerialization.jsonObject(with: mdData) as? [String: Any]
+    XCTAssertEqual(metadata?["vp_rp"] as? [String], ["alpha", "zebra"])
   }
 
   // MARK: - Sanitization / customData filter
@@ -635,7 +631,7 @@ final class VVPConfigManagerTests: XCTestCase {
 
   // MARK: - contents[].id sanitization
 
-  func testProcessParametersScrubsIdInContentsArrayEntries() {
+  func testProcessParametersScrubsIdInContentsArrayEntries() throws {
     let cfg = """
       {"enabled": true,
        "isShadowEnabled": false,
@@ -658,11 +654,9 @@ final class VVPConfigManagerTests: XCTestCase {
 
     XCTAssertEqual(out?["vvp"] as? String, "1")
     XCTAssertEqual(out?["fb_currency"] as? String, "USD")
-    let resultStr = out?["fb_content"] as? String
-    XCTAssertNotNil(resultStr)
-    let decoded = try? JSONSerialization.jsonObject(
-      with: resultStr!.data(using: .utf8)!, options: []
-    ) as? [[String: Any]]
+    let resultStr = try XCTUnwrap(out?["fb_content"] as? String)
+    let resultData = try XCTUnwrap(resultStr.data(using: .utf8))
+    let decoded = try JSONSerialization.jsonObject(with: resultData, options: []) as? [[String: Any]]
     XCTAssertEqual(decoded?.count, 2)
     XCTAssertEqual(decoded?[0]["id"] as? String, "_removed_")
     XCTAssertEqual(decoded?[0]["quantity"] as? Int, 1)
@@ -740,7 +734,7 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertEqual(out?["fb_content"] as? String, "not_json_at_all")
   }
 
-  func testProcessParametersContentsDoesNotAddIdWhenEntryHadNone() {
+  func testProcessParametersContentsDoesNotAddIdWhenEntryHadNone() throws {
     let cfg = """
       {"enabled": true,
        "isShadowEnabled": false,
@@ -760,11 +754,9 @@ final class VVPConfigManagerTests: XCTestCase {
     let out = manager.processParameters(params, event: "Purchase")
 
     XCTAssertEqual(out?["vvp"] as? String, "1")
-    let resultStr = out?["fb_content"] as? String
-    XCTAssertNotNil(resultStr)
-    let decoded = try? JSONSerialization.jsonObject(
-      with: resultStr!.data(using: .utf8)!, options: []
-    ) as? [[String: Any]]
+    let resultStr = try XCTUnwrap(out?["fb_content"] as? String)
+    let resultData = try XCTUnwrap(resultStr.data(using: .utf8))
+    let decoded = try JSONSerialization.jsonObject(with: resultData, options: []) as? [[String: Any]]
     XCTAssertEqual(decoded?.count, 2)
     XCTAssertNil(decoded?[0]["id"])
     XCTAssertEqual(decoded?[0]["quantity"] as? Int, 1)
@@ -772,7 +764,7 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertEqual(decoded?[1]["quantity"] as? Int, 2)
   }
 
-  func testProcessParametersContentsNotScrubedInShadowMode() {
+  func testProcessParametersContentsNotScrubedInShadowMode() throws {
     let cfg = """
       {"enabled": true,
        "isShadowEnabled": true,
@@ -792,15 +784,13 @@ final class VVPConfigManagerTests: XCTestCase {
     let out = manager.processParameters(params, event: "Purchase")
 
     XCTAssertEqual(out?["vvp"] as? String, "1")
-    let resultStr = out?["fb_content"] as? String
-    XCTAssertNotNil(resultStr)
-    let decoded = try? JSONSerialization.jsonObject(
-      with: resultStr!.data(using: .utf8)!, options: []
-    ) as? [[String: Any]]
+    let resultStr = try XCTUnwrap(out?["fb_content"] as? String)
+    let resultData = try XCTUnwrap(resultStr.data(using: .utf8))
+    let decoded = try JSONSerialization.jsonObject(with: resultData, options: []) as? [[String: Any]]
     XCTAssertEqual(decoded?[0]["id"] as? String, "sku_19738928")
   }
 
-  func testProcessParametersContentsAndTopLevelContentIdsBothScrubbed() {
+  func testProcessParametersContentsAndTopLevelContentIdsBothScrubbed() throws {
     let cfg = """
       {"enabled": true,
        "isShadowEnabled": false,
@@ -822,11 +812,9 @@ final class VVPConfigManagerTests: XCTestCase {
 
     XCTAssertEqual(out?["vvp"] as? String, "1")
     XCTAssertEqual(out?["fb_content_ids"] as? String, "_removed_")
-    let resultStr = out?["fb_content"] as? String
-    XCTAssertNotNil(resultStr)
-    let decoded = try? JSONSerialization.jsonObject(
-      with: resultStr!.data(using: .utf8)!, options: []
-    ) as? [[String: Any]]
+    let resultStr = try XCTUnwrap(out?["fb_content"] as? String)
+    let resultData = try XCTUnwrap(resultStr.data(using: .utf8))
+    let decoded = try JSONSerialization.jsonObject(with: resultData, options: []) as? [[String: Any]]
     XCTAssertEqual(decoded?[0]["id"] as? String, "_removed_")
     XCTAssertEqual(decoded?[0]["quantity"] as? Int, 1)
     XCTAssertEqual(out?["fb_currency"] as? String, "USD")
@@ -847,12 +835,12 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertTrue(result.evNames.isEmpty)
   }
 
-  func testDetectMatchesPureEventNameMatch() {
+  func testDetectMatchesPureEventNameMatch() throws {
     let json = """
       {"enabled": true, "rules": [{"place": 3, "keyRegex": "VideoView", "valueRegex": ""}],
        "standardParams": {}}
       """
-    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: json))
     let result = manager.detectMatches(
       eventName: "VideoView",
       customData: nil,
@@ -882,7 +870,7 @@ final class VVPConfigManagerTests: XCTestCase {
   /// matches both `keyRegex` AND `keyNegativeRegex` must NOT fire — lets the
   /// server allowlist `utm_*` style false positives whose names satisfy the
   /// positive content/video regex.
-  func testDetectMatchesCustomDataKeyNegativeRegexSuppressesMatch() {
+  func testDetectMatchesCustomDataKeyNegativeRegexSuppressesMatch() throws {
     let json = """
       {"enabled": true,
        "rules": [{"place": 1,
@@ -891,7 +879,7 @@ final class VVPConfigManagerTests: XCTestCase {
                   "keyNegativeRegex": "(\\\\b|_)(utm|url|refer)(\\\\b|_)"}],
        "standardParams": {}}
       """
-    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: json))
     let result = manager.detectMatches(
       eventName: "Purchase",
       customData: ["utm_content_id": "anything", "video_id": "tt1234567"],
@@ -902,7 +890,7 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertEqual(result.cdKeys, ["video_id"])
   }
 
-  func testDetectMatchesCustomDataKeyNegativeRegexNilDoesNotSuppress() {
+  func testDetectMatchesCustomDataKeyNegativeRegexNilDoesNotSuppress() throws {
     // Sanity: when keyNegativeRegex is absent, the legacy positive-only behavior is preserved.
     let json = """
       {"enabled": true,
@@ -911,7 +899,7 @@ final class VVPConfigManagerTests: XCTestCase {
                   "valueRegex": ""}],
        "standardParams": {}}
       """
-    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: json))
     let result = manager.detectMatches(
       eventName: "Purchase",
       customData: ["utm_content_id": "anything", "video_id": "tt1234567"],
@@ -921,7 +909,7 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertEqual(result.cdKeys, ["utm_content_id", "video_id"])
   }
 
-  func testDetectMatchesEventNameKeyNegativeRegexSuppressesMatch() {
+  func testDetectMatchesEventNameKeyNegativeRegexSuppressesMatch() throws {
     let json = """
       {"enabled": true,
        "rules": [{"place": 3,
@@ -930,7 +918,7 @@ final class VVPConfigManagerTests: XCTestCase {
                   "keyNegativeRegex": "utm"}],
        "standardParams": {}}
       """
-    let cfg = VVPConfigManager.parseConfig(jsonString: json)!
+    let cfg = try XCTUnwrap(VVPConfigManager.parseConfig(jsonString: json))
     // Event name matches positive AND negative -> suppressed.
     let suppressed = manager.detectMatches(
       eventName: "utm_video_view",
