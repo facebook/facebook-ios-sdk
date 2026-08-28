@@ -43,6 +43,7 @@ type_name:
     RawAppEventsConfigurationResponseFixtures,
     GraphRequestPiggybackManagerProviderTests,
     DomainConfigurationManagerNonBlockingLoadTests,
+    SocialComposeViewControllerFactoryProtocol,
   ]
   allowed_symbols: "_"
 

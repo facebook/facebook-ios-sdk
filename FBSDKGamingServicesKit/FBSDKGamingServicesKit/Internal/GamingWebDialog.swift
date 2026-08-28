@@ -11,6 +11,8 @@
 import FBSDKCoreKit
 import Foundation
 
+// swiftlint:disable:next swiftlint_disable_without_this_or_next
+// swiftlint:disable prefer_final_classes
 /**
  General-purpose web dialog for presenting `fb.gg/dialog/{view}`
  - warning: INTERNAL - DO NOT USE. This class is public so that other public types may extend it.
@@ -99,3 +101,5 @@ public class GamingWebDialog<Success: GamingWebDialogSuccess>: WebDialogDelegate
     InternalUtility.shared.unregisterTransientObject(self)
   }
 }
+
+// swiftlint:enable prefer_final_classes
