@@ -38,7 +38,11 @@ file_name:
     ValueClamping.swift,
   ]
 type_name:
-  excluded: [RawAppEventsConfigurationResponseFixtures, GraphRequestPiggybackManagerProviderTests]
+  excluded: [
+    RawAppEventsConfigurationResponseFixtures,
+    GraphRequestPiggybackManagerProviderTests,
+    DomainConfigurationManagerNonBlockingLoadTests,
+  ]
   allowed_symbols: "_"
 
 # Use 10x the defaults for these to essentially disable these rules
