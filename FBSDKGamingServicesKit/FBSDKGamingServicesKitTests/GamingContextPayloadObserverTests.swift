@@ -33,8 +33,9 @@ final class GamingContextPayloadObserverTests: XCTestCase {
   // MARK: - GamingContextObserver
 
   func testCreatingGamingContextObserver() {
-    XCTAssertTrue(
-      gamingContextObserver.delegate === gamingContextDelegate,
+    XCTAssertIdentical(
+      gamingContextObserver.delegate,
+      gamingContextDelegate,
       "Should store the delegate it was created with"
     )
     XCTAssertTrue(

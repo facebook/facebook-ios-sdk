@@ -380,8 +380,9 @@ final class AEMReporterTests: XCTestCase {
   func testSendDebuggingRequest() {
     AEMReporter.sendDebuggingRequest(SampleAEMInvocations.createDebuggingInvocation())
 
-    XCTAssertTrue(
-      networker.capturedGraphPath?.hasSuffix("aem_conversions") == true,
+    XCTAssertEqual(
+      networker.capturedGraphPath?.hasSuffix("aem_conversions"),
+      true,
       "GraphRequst should be created because of there is a debugging invocation"
     )
     XCTAssertEqual(
@@ -436,8 +437,9 @@ final class AEMReporterTests: XCTestCase {
     invocation.isAggregated = false
     AEMReporter.invocations = [invocation]
     AEMReporter.sendAggregationRequest()
-    XCTAssertTrue(
-      networker.capturedGraphPath?.hasSuffix("aem_conversions") == true,
+    XCTAssertEqual(
+      networker.capturedGraphPath?.hasSuffix("aem_conversions"),
+      true,
       "GraphRequst should be created because of there is non-aggregated invocation"
     )
     XCTAssertEqual(
@@ -530,8 +532,9 @@ final class AEMReporterTests: XCTestCase {
       [Values.purchase: [Values.USD: 100]],
       "Invocation's cached values should be updated"
     )
-    XCTAssertTrue(
-      networker.capturedGraphPath?.hasSuffix("aem_conversions") == true,
+    XCTAssertEqual(
+      networker.capturedGraphPath?.hasSuffix("aem_conversions"),
+      true,
       "Should create a request to update the conversions for a valid event"
     )
     XCTAssertFalse(
@@ -941,8 +944,9 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter.loadCatalogOptimization(with: invocation, contentID: nil) {
       blockCall += 1
     }
-    XCTAssertTrue(
-      (networker.capturedGraphPath?.contains("aem_conversion_filter")) == true,
+    XCTAssertEqual(
+      networker.capturedGraphPath?.contains("aem_conversion_filter"),
+      true,
       "Should start the catalog request"
     )
     XCTAssertEqual(blockCall, 0, "Should not execute the block when contentID is nil")
@@ -955,8 +959,9 @@ final class AEMReporterTests: XCTestCase {
     AEMReporter.loadCatalogOptimization(with: invocation, contentID: "test_content_id") {
       blockCall += 1
     }
-    XCTAssertTrue(
-      (networker.capturedGraphPath?.contains("aem_conversion_filter")) == true,
+    XCTAssertEqual(
+      networker.capturedGraphPath?.contains("aem_conversion_filter"),
+      true,
       "Should start the catalog request"
     )
     networker.capturedCompletionHandler?(nil, SampleAEMError())
@@ -1049,8 +1054,9 @@ final class AEMReporterTests: XCTestCase {
       "advertiser_ids": #"["123"]"#,
       "fb_content_data": content,
     ]
-    XCTAssertTrue(
-      (networker.capturedGraphPath?.contains("aem_attribution")) == true,
+    XCTAssertEqual(
+      networker.capturedGraphPath?.contains("aem_attribution"),
+      true,
       "Should start the rule match request"
     )
     XCTAssertEqual(

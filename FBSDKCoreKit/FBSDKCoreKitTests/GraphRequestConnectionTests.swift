@@ -221,48 +221,58 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
   }
 
   func testCreatingWithCustomDependencies() {
-    XCTAssertTrue(
-      GraphRequestConnection.sessionProxyFactory === sessionFactory,
+    XCTAssertIdentical(
+      GraphRequestConnection.sessionProxyFactory,
+      sessionFactory,
       "A graph request connection should persist the session provider it was created with"
     )
-    XCTAssertTrue(
-      connection.session === session,
+    XCTAssertIdentical(
+      connection.session,
+      session,
       "A graph request connection should derive sessions from the session provider"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.errorConfigurationProvider === errorConfigurationProvider,
+    XCTAssertIdentical(
+      GraphRequestConnection.errorConfigurationProvider,
+      errorConfigurationProvider,
       "A graph request connection should persist the error configuration provider it was created with"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.piggybackManager === piggybackManager,
+    XCTAssertIdentical(
+      GraphRequestConnection.piggybackManager,
+      piggybackManager,
       "A graph request connection should persist the piggyback manager it was created with"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.settings === settings,
+    XCTAssertIdentical(
+      GraphRequestConnection.settings,
+      settings,
       "A graph request connection should persist the settings it was created with"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.graphRequestConnectionFactory === graphRequestConnectionFactory,
+    XCTAssertIdentical(
+      GraphRequestConnection.graphRequestConnectionFactory,
+      graphRequestConnectionFactory,
       "A graph request connection should persist the connection factory it was created with"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.eventLogger === eventLogger,
+    XCTAssertIdentical(
+      GraphRequestConnection.eventLogger,
+      eventLogger,
       "A graph request connection should persist the events logger it was created with"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.operatingSystemVersionComparer === processInfo,
+    XCTAssertIdentical(
+      GraphRequestConnection.operatingSystemVersionComparer,
+      processInfo,
       "A graph request connection should persist the operating system comparer it was created with"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.macCatalystDeterminator === macCatalystDeterminator,
+    XCTAssertIdentical(
+      GraphRequestConnection.macCatalystDeterminator,
+      macCatalystDeterminator,
       "A graph request connection should persist the Mac Catalyst determinator it was created with"
     )
     XCTAssertTrue(
       GraphRequestConnection.accessTokenProvider === TestAccessTokenWallet.self,
       "A graph request connection should persist the access token provider it was created with"
     )
-    XCTAssertTrue(
-      GraphRequestConnection.errorFactory === errorFactory,
+    XCTAssertIdentical(
+      GraphRequestConnection.errorFactory,
+      errorFactory,
       "A graph request connection should persist the error factory it was created with"
     )
     XCTAssertTrue(
@@ -812,13 +822,15 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     )
     XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
     if #available(iOS 14.5, *) {
-      XCTAssertFalse(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertNotIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "A connection used for fetching the domain configuration should not invoke the piggyback manager"
       )
     } else {
-      XCTAssertTrue(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "Should invoke the piggyback manager"
       )
     }
@@ -843,8 +855,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "The connection should not have started"
       )
       XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
-      XCTAssertTrue(
-        GraphRequestQueue.sharedInstance().requestsQueue.count == 1,
+      XCTAssertEqual(
+        GraphRequestQueue.sharedInstance().requestsQueue.count,
+        1,
         "GraphRequestQueue should have 1 request in it"
       )
     } else {
@@ -904,8 +917,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       )
       XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
       let count = GraphRequestQueue.sharedInstance().requestsQueue.count
-      XCTAssertTrue(
-        count == 2,
+      XCTAssertEqual(
+        count,
+        2,
         "GraphRequestQueue should still have 2 requests. It has \(count)"
       )
     } else {
@@ -932,8 +946,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(request2) { _, _, _ in }
     var count = GraphRequestQueue.sharedInstance().requestsQueue.count
     if #available(iOS 14.5, *) {
-      XCTAssertTrue(
-        count == 2,
+      XCTAssertEqual(
+        count,
+        2,
         "GraphRequestQueue should have 2 requests. It has \(count)"
       )
     } else {
@@ -966,8 +981,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       )
       XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
       count = GraphRequestQueue.sharedInstance().requestsQueue.count
-      XCTAssertTrue(
-        count == 2,
+      XCTAssertEqual(
+        count,
+        2,
         "GraphRequestQueue should still have 2 requests. It has \(count)"
       )
     } else {
@@ -1079,8 +1095,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(makeSampleRequest()) { _, _, _ in }
     connection.start()
 
-    XCTAssertTrue(
-      connection === piggybackManager.capturedConnection,
+    XCTAssertIdentical(
+      connection,
+      piggybackManager.capturedConnection,
       "Starting a request should invoke the piggyback manager"
     )
   }
@@ -2059,8 +2076,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       "Should be able to piggy back requests onto regular requests"
     )
     connection.start()
-    XCTAssertTrue(
-      connection === piggybackManager.capturedConnection,
+    XCTAssertIdentical(
+      connection,
+      piggybackManager.capturedConnection,
       "A connection used for a regular graph request should invoke the piggyback manager"
     )
   }
@@ -2073,8 +2091,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       "Should be able to piggy back requests onto batch requests"
     )
     connection.start()
-    XCTAssertTrue(
-      connection === piggybackManager.capturedConnection,
+    XCTAssertIdentical(
+      connection,
+      piggybackManager.capturedConnection,
       "A connection used for batch requests should invoke the piggyback manager"
     )
   }
@@ -2089,8 +2108,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should not be able to piggy back requests onto the domain configuration request"
       )
       connection.start()
-      XCTAssertFalse(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertNotIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "A connection used to fetch the domain configuration should not invoke the piggyback manager"
       )
     } else {
@@ -2099,8 +2119,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should be able to piggy back requests"
       )
       connection.start()
-      XCTAssertTrue(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "Should invoke the piggyback manager"
       )
     }
@@ -2122,8 +2143,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should not be able to piggy back requests onto an app activities request"
       )
       connection.start()
-      XCTAssertFalse(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertNotIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "A connection used for app events should not invoke the piggyback manager"
       )
     } else {
@@ -2132,8 +2154,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should be able to piggy back requests"
       )
       connection.start()
-      XCTAssertTrue(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "Should invoke the piggyback manager"
       )
     }
@@ -2157,8 +2180,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should not be able to piggy back requests onto the custom audience third party request"
       )
       connection.start()
-      XCTAssertFalse(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertNotIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "A connection used for the custom audience third party request should not invoke the piggyback manager"
       )
     } else {
@@ -2167,8 +2191,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should be able to piggy back requests"
       )
       connection.start()
-      XCTAssertTrue(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "Should invoke the piggyback manager"
       )
     }
@@ -2200,8 +2225,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should not be able to piggy back requests onto the app indexing session request"
       )
       connection.start()
-      XCTAssertFalse(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertNotIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "A connection used for the app indexing session request should not invoke the piggyback manager"
       )
     } else {
@@ -2210,8 +2236,9 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
         "Should be able to piggy back requests"
       )
       connection.start()
-      XCTAssertTrue(
-        connection === piggybackManager.capturedConnection,
+      XCTAssertIdentical(
+        connection,
+        piggybackManager.capturedConnection,
         "Should invoke the piggyback manager"
       )
     }

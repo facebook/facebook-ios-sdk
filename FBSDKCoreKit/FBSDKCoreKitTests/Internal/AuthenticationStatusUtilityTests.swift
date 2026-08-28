@@ -77,8 +77,9 @@ final class AuthenticationStatusUtilityTests: XCTestCase {
       _AuthenticationStatusUtility.profileSetter === TestProfileProvider.self,
       "Should be able to set a custom profile setter"
     )
-    XCTAssertTrue(
-      _AuthenticationStatusUtility.sessionDataTaskProvider === sessionDataTaskProvider,
+    XCTAssertIdentical(
+      _AuthenticationStatusUtility.sessionDataTaskProvider,
+      sessionDataTaskProvider,
       "Should be able to set a custom session data task provider"
     )
     XCTAssertTrue(

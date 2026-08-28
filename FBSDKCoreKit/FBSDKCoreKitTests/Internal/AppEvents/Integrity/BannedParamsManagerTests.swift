@@ -42,22 +42,24 @@ final class BannedParamsManagerTests: XCTestCase {
 
   func testDefaultDependencies() throws {
     bannedParamsManager.resetDependencies()
-    XCTAssertTrue(
-      bannedParamsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      bannedParamsManager.serverConfigurationProvider,
+      _ServerConfigurationManager.shared,
       "Should use the shared server configuration manger by default"
     )
   }
 
   func testConfiguringDependencies() {
-    XCTAssertTrue(
-      bannedParamsManager.serverConfigurationProvider === provider,
+    XCTAssertIdentical(
+      bannedParamsManager.serverConfigurationProvider,
+      provider,
       "Should be able to create with a server configuration provider"
     )
   }
 
   func testAllowOtherParams() {
     bannedParamsManager.enable()
-    XCTAssertTrue(bannedParamsManager.getIsEnabled() == true)
+    XCTAssertTrue(bannedParamsManager.getIsEnabled())
 
     let parameters: NSDictionary = [
       AppEvents.ParameterName(rawValue: "predicted_ltv"): "NOT_COMPLIANT",
@@ -75,7 +77,7 @@ final class BannedParamsManagerTests: XCTestCase {
 
   func testBannedParamBlocking() {
     bannedParamsManager.enable()
-    XCTAssertTrue(bannedParamsManager.getIsEnabled() == true)
+    XCTAssertTrue(bannedParamsManager.getIsEnabled())
 
     let parameters: NSDictionary = [
       AppEvents.ParameterName(rawValue: "predicted_ltv"): "NOT_COMPLIANT",
@@ -101,6 +103,6 @@ final class BannedParamsManagerTests: XCTestCase {
       serverConfigurationProvider: provider
     )
     bannedParamsManager.enable()
-    XCTAssertTrue(bannedParamsManager.getIsEnabled() == false)
+    XCTAssertFalse(bannedParamsManager.getIsEnabled())
   }
 }

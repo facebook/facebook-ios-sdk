@@ -39,8 +39,9 @@ final class AccessTokenProviderTests: XCTestCase {
   func testCurrentToken() {
     AccessToken.current = token
 
-    XCTAssertTrue(
-      AccessTokenProvider.current === token,
+    XCTAssertIdentical(
+      AccessTokenProvider.current,
+      token,
       "The current access token should match that on the AccessToken singleton"
     )
   }
@@ -48,8 +49,9 @@ final class AccessTokenProviderTests: XCTestCase {
   func testGettingTokenCache() {
     AccessToken.tokenCache = cache
 
-    XCTAssertTrue(
-      AccessTokenProvider.tokenCache === cache,
+    XCTAssertIdentical(
+      AccessTokenProvider.tokenCache,
+      cache,
       "The current token cache should match that on the AccessToken singleton"
     )
   }
@@ -57,8 +59,9 @@ final class AccessTokenProviderTests: XCTestCase {
   func testSettingTokenCache() {
     AccessTokenProvider.tokenCache = cache
 
-    XCTAssertTrue(
-      AccessToken.tokenCache === cache,
+    XCTAssertIdentical(
+      AccessToken.tokenCache,
+      cache,
       "Should set the provided token cache on the underlying access token type"
     )
   }

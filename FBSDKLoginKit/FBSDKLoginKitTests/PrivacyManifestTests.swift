@@ -32,7 +32,7 @@ final class PrivacyManifestTests: XCTestCase {
     guard let trackingDomains = manifest?["NSPrivacyTrackingDomains"] as? NSArray else {
       return XCTFail("Could not find tracking domains")
     }
-    XCTAssertTrue(trackingDomains.count == 1)
+    XCTAssertEqual(trackingDomains.count, 1)
     XCTAssertTrue(trackingDomains.contains("ep1.facebook.com"))
   }
 

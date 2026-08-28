@@ -536,7 +536,7 @@ final class AppEventsStateTests: XCTestCase {
   func testExtractReceiptData() {
     state.addEvent(["receipt_data": "some_data"], isImplicit: false, withOperationalParameters: nil)
     let extracted = state.extractReceiptData()
-    XCTAssertTrue(extracted == "receipt_1::some_data;;;")
+    XCTAssertEqual(extracted, "receipt_1::some_data;;;")
   }
 
   // MARK: - JSONString For Events

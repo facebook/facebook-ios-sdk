@@ -117,12 +117,14 @@ final class DomainConfigurationManagerTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(
-      domainConfigurationManager.graphRequestFactory === requestFactory,
+    XCTAssertIdentical(
+      domainConfigurationManager.graphRequestFactory,
+      requestFactory,
       "Should set the provided graph request factory"
     )
-    XCTAssertTrue(
-      domainConfigurationManager.graphRequestConnectionFactory === connectionFactory,
+    XCTAssertIdentical(
+      domainConfigurationManager.graphRequestConnectionFactory,
+      connectionFactory,
       "Should set the provided graph request connection factory"
     )
   }

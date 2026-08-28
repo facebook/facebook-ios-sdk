@@ -1355,7 +1355,7 @@ final class LoginManagerTests: XCTestCase {
     }
 
     XCTAssertTrue(graphRequestFactory.capturedRequests.isEmpty)
-    XCTAssertFalse(loginManager.state == .idle)
+    XCTAssertNotEqual(loginManager.state, .idle)
   }
 
   // MARK: Permissions

@@ -957,20 +957,24 @@ final class AppEventsUtilityTests: XCTestCase {
   }
 
   func testCustomDependencies() {
-    XCTAssertTrue(
-      appEventsUtility.appEventsConfigurationProvider === appEventsConfigurationProvider,
+    XCTAssertIdentical(
+      appEventsUtility.appEventsConfigurationProvider,
+      appEventsConfigurationProvider,
       "Should be able to set a custom app events configuration provider"
     )
-    XCTAssertTrue(
-      appEventsUtility.deviceInformationProvider === deviceInformationProvider,
+    XCTAssertIdentical(
+      appEventsUtility.deviceInformationProvider,
+      deviceInformationProvider,
       "Should be able to set a custom device information provider"
     )
-    XCTAssertTrue(
-      appEventsUtility.settings === settings,
+    XCTAssertIdentical(
+      appEventsUtility.settings,
+      settings,
       "Should be able to set custom settings"
     )
-    XCTAssertTrue(
-      appEventsUtility.internalUtility === internalUtility,
+    XCTAssertIdentical(
+      appEventsUtility.internalUtility,
+      internalUtility,
       "Should be able to set custom internal utility"
     )
     XCTAssertIdentical(

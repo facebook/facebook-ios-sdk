@@ -53,8 +53,9 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
 
     let dependencies = try AuthenticationTokenClaims.getDependencies()
 
-    XCTAssertTrue(
-      dependencies.settings === Settings.shared,
+    XCTAssertIdentical(
+      dependencies.settings,
+      Settings.shared,
       "The class should use the shared settings by default"
     )
   }
@@ -62,8 +63,9 @@ final class AuthenticationTokenClaimsTests: XCTestCase {
   func testCustomClassDependencies() throws {
     let dependencies = try AuthenticationTokenClaims.getDependencies()
 
-    XCTAssertTrue(
-      dependencies.settings === settings,
+    XCTAssertIdentical(
+      dependencies.settings,
+      settings,
       "Should be able to configure the settings dependency on the type"
     )
   }

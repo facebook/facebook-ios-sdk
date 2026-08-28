@@ -110,8 +110,9 @@ final class BridgeAPITests: XCTestCase {
     )
 
     let reporter = try _ErrorFactory.getDependencies().reporter
-    XCTAssertTrue(
-      reporter === ErrorReporter.shared,
+    XCTAssertIdentical(
+      reporter,
+      ErrorReporter.shared,
       "Should use the shared error reporter by default"
     )
   }
@@ -131,8 +132,9 @@ final class BridgeAPITests: XCTestCase {
       api.bridgeAPIResponseFactory is TestBridgeAPIResponseFactory,
       "Should be able to create a bridge api with a specific response factory"
     )
-    XCTAssertTrue(
-      api.errorFactory === errorFactory,
+    XCTAssertIdentical(
+      api.errorFactory,
+      errorFactory,
       "Should be able to create a bridge API instance with an error factory"
     )
   }
@@ -432,8 +434,9 @@ final class BridgeAPITests: XCTestCase {
     ) { _, _ in }
 
     XCTAssertTrue(api.isExpectingBackground, "Should set expecting background to true when opening a URL")
-    XCTAssertTrue(
-      api.pendingURLOpener === urlOpener,
+    XCTAssertIdentical(
+      api.pendingURLOpener,
+      urlOpener,
       "Should set the pending url opener to the sender"
     )
   }
@@ -515,8 +518,9 @@ final class BridgeAPITests: XCTestCase {
     completion(false, SampleError())
     assertPendingPropertiesCleared()
 
-    XCTAssertTrue(
-      capturedResponse?.request === request,
+    XCTAssertIdentical(
+      capturedResponse?.request,
+      request,
       "The response should contain the original request"
     )
     let error = try XCTUnwrap(capturedResponse?.error as? TestSDKError)
@@ -553,8 +557,9 @@ final class BridgeAPITests: XCTestCase {
     completion(false, nil)
     assertPendingPropertiesCleared()
 
-    XCTAssertTrue(
-      capturedResponse?.request === request,
+    XCTAssertIdentical(
+      capturedResponse?.request,
+      request,
       "The response should contain the original request"
     )
     let error = try XCTUnwrap(capturedResponse?.error as? TestSDKError)
@@ -592,8 +597,9 @@ final class BridgeAPITests: XCTestCase {
     completion(false, SampleError())
     assertPendingPropertiesCleared()
 
-    XCTAssertTrue(
-      capturedResponse?.request === request,
+    XCTAssertIdentical(
+      capturedResponse?.request,
+      request,
       "The response should contain the original request"
     )
     let error = try XCTUnwrap(capturedResponse?.error as? TestSDKError)
@@ -631,8 +637,9 @@ final class BridgeAPITests: XCTestCase {
     completion(false, nil)
     assertPendingPropertiesCleared()
 
-    XCTAssertTrue(
-      capturedResponse?.request === request,
+    XCTAssertIdentical(
+      capturedResponse?.request,
+      request,
       "The response should contain the original request"
     )
     let error = try XCTUnwrap(capturedResponse?.error as? TestSDKError)

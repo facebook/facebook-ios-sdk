@@ -108,8 +108,9 @@ final class GraphRequestQueueTests: XCTestCase {
   func testQueueGraphRequestWithCompletion() {
     let testRequest = makeTestRequest()
     graphRequestQueue.enqueue(testRequest) { _, _, _ in }
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 1,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      1,
       "Queue should only have 1 request in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
@@ -129,8 +130,9 @@ final class GraphRequestQueueTests: XCTestCase {
   func testQueueRequestMetadata() {
     let testRequestMetaData = makeTestRequestMetadata()
     graphRequestQueue.enqueue(testRequestMetaData)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 1,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      1,
       "Queue should only have 1 request in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
@@ -156,8 +158,9 @@ final class GraphRequestQueueTests: XCTestCase {
     )
     let requestsMetadata = [testRequestMetaData1, testRequestMetaData2]
     graphRequestQueue.enqueueRequests(requestsMetadata)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 2,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      2,
       "Queue should have 2 requests in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
@@ -183,8 +186,9 @@ final class GraphRequestQueueTests: XCTestCase {
     graphRequestQueue.enqueue(request1) { _, _, _ in }
     graphRequestQueue.enqueue(requestMetadata1)
     graphRequestQueue.enqueueRequests(requestsMetadata)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 4,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      4,
       "Queue should have 4 requests in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
@@ -219,13 +223,15 @@ final class GraphRequestQueueTests: XCTestCase {
     )
     let requestsToQueue = [requestMetadata1, requestMetadata2, requestMetadata3, requestMetadata4]
     graphRequestQueue.enqueueRequests(requestsToQueue)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 4,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      4,
       "Queue should have 4 requests in it before flush"
     )
     graphRequestQueue.flush()
-    XCTAssertTrue(
-      connection.startCallCount == 1,
+    XCTAssertEqual(
+      connection.startCallCount,
+      1,
       "GraphRequestConnection start should have been  called"
     )
     XCTAssertEqual(

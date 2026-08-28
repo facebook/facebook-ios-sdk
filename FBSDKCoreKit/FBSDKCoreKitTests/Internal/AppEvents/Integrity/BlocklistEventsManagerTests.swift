@@ -70,15 +70,17 @@ final class BlocklistEventsManagerTests: XCTestCase {
 
   func testDefaultDependencies() throws {
     blocklistEventsManager.resetDependencies()
-    XCTAssertTrue(
-      blocklistEventsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      blocklistEventsManager.serverConfigurationProvider,
+      _ServerConfigurationManager.shared,
       "Should use the shared server configuration manger by default"
     )
   }
 
   func testConfiguringDependencies() {
-    XCTAssertTrue(
-      blocklistEventsManager.serverConfigurationProvider === provider,
+    XCTAssertIdentical(
+      blocklistEventsManager.serverConfigurationProvider,
+      provider,
       "Should be able to create with a server configuration provider"
     )
   }
@@ -86,8 +88,9 @@ final class BlocklistEventsManagerTests: XCTestCase {
   func testProcessEventsNotEnabled() {
     let events = getTestEvents()
     blocklistEventsManager.processEvents(events)
-    XCTAssertTrue(
-      events.count == 3,
+    XCTAssertEqual(
+      events.count,
+      3,
       "blocklistEventsManager should not process events when it is not enabled"
     )
     guard let eventDict0 = events[0] as? [String: Any],
@@ -120,8 +123,9 @@ final class BlocklistEventsManagerTests: XCTestCase {
     blocklistEventsManager.enable()
     let events = getTestEvents()
     blocklistEventsManager.processEvents(events)
-    XCTAssertTrue(
-      events.count == 1,
+    XCTAssertEqual(
+      events.count,
+      1,
       "blocklistEventsManager should drop blocklisted events when enabled"
     )
     guard let eventDict0 = events[0] as? [String: Any],

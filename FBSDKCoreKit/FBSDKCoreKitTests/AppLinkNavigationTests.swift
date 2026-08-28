@@ -80,8 +80,9 @@ final class AppLinkNavigationTests: XCTestCase {
 
   func testDefaultResolver() {
     AppLinkNavigation.resetDependencies()
-    XCTAssertTrue(
-      AppLinkNavigation.defaultResolver === WebViewAppLinkResolver.shared,
+    XCTAssertIdentical(
+      AppLinkNavigation.defaultResolver,
+      WebViewAppLinkResolver.shared,
       "Should use the shared webview app link resolver by default"
     )
   }
@@ -90,12 +91,14 @@ final class AppLinkNavigationTests: XCTestCase {
     let resolver = AppLinkResolver()
     AppLinkNavigation.defaultResolver = resolver
 
-    XCTAssertTrue(
-      AppLinkNavigation.defaultResolver === resolver,
+    XCTAssertIdentical(
+      AppLinkNavigation.defaultResolver,
+      resolver,
       "Should be able to set the default app link resolver"
     )
-    XCTAssertTrue(
-      AppLinkNavigation.appLinkResolver === resolver,
+    XCTAssertIdentical(
+      AppLinkNavigation.appLinkResolver,
+      resolver,
       "Should set the underlying resolver when setting the default"
     )
   }

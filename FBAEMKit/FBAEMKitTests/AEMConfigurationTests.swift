@@ -261,24 +261,24 @@ final class AEMConfigurationTests: XCTestCase {
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigurationWithoutBusinessID()
 
     XCTAssertTrue(
-      configWithBusinessID.isSameBusinessID("test_advertiserid_123") == true,
+      configWithBusinessID.isSameBusinessID("test_advertiserid_123"),
       "Should return true for the same business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameBusinessID("test_advertiserid_6666") == true,
+      configWithBusinessID.isSameBusinessID("test_advertiserid_6666"),
       "Should return false for the unexpected business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSameBusinessID(nil) == true,
+      configWithBusinessID.isSameBusinessID(nil),
       "Should return false for nil business ID if the configuration has business ID"
     )
 
     XCTAssertTrue(
-      configWithoutBusinessID.isSameBusinessID(nil) == true,
+      configWithoutBusinessID.isSameBusinessID(nil),
       "Should return true for nil business ID if the configuration doesn't have business ID"
     )
     XCTAssertFalse(
-      configWithoutBusinessID.isSameBusinessID("test_advertiserid_123") == true,
+      configWithoutBusinessID.isSameBusinessID("test_advertiserid_123"),
       "Should return false for non-nil business ID if the configuration has business ID"
     )
   }
@@ -288,32 +288,32 @@ final class AEMConfigurationTests: XCTestCase {
     let configWithoutBusinessID = SampleAEMConfigurations.createConfigurationWithoutBusinessID()
 
     XCTAssertTrue(
-      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123") == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123"),
       "Should return true for the same validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_6666") == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_6666"),
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSame(validFrom: 10001, businessID: "test_advertiserid_123") == true,
+      configWithBusinessID.isSame(validFrom: 10001, businessID: "test_advertiserid_123"),
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithBusinessID.isSame(validFrom: 10000, businessID: nil) == true,
+      configWithBusinessID.isSame(validFrom: 10000, businessID: nil),
       "Should return false for the unexpected validFrom and business ID"
     )
 
     XCTAssertTrue(
-      configWithoutBusinessID.isSame(validFrom: 10000, businessID: nil) == true,
+      configWithoutBusinessID.isSame(validFrom: 10000, businessID: nil),
       "Should return true for nil business ID if the configuration doesn't have business ID"
     )
     XCTAssertFalse(
-      configWithoutBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123") == true,
+      configWithoutBusinessID.isSame(validFrom: 10000, businessID: "test_advertiserid_123"),
       "Should return false for the unexpected validFrom and business ID"
     )
     XCTAssertFalse(
-      configWithoutBusinessID.isSame(validFrom: 10001, businessID: nil) == true,
+      configWithoutBusinessID.isSame(validFrom: 10001, businessID: nil),
       "Should return false for the unexpected validFrom and business ID"
     )
   }

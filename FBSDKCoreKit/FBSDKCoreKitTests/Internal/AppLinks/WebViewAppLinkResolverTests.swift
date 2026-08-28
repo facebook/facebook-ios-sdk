@@ -27,25 +27,29 @@ final class WebViewAppLinkResolverTests: XCTestCase {
 
   func testDefaultDependencies() throws {
     resolver = WebViewAppLinkResolver.shared
-    XCTAssertTrue(
-      resolver.sessionProvider === URLSession.shared,
+    XCTAssertIdentical(
+      resolver.sessionProvider,
+      URLSession.shared,
       "Should use the shared system session by default"
     )
 
     let reporter = try _ErrorFactory.getDependencies().reporter
-    XCTAssertTrue(
-      reporter === ErrorReporter.shared,
+    XCTAssertIdentical(
+      reporter,
+      ErrorReporter.shared,
       "Should use the shared error reporter by default"
     )
   }
 
   func testConfiguringDependencies() {
-    XCTAssertTrue(
-      resolver.sessionProvider === sessionProvider,
+    XCTAssertIdentical(
+      resolver.sessionProvider,
+      sessionProvider,
       "Should be able to create with a session provider"
     )
-    XCTAssertTrue(
-      resolver.errorFactory === errorFactory,
+    XCTAssertIdentical(
+      resolver.errorFactory,
+      errorFactory,
       "Should be able to create with an error factory"
     )
   }

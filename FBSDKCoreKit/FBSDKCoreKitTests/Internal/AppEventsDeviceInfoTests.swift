@@ -42,8 +42,9 @@ final class AppEventsDeviceInfoTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(
-      deviceInfo.settings === settings,
+    XCTAssertIdentical(
+      deviceInfo.settings,
+      settings,
       "Should use the provided settings"
     )
   }

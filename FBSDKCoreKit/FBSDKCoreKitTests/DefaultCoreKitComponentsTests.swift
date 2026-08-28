@@ -18,8 +18,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.accessTokenExpirer as? _AccessTokenExpirer,
       "The default components should use an instance of AccessTokenExpirer as its access token expirer"
     )
-    XCTAssertTrue(
-      expirer.notificationCenter === components.notificationCenter,
+    XCTAssertIdentical(
+      expirer.notificationCenter,
+      components.notificationCenter,
       "The expirer should use the components' notification center"
     )
   }
@@ -32,8 +33,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testAdvertiserIDProvider() {
-    XCTAssertTrue(
-      components.advertiserIDProvider === _AppEventsUtility.shared,
+    XCTAssertIdentical(
+      components.advertiserIDProvider,
+      _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its advertise ID provider"
     )
   }
@@ -47,22 +49,25 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testAppEventParametersExtractor() {
-    XCTAssertTrue(
-      components.appEventParametersExtractor === _AppEventsUtility.shared,
+    XCTAssertIdentical(
+      components.appEventParametersExtractor,
+      _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its app event parameters extractor"
     )
   }
 
   func testAppEvents() throws {
-    XCTAssertTrue(
-      components.appEvents === AppEvents.shared,
+    XCTAssertIdentical(
+      components.appEvents,
+      AppEvents.shared,
       "The default components should use the shared AppEvents as its app events"
     )
   }
 
   func testAppEventsConfigurationProvider() {
-    XCTAssertTrue(
-      components.appEventsConfigurationProvider === _AppEventsConfigurationManager.shared,
+    XCTAssertIdentical(
+      components.appEventsConfigurationProvider,
+      _AppEventsConfigurationManager.shared,
       """
       The default components should use the shared \
       AppEventsConfigurationManager as its app events configuration provider
@@ -71,8 +76,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testAppEventsDropDeterminer() {
-    XCTAssertTrue(
-      components.appEventsDropDeterminer === _AppEventsUtility.shared,
+    XCTAssertIdentical(
+      components.appEventsDropDeterminer,
+      _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its app events drop determiner"
     )
   }
@@ -85,15 +91,17 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testAppEventsStateStore() {
-    XCTAssertTrue(
-      components.appEventsStateStore === _AppEventsStateManager.shared,
+    XCTAssertIdentical(
+      components.appEventsStateStore,
+      _AppEventsStateManager.shared,
       "The default components should use the shared AppEventsStateManager as its app events state store"
     )
   }
 
   func testAppEventsUtility() {
-    XCTAssertTrue(
-      components.appEventsUtility === _AppEventsUtility.shared,
+    XCTAssertIdentical(
+      components.appEventsUtility,
+      _AppEventsUtility.shared,
       "The default components should use the shared AppEventsUtility as its app events utility"
     )
   }
@@ -113,8 +121,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testAppLinkResolver() {
-    XCTAssertTrue(
-      components.appLinkResolver === WebViewAppLinkResolver.shared,
+    XCTAssertIdentical(
+      components.appLinkResolver,
+      WebViewAppLinkResolver.shared,
       "The default components should use the shared WebViewAppLinkResolver as its app link resolver"
     )
   }
@@ -134,8 +143,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testApplicationActivationNotifier() {
-    XCTAssertTrue(
-      components.getApplicationActivationNotifier() as AnyObject === ApplicationDelegate.shared,
+    XCTAssertIdentical(
+      components.getApplicationActivationNotifier() as AnyObject,
+      ApplicationDelegate.shared,
       "The default components should use the shared ApplicationDelegate as its application activation notifier"
     )
   }
@@ -145,20 +155,24 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.atePublisherFactory as? _ATEPublisherFactory,
       "The default components should use an instance of ATEPublisherFactory as its ATE publisher factory"
     )
-    XCTAssertTrue(
-      factory.dataStore === components.defaultDataStore,
+    XCTAssertIdentical(
+      factory.dataStore,
+      components.defaultDataStore,
       "The factory should use the components' default data store"
     )
-    XCTAssertTrue(
-      factory.graphRequestFactory === components.graphRequestFactory,
+    XCTAssertIdentical(
+      factory.graphRequestFactory,
+      components.graphRequestFactory,
       "The factory should use the components' graph request factory"
     )
-    XCTAssertTrue(
-      factory.settings === components.settings,
+    XCTAssertIdentical(
+      factory.settings,
+      components.settings,
       "The factory should use the components' settings"
     )
-    XCTAssertTrue(
-      factory.deviceInformationProvider === components.deviceInformationProvider,
+    XCTAssertIdentical(
+      factory.deviceInformationProvider,
+      components.deviceInformationProvider,
       "The factory should use the components' device information provider"
     )
   }
@@ -176,12 +190,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       "The default components should use an instance of BackgroundEventLogger as its background event logger"
     )
     let dependencies = try BackgroundEventLogger.getDependencies()
-    XCTAssertTrue(
-      dependencies.infoDictionaryProvider === components.infoDictionaryProvider,
+    XCTAssertIdentical(
+      dependencies.infoDictionaryProvider,
+      components.infoDictionaryProvider,
       "The cache should use the components' info dictionary provider"
     )
-    XCTAssertTrue(
-      dependencies.eventLogger === components.eventLogger,
+    XCTAssertIdentical(
+      dependencies.eventLogger,
+      components.eventLogger,
       "The cache should use the components' app events"
     )
   }
@@ -194,8 +210,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testCrashHandler() {
-    XCTAssertTrue(
-      components.crashHandler === CrashHandler.shared,
+    XCTAssertIdentical(
+      components.crashHandler,
+      CrashHandler.shared,
       "The default components should use the shared CrashHandler as its crash handler"
     )
   }
@@ -205,20 +222,24 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.crashObserver as? _CrashObserver,
       "The default components should use an instance of CrashObserver as its crash observer"
     )
-    XCTAssertTrue(
-      crashObserver.featureChecker === components.featureChecker,
+    XCTAssertIdentical(
+      crashObserver.featureChecker,
+      components.featureChecker,
       "The crash observer should use the components' feature checker"
     )
-    XCTAssertTrue(
-      crashObserver.graphRequestFactory === components.graphRequestFactory,
+    XCTAssertIdentical(
+      crashObserver.graphRequestFactory,
+      components.graphRequestFactory,
       "The crash observer should use the components' graph request factory"
     )
-    XCTAssertTrue(
-      crashObserver.settings === components.settings,
+    XCTAssertIdentical(
+      crashObserver.settings,
+      components.settings,
       "The crash observer should use the components' settings"
     )
-    XCTAssertTrue(
-      crashObserver.crashHandler === components.crashHandler,
+    XCTAssertIdentical(
+      crashObserver.crashHandler,
+      components.crashHandler,
       "The crash observer should use the components' crash handler"
     )
   }
@@ -231,15 +252,17 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testDefaultDataStore() {
-    XCTAssertTrue(
-      components.defaultDataStore === UserDefaults.standard,
+    XCTAssertIdentical(
+      components.defaultDataStore,
+      UserDefaults.standard,
       "The default components should use the standard UserDefaults as its default data store"
     )
   }
 
   func testDeviceInformationProvider() {
-    XCTAssertTrue(
-      components.deviceInformationProvider === _AppEventsDeviceInfo.shared,
+    XCTAssertIdentical(
+      components.deviceInformationProvider,
+      _AppEventsDeviceInfo.shared,
       "The default components should use the shared AppEventsDeviceInfo as its device information provider"
     )
   }
@@ -263,15 +286,17 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
   func testErrorFactory() throws {
     let reporter = try _ErrorFactory.getDependencies().reporter
-    XCTAssertTrue(
-      reporter === components.errorReporter,
+    XCTAssertIdentical(
+      reporter,
+      components.errorReporter,
       "The factory should use the components' error reporter"
     )
   }
 
   func testErrorReporter() {
-    XCTAssertTrue(
-      components.errorReporter === ErrorReporter.shared,
+    XCTAssertIdentical(
+      components.errorReporter,
+      ErrorReporter.shared,
       "The default components should use the shared ErrorReporter as its error reporter"
     )
   }
@@ -284,15 +309,17 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testEventLogger() {
-    XCTAssertTrue(
-      components.eventLogger === components.appEvents,
+    XCTAssertIdentical(
+      components.eventLogger,
+      components.appEvents,
       "The default components should use the components' app events as its event logger"
     )
   }
 
   func testFeatureChecker() {
-    XCTAssertTrue(
-      components.featureChecker === _FeatureManager.shared,
+    XCTAssertIdentical(
+      components.featureChecker,
+      _FeatureManager.shared,
       "The default components should use the shared FeatureManager as its feature checker"
     )
   }
@@ -305,8 +332,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testFileManager() {
-    XCTAssertTrue(
-      components.fileManager === FileManager.default,
+    XCTAssertIdentical(
+      components.fileManager,
+      FileManager.default,
       "The default components should use the default FileManager as its file manager"
     )
   }
@@ -340,27 +368,32 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.impressionLoggerFactory as? _ImpressionLoggerFactory,
       "The default components should use an instance of ImpressionLoggerFactory as its impression logger factory"
     )
-    XCTAssertTrue(
-      factory.graphRequestFactory === components.graphRequestFactory,
+    XCTAssertIdentical(
+      factory.graphRequestFactory,
+      components.graphRequestFactory,
       "The factory should use the components' graph request factory"
     )
-    XCTAssertTrue(
-      factory.eventLogger === components.eventLogger,
+    XCTAssertIdentical(
+      factory.eventLogger,
+      components.eventLogger,
       "The factory should use the components' app events"
     )
-    XCTAssertTrue(
-      factory.notificationCenter === components.notificationCenter,
+    XCTAssertIdentical(
+      factory.notificationCenter,
+      components.notificationCenter,
       "The factory should use the components' notification center"
     )
-    XCTAssertTrue(
-      factory.accessTokenWallet === components.accessTokenWallet,
+    XCTAssertIdentical(
+      factory.accessTokenWallet,
+      components.accessTokenWallet,
       "The factory should use the components' access token wallet"
     )
   }
 
   func testInfoDictionaryProvider() {
-    XCTAssertTrue(
-      components.infoDictionaryProvider === Bundle.main,
+    XCTAssertIdentical(
+      components.infoDictionaryProvider,
+      Bundle.main,
       "The default components should use the main Bundle as its info dictionary provider"
     )
   }
@@ -374,8 +407,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testInternalUtility() {
-    XCTAssertTrue(
-      components.internalUtility === InternalUtility.shared,
+    XCTAssertIdentical(
+      components.internalUtility,
+      InternalUtility.shared,
       "The default components should use the shared InternalUtility as its internal utility"
     )
   }
@@ -395,8 +429,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testMacCatalystDeterminator() {
-    XCTAssertTrue(
-      components.macCatalystDeterminator === ProcessInfo.processInfo,
+    XCTAssertIdentical(
+      components.macCatalystDeterminator,
+      ProcessInfo.processInfo,
       "The default components should use the default ProcessInfo as its Mac Catalyst determinator"
     )
   }
@@ -406,33 +441,38 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.metadataIndexer as? _MetadataIndexer,
       "The default components should use an instance of MetadataIndexer as its metadata indexer"
     )
-    XCTAssertTrue(
-      indexer.userDataStore === components.userDataStore,
+    XCTAssertIdentical(
+      indexer.userDataStore,
+      components.userDataStore,
       "The indexer should use the components' user data store"
     )
-    XCTAssertTrue(
-      indexer.swizzler === components.swizzler,
+    XCTAssertIdentical(
+      indexer.swizzler,
+      components.swizzler,
       "The indexer should use the components' swizzler"
     )
   }
 
   func testModelManager() {
-    XCTAssertTrue(
-      components.modelManager === _ModelManager.shared,
+    XCTAssertIdentical(
+      components.modelManager,
+      _ModelManager.shared,
       "The default components should use the shared ModelManager as its model manager"
     )
   }
 
   func testNotificationCenter() {
-    XCTAssertTrue(
-      components.notificationCenter === NotificationCenter.default,
+    XCTAssertIdentical(
+      components.notificationCenter,
+      NotificationCenter.default,
       "The default components should use the default NotificationCenter as its notification center"
     )
   }
 
   func testOperatingSystemVersionComparer() {
-    XCTAssertTrue(
-      components.operatingSystemVersionComparer === ProcessInfo.processInfo,
+    XCTAssertIdentical(
+      components.operatingSystemVersionComparer,
+      ProcessInfo.processInfo,
       "The default components should use the default ProcessInfo as its operating system version comparer"
     )
   }
@@ -442,8 +482,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.paymentObserver as? _PaymentObserver,
       "The default components should use an instance of PaymentObserver as its payment observer"
     )
-    XCTAssertTrue(
-      observer.paymentQueue === SKPaymentQueue.default(),
+    XCTAssertIdentical(
+      observer.paymentQueue,
+      SKPaymentQueue.default(),
       "The observer should use the default SKPaymentQueue as its payment queue"
     )
     let factory = try XCTUnwrap(
@@ -453,32 +494,38 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
 
     let factoryDependencies = try type(of: factory).getDependencies()
 
-    XCTAssertTrue(
-      factoryDependencies.settings === components.settings,
+    XCTAssertIdentical(
+      factoryDependencies.settings,
+      components.settings,
       "The factory should use the components' settings"
     )
-    XCTAssertTrue(
-      factoryDependencies.eventLogger === components.eventLogger,
+    XCTAssertIdentical(
+      factoryDependencies.eventLogger,
+      components.eventLogger,
       "The factory should use the components' app events"
     )
-    XCTAssertTrue(
-      factoryDependencies.gateKeeperManager === components.gateKeeperManager,
+    XCTAssertIdentical(
+      factoryDependencies.gateKeeperManager,
+      components.gateKeeperManager,
       "The factory should use the components' gate keeper manager"
     )
-    XCTAssertTrue(
-      factoryDependencies.store === components.defaultDataStore,
+    XCTAssertIdentical(
+      factoryDependencies.store,
+      components.defaultDataStore,
       "The factory should use the components' default data store"
     )
-    XCTAssertTrue(
-      factoryDependencies.loggerFactory === components.loggerFactory,
+    XCTAssertIdentical(
+      factoryDependencies.loggerFactory,
+      components.loggerFactory,
       "The factory should use the components' logger factory"
     )
     XCTAssertTrue(
       factoryDependencies.productsRequestFactory is _ProductRequestFactory,
       "The factory should use an instance of ProductRequestFactory for its products request factory"
     )
-    XCTAssertTrue(
-      factoryDependencies.appStoreReceiptProvider === Bundle(for: ApplicationDelegate.self),
+    XCTAssertIdentical(
+      factoryDependencies.appStoreReceiptProvider,
+      Bundle(for: ApplicationDelegate.self),
       "The factory should use the bundle of the application delegate"
     )
   }
@@ -508,36 +555,41 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       RestrictiveDataFilterManager as its restrictive data filter manager
       """
     )
-    XCTAssertTrue(
-      manager.serverConfigurationProvider === components.serverConfigurationProvider,
+    XCTAssertIdentical(
+      manager.serverConfigurationProvider,
+      components.serverConfigurationProvider,
       "The factory should use the components' server configuration provider"
     )
   }
 
   func testRulesFromKeyProvider() {
-    XCTAssertTrue(
-      components.rulesFromKeyProvider === _ModelManager.shared,
+    XCTAssertIdentical(
+      components.rulesFromKeyProvider,
+      _ModelManager.shared,
       "The default components should use the shared ModelManager as its rules from key provider"
     )
   }
 
   func testServerConfigurationProvider() {
-    XCTAssertTrue(
-      components.serverConfigurationProvider === _ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      components.serverConfigurationProvider,
+      _ServerConfigurationManager.shared,
       "The default components should use the shared ServerConfigurationManager as its server configuration provider"
     )
   }
 
   func testSessionDataTaskProvider() {
-    XCTAssertTrue(
-      components.sessionDataTaskProvider === URLSession.shared,
+    XCTAssertIdentical(
+      components.sessionDataTaskProvider,
+      URLSession.shared,
       "The default components should use the shared URLSession as its session data task provider"
     )
   }
 
   func testSettings() {
-    XCTAssertTrue(
-      components.settings === Settings.shared,
+    XCTAssertIdentical(
+      components.settings,
+      Settings.shared,
       "The default components should use the shared Settings as its settings"
     )
   }
@@ -547,12 +599,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.skAdNetworkReporter as? _SKAdNetworkReporter,
       "The default components should use an instance of SKAdNetworkReporter as its StoreKit ad network reporter"
     )
-    XCTAssertTrue(
-      reporter.graphRequestFactory === components.graphRequestFactory,
+    XCTAssertIdentical(
+      reporter.graphRequestFactory,
+      components.graphRequestFactory,
       "The reporter should use the components' graph request factory"
     )
-    XCTAssertTrue(
-      reporter.dataStore === components.defaultDataStore,
+    XCTAssertIdentical(
+      reporter.dataStore,
+      components.defaultDataStore,
       "The reporter should use the components' default data store"
     )
     XCTAssertTrue(
@@ -566,12 +620,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.skAdNetworkReporterV2 as? _SKAdNetworkReporterV2,
       "The default components should use an instance of SKAdNetworkReporterV2 as its StoreKit ad network reporter"
     )
-    XCTAssertTrue(
-      reporter.graphRequestFactory === components.graphRequestFactory,
+    XCTAssertIdentical(
+      reporter.graphRequestFactory,
+      components.graphRequestFactory,
       "The reporter should use the components' graph request factory"
     )
-    XCTAssertTrue(
-      reporter.dataStore === components.defaultDataStore,
+    XCTAssertIdentical(
+      reporter.dataStore,
+      components.defaultDataStore,
       "The reporter should use the components' default data store"
     )
     XCTAssertTrue(
@@ -585,32 +641,39 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.suggestedEventsIndexer as? _SuggestedEventsIndexer,
       "The default components should use an instance of SuggestedEventsIndexer as its suggested events indexer"
     )
-    XCTAssertTrue(
-      indexer.graphRequestFactory === components.graphRequestFactory,
+    XCTAssertIdentical(
+      indexer.graphRequestFactory,
+      components.graphRequestFactory,
       "The indexer should use the components' graph request factory"
     )
-    XCTAssertTrue(
-      indexer.serverConfigurationProvider === components.serverConfigurationProvider,
+    XCTAssertIdentical(
+      indexer.serverConfigurationProvider,
+      components.serverConfigurationProvider,
       "The indexer should use the components' server configuration provider"
     )
-    XCTAssertTrue(
-      indexer.swizzler === components.swizzler,
+    XCTAssertIdentical(
+      indexer.swizzler,
+      components.swizzler,
       "The indexer should use the components' swizzler"
     )
-    XCTAssertTrue(
-      indexer.settings === components.settings,
+    XCTAssertIdentical(
+      indexer.settings,
+      components.settings,
       "The indexer should use the components' settings"
     )
-    XCTAssertTrue(
-      indexer.eventLogger === components.eventLogger,
+    XCTAssertIdentical(
+      indexer.eventLogger,
+      components.eventLogger,
       "The indexer should use the components' event logger"
     )
-    XCTAssertTrue(
-      indexer.featureExtractor === components.featureExtractor,
+    XCTAssertIdentical(
+      indexer.featureExtractor,
+      components.featureExtractor,
       "The indexer should use the components' feature extractor"
     )
-    XCTAssertTrue(
-      indexer.eventProcessor === components.modelManager,
+    XCTAssertIdentical(
+      indexer.eventProcessor,
+      components.modelManager,
       "The indexer should use the components' model manager"
     )
   }
@@ -627,12 +690,14 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.timeSpentRecorder as? _TimeSpentData,
       "The default components should use an instance of TimeSpentData as its time spent recorder"
     )
-    XCTAssertTrue(
-      recorder.eventLogger === components.eventLogger,
+    XCTAssertIdentical(
+      recorder.eventLogger,
+      components.eventLogger,
       "The recorder should use the components' event logger"
     )
-    XCTAssertTrue(
-      recorder.serverConfigurationProvider === components.serverConfigurationProvider,
+    XCTAssertIdentical(
+      recorder.serverConfigurationProvider,
+      components.serverConfigurationProvider,
       "The recorder should use the components' server configuration provider"
     )
   }
@@ -642,8 +707,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
       components.tokenCache as? TokenCache,
       "The default components should use an instance of TokenCache as its token cache"
     )
-    XCTAssertTrue(
-      cache.settings === components.settings,
+    XCTAssertIdentical(
+      cache.settings,
+      components.settings,
       "The cache should use the components' settings"
     )
 
@@ -665,8 +731,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testURLHoster() {
-    XCTAssertTrue(
-      components.urlHoster === InternalUtility.shared,
+    XCTAssertIdentical(
+      components.urlHoster,
+      InternalUtility.shared,
       "The default components should use the shared InternalUtility as its URL hoster"
     )
   }
@@ -686,8 +753,9 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
   }
 
   func testUserIDProvider() {
-    XCTAssertTrue(
-      components.userIDProvider === components.appEvents,
+    XCTAssertIdentical(
+      components.userIDProvider,
+      components.appEvents,
       "The default components should use the components' app events as its user ID provider"
     )
   }

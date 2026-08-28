@@ -22,8 +22,9 @@ final class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
       OperationQueue.main,
       "The provided proxy Should use the operation queue it was created with"
     )
-    XCTAssertTrue(
-      proxy.delegate === self,
+    XCTAssertIdentical(
+      proxy.delegate,
+      self,
       "The provided proxy should use the delegate it was created with"
     )
   }
@@ -32,8 +33,9 @@ final class URLSessionProxyFactoryTests: XCTestCase, URLSessionDataDelegate {
     let proxy = factory.createSessionProxy(with: self, queue: OperationQueue.main)
     let proxy2 = factory.createSessionProxy(with: self, queue: OperationQueue.main)
 
-    XCTAssertFalse(
-      proxy === proxy2,
+    XCTAssertNotIdentical(
+      proxy,
+      proxy2,
       "Session proxies should be unique"
     )
   }

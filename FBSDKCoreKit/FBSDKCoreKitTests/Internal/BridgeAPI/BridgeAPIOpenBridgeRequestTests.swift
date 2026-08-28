@@ -39,7 +39,7 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       completionBlock: uninvokedCompletionHandler()
     )
 
-    XCTAssertTrue(api.pendingRequest === request)
+    XCTAssertIdentical(api.pendingRequest, request)
     XCTAssertNotNil(api.pendingRequestCompletionBlock)
 
     XCTAssertNil(
@@ -62,7 +62,7 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       completionBlock: uninvokedCompletionHandler()
     )
 
-    XCTAssertTrue(api.pendingRequest === request)
+    XCTAssertIdentical(api.pendingRequest, request)
     XCTAssertNotNil(api.pendingRequestCompletionBlock)
 
     XCTAssertEqual(
@@ -81,7 +81,7 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       completionBlock: uninvokedCompletionHandler()
     )
 
-    XCTAssertTrue(api.pendingRequest === request)
+    XCTAssertIdentical(api.pendingRequest, request)
     XCTAssertNotNil(api.pendingRequestCompletionBlock)
   }
 
@@ -94,7 +94,7 @@ final class BridgeAPIOpenBridgeRequestTests: XCTestCase {
       completionBlock: uninvokedCompletionHandler()
     )
 
-    XCTAssertTrue(api.pendingRequest === request)
+    XCTAssertIdentical(api.pendingRequest, request)
     XCTAssertNotNil(api.pendingRequestCompletionBlock)
   }
 

@@ -18,8 +18,9 @@ final class GamingRequestPayloadObserverTests: XCTestCase {
   var capturedPayload: GamingPayload?
 
   func testCreatingObserver() {
-    XCTAssertTrue(
-      gameRequestObserver.delegate === gameRequestDelegate,
+    XCTAssertIdentical(
+      gameRequestObserver.delegate,
+      gameRequestDelegate,
       "Should store the delegate it was created with"
     )
     XCTAssertTrue(

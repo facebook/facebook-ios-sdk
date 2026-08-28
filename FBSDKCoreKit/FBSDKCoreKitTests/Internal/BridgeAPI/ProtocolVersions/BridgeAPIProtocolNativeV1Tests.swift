@@ -411,7 +411,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
       )
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix))
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
@@ -462,7 +462,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
       )
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix))
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
@@ -521,7 +521,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
       XCTAssertEqual(pasteboard.capturedPasteboardType, "com.facebook.Facebook.FBAppBridgeType")
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix))
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")
@@ -572,7 +572,7 @@ final class BridgeAPIProtocolNativeV1Tests: XCTestCase {
       XCTAssertEqual(pasteboard.capturedPasteboardType, "com.facebook.Facebook.FBAppBridgeType")
 
       let expectedPrefix = "\(scheme)://dialog/\(methodName)?"
-      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix) == true)
+      XCTAssertTrue(requestURL.absoluteString.hasPrefix(expectedPrefix))
       /* Due to the non-deterministic order of Dictionary->JSON serialization,
        we cannot do string comparisons to verify. */
       let queryParameters = Utility.dictionary(withQuery: requestURL.query ?? "")

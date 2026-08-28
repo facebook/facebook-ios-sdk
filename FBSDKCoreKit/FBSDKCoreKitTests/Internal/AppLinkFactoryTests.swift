@@ -40,8 +40,9 @@ final class AppLinkFactoryTests: XCTestCase {
       webURL,
       "Should use the provided web URL to create the app link"
     )
-    XCTAssertTrue(
-      appLink.targets[0] as? TestAppLinkTarget === target,
+    XCTAssertIdentical(
+      appLink.targets[0] as? TestAppLinkTarget,
+      target,
       "Should use the provided targets to create the app link"
     )
     XCTAssertEqual(

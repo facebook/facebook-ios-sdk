@@ -72,20 +72,24 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
       bridge.serverConfigurationProvider is TestServerConfigurationProvider,
       "Should be able to create with a custom server configuration provider"
     )
-    XCTAssertTrue(
-      bridge.nativeBridge === nativeBridge,
+    XCTAssertIdentical(
+      bridge.nativeBridge,
+      nativeBridge,
       "Should be able to create with a custom native bridge"
     )
-    XCTAssertTrue(
-      bridge.errorFactory === errorFactory,
+    XCTAssertIdentical(
+      bridge.errorFactory,
+      errorFactory,
       "Should be able to create with a custom error factory"
     )
-    XCTAssertTrue(
-      bridge.internalUtility === internalUtility,
+    XCTAssertIdentical(
+      bridge.internalUtility,
+      internalUtility,
       "Should be able to create with a custom internal utility"
     )
-    XCTAssertTrue(
-      bridge.infoDictionaryProvider === bundle,
+    XCTAssertIdentical(
+      bridge.infoDictionaryProvider,
+      bundle,
       "Should be able to create with a custom info dictionary provider"
     )
   }
@@ -103,16 +107,19 @@ final class BridgeAPIProtocolWebV2Tests: XCTestCase {
     )
 
     let reporter = try _ErrorFactory.getDependencies().reporter
-    XCTAssertTrue(
-      reporter === ErrorReporter.shared,
+    XCTAssertIdentical(
+      reporter,
+      ErrorReporter.shared,
       "The error factory should use the shared error reporter"
     )
-    XCTAssertTrue(
-      bridge.internalUtility === InternalUtility.shared,
+    XCTAssertIdentical(
+      bridge.internalUtility,
+      InternalUtility.shared,
       "Should use the expected default internal utility"
     )
-    XCTAssertTrue(
-      bridge.infoDictionaryProvider === Bundle.main,
+    XCTAssertIdentical(
+      bridge.infoDictionaryProvider,
+      Bundle.main,
       "Should use the expected default info dictionary provider"
     )
   }

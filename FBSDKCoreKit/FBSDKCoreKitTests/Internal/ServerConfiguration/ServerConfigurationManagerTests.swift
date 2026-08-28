@@ -61,16 +61,19 @@ final class ServerConfigurationManagerTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(
-      _ServerConfigurationManager.shared.graphRequestFactory === requestFactory,
+    XCTAssertIdentical(
+      _ServerConfigurationManager.shared.graphRequestFactory,
+      requestFactory,
       "Should set the provided graph request factory"
     )
-    XCTAssertTrue(
-      _ServerConfigurationManager.shared.graphRequestConnectionFactory === connectionFactory,
+    XCTAssertIdentical(
+      _ServerConfigurationManager.shared.graphRequestConnectionFactory,
+      connectionFactory,
       "Should set the provided graph request connection factory"
     )
-    XCTAssertTrue(
-      _ServerConfigurationManager.shared.dialogConfigurationMapBuilder === dialogConfigurationMapBuilder,
+    XCTAssertIdentical(
+      _ServerConfigurationManager.shared.dialogConfigurationMapBuilder,
+      dialogConfigurationMapBuilder,
       "Should set the provided dialog configuration map builder"
     )
   }

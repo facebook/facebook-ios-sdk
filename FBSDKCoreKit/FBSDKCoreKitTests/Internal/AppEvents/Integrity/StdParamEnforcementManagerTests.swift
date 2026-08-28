@@ -55,15 +55,17 @@ final class StdParamEnforcementManagerTests: XCTestCase {
 
   func testDefaultDependencies() throws {
     stdParamEnforcementManager.resetDependencies()
-    XCTAssertTrue(
-      stdParamEnforcementManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      stdParamEnforcementManager.serverConfigurationProvider,
+      _ServerConfigurationManager.shared,
       "Should use the shared server configuration manger by default"
     )
   }
 
   func testConfiguringDependencies() {
-    XCTAssertTrue(
-      stdParamEnforcementManager.serverConfigurationProvider === provider,
+    XCTAssertIdentical(
+      stdParamEnforcementManager.serverConfigurationProvider,
+      provider,
       "Should be able to create with a server configuration provider"
     )
   }
@@ -79,9 +81,9 @@ final class StdParamEnforcementManagerTests: XCTestCase {
       "fb_currency": ["USDP", "TEST"],
     ]
     stdParamEnforcementManager.enable()
-    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled() == true)
-    XCTAssertTrue(stdParamEnforcementManager.getRegexRestrictionsConfig() == expectedStdParamsRegexConfig)
-    XCTAssertTrue(stdParamEnforcementManager.getEnumRestrictionsConfig() == expectedStdParamsEnumConfig)
+    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled())
+    XCTAssertEqual(stdParamEnforcementManager.getRegexRestrictionsConfig(), expectedStdParamsRegexConfig)
+    XCTAssertEqual(stdParamEnforcementManager.getEnumRestrictionsConfig(), expectedStdParamsEnumConfig)
   }
 
   func testNotEnablesIfNoConfigIsNotPresent() {
@@ -96,7 +98,7 @@ final class StdParamEnforcementManagerTests: XCTestCase {
       serverConfigurationProvider: provider
     )
     stdParamEnforcementManager.enable()
-    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled() == false)
+    XCTAssertFalse(stdParamEnforcementManager.getIsEnabled())
     XCTAssertTrue(stdParamEnforcementManager.getRegexRestrictionsConfig().isEmpty)
     XCTAssertTrue(stdParamEnforcementManager.getEnumRestrictionsConfig().isEmpty)
   }
@@ -117,7 +119,7 @@ final class StdParamEnforcementManagerTests: XCTestCase {
       serverConfigurationProvider: provider
     )
     stdParamEnforcementManager.enable()
-    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled() == true)
+    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled())
 
     let parameters: NSDictionary = [
       AppEvents.ParameterName(rawValue: "fb_currency"): "USDP",
@@ -147,7 +149,7 @@ final class StdParamEnforcementManagerTests: XCTestCase {
       serverConfigurationProvider: provider
     )
     stdParamEnforcementManager.enable()
-    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled() == true)
+    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled())
     let parameters: NSDictionary = [
       AppEvents.ParameterName(rawValue: "fb_currency"): "NOT_COMPLIANT",
     ]
@@ -176,7 +178,7 @@ final class StdParamEnforcementManagerTests: XCTestCase {
 
   func testSchemaRegexRestrictionWhenAllRulesFail() {
     stdParamEnforcementManager.enable()
-    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled() == true)
+    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled())
 
     let parameters: NSDictionary = [
       AppEvents.ParameterName(rawValue: "fb_value"): "NOT_COMPLIANT",
@@ -204,7 +206,7 @@ final class StdParamEnforcementManagerTests: XCTestCase {
       serverConfigurationProvider: provider
     )
     stdParamEnforcementManager.enable()
-    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled() == true)
+    XCTAssertTrue(stdParamEnforcementManager.getIsEnabled())
     let parameters: NSDictionary = [
       AppEvents.ParameterName(rawValue: "some_std_param"): "random_value",
     ]

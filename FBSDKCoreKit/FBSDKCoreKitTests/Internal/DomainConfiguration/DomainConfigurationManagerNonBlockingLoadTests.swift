@@ -101,7 +101,7 @@ final class DomainConfigurationManagerNonBlockingLoadTests: XCTestCase {
     waitForExpectations(timeout: 1.0)
   }
 
-  func testRequestStartIsDispatchedOffTheMainThread() {
+  func testRequestStartIsDispatchedOffTheMainThread() throws {
     // The expensive request build+start must run off the main thread, not synchronously in the
     // caller's launch frame. Assert on the thread the request actually started on rather than on
     // timing (a synchronous `startCallCount == 0` check races the background dispatch).
@@ -118,8 +118,8 @@ final class DomainConfigurationManagerNonBlockingLoadTests: XCTestCase {
       object: nil
     )
     wait(for: [started], timeout: 5.0)
-    XCTAssertEqual(
-      connection.startCalledOnMainThread, false,
+    XCTAssertFalse(
+      try XCTUnwrap(connection.startCalledOnMainThread),
       "The network request must be started off the main thread, not in the caller's launch frame"
     )
   }

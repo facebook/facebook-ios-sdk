@@ -42,7 +42,7 @@ final class PrivacyManifestTests: XCTestCase {
     guard let rrAPIs = manifest?["NSPrivacyAccessedAPITypes"] as? NSArray else {
       return XCTFail("Could not find Privacy Accessed API Types")
     }
-    XCTAssertTrue(rrAPIs.count == 1, "Should only expect to have one API in the Privacy Manifest file")
+    XCTAssertEqual(rrAPIs.count, 1, "Should only expect to have one API in the Privacy Manifest file")
     guard let rrAPIDict = rrAPIs[0] as? NSDictionary else {
       return XCTFail("Could not find items in Privacy Accessed API Types")
     }
@@ -55,8 +55,9 @@ final class PrivacyManifestTests: XCTestCase {
     guard let reasons = rrAPIDict["NSPrivacyAccessedAPITypeReasons"] as? NSArray else {
       return XCTFail("Could not find Privacy Accessed API Reasons")
     }
-    XCTAssertTrue(
-      reasons.count == 1,
+    XCTAssertEqual(
+      reasons.count,
+      1,
       """
       Should only expect to have one reason for UserDefaults
       in the Privacy Manifest file

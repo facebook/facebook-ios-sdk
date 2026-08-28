@@ -36,8 +36,9 @@ final class ChooseContextDialogFactoryTests: XCTestCase {
       content,
       "Should create the dialog with the expected content"
     )
-    XCTAssertTrue(
-      dialog.delegate === delegate,
+    XCTAssertIdentical(
+      dialog.delegate,
+      delegate,
       "Should create the dialog with the expected delegate"
     )
   }

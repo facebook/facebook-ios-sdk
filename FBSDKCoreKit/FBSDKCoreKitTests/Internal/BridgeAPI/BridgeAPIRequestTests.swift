@@ -115,6 +115,6 @@ final class BridgeAPIRequestTests: XCTestCase {
   func testCopying() throws {
     let request: _BridgeAPIRequest = try XCTUnwrap(makeRequest())
     let copy = try XCTUnwrap(request.copy() as AnyObject)
-    XCTAssertTrue(request === copy, "Instances should be provided as copies of themselves")
+    XCTAssertIdentical(request, copy, "Instances should be provided as copies of themselves")
   }
 }

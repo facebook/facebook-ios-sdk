@@ -62,8 +62,9 @@ final class ErrorReporterTests: XCTestCase {
       reporter.graphRequestFactory is GraphRequestFactory,
       "Should use the expected default graph request factory"
     )
-    XCTAssertTrue(
-      reporter.fileManager === FileManager.default,
+    XCTAssertIdentical(
+      reporter.fileManager,
+      FileManager.default,
       "Should use the expected default file manager"
     )
     XCTAssertTrue(

@@ -254,8 +254,9 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       line: line
     )
 
-    XCTAssertTrue(
-      api.pendingURLOpener === loginManager,
+    XCTAssertIdentical(
+      api.pendingURLOpener,
+      loginManager,
       "Should set the pending url opener to the passed in sender",
       file: file,
       line: line
