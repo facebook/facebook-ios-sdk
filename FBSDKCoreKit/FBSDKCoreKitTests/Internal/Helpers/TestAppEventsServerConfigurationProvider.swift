@@ -29,6 +29,6 @@ final class TestAppEventsServerConfigurationProvider: NSObject, _ServerConfigura
 
   func request(toLoadServerConfiguration appID: String) -> GraphRequest? {
     // no-op
-    return nil
+    nil
   }
 }

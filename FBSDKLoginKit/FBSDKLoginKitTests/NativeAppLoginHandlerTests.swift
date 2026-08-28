@@ -324,7 +324,7 @@ final class NativeAppLoginHandlerTests: XCTestCase {
     var handlerCalled = false
     let expectation = expectation(description: "Handler should be called")
 
-    handler.performNativeAppLogin(loggingToken: nil) { didOpen, error in
+    handler.performNativeAppLogin(loggingToken: nil) { _, _ in
       handlerCalled = true
       expectation.fulfill()
     }
@@ -421,7 +421,7 @@ final class NativeAppLoginHandlerTests: XCTestCase {
 
     let expectation = expectation(description: "Should complete with logger")
 
-    handler.performNativeAppLogin(loggingToken: nil) { didOpen, error in
+    handler.performNativeAppLogin(loggingToken: nil) { didOpen, _ in
       XCTAssertTrue(didOpen, "Should successfully open with logger")
       expectation.fulfill()
     }

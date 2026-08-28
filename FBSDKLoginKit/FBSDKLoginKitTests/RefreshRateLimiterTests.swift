@@ -12,14 +12,14 @@ import XCTest
 final class RefreshRateLimiterTests: XCTestCase {
 
   func testCanRefreshWhenNoRecentAttempts() {
-    let rateLimiter = RefreshRateLimiter(dateProvider: { Date() })
+    let rateLimiter = RefreshRateLimiter { Date() }
 
     XCTAssertTrue(rateLimiter.canAttemptRefresh())
   }
 
   func testBlocksRefreshWithinMinimumInterval() {
     var currentDate = Date()
-    let rateLimiter = RefreshRateLimiter(dateProvider: { currentDate })
+    let rateLimiter = RefreshRateLimiter { currentDate }
 
     rateLimiter.recordAttempt()
 
@@ -34,7 +34,7 @@ final class RefreshRateLimiterTests: XCTestCase {
 
   func testBlocksRefreshDuringFailureCooldown() {
     var currentDate = Date()
-    let rateLimiter = RefreshRateLimiter(dateProvider: { currentDate })
+    let rateLimiter = RefreshRateLimiter { currentDate }
 
     rateLimiter.recordAttempt()
     rateLimiter.recordFailure()
@@ -50,7 +50,7 @@ final class RefreshRateLimiterTests: XCTestCase {
 
   func testBlocksRefreshWhenHourlyLimitReached() {
     var currentDate = Date()
-    let rateLimiter = RefreshRateLimiter(dateProvider: { currentDate })
+    let rateLimiter = RefreshRateLimiter { currentDate }
 
     // Record 10 attempts, each 61 seconds apart to clear minimum interval
     for _ in 0 ..< 10 {
@@ -70,7 +70,7 @@ final class RefreshRateLimiterTests: XCTestCase {
 
   func testSuccessResetsFailureCooldown() {
     var currentDate = Date()
-    let rateLimiter = RefreshRateLimiter(dateProvider: { currentDate })
+    let rateLimiter = RefreshRateLimiter { currentDate }
 
     rateLimiter.recordAttempt()
     rateLimiter.recordFailure()
@@ -85,7 +85,7 @@ final class RefreshRateLimiterTests: XCTestCase {
 
   func testResetClearsAllState() {
     let currentDate = Date()
-    let rateLimiter = RefreshRateLimiter(dateProvider: { currentDate })
+    let rateLimiter = RefreshRateLimiter { currentDate }
 
     // Accumulate state: attempts + failure
     rateLimiter.recordAttempt()
@@ -101,7 +101,7 @@ final class RefreshRateLimiterTests: XCTestCase {
 
   func testTimeUntilNextAllowedAttempt() {
     var currentDate = Date()
-    let rateLimiter = RefreshRateLimiter(dateProvider: { currentDate })
+    let rateLimiter = RefreshRateLimiter { currentDate }
 
     rateLimiter.recordAttempt()
 
@@ -120,7 +120,7 @@ final class RefreshRateLimiterTests: XCTestCase {
   }
 
   func testThreadSafety() {
-    let rateLimiter = RefreshRateLimiter(dateProvider: { Date() })
+    let rateLimiter = RefreshRateLimiter { Date() }
     let concurrentQueue = DispatchQueue(label: "test.concurrency", attributes: .concurrent)
     let group = DispatchGroup()
 
