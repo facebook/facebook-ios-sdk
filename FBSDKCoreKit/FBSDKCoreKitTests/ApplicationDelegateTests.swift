@@ -249,18 +249,18 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
 
     XCTAssertTrue(
-      appEvents.wasStartObservingApplicationStatePersistenceNotificationsCalled,
-      "The App Events persist-on-close observers should be armed synchronously during init, before the deferred setup runs"
+      appEvents.wasStatePersistenceObservationStarted,
+      "The App Events persist-on-close observers should be armed during init, not deferred to doSDKSetup"
     )
     XCTAssertFalse(
-      appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
+      appEvents.wasLifecycleObservationStarted,
       "The remaining lifecycle observers should still be deferred with doSDKSetup, not run during initializeSDK"
     )
 
     scheduledWork?()
 
     XCTAssertTrue(
-      appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
+      appEvents.wasLifecycleObservationStarted,
       "The remaining lifecycle observers should be registered once the deferred setup fires"
     )
   }
@@ -511,7 +511,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
 
     XCTAssertTrue(
-      appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
+      appEvents.wasLifecycleObservationStarted,
       "Should have app events start observing application lifecycle notifications upon initialization"
     )
   }

@@ -79,13 +79,12 @@ final class NativeAppLoginHandlerTests: XCTestCase {
   }
 
   func createHandler(
-    configuration: LoginConfiguration? = nil,
+    configuration: LoginConfiguration,
     defaultAudience: DefaultAudience = .friends
   ) -> NativeAppLoginHandler {
-    let config = configuration ?? createConfiguration()!
-    return NativeAppLoginHandler(
+    NativeAppLoginHandler(
       loginManager: loginManager.loginManager,
-      configuration: config,
+      configuration: configuration,
       defaultAudience: defaultAudience,
       logger: logger
     )
@@ -235,7 +234,7 @@ final class NativeAppLoginHandlerTests: XCTestCase {
     configuration = createConfiguration(appSwitch: .enabled)
     let failingHandler = NativeAppLoginHandler(
       loginManager: failingLoginManager,
-      configuration: configuration!,
+      configuration: configuration,
       defaultAudience: .friends,
       logger: logger
     )
@@ -414,7 +413,7 @@ final class NativeAppLoginHandlerTests: XCTestCase {
     let realLogger = LoginManagerLogger(loggingToken: "test_token", tracking: .enabled)
     handler = NativeAppLoginHandler(
       loginManager: loginManager.loginManager,
-      configuration: configuration!,
+      configuration: configuration,
       defaultAudience: .friends,
       logger: realLogger
     )

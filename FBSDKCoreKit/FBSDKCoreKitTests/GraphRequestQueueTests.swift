@@ -167,10 +167,9 @@ final class GraphRequestQueueTests: XCTestCase {
       XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
       return
     }
-    for idx in requests.indices {
-      if !requestMetadatasAreEqual(request1: requestsMetadata[idx], request2: requests[idx]) {
-        XCTFail("Test request should equal queued request")
-      }
+    for idx in requests.indices
+      where !requestMetadatasAreEqual(request1: requestsMetadata[idx], request2: requests[idx]) {
+      XCTFail("Test request should equal queued request")
     }
   }
 
@@ -239,10 +238,9 @@ final class GraphRequestQueueTests: XCTestCase {
       connection.capturedRequests.count,
       "Number of queued requests should eqaul number of GraphRequestConnection captured requests"
     )
-    for idx in connection.capturedRequests.indices {
-      if !requestsAreEqual(request1: requestsToQueue[idx].request, request2: connection.capturedRequests[idx]) {
-        XCTFail("Queued request should eqaul GraphRequestConnection captured request")
-      }
+    for idx in connection.capturedRequests.indices
+      where !requestsAreEqual(request1: requestsToQueue[idx].request, request2: connection.capturedRequests[idx]) {
+      XCTFail("Queued request should eqaul GraphRequestConnection captured request")
     }
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
       XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")

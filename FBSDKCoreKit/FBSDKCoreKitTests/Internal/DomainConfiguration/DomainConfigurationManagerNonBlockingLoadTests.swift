@@ -36,19 +36,27 @@ final class DomainConfigurationManagerNonBlockingLoadTests: XCTestCase {
   // swiftlint:enable implicitly_unwrapped_optional
 
   let serverResult: [String: Any] = [
-    "data": [[
-      "endpoints": [
-        ["key": "activities", "value": [
-          "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
-          "att_opt_out_domain_prefix": kEndpoint2URLPrefix,
-        ]],
-        ["key": "default_config", "value": [
-          "default_domain_prefix": kEndpoint2URLPrefix,
-          "default_alternative_domain_prefix": kEndpoint1URLPrefix,
-          "enable_for_early_versions": false,
-        ]],
+    "data": [
+      [
+        "endpoints": [
+          [
+            "key": "activities",
+            "value": [
+              "att_opt_in_domain_prefix": kEndpoint1URLPrefix,
+              "att_opt_out_domain_prefix": kEndpoint2URLPrefix,
+            ],
+          ],
+          [
+            "key": "default_config",
+            "value": [
+              "default_domain_prefix": kEndpoint2URLPrefix,
+              "default_alternative_domain_prefix": kEndpoint1URLPrefix,
+              "enable_for_early_versions": false,
+            ],
+          ],
+        ],
       ],
-    ]],
+    ],
   ]
 
   override func setUp() {
@@ -205,7 +213,8 @@ final class DomainConfigurationManagerNonBlockingLoadTests: XCTestCase {
     manager.loadDomainConfiguration { secondCompleted.fulfill() }
     waitForExpectations(timeout: 1.0)
     XCTAssertEqual(
-      connection.startCallCount, 1,
+      connection.startCallCount,
+      1,
       "A valid, fresh cached config must fast-path without a second network request"
     )
   }
@@ -228,7 +237,8 @@ final class DomainConfigurationManagerNonBlockingLoadTests: XCTestCase {
     )
     wait(for: [started], timeout: 5.0)
     XCTAssertEqual(
-      connection.startCallCount, 1,
+      connection.startCallCount,
+      1,
       "Overlapping loads while a fetch is in flight must not start duplicate requests"
     )
   }

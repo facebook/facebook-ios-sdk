@@ -579,23 +579,28 @@ final class ServerConfigurationTests: XCTestCase {
 
     // Config should retain the original values, unaffected by mutation
     XCTAssertEqual(
-      config.eventBindings?.count, 1,
+      config.eventBindings?.count,
+      1,
       "eventBindings should be copied on init and not affected by external mutation"
     )
     XCTAssertEqual(
-      config.restrictiveParams?.count, 1,
+      config.restrictiveParams?.count,
+      1,
       "restrictiveParams should be copied on init and not affected by external mutation"
     )
     XCTAssertEqual(
-      config.aamRules?.count, 1,
+      config.aamRules?.count,
+      1,
       "AAMRules should be copied on init and not affected by external mutation"
     )
     XCTAssertEqual(
-      config.suggestedEventsSetting?.count, 1,
+      config.suggestedEventsSetting?.count,
+      1,
       "suggestedEventsSetting should be copied on init and not affected by external mutation"
     )
     XCTAssertEqual(
-      config.protectedModeRules?.count, 1,
+      config.protectedModeRules?.count,
+      1,
       "protectedModeRules should be copied on init and not affected by external mutation"
     )
   }

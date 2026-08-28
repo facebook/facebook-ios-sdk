@@ -83,7 +83,11 @@ final class BridgeAPIRequestTests: XCTestCase {
   func testProperties() throws {
     let request: _BridgeAPIRequest = try XCTUnwrap(makeRequest())
 
-    XCTAssertEqual(request.protocolType, FBSDKBridgeAPIProtocolType.web, "A request should use the provided protocol type")
+    XCTAssertEqual(
+      request.protocolType,
+      FBSDKBridgeAPIProtocolType.web,
+      "A request should use the provided protocol type"
+    )
     XCTAssertTrue(
       request.protocol is BridgeAPIProtocolWebV1,
       "A request should use a protocol based on its protocol type"

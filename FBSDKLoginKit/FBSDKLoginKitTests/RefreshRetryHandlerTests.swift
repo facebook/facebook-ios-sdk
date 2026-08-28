@@ -11,7 +11,7 @@ import XCTest
 
 final class RefreshRetryHandlerTests: XCTestCase {
 
-  private var handler: RefreshRetryHandler!
+  private var handler: RefreshRetryHandler! // swiftlint:disable:this implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
