@@ -111,7 +111,10 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
             let data = res["data"] as? [[String: Any]],
             let configuration = data.first
           else {
-            _Logger.singleShotLogEntry(.developerErrors, logEntry: "CAPI Gateway Settings API response is not a valid json")
+            _Logger.singleShotLogEntry(
+              .developerErrors,
+              logEntry: "CAPI Gateway Settings API response is not a valid json"
+            )
             self.executeBlocks(isEnabled: false)
             self.isLoadingConfig = false
             return
@@ -134,7 +137,10 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
               ofType: NSString.self
             ) as? String
           else {
-            _Logger.singleShotLogEntry(.developerErrors, logEntry: "CAPI Gateway Settings API response doesn't have valid data")
+            _Logger.singleShotLogEntry(
+              .developerErrors,
+              logEntry: "CAPI Gateway Settings API response doesn't have valid data"
+            )
             self.executeBlocks(isEnabled: false)
             self.isLoadingConfig = false
             return
@@ -159,7 +165,7 @@ public final class FBSDKAppEventsCAPIManager: NSObject, CAPIReporter {
     // We should refresh the config if
     // 1. refresh timestamp is expired
     // 2. local config doesn't exist
-    return !isRefreshTimestampValid() ||
+    !isRefreshTimestampValid() ||
       FBSDKTransformerGraphRequestFactory.shared.credentials == nil
   }
 

@@ -88,12 +88,10 @@ public final class ShimGraphRequestInterceptor: NSObject {
     }
 
     if urlPath.range(of: GraphAPIPath.regexPattern, options: .regularExpression) != nil {
-      for path in GraphAPIPath.allCases {
-        if urlPath.hasSuffix(path.rawValue) {
-          currentGraphAPIPath = path
-          currentURLRequest = request
-          return true
-        }
+      for path in GraphAPIPath.allCases where urlPath.hasSuffix(path.rawValue) {
+        currentGraphAPIPath = path
+        currentURLRequest = request
+        return true
       }
     }
 

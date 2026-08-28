@@ -176,6 +176,7 @@ final class LimitedLoginRefresher {
 
     session.start(url: url, callbackURLScheme: callbackURLScheme) { [weak self] result in
       guard let self = self else { return }
+
       self.silentAuthSession = nil
 
       switch result {

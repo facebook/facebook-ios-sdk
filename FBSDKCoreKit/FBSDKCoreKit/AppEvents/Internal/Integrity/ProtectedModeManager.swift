@@ -209,7 +209,8 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     guard let parameters else {
       return false
     }
-    return parameters.keys.contains(ProtectedModeManager.pmKey) && parameters[ProtectedModeManager.pmKey] as? Bool == true
+    return parameters.keys.contains(ProtectedModeManager.pmKey)
+      && parameters[ProtectedModeManager.pmKey] as? Bool == true
   }
 }
 

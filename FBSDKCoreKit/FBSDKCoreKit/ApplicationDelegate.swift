@@ -661,6 +661,7 @@ private final class FirstFrameScheduler {
 
   private func fire() {
     guard let work = work else { return }
+
     self.work = nil
     displayLink?.invalidate()
     displayLink = nil

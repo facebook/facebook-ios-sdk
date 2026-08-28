@@ -20,6 +20,7 @@ enum RetryConfig {
 
   static func delay(forAttempt attempt: Int) -> TimeInterval {
     guard attempt > 0 else { return 0 }
+
     let baseDelay = initialDelay * pow(backoffMultiplier, Double(attempt - 1))
     let cappedDelay = min(baseDelay, maxDelay)
     let jitter = cappedDelay * jitterRange * Double.random(in: -1 ... 1)

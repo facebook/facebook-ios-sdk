@@ -284,31 +284,31 @@ public final class LoginManager: NSObject {
         logger?.willAttemptAppSwitchingBehavior(urlScheme: urlScheme)
 
         nativeHandler.performNativeAppLogin(
-          loggingToken: serverConfigurationProvider.loggingToken,
-          handler: { [weak self] didOpen, error in
-            guard let self = self else { return }
+          loggingToken: serverConfigurationProvider.loggingToken
+        ) { [weak self] didOpen, error in
+          guard let self = self else { return }
 
-            if didOpen, error == nil {
-              // Native app opened successfully!
-              // Set state and wait for URL callback
-              self.state = .performingLogin
-            } else {
-              // Native app failed, fall back to browser login
-              self.performBrowserLogIn { [weak self] didPerformLogIn, potentialError in
-                guard let self = self else { return }
-                if didPerformLogIn {
-                  self.state = .performingLogin
-                } else if let error = potentialError as NSError?,
-                          CanceledLoginErrorDomains.isValidDomain(error.domain) {
-                  self.handleImplicitCancelOfLogIn()
-                } else {
-                  let error = potentialError ?? NSError(domain: LoginErrorDomain, code: LoginError.unknown.rawValue)
-                  self.invokeHandler(error: error)
-                }
+          if didOpen, error == nil {
+            // Native app opened successfully!
+            // Set state and wait for URL callback
+            self.state = .performingLogin
+          } else {
+            // Native app failed, fall back to browser login
+            self.performBrowserLogIn { [weak self] didPerformLogIn, potentialError in
+              guard let self = self else { return }
+
+              if didPerformLogIn {
+                self.state = .performingLogin
+              } else if let error = potentialError as NSError?,
+                        CanceledLoginErrorDomains.isValidDomain(error.domain) {
+                self.handleImplicitCancelOfLogIn()
+              } else {
+                let error = potentialError ?? NSError(domain: LoginErrorDomain, code: LoginError.unknown.rawValue)
+                self.invokeHandler(error: error)
               }
             }
           }
-        )
+        }
         return
       }
     }

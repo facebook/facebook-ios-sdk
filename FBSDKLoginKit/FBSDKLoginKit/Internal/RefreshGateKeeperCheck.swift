@@ -29,7 +29,7 @@ import Foundation
 /// covers the entire Limited Login Refresh feature: the silent path, the direct
 /// path, and `dpop_jkt` emission at initial Limited Login. Renaming is deferred
 /// to avoid touching every call site landed in Phase 1-2.
-final class RefreshGateKeeperCheck {
+enum RefreshGateKeeperCheck {
   static func isSilentRefreshEnabled() -> Bool {
     _FeatureManager.shared.isEnabled(.limitedLoginRefresh)
   }
