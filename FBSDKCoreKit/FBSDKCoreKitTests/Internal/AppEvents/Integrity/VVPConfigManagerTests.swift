@@ -593,6 +593,33 @@ final class VVPConfigManagerTests: XCTestCase {
     XCTAssertEqual(out?["video_title"] as? String, "Finding Nemo")
   }
 
+  func testProcessParametersEmptyStandardParamsLeavesCustomDataIntact() {
+    // An empty allowlist means "keep everything". Reading it as "keep nothing"
+    // would strip every parameter off the event, which is why the enforce path
+    // bails out instead of running the filter with nothing allowed.
+    let cfg = """
+      {"enabled": true,
+       "isShadowEnabled": false,
+       "rules": [{"place": 1, "keyRegex": "", "valueRegex": "\\\\btt\\\\d{7,}\\\\b"}],
+       "standardParams": {},
+       "inScopeEventNames": null}
+      """
+    install(vvpConfig: cfg)
+    manager.enable()
+    let params: NSDictionary = [
+      "fb_content_ids": "tt1234567",
+      "fb_currency": "USD",
+      "video_title": "Finding Nemo",
+    ]
+
+    let out = manager.processParameters(params, event: "Purchase")
+
+    XCTAssertEqual(out?["vvp"] as? String, "1")
+    XCTAssertEqual(out?["fb_content_ids"] as? String, "tt1234567")
+    XCTAssertEqual(out?["fb_currency"] as? String, "USD")
+    XCTAssertEqual(out?["video_title"] as? String, "Finding Nemo")
+  }
+
   func testProcessParametersDefaultsToShadowModeWhenIsShadowEnabledOmitted() {
     install(vvpConfig: Self.shadowDefaultNonRetailConfig)
     manager.enable()

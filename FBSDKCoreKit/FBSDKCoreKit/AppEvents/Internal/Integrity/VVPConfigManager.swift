@@ -110,8 +110,13 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
   /// `VVPManager.processParametersForVVP`. Returns `params` unchanged when
   /// disabled, no event name, no config, out-of-scope, or no rule matches.
   func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary? {
-    // swiftformat:disable:next isEmpty
-    guard isEnabled, let cfg = config, let event = event, let params = params, params.count > 0 else { // swiftlint:disable:this empty_count
+    guard isEnabled,
+          let cfg = config,
+          let event = event,
+          let params = params,
+          // swiftformat:disable:next isEmpty
+          params.count > 0 // swiftlint:disable:this empty_count
+    else {
       return params
     }
 
@@ -127,34 +132,7 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
 
     let mutated = NSMutableDictionary(dictionary: params)
 
-    // Sanitize / filter customData. Skipped entirely in shadow mode so we
-    // emit adoption tags without mutating advertiser data — only the explicit
-    // enforce path (isShadowEnabled == false) touches the payload. Mirrors JS
-    // plugin's shadow-vs-enforce split. Also skipped when standardParams is
-    // empty — otherwise we'd drop everything (no allowlist means "keep
-    // nothing", which is not the intended fallback).
-    if !cfg.isShadowEnabled, !cfg.standardParams.isEmpty {
-      // Snapshot keys first since we mutate in the loop.
-      for key in params.allKeys {
-        guard let strKey = key as? String else { continue }
-        if VVPConfigManager.contentIdSanitizeKeys.contains(strKey) {
-          mutated[strKey] = VVPConfigManager.sanitizedValue
-          continue
-        }
-        if cfg.standardParams.contains(strKey) {
-          continue
-        }
-        mutated.removeObject(forKey: key)
-      }
-
-      // Scrub `id` inside each entry of the contents array. `fb_content`
-      // is in the standardParams allowlist (so the loop above keeps it),
-      // but each entry's nested `id` carries the same video identifier
-      // the top-level `fb_content_ids` would. Mirrors the JS pixel
-      // plugin and server-side
-      // `SignalsIntegrityVVPPreprocessor::scrubIdInContentsArray`.
-      VVPConfigManager.scrubIdInContentsArray(mutated)
-    }
+    sanitizeCustomData(mutated, params: params, config: cfg)
 
     mutated[VVPConfigManager.vvpKey] = VVPConfigManager.vvpAppliedValue
 
@@ -162,21 +140,56 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     // the JS plugin: { vp_rp: [...customData keys], vp_rp_ev: ["1"] }.
     // Empty buckets are omitted; the entire field is omitted if both empty.
     if !result.cdKeys.isEmpty || !result.evNames.isEmpty {
-      var md: [String: [String]] = [:]
+      var metadata: [String: [String]] = [:]
       if !result.cdKeys.isEmpty {
         // Sorted for deterministic test/wire ordering.
-        md[VVPConfigManager.vpRpKey] = result.cdKeys.sorted()
+        metadata[VVPConfigManager.vpRpKey] = result.cdKeys.sorted()
       }
       if !result.evNames.isEmpty {
-        md[VVPConfigManager.vpRpEvKey] = result.evNames.sorted()
+        metadata[VVPConfigManager.vpRpEvKey] = result.evNames.sorted()
       }
-      if let mdData = try? JSONSerialization.data(withJSONObject: md, options: [.sortedKeys]),
+      if let mdData = try? JSONSerialization.data(withJSONObject: metadata, options: [.sortedKeys]),
          let mdString = String(data: mdData, encoding: .utf8) {
         mutated[VVPConfigManager.vvpMetadataKey] = mdString
       }
     }
 
     return mutated
+  }
+
+  /// Sanitize / filter customData. Skipped entirely in shadow mode so we
+  /// emit adoption tags without mutating advertiser data — only the explicit
+  /// enforce path (isShadowEnabled == false) touches the payload. Mirrors JS
+  /// plugin's shadow-vs-enforce split. Also skipped when standardParams is
+  /// empty — otherwise we'd drop everything (no allowlist means "keep
+  /// nothing", which is not the intended fallback).
+  private func sanitizeCustomData(
+    _ mutated: NSMutableDictionary,
+    params: NSDictionary,
+    config: VVPConfig
+  ) {
+    guard !config.isShadowEnabled, !config.standardParams.isEmpty else { return }
+
+    // Snapshot keys first since we mutate in the loop.
+    for key in params.allKeys {
+      guard let strKey = key as? String else { continue }
+      if VVPConfigManager.contentIdSanitizeKeys.contains(strKey) {
+        mutated[strKey] = VVPConfigManager.sanitizedValue
+        continue
+      }
+      if config.standardParams.contains(strKey) {
+        continue
+      }
+      mutated.removeObject(forKey: key)
+    }
+
+    // Scrub `id` inside each entry of the contents array. `fb_content`
+    // is in the standardParams allowlist (so the loop above keeps it),
+    // but each entry's nested `id` carries the same video identifier
+    // the top-level `fb_content_ids` would. Mirrors the JS pixel
+    // plugin and server-side
+    // `SignalsIntegrityVVPPreprocessor::scrubIdInContentsArray`.
+    VVPConfigManager.scrubIdInContentsArray(mutated)
   }
 
   // MARK: - Detection
@@ -203,7 +216,7 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     for rule in rules {
       switch rule.place {
       case VVPConfigManager.placeEventName:
-        guard let kr = rule.keyRegex, regexMatches(kr, eventName) else { continue }
+        guard let keyPattern = rule.keyRegex, regexMatches(keyPattern, eventName) else { continue }
         // keyNegativeRegex suppression — `utm_*`-style false positives.
         if let kneg = rule.keyNegativeRegex, regexMatches(kneg, eventName) {
           continue
@@ -368,6 +381,7 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
     guard let arr = root[rulesKey] as? [Any] else { return [] }
     return arr.compactMap { entry -> VVPRule? in
       guard let dict = entry as? [String: Any] else { return nil }
+
       return compileRule(dict)
     }
   }
@@ -399,7 +413,9 @@ final class VVPConfigManager: NSObject, MACARuleMatching {
   private static func parseInScopeEventNames(_ root: [String: Any]) -> Set<String>? {
     // Missing or JSON null -> no event-name gate (NON_RETAIL).
     guard let raw = root[inScopeEventNamesKey], !(raw is NSNull) else { return nil }
+
     guard let arr = raw as? [Any] else { return nil }
+
     var out = Set<String>()
     for entry in arr {
       if let name = entry as? String, !name.isEmpty {
