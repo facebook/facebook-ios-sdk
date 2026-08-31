@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class TestBundle: Bundle {
+final class TestBundle: Bundle, @unchecked Sendable {
   var infoDictionaryKey: String?
   var stubbedInfoDictionaryObject: Any?
 

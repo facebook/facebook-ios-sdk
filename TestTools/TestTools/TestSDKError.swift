@@ -16,7 +16,7 @@ import Foundation
 }
 
 @objcMembers
-public final class TestSDKError: NSError {
+public final class TestSDKError: NSError, @unchecked Sendable {
   public let type: TestSDKErrorType
   public let name: String?
   public let value: Any?

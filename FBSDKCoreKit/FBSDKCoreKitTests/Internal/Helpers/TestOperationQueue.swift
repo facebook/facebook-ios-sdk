@@ -9,7 +9,7 @@
 import Foundation
 
 @objcMembers
-final class TestOperationQueue: OperationQueue {
+final class TestOperationQueue: OperationQueue, @unchecked Sendable {
 
   var addOperationWithBlockWasCalled = false
   var capturedOperationBlock: (() -> Void)?

@@ -8,7 +8,7 @@
 
 import Photos
 
-final class TestPHAsset: PHAsset {
+final class TestPHAsset: PHAsset, @unchecked Sendable {
   var stubbedMediaType: PHAssetMediaType?
 
   override var mediaType: PHAssetMediaType {

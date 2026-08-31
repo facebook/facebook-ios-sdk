@@ -50,4 +50,4 @@ public final class TestBridgeAPIRequest: NSObject, BridgeAPIRequestProtocol {
 }
 
 @objc
-public final class FakeBridgeAPIRequestError: NSError {}
+public final class FakeBridgeAPIRequestError: NSError, @unchecked Sendable {}
