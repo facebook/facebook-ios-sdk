@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-// swiftlint:disable:all prefer_final_classes
-
 import FBSDKCoreKit
 import Foundation
 

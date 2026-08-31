@@ -142,6 +142,7 @@ only_rules:
   - implicit_return
   - implicitly_unwrapped_optional
   - inclusive_language
+  - invalid_swiftlint_command
   - is_disjoint
   - joined_default_parameter
   - large_tuple
