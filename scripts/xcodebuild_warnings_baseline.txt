@@ -7,18 +7,17 @@
 # already-listed warning would slip through.
 #
 # Shrinking this file is the point. Fix warnings, then --update-baseline
-# --prune-baseline and land the smaller file.
+# --prune-baseline and land the smaller file. That is safe to run from a laptop:
+# pruning only drops entries in files this repo compiles.
 #
-# To shrink it, read which entries a CI run reports as no longer occurring and drop
-# exactly those. A local run cannot distinguish a warning that was fixed from one
-# that only ever appears on the build host, so --prune-baseline from a laptop will
-# discard entries that are still real in CI.
+# Entries for code we do not compile -- `<SDK>/...` and `<DERIVED_DATA>` -- are never
+# pruned, because they do not appear in every build and one run seeing none of them
+# does not mean they are gone. To retire one of those, allowlist it instead; we are
+# never going to fix a warning in Apple's headers.
 #
-# --update-baseline adds to this file rather than replacing it, because not every
-# warning appears in every environment: SDK-header warnings surface on the build
-# host but not always on a laptop. Replacing from a local run would drop those and
-# fail CI on warnings nobody introduced. A local run reporting such an entry as
-# 'no longer occurs' is expected and is not a failure.
+# --update-baseline without --prune-baseline adds to this file rather than replacing
+# it, so it can absorb a batch of new pre-existing debt (a toolchain upgrade, say)
+# without dropping anything.
 2	<DERIVED_DATA>: warning: 'SKPayment' is deprecated: first deprecated in iOS 18.0 - Use Product.purchase(confirmIn:options:).
 1	<DERIVED_DATA>: warning: 'SKPaymentDiscount' is deprecated: first deprecated in iOS 18.0 - Create a Product.PurchaseOption.promotionalOffer to use in Product.purchase(confirmIn:options:).
 1	<DERIVED_DATA>: warning: 'SKPaymentQueue' is deprecated: first deprecated in iOS 18.0 - No longer supported.

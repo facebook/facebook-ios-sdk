@@ -60,6 +60,25 @@ def normalize(warning: str) -> str:
     return " ".join(warning.split())
 
 
+# Signature prefixes for code this repo does not compile. `normalize` rewrites Xcode/SDK
+# header paths to `<SDK>/...` and generated-header paths to `<DERIVED_DATA>`.
+EXTERNAL_SIGNATURE_PREFIXES = ("<SDK>", "<DERIVED_DATA>")
+
+
+def is_external(signature: str) -> bool:
+    """True for a warning in code outside this repo, which --prune-baseline must not drop.
+
+    These are not ours to fix, and they do not appear in every build. The
+    `SKTestTransaction.h` entry showed up in two of three consecutive CI runs against
+    identical code. Pruning on a single observation would drop an entry that is still
+    real, and the next diff to touch anything would fail on a warning nobody introduced.
+
+    Warnings in repo files do not have that problem: if the file compiles, its warnings
+    are deterministic, so absence from a run means someone fixed it.
+    """
+    return signature.startswith(EXTERNAL_SIGNATURE_PREFIXES)
+
+
 def load_baseline(base_dir: str) -> collections.Counter:
     """Signature -> how many times it was seen when the baseline was written.
 
@@ -95,18 +114,17 @@ def write_baseline(base_dir: str, signatures) -> pathlib.Path:
         "# already-listed warning would slip through.\n"
         "#\n"
         "# Shrinking this file is the point. Fix warnings, then --update-baseline\n"
-        "# --prune-baseline and land the smaller file.\n"
+        "# --prune-baseline and land the smaller file. That is safe to run from a laptop:\n"
+        "# pruning only drops entries in files this repo compiles.\n"
         "#\n"
-        "# To shrink it, read which entries a CI run reports as no longer occurring and drop\n"
-        "# exactly those. A local run cannot distinguish a warning that was fixed from one\n"
-        "# that only ever appears on the build host, so --prune-baseline from a laptop will\n"
-        "# discard entries that are still real in CI.\n"
+        "# Entries for code we do not compile -- `<SDK>/...` and `<DERIVED_DATA>` -- are never\n"
+        "# pruned, because they do not appear in every build and one run seeing none of them\n"
+        "# does not mean they are gone. To retire one of those, allowlist it instead; we are\n"
+        "# never going to fix a warning in Apple's headers.\n"
         "#\n"
-        "# --update-baseline adds to this file rather than replacing it, because not every\n"
-        "# warning appears in every environment: SDK-header warnings surface on the build\n"
-        "# host but not always on a laptop. Replacing from a local run would drop those and\n"
-        "# fail CI on warnings nobody introduced. A local run reporting such an entry as\n"
-        "# 'no longer occurs' is expected and is not a failure.\n"
+        "# --update-baseline without --prune-baseline adds to this file rather than replacing\n"
+        "# it, so it can absorb a batch of new pre-existing debt (a toolchain upgrade, say)\n"
+        "# without dropping anything.\n"
         + "\n".join(f"{count}\t{signature}" for signature, count in sorted(signatures.items()))
         + "\n"
     )
@@ -149,9 +167,9 @@ def main():
         "--prune-baseline",
         action="store_true",
         help=(
-            "with --update-baseline, write only what this run saw. Prune from CI, not a "
-            "laptop: a local run cannot tell a fixed warning from one that only occurs on "
-            "the build host, and would drop both"
+            "with --update-baseline, drop baseline entries this run did not see. Only "
+            "applies to files this repo compiles; <SDK> and <DERIVED_DATA> entries are "
+            "always carried over, since they do not appear in every build"
         ),
     )
     args = parser.parse_args()
@@ -217,8 +235,20 @@ def main():
         existing = load_baseline(base_dir)
         if args.prune_baseline:
             final = collections.Counter(signatures)
-            dropped = sum(1 for s in existing if s not in signatures)
-            note = f", dropping {dropped} entry(ies) not seen in this run" if dropped else ""
+            # Drop only what this checkout compiles. Everything external is carried over at
+            # its recorded count regardless of whether this run saw it -- see is_external.
+            for signature, count in existing.items():
+                if is_external(signature):
+                    final[signature] = max(final[signature], count)
+            dropped = sum(
+                1 for s in existing if s not in signatures and not is_external(s)
+            )
+            preserved = sum(
+                1 for s in existing if s not in signatures and is_external(s)
+            )
+            note = f", dropping {dropped} fixed entry(ies)" if dropped else ""
+            if preserved:
+                note += f", preserving {preserved} external entry(ies) this run did not see"
         else:
             # Per-signature max, not a sum: re-running must not inflate the counts.
             final = collections.Counter(signatures)
