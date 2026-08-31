@@ -99,6 +99,7 @@ only_rules:
   - collection_alignment
   - colon
   - comma
+  - comma_inheritance
   - comment_spacing
   - compiler_protocol_init
   - computed_accessors_order
@@ -115,7 +116,9 @@ only_rules:
   - duplicate_conditions
   - duplicate_enum_cases
   - duplicate_imports
+  - duplicated_key_in_dictionary_literal
   - dynamic_inline
+  - empty_collection_literal
   - empty_count
   - empty_enum_arguments
   - empty_parameters
@@ -137,13 +140,16 @@ only_rules:
   - function_name_whitespace
   - function_parameter_count
   - generic_type_name
+  - identical_operands
   - identifier_name
   - implicit_getter
   - implicit_optional_initialization
   - implicit_return
   - implicitly_unwrapped_optional
   - inclusive_language
+  - incompatible_concurrency_annotation
   - invalid_swiftlint_command
+  - invisible_character
   - is_disjoint
   - joined_default_parameter
   - large_tuple
@@ -170,9 +176,11 @@ only_rules:
   - no_fallthrough_only
   - no_space_in_method_call
   - notification_center_detachment
+  - ns_number_init_as_function_reference
   - nsobject_prefer_isequal
   - opening_brace
   - operator_usage_whitespace
+  - optional_data_string_conversion
   - orphaned_doc_comment
   - overridden_super_call
   - override_in_extension
@@ -197,12 +205,14 @@ only_rules:
   - redundant_discardable_let
   - redundant_nil_coalescing
   - redundant_objc_attribute
+  - redundant_sendable
   - redundant_set_access_control
   - redundant_string_enum_value
   - redundant_type_annotation
   - redundant_void_return
   - required_enum_case
   - return_arrow_whitespace
+  - self_in_property_initialization
   - shorthand_operator
   - single_test_class
   - sorted_first_last
@@ -221,7 +231,9 @@ only_rules:
   - type_body_length
   - type_name
   - unavailable_function
+  - unhandled_throwing_task
   - unneeded_break_in_switch
+  - unneeded_override
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
   - unused_closure_parameter
