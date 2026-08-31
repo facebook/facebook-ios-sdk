@@ -11,7 +11,6 @@ XCODEBUILD_WARNINGS_ALLOWLIST = [
     # Deprecation Warnings:
     "is deprecated and will be removed in the next major release",
     "warning: Building targets in manual order is deprecated",
-    "warning: 'prefer_self_in_static_references' is not a valid rule identifier",
     "warning: 'web' is deprecated: The web sharing mode is deprecated. Consider using automatic sharing mode instead.",
     "warning: 'feedWeb' is deprecated: The feed web sharing mode is deprecated. Consider using automatic sharing mode instead.",
     "warning: 'feedBrowser' is deprecated: The feed browser sharing mode is deprecated. Consider using automatic or browser sharing modes instead.",
@@ -19,10 +18,6 @@ XCODEBUILD_WARNINGS_ALLOWLIST = [
     "warning: tasks in 'Copy Headers' are delayed by unsandboxed script phases",
     # Toolchain noise, emitted per-target regardless of anything in this repo:
     "Metadata extraction skipped. No AppIntents.framework dependency found.",
-    # The vendored SwiftLint is too old to load the current sourcekitd, so its build
-    # phase prints this and the build carries on. Remove once SwiftLint is upgraded --
-    # until then the rules needing sourcekitd are silently not running.
-    "Fatal error: Loading sourcekitd.framework",
 ]
 
 # Anything not matched above is compared against scripts/xcodebuild_warnings_baseline.txt.
