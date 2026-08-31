@@ -131,6 +131,35 @@ def write_baseline(base_dir: str, signatures) -> pathlib.Path:
     return path
 
 
+def report_allowlist_usage(hits: collections.Counter) -> None:
+    """Print what the allowlist suppressed, and what it did not.
+
+    An allowlist entry hides every future instance of its pattern, so a stale one quietly
+    narrows what this check can catch and nothing surfaces that. The baseline is visible in
+    the repo and shrinks as warnings are fixed; the allowlist had no equivalent, which is how
+    two entries survived long after the conditions that justified them were gone.
+
+    Entries matching nothing are reported rather than pruned. Whether one is dead or merely
+    absent from this environment is not decidable from a single run -- one entry is keyed to
+    the build host's home directory and can never match on a laptop -- so this reports the
+    evidence and leaves the judgement to a human comparing runs.
+    """
+    used = {entry: n for entry, n in hits.items() if n}
+    unused = sorted(entry for entry, n in hits.items() if not n)
+
+    print(f"\nAllowlist: {len(used)} of {len(hits)} entry(ies) suppressed something this run.")
+    for entry, count in sorted(used.items(), key=lambda kv: -kv[1]):
+        print(f"  {count:5d}  {entry}")
+    if unused:
+        print(
+            f"\n{len(unused)} allowlist entry(ies) matched nothing here. That is not proof they "
+            "are dead -- some only occur on the build host, or for targets this scheme does not "
+            "build. Compare across environments before removing one:"
+        )
+        for entry in unused:
+            print(f"      0  {entry}")
+
+
 def find_iphone_simulator_destination():
     """Dynamically find an available iPhone simulator instead of hardcoding a model."""
     result = subprocess.run(
@@ -205,16 +234,24 @@ def main():
     warning_lines = [line.replace(f"{base_dir}/", "") for line in warning_lines]
 
     non_allowlisted_warnings = []
+    # How many warnings each allowlist entry accounted for. Recorded even for entries that
+    # matched nothing, so a run reports its whole allowlist rather than only the live part.
+    allowlist_hits = collections.Counter({entry: 0 for entry in XCODEBUILD_WARNINGS_ALLOWLIST})
 
     for warning in warning_lines:
-        can_ignore = any(
-            allowed_warning_text in warning
+        matched = [
+            allowed_warning_text
             for allowed_warning_text in XCODEBUILD_WARNINGS_ALLOWLIST
-        )
-        if not can_ignore:
+            if allowed_warning_text in warning
+        ]
+        for entry in matched:
+            allowlist_hits[entry] += 1
+        if not matched:
             non_allowlisted_warnings.append(warning)
 
     signatures = collections.Counter(normalize(w) for w in non_allowlisted_warnings)
+
+    report_allowlist_usage(allowlist_hits)
 
     if args.update_baseline:
         # A failed xcodebuild produces partial output, so the warning set is truncated.
