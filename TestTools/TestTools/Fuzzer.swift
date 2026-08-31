@@ -102,9 +102,13 @@ public final class Fuzzer: NSObject {
       else if var values = json[key] as? [Any] {
         json[key] = Bool.random() ? values : randomizeInPlace(array: &values)
       } else {
-        if Bool.random() {
+        // Two independent coin flips, not one condition tested twice: randomize half the
+        // time, drop a quarter, leave a quarter alone.
+        let shouldRandomize = Bool.random()
+        let shouldRemove = Bool.random()
+        if shouldRandomize {
           json[key] = random
-        } else if Bool.random() {
+        } else if shouldRemove {
           json.removeValue(forKey: key)
         }
       }
