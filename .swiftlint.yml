@@ -175,7 +175,13 @@ only_rules:
   - overridden_super_call
   - override_in_extension
   - pattern_matching_keywords
-# - prefer_self_in_static_references # prevent "'prefer_self_in_static_references' is not a valid rule identifier" warning in older version of swiftlint
+# - prefer_self_in_static_references # Off for two independent reasons; check both before
+#                                    # enabling. (1) Not a backlog of unfixed warnings --
+#                                    # the rule is off, so its violations are not reported;
+#                                    # turning it on surfaces ~170, which --strict blocks.
+#                                    # (2) The identifier postdates 0.47.1, so a swiftlint
+#                                    # older than that rejects it outright. Confirm the
+#                                    # versions contributors actually run accept it.
   - private_action
   - private_outlet
   - private_over_fileprivate
