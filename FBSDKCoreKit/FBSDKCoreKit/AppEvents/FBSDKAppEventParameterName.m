@@ -72,3 +72,16 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameSessionInterruptions 
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameTimeBetweenSessions = @"fb_mobile_time_between_sessions";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameSessionID = @"_session_id";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameLaunchSource = @"fb_mobile_launch_source";
+
+// MARK: - AppLink
+
+// Internal
+
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameURL = @"url";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameURLType = @"url_type";
+
+// MARK: - UserJourney
+
+// Internal
+
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameScreenTitle = @"fb_screen_title";
