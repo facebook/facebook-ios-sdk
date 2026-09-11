@@ -199,6 +199,25 @@ static void (*fb_swizzledMethods[MAX_ARGS - MIN_ARGS + 1])() = {fb_swizzledMetho
   }
 }
 
++ (nullable IMP)swizzleMethodsOnSameClass:(Class)targetClass
+                         originalSelector:(SEL)originalSelector
+                         swizzledSelector:(SEL)swizzledSelector
+{
+  if (originalSelector == swizzledSelector) {
+    return NULL;
+  }
+  Method originalMethod = class_getInstanceMethod(targetClass, originalSelector);
+  Method swizzledMethod = class_getInstanceMethod(targetClass, swizzledSelector);
+  if (!originalMethod || !swizzledMethod) {
+    return NULL;
+  }
+  IMP originalImplementation = method_getImplementation(originalMethod);
+  IMP swizzledImplementation = method_getImplementation(swizzledMethod);
+  method_setImplementation(originalMethod, swizzledImplementation);
+  method_setImplementation(swizzledMethod, originalImplementation);
+  return originalImplementation;
+}
+
 + (FBSDKSwizzle *)swizzleForMethod:(Method)aMethod
 {
   return (FBSDKSwizzle *)[swizzles objectForKey:MAPTABLE_ID(aMethod)];

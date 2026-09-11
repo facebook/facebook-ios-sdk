@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
+
+@interface FBSDKScreenTitleObserverTests : XCTestCase
+@end
+
+@implementation FBSDKScreenTitleObserverTests
+
+- (void)tearDown
+{
+  // Reverse the global UIViewController swizzle and clear cached state so the
+  // shared observer does not pollute later tests under randomized execution order.
+  [[FBSDKScreenTitleObserver shared] stopObserving];
+  [super tearDown];
+}
+
+// Invoking viewDidAppear: previously crashed (EXC_BAD_ACCESS 0x1) because the BOOL
+// argument was forwarded through an ARC-managed id. The method-exchange swizzle keeps
+// the BOOL typed, so this must run without crashing and still capture the title.
+- (void)testViewDidAppearCapturesScreenTitle
+{
+  [[FBSDKScreenTitleObserver shared] startObserving];
+
+  UIViewController *viewController = [UIViewController new];
+  viewController.title = @"My Screen";
+  [viewController viewDidAppear:YES];
+
+  XCTAssertEqualObjects(
+    [[FBSDKScreenTitleObserver shared] currentScreenTitle],
+    @"My Screen",
+    "Should capture the view controller's title on viewDidAppear:"
+  );
+}
+
+- (void)testViewDidAppearFallsBackToLargeContentTitle
+{
+  if (@available(iOS 13.0, *)) {
+    [[FBSDKScreenTitleObserver shared] startObserving];
+
+    UIViewController *viewController = [UIViewController new];
+    viewController.title = nil;
+    UIView *labeledView = [UIView new];
+    labeledView.largeContentTitle = @"Large Title";
+    [viewController.view addSubview:labeledView];
+
+    [viewController viewDidAppear:NO];
+
+    XCTAssertEqualObjects(
+      [[FBSDKScreenTitleObserver shared] currentScreenTitle],
+      @"Large Title",
+      "Should fall back to a subview's largeContentTitle when the title is empty"
+    );
+  }
+}
+
+@end

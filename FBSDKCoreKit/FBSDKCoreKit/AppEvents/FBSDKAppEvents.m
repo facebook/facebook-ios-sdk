@@ -33,6 +33,7 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
+#import "FBSDKScreenTitleObserver.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKUtility.h"
 
@@ -1374,6 +1375,11 @@ operationalParameters:nil];
     applicationState = self.applicationState;
   }
   [FBSDKTypeUtility dictionary:eventDictionary setObject:currentViewControllerName forKey:@"_ui"];
+
+  NSString *screenTitle = [FBSDKScreenTitleObserver shared].currentScreenTitle;
+  if (screenTitle.length > 0) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:screenTitle forKey:FBSDKAppEventParameterNameScreenTitle];
+  }
 
   if (applicationState == UIApplicationStateBackground) {
     [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterNameInBackground];

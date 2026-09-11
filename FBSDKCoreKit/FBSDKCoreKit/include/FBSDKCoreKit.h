@@ -171,6 +171,7 @@
 #import <FBSDKCoreKit/FBSDKRandom.h>
 #import <FBSDKCoreKit/FBSDKRestrictiveDataFilterManager.h>
 #import <FBSDKCoreKit/FBSDKRulesFromKeyProvider.h>
+#import <FBSDKCoreKit/FBSDKScreenTitleObserver.h>
 #import <FBSDKCoreKit/FBSDKServerConfiguration.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationManager.h>
 #import <FBSDKCoreKit/FBSDKServerConfigurationProviding.h>
