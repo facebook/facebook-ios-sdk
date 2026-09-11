@@ -7,6 +7,7 @@
  */
 
 import Foundation
+import ObjectiveC
 import UIKit
 
 /**
@@ -110,6 +111,7 @@ public final class ApplicationDelegate: NSObject {
     _ = application(UIApplication.shared, didFinishLaunchingWithOptions: launchOptions)
     handleDeferredActivationIfNeeded()
     enableInstrumentation()
+    enableUserJourney()
 
     logBackgroundRefreshStatus()
     initializeAppLink()
@@ -216,6 +218,54 @@ public final class ApplicationDelegate: NSObject {
     }
   }
 
+  private func enableUserJourney() {
+    guard components.settings.isAutoLogAppEventsEnabled else { return }
+
+    components.featureChecker.check(.userJourney) { enabled in
+      if enabled {
+        _ScreenTitleObserver.shared.startObserving()
+        self.setupOutboundURLSwizzle()
+      }
+    }
+  }
+
+  private func logAppLinkEvent(url: URL, urlType: String) {
+    components.appEvents.logInternalEvent(
+      .appLink,
+      parameters: [
+        .url: url.absoluteString,
+        .urlType: urlType,
+      ],
+      isImplicitlyLogged: true
+    )
+  }
+
+  // Install the swizzle at most once — re-running enableUserJourney would
+  // otherwise stack blocks and log each outbound open multiple times.
+  private static var hasInstalledOutboundURLSwizzle = false
+
+  private func setupOutboundURLSwizzle() {
+    guard !Self.hasInstalledOutboundURLSwizzle else { return }
+
+    Self.hasInstalledOutboundURLSwizzle = true
+    let selector = NSSelectorFromString("openURL:options:completionHandler:")
+    guard let method = class_getInstanceMethod(UIApplication.self, selector) else { return }
+
+    let originalIMP = method_getImplementation(method)
+    typealias OpenURLIMP = @convention(c) (AnyObject, Selector, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
+    typealias OpenURLBlock = @convention(block) (AnyObject, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
+    // Re-check per call, not just at install time: the swizzle cannot be uninstalled.
+    let block: OpenURLBlock = { [weak self] receiver, url, options, completion in
+      if let self = self,
+         self.components.settings.isAutoLogAppEventsEnabled,
+         self.components.featureChecker.isEnabled(.userJourney) {
+        self.logAppLinkEvent(url: url as URL, urlType: AppEvents.ParameterValue.outboundURL.rawValue)
+      }
+      unsafeBitCast(originalIMP, to: OpenURLIMP.self)(receiver, selector, url, options, completion)
+    }
+    method_setImplementation(method, imp_implementationWithBlock(unsafeBitCast(block, to: AnyObject.self)))
+  }
+
   private func addObservers() {
     components.notificationCenter.fb_addObserver(
       self,
@@ -315,6 +365,9 @@ public final class ApplicationDelegate: NSObject {
     annotation: Any?
   ) -> Bool {
     components.appEvents.setSourceApplication(sourceApplication, open: url)
+    if components.settings.isAutoLogAppEventsEnabled, components.featureChecker.isEnabled(.userJourney) {
+      logAppLinkEvent(url: url, urlType: AppEvents.ParameterValue.inboundURL.rawValue)
+    }
 
     components.featureChecker.check(.AEM) { enabled in
       guard enabled else { return }
@@ -606,6 +659,7 @@ public final class ApplicationDelegate: NSObject {
 fileprivate extension AppEvents.Name {
   static let appLinkInboundEvent = Self("fb_al_inbound")
   static let autoAppLink = Self("fb_auto_applink")
+  static let appLink = Self("fb_mobile_applink")
 }
 
 // swiftformat:disable:next extensionaccesscontrol
@@ -625,6 +679,8 @@ fileprivate extension AppEvents.ParameterName {
   static let isShareLibraryIncluded = Self("share_lib_included")
   static let isTVLibraryIncluded = Self("tv_lib_included")
   static let schemeWarning = Self("SchemeWarning")
+  static let url = Self("url")
+  static let urlType = Self("url_type")
 }
 
 /// Schedules a block of work to run after the first frame is rendered. Injectable so tests can run
