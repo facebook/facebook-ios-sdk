@@ -125,6 +125,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
          .bannedParamFiltering,
          .iapLoggingSK2,
          .iosManualImplicitPurchaseDedupe,
+         .userJourney,
          .loginFastAppSwitch,
          .limitedLoginFastAppSwitch,
          .limitedLoginRefresh:
@@ -195,6 +196,7 @@ public final class _FeatureManager: NSObject, FeatureChecking, _FeatureDisabling
     case .bannedParamFiltering: featureName = "BannedParamFiltering"
     case .iapLoggingSK2: featureName = "IAPLoggingSK2"
     case .iosManualImplicitPurchaseDedupe: featureName = "IOSManualImplicitPurchaseDedupe"
+    case .userJourney: featureName = "MetadataBasic"
     @unknown default: featureName = "NONE"
     }
 
