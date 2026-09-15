@@ -242,12 +242,24 @@ public final class ApplicationDelegate: NSObject {
 
   // Install the swizzle at most once — re-running enableUserJourney would
   // otherwise stack blocks and log each outbound open multiple times.
+  // Only ever read/written on the main thread, which gives it dispatch_once semantics.
   private static var hasInstalledOutboundURLSwizzle = false
 
+  /// Installs the `openURL:options:completionHandler:` swizzle. Hops to the main thread and is a
+  /// no-op after the first call, so it is safe to invoke from any thread any number of times.
   private func setupOutboundURLSwizzle() {
-    guard !Self.hasInstalledOutboundURLSwizzle else { return }
+    runOnMainThread { [weak self] in
+      guard
+        let self = self,
+        !Self.hasInstalledOutboundURLSwizzle
+      else { return }
 
-    Self.hasInstalledOutboundURLSwizzle = true
+      Self.hasInstalledOutboundURLSwizzle = true
+      self.installOutboundURLSwizzle()
+    }
+  }
+
+  private func installOutboundURLSwizzle() {
     let selector = NSSelectorFromString("openURL:options:completionHandler:")
     guard let method = class_getInstanceMethod(UIApplication.self, selector) else { return }
 
@@ -264,6 +276,14 @@ public final class ApplicationDelegate: NSObject {
       unsafeBitCast(originalIMP, to: OpenURLIMP.self)(receiver, selector, url, options, completion)
     }
     method_setImplementation(method, imp_implementationWithBlock(unsafeBitCast(block, to: AnyObject.self)))
+  }
+
+  private func runOnMainThread(_ work: @escaping () -> Void) {
+    if Thread.isMainThread {
+      work()
+    } else {
+      DispatchQueue.main.async(execute: work)
+    }
   }
 
   private func addObservers() {

@@ -22,8 +22,9 @@ NS_SWIFT_NAME(_ScreenTitleObserver)
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
+/// Installs the `viewDidAppear:` swizzle. Hops to the main thread and is a no-op after the first
+/// call, so it is safe to invoke from any thread and any number of times.
 - (void)startObserving;
-- (void)stopObserving;
 - (nullable NSString *)currentScreenTitle;
 - (void)setScreenTitle:(nullable NSString *)screenTitle;
 

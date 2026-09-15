@@ -17,9 +17,9 @@
 
 - (void)tearDown
 {
-  // Reverse the global UIViewController swizzle and clear cached state so the
-  // shared observer does not pollute later tests under randomized execution order.
-  [[FBSDKScreenTitleObserver shared] stopObserving];
+  // The swizzle is installed once for the process lifetime and cannot be reversed, so only the
+  // cached title needs clearing to keep later tests from seeing a stale value.
+  [[FBSDKScreenTitleObserver shared] setScreenTitle:nil];
   [super tearDown];
 }
 

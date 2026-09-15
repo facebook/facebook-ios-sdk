@@ -8,6 +8,7 @@
 
 #import "FBSDKScreenTitleObserver.h"
 
+#import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <UIKit/UIKit.h>
 
 #import "FBSDKSwizzler.h"
@@ -17,7 +18,6 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 
 @interface FBSDKScreenTitleObserver ()
 
-@property (nonatomic) BOOL isObserving;
 @property (nullable, nonatomic) IMP originalViewDidAppearImplementation;
 @property (nullable, nonatomic, copy) NSString *screenTitle;
 
@@ -42,34 +42,20 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
   return [super init];
 }
 
+// The swizzle mutates the shared UIViewController method table, so it must happen on the main
+// thread and exactly once for the process lifetime. Exchanging the implementations a second time
+// would restore the originals and silently stop title capture.
 - (void)startObserving
 {
-  @synchronized(self) {
-    if (self.isObserving) {
-      return;
-    }
-    self.originalViewDidAppearImplementation =
-    [FBSDKSwizzler swizzleMethodsOnSameClass:[UIViewController class]
-                            originalSelector:@selector(viewDidAppear:)
-                            swizzledSelector:@selector(fb_userJourneyViewDidAppear:)];
-    self.isObserving = YES;
-  }
-}
-
-- (void)stopObserving
-{
-  @synchronized(self) {
-    if (!self.isObserving) {
-      return;
-    }
-    // Exchanging the same two methods again restores their original implementations.
-    [FBSDKSwizzler swizzleMethodsOnSameClass:[UIViewController class]
-                            originalSelector:@selector(viewDidAppear:)
-                            swizzledSelector:@selector(fb_userJourneyViewDidAppear:)];
-    self.originalViewDidAppearImplementation = nil;
-    self.isObserving = NO;
-    _screenTitle = nil;
-  }
+  fb_dispatch_on_main_thread(^{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+      self.originalViewDidAppearImplementation =
+      [FBSDKSwizzler swizzleMethodsOnSameClass:[UIViewController class]
+                              originalSelector:@selector(viewDidAppear:)
+                              swizzledSelector:@selector(fb_userJourneyViewDidAppear:)];
+    });
+  });
 }
 
 - (void)setScreenTitle:(NSString *)screenTitle
