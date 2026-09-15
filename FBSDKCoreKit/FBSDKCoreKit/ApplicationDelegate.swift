@@ -218,9 +218,9 @@ public final class ApplicationDelegate: NSObject {
     }
   }
 
+  // Screen title and app link URL tracking are not app event auto-logging, so they are
+  // intentionally not gated on `isAutoLogAppEventsEnabled` — only on the UserJourney feature flag.
   private func enableUserJourney() {
-    guard components.settings.isAutoLogAppEventsEnabled else { return }
-
     components.featureChecker.check(.userJourney) { enabled in
       if enabled {
         _ScreenTitleObserver.shared.startObserving()
@@ -230,13 +230,12 @@ public final class ApplicationDelegate: NSObject {
   }
 
   private func logAppLinkEvent(url: URL, urlType: String) {
-    components.appEvents.logInternalEvent(
+    components.appEvents.logEvent(
       .appLink,
       parameters: [
         .url: url.absoluteString,
         .urlType: urlType,
-      ],
-      isImplicitlyLogged: true
+      ]
     )
   }
 
@@ -269,7 +268,6 @@ public final class ApplicationDelegate: NSObject {
     // Re-check per call, not just at install time: the swizzle cannot be uninstalled.
     let block: OpenURLBlock = { [weak self] receiver, url, options, completion in
       if let self = self,
-         self.components.settings.isAutoLogAppEventsEnabled,
          self.components.featureChecker.isEnabled(.userJourney) {
         _AppLinkURLCache.shared.cacheOutboundURL(url as URL)
         self.logAppLinkEvent(url: url as URL, urlType: AppEvents.ParameterValue.outboundURL.rawValue)
@@ -387,7 +385,7 @@ public final class ApplicationDelegate: NSObject {
   ) -> Bool {
     components.appEvents.setSourceApplication(sourceApplication, open: url)
     _AppLinkURLCache.shared.cacheInboundURL(url)
-    if components.settings.isAutoLogAppEventsEnabled, components.featureChecker.isEnabled(.userJourney) {
+    if components.featureChecker.isEnabled(.userJourney) {
       logAppLinkEvent(url: url, urlType: AppEvents.ParameterValue.inboundURL.rawValue)
     }
 
