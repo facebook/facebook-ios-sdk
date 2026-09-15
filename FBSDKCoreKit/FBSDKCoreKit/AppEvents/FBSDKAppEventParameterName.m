@@ -85,3 +85,5 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameURLType = @"url_type"
 // Internal
 
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameScreenTitle = @"fb_screen_title";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameInboundURL = @"inbound_url";
+FBSDKAppEventParameterName const FBSDKAppEventParameterNameOutboundURL = @"outbound_url";

@@ -28,6 +28,7 @@
 #import "FBSDKAppEventsConfigurationManager+Testing.h"
 #import "FBSDKAppEventsNumberParser.h"
 #import "FBSDKAppEventsUtility+Testing.h"
+#import "FBSDKAppLinkURLCache+Testing.h"
 #import "FBSDKAppLinkUtility+Testing.h"
 #import "FBSDKAppURLSchemeProviding.h"
 #import "FBSDKApplicationLifecycleNotifications.h"

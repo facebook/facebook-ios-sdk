@@ -271,6 +271,7 @@ public final class ApplicationDelegate: NSObject {
       if let self = self,
          self.components.settings.isAutoLogAppEventsEnabled,
          self.components.featureChecker.isEnabled(.userJourney) {
+        _AppLinkURLCache.shared.cacheOutboundURL(url as URL)
         self.logAppLinkEvent(url: url as URL, urlType: AppEvents.ParameterValue.outboundURL.rawValue)
       }
       unsafeBitCast(originalIMP, to: OpenURLIMP.self)(receiver, selector, url, options, completion)
@@ -385,6 +386,7 @@ public final class ApplicationDelegate: NSObject {
     annotation: Any?
   ) -> Bool {
     components.appEvents.setSourceApplication(sourceApplication, open: url)
+    _AppLinkURLCache.shared.cacheInboundURL(url)
     if components.settings.isAutoLogAppEventsEnabled, components.featureChecker.isEnabled(.userJourney) {
       logAppLinkEvent(url: url, urlType: AppEvents.ParameterValue.inboundURL.rawValue)
     }

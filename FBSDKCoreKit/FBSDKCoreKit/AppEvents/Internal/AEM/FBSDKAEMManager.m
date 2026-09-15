@@ -41,6 +41,7 @@ static FBSDKAEMManager *_shared = nil;
 static BOOL fbproxy_AppDelegateOpenURL(id self, SEL _cmd, id application, NSURL *url, id options)
 {
   FBSDKAEMManager *aemManager = FBSDKAEMManager.shared;
+  [FBSDKAppLinkURLCache.shared cacheInboundURL:url];
   [aemManager.aemReporter enable];
   [aemManager.aemReporter handle:url];
   [aemManager.appEventsUtility saveCampaignIDs:url];
@@ -57,6 +58,7 @@ static BOOL fbproxy_AppDelegateOpenURL(id self, SEL _cmd, id application, NSURL 
 static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id application, NSUserActivity *userActivity, id restorationHandler)
 {
   FBSDKAEMManager *aemManager = FBSDKAEMManager.shared;
+  [FBSDKAppLinkURLCache.shared cacheInboundURL:userActivity.webpageURL];
   [aemManager.aemReporter enable];
   [aemManager.aemReporter handle:userActivity.webpageURL];
   [aemManager.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
@@ -171,6 +173,7 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
 {
   Class clazz = [[UIApplication sharedApplication] delegate].class;
   [self.swizzler swizzleSelector:@selector(application:openURL:options:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSURL *url, id options) {
+    [FBSDKAppLinkURLCache.shared cacheInboundURL:url];
     [self.aemReporter enable];
     [self.aemReporter handle:url];
     [self.appEventsUtility saveCampaignIDs:url];
@@ -179,6 +182,7 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
   
   
   [self.swizzler swizzleSelector:@selector(application:continueUserActivity:restorationHandler:) onClass:clazz withBlock:^(id delegate, SEL cmd, id application, NSUserActivity *userActivity, id restorationHandler) {
+    [FBSDKAppLinkURLCache.shared cacheInboundURL:userActivity.webpageURL];
     [self.aemReporter enable];
     [self.aemReporter handle:userActivity.webpageURL];
     [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
@@ -197,6 +201,7 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
     [self.swizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
       [self.aemReporter enable];
       for(UIOpenURLContext* urlContext in urlContexts) {
+        [FBSDKAppLinkURLCache.shared cacheInboundURL:urlContext.URL];
         [self.aemReporter handle:urlContext.URL];
         [self.appEventsUtility saveCampaignIDs:urlContext.URL];
       }
@@ -204,6 +209,7 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
     } named:[NSString stringWithFormat:@"AEMSceneDeeplinkAutoSetup_%@", NSStringFromClass(sceneClass)]];
     
     [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
+      [FBSDKAppLinkURLCache.shared cacheInboundURL:userActivity.webpageURL];
       [self.aemReporter enable];
       [self.aemReporter handle:userActivity.webpageURL];
       [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
@@ -213,6 +219,7 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
     [self.swizzler swizzleSelector:@selector(scene:willConnectToSession:options:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, UISceneSession *session, UISceneConnectionOptions *options) {
       [self.aemReporter enable];
       for(UIOpenURLContext* urlContext in options.URLContexts) {
+        [FBSDKAppLinkURLCache.shared cacheInboundURL:urlContext.URL];
         [self.aemReporter handle:urlContext.URL];
         [self.appEventsUtility saveCampaignIDs:urlContext.URL];
       }

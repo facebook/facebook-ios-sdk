@@ -25,6 +25,7 @@
 #import "FBSDKAppEventParameterProduct+Internal.h"
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsWKWebViewKeys.h"
+#import "FBSDKAppLinkURLCache.h"
 #import "FBSDKAtePublishing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
@@ -1379,6 +1380,18 @@ operationalParameters:nil];
   NSString *screenTitle = [FBSDKScreenTitleObserver shared].currentScreenTitle;
   if (screenTitle.length > 0) {
     [FBSDKTypeUtility dictionary:eventDictionary setObject:screenTitle forKey:FBSDKAppEventParameterNameScreenTitle];
+  }
+
+  // Attribute the event to the app link that most recently brought the user into the app, or that
+  // the app most recently sent the user out through.
+  FBSDKAppLinkURLCache *appLinkURLCache = FBSDKAppLinkURLCache.shared;
+  NSString *inboundURL = appLinkURLCache.inboundURL;
+  if (inboundURL.length > 0) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:inboundURL forKey:FBSDKAppEventParameterNameInboundURL];
+  }
+  NSString *outboundURL = appLinkURLCache.outboundURL;
+  if (outboundURL.length > 0) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:outboundURL forKey:FBSDKAppEventParameterNameOutboundURL];
   }
 
   if (applicationState == UIApplicationStateBackground) {
