@@ -260,7 +260,7 @@ final class GameRequestDialogTests: XCTestCase {
     let expectedError = TestSDKError(
       type: .general,
       code: CoreError.errorBridgeAPIInterruption.rawValue,
-      message: "Error occured while interacting with Gaming Services, Failed to open bridge.",
+      message: "Error occurred while interacting with Gaming Services, Failed to open bridge.",
       underlyingError: error
     )
     let capturedError = try XCTUnwrap(
@@ -295,7 +295,7 @@ final class GameRequestDialogTests: XCTestCase {
 
     XCTAssertEqual(
       capturedRequest.scheme,
-      URLScheme.https.rawValue,
+      URLSchemeEnum.https.rawValue,
       "Should use the expected scheme"
     )
     XCTAssertEqual(

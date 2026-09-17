@@ -22,8 +22,9 @@ final class GraphRequestConnectionFactoryTests: XCTestCase {
     let connection = factory.createGraphRequestConnection()
     let connection2 = factory.createGraphRequestConnection()
 
-    XCTAssertFalse(
-      connection === connection2,
+    XCTAssertNotIdentical(
+      connection,
+      connection2,
       "Connections should be unique"
     )
   }

@@ -24,6 +24,7 @@
 @interface FBSDKAppEventsUtility ()
 
 @property (nullable, nonatomic) ASIdentifierManager *cachedAdvertiserIdentifierManager;
+@property (nullable, nonatomic) NSString *cachedAdvertiserIdentifierString;
 
 @end
 
@@ -96,11 +97,15 @@ static FBSDKAppEventsUtility *_shared;
 
   [FBSDKTypeUtility dictionary:parameters setObject:@(!self.settings.isEventDataUsageLimited).stringValue forKey:@"application_tracking_enabled"];
   [FBSDKTypeUtility dictionary:parameters setObject:@(self.settings.isAdvertiserIDCollectionEnabled).stringValue forKey:@"advertiser_id_collection_enabled"];
+  NSNumber *addToMessagingCustomerBaseForWhatsApp = FBSDKSettings.sharedSettings.addToMessagingCustomerBaseForWhatsApp;
+  if (addToMessagingCustomerBaseForWhatsApp != nil) {
+    [FBSDKTypeUtility dictionary:parameters setObject:addToMessagingCustomerBaseForWhatsApp.stringValue forKey:@"add_to_messaging_customer_base_for_whatsapp"];
+  }
 
   if (userID) {
     [FBSDKTypeUtility dictionary:parameters setObject:userID forKey:@"app_user_id"];
   }
-    
+
   [FBSDKTypeUtility dictionary:parameters setObject:[self getCampaignIDs] forKey:@"campaign_ids"];
 
   [self.internalUtility extendDictionaryWithDataProcessingOptions:parameters];
@@ -151,9 +156,18 @@ static FBSDKAppEventsUtility *_shared;
     }
   }
 
+  // Return cached advertiser ID string if available to avoid expensive IPC on the main thread.
+  // The advertising identifier is stable for the lifetime of the app process and only changes
+  // when the user resets it via Settings, so caching per-session is safe.
+  if (self.cachedAdvertiserIdentifierString) {
+    return self.cachedAdvertiserIdentifierString;
+  }
+
   ASIdentifierManager *manager = [self _asIdentifierManagerWithShouldUseCachedManager:shouldUseCachedManager
                                                              dynamicFrameworkResolver:dynamicFrameworkResolver];
-  return manager.advertisingIdentifier.UUIDString;
+  NSString *advertiserID = manager.advertisingIdentifier.UUIDString;
+  self.cachedAdvertiserIdentifierString = advertiserID;
+  return advertiserID;
 }
 
 - (ASIdentifierManager *)_asIdentifierManagerWithShouldUseCachedManager:(BOOL)shouldUseCachedManager
@@ -225,13 +239,25 @@ static FBSDKAppEventsUtility *_shared;
   if (!applinkData) {
     return;
   }
-    
+
   NSString *campaignIDs = [FBSDKTypeUtility dictionary:applinkData objectForKey:@"campaign_ids" ofType:NSString.class];
   if (!campaignIDs) {
     return;
   }
-    
-  [self.dataStore fb_setObject:campaignIDs forKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY];
+
+  NSMutableArray<NSString *> *res = [NSMutableArray new];
+  NSString *cacheCampaignIDs = [self getCampaignIDs];
+  if (cacheCampaignIDs) {
+    res = [[cacheCampaignIDs componentsSeparatedByString:@","] mutableCopy];
+  }
+  [res insertObject:campaignIDs atIndex:0];
+  // Only Keep the most recent 3 campaign IDs
+  while (res.count > 3) {
+    [res removeLastObject];
+  }
+  NSString *resString = [res componentsJoinedByString:@","];
+
+  [self.dataStore fb_setObject:resString forKey:FBSDK_APPEVENTSUTILITY_CAMPAIGNIDS_KEY];
 }
 
 - (nullable NSString *)getCampaignIDs
@@ -295,7 +321,7 @@ static FBSDKAppEventsUtility *_shared;
 {
   NSString *behaviorToLog = FBSDKLoggingBehaviorAppEvents;
   if (allowLogAsDeveloperError) {
-    if ([self.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorDeveloperErrors]) {
+    if ([self.settings isLoggingBehaviorEnabled:FBSDKLoggingBehaviorDeveloperErrors]) {
       // Rather than log twice, prefer 'DeveloperErrors' if it's set over AppEvents.
       behaviorToLog = FBSDKLoggingBehaviorDeveloperErrors;
     }

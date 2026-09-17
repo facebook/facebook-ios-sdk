@@ -50,7 +50,6 @@ public final class LoginManager: NSObject {
   }
 
   private static let clientStateChallengeLength = UInt(20)
-  private static let oAuthPath = "/dialog/oauth"
 
   private enum CanceledLoginErrorDomains {
     static let safariServices = "com.apple.SafariServices.Authentication"
@@ -64,15 +63,14 @@ public final class LoginManager: NSObject {
   private enum LoggerAuthenticationMethod {
     static let browser = "browser_auth"
     static let safariViewController = "sfvc_auth"
+    static let nativeAppSwitch = "native_app_switch_auth"
   }
 
   var configuredDependencies: ObjectDependencies?
 
   lazy var defaultDependencies: ObjectDependencies? = {
     let keychainStoreFactory = KeychainStoreFactory()
-    guard let bundleIdentifier = Bundle.main.bundleIdentifier else {
-      fatalError("Unable to find main bundle identifier. Cannot create keychain service identifier")
-    }
+    let bundleIdentifier = Bundle.main.bundleIdentifier ?? "com.facebook.sdk.unknown"
 
     let keychainStore = keychainStoreFactory.createKeychainStore(
       service: "com.facebook.sdk.loginmanager.\(bundleIdentifier)",
@@ -269,6 +267,53 @@ public final class LoginManager: NSObject {
   private func logIn() {
     usedSafariSession = false
 
+    // Try native app login first if conditions are met
+    if let configuration = configuration {
+      let serverConfigurationProvider = ServerConfigurationProvider()
+      let nativeHandler = NativeAppLoginHandler(
+        loginManager: self,
+        configuration: configuration,
+        defaultAudience: defaultAudience,
+        logger: logger
+      )
+
+      if nativeHandler.shouldAttemptNativeAppLogin() {
+        // Log app switching behavior for telemetry
+        // swiftformat:disable:next redundantSelf
+        let urlScheme = "fb\(self.settings?.appID ?? "")\(self.settings?.appURLSchemeSuffix ?? "")"
+        logger?.willAttemptAppSwitchingBehavior(urlScheme: urlScheme)
+
+        nativeHandler.performNativeAppLogin(
+          loggingToken: serverConfigurationProvider.loggingToken
+        ) { [weak self] didOpen, error in
+          guard let self = self else { return }
+
+          if didOpen, error == nil {
+            // Native app opened successfully!
+            // Set state and wait for URL callback
+            self.state = .performingLogin
+          } else {
+            // Native app failed, fall back to browser login
+            self.performBrowserLogIn { [weak self] didPerformLogIn, potentialError in
+              guard let self = self else { return }
+
+              if didPerformLogIn {
+                self.state = .performingLogin
+              } else if let error = potentialError as NSError?,
+                        CanceledLoginErrorDomains.isValidDomain(error.domain) {
+                self.handleImplicitCancelOfLogIn()
+              } else {
+                let error = potentialError ?? NSError(domain: LoginErrorDomain, code: LoginError.unknown.rawValue)
+                self.invokeHandler(error: error)
+              }
+            }
+          }
+        }
+        return
+      }
+    }
+
+    // No native app login attempted, use browser
     performBrowserLogIn { [self] didPerformLogIn, potentialError in
       if didPerformLogIn {
         state = .performingLogin
@@ -351,6 +396,7 @@ public final class LoginManager: NSObject {
     dependencies.authenticationTokenWallet.current = nil
     dependencies.profileProvider.current = nil
     storeUserTokenNonce(nil)
+    cleanupLimitedLoginRefreshState()
   }
 
   // MARK: - Helpers
@@ -451,6 +497,12 @@ public final class LoginManager: NSObject {
     dependencies.authenticationTokenWallet.current = parameters.authenticationToken
     dependencies.accessTokenWallet.current = loginResult?.token
     dependencies.profileProvider.current = parameters.profile
+
+    // Initialize BackgroundRefreshManager when a Limited Login session is established.
+    // This ensures the foreground notification observer is registered for auto-refresh.
+    if hasNewAuthenticationToken, !hasNewOrUpdatedAccessToken {
+      _ = BackgroundRefreshManager.shared
+    }
   }
 
   // Returns an error if a stored challenge cannot be obtained from the completion parameters
@@ -516,8 +568,8 @@ public final class LoginManager: NSObject {
     let cbtInMilliseconds = round(1000 * Date().timeIntervalSince1970)
     let nullableParameters: [String: String?] = [
       "client_id": dependencies.settings.appID,
-      "display": "touch",
-      "sdk": "ios",
+      "display": LoginEndpoints.displayValueTouch,
+      "sdk": LoginEndpoints.sdkValueIOS,
       "return_scopes": "true",
       "sdk_version": FBSDK_VERSION_STRING,
       "fbapp_pres": NSNumber(value: dependencies.internalUtility.isFacebookAppInstalled).stringValue,
@@ -532,7 +584,7 @@ public final class LoginManager: NSObject {
     var parameters = nullableParameters.compactMapValues { $0 }
 
     var permissions = configuration.requestedPermissions
-    if let openIDPermission = FBPermission(string: "openid") {
+    if let openIDPermission = FBPermission(string: LoginEndpoints.openIDScope) {
       permissions.insert(openIDPermission)
     }
     parameters["scope"] = permissions.map(\.value).joined(separator: ",")
@@ -542,7 +594,7 @@ public final class LoginManager: NSObject {
     }
 
     if let redirectURL = try? dependencies.internalUtility.appURL(
-      withHost: "authorize",
+      withHost: LoginEndpoints.redirectHost,
       path: "",
       queryParameters: [:]
     ) {
@@ -563,8 +615,9 @@ public final class LoginManager: NSObject {
 
     switch configuration.tracking {
     case .limited:
-      parameters["response_type"] = "id_token,graph_domain,user_token_nonce"
-      parameters["tp"] = "ios_14_do_not_track"
+      parameters["response_type"] = LoginEndpoints.responseTypeLimitedLogin
+      parameters["tp"] = LoginEndpoints.trackingValueDoNotTrack
+      addDPoPJktIfAvailable(parameters: &parameters)
 
     case .enabled:
       if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
@@ -576,6 +629,10 @@ public final class LoginManager: NSObject {
 
     parameters["nonce"] = configuration.nonce
     storeExpectedNonce(configuration.nonce)
+
+    if authenticationMethod == "native_app_auth" {
+      parameters["ios_fast_app_switch"] = "true"
+    }
 
     let nanoseconds = clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
     let seconds = Double(nanoseconds) / 1_000_000_000.0
@@ -594,16 +651,81 @@ public final class LoginManager: NSObject {
   }
 
   private func addTrackingParameters(parameters: inout [String: String], configuration: LoginConfiguration) {
-    parameters["response_type"] = "id_token,token_or_nonce,signed_request,graph_domain,user_token_nonce"
+    parameters["response_type"] = LoginEndpoints.responseTypeFullLogin
     parameters["code_challenge"] = configuration.codeVerifier.challenge
-    parameters["code_challenge_method"] = "S256"
+    parameters["code_challenge_method"] = LoginEndpoints.pkceMethodS256
     storeExpectedCodeVerifier(configuration.codeVerifier)
   }
 
   private func addLimitedLoginShimParameters(parameters: inout [String: String], configuration: LoginConfiguration) {
     addTrackingParameters(parameters: &parameters, configuration: configuration)
-    parameters["tp"] = "ios_14_do_not_track"
+    parameters["tp"] = LoginEndpoints.trackingValueDoNotTrack
     parameters["is_limited_login_shim"] = "true"
+    // The shim path also issues a Limited Login id_token (the SDK fell back to
+    // Limited Login because ATT is denied). It must send dpop_jkt for the same
+    // reason the explicit `.limited` path does — otherwise the resulting token
+    // has no cnf.jkt and `.directOnly` refresh is impossible.
+    addDPoPJktIfAvailable(parameters: &parameters)
+  }
+
+  /// Generates (or reuses) the device's DPoP P-256 key pair and adds the JWK Thumbprint
+  /// to the OAuth request as `dpop_jkt`, gating the entire emission behind the
+  /// `FBSDKFeatureLimitedLoginRefresh` feature flag.
+  ///
+  /// The flag is the kill switch for the entire Limited Login Refresh feature: if it's
+  /// disabled (or fetch failed and we're falling back to the SDK default of `false`), we
+  /// don't bind tokens to a device key. This trades faster ramp-up (immediate post-flip
+  /// adoption requires pre-bound tokens) for full kill-switch coverage of the new behavior.
+  ///
+  /// Silent no-op on iOS < 13, when the gate is closed, or on any keypair-generation
+  /// failure — the server treats absence of `dpop_jkt` as "this client does not support
+  /// direct refresh", so the request still completes and a non-bound token is issued.
+  private func addDPoPJktIfAvailable(parameters: inout [String: String]) {
+    // `directRefreshIsEnabled` (in LoginManager+LimitedLoginRefresh) wraps the
+    // same `RefreshGateKeeperCheck.isSilentRefreshEnabled()` call — using the
+    // shared seam keeps the test surface uniform and makes the kill-switch
+    // story explicit (one toggle disables both at-login emission and refresh).
+    guard Self.directRefreshIsEnabled() else { return }
+
+    guard let thumbprint = Self.dpopJktProvider() else { return }
+
+    parameters[LoginEndpoints.dpopJktParam] = thumbprint
+  }
+
+  /// Gates `dpop_jkt` emission (and, in extensions, the direct refresh path) behind
+  /// the same GateKeeper used by silent refresh — keeping at-login binding and
+  /// at-refresh use of that binding atomically rollable. Tests inject `{ true }` /
+  /// `{ false }` to bypass the runtime feature flag.
+  static var directRefreshIsEnabled: () -> Bool = { RefreshGateKeeperCheck.isSilentRefreshEnabled() }
+
+  /// Test seam for `addDPoPJktIfAvailable`. Production produces the thumbprint from
+  /// `DPoPKeyManager.shared`; tests can swap this to inject a deterministic value
+  /// (or nil to simulate "no DPoP available"). Reset in tearDown.
+  static var dpopJktProvider: () -> String? = defaultDPoPJktProvider
+
+  static let defaultDPoPJktProvider: () -> String? = {
+    guard #available(iOS 13.0, *) else { return nil }
+
+    let manager = DPoPKeyManager.shared
+    do {
+      _ = try manager.generateKeyPairIfNeeded()
+    } catch {
+      // Login still proceeds — `dpop_jkt` becomes optional and the resulting
+      // token will have no `cnf.jkt`, surfacing later as `.notDPoPBound` on
+      // any `.directOnly` refresh. Log so integrators can find the root cause
+      // (almost always a missing `keychain-access-groups` entitlement on the
+      // host app — see `LimitedLoginRefreshError.dpopKeyGenerationFailed`).
+      _Logger.singleShotLogEntry(
+        .developerErrors,
+        logEntry: "FBSDKLoginKit: DPoP key generation failed at login — "
+          + "`dpop_jkt` will be omitted and the resulting token will not be "
+          + "DPoP-bound. Underlying error: \(error). "
+          + "See LimitedLoginRefreshError.dpopKeyGenerationFailed for diagnosis."
+      )
+      return nil
+    }
+
+    return manager.getJWKThumbprint()
   }
 
   func validateReauthentication(
@@ -654,6 +776,7 @@ public final class LoginManager: NSObject {
     let shouldUseSafariViewController = serverConfigurationProvider.shouldUseSafariViewController(
       forDialogName: "login"
     )
+
     let authenticationMethod = shouldUseSafariViewController
       ? LoggerAuthenticationMethod.safariViewController
       : LoggerAuthenticationMethod.browser
@@ -687,15 +810,15 @@ public final class LoginManager: NSObject {
         var hostPrefix = "m."
         switch configuration.tracking {
         case .limited:
-          hostPrefix = "limited."
+          hostPrefix = LoginEndpoints.limitedHostPrefix
         case .enabled:
           if _DomainHandler.sharedInstance().isDomainHandlingEnabled(), !Settings.shared.isAdvertiserTrackingEnabled {
-            hostPrefix = "limited."
+            hostPrefix = LoginEndpoints.limitedHostPrefix
           }
         }
         authenticationURL = try dependencies.internalUtility.facebookURL(
           hostPrefix: hostPrefix,
-          path: Self.oAuthPath,
+          path: LoginEndpoints.oAuthPath,
           queryParameters: parameters
         )
       } catch {
@@ -960,7 +1083,7 @@ extension LoginManager: URLOpening {
   }
 
   public func isAuthenticationURL(_ url: URL) -> Bool {
-    url.path.hasSuffix(Self.oAuthPath)
+    url.path.hasSuffix(LoginEndpoints.oAuthPath)
   }
 
   public func shouldStopPropagation(of url: URL) -> Bool {

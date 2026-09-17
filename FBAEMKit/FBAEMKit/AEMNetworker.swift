@@ -19,11 +19,10 @@ final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
 
   private enum Values {
     static let newline = "\r\n"
-    static let versionString = "18.0.0"
-    static let defaultGraphAPIVersion = "v17.0"
+    static let versionString = FBSDK_VERSION_STRING
     static let SDK = "ios"
     static let userAgentBase = "FBiOSAEM"
-    static let graphAPIEndpoint = "https://graph.facebook.com/v17.0/"
+    static let graphAPIEndpoint = "https://graph.facebook.com/\(FBSDK_DEFAULT_GRAPH_API_VERSION)/"
     static let graphAPIContentType = "application/json"
     static let errorDomain = "com.facebook.aemkit"
     static let agent = "\(Values.userAgentBase).\(Values.versionString)"
@@ -136,7 +135,9 @@ final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
     if rawResponse == nil {
       let base64Data = !data.isEmpty ? data.base64EncodedString(options: .lineLength64Characters) : ""
       if !base64Data.isEmpty {
+        #if DEBUG
         print("fb_response_invalid_utf8")
+        #endif
       }
     }
 
@@ -191,7 +192,9 @@ final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
          addFormData {
         body.append(withKey: key, formValue: string)
       } else {
+        #if DEBUG
         print("Unsupported attachment:\(String(describing: value)), skipping.")
+        #endif
       }
     }
   }

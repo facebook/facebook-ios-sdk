@@ -15,6 +15,7 @@ enum ShareModelTestUtility {
   // swiftlint:disable force_unwrapping
   static let cameraEffectID = "1234567"
   static let contentURL = URL(string: "https://developers.facebook.com/")!
+  static let entityURI = "https://developers.facebook.com/"
   static let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
   static let hashtag = Hashtag("#ashtag")
   static let isPhotoUserGenerated = true
@@ -35,11 +36,14 @@ enum ShareModelTestUtility {
   static let video = ShareVideo(videoURL: videoURL)
   static let videoURL = URL(string: "assets-library://asset/asset.mp4?id=86C6970B-1266-42D0-91E8-4E68127D3864&ext=mp4")!
   static let videoWithPreviewPhoto = ShareVideo(videoURL: videoURL, previewPhoto: photoWithImageURL)
+  static let isMusicAttachmentAllowed = true
   // swiftlint:enable force_unwrapping
 
   static var linkContent: ShareLinkContent {
     let linkContent = linkContentWithoutQuote
     linkContent.quote = quote
+    linkContent.entityURI = entityURI
+    linkContent.isMusicAttachmentAllowed = isMusicAttachmentAllowed
     return linkContent
   }
 

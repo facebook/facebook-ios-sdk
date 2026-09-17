@@ -48,7 +48,7 @@ final class ShareViewController: UITableViewController {
             return
         }
 
-        let photo = SharePhoto(image: image, userGenerated: true)
+        let photo = SharePhoto(image: image, isUserGenerated: true)
         let content = SharePhotoContent()
         content.photos = [photo]
 

@@ -7,6 +7,7 @@
  */
 
 import Foundation
+import ObjectiveC
 import UIKit
 
 /**
@@ -31,6 +32,11 @@ public final class ApplicationDelegate: NSObject {
       components.appEvents.setApplicationState(applicationState)
     }
   }
+
+  // Schedules SDK setup to run after the first frame is rendered so it does not serialize ahead of
+  // the initial render. Overridden in tests to run synchronously.
+  @nonobjc
+  var scheduleAfterFirstFrame: FirstFrameScheduling = ApplicationDelegate.runAfterFirstFrame
 
   private static let kitsBitmaskKey = "com.facebook.sdk.kits.bitmask"
 
@@ -75,11 +81,20 @@ public final class ApplicationDelegate: NSObject {
     configurator.performConfiguration()
     initializeTokenCache()
     initializeProfile()
+    // Arm the App Events persist-on-close observers synchronously, before SDK setup is deferred
+    // past the first frame. This ensures events logged during the deferral window are persisted
+    // (and re-sent next launch) rather than lost if the app is closed before doSDKSetup runs.
+    components.appEvents.startObservingApplicationStatePersistenceNotifications()
     if #available(iOS 14.5, *) {
       fetchDomainConfiguration {
-        GraphRequestConnection.setDidFetchDomainConfiguration()
-        self.doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
-        GraphRequestQueue.sharedInstance().flush() // Flush any queued requests
+        // The completion now fires from the cached/default domain configuration without waiting on
+        // the network. Defer SDK setup until after the first frame so it does not serialize ahead
+        // of the initial render.
+        self.scheduleAfterFirstFrame {
+          GraphRequestConnection.setDidFetchDomainConfiguration()
+          self.doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
+          GraphRequestQueue.sharedInstance().flush() // Flush any queued requests
+        }
       }
     } else {
       doSDKSetup(launchOptions: launchOptions, completionBlock: completionBlock)
@@ -96,6 +111,7 @@ public final class ApplicationDelegate: NSObject {
     _ = application(UIApplication.shared, didFinishLaunchingWithOptions: launchOptions)
     handleDeferredActivationIfNeeded()
     enableInstrumentation()
+    enableUserJourney()
 
     logBackgroundRefreshStatus()
     initializeAppLink()
@@ -161,9 +177,37 @@ public final class ApplicationDelegate: NSObject {
   }
 
   private func logInitialization() {
-    components.settings.logWarnings()
     components.settings.logIfSDKSettingsChanged()
     components.settings.recordInstall()
+    validateAppConfiguration()
+  }
+
+  /// Surfaces a clear developer-facing warning when the App ID or Client Token is
+  /// missing, empty, or whitespace-only at initialization, rather than letting the
+  /// misconfiguration surface later as opaque authentication / Graph API failures
+  /// (see GitHub issue #3639). This only logs via `.developerErrors` and never
+  /// aborts initialization. Note: apps that configure the App ID / Client Token
+  /// *after* `initializeSDK()` runs will see one spurious `.developerErrors` entry
+  /// at launch (logging is on by default); the warning is diagnostic only and does
+  /// not affect functionality.
+  private func validateAppConfiguration() {
+    let appID = components.settings.appID
+    if (appID?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) ?? true {
+      _Logger.singleShotLogEntry(
+        .developerErrors,
+        logEntry: "Invalid Facebook App ID configuration: the App ID is missing or empty. Set "
+          + "FacebookAppID in your Info.plist (or Settings.shared.appID) before using the SDK."
+      )
+    }
+
+    let clientToken = components.settings.clientToken
+    if (clientToken?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) ?? true {
+      _Logger.singleShotLogEntry(
+        .developerErrors,
+        logEntry: "Invalid Facebook Client Token configuration: the Client Token is missing or empty. Set "
+          + "FacebookClientToken in your Info.plist (or Settings.shared.clientToken) before using the SDK."
+      )
+    }
   }
 
   private func enableInstrumentation() {
@@ -171,6 +215,73 @@ public final class ApplicationDelegate: NSObject {
       if enabled {
         _InstrumentManager.shared.enable()
       }
+    }
+  }
+
+  // Screen title and app link URL tracking are not app event auto-logging, so they are
+  // intentionally not gated on `isAutoLogAppEventsEnabled` — only on the UserJourney feature flag.
+  private func enableUserJourney() {
+    components.featureChecker.check(.userJourney) { enabled in
+      if enabled {
+        _ScreenTitleObserver.shared.startObserving()
+        self.setupOutboundURLSwizzle()
+      }
+    }
+  }
+
+  private func logAppLinkEvent(url: URL, urlType: String) {
+    components.appEvents.logEvent(
+      .appLink,
+      parameters: [
+        .url: url.absoluteString,
+        .urlType: urlType,
+      ]
+    )
+  }
+
+  // Install the swizzle at most once — re-running enableUserJourney would
+  // otherwise stack blocks and log each outbound open multiple times.
+  // Only ever read/written on the main thread, which gives it dispatch_once semantics.
+  private static var hasInstalledOutboundURLSwizzle = false
+
+  /// Installs the `openURL:options:completionHandler:` swizzle. Hops to the main thread and is a
+  /// no-op after the first call, so it is safe to invoke from any thread any number of times.
+  private func setupOutboundURLSwizzle() {
+    runOnMainThread { [weak self] in
+      guard
+        let self = self,
+        !Self.hasInstalledOutboundURLSwizzle
+      else { return }
+
+      Self.hasInstalledOutboundURLSwizzle = true
+      self.installOutboundURLSwizzle()
+    }
+  }
+
+  private func installOutboundURLSwizzle() {
+    let selector = NSSelectorFromString("openURL:options:completionHandler:")
+    guard let method = class_getInstanceMethod(UIApplication.self, selector) else { return }
+
+    let originalIMP = method_getImplementation(method)
+    typealias OpenURLIMP = @convention(c) (AnyObject, Selector, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
+    typealias OpenURLBlock = @convention(block) (AnyObject, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
+    // Re-check per call, not just at install time: the swizzle cannot be uninstalled.
+    let block: OpenURLBlock = { [weak self] receiver, url, options, completion in
+      if let self = self,
+         self.components.featureChecker.isEnabled(.userJourney) {
+        _AppLinkURLCache.shared.cacheOutboundURL(url as URL)
+        self.logAppLinkEvent(url: url as URL, urlType: AppEvents.ParameterValue.outboundURL.rawValue)
+      }
+      unsafeBitCast(originalIMP, to: OpenURLIMP.self)(receiver, selector, url, options, completion)
+    }
+    method_setImplementation(method, imp_implementationWithBlock(unsafeBitCast(block, to: AnyObject.self)))
+  }
+
+  private func runOnMainThread(_ work: @escaping () -> Void) {
+    if Thread.isMainThread {
+      work()
+    } else {
+      DispatchQueue.main.async(execute: work)
     }
   }
 
@@ -273,6 +384,10 @@ public final class ApplicationDelegate: NSObject {
     annotation: Any?
   ) -> Bool {
     components.appEvents.setSourceApplication(sourceApplication, open: url)
+    _AppLinkURLCache.shared.cacheInboundURL(url)
+    if components.featureChecker.isEnabled(.userJourney) {
+      logAppLinkEvent(url: url, urlType: AppEvents.ParameterValue.inboundURL.rawValue)
+    }
 
     components.featureChecker.check(.AEM) { enabled in
       guard enabled else { return }
@@ -360,6 +475,17 @@ public final class ApplicationDelegate: NSObject {
     _DomainHandler.sharedInstance().loadDomainConfiguration(completionBlock: completionBlock)
   }
 
+  @nonobjc
+  static func runAfterFirstFrame(_ work: @escaping () -> Void) {
+    // An app launched into the background never renders a first frame, so there is nothing to defer
+    // to — run setup immediately rather than stalling it until a frame that never comes.
+    if UIApplication.shared.applicationState == .background {
+      work()
+      return
+    }
+    FirstFrameScheduler.schedule(work)
+  }
+
   private func initializeProfile() {
     components.profileSetter.current = components.profileSetter.fetchCachedProfile()
   }
@@ -426,7 +552,7 @@ public final class ApplicationDelegate: NSObject {
   }
 
   func applicationWillResignActive(_ notification: Notification) {
-    applicationState = .active
+    applicationState = .inactive
     applicationObservers.allObjects.forEach { observer in
       observer.applicationWillResignActive?(notification.object as? UIApplication)
     }
@@ -525,7 +651,7 @@ public final class ApplicationDelegate: NSObject {
       if !AppLinkUtility.isMatchURLScheme("fb\(components.settings.appID ?? "nil")") {
         let warning = "You haven't set the Auto App Link URL scheme: fb<YOUR APP ID>"
         parameters[.schemeWarning] = warning
-        print(warning)
+        _Logger.singleShotLogEntry(.developerErrors, logEntry: warning)
       }
 
       components.appEvents.logInternalEvent(
@@ -553,6 +679,7 @@ public final class ApplicationDelegate: NSObject {
 fileprivate extension AppEvents.Name {
   static let appLinkInboundEvent = Self("fb_al_inbound")
   static let autoAppLink = Self("fb_auto_applink")
+  static let appLink = Self("fb_mobile_applink")
 }
 
 // swiftformat:disable:next extensionaccesscontrol
@@ -572,4 +699,48 @@ fileprivate extension AppEvents.ParameterName {
   static let isShareLibraryIncluded = Self("share_lib_included")
   static let isTVLibraryIncluded = Self("tv_lib_included")
   static let schemeWarning = Self("SchemeWarning")
+  static let url = Self("url")
+  static let urlType = Self("url_type")
+}
+
+/// Schedules a block of work to run after the first frame is rendered. Injectable so tests can run
+/// the work synchronously.
+typealias FirstFrameScheduling = (@escaping () -> Void) -> Void
+
+/// Runs a block once, after the next rendered frame. A one-shot `CADisplayLink` fires on the next
+/// display refresh; a fallback timer guarantees the block still runs if no frame is produced, so
+/// SDK setup is never dropped.
+private final class FirstFrameScheduler {
+  private var displayLink: CADisplayLink?
+  private var work: (() -> Void)?
+
+  private static let fallbackDelay: TimeInterval = 1.0
+
+  static func schedule(_ work: @escaping () -> Void) {
+    let scheduler = FirstFrameScheduler()
+    scheduler.work = work
+
+    // The display link retains `scheduler`, and the run loop retains the link once added, so the
+    // scheduler stays alive until it fires and invalidates the link.
+    let displayLink = CADisplayLink(target: scheduler, selector: #selector(handleFrame))
+    scheduler.displayLink = displayLink
+    displayLink.add(to: .main, forMode: .common)
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + fallbackDelay) { [weak scheduler] in
+      scheduler?.fire()
+    }
+  }
+
+  @objc private func handleFrame() {
+    fire()
+  }
+
+  private func fire() {
+    guard let work = work else { return }
+
+    self.work = nil
+    displayLink?.invalidate()
+    displayLink = nil
+    work()
+  }
 }

@@ -125,7 +125,11 @@ NS_ASSUME_NONNULL_END
     }
     object = array;
   } else {
-    object = invalidObjectHandler(object, stopRef);
+    if (invalidObjectHandler) {
+      object = invalidObjectHandler(object, stopRef);
+    } else {
+      object = nil;
+    }
   }
   if (stopRef != NULL) {
     *stopRef = stop;

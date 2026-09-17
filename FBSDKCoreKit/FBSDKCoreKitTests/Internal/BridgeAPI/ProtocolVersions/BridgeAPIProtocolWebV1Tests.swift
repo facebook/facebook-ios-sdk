@@ -81,12 +81,14 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
   }
 
   func testInitialization() {
-    XCTAssertTrue(
-      bridge.errorFactory === errorFactory,
+    XCTAssertIdentical(
+      bridge.errorFactory,
+      errorFactory,
       "Should be able to create an instance with an error factory"
     )
-    XCTAssertTrue(
-      bridge.internalUtility === internalUtility,
+    XCTAssertIdentical(
+      bridge.internalUtility,
+      internalUtility,
       "Should be able to create an instance with an error factory"
     )
   }
@@ -95,12 +97,14 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
     bridge = BridgeAPIProtocolWebV1()
 
     let reporter = try _ErrorFactory.getDependencies().reporter
-    XCTAssertTrue(
-      reporter === ErrorReporter.shared,
+    XCTAssertIdentical(
+      reporter,
+      ErrorReporter.shared,
       "The default factory should use the shared error reporter"
     )
-    XCTAssertTrue(
-      bridge.internalUtility === InternalUtility.shared,
+    XCTAssertIdentical(
+      bridge.internalUtility,
+      InternalUtility.shared,
       "The bridge should use the shared internal utility by default"
     )
   }
@@ -118,7 +122,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
 
     let url = try bridge.requestURL(
       actionID: Values.actionID,
-      scheme: URLScheme.https.rawValue,
+      scheme: URLSchemeEnum.https.rawValue,
       methodName: Values.methodName,
       parameters: queryParameters
     )
@@ -228,7 +232,7 @@ final class BridgeAPIProtocolWebV1Tests: XCTestCase {
     XCTAssertEqual(
       response as? [String: String],
       [Keys.completionGesture: Values.cancel],
-      "Should indicate a cancelation when there's a cancellation error code"
+      "Should indicate a cancellation when there's a cancellation error code"
     )
   }
 }

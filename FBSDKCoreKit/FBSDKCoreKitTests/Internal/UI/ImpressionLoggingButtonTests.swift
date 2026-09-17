@@ -42,8 +42,9 @@ final class ImpressionLoggingButtonTests: XCTestCase {
   func testConfiguringClassDependencies() {
     ImpressionLoggingButton.configure(impressionLoggerFactory: impressionLoggerFactory)
 
-    XCTAssertTrue(
-      ImpressionLoggingButton.impressionLoggerFactory === impressionLoggerFactory,
+    XCTAssertIdentical(
+      ImpressionLoggingButton.impressionLoggerFactory,
+      impressionLoggerFactory,
       "Should be able to configure with an impression logger factory"
     )
   }

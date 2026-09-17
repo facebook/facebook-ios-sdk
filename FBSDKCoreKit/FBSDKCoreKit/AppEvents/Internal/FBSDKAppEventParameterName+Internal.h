@@ -24,3 +24,14 @@ FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameSes
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameTimeBetweenSessions;
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameSessionID;
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameLaunchSource;
+
+// MARK: - AppLink
+
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameURL;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameURLType;
+
+// MARK: - UserJourney
+
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameScreenTitle;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameInboundURL;
+FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameOutboundURL;

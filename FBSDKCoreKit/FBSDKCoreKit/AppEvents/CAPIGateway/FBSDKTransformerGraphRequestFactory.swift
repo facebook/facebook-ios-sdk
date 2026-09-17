@@ -88,6 +88,7 @@ public class FBSDKTransformerGraphRequestFactory: NSObject {
         }
         .resume()
       } catch {
+        _Logger.singleShotLogEntry(.developerErrors, logEntry: "CAPI Gateway event serialization failed: \(error)")
         return
       }
     }

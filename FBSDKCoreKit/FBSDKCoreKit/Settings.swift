@@ -54,9 +54,6 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     quality.fb_clamped(to: 0.0 ... 1.0)
   }
 
-  // swiftlint:disable:next swiftlint_disable_without_this_or_next
-  // swiftlint:disable let_var_whitespace
-
   /**
    Controls the automatic logging of basic app events such as `activateApp` and `deactivateApp`.
 
@@ -82,7 +79,10 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    */
   public var isAutoLogAppEventsEnabled: Bool {
     get { checkAutoLogAppEventsEnabled() }
-    set { isAutoLogAppEventsEnabledLocally = newValue }
+    set {
+      _isAutoLogAppEventsExplicitlySet = true
+      isAutoLogAppEventsEnabledLocally = newValue
+    }
   }
 
   /**
@@ -97,6 +97,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
 
   // swiftlint:disable:next identifier_name discouraged_optional_boolean
   internal var _isAutoLogAppEventsEnabledLocally: Bool?
+  // swiftlint:disable:next identifier_name
+  internal var _isAutoLogAppEventsExplicitlySet = false
 
   /**
    Controls the `fb_codeless_debug` logging event.
@@ -252,6 +254,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
       validateConfiguration()
       _appID = newValue
       logIfSDKSettingsChanged()
+      // Flush any requests that were queued before the SDK was configured to make them.
+      GraphRequestQueue.sharedInstance().flush()
     }
   }
 
@@ -281,7 +285,11 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    */
   public var clientToken: String? {
     get { getPersistedStringProperty(.clientToken) }
-    set { setPersistedStringProperty(.clientToken, to: newValue) }
+    set {
+      setPersistedStringProperty(.clientToken, to: newValue)
+      // Flush any requests that were queued before the SDK was configured to make them.
+      GraphRequestQueue.sharedInstance().flush()
+    }
   }
 
   // swiftlint:disable:next identifier_name
@@ -356,8 +364,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     get { advertisingTrackingStatus == .allowed }
 
     @available(
-      *,
-      deprecated,
+      iOS,
+      deprecated: 17.0,
       message: """
         The setAdvertiserTrackingEnabled flag is not used for FBSDK v17+ on iOS 17+ \
         as the FBSDK v17+ now relies on ATTrackingManager.trackingAuthorizationStatus.
@@ -406,6 +414,12 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   }
 
   private var _advertisingTrackingStatusFromATT: AdvertisingTrackingStatus {
+    #if targetEnvironment(macCatalyst)
+    // ATTrackingManager is unavailable on Mac Catalyst and always
+    // returns .notDetermined. Treat Catalyst as tracking-allowed
+    // since ATT does not apply on macOS.
+    return .allowed
+    #else
     var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
     if #available(iOS 14.0, *) {
       let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
@@ -421,6 +435,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
       }
     }
     return advertisingTrackingStatus
+    #endif
   }
 
   private lazy var _advertisingTrackingStatus: AdvertisingTrackingStatus = {
@@ -555,6 +570,14 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     loggingBehaviors.remove(loggingBehavior)
   }
 
+  /// Check if a particular logging behavior is enabled.
+  /// Performs the membership check entirely in Swift to avoid the
+  /// ObjC NSSet bridge path that is vulnerable to linker ICF bugs
+  /// with static XCFrameworks.
+  public func isLoggingBehaviorEnabled(_ loggingBehavior: LoggingBehavior) -> Bool {
+    loggingBehaviors.contains(loggingBehavior)
+  }
+
   /**
    Internal property exposed to facilitate transition to Swift.
    API Subject to change or removal without warning. Do not use.
@@ -669,10 +692,39 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     }
   }
 
+  /// The minimum interval between automatic Limited Login background refreshes, in seconds.
+  ///
+  /// Auto-refresh runs once per foreground for any active Limited Login session whose
+  /// token carries a `cnf.jkt` binding (Phase 3 DPoP). Tokens without the binding fall
+  /// through as a no-op. The interval throttles repeated foregrounds within the window.
+  ///
+  /// The default value is `86400.0` (24 hours).
+  public var limitedLoginAutoRefreshInterval: TimeInterval = 86_400.0
+
   /// Controls whether to show domain errors.
   public var isDomainErrorEnabled = true
 
-  // swiftlint:enable let_var_whitespace
+  /**
+   Controls whether to add the user to the messaging customer base for WhatsApp.
+
+   The default value is `nil` (field not sent in the payload).
+   Set to `true` or `false` to explicitly include the field in the payload.
+   This value is stored on the device and persists across app launches.
+   */
+  public var addToMessagingCustomerBaseForWhatsApp: NSNumber? {
+    get {
+      self.dataStore?.fb_object(
+        forKey: PersistenceKey.addToMessagingCustomerBaseForWhatsApp.rawValue
+      ) as? NSNumber
+    }
+    set {
+      if let newValue {
+        self.dataStore?.fb_setObject(newValue, forKey: PersistenceKey.addToMessagingCustomerBaseForWhatsApp.rawValue)
+      } else {
+        self.dataStore?.fb_removeObject(forKey: PersistenceKey.addToMessagingCustomerBaseForWhatsApp.rawValue)
+      }
+    }
+  }
 
   #if DEBUG
   func reset() {

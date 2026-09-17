@@ -32,7 +32,7 @@ struct ChooseContextDialogURLFactory: DialogDeeplinkURLCreating {
 
   func generateDialogDeeplinkURL() throws -> URL {
     var components = URLComponents()
-    components.scheme = URLScheme.https.rawValue
+    components.scheme = URLSchemeEnum.https.rawValue
     components.host = URLValues.host
     components.path = "\(URLValues.path)\(appID)"
 

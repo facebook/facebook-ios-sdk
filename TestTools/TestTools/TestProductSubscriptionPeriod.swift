@@ -8,7 +8,7 @@
 
 import StoreKit
 
-public final class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod {
+public final class TestProductSubscriptionPeriod: SKProductSubscriptionPeriod, @unchecked Sendable {
   public let stubbedNumberOfUnits: Int
   public let stubbedUnit: SKProduct.PeriodUnit
 

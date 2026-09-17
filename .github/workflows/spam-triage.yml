@@ -1,0 +1,59 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+#
+# Daily deterministic spam-issue triage. No external services or secrets:
+# uses the built-in GITHUB_TOKEN (issues: write) to close high-confidence spam
+# and label uncertain ones `possible-spam` for human review.
+#
+# Detection logic + thresholds live in scripts/spam_triage.py.
+#
+# Safety / rollout:
+#   * Starts in DRY-RUN by default. To go live, set the repo Actions VARIABLE
+#     SPAM_TRIAGE_DRY_RUN = 0  (Settings → Secrets and variables → Actions → Variables).
+#     Manual runs can override via the workflow_dispatch "dry_run" input.
+#   * Kill switch: disable this workflow in the Actions tab, or set the variable back to 1.
+
+name: Spam Issue Triage
+
+on:
+  schedule:
+    # 11:07 UTC daily. NOTE: GitHub cron is UTC and best-effort (can be delayed
+    # under load); pick an off-:00 minute to avoid the top-of-hour stampede.
+    - cron: "7 11 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (log only; no close/label)"
+        type: boolean
+        default: true
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: spam-triage
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run spam triage
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT: ${{ github.event_name }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          VAR_DRY_RUN: ${{ vars.SPAM_TRIAGE_DRY_RUN }}
+        run: |
+          # Resolve dry-run: manual input wins; otherwise the repo variable
+          # (default to dry-run when the variable is unset).
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            [ "$INPUT_DRY_RUN" = "false" ] && export DRY_RUN=0 || export DRY_RUN=1
+          else
+            [ "$VAR_DRY_RUN" = "0" ] && export DRY_RUN=0 || export DRY_RUN=1
+          fi
+          echo "Resolved DRY_RUN=$DRY_RUN (event=$EVENT)"
+          python3 scripts/spam_triage.py

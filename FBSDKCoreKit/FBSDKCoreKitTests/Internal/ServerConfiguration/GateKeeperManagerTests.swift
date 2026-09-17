@@ -63,9 +63,9 @@ final class GateKeeperManagerTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(_GateKeeperManager.graphRequestFactory === graphRequestFactory)
-    XCTAssertTrue(_GateKeeperManager.graphRequestConnectionFactory === graphRequestConnectionFactory)
-    XCTAssertTrue(_GateKeeperManager.store === store)
+    XCTAssertIdentical(_GateKeeperManager.graphRequestFactory, graphRequestFactory)
+    XCTAssertIdentical(_GateKeeperManager.graphRequestConnectionFactory, graphRequestConnectionFactory)
+    XCTAssertIdentical(_GateKeeperManager.store, store)
   }
 
   // MARK: - Gatekeeper Validity

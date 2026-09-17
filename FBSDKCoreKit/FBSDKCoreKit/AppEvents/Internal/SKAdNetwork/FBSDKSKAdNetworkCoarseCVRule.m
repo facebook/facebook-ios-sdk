@@ -43,23 +43,29 @@
     }
     // Check if event value matches when values is not nil
     if (event.values) {
-      NSDictionary<NSString *, NSNumber *> *recordedCoarseEventValues = [FBSDKTypeUtility dictionary:recordedCoarseValues objectForKey:event.eventName ofType:NSDictionary.class];
-      if (!recordedCoarseEventValues) {
+      NSDictionary<NSString *, NSNumber *> *recordedEventValues = [FBSDKTypeUtility dictionary:recordedCoarseValues objectForKey:event.eventName ofType:NSDictionary.class];
+      if (!recordedEventValues) {
         return NO;
       }
-      for (NSString *currency in event.values) {
-        NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:event.values objectForKey:currency ofType:NSNumber.class];
-        NSNumber *value = [FBSDKTypeUtility dictionary:recordedCoarseEventValues objectForKey:currency ofType:NSNumber.class];
-        if (value != nil && valueInMapping != nil && value.doubleValue > valueInMapping.doubleValue) {
-          return YES;
-        }
+      if (![self isValueMatchedWithEvent:event recordedEventValues:recordedEventValues]) {
+        return NO;
       }
-      return NO;
     }
   }
   return YES;
 }
 
+- (BOOL)isValueMatchedWithEvent:(FBSDKSKAdNetworkEvent *)event recordedEventValues:(NSDictionary<NSString *, NSNumber *> *)recordedEventValues
+{
+  for (NSString *currency in event.values) {
+    NSNumber *valueInMapping = [FBSDKTypeUtility dictionary:event.values objectForKey:currency ofType:NSNumber.class];
+    NSNumber *value = [FBSDKTypeUtility dictionary:recordedEventValues objectForKey:currency ofType:NSNumber.class];
+    if (value != nil && valueInMapping != nil && value.doubleValue > valueInMapping.doubleValue) {
+      return YES;
+    }
+  }
+  return NO;
+}
 @end
 
 #endif

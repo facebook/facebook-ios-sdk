@@ -14,9 +14,9 @@ struct VerifyFacebookCore {
         _ = Permission.email
 
         // Verifies ObjC symbol
-        Settings.appID = "Foo"
+        Settings.shared.appID = "Foo"
 
         // Additional Sanity Check
-        AppEvents.logEvent(AppEvents.Name("foo"))
+        AppEvents.shared.logEvent(AppEvents.Name("foo"))
     }
 }

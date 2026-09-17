@@ -1292,7 +1292,7 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
 
 - (void)registerTokenToOmitFromLog:(NSString *)token
 {
-  if (![self.class.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAccessTokens]) {
+  if (![self.class.settings isLoggingBehaviorEnabled:FBSDKLoggingBehaviorAccessTokens]) {
     [FBSDKLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
   }
 }

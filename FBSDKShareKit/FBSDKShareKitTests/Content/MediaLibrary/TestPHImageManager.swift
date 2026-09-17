@@ -10,7 +10,7 @@ import Photos
 import UIKit
 
 // This test double simply subclasses `PHImageManager` in order to capture calls to itself
-final class TestPHImageManager: PHImageManager {
+final class TestPHImageManager: PHImageManager, @unchecked Sendable {
 
   // MARK: - Requesting images
 

@@ -19,7 +19,7 @@ import Darwin.C
 
 let package = Package(
     name: "Facebook",
-    platforms: [.iOS(.v12)],
+    platforms: [.iOS("15.0")],
     products: [
         // The Kernel of the SDK. Must be included as a runtime dependency.
         .basics,
@@ -135,7 +135,7 @@ extension Target {
     }
 
     static func remoteBinaryURLString(for targetName: String) -> String {
-        "https://github.com/facebook/facebook-ios-sdk/releases/download/v18.0.0/\(targetName)-Dynamic_XCFramework.zip"
+        "https://github.com/facebook/facebook-ios-sdk/releases/download/v18.1.1/\(targetName)-Dynamic_XCFramework.zip"
     }
 
     static let basics = target(
@@ -148,7 +148,7 @@ extension Target {
 
     static let aem = target(
         name: .aem,
-        dependencies: [.Prefixed.aem],
+        dependencies: [.Prefixed.aem, .Prefixed.basics],
         resources: [
            .copy("Resources/PrivacyInfo.xcprivacy"),
         ]
@@ -188,32 +188,32 @@ extension Target {
     enum Prefixed {
         static let basics = binaryTarget(
             name: .Prefixed.basics,
-            remoteChecksum: "750f129c7413d51dfdeca1cc983743996fbf28154d80b2434acee7d537d64179"
+            remoteChecksum: "c780833f204f9ec6eab70a3758a45c5c78bfb6f4e590289ccf395497f204cac1"
         )
 
         static let aem = binaryTarget(
             name: .Prefixed.aem,
-            remoteChecksum: "b2dda579247ffddad88b09b8a171e6a63c1a6254f97479833987d19392c0ae99"
+            remoteChecksum: "ceaf685683c6a23ae4893150d0d770aeeaec34811ac8c146b3aa351beade5fa0"
         )
 
         static let core = binaryTarget(
             name: .Prefixed.core,
-            remoteChecksum: "6d78eb5ad74812c8a45921b98824590fb0ad013c0afe7fc42f58fb7a48b17cd4"
+            remoteChecksum: "1577edd62ec0c172928befed3b309dc59ae8915d2aaad091460d9d1be5ddc13d"
         )
 
         static let login = binaryTarget(
             name: .Prefixed.login,
-            remoteChecksum: "3c303233edfec91edb29cef0383edb5c9bc9c34acf1a1dd3011d0042f0a88a87"
+            remoteChecksum: "c8211f3fbab524d356e25e751e2991e6b683faa8a8adb6bf552e83955146377e"
         )
 
         static let share = binaryTarget(
             name: .Prefixed.share,
-            remoteChecksum: "f4bad82bf960caf30f11b173cab49d992c275514aa698cc8851c33683f06e4bb"
+            remoteChecksum: "2c8f2bba43b3ca2266e5c506b70ddd001d2214e9f234c880a0efc7c40314c435"
         )
 
         static let gamingServices = binaryTarget(
             name: .Prefixed.gaming,
-            remoteChecksum: "b17608f729b35516e26fd789285718992fb693e551946f99f97c0dbe2919e7f7"
+            remoteChecksum: "59c20995d5096f4ebac965e4f60547953be528c61d09369a164dfb8d83941460"
         )
     }
 }

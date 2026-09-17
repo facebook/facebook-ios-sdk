@@ -119,7 +119,7 @@ public final class Profile: NSObject {
 
   public let permissions: Set<String>?
 
-  let isLimited: Bool
+  public let isLimited: Bool
 
   // swiftlint:disable:next identifier_name
   static var _current: Profile?

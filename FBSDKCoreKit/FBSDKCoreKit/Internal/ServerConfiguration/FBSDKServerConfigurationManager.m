@@ -103,9 +103,11 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 
 - (void)clearCache
 {
-  self.serverConfiguration = nil;
-  self.serverConfigurationError = nil;
-  self.serverConfigurationErrorTimestamp = nil;
+  @synchronized(self) {
+    self.serverConfiguration = nil;
+    self.serverConfigurationError = nil;
+    self.serverConfigurationErrorTimestamp = nil;
+  }
   NSUserDefaults *defaults = NSUserDefaults.standardUserDefaults;
   NSString *defaultsKey = [NSString stringWithFormat:FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY, FBSDKSettings.sharedSettings.appID];
   [defaults removeObjectForKey:defaultsKey];

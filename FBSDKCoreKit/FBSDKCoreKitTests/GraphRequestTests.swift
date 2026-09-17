@@ -15,7 +15,7 @@ final class GraphRequestTests: XCTestCase {
 
   let path = "me"
   let parameters = ["fields": ""]
-  let version = "v17.0"
+  let version = FBSDK_DEFAULT_GRAPH_API_VERSION
   let prefix = "graph."
   let settings = TestSettings()
   var factory = TestGraphRequestConnectionFactory()
@@ -68,8 +68,9 @@ final class GraphRequestTests: XCTestCase {
     TestAccessTokenWallet.current = SampleAccessTokens.validToken
     let request = GraphRequest(graphPath: path)
 
-    XCTAssertTrue(
-      GraphRequest.settings === settings,
+    XCTAssertIdentical(
+      GraphRequest.settings,
+      settings,
       "GraphRequest should store the settings dependency it was configured with"
     )
     XCTAssertEqual(
@@ -77,8 +78,9 @@ final class GraphRequestTests: XCTestCase {
       TestAccessTokenWallet.tokenString,
       "Should use the token string provider for the token string"
     )
-    XCTAssertTrue(
-      request.graphRequestConnectionFactory === factory,
+    XCTAssertIdentical(
+      request.graphRequestConnectionFactory,
+      factory,
       "New instances should use the factory provider configured on the type"
     )
   }
@@ -94,8 +96,9 @@ final class GraphRequestTests: XCTestCase {
       graphRequestConnectionFactory: factory
     )
 
-    XCTAssertTrue(
-      request.graphRequestConnectionFactory === factory,
+    XCTAssertIdentical(
+      request.graphRequestConnectionFactory,
+      factory,
       "A graph request should persist the session factory it was created with"
     )
   }

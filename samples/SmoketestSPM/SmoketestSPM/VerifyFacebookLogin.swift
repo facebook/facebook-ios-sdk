@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FacebookCore
 import FacebookLogin
 
 struct VerifyFacebookLogin {
@@ -14,10 +15,10 @@ struct VerifyFacebookLogin {
         _ = Permission.email
 
         // Verifies ObjC symbol
-        Settings.appID = "Foo"
+        Settings.shared.appID = "Foo"
 
         // Additional Sanity Check
-        AppEvents.logEvent(AppEvents.Name("foo"))
+        AppEvents.shared.logEvent(AppEvents.Name("foo"))
     }
 
     func verifyLoginSymbols() {

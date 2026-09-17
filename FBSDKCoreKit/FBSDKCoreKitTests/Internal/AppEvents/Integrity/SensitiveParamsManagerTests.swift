@@ -53,15 +53,17 @@ final class SensitiveParamsManagerTests: XCTestCase {
 
   func testDefaultDependencies() throws {
     sensitiveParamsManager.resetDependencies()
-    XCTAssertTrue(
-      sensitiveParamsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      sensitiveParamsManager.serverConfigurationProvider,
+      _ServerConfigurationManager.shared,
       "Should use the shared server configuration manger by default"
     )
   }
 
   func testConfiguringDependencies() {
-    XCTAssertTrue(
-      sensitiveParamsManager.serverConfigurationProvider === provider,
+    XCTAssertIdentical(
+      sensitiveParamsManager.serverConfigurationProvider,
+      provider,
       "Should be able to create with a server configuration provider"
     )
   }
@@ -74,8 +76,8 @@ final class SensitiveParamsManagerTests: XCTestCase {
     let expectedDefaultSensitiveParams: Set<String> = ["default_param_1", "default_param_2"]
     sensitiveParamsManager.enable()
     XCTAssertTrue(sensitiveParamsManager.getIsEnabled())
-    XCTAssertTrue(sensitiveParamsManager.getSensitiveParamsConfig() == expectedSensitiveParamsConfig)
-    XCTAssertTrue(sensitiveParamsManager.getDefaultSensitiveParams() == expectedDefaultSensitiveParams)
+    XCTAssertEqual(sensitiveParamsManager.getSensitiveParamsConfig(), expectedSensitiveParamsConfig)
+    XCTAssertEqual(sensitiveParamsManager.getDefaultSensitiveParams(), expectedDefaultSensitiveParams)
   }
 
   func testEnable2() {
@@ -104,7 +106,7 @@ final class SensitiveParamsManagerTests: XCTestCase {
     ]
     sensitiveParamsManager.enable()
     XCTAssertTrue(sensitiveParamsManager.getIsEnabled())
-    XCTAssertTrue(sensitiveParamsManager.getSensitiveParamsConfig() == expectedSensitiveParamsConfig)
+    XCTAssertEqual(sensitiveParamsManager.getSensitiveParamsConfig(), expectedSensitiveParamsConfig)
     XCTAssertTrue(sensitiveParamsManager.getDefaultSensitiveParams().isEmpty)
   }
 
@@ -128,7 +130,7 @@ final class SensitiveParamsManagerTests: XCTestCase {
     sensitiveParamsManager.enable()
     XCTAssertTrue(sensitiveParamsManager.getIsEnabled())
     XCTAssertTrue(sensitiveParamsManager.getSensitiveParamsConfig().isEmpty)
-    XCTAssertTrue(sensitiveParamsManager.getDefaultSensitiveParams() == expectedDefaultSensitiveParams)
+    XCTAssertEqual(sensitiveParamsManager.getDefaultSensitiveParams(), expectedDefaultSensitiveParams)
   }
 
   func testEnable4() {
@@ -348,5 +350,20 @@ final class SensitiveParamsManagerTests: XCTestCase {
       filteredParams?[AppEvents.ParameterName(rawValue: "default_param_2")] as? String,
       parameters[AppEvents.ParameterName(rawValue: "default_param_2")]
     )
+  }
+
+  func testProcessParametersCorrectAfterEnable() {
+    sensitiveParamsManager.enable()
+
+    let parameters: [AppEvents.ParameterName: Any] = [
+      AppEvents.ParameterName.currency: "USD",
+      AppEvents.ParameterName(rawValue: "default_param_1"): "sensitive",
+    ]
+    let eventName = AppEvents.Name(rawValue: "test_event_name_1")
+    let result = sensitiveParamsManager.processParameters(parameters, eventName: eventName)
+
+    XCTAssertNotNil(result)
+    XCTAssertEqual(result?.keys.contains(AppEvents.ParameterName(rawValue: "default_param_1")), false)
+    XCTAssertEqual(result?[AppEvents.ParameterName.currency] as? String, "USD")
   }
 }

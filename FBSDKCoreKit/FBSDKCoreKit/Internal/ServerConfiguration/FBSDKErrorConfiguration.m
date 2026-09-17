@@ -195,7 +195,17 @@ static NSString *const kErrorCategoryLogin = @"login";
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  return self;
+  // Deep copy the configuration dictionary since inner values are also mutable dictionaries
+  NSMutableDictionary *deepCopy = [NSMutableDictionary dictionaryWithCapacity:_configurationDictionary.count];
+  for (NSString *key in _configurationDictionary) {
+    id value = _configurationDictionary[key];
+    if ([value isKindOfClass:[NSDictionary class]]) {
+      deepCopy[key] = [NSMutableDictionary dictionaryWithDictionary:value];
+    } else {
+      deepCopy[key] = value;
+    }
+  }
+  return [[FBSDKErrorConfiguration alloc] initWithDictionary:deepCopy];
 }
 
 @end

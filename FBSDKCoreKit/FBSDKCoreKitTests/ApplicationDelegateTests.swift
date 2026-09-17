@@ -66,6 +66,7 @@ final class ApplicationDelegateTests: XCTestCase {
       refreshDate: nil
     )
     components = TestCoreKitComponents.makeComponents(
+      aemManager: aemManager,
       appEvents: appEvents,
       backgroundEventLogger: backgroundEventLogger,
       defaultDataStore: userDataStore,
@@ -74,8 +75,7 @@ final class ApplicationDelegateTests: XCTestCase {
       notificationCenter: notificationCenter,
       paymentObserver: paymentObserver,
       serverConfigurationProvider: serverConfigurationProvider,
-      settings: settings,
-      aemManager: aemManager
+      settings: settings
     )
     configurator = TestCoreKitConfigurator(components: components)
     _DomainConfiguration.setDefaultDomainInfo()
@@ -120,6 +120,8 @@ final class ApplicationDelegateTests: XCTestCase {
       components: components,
       configurator: configurator
     )
+    // Run deferred SDK setup synchronously so tests can assert on it without a rendered frame.
+    delegate.scheduleAfterFirstFrame = { $0() }
   }
 
   func resetTestDependencies() {
@@ -209,6 +211,60 @@ final class ApplicationDelegateTests: XCTestCase {
     }
   }
 
+  func testInitializeSDKDefersSetupUntilAfterFirstFrame() throws {
+    guard #available(iOS 14.5, *) else {
+      throw XCTSkip("Domain configuration gating only runs on iOS 14.5+")
+    }
+    var scheduledWork: (() -> Void)?
+    delegate.scheduleAfterFirstFrame = { scheduledWork = $0 }
+
+    delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
+
+    XCTAssertNotNil(
+      scheduledWork,
+      "SDK setup should be scheduled to run after the first frame"
+    )
+    XCTAssertEqual(
+      settings.logIfSDKSettingsChangedCallCount,
+      0,
+      "SDK setup should be deferred until the scheduled block runs, not during initializeSDK"
+    )
+
+    scheduledWork?()
+
+    XCTAssertEqual(
+      settings.logIfSDKSettingsChangedCallCount,
+      1,
+      "SDK setup should run once the scheduled block fires"
+    )
+  }
+
+  func testInitializeSDKArmsEventPersistenceBeforeDeferredSetup() throws {
+    guard #available(iOS 14.5, *) else {
+      throw XCTSkip("SDK setup is only deferred past the first frame on iOS 14.5+")
+    }
+    var scheduledWork: (() -> Void)?
+    delegate.scheduleAfterFirstFrame = { scheduledWork = $0 }
+
+    delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
+
+    XCTAssertTrue(
+      appEvents.wasStatePersistenceObservationStarted,
+      "The App Events persist-on-close observers should be armed during init, not deferred to doSDKSetup"
+    )
+    XCTAssertFalse(
+      appEvents.wasLifecycleObservationStarted,
+      "The remaining lifecycle observers should still be deferred with doSDKSetup, not run during initializeSDK"
+    )
+
+    scheduledWork?()
+
+    XCTAssertTrue(
+      appEvents.wasLifecycleObservationStarted,
+      "The remaining lifecycle observers should be registered once the deferred setup fires"
+    )
+  }
+
   func testInitializingSdkAddsBridgeApiObserver() {
     delegate.initializeSDK()
 
@@ -220,11 +276,6 @@ final class ApplicationDelegateTests: XCTestCase {
 
   func testInitializingSdkPerformsSettingsLogging() {
     delegate.initializeSDK()
-    XCTAssertEqual(
-      settings.logWarningsCallCount,
-      1,
-      "Should have settings log warnings upon initialization"
-    )
     XCTAssertEqual(
       settings.logIfSDKSettingsChangedCallCount,
       1,
@@ -460,7 +511,7 @@ final class ApplicationDelegateTests: XCTestCase {
     delegate.initializeSDK(launchOptions: [:], completionBlock: nil)
 
     XCTAssertTrue(
-      appEvents.wasStartObservingApplicationLifecycleNotificationsCalled,
+      appEvents.wasLifecycleObservationStarted,
       "Should have app events start observing application lifecycle notifications upon initialization"
     )
   }

@@ -34,10 +34,10 @@ final class GraphRequestPiggybackManagerTests: XCTestCase {
     manager = GraphRequestPiggybackManager()
     manager.setDependencies(
       .init(
-        tokenWallet: TestAccessTokenWallet.self,
-        settings: settings,
+        graphRequestFactory: graphRequestFactory,
         serverConfigurationProvider: serverConfigurationProvider,
-        graphRequestFactory: graphRequestFactory
+        settings: settings,
+        tokenWallet: TestAccessTokenWallet.self
       )
     )
   }

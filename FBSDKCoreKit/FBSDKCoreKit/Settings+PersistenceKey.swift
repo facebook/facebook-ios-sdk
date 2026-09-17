@@ -27,5 +27,6 @@ extension Settings {
     case bitmask = "com.facebook.sdk:FBSDKSettingsBitmask"
     case installTimestamp = "com.facebook.sdk:FBSDKSettingsInstallTimestamp"
     case setAdvertiserTrackingEnabledTimestamp = "com.facebook.sdk:FBSDKSettingsSetAdvertiserTrackingEnabledTimestamp"
+    case addToMessagingCustomerBaseForWhatsApp = "com.facebook.sdk:FBSDKSettingsAddToMessagingCustomerBaseForWhatsApp"
   }
 }

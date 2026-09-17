@@ -96,8 +96,9 @@ final class GraphErrorRecoveryProcessorTests: XCTestCase {
       wasRecoverySuccessful,
       "Should inform the delegate about the status of the recovery"
     )
-    XCTAssertTrue(
-      delegate.capturedError === error,
+    XCTAssertIdentical(
+      delegate.capturedError,
+      error,
       "Should invoke the delegate with the expected error"
     )
   }

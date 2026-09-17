@@ -8,7 +8,7 @@
 
 import StoreKit
 
-public final class TestProductDiscount: SKProductDiscount {
+public final class TestProductDiscount: SKProductDiscount, @unchecked Sendable {
   let stubbedIdentifier: String
   let stubbedPaymentMode: PaymentMode
   let stubbedPrice: NSDecimalNumber

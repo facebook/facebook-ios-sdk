@@ -153,6 +153,11 @@ final class ProtectedModeManagerTests: XCTestCase {
       "pm",
       "_audiencePropertyIds",
       "cs_maca",
+      "pm_metadata",
+      "_bannedParams",
+      "vvp",
+      "vvp_md",
+      "add_to_messaging_customer_base_for_whatsapp",
     ]
     XCTAssertEqual(
       protectedModeManager.standardParametersDefault,
@@ -170,11 +175,15 @@ final class ProtectedModeManagerTests: XCTestCase {
 
   func testProcessParametersWithEnable() {
     protectedModeManager.enable()
-    XCTAssertEqual(
-      protectedModeManager.processParameters(sampleParameters, eventName: AppEvents.Name.addedToCart)?.count,
-      3, // should also include PM flag
-      "It should do the parameter filtering when enbaled"
-    )
+    let filteredParams = protectedModeManager.processParameters(sampleParameters, eventName: .addedToCart)
+    let expectedKeys: Set<String> = [
+      "_logTime",
+      "_implicitlyLogged",
+      "pm_metadata",
+      "pm",
+    ]
+    let actualKeys = Set(filteredParams?.keys.map { $0.rawValue } ?? [])
+    XCTAssertEqual(actualKeys, expectedKeys)
   }
 
   func testIsProtectedModeApplied1() {

@@ -5,8 +5,7 @@
 // LICENSE file in the root directory of this source tree.
 
 // Architectures
-ARCHS = i386 armv7 x86_64 arm64
-IPHONEOS_DEPLOYMENT_TARGET = 11.0
+IPHONEOS_DEPLOYMENT_TARGET = 15.0
 SDKROOT = iphoneos
 
 // Build Options
@@ -21,7 +20,7 @@ INFOPLIST_FILE = $(TARGET_NAME)/$(TARGET_NAME)-Info.plist
 
 // Search Paths
 ALWAYS_SEARCH_USER_PATHS = NO
-FRAMEWORK_SEARCH_PATHS = $(inherited) "$(SRCROOT)/../../build"
+FRAMEWORK_SEARCH_PATHS = $(inherited)
 
 // Code Generation
 GCC_DYNAMIC_NO_PIC = NO

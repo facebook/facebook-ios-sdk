@@ -7,7 +7,6 @@
  */
 
 @testable import FBSDKCoreKit
-
 import TestTools
 
 final class AppEventsPublishATETests: XCTestCase {
@@ -77,6 +76,7 @@ final class AppEventsPublishATETests: XCTestCase {
       bannedParamsManager: TestBannedParamsManager(),
       stdParamEnforcementManager: TestStdParamEnforcementManager(),
       macaRuleMatchingManager: TestMACARuleMatchingManager(),
+      vvpConfigManager: TestVVPConfigManager(),
       blocklistEventsManager: TestBlocklistEventsManager(),
       redactedEventsManager: TestRedactedEventsManager(),
       sensitiveParamsManager: TestSensitiveParamsManager(),

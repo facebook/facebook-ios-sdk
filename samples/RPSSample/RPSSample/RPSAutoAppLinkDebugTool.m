@@ -10,7 +10,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKUtility.h>
+@import FBSDKCoreKit;
 
 static const int paddingLen = 10;
 static const int frameHeight = 30;

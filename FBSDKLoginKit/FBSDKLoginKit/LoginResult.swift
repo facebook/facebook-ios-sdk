@@ -14,7 +14,7 @@ public typealias LoginResultBlock = (LoginResult) -> Void
 /// Describes the result of a login attempt.
 @frozen
 public enum LoginResult {
-  /// User succesfully logged in. Contains granted, declined permissions and access token.
+  /// User successfully logged in. Contains granted, declined permissions and access token.
   case success(granted: Set<Permission>, declined: Set<Permission>, token: AccessToken?)
   /// Login attempt was cancelled by the user.
   case cancelled

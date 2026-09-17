@@ -172,5 +172,5 @@ fileprivate extension String {
 // MARK: - Test Values
 
 fileprivate extension URL {
-  static let linkContent = URL(string: "https://facebook.com")! // swiftlint:disable:this force_unwrapping
+  static let linkContent = URL(string: "https://facebook.com")!
 }

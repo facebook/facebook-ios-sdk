@@ -288,19 +288,19 @@ final class SettingsTests: XCTestCase {
       let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
       switch status {
       case .notDetermined:
-        XCTAssertTrue(settings.advertisingTrackingStatus == .unspecified)
+        XCTAssertEqual(settings.advertisingTrackingStatus, .unspecified)
         XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
       case .restricted:
-        XCTAssertTrue(settings.advertisingTrackingStatus == .disallowed)
+        XCTAssertEqual(settings.advertisingTrackingStatus, .disallowed)
         XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
       case .denied:
-        XCTAssertTrue(settings.advertisingTrackingStatus == .disallowed)
+        XCTAssertEqual(settings.advertisingTrackingStatus, .disallowed)
         XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
       case .authorized:
-        XCTAssertTrue(settings.advertisingTrackingStatus == .allowed)
+        XCTAssertEqual(settings.advertisingTrackingStatus, .allowed)
         XCTAssertTrue(settings.isAdvertiserTrackingEnabled)
       @unknown default:
-        XCTAssertTrue(settings.advertisingTrackingStatus == .unspecified)
+        XCTAssertEqual(settings.advertisingTrackingStatus, .unspecified)
         XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
       }
     }
@@ -1131,7 +1131,7 @@ final class SettingsTests: XCTestCase {
   }
 
   func testAutoLogAppEventsEnabledFromServer_1() {
-    // set true for the server-side overriden value
+    // set true for the server-side overridden value
     let migratedAutoLogValues = ["auto_log_app_events_enabled": NSNumber(true)]
     serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
     // set false in info.plist
@@ -1139,12 +1139,12 @@ final class SettingsTests: XCTestCase {
     configureSettings()
     XCTAssertTrue(
       settings.isAutoLogAppEventsEnabled,
-      "Should favor the server-side overriden value over others"
+      "Should favor the server-side overridden value over others"
     )
   }
 
   func testAutoLogAppEventsEnabledFromServer_2() {
-    // set true for the server-side overriden value
+    // set true for the server-side overridden value
     let migratedAutoLogValues = ["auto_log_app_events_enabled": String("Some_Value")]
     serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
     configureSettings()
@@ -1180,7 +1180,7 @@ final class SettingsTests: XCTestCase {
   }
 
   func testAutoLogAppEventsEnabledFromLocal_2() {
-    // set true for the server-side overriden value
+    // set true for the server-side overridden value
     let migratedAutoLogValues = ["auto_log_app_events_default": NSNumber(true)]
     serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
     // set false in memory store
@@ -1544,8 +1544,9 @@ final class SettingsTests: XCTestCase {
   func testSetUseCachedValuesForExpensiveMetadata() {
     settings.shouldUseCachedValuesForExpensiveMetadata = true
 
-    XCTAssertTrue(
-      userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata"] as? Int != 0,
+    XCTAssertNotEqual(
+      userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata"] as? Int,
+      0,
       "Should userDefaultsSpy whether or not to limit event and data usage in the user defaults"
     )
     XCTAssertTrue(
@@ -1557,8 +1558,9 @@ final class SettingsTests: XCTestCase {
   func testSetUseTokenOptimizations() {
     settings.shouldUseTokenOptimizations = false
 
-    XCTAssertTrue(
-      userDefaultsSpy.capturedValues["com.facebook.sdk.FBSDKSettingsUseTokenOptimizations"] as? Int == 0,
+    XCTAssertEqual(
+      userDefaultsSpy.capturedValues["com.facebook.sdk.FBSDKSettingsUseTokenOptimizations"] as? Int,
+      0,
       "Should userDefaultsSpy whether or not to use token optimizations"
     )
     XCTAssertFalse(
@@ -1570,8 +1572,9 @@ final class SettingsTests: XCTestCase {
   func testSetLimitEventAndDataUsageWithEmptyCache() {
     settings.isEventDataUsageLimited = true
 
-    XCTAssertTrue(
-      userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata"] as? Int != 0,
+    XCTAssertNotEqual(
+      userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsUseCachedValuesForExpensiveMetadata"] as? Int,
+      0,
       "Should userDefaultsSpy whether or not to limit event and data usage in the user defaults"
     )
     XCTAssertTrue(
@@ -1590,8 +1593,9 @@ final class SettingsTests: XCTestCase {
       "Should be able to override the existing value of should limit event data usage"
     )
 
-    XCTAssertTrue(
-      userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage"] as? Int == 0,
+    XCTAssertEqual(
+      userDefaultsSpy.capturedValues["com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage"] as? Int,
+      0,
       "Should userDefaultsSpy the overridden preference for limiting event data usage in the user defaults"
     )
   }

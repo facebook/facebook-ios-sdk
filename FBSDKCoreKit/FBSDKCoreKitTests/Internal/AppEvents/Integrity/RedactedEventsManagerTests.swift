@@ -84,15 +84,17 @@ final class RedactedEventsManagerTests: XCTestCase {
 
   func testDefaultDependencies() throws {
     redactedEventsManager.resetDependencies()
-    XCTAssertTrue(
-      redactedEventsManager.serverConfigurationProvider === _ServerConfigurationManager.shared,
+    XCTAssertIdentical(
+      redactedEventsManager.serverConfigurationProvider,
+      _ServerConfigurationManager.shared,
       "Should use the shared server configuration manger by default"
     )
   }
 
   func testConfiguringDependencies() {
-    XCTAssertTrue(
-      redactedEventsManager.serverConfigurationProvider === provider,
+    XCTAssertIdentical(
+      redactedEventsManager.serverConfigurationProvider,
+      provider,
       "Should be able to create with a server configuration provider"
     )
   }
@@ -100,8 +102,9 @@ final class RedactedEventsManagerTests: XCTestCase {
   func testProcessEventsNotEnabled() {
     let events = getTestEvents()
     redactedEventsManager.processEvents(events)
-    XCTAssertTrue(
-      events.count == 5,
+    XCTAssertEqual(
+      events.count,
+      5,
       "redactedEventsManager should not drop any events"
     )
     guard let eventDict0 = events[0] as? [String: Any],
@@ -148,8 +151,9 @@ final class RedactedEventsManagerTests: XCTestCase {
     redactedEventsManager.enable()
     let events = getTestEvents()
     redactedEventsManager.processEvents(events)
-    XCTAssertTrue(
-      events.count == 5,
+    XCTAssertEqual(
+      events.count,
+      5,
       "redactedEventsManager should not drop any events"
     )
     guard let eventDict0 = events[0] as? [String: Any],

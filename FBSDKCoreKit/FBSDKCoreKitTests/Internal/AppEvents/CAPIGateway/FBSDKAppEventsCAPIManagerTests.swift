@@ -100,7 +100,7 @@ final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
     )
   }
 
-  func testExecuteBlocks() {
+  func testExecuteBlocks() throws {
     // swiftlint:disable:next discouraged_optional_boolean
     var capturedIsEnabled: Bool?
     FBSDKAppEventsCAPIManager.shared.completionBlocks.append { isEnabled in
@@ -113,7 +113,7 @@ final class FBSDKAppEventsCAPIManagerTests: XCTestCase {
       "Completion blocks should be cleared after execution"
     )
     XCTAssertTrue(
-      capturedIsEnabled == true,
+      try XCTUnwrap(capturedIsEnabled),
       "Should pass the expected isEnabled value to completion blocks"
     )
   }

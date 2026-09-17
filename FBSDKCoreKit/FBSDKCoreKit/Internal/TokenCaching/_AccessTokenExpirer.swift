@@ -54,7 +54,7 @@ public final class _AccessTokenExpirer: NSObject, _AccessTokenExpiring {
       return
     }
 
-    timer = Timer(
+    timer = Timer.scheduledTimer(
       timeInterval: accessToken.expirationDate.timeIntervalSinceNow,
       target: self,
       selector: #selector(timerDidFire),

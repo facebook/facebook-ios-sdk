@@ -303,6 +303,52 @@ final class ErrorConfigurationTests: XCTestCase {
     }
   }
 
+  func testCopyReturnsIndependentInstance() {
+    let original = _ErrorConfiguration(dictionary: nil)
+    original.update(with: rawErrorCodeConfiguration)
+    let copy = original.copy() as! _ErrorConfiguration // swiftlint:disable:this force_cast
+
+    // Copy should preserve the same error mappings
+    XCTAssertEqual(
+      .other,
+      copy.recoveryConfiguration(
+        forCode: "190",
+        subcode: "459",
+        request: graphRequest
+      )?.errorCategory
+    )
+
+    // Mutating the copy should not affect the original
+    let additionalConfig: [[String: Any]] = [
+      [
+        "name": "transient",
+        "items": [["code": 190, "subcodes": [459]]],
+      ],
+    ]
+    copy.update(with: additionalConfig)
+
+    // Original should still have the old value
+    XCTAssertEqual(
+      .other,
+      original.recoveryConfiguration(
+        forCode: "190",
+        subcode: "459",
+        request: graphRequest
+      )?.errorCategory,
+      "Mutating a copy should not affect the original"
+    )
+
+    // Copy should have the updated value
+    XCTAssertEqual(
+      .transient,
+      copy.recoveryConfiguration(
+        forCode: "190",
+        subcode: "459",
+        request: graphRequest
+      )?.errorCategory
+    )
+  }
+
   func testParsingRandomEntries() {
     for _ in 0 ..< 100 {
       // swiftlint:disable:next force_cast

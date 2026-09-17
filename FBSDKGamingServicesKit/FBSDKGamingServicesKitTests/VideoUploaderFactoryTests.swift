@@ -24,8 +24,9 @@ final class VideoUploaderFactoryTests: XCTestCase, VideoUploaderDelegate {
       "Should create the expected concrete video uploader"
     )
 
-    XCTAssertTrue(
-      uploader.delegate === self,
+    XCTAssertIdentical(
+      uploader.delegate,
+      self,
       "Should set the expected delegate on the uploader"
     )
   }

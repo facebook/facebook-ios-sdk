@@ -11,6 +11,10 @@ import Social
 final class SocialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol {
   private static let socialComposeServiceType = "com.apple.social.facebook"
 
+  var canMakeSocialComposeViewController: Bool {
+    SLComposeViewController.isAvailable(forServiceType: Self.socialComposeServiceType)
+  }
+
   func makeSocialComposeViewController() -> SLComposeViewController {
     SLComposeViewController(forServiceType: Self.socialComposeServiceType)
   }

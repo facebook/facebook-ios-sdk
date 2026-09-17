@@ -11,8 +11,11 @@ import Foundation
 @available(iOS 13.0, *)
 extension AsyncSequence {
   func getValues() async rethrows -> [Element] {
-    return try await reduce(into: []) { // swiftlint:disable:this implicit_return
-      $0.append($1)
+    var result: [Element] = []
+    for try await element in self {
+      if Task.isCancelled { break }
+      result.append(element)
     }
+    return result
   }
 }

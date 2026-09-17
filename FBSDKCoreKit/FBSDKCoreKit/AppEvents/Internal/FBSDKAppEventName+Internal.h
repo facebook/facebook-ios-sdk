@@ -26,3 +26,7 @@ FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameDeactivatedApp;
 
 FOUNDATION_EXPORT FBSDKAppEventName const  FBSDKAppEventNameOptinAEMAutoSetup;
 FOUNDATION_EXPORT FBSDKAppEventName const  FBSDKAppEventNameOptoutAEMAutoSetup;
+
+// MARK: - AppLink
+
+FOUNDATION_EXPORT FBSDKAppEventName const FBSDKAppEventNameAppLink;

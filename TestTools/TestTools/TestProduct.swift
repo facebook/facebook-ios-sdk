@@ -8,7 +8,7 @@
 
 import StoreKit
 
-public final class TestProduct: SKProduct {
+public final class TestProduct: SKProduct, @unchecked Sendable {
   public static let title = "Product title"
   public static let productDescription = "Some description"
   private var stubbedID: String?

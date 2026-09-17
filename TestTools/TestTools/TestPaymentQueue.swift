@@ -8,7 +8,7 @@
 
 import StoreKit
 
-public final class TestPaymentQueue: SKPaymentQueue {
+public final class TestPaymentQueue: SKPaymentQueue, @unchecked Sendable {
 
   public var addTransactionObserverWasCalled = false
   public var removeTransactionObserverWasCalled = false

@@ -19,7 +19,7 @@ final class DeviceLoginCodeInfoTests: XCTestCase {
     static let loginCode = "abcd"
     static let loginCode2 = "123"
     static let loginCode3 = "123abc"
-    static let verificationURL = URL(string: "https://www.facebook.com/some/test/url")! // swiftlint:disable:this force_unwrapping
+    static let verificationURL = URL(string: "https://www.facebook.com/some/test/url")!
     static let expirationDate = Date.distantFuture
     static let pollingInterval: UInt = 10
   }

@@ -216,6 +216,9 @@ static dispatch_once_t enableNonce;
       return false;
     }
     const fbsdk::MTensor &res = fbsdk::predictOnMTML("integrity_detect", bytes, _MTMLWeights, nullptr);
+    if (res.count() == 0) {
+      return false;
+    }
     const float *res_data = res.data();
     for (int i = 0; i < thresholds.count; i++) {
       if ((float)res_data[i] >= (float)[[FBSDKTypeUtility array:thresholds objectAtIndex:i] floatValue]) {
@@ -249,6 +252,9 @@ static dispatch_once_t enableNonce;
     }
 
     const fbsdk::MTensor &res = fbsdk::predictOnMTML("app_event_pred", bytes, _MTMLWeights, denseData);
+    if (res.count() == 0) {
+      return SUGGESTED_EVENT_OTHER;
+    }
     const float *res_data = res.data();
     for (int i = 0; i < thresholds.count; i++) {
       if ((float)res_data[i] >= (float)[[FBSDKTypeUtility array:thresholds objectAtIndex:i] floatValue]) {

@@ -183,7 +183,7 @@ final class FeatureExtractorTests: XCTestCase {
 
   let modelManager = TestOnDeviceMLModelManager()
 
-  override func setUpWithError() throws { // swiftlint:disable:this overridden_super_call
+  override func setUpWithError() throws {
     super.setUp()
 
     let bundle = Bundle(for: Self.self)

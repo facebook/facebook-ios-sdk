@@ -54,7 +54,10 @@ final class TokenCache: TokenCaching {
         tokenUUID == uuid,
         let tokenData = keychainStoreRepresentation[Keys.encodedToken] as? Data,
         let unarchiver = try? createUnarchiver(for: tokenData),
-        let unarchivedToken = unarchiver.decodeObject(of: AccessToken.self, forKey: NSKeyedArchiveRootObjectKey)
+        let unarchivedToken = unarchiver.decodeObject(
+          of: [AccessToken.self, NSString.self, NSDate.self, NSSet.self, NSNumber.self],
+          forKey: NSKeyedArchiveRootObjectKey
+        ) as? AccessToken
       else {
         clearAccessTokenCache()
         return nil
@@ -130,7 +133,10 @@ final class TokenCache: TokenCaching {
       guard
         let tokenData = keychainRepresentation[Keys.encodedToken] as? Data,
         let unarchiver = try? createUnarchiver(for: tokenData),
-        let unarchivedToken = unarchiver.decodeObject(of: AuthenticationToken.self, forKey: NSKeyedArchiveRootObjectKey)
+        let unarchivedToken = unarchiver.decodeObject(
+          of: [AuthenticationToken.self, NSString.self, NSDate.self, NSSet.self, NSNumber.self],
+          forKey: NSKeyedArchiveRootObjectKey
+        ) as? AuthenticationToken
       else {
         return nil
       }

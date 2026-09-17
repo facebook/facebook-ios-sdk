@@ -11,7 +11,6 @@ import Foundation
 
 @objcMembers
 open class TestEventLogger: NSObject, EventLogging {
-  // swiftlint:disable:this prefer_final_classes
   public var flushCallCount = 0
   public var flushBehavior: AppEvents.FlushBehavior = .auto
   public var capturedEventName: AppEvents.Name?

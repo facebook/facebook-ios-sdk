@@ -39,7 +39,7 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
 
   func testWithNonHttpUrlScheme() {
     api.isExpectingBackground = true // So we can check that it's unchanged
-    let nonHTTPUrl = URL(string: "file://example.com")! // swiftlint:disable:this force_unwrapping
+    let nonHTTPUrl = URL(string: "file://example.com")!
     api.openURLWithSafariViewController(
       url: nonHTTPUrl,
       sender: nil,
@@ -254,8 +254,9 @@ final class BridgeAPIOpenUrlWithSafariTests: XCTestCase {
       line: line
     )
 
-    XCTAssertTrue(
-      api.pendingURLOpener === loginManager,
+    XCTAssertIdentical(
+      api.pendingURLOpener,
+      loginManager,
       "Should set the pending url opener to the passed in sender",
       file: file,
       line: line

@@ -99,7 +99,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -150,7 +153,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -201,7 +207,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -257,7 +266,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -309,7 +321,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -454,7 +469,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(originalTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(originalTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -507,7 +525,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -558,7 +579,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -634,7 +658,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -698,7 +725,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -773,7 +803,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -839,7 +872,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -916,7 +952,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -975,7 +1014,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "inapp")
     XCTAssertNil(capturedParameters[.subscriptionPeriod])
@@ -1027,7 +1069,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")
@@ -1086,7 +1131,10 @@ extension IAPTransactionLoggerTests {
     XCTAssertEqual(capturedParameters[.productTitle] as? String, product.displayName)
     XCTAssertEqual(capturedParameters[.description] as? String, product.description)
     XCTAssertEqual(capturedParameters[.currency] as? String, "USD")
-    XCTAssertEqual(iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String, String(iapTransaction.transaction.id))
+    XCTAssertEqual(
+      iapParameters[AppEvents.ParameterName.transactionID.rawValue] as? String,
+      String(iapTransaction.transaction.id)
+    )
     XCTAssertEqual(capturedParameters[.implicitlyLoggedPurchase] as? String, "1")
     XCTAssertEqual(capturedParameters[.inAppPurchaseType] as? String, "subs")
     XCTAssertEqual(capturedParameters[.subscriptionPeriod] as? String, "P1Y")

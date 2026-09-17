@@ -83,6 +83,7 @@ enum AppEventUserAndAppDataField: String {
   case receiptData = "receipt_data"
   case urlSchemes = "url_schemes"
   case campaignIds = "campaign_ids"
+  case addToMessagingCustomerBaseForWhatsApp = "add_to_messaging_customer_base_for_whatsapp"
 }
 
 // MARK: ConversionsAPI parameters
@@ -136,6 +137,7 @@ enum ConversionsAPIUserAndAppDataField: String {
   case receiptData = "receipt_data"
   case urlSchemes = "url_schemes"
   case campaignIds = "campaign_ids"
+  case addToMessagingCustomerBaseForWhatsApp = "add_to_messaging_customer_base_for_whatsapp"
 }
 
 enum ConversionsAPIEventName: String {
@@ -193,6 +195,7 @@ enum AppEventsConversionsAPITransformer {
     .receiptData: .init(section: .appData, field: .receiptData),
     .urlSchemes: .init(section: .appData, field: .urlSchemes),
     .campaignIds: .init(section: .appData, field: .campaignIds),
+    .addToMessagingCustomerBaseForWhatsApp: .init(section: .appData, field: .addToMessagingCustomerBaseForWhatsApp),
     .userData: .init(section: .userData, field: nil),
   ]
 

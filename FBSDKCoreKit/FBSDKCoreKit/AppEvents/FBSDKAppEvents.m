@@ -25,6 +25,7 @@
 #import "FBSDKAppEventParameterProduct+Internal.h"
 #import "FBSDKAppEventUserDataType.h"
 #import "FBSDKAppEventsWKWebViewKeys.h"
+#import "FBSDKAppLinkURLCache.h"
 #import "FBSDKAtePublishing.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
@@ -33,6 +34,7 @@
 #import "FBSDKInternalUtility+Internal.h"
 #import "FBSDKLogger.h"
 #import "FBSDKLogging.h"
+#import "FBSDKScreenTitleObserver.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKUtility.h"
 
@@ -42,6 +44,9 @@
  #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 
 #endif
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 @protocol FBSDKCAPIReporter;
 
@@ -85,6 +90,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 @property (nonatomic) FBSDKServerConfiguration *serverConfiguration;
 @property (nonatomic) FBSDKAppEventsState *appEventsState;
 @property (nonatomic) BOOL _isUnityInitialized; // not publicly readable
+@property (nonatomic) BOOL isObservingApplicationStatePersistence;
 
 // Dependencies
 
@@ -105,6 +111,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> bannedParamsManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> stdParamEnforcementManager;
 @property (nullable, nonatomic) id<FBSDKMACARuleMatching> macaRuleMatchingManager;
+@property (nullable, nonatomic) id<FBSDKMACARuleMatching> vvpConfigManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> blocklistEventsManager;
 @property (nullable, nonatomic) id<FBSDKEventsProcessing> redactedEventsManager;
 @property (nullable, nonatomic) id<FBSDKAppEventsParameterProcessing> sensitiveParamsManager;
@@ -177,8 +184,15 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   return self;
 }
 
-- (void)startObservingApplicationLifecycleNotifications
+- (void)startObservingApplicationStatePersistenceNotifications
 {
+  // Idempotent: this may be called during synchronous init and again from
+  // startObservingApplicationLifecycleNotifications; register the persist observers only once.
+  if (self.isObservingApplicationStatePersistence) {
+    return;
+  }
+  self.isObservingApplicationStatePersistence = YES;
+
   [NSNotificationCenter.defaultCenter
    addObserver:self
    selector:@selector(applicationMovingFromActiveState)
@@ -190,6 +204,13 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
    selector:@selector(applicationTerminating)
    name:UIApplicationWillTerminateNotification
    object:NULL];
+}
+
+- (void)startObservingApplicationLifecycleNotifications
+{
+  // The persist-on-close observers are armed here too (idempotently) so a lone call still
+  // registers the full set; when init arms them earlier this is a no-op.
+  [self startObservingApplicationStatePersistenceNotifications];
 
   [NSNotificationCenter.defaultCenter
    addObserver:self
@@ -484,19 +505,24 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 
 - (nullable NSString *)loggingOverrideAppID
 {
-  return g_overrideAppID;
+  @synchronized (self) {
+    return g_overrideAppID;
+  }
 }
 
 - (void)setLoggingOverrideAppID:(nullable NSString *)appID
 {
   [self validateConfiguration];
 
-  if (![g_overrideAppID isEqualToString:appID]) {
+
+  if (![[self loggingOverrideAppID] isEqualToString:appID]) {
     if (g_explicitEventsLoggedYet) {
       [self.logger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                              logEntry:@"AppEvents.shared.loggingOverrideAppID should only be set prior to any events being logged."];
     }
-    g_overrideAppID = appID;
+    @synchronized (self) {
+      g_overrideAppID = appID;
+    }
   }
 }
 
@@ -531,16 +557,15 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
              country:(nullable NSString *)country
 {
   [self.userDataStore setUserEmail:email
-                         firstName:firstName
-                          lastName:lastName
-                             phone:phone
-                       dateOfBirth:dateOfBirth
-                            gender:gender
-                              city:city
-                             state:state
-                               zip:zip
-                           country:country
-                        externalId:nil];
+           firstName:firstName
+            lastName:lastName
+               phone:phone
+         dateOfBirth:dateOfBirth
+              gender:gender
+                city:city
+               state:state
+                 zip:zip
+             country:country];
 }
 
 - (nullable NSString *)getUserData
@@ -656,6 +681,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
                       bannedParamsManager:(nonnull id<FBSDKMACARuleMatching>)bannedParamsManager
                stdParamEnforcementManager:(nonnull id<FBSDKMACARuleMatching>)stdParamEnforcementManager
                  macaRuleMatchingManager:(nonnull id<FBSDKMACARuleMatching>)macaRuleMatchingManager
+                        vvpConfigManager:(nonnull id<FBSDKMACARuleMatching>)vvpConfigManager
                    blocklistEventsManager:(nonnull id<FBSDKEventsProcessing>)blocklistEventsManager
                     redactedEventsManager:(nonnull id<FBSDKEventsProcessing>)redactedEventsManager
                    sensitiveParamsManager:(nonnull id<FBSDKAppEventsParameterProcessing>)sensitiveParamsManager
@@ -688,6 +714,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   self.bannedParamsManager = bannedParamsManager;
   self.stdParamEnforcementManager = stdParamEnforcementManager;
   self.macaRuleMatchingManager = macaRuleMatchingManager;
+  self.vvpConfigManager = vvpConfigManager;
   self.blocklistEventsManager = blocklistEventsManager;
   self.redactedEventsManager = redactedEventsManager;
   self.sensitiveParamsManager = sensitiveParamsManager;
@@ -695,7 +722,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
   self.failedTransactionLoggingFactory = failedTransactionLoggingFactory;
   self.iapDedupeProcessor = iapDedupeProcessor;
   self.iapTransactionCache = iapTransactionCache;
- 
+
   NSString *appID = self.appID;
   if (appID) {
     self.atePublisher = [atePublisherFactory createPublisherWithAppID:appID];
@@ -1028,6 +1055,11 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           [self.macaRuleMatchingManager enable];
         }
       }];
+      [self.featureChecker checkFeature:FBSDKFeatureVVP completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [self.vvpConfigManager enable];
+        }
+      }];
       [self.featureChecker checkFeature:FBSDKFeatureBlocklistEvents completionBlock:^(BOOL enabled) {
         if (enabled) {
           [self.blocklistEventsManager enable];
@@ -1212,7 +1244,7 @@ operationalParameters:nil];
   if (isImplicitlyLogged && self.serverConfiguration && !self.serverConfiguration.isImplicitLoggingSupported) {
     return;
   }
-  
+
   operationalParameters = [self addImplicitPurchaseParameters:operationalParameters];
 
   BOOL isProtectedModeApplied = (self.protectedModeManager && [FBSDKProtectedModeManager isProtectedModeAppliedWithParameters:parameters]);
@@ -1224,7 +1256,7 @@ operationalParameters:nil];
                                    logEntry:@"FBSDKAppEvents: caught exception while processing sensitiveParamsManager."];
     }
   }
-  
+
   // remove banned parameters
     if (self.bannedParamsManager) {
       @try {
@@ -1234,13 +1266,13 @@ operationalParameters:nil];
                                logEntry:@"FBSDKAppEvents: caght exception while processing bannedParamsManager."];
       }
     }
-  
+
   if (self.macaRuleMatchingManager) {
     @try {
         parameters = [self.macaRuleMatchingManager processParameters:parameters event:eventName?:@""];
     } @catch(NSException *exception) {}
   }
-  
+
   // Schematize certain params
   if (self.stdParamEnforcementManager) {
     @try {
@@ -1295,8 +1327,20 @@ operationalParameters:nil];
         parameters = [self.protectedModeManager processParameters:parameters eventName:eventName];
     } @catch(NSException *exception) {}
   }
-  
-  
+
+  // VPPA Video Viewing Protections — must run AFTER ProtectedMode so the
+  // `vvp` / `vvp_md` tags survive ProtectedMode's standard-params filter
+  // (those keys are added to ProtectedMode's allowlist for that reason).
+  if (self.vvpConfigManager) {
+    @try {
+      parameters = [self.vvpConfigManager processParameters:parameters event:eventName ?: @""];
+    } @catch (NSException *exception) {
+      [self.logger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                             logEntry:@"FBSDKAppEvents: caught exception while processing vvpConfigManager."];
+    }
+  }
+
+
   NSMutableDictionary<FBSDKAppEventParameterName, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters ?: @{}];
   [FBSDKTypeUtility dictionary:eventDictionary setObject:eventName forKey:FBSDKAppEventParameterNameEventName];
   if (!eventDictionary[FBSDKAppEventParameterNameLogTime]) {
@@ -1333,6 +1377,23 @@ operationalParameters:nil];
   }
   [FBSDKTypeUtility dictionary:eventDictionary setObject:currentViewControllerName forKey:@"_ui"];
 
+  NSString *screenTitle = [FBSDKScreenTitleObserver shared].currentScreenTitle;
+  if (screenTitle.length > 0) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:screenTitle forKey:FBSDKAppEventParameterNameScreenTitle];
+  }
+
+  // Attribute the event to the app link that most recently brought the user into the app, or that
+  // the app most recently sent the user out through.
+  FBSDKAppLinkURLCache *appLinkURLCache = FBSDKAppLinkURLCache.shared;
+  NSString *inboundURL = appLinkURLCache.inboundURL;
+  if (inboundURL.length > 0) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:inboundURL forKey:FBSDKAppEventParameterNameInboundURL];
+  }
+  NSString *outboundURL = appLinkURLCache.outboundURL;
+  if (outboundURL.length > 0) {
+    [FBSDKTypeUtility dictionary:eventDictionary setObject:outboundURL forKey:FBSDKAppEventParameterNameOutboundURL];
+  }
+
   if (applicationState == UIApplicationStateBackground) {
     [FBSDKTypeUtility dictionary:eventDictionary setObject:@"1" forKey:FBSDKAppEventParameterNameInBackground];
   }
@@ -1363,7 +1424,7 @@ operationalParameters:nil];
     }
 
     [self checkPersistedEvents];
-    
+
     if (nil != [self.appEventsUtility getCampaignIDs]) {
        [self flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
        return;
@@ -1465,7 +1526,7 @@ operationalParameters:nil];
     }
 
     NSString *loggingEntry = nil;
-    if ([self.settings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAppEvents]) {
+    if ([self.settings isLoggingBehaviorEnabled:FBSDKLoggingBehaviorAppEvents]) {
       NSData *prettyJSONData = [FBSDKTypeUtility dataWithJSONObject:appEventsState.events
                                                             options:NSJSONWritingPrettyPrinted
                                                               error:NULL];
@@ -1690,6 +1751,8 @@ operationalParameters:nil];
   return request;
 }
 
+#pragma clang diagnostic pop
+
 #pragma mark - Testability
 
 #if DEBUG
@@ -1723,6 +1786,7 @@ operationalParameters:nil];
   self.bannedParamsManager = nil;
   self.stdParamEnforcementManager = nil;
   self.macaRuleMatchingManager = nil;
+  self.vvpConfigManager = nil;
   self.blocklistEventsManager = nil;
   self.redactedEventsManager = nil;
   self.sensitiveParamsManager = nil;
@@ -1730,7 +1794,9 @@ operationalParameters:nil];
   // The actual setter on here has a check to see if the SDK is initialized
   // This is not a useful check for tests so we can just reset the underlying
   // static var.
-  g_overrideAppID = nil;
+  @synchronized (self) {
+    g_overrideAppID = nil;
+  }
 
 #if !TARGET_OS_TV
   self.onDeviceMLModelManager = nil;

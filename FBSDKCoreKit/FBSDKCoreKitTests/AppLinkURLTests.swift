@@ -57,20 +57,24 @@ final class AppLinkURLTests: XCTestCase {
       appLinkEventPoster: appLinkEventPoster
     )
 
-    XCTAssertTrue(
-      AppLinkURL.settings === settings,
+    XCTAssertIdentical(
+      AppLinkURL.settings,
+      settings,
       "Should be able to configure dependencies"
     )
-    XCTAssertTrue(
-      AppLinkURL.appLinkFactory === appLinkFactory,
+    XCTAssertIdentical(
+      AppLinkURL.appLinkFactory,
+      appLinkFactory,
       "Should be able to configure dependencies"
     )
-    XCTAssertTrue(
-      AppLinkURL.appLinkTargetFactory === appLinkTargetFactory,
+    XCTAssertIdentical(
+      AppLinkURL.appLinkTargetFactory,
+      appLinkTargetFactory,
       "Should be able to configure dependencies"
     )
-    XCTAssertTrue(
-      AppLinkURL.appLinkEventPoster === appLinkEventPoster,
+    XCTAssertIdentical(
+      AppLinkURL.appLinkEventPoster,
+      appLinkEventPoster,
       "Should be able to configure dependencies"
     )
   }

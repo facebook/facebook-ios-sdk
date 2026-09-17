@@ -8,8 +8,8 @@
 
 #import "RPSAppDelegate.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKLoginKit/FBSDKLoginKit.h>
+@import FBSDKCoreKit;
+@import FBSDKLoginKit;
 
 #import "RPSAppLinkedViewController.h"
 #import "RPSAutoAppLinkBasicViewController.h"

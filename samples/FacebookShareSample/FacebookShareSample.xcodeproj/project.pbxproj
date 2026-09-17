@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA000001AAAAAA0100000001 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = AA000001AAAAAA0000000001 /* FacebookCore */; };
 		F45CD1D124C754C100C84BF7 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = F45CD1D024C754C100C84BF7 /* FacebookShare */; };
 		F46A5FA523E1ED3200948850 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FA423E1ED3200948850 /* AppDelegate.swift */; };
 		F46A5FA723E1ED3200948850 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46A5FA623E1ED3200948850 /* SceneDelegate.swift */; };
@@ -28,7 +29,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F45CD1CE24C754AB00C84BF7 /* facebook-ios-sdk */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "facebook-ios-sdk"; path = ../..; sourceTree = "<group>"; };
 		F46A5FA123E1ED3200948850 /* FacebookShareSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FacebookShareSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F46A5FA423E1ED3200948850 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F46A5FA623E1ED3200948850 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -46,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA000001AAAAAA0100000001 /* FacebookCore in Frameworks */,
 				F45CD1D124C754C100C84BF7 /* FacebookShare in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -70,7 +71,6 @@
 		F46A5F9823E1ED3200948850 = {
 			isa = PBXGroup;
 			children = (
-				F45CD1CE24C754AB00C84BF7 /* facebook-ios-sdk */,
 				F46A5FA323E1ED3200948850 /* FacebookShareSample */,
 				F46A5FA223E1ED3200948850 /* Products */,
 				F45CD1CF24C754C100C84BF7 /* Frameworks */,
@@ -120,6 +120,7 @@
 			);
 			name = FacebookShareSample;
 			packageProductDependencies = (
+				AA000001AAAAAA0000000001 /* FacebookCore */,
 				F45CD1D024C754C100C84BF7 /* FacebookShare */,
 			);
 			productName = FacebookShareSample;
@@ -173,6 +174,7 @@
 			);
 			mainGroup = F46A5F9823E1ED3200948850;
 			packageReferences = (
+				AA000001AAAAAA0200000001 /* XCLocalSwiftPackageReference "../.." */,
 			);
 			productRefGroup = F46A5FA223E1ED3200948850 /* Products */;
 			projectDirPath = "";
@@ -304,6 +306,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -358,6 +361,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -408,7 +412,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = FacebookShareSampleTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -429,7 +433,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = FacebookShareSampleTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -475,9 +479,22 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		AA000001AAAAAA0200000001 /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../..";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		AA000001AAAAAA0000000001 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA000001AAAAAA0200000001 /* XCLocalSwiftPackageReference "../.." */;
+			productName = FacebookCore;
+		};
 		F45CD1D024C754C100C84BF7 /* FacebookShare */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = AA000001AAAAAA0200000001 /* XCLocalSwiftPackageReference "../.." */;
 			productName = FacebookShare;
 		};
 /* End XCSwiftPackageProductDependency section */

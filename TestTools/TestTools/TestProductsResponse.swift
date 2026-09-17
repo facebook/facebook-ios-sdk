@@ -8,7 +8,7 @@
 
 import StoreKit
 
-public final class TestProductsResponse: SKProductsResponse {
+public final class TestProductsResponse: SKProductsResponse, @unchecked Sendable {
   private let stubbedProducts: [SKProduct]
   private let stubbedInvalidProductIdentifiers: [String]
 

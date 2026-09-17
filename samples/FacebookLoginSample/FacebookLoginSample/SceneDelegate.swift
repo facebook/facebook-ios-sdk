@@ -9,14 +9,13 @@
 import FacebookCore
 import UIKit
 
-@available(iOS 13.0, *)
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         guard let context = URLContexts.first else {
-            fatalError("Open url called without a context. This should never happen.")
+            return
         }
 
         ApplicationDelegate.shared.application(

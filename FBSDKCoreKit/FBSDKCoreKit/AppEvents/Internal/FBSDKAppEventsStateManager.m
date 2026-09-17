@@ -9,6 +9,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "FBSDKLogger.h"
 #import "FBSDKUnarchiverProvider.h"
@@ -16,6 +17,7 @@
 @interface FBSDKAppEventsStateManager ()
 // A quick optimization to allow returning empty array if we know there are no persisted events.
 @property (nonatomic, readwrite, assign) BOOL canSkipDiskCheck;
+@property (nonatomic, strong) dispatch_queue_t persistQueue;
 @end
 
 @implementation FBSDKAppEventsStateManager
@@ -24,6 +26,7 @@
 {
   if ((self = [super init])) {
     _canSkipDiskCheck = NO;
+    _persistQueue = dispatch_queue_create("com.facebook.sdk.AppEventsStateManager", DISPATCH_QUEUE_SERIAL);
   }
   return self;
 }
@@ -39,13 +42,15 @@
   return instance;
 }
 
+// dispatch_sync ensures callers see a consistent view of the file after any
+// pending async persist completes. In practice, the blocking window is near-zero:
+// persist runs on willResignActive (backgrounding) and retrieve runs on
+// didBecomeActive (foregrounding), so the queue is drained by the time we get here.
 - (void)clearPersistedAppEventsStates
 {
-  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                         logEntry:@"FBSDKAppEvents Persist: Clearing"];
-  [NSFileManager.defaultManager removeItemAtPath:[self filePath]
-                                           error:NULL];
-  self.canSkipDiskCheck = YES;
+  dispatch_sync(self.persistQueue, ^{
+    [self _clearPersistedAppEventsStates];
+  });
 }
 
 - (void)persistAppEventsData:(FBSDKAppEventsState *)appEventsState
@@ -57,16 +62,62 @@
   if (!appEventsState.events.count) {
     return;
   }
-  NSMutableArray<FBSDKAppEventsState *> *existingEvents = [NSMutableArray arrayWithArray:[self retrievePersistedAppEventsStates]];
-  [FBSDKTypeUtility array:existingEvents addObject:appEventsState];
+
+  // UIApplication.sharedApplication is unavailable in app extensions.
+  // Use NSClassFromString so this code is safe if the SDK is ever linked
+  // into an extension target.
+  __block UIBackgroundTaskIdentifier taskID = UIBackgroundTaskInvalid;
+  UIApplication *app = nil;
+  Class uiAppClass = NSClassFromString(@"UIApplication");
+  if (uiAppClass) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    app = [uiAppClass performSelector:NSSelectorFromString(@"sharedApplication")];
+#pragma clang diagnostic pop
+  }
+  if (app) {
+    taskID = [app beginBackgroundTaskWithExpirationHandler:^{
+      [app endBackgroundTask:taskID];
+      taskID = UIBackgroundTaskInvalid;
+    }];
+  }
+
+  dispatch_async(self.persistQueue, ^{
+    NSMutableArray<FBSDKAppEventsState *> *existingEvents = [NSMutableArray arrayWithArray:[self _retrievePersistedAppEventsStates]];
+    [FBSDKTypeUtility array:existingEvents addObject:appEventsState];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [NSKeyedArchiver archiveRootObject:existingEvents toFile:[self filePath]];
+    [NSKeyedArchiver archiveRootObject:existingEvents toFile:[self filePath]];
 #pragma clang diagnostic pop
-  self.canSkipDiskCheck = NO;
+    self.canSkipDiskCheck = NO;
+
+    if (app && taskID != UIBackgroundTaskInvalid) {
+      [app endBackgroundTask:taskID];
+    }
+  });
 }
 
-- (NSArray<FBSDKAppEventsState *> *)retrievePersistedAppEventsStates;
+- (NSArray<FBSDKAppEventsState *> *)retrievePersistedAppEventsStates
+{
+  __block NSArray<FBSDKAppEventsState *> *result;
+  dispatch_sync(self.persistQueue, ^{
+    result = [self _retrievePersistedAppEventsStates];
+  });
+  return result;
+}
+
+#pragma mark - Queue-internal helpers (must be called on persistQueue)
+
+- (void)_clearPersistedAppEventsStates
+{
+  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                         logEntry:@"FBSDKAppEvents Persist: Clearing"];
+  [NSFileManager.defaultManager removeItemAtPath:[self filePath]
+                                           error:NULL];
+  self.canSkipDiskCheck = YES;
+}
+
+- (NSArray<FBSDKAppEventsState *> *)_retrievePersistedAppEventsStates
 {
   NSMutableArray<FBSDKAppEventsState *> *eventsStates = [NSMutableArray array];
   if (!self.canSkipDiskCheck) {
@@ -86,7 +137,7 @@
                      ((FBSDKAppEventsState *)eventsStates.firstObject).events.count];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                            logEntry:msg];
-    [self clearPersistedAppEventsStates];
+    [self _clearPersistedAppEventsStates];
   }
   return eventsStates;
 }

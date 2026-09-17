@@ -29,9 +29,9 @@ final class GameRequestFrictionlessRecipientCacheTests: XCTestCase {
     cache = GameRequestFrictionlessRecipientCache()
     cache.setDependencies(
       .init(
+        accessTokenWallet: TestAccessTokenWallet.self,
         graphRequestFactory: graphRequestFactory,
-        notificationCenter: notificationCenter,
-        accessTokenWallet: TestAccessTokenWallet.self
+        notificationCenter: notificationCenter
       )
     )
   }

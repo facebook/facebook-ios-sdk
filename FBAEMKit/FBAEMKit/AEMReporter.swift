@@ -388,7 +388,7 @@ public final class AEMReporter: NSObject {
     // 1. The field hasStoreKitAdNetwork is true
     // 2. The conversion happens before SKAdNetwork cutoff
     // 3. The event is also being reported by SKAdNetwork
-    return invocation.hasStoreKitAdNetwork
+    invocation.hasStoreKitAdNetwork
       && reporter?.shouldCutoff() == false
       && reporter?.isReportingEvent(event) == true
   }
@@ -789,11 +789,9 @@ public final class AEMReporter: NSObject {
   static func sendAggregationRequest() {
     var params: [[String: Any]] = []
     var aggregatedInvocations: [AEMInvocation] = []
-    for invocation in invocations {
-      if !invocation.isAggregated {
-        params.append(aggregationRequestParameters(invocation))
-        aggregatedInvocations.append(invocation)
-      }
+    for invocation in invocations where !invocation.isAggregated {
+      params.append(aggregationRequestParameters(invocation))
+      aggregatedInvocations.append(invocation)
     }
 
     if params.isEmpty {
@@ -950,10 +948,9 @@ public final class AEMReporter: NSObject {
     _ configuration: AEMConfiguration,
     forInvocations invocations: [AEMInvocation]
   ) -> Bool {
-    for invocation in invocations {
-      if configuration.isSame(validFrom: invocation.configurationID, businessID: invocation.businessID) {
-        return true
-      }
+    for invocation in invocations
+      where configuration.isSame(validFrom: invocation.configurationID, businessID: invocation.businessID) {
+      return true
     }
     return false
   }

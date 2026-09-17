@@ -17,6 +17,7 @@ final class GraphRequestQueueTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var connection: TestGraphRequestConnection!
   var connectionFactory: TestGraphRequestConnectionFactory!
+  var settings: TestSettings!
   var graphRequestQueue: GraphRequestQueue!
   // swiftlint:enable implicitly_unwrapped_optional
 
@@ -25,8 +26,12 @@ final class GraphRequestQueueTests: XCTestCase {
     connectionFactory = TestGraphRequestConnectionFactory(
       stubbedConnection: connection
     )
+    settings = TestSettings()
+    settings.appID = "test-app-id"
+    settings.clientToken = "test-client-token"
     GraphRequestQueue.sharedInstance().configure(
-      graphRequestConnectionFactory: connectionFactory
+      graphRequestConnectionFactory: connectionFactory,
+      settings: settings
     )
     graphRequestQueue = GraphRequestQueue.sharedInstance()
     super.setUp()
@@ -35,6 +40,7 @@ final class GraphRequestQueueTests: XCTestCase {
   override func tearDown() {
     GraphRequestQueue.sharedInstance().reset()
     connectionFactory = nil
+    settings = nil
     super.tearDown()
   }
 
@@ -102,8 +108,9 @@ final class GraphRequestQueueTests: XCTestCase {
   func testQueueGraphRequestWithCompletion() {
     let testRequest = makeTestRequest()
     graphRequestQueue.enqueue(testRequest) { _, _, _ in }
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 1,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      1,
       "Queue should only have 1 request in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
@@ -123,8 +130,9 @@ final class GraphRequestQueueTests: XCTestCase {
   func testQueueRequestMetadata() {
     let testRequestMetaData = makeTestRequestMetadata()
     graphRequestQueue.enqueue(testRequestMetaData)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 1,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      1,
       "Queue should only have 1 request in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
@@ -150,18 +158,18 @@ final class GraphRequestQueueTests: XCTestCase {
     )
     let requestsMetadata = [testRequestMetaData1, testRequestMetaData2]
     graphRequestQueue.enqueueRequests(requestsMetadata)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 2,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      2,
       "Queue should have 2 requests in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
       XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
       return
     }
-    for idx in requests.indices {
-      if !requestMetadatasAreEqual(request1: requestsMetadata[idx], request2: requests[idx]) {
-        XCTFail("Test request should equal queued request")
-      }
+    for idx in requests.indices
+      where !requestMetadatasAreEqual(request1: requestsMetadata[idx], request2: requests[idx]) {
+      XCTFail("Test request should equal queued request")
     }
   }
 
@@ -177,8 +185,9 @@ final class GraphRequestQueueTests: XCTestCase {
     graphRequestQueue.enqueue(request1) { _, _, _ in }
     graphRequestQueue.enqueue(requestMetadata1)
     graphRequestQueue.enqueueRequests(requestsMetadata)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 4,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      4,
       "Queue should have 4 requests in it"
     )
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
@@ -213,13 +222,15 @@ final class GraphRequestQueueTests: XCTestCase {
     )
     let requestsToQueue = [requestMetadata1, requestMetadata2, requestMetadata3, requestMetadata4]
     graphRequestQueue.enqueueRequests(requestsToQueue)
-    XCTAssertTrue(
-      graphRequestQueue.requestsQueue.count == 4,
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      4,
       "Queue should have 4 requests in it before flush"
     )
     graphRequestQueue.flush()
-    XCTAssertTrue(
-      connection.startCallCount == 1,
+    XCTAssertEqual(
+      connection.startCallCount,
+      1,
       "GraphRequestConnection start should have been  called"
     )
     XCTAssertEqual(
@@ -227,10 +238,9 @@ final class GraphRequestQueueTests: XCTestCase {
       connection.capturedRequests.count,
       "Number of queued requests should eqaul number of GraphRequestConnection captured requests"
     )
-    for idx in connection.capturedRequests.indices {
-      if !requestsAreEqual(request1: requestsToQueue[idx].request, request2: connection.capturedRequests[idx]) {
-        XCTFail("Queued request should eqaul GraphRequestConnection captured request")
-      }
+    for idx in connection.capturedRequests.indices
+      where !requestsAreEqual(request1: requestsToQueue[idx].request, request2: connection.capturedRequests[idx]) {
+      XCTFail("Queued request should eqaul GraphRequestConnection captured request")
     }
     guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
       XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
@@ -240,5 +250,140 @@ final class GraphRequestQueueTests: XCTestCase {
       requests.isEmpty,
       "Queue should be empty after flush"
     )
+  }
+
+  func testFlushRetainsRequestsWhenAppIDMissing() {
+    settings.appID = nil
+    graphRequestQueue.enqueueRequests([makeTestRequestMetadata(), makeTestRequestMetadata()])
+
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      connection.startCallCount,
+      0,
+      "Should not start a request when there is no app ID to flush with"
+    )
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      2,
+      "Should retain the queued requests when it cannot flush them"
+    )
+  }
+
+  func testFlushRetainsRequestsWhenClientTokenMissing() {
+    settings.clientToken = nil
+    graphRequestQueue.enqueueRequests([makeTestRequestMetadata(), makeTestRequestMetadata()])
+
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      connection.startCallCount,
+      0,
+      "Should not start a request when there is no client token to flush with"
+    )
+    XCTAssertEqual(
+      graphRequestQueue.requestsQueue.count,
+      2,
+      "Should retain the queued requests when it cannot flush them"
+    )
+  }
+
+  func testFlushSplitsBatchesLargerThanTheGraphAPILimit() {
+    let perBatchFactory = PerCallConnectionFactory()
+    graphRequestQueue.configure(graphRequestConnectionFactory: perBatchFactory, settings: settings)
+    graphRequestQueue.enqueueRequests((0 ..< 120).map { _ in makeTestRequestMetadata() })
+
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      perBatchFactory.connections.map(\.capturedRequests.count),
+      [50, 50, 20],
+      "Should split into batches of at most 50; the Graph API rejects a larger batch outright"
+    )
+    XCTAssertEqual(
+      perBatchFactory.connections.map(\.startCallCount),
+      [1, 1, 1],
+      "Should start each batch exactly once"
+    )
+  }
+
+  func testEnqueueDropsRequestsBeyondTheQueueLimit() {
+    graphRequestQueue.enqueueRequests((0 ..< 1005).map { _ in makeTestRequestMetadata() })
+
+    guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
+      return XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+    }
+    XCTAssertEqual(requests.count, 1000, "Should bound the queue rather than growing without limit")
+  }
+
+  func testEnqueueCompletesDroppedRequestsWithAnError() {
+    graphRequestQueue.enqueueRequests((0 ..< 1000).map { _ in makeTestRequestMetadata() })
+
+    var capturedError: Error?
+    let completed = expectation(description: "dropped request completion")
+    graphRequestQueue.enqueue(makeTestRequest()) { _, _, error in
+      XCTAssertTrue(Thread.isMainThread, "Should deliver on the main queue, as a sent request does")
+      capturedError = error
+      completed.fulfill()
+    }
+
+    XCTAssertNil(
+      capturedError,
+      "Should not complete before the caller has finished submitting the request"
+    )
+    wait(for: [completed], timeout: 1)
+    XCTAssertNotNil(
+      capturedError,
+      "Should report an error for a dropped request rather than completing as though it succeeded"
+    )
+  }
+
+  func testLegacyConfigureSuppliesRealSettings() {
+    graphRequestQueue.reset()
+
+    graphRequestQueue.configure(graphRequestConnectionFactory: connectionFactory)
+
+    XCTAssertNotNil(
+      graphRequestQueue.settings,
+      "The legacy signature must forward real settings, otherwise the queue can never flush"
+    )
+    XCTAssertIdentical(
+      graphRequestQueue.settings,
+      Settings.shared,
+      "Should forward the shared settings, the same instance the SDK's own configuration passes"
+    )
+  }
+
+  func testFlushDrainsRetainedRequestsOnceConfigured() {
+    settings.appID = nil
+    graphRequestQueue.enqueueRequests([makeTestRequestMetadata(), makeTestRequestMetadata()])
+    graphRequestQueue.flush()
+    XCTAssertEqual(connection.startCallCount, 0, "Precondition: requests are retained while unconfigured")
+
+    settings.appID = "test-app-id"
+    graphRequestQueue.flush()
+
+    XCTAssertEqual(
+      connection.startCallCount,
+      1,
+      "Should flush the retained requests once an app ID and client token are available"
+    )
+    guard let requests = graphRequestQueue.requestsQueue as? [GraphRequestMetadata] else {
+      return XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
+    }
+    XCTAssertTrue(requests.isEmpty, "Queue should be empty after a successful flush")
+  }
+}
+
+// The shared `TestGraphRequestConnectionFactory` vends one connection for every call, which
+// collapses the batches into a single list of requests. This vends a fresh connection per call so
+// a test can assert what each individual batch received.
+private final class PerCallConnectionFactory: NSObject, GraphRequestConnectionFactoryProtocol {
+  var connections = [TestGraphRequestConnection]()
+
+  func createGraphRequestConnection() -> GraphRequestConnecting {
+    let connection = TestGraphRequestConnection()
+    connections.append(connection)
+    return connection
   }
 }

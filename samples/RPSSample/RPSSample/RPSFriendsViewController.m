@@ -10,9 +10,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKLoginKit/FBSDKLoginKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@import FBSDKCoreKit;
+@import FBSDKGamingServicesKit;
+@import FBSDKLoginKit;
+@import FBSDKShareKit;
 
 @interface RPSFriendsViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>
 @end
@@ -79,11 +80,9 @@
 
 - (IBAction)tapChallengeFriends:(id)sender
 {
-  FBSDKGameRequestDialog *gameRequestDialog = [[FBSDKGameRequestDialog alloc] init];
   FBSDKGameRequestContent *content = [[FBSDKGameRequestContent alloc] init];
-  content.title = @"Challenge a Friend";
   content.message = @"Please come play RPS with me!";
-  gameRequestDialog.content = content;
+  FBSDKGameRequestDialog *gameRequestDialog = [[FBSDKGameRequestDialog alloc] initWithContent:content delegate:nil];
   [gameRequestDialog show];
 }
 
@@ -141,7 +140,7 @@
                                                                         parameters:parameters];
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   [connection addRequest:friendsRequest
-       completionHandler:^(FBSDKGraphRequestConnection *innerConnection, NSDictionary *result, NSError *error) {
+            completion:^(id<FBSDKGraphRequestConnecting> innerConnection, NSDictionary *result, NSError *error) {
          if (error) {
            NSLog(@"%@", error);
            return;
@@ -174,7 +173,7 @@
                                             }];
   ++pendingRequestCount;
   [connection addRequest:playActivityRequest
-       completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id playActivity, NSError *error) {
+            completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id playActivity, NSError *error) {
          if (error) {
            NSLog(@"Failed get fb_sample_rps:throw activities for user '%@': %@", fbid, error);
          } else if (playActivity) {
@@ -201,8 +200,8 @@
                                             }];
   ++pendingRequestCount;
   [connection addRequest:gameActivityRequest
-          batchEntryName:@"games-post"
-       completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+                    name:@"games-post"
+              completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id result, NSError *error) {
          if (error) {
            NSLog(@"Failed to get game activity %@:", error);
          }
@@ -218,7 +217,7 @@
                                    @"date_format" : @"U",
                                  }];
   ++pendingRequestCount;
-  [connection addRequest:gameData completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id games, NSError *innerError) {
+  [connection addRequest:gameData completion:^(id<FBSDKGraphRequestConnecting> innerConnection, id games, NSError *innerError) {
     if (innerError) {
       // ignore code 2500 errors since that indicates the parent games-post error was empty.
       if ([innerError.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue] != 2500) {

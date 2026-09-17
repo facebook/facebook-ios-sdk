@@ -40,6 +40,17 @@ NS_SWIFT_NAME(_Swizzler)
 + (void)unswizzleSelector:(SEL)aSelector onClass:(Class)aClass named:(NSString *)aName;
 + (void)printSwizzles;
 
+/**
+ Exchanges the implementations of two instance methods already defined on the same class
+ and returns the original implementation of `originalSelector`.
+
+ Unlike the block-based API, the swizzled selector carries the original method's exact
+ argument types, so it is safe for selectors with non-object arguments (e.g. a `BOOL`).
+ */
++ (nullable IMP)swizzleMethodsOnSameClass:(Class)targetClass
+                         originalSelector:(SEL)originalSelector
+                         swizzledSelector:(SEL)swizzledSelector;
+
 @end
 
 NS_ASSUME_NONNULL_END

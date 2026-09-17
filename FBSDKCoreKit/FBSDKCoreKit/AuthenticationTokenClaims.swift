@@ -13,6 +13,8 @@ public final class AuthenticationTokenClaims: NSObject {
 
   private enum Keys {
     static let aud = "aud"
+    static let cnf = "cnf"
+    static let cnfJkt = "jkt"
     static let email = "email"
     static let exp = "exp"
     static let familyName = "family_name"
@@ -107,6 +109,10 @@ public final class AuthenticationTokenClaims: NSObject {
   /// End-User's link
   public let userLink: String?
 
+  /// JWK Thumbprint of the device public key bound to this token via the `cnf.jkt`
+  /// claim (RFC 7800 / RFC 9449). Present when the token is DPoP-bound; nil otherwise.
+  public let cnfJkt: String?
+
   /**
    Internal method exposed to facilitate transition to Swift.
    API Subject to change or removal without warning. Do not use.
@@ -138,7 +144,7 @@ public final class AuthenticationTokenClaims: NSObject {
           let dependencies = try? AuthenticationTokenClaims.getDependencies(),
           let audience = claimsDictionary[Keys.aud] as? String,
           audience == dependencies.settings.appID,
-          // Validate expireation
+          // Validate expiration
           let expiration = claimsDictionary[Keys.exp] as? Double,
           expiration > currentTime,
           // Validate 'issued at' timestamp
@@ -173,6 +179,13 @@ public final class AuthenticationTokenClaims: NSObject {
       potentialLocation = location
     }
 
+    var potentialCnfJkt: String?
+    if let cnf = claimsDictionary[Keys.cnf] as? [String: Any],
+       let jkt = cnf[Keys.cnfJkt] as? String,
+       !jkt.isEmpty {
+      potentialCnfJkt = jkt
+    }
+
     self.init(
       jti: validJTI,
       iss: issuer,
@@ -193,7 +206,8 @@ public final class AuthenticationTokenClaims: NSObject {
       userHometown: potentialHometown,
       userLocation: potentialLocation,
       userGender: claimsDictionary[Keys.userGender] as? String,
-      userLink: claimsDictionary[Keys.userLink] as? String
+      userLink: claimsDictionary[Keys.userLink] as? String,
+      cnfJkt: potentialCnfJkt
     )
   }
 
@@ -217,7 +231,8 @@ public final class AuthenticationTokenClaims: NSObject {
     userHometown: [String: String]?,
     userLocation: [String: String]?,
     userGender: String?,
-    userLink: String?
+    userLink: String?,
+    cnfJkt: String? = nil
   ) {
     self.jti = jti
     self.iss = iss
@@ -239,6 +254,7 @@ public final class AuthenticationTokenClaims: NSObject {
     self.userLocation = userLocation
     self.userGender = userGender
     self.userLink = userLink
+    self.cnfJkt = cnfJkt
   }
 }
 

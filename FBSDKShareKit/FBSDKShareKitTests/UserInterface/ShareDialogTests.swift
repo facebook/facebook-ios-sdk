@@ -54,17 +54,17 @@ final class ShareDialogTests: XCTestCase {
 
     ShareDialog.setDependencies(
       .init(
-        internalURLOpener: internalURLOpener,
-        internalUtility: internalUtility,
-        settings: settings,
-        shareUtility: TestShareUtility.self,
         bridgeAPIRequestFactory: bridgeAPIRequestFactory,
         bridgeAPIRequestOpener: bridgeAPIRequestOpener,
-        socialComposeViewControllerFactory: socialComposeViewControllerFactory,
-        windowFinder: windowFinder,
         errorFactory: errorFactory,
         eventLogger: eventLogger,
-        mediaLibrarySearcher: mediaLibrarySearcher
+        internalURLOpener: internalURLOpener,
+        internalUtility: internalUtility,
+        mediaLibrarySearcher: mediaLibrarySearcher,
+        settings: settings,
+        shareUtility: TestShareUtility.self,
+        socialComposeViewControllerFactory: socialComposeViewControllerFactory,
+        windowFinder: windowFinder
       )
     )
 
@@ -290,6 +290,71 @@ final class ShareDialogTests: XCTestCase {
     XCTAssertFalse(dialog.show())
   }
 
+  // MARK: - Native completion handling
+
+  func testNativeLinkShareWithNoGestureAndNoPostIDTreatedAsComplete() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    internalUtility.isFacebookAppInstalled = true
+
+    dialog = createEmptyDialog(mode: .native)
+    dialog.shareContent = ShareModelTestUtility.linkContent
+    let viewController = UIViewController()
+    dialog.fromViewController = viewController
+    _ = dialog.show()
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(
+      delegate.sharerDidCompleteCalled,
+      "A native link share with no completion gesture and no post ID should be treated as complete"
+    )
+    XCTAssertFalse(delegate.sharerDidCancelCalled)
+  }
+
+  func testNativePhotoShareWithNoGestureAndNoPostIDTreatedAsComplete() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    internalUtility.isFacebookAppInstalled = true
+
+    dialog = createEmptyDialog(mode: .native)
+    dialog.shareContent = ShareModelTestUtility.photoContentWithImages
+    let viewController = UIViewController()
+    dialog.fromViewController = viewController
+    _ = dialog.show()
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(
+      delegate.sharerDidCompleteCalled,
+      "A native photo share with no completion gesture and no post ID should be treated as complete"
+    )
+    XCTAssertFalse(delegate.sharerDidCancelCalled)
+  }
+
+  func testNativeVideoShareWithNoGestureAndNoPostIDTreatedAsComplete() {
+    let request = TestBridgeAPIRequest()
+    bridgeAPIRequestFactory.stubbedBridgeAPIRequest = request
+    internalUtility.isFacebookAppInstalled = true
+
+    dialog = createEmptyDialog(mode: .native)
+    dialog.shareContent = ShareModelTestUtility.videoContentWithoutPreviewPhoto
+    let viewController = UIViewController()
+    dialog.fromViewController = viewController
+    _ = dialog.show()
+
+    let response = BridgeAPIResponse(request: request, error: nil)
+    bridgeAPIRequestOpener.capturedCompletionBlock?(response)
+
+    XCTAssertTrue(
+      delegate.sharerDidCompleteCalled,
+      "A native video share with no completion gesture and no post ID should be treated as complete"
+    )
+    XCTAssertFalse(delegate.sharerDidCancelCalled)
+  }
+
   // MARK: - Browser mode
 
   func testCanShowBrowser() {
@@ -380,7 +445,7 @@ final class ShareDialogTests: XCTestCase {
     )
 
     XCTAssertEqual(bridgeAPIRequestFactory.capturedProtocolType, .web, .Showing.bridgeAPIRequest)
-    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLScheme.https.rawValue, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLSchemeEnum.https.rawValue, .Showing.bridgeAPIRequest)
     XCTAssertEqual(bridgeAPIRequestFactory.capturedMethodName, components.methodName, .Showing.bridgeAPIRequest)
     XCTAssertEqual(
       bridgeAPIRequestFactory.capturedParameters as? [String: String],
@@ -425,7 +490,7 @@ final class ShareDialogTests: XCTestCase {
     TestShareUtility.capturedAsyncWebPhotoContentCompletion?(true, "test", parameters)
 
     XCTAssertEqual(bridgeAPIRequestFactory.capturedProtocolType, .web, .Showing.bridgeAPIRequest)
-    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLScheme.https.rawValue, .Showing.bridgeAPIRequest)
+    XCTAssertEqual(bridgeAPIRequestFactory.capturedScheme, URLSchemeEnum.https.rawValue, .Showing.bridgeAPIRequest)
     XCTAssertEqual(bridgeAPIRequestFactory.capturedMethodName, "test", .Showing.bridgeAPIRequest)
     XCTAssertEqual(
       bridgeAPIRequestFactory.capturedParameters as? [String: String],
@@ -620,6 +685,7 @@ final class ShareDialogTests: XCTestCase {
     content.quote = "a quote"
     dialog.shareContent = content
     internalUtility.isFacebookAppInstalled = true
+    socialComposeViewControllerFactory.stubbedCanMakeSocialComposeViewController = true
 
     internalURLOpener.canOpenURL = true
     settings.appID = "appID"
@@ -638,6 +704,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testPassingValidationForLinkQuoteWithValidShareExtensionVersion() {
     internalUtility.isFacebookAppInstalled = true
+    socialComposeViewControllerFactory.stubbedCanMakeSocialComposeViewController = true
 
     validate(
       shareContent: ShareModelTestUtility.linkContent,
@@ -661,6 +728,7 @@ final class ShareDialogTests: XCTestCase {
 
   func testThatValidateWithErrorReturnsTrueForMMPIfAValidShareExtensionVersionIsAvailable() {
     internalUtility.isFacebookAppInstalled = true
+    socialComposeViewControllerFactory.stubbedCanMakeSocialComposeViewController = true
 
     validate(
       shareContent: ShareModelTestUtility.mediaContent,

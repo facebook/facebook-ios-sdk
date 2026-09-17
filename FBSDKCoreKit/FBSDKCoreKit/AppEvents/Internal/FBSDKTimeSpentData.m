@@ -53,6 +53,15 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   LONG_MAX, // keep as LONG_MAX to guarantee loop will terminate
 };
 
+static dispatch_queue_t FBSDKTimeSpentDataWriteQueue(void) {
+  static dispatch_queue_t queue;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    queue = dispatch_queue_create("com.facebook.sdk.TimeSpentData.write", DISPATCH_QUEUE_SERIAL);
+  });
+  return queue;
+}
+
 @interface FBSDKTimeSpentData ()
 
 @property (nonatomic, weak) id<FBSDKEventLogging> eventLogger;
@@ -130,16 +139,30 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
   NSString *content = [FBSDKBasicUtility JSONStringForObject:timeSpentData error:NULL invalidObjectHandler:NULL];
 
-  [content writeToFile:[FBSDKBasicUtility persistenceFilePath:FBSDKTimeSpentFilename]
-            atomically:YES
-              encoding:NSASCIIStringEncoding
-                 error:nil];
+  __block UIBackgroundTaskIdentifier bgTask = UIBackgroundTaskInvalid;
+  bgTask = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:^{
+    [UIApplication.sharedApplication endBackgroundTask:bgTask];
+    bgTask = UIBackgroundTaskInvalid;
+  }];
+  dispatch_async(FBSDKTimeSpentDataWriteQueue(), ^{
+    [content writeToFile:[FBSDKBasicUtility persistenceFilePath:FBSDKTimeSpentFilename]
+              atomically:YES
+                encoding:NSASCIIStringEncoding
+                   error:nil];
 
-  NSString *msg = [NSString stringWithFormat:@"FBSDKTimeSpentData Persist: %@", content];
-  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
-                         logEntry:msg];
+    NSString *msg = [NSString stringWithFormat:@"FBSDKTimeSpentData Persist: %@", content];
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
+                           logEntry:msg];
 
-  self.isCurrentlyLoaded = NO;
+    if (bgTask != UIBackgroundTaskInvalid) {
+      [UIApplication.sharedApplication endBackgroundTask:bgTask];
+      bgTask = UIBackgroundTaskInvalid;
+    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+      self.isCurrentlyLoaded = NO;
+    });
+  });
 }
 
 // Called during activation - either through an explicit 'activateApp' call or implicitly when the app is foregrounded.

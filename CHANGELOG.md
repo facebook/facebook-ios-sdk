@@ -10,7 +10,81 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.1...HEAD)
+
+### Changed
+- **Breaking**: the minimum supported deployment target is now iOS 15.0 (was iOS 12.0).
+  Xcode 27 does not support deployment targets below iOS 15.0. Apps still targeting
+  iOS 12–14 must raise their deployment target to adopt this version.
+
+## 18.1.1
+
+### Changed
+- The default Graph API version is now v26.0
+- SDK initialization no longer blocks on the network or on the first frame, so less work
+  happens during app launch
+- Queued graph requests are flushed in bounded batches
+
+### Fixed
+- Fast App Switching eligibility when ATT is denied, on iOS 17 and later
+- Two `SDKFeature` values were not resolved correctly
+- Recurring typos in `FBSDKGamingServicesKit`, `FBSDKLoginKit`, and tests
+
+[2026-08-27](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.1.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.0...v18.1.1)
+
+## 18.1.0
+
+### Added
+- **Limited Login Refresh**: Limited Login sessions now refresh automatically
+  when the app returns to the foreground, keeping `Profile.current` and
+  `AuthenticationToken.current` up to date without prompting the user to
+  re-authenticate. Tune the minimum interval between automatic refreshes via
+  `Settings.shared.limitedLoginAutoRefreshInterval` (default: 24 hours), or
+  trigger an on-demand refresh with
+  `LoginManager.refreshLimitedLogin(from:fallbackPolicy:completion:)`. The refresh
+  strategy is configurable via `RefreshFallbackPolicy` (`.automatic`,
+  `.directOnly`, `.silentOnly`, `.explicitOnly`). Rolling out gradually.
+- Diagnostic warning at initialization when the App ID or Client Token is missing
+  or empty (#3639).
+
+### Changed
+- `ShareDialog` in `.automatic` mode now prefers the native share dialog over the
+  deprecated `SLComposeViewController`.
+
+### Fixed
+- Photo and video sharing incorrectly reported as cancelled in native mode (#2267).
+- Fixed crashes from concurrent access in `SensitiveParamsManager` (#3626) and
+  during server-configuration archiving.
+- Fixed a main-thread hang when persisting time-spent data on backgrounding (#2349).
+- Fixed automatic access-token refresh not firing on its timer.
+- Fixed user data for `zip` and `dateOfBirth` being stored as a hash of the empty
+  string (#2219).
+- The SDK's Swift Package no longer injects its own Xcode schemes into consuming
+  projects (#2515).
+
+[2026-06-18](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.1.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.3...v18.1.0)
+
+## 18.0.3
+- Added anonymous deferral deeplink support
+
+[2026-02-10](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.3) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.2...v18.0.3)
+
+## 18.0.2
+- Reintroduced fast app switching capabilities
+
+[2025-11-13](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.2) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.1...v18.0.2)
+
+## 18.0.1
+
+### Added
+- Added additional capability for link attachments to have music attached
+
+[2025-08-17](https://github.com/facebook/facebook-ios-sdk/releases/tag/v18.0.1) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.0.0...v18.0.1)
 
 ## 18.0.0
 

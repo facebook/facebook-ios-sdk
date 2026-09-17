@@ -14,22 +14,6 @@ final class IAPDedupeProcessor: _IAPDedupeProcessing {
   private var implicitlyLoggedEvents: [DedupableEvent] = []
   private var timer: Timer?
 
-  private var synchronizedManualEvents: [DedupableEvent] {
-    var events: [DedupableEvent] = []
-    synchronized(self) {
-      events = manuallyLoggedEvents
-    }
-    return events
-  }
-
-  private var synchronizedImplicitEvents: [DedupableEvent] {
-    var events: [DedupableEvent] = []
-    synchronized(self) {
-      events = implicitlyLoggedEvents
-    }
-    return events
-  }
-
   private static let dateFormatter = DateFormatter()
   private static var valueToSumKey = "_valueToSum"
   static var configuredDependencies: TypeDependencies?
@@ -93,13 +77,17 @@ extension IAPDedupeProcessor {
     }
     timer?.invalidate()
     timer = nil
-    let manualEvents = synchronizedManualEvents
-    manuallyLoggedEvents = []
+    var manualEvents: [DedupableEvent] = []
+    var implicitEvents: [DedupableEvent] = []
+    synchronized(self) {
+      manualEvents = manuallyLoggedEvents
+      manuallyLoggedEvents = []
+      implicitEvents = implicitlyLoggedEvents
+      implicitlyLoggedEvents = []
+    }
     if !manualEvents.isEmpty, let manualData = try? JSONEncoder().encode(manualEvents) {
       dependencies.dataStore.fb_setObject(manualData, forKey: IAPConstants.manuallyLoggedDedupableEventsKey)
     }
-    let implicitEvents = synchronizedImplicitEvents
-    implicitlyLoggedEvents = []
     if !implicitEvents.isEmpty, let implicitData = try? JSONEncoder().encode(implicitEvents) {
       dependencies.dataStore.fb_setObject(implicitData, forKey: IAPConstants.implicitlyLoggedDedupableEventsKey)
     }
@@ -343,10 +331,14 @@ extension IAPDedupeProcessor {
   private func executeDedupTimerFired() {
     timer?.invalidate()
     timer = nil
-    var implicitEvents = synchronizedImplicitEvents
-    implicitlyLoggedEvents = []
-    var manualEvents = synchronizedManualEvents
-    manuallyLoggedEvents = []
+    var implicitEvents: [DedupableEvent] = []
+    var manualEvents: [DedupableEvent] = []
+    synchronized(self) {
+      implicitEvents = implicitlyLoggedEvents
+      implicitlyLoggedEvents = []
+      manualEvents = manuallyLoggedEvents
+      manuallyLoggedEvents = []
+    }
     Self.performDedup(implicitEvents: &implicitEvents, manualEvents: &manualEvents)
   }
 

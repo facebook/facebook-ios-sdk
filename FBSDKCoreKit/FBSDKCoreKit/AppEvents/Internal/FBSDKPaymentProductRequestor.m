@@ -18,6 +18,9 @@
 #import "FBSDKEventLogging.h"
 #import "FBSDKProductsRequestProtocols.h"
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 static NSString *const FBSDKPaymentObserverOriginalTransactionKey = @"com.facebook.appevents.PaymentObserver.originalTransaction";
 static NSString *const FBSDKPaymentObserverDelimiter = @",";
 
@@ -103,7 +106,10 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
 - (void)resolveProducts
 {
   NSString *productId = self.transaction.payment.productIdentifier;
-  NSSet<NSString *> *productIdentifiers = [NSSet setWithObjects:productId, nil];
+  if (!productId) {
+    return;
+  }
+  NSSet<NSString *> *productIdentifiers = [NSSet setWithObject:productId];
   self.productsRequest = [self.productRequestFactory createWithProductIdentifiers:productIdentifiers];
   self.productsRequest.delegate = self;
   @synchronized(self.class.pendingRequestors) {
@@ -410,5 +416,7 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
   NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
   return receipt;
 }
+
+#pragma clang diagnostic pop
 
 @end

@@ -53,6 +53,7 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureFilterSensitiveParams = 0x01010408,
   FBSDKFeatureStdParamEnforcement = 0x01010409,
   FBSDKFeatureBannedParamFiltering = 0x0101040a,
+  FBSDKFeatureVVP = 0x0101040b,
   FBSDKFeatureEventDeactivation = 0x01010500,
   FBSDKFeatureSKAdNetwork = 0x01010600,
   FBSDKFeatureSKAdNetworkConversionValue = 0x01010601,
@@ -67,6 +68,8 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureAppEventsCloudbridge = 0x01010900,
   FBSDKFeatureIAPLoggingSK2 = 0x01011000,
   FBSDKFeatureIOSManualImplicitPurchaseDedupe = 0x01011001,
+  /// UserJourney
+  FBSDKFeatureUserJourney = 0x01011100,
   /// Instrument
   FBSDKFeatureInstrument = 0x01020000,
   FBSDKFeatureCrashReport = 0x01020100,
@@ -76,6 +79,12 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   // Features in LoginKit
   /// Essential of LoginKit
   FBSDKFeatureLogin = 0x02000000,
+  /// Fast App Switch login flow
+  FBSDKFeatureLoginFastAppSwitch = 0x02010000,
+  /// Limited Login Refresh
+  FBSDKFeatureLimitedLoginRefresh = 0x02020000,
+  /// Fast App Switch for Limited Login
+  FBSDKFeatureLimitedLoginFastAppSwitch = 0x02030000,
 
   // Features in ShareKit
   /// Essential of ShareKit

@@ -24,7 +24,7 @@ final class ProfileTests: XCTestCase {
   var imageURL: URL!
   // swiftlint:enable implicitly_unwrapped_optional
 
-  let stubbedURL = URL(string: "testProfile.com")! // swiftlint:disable:this force_unwrapping
+  let stubbedURL = URL(string: "testProfile.com")!
   let accessTokenKey = "access_token"
   let pictureModeKey = "type"
   let widthKey = "width"
@@ -897,15 +897,17 @@ final class ProfileTests: XCTestCase {
   }
 
   func testConfiguringWithDataStore() {
-    XCTAssertTrue(
-      Profile.dataStore === dataStore,
+    XCTAssertIdentical(
+      Profile.dataStore,
+      dataStore,
       "Should be able to set a persistent data store"
     )
   }
 
   func testConfiguringWithNotificationCenter() {
-    XCTAssertTrue(
-      Profile.notificationCenter === notificationCenter,
+    XCTAssertIdentical(
+      Profile.notificationCenter,
+      notificationCenter,
       "Should be able to set a Notification Posting"
     )
   }
@@ -934,8 +936,9 @@ final class ProfileTests: XCTestCase {
   }
 
   func testConfiguringWithSettings() {
-    XCTAssertTrue(
-      Profile.settings === settings,
+    XCTAssertIdentical(
+      Profile.settings,
+      settings,
       "Should be able to set settings"
     )
   }

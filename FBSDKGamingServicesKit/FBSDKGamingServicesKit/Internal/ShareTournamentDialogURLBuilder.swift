@@ -56,7 +56,7 @@ internal enum ShareTournamentDialogURLBuilder {
 
   func url(withPathAppID appID: String, score: Int) -> URL? {
     var components = URLComponents()
-    components.scheme = URLScheme.https.rawValue
+    components.scheme = URLSchemeEnum.https.rawValue
     components.host = Constants.host
     components.path = "\(Constants.path)\(appID)"
 

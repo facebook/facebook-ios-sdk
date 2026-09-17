@@ -51,6 +51,5 @@ fileprivate extension String {
 // MARK: - Test Values
 
 fileprivate extension URL {
-  // swiftlint:disable:next force_unwrapping
   static let sample = URL(string: "https://facebook.com")!
 }

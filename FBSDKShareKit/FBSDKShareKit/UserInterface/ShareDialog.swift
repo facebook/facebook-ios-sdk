@@ -122,33 +122,33 @@ public class ShareDialog: NSObject, SharingDialog { // swiftlint:disable:this pr
 
 extension ShareDialog: DependentAsType {
   struct TypeDependencies {
-    var internalURLOpener: ShareInternalURLOpening
-    var internalUtility: InternalUtilityProtocol
-    var settings: SettingsProtocol
-    var shareUtility: (ShareUtilityProtocol & ShareValidating).Type
     var bridgeAPIRequestFactory: BridgeAPIRequestCreating
     var bridgeAPIRequestOpener: BridgeAPIRequestOpening
-    var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol
-    var windowFinder: _WindowFinding
     var errorFactory: ErrorCreating
     var eventLogger: ShareEventLogging
+    var internalURLOpener: ShareInternalURLOpening
+    var internalUtility: InternalUtilityProtocol
     var mediaLibrarySearcher: MediaLibrarySearching
+    var settings: SettingsProtocol
+    var shareUtility: (ShareUtilityProtocol & ShareValidating).Type
+    var socialComposeViewControllerFactory: SocialComposeViewControllerFactoryProtocol
+    var windowFinder: _WindowFinding
   }
 
   static var configuredDependencies: TypeDependencies?
 
   static var defaultDependencies: TypeDependencies? = TypeDependencies(
-    internalURLOpener: ShareUIApplication.shared,
-    internalUtility: InternalUtility.shared,
-    settings: Settings.shared,
-    shareUtility: _ShareUtility.self,
     bridgeAPIRequestFactory: ShareBridgeAPIRequestFactory(),
     bridgeAPIRequestOpener: _BridgeAPI.shared,
-    socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
-    windowFinder: InternalUtility.shared,
     errorFactory: _ErrorFactory(),
     eventLogger: AppEvents.shared,
-    mediaLibrarySearcher: PHImageManager.default()
+    internalURLOpener: ShareUIApplication.shared,
+    internalUtility: InternalUtility.shared,
+    mediaLibrarySearcher: PHImageManager.default(),
+    settings: Settings.shared,
+    shareUtility: _ShareUtility.self,
+    socialComposeViewControllerFactory: SocialComposeViewControllerFactory(),
+    windowFinder: InternalUtility.shared
   )
 
   #if DEBUG
@@ -166,7 +166,7 @@ extension ShareDialog {
 
     let internalUtility = try getDependencies().internalUtility
 
-    internalUtility.checkRegisteredCanOpenURLScheme(URLScheme.facebookAPI.rawValue)
+    internalUtility.checkRegisteredCanOpenURLScheme(URLSchemeEnum.facebookAPI.rawValue)
     hasValidatedURLSchemeRegistration = true
   }
 
@@ -238,30 +238,15 @@ extension ShareDialog {
     }
   }
 
-  private var shouldDefaultToShareSheet: Bool {
-    if shareContent is ShareCameraEffectContent {
-      return false
-    } else {
-      return ShareDialogConfiguration().defaultShareMode == "share_sheet"
-    }
-  }
-
   private func showAutomatic() throws {
-    let defaultToShareSheet = shouldDefaultToShareSheet
-    let useNativeDialog = shouldUseNativeDialog
-
-    if defaultToShareSheet,
-       doesNotThrow(try showShareSheet()) {
+    // Prefer native dialog when the Facebook app is installed.
+    // SLComposeViewController is deprecated and may produce false
+    // cancellations with newer Facebook app versions.
+    if doesNotThrow(try showNative()) {
       return
     }
 
-    if useNativeDialog,
-       doesNotThrow(try showNative()) {
-      return
-    }
-
-    if !defaultToShareSheet,
-       doesNotThrow(try showShareSheet()) {
+    if doesNotThrow(try showShareSheet()) {
       return
     }
 
@@ -277,19 +262,7 @@ extension ShareDialog {
       return
     }
 
-    let showWebError: Error
-    do {
-      try showWeb()
-      return
-    } catch {
-      showWebError = error
-    }
-
-    if !useNativeDialog {
-      try showNative()
-    } else {
-      throw showWebError
-    }
+    try showWeb()
   }
 
   // This method helps us turn a chain of validation methods into a predicate
@@ -307,7 +280,10 @@ extension ShareDialog {
   }
 
   private var canShowShareSheet: Bool {
-    Self.internalUtility?.isFacebookAppInstalled ?? false
+    guard Self.internalUtility?.isFacebookAppInstalled ?? false,
+          let dependencies = try? Self.getDependencies()
+    else { return false }
+    return dependencies.socialComposeViewControllerFactory.canMakeSocialComposeViewController
   }
 
   private var canAttributeThroughShareSheet: Bool {
@@ -318,7 +294,7 @@ extension ShareDialog {
     }
 
     var components = URLComponents()
-    components.scheme = URLScheme.facebookAPI.rawValue
+    components.scheme = URLSchemeEnum.facebookAPI.rawValue
     components.path = "/"
 
     var canOpenURL = false
@@ -334,7 +310,7 @@ extension ShareDialog {
     guard let urlOpener = Self.internalURLOpener else { return false }
 
     var components = URLComponents()
-    components.scheme = URLScheme.facebookAPI.rawValue
+    components.scheme = URLSchemeEnum.facebookAPI.rawValue
     components.path = "/"
 
     guard let url = components.url else { return false }
@@ -444,7 +420,7 @@ extension ShareDialog {
           success,
           let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
             with: .web,
-            scheme: URLScheme.https.rawValue,
+            scheme: URLSchemeEnum.https.rawValue,
             methodName: methodName,
             parameters: parameters,
             userInfo: nil
@@ -469,7 +445,7 @@ extension ShareDialog {
       let components = dependencies.shareUtility.buildWebShareBridgeComponents(for: content)
       guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
         with: .web,
-        scheme: URLScheme.https.rawValue,
+        scheme: URLSchemeEnum.https.rawValue,
         methodName: components.methodName,
         parameters: components.parameters,
         userInfo: nil
@@ -505,7 +481,7 @@ extension ShareDialog {
     let parameters = dependencies.shareUtility.feedShareDictionary(for: content)
     guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
       with: .web,
-      scheme: URLScheme.https.rawValue,
+      scheme: URLSchemeEnum.https.rawValue,
       methodName: Self.feedMethodName,
       parameters: parameters,
       userInfo: nil
@@ -578,7 +554,7 @@ extension ShareDialog {
 
     guard let request = dependencies.bridgeAPIRequestFactory.bridgeAPIRequest(
       with: .native,
-      scheme: URLScheme.facebookAPI.rawValue,
+      scheme: URLSchemeEnum.facebookAPI.rawValue,
       methodName: methodName,
       parameters: parameters,
       userInfo: nil
@@ -618,6 +594,7 @@ extension ShareDialog {
         if let postID = response.responseParameters?[ShareBridgeAPI.PostIDKey.results] {
           results[ShareBridgeAPI.PostIDKey.results] = postID
         }
+
         invokeDelegateDidComplete(results: results)
       }
 
@@ -700,15 +677,6 @@ extension ShareDialog {
     )
     webDialog?.delegate = self
     webDialog?.show()
-  }
-
-  private var shouldUseNativeDialog: Bool {
-    if shareContent is ShareCameraEffectContent {
-      return true
-    } else {
-      return ShareDialogConfiguration()
-        .shouldUseNativeDialog(forDialogName: DialogConfigurationName.share)
-    }
   }
 
   private var shouldUseSafariViewController: Bool {

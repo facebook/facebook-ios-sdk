@@ -26,20 +26,24 @@ final class CrashObserverTests: XCTestCase {
   )
 
   func testCreatingWithDependencies() {
-    XCTAssertTrue(
-      crashObserver.graphRequestFactory === graphRequestFactory,
+    XCTAssertIdentical(
+      crashObserver.graphRequestFactory,
+      graphRequestFactory,
       "Should be able to create with a custom graph request factory"
     )
-    XCTAssertTrue(
-      crashObserver.settings === settings,
+    XCTAssertIdentical(
+      crashObserver.settings,
+      settings,
       "Should be able to create with custom settings"
     )
-    XCTAssertTrue(
-      crashObserver.featureChecker === featureChecker,
+    XCTAssertIdentical(
+      crashObserver.featureChecker,
+      featureChecker,
       "Should be able to create with a custom feature checker"
     )
-    XCTAssertTrue(
-      crashObserver.crashHandler === crashHandler,
+    XCTAssertIdentical(
+      crashObserver.crashHandler,
+      crashHandler,
       "Should be able to create with a custom crash handler"
     )
   }

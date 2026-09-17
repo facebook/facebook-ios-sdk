@@ -94,16 +94,19 @@ final class InternalUtilityTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(
-      internalUtility.infoDictionaryProvider === bundle,
+    XCTAssertIdentical(
+      internalUtility.infoDictionaryProvider,
+      bundle,
       "Should be able to provide an info dictionary provider"
     )
-    XCTAssertTrue(
-      internalUtility.loggerFactory === loggerFactory,
+    XCTAssertIdentical(
+      internalUtility.loggerFactory,
+      loggerFactory,
       "The shared instance should use the provided logger factory"
     )
-    XCTAssertTrue(
-      internalUtility.settings === settings,
+    XCTAssertIdentical(
+      internalUtility.settings,
+      settings,
       "The shared instance should use the provided settings"
     )
     XCTAssertIdentical(
@@ -855,8 +858,8 @@ final class InternalUtilityTests: XCTestCase {
 
   func testIsBrowserURLWithNonBrowserURL() {
     [
-      URL(string: "file://foo")!, // swiftlint:disable:this force_unwrapping
-      URL(string: "example://bar")!, // swiftlint:disable:this force_unwrapping
+      URL(string: "file://foo")!,
+      URL(string: "example://bar")!,
     ]
       .forEach { url in
         XCTAssertFalse(

@@ -33,24 +33,6 @@ extension Settings {
 
    @warning INTERNAL - DO NOT USE
    */
-  public func logWarnings() {
-    // swiftformat:disable:next redundantSelf
-    if self.infoDictionaryProvider?
-      .fb_object(forInfoDictionaryKey: PersistenceKey.isAdvertiserIDCollectionEnabled.rawValue) == nil {
-      print(AppEventFlagWarningMessages.isAdvertiserIDCollectionEnabledNotSet)
-    }
-
-    if !(_isAdvertiserIDCollectionEnabled ?? false) {
-      print(AppEventFlagWarningMessages.isAdvertiserIDCollectionEnabledFalse)
-    }
-  }
-
-  /**
-   Internal method exposed to facilitate transition to Swift.
-   API Subject to change or removal without warning. Do not use.
-
-   @warning INTERNAL - DO NOT USE
-   */
   public func logIfSDKSettingsChanged() {
     guard let dependencies = try? getDependencies() else { return }
 
@@ -97,23 +79,6 @@ extension Settings {
       ],
       isImplicitlyLogged: true
     )
-  }
-
-  private enum AppEventFlagWarningMessages {
-    static let isAutoLogAppEventsEnabledNotSet = """
-      <Warning>: Please set a value for FacebookAutoLogAppEventsEnabled. Set the flag to TRUE if you want \
-      to collect app install, app launch and in-app purchase events automatically. To request user consent \
-      before collecting data, set the flag value to FALSE, then change to TRUE once user consent is received. \
-      Learn more: https://developers.facebook.com/docs/app-events/getting-started-app-events-ios#disable-auto-events.
-      """
-    static let isAdvertiserIDCollectionEnabledNotSet = """
-      <Warning>: You haven't set a value for FacebookAdvertiserIDCollectionEnabled. Set the flag to TRUE if \
-      you want to collect Advertiser ID for better advertising and analytics results.
-      """
-    static let isAdvertiserIDCollectionEnabledFalse = """
-      <Warning>: The value for FacebookAdvertiserIDCollectionEnabled is currently set to FALSE so you're sending app \
-      events without collecting Advertiser ID. This can affect the quality of your advertising and analytics results.
-      """
   }
 }
 

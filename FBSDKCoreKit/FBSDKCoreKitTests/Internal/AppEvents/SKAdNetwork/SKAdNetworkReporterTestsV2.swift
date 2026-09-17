@@ -162,10 +162,11 @@ final class SKAdNetworkReporterTestsV2: XCTestCase {
     )
     XCTAssertEqual(count, 1, "Should expect the execution block to be called once")
     XCTAssertEqual(graphRequestFactory.capturedRequests.count, 1, "Should have graph request without valid cache")
-    XCTAssertTrue(
+    XCTAssertEqual(
       graphRequestFactory.capturedGraphPath?.contains(
         "ios_skadnetwork_conversion_config"
-      ) == true,
+      ),
+      true,
       "Should have graph request for configuration without valid cache"
     )
     XCTAssertNotNil(skAdNetworkReporter.configuration, "Should have expected configuration")
@@ -195,10 +196,11 @@ final class SKAdNetworkReporterTestsV2: XCTestCase {
       1,
       "Should have graph request without valid cache"
     )
-    XCTAssertTrue(
+    XCTAssertEqual(
       graphRequestFactory.capturedGraphPath?.contains(
         "ios_skadnetwork_conversion_config"
-      ) == true,
+      ),
+      true,
       "Should have graph request for configuration without valid cache"
     )
     XCTAssertNil(
@@ -383,11 +385,11 @@ final class SKAdNetworkReporterTestsV2: XCTestCase {
 
       let recordedEvents = data?["recorded_events"] as? Set<String>
       let expectedEvents = Set(["fb_test", "fb_mobile_purchase"])
-      XCTAssertTrue(expectedEvents == recordedEvents)
+      XCTAssertEqual(expectedEvents, recordedEvents)
       let recordedValues = data?["recorded_values"] as? [String: [String: Int]]
 
       let expectedValues = ["fb_mobile_purchase": ["USD": 301]]
-      XCTAssertTrue(expectedValues == recordedValues)
+      XCTAssertEqual(expectedValues, recordedValues)
     }
   }
 
@@ -411,11 +413,11 @@ final class SKAdNetworkReporterTestsV2: XCTestCase {
 
       let recordedEvents = data?["recorded_coarse_events"] as? Set<String>
       let expectedEvents = Set(["fb_test", "fb_mobile_purchase"])
-      XCTAssertTrue(expectedEvents == recordedEvents)
+      XCTAssertEqual(expectedEvents, recordedEvents)
       let recordedValues = data?["recorded_coarse_values"] as? [String: [String: Int]]
 
       let expectedValues = ["fb_mobile_purchase": ["USD": 301]]
-      XCTAssertTrue(expectedValues == recordedValues)
+      XCTAssertEqual(expectedValues, recordedValues)
     }
   }
 

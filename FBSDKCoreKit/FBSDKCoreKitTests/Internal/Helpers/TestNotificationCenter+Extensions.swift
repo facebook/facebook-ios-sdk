@@ -10,7 +10,7 @@ import Foundation
 
 import FBSDKCoreKit_Basics
 
-extension TestNotificationCenter: _NotificationPosting {
+extension TestNotificationCenter: @retroactive _NotificationPosting {
 
   // MARK: Posting
 

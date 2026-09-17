@@ -38,7 +38,7 @@ final class StdParamEnforcementManager: NSObject, MACARuleMatching {
     }
     guard let params = params else { return params }
 
-    var updatedParams = params.mutableCopy() as? NSMutableDictionary
+    let updatedParams = params.mutableCopy() as? NSMutableDictionary
     for (key, value) in params {
       let strKey = String(describing: key)
       let strValue = String(describing: value)
@@ -60,10 +60,8 @@ final class StdParamEnforcementManager: NSObject, MACARuleMatching {
 
   private func isAnyRegexMatched(value: String, expressions: Set<String>?) -> Bool {
     if let expressions = expressions, !expressions.isEmpty {
-      for expression in expressions {
-        if value.range(of: expression, options: .regularExpression) != nil {
-          return true
-        }
+      for expression in expressions where value.range(of: expression, options: .regularExpression) != nil {
+        return true
       }
     }
     return false
@@ -72,10 +70,8 @@ final class StdParamEnforcementManager: NSObject, MACARuleMatching {
   private func isAnyEnumMatched(value: String, enumValues: Set<String>?) -> Bool {
     guard let enumValues = enumValues else { return false }
 
-    for enumValue in enumValues {
-      if value.lowercased() == enumValue.lowercased() {
-        return true
-      }
+    for enumValue in enumValues where value.lowercased() == enumValue.lowercased() {
+      return true
     }
 
     return false

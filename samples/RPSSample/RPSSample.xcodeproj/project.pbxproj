@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -53,9 +53,10 @@
 		BFE7988D235FB801002B10C7 /* RPSAutoAppLinkDebugTool.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE79888235FB800002B10C7 /* RPSAutoAppLinkDebugTool.m */; };
 		BFE7988E235FB801002B10C7 /* RPSRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BFE79889235FB801002B10C7 /* RPSRootViewController.m */; };
 		DB8278D01AAFB72E004247DA /* RPSFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB8278CF1AAFB72E004247DA /* RPSFriendsViewController.m */; };
-		DBCEEA4E1A95439C00D2C8AE /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */; };
-		DBCEEA4F1A95439C00D2C8AE /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBCEEA4C1A95439C00D2C8AE /* FBSDKLoginKit.framework */; };
-		DBCEEA501A95439C00D2C8AE /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBCEEA4D1A95439C00D2C8AE /* FBSDKShareKit.framework */; };
+		BB000001BBBBBB0100000001 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = BB000001BBBBBB0000000001 /* FacebookCore */; };
+		BB000001BBBBBB0100000002 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = BB000001BBBBBB0000000002 /* FacebookLogin */; };
+		BB000001BBBBBB0100000003 /* FacebookShare in Frameworks */ = {isa = PBXBuildFile; productRef = BB000001BBBBBB0000000003 /* FacebookShare */; };
+		BB000001BBBBBB0100000004 /* FacebookGamingServices in Frameworks */ = {isa = PBXBuildFile; productRef = BB000001BBBBBB0000000004 /* FacebookGamingServices */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,9 +126,6 @@
 		BFE7988A235FB801002B10C7 /* RPSRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSRootViewController.h; sourceTree = "<group>"; };
 		DB8278CE1AAFB715004247DA /* RPSFriendsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RPSFriendsViewController.h; sourceTree = "<group>"; };
 		DB8278CF1AAFB72E004247DA /* RPSFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSFriendsViewController.m; sourceTree = "<group>"; };
-		DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
-		DBCEEA4C1A95439C00D2C8AE /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../build/FBSDKLoginKit.framework; sourceTree = "<group>"; };
-		DBCEEA4D1A95439C00D2C8AE /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../build/FBSDKShareKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,11 +133,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBCEEA4E1A95439C00D2C8AE /* FBSDKCoreKit.framework in Frameworks */,
+				BB000001BBBBBB0100000001 /* FacebookCore in Frameworks */,
+				BB000001BBBBBB0100000002 /* FacebookLogin in Frameworks */,
+				BB000001BBBBBB0100000003 /* FacebookShare in Frameworks */,
+				BB000001BBBBBB0100000004 /* FacebookGamingServices in Frameworks */,
 				BF2CF3D523A43EF500A35D83 /* Accelerate.framework in Frameworks */,
 				84EB807117033179007561AE /* AVFoundation.framework in Frameworks */,
-				DBCEEA4F1A95439C00D2C8AE /* FBSDKLoginKit.framework in Frameworks */,
-				DBCEEA501A95439C00D2C8AE /* FBSDKShareKit.framework in Frameworks */,
 				84070D1B1540AA2B00E39703 /* UIKit.framework in Frameworks */,
 				84070D1D1540AA2B00E39703 /* Foundation.framework in Frameworks */,
 				84070D1F1540AA2B00E39703 /* CoreGraphics.framework in Frameworks */,
@@ -176,9 +175,6 @@
 				BF2CF3D423A43EF500A35D83 /* Accelerate.framework */,
 				84EB807017033179007561AE /* AVFoundation.framework */,
 				84070D1E1540AA2B00E39703 /* CoreGraphics.framework */,
-				DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */,
-				DBCEEA4C1A95439C00D2C8AE /* FBSDKLoginKit.framework */,
-				DBCEEA4D1A95439C00D2C8AE /* FBSDKShareKit.framework */,
 				84070D1C1540AA2B00E39703 /* Foundation.framework */,
 				84070D1A1540AA2B00E39703 /* UIKit.framework */,
 			);
@@ -283,6 +279,12 @@
 			dependencies = (
 			);
 			name = RPSSample;
+			packageProductDependencies = (
+				BB000001BBBBBB0000000001 /* FacebookCore */,
+				BB000001BBBBBB0000000002 /* FacebookLogin */,
+				BB000001BBBBBB0000000003 /* FacebookShare */,
+				BB000001BBBBBB0000000004 /* FacebookGamingServices */,
+			);
 			productName = RPSSample;
 			productReference = 84070D161540AA2B00E39703 /* RPSSample.app */;
 			productType = "com.apple.product-type.application";
@@ -301,7 +303,7 @@
 				};
 			};
 			buildConfigurationList = 84070D101540AA2B00E39703 /* Build configuration list for PBXProject "RPSSample" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 11.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -311,6 +313,9 @@
 				Base,
 			);
 			mainGroup = 84070D0B1540AA2B00E39703;
+			packageReferences = (
+				BB000001BBBBBB0200000001 /* XCLocalSwiftPackageReference "../.." */,
+			);
 			productRefGroup = 84070D171540AA2B00E39703 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -494,6 +499,36 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		BB000001BBBBBB0200000001 /* XCLocalSwiftPackageReference "../.." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../..";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BB000001BBBBBB0000000001 /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB000001BBBBBB0200000001 /* XCLocalSwiftPackageReference "../.." */;
+			productName = FacebookCore;
+		};
+		BB000001BBBBBB0000000002 /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB000001BBBBBB0200000001 /* XCLocalSwiftPackageReference "../.." */;
+			productName = FacebookLogin;
+		};
+		BB000001BBBBBB0000000003 /* FacebookShare */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB000001BBBBBB0200000001 /* XCLocalSwiftPackageReference "../.." */;
+			productName = FacebookShare;
+		};
+		BB000001BBBBBB0000000004 /* FacebookGamingServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB000001BBBBBB0200000001 /* XCLocalSwiftPackageReference "../.." */;
+			productName = FacebookGamingServices;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 84070D0D1540AA2B00E39703 /* Project object */;
 }

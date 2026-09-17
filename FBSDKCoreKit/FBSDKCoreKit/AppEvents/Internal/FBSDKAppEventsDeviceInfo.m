@@ -25,6 +25,9 @@
 
 #define FB_ARRAY_COUNT(x) sizeof(x) / sizeof(x[0])
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 static const u_int FB_GROUP1_RECHECK_DURATION = 30 * 60; // seconds
 
 @interface FBSDKAppEventsDeviceInfo ()
@@ -32,6 +35,7 @@ static const u_int FB_GROUP1_RECHECK_DURATION = 30 * 60; // seconds
 // Other state
 @property (nonatomic) long lastGroup1CheckTime;
 @property (nonatomic) BOOL isEncodingDirty;
+@property (nonatomic) BOOL isCollectingGroup1;
 
 // Dependencies
 @property (nullable, nonatomic) id<FBSDKSettings> settings;
@@ -70,6 +74,7 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
 
 - (nullable NSString *)encodedDeviceInfo
 {
+  BOOL needsGroup1Collection = NO;
   @synchronized(self) {
     BOOL isGroup1Expired = [self _isGroup1Expired];
     BOOL isEncodingExpired = isGroup1Expired; // Can || other groups in if we add them
@@ -79,10 +84,22 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
       return _encodedDeviceInfo;
     }
 
-    if (isGroup1Expired) {
-      [self _collectGroup1Data];
+    if (isGroup1Expired && !_isCollectingGroup1) {
+      _isCollectingGroup1 = YES;
+      needsGroup1Collection = YES;
     }
+  }
 
+  // Collect expensive data outside the lock to avoid blocking while
+  // CTTelephonyNetworkInfo accesses the main thread internally.
+  if (needsGroup1Collection) {
+    [self _collectGroup1Data];
+    @synchronized(self) {
+      _isCollectingGroup1 = NO;
+    }
+  }
+
+  @synchronized(self) {
     if (_isEncodingDirty) {
       _encodedDeviceInfo = [self _generateEncoding];
       _isEncodingDirty = NO;
@@ -196,8 +213,6 @@ static FBSDKAppEventsDeviceInfo *sharedInstance;
   return value;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)_getCarrier
 {
 #if TARGET_OS_SIMULATOR

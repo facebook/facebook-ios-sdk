@@ -75,8 +75,9 @@ final class AppEventsConfigurationManagerTests: XCTestCase {
   }
 
   func testConfiguringWithDependencies() {
-    XCTAssertTrue(
-      manager.store === store,
+    XCTAssertIdentical(
+      manager.store,
+      store,
       "Should be able to configure with a persistent data store"
     )
     XCTAssertEqual(

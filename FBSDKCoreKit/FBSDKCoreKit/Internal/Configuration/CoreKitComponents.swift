@@ -12,16 +12,19 @@ final class CoreKitComponents {
   let accessTokenExpirer: _AccessTokenExpiring
   let accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type
   let advertiserIDProvider: _AdvertiserIDProviding
+  let aemManager: _AutoSetup
   let aemNetworker: AEMNetworking?
   let aemReporter: _AEMReporterProtocol.Type
   let appEventParametersExtractor: _AppEventParametersExtracting
-  let appEvents: _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
+  let appEvents:
+    _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
     & _ApplicationActivating & _ApplicationStateSetting & EventLogging
   let appEventsConfigurationProvider: _AppEventsConfigurationProviding
   let appEventsDropDeterminer: _AppEventDropDetermining
   let appEventsStateProvider: _AppEventsStateProviding
   let appEventsStateStore: _AppEventsStatePersisting
-  let appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting
+  let appEventsUtility:
+    _AppEventDropDetermining & _AppEventParametersExtracting
     & _AppEventsUtilityProtocol & _LoggingNotifying
   let appLinkEventPoster: _AppLinkEventPosting
   let appLinkFactory: _AppLinkCreating
@@ -31,6 +34,8 @@ final class CoreKitComponents {
   let atePublisherFactory: _ATEPublisherCreating
   let authenticationTokenWallet: _AuthenticationTokenProviding.Type
   let backgroundEventLogger: BackgroundEventLogging
+  let bannedParamsManager: MACARuleMatching
+  let blocklistEventsManager: _EventsProcessing
   let capiReporter: CAPIReporter
   let codelessIndexer: _CodelessIndexing.Type
   let crashHandler: CrashHandlerProtocol
@@ -51,6 +56,8 @@ final class CoreKitComponents {
   let getApplicationActivationNotifier: () -> Any
   let graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol
   let graphRequestFactory: GraphRequestFactoryProtocol
+  let iapDedupeProcessor: _IAPDedupeProcessing
+  let iapTransactionCache: _IAPTransactionCaching
   let impressionLoggerFactory: _ImpressionLoggerFactoryProtocol
   let infoDictionaryProvider: InfoDictionaryProviding
   let internalURLOpener: _InternalURLOpener
@@ -58,6 +65,7 @@ final class CoreKitComponents {
   let logger: Logging.Type
   let loggerFactory: _LoggerCreating
   let macCatalystDeterminator: _MacCatalystDetermining
+  let macaRuleMatchingManager: MACARuleMatching
   let metadataIndexer: _MetadataIndexing
   let modelManager: _EventProcessing & _IntegrityParametersProcessorProvider
   let notificationCenter: _NotificationPosting & NotificationDelivering
@@ -65,33 +73,28 @@ final class CoreKitComponents {
   let paymentObserver: _PaymentObserving
   let piggybackManager: _GraphRequestPiggybackManaging
   let profileSetter: ProfileProviding.Type
+  let protectedModeManager: _AppEventsParameterProcessing
+  let redactedEventsManager: _EventsProcessing
   let restrictiveDataFilterManager: _AppEventsParameterProcessing & _EventsProcessing
   let rulesFromKeyProvider: _RulesFromKeyProvider
+  let sensitiveParamsManager: _AppEventsParameterProcessing
   let serverConfigurationProvider: _ServerConfigurationProviding
   let sessionDataTaskProvider: URLSessionProviding
   let settings: SettingsProtocol & SettingsLogging
   let skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
   let skAdNetworkReporterV2: (_AppEventsReporter & SKAdNetworkReporting)?
+  let stdParamEnforcementManager: MACARuleMatching
   let suggestedEventsIndexer: _SuggestedEventsIndexerProtocol
   let swizzler: _Swizzling.Type
   let timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording
   let tokenCache: TokenCaching
+  let transactionObserver: _TransactionObserving
   let urlHoster: URLHosting
   let urlSessionProxyFactory: _URLSessionProxyProviding
   let userDataStore: _UserDataPersisting
   let userIDProvider: _UserIDProviding
+  let vvpConfigManager: MACARuleMatching
   let webViewProvider: _WebViewProviding
-  let aemManager: _AutoSetup
-  let protectedModeManager: _AppEventsParameterProcessing
-  let bannedParamsManager: MACARuleMatching
-  let stdParamEnforcementManager: MACARuleMatching
-  let macaRuleMatchingManager: MACARuleMatching
-  let blocklistEventsManager: _EventsProcessing
-  let redactedEventsManager: _EventsProcessing
-  let sensitiveParamsManager: _AppEventsParameterProcessing
-  let transactionObserver: _TransactionObserving
-  let iapDedupeProcessor: _IAPDedupeProcessing
-  let iapTransactionCache: _IAPTransactionCaching
 
   // MARK: - Initializers
 
@@ -99,6 +102,7 @@ final class CoreKitComponents {
     accessTokenExpirer: _AccessTokenExpiring,
     accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type,
     advertiserIDProvider: _AdvertiserIDProviding,
+    aemManager: _AutoSetup,
     aemNetworker: AEMNetworking?,
     aemReporter: _AEMReporterProtocol.Type,
     appEventParametersExtractor: _AppEventParametersExtracting,
@@ -116,6 +120,8 @@ final class CoreKitComponents {
     atePublisherFactory: _ATEPublisherCreating,
     authenticationTokenWallet: _AuthenticationTokenProviding.Type,
     backgroundEventLogger: BackgroundEventLogging,
+    bannedParamsManager: MACARuleMatching,
+    blocklistEventsManager: _EventsProcessing,
     capiReporter: CAPIReporter,
     codelessIndexer: _CodelessIndexing.Type,
     crashHandler: CrashHandlerProtocol,
@@ -136,6 +142,8 @@ final class CoreKitComponents {
     getApplicationActivationNotifier: @escaping () -> Any,
     graphRequestConnectionFactory: GraphRequestConnectionFactoryProtocol,
     graphRequestFactory: GraphRequestFactoryProtocol,
+    iapDedupeProcessor: _IAPDedupeProcessing,
+    iapTransactionCache: _IAPTransactionCaching,
     impressionLoggerFactory: _ImpressionLoggerFactoryProtocol,
     infoDictionaryProvider: InfoDictionaryProviding,
     internalURLOpener: _InternalURLOpener,
@@ -143,6 +151,7 @@ final class CoreKitComponents {
     logger: Logging.Type,
     loggerFactory: _LoggerCreating,
     macCatalystDeterminator: _MacCatalystDetermining,
+    macaRuleMatchingManager: MACARuleMatching,
     metadataIndexer: _MetadataIndexing,
     modelManager: _EventProcessing & _IntegrityParametersProcessorProvider,
     notificationCenter: _NotificationPosting & NotificationDelivering,
@@ -150,37 +159,33 @@ final class CoreKitComponents {
     paymentObserver: _PaymentObserving,
     piggybackManager: _GraphRequestPiggybackManaging,
     profileSetter: ProfileProviding.Type,
+    protectedModeManager: _AppEventsParameterProcessing,
+    redactedEventsManager: _EventsProcessing,
     restrictiveDataFilterManager: _AppEventsParameterProcessing & _EventsProcessing,
     rulesFromKeyProvider: _RulesFromKeyProvider,
+    sensitiveParamsManager: _AppEventsParameterProcessing,
     serverConfigurationProvider: _ServerConfigurationProviding,
     sessionDataTaskProvider: URLSessionProviding,
     settings: SettingsLogging & SettingsProtocol,
     skAdNetworkReporter: (SKAdNetworkReporting & _AppEventsReporter)?,
     skAdNetworkReporterV2: (SKAdNetworkReporting & _AppEventsReporter)?,
+    stdParamEnforcementManager: MACARuleMatching,
     suggestedEventsIndexer: _SuggestedEventsIndexerProtocol,
     swizzler: _Swizzling.Type,
     timeSpentRecorder: _SourceApplicationTracking & _TimeSpentRecording,
     tokenCache: TokenCaching,
+    transactionObserver: _TransactionObserving,
     urlHoster: URLHosting,
     urlSessionProxyFactory: _URLSessionProxyProviding,
     userDataStore: _UserDataPersisting,
     userIDProvider: _UserIDProviding,
-    webViewProvider: _WebViewProviding,
-    aemManager: _AutoSetup,
-    protectedModeManager: _AppEventsParameterProcessing,
-    bannedParamsManager: MACARuleMatching,
-    stdParamEnforcementManager: MACARuleMatching,
-    macaRuleMatchingManager: MACARuleMatching,
-    blocklistEventsManager: _EventsProcessing,
-    redactedEventsManager: _EventsProcessing,
-    sensitiveParamsManager: _AppEventsParameterProcessing,
-    transactionObserver: _TransactionObserving,
-    iapDedupeProcessor: _IAPDedupeProcessing,
-    iapTransactionCache: _IAPTransactionCaching
+    vvpConfigManager: MACARuleMatching,
+    webViewProvider: _WebViewProviding
   ) {
     self.accessTokenExpirer = accessTokenExpirer
     self.accessTokenWallet = accessTokenWallet
     self.advertiserIDProvider = advertiserIDProvider
+    self.aemManager = aemManager
     self.aemNetworker = aemNetworker
     self.aemReporter = aemReporter
     self.appEventParametersExtractor = appEventParametersExtractor
@@ -198,6 +203,8 @@ final class CoreKitComponents {
     self.atePublisherFactory = atePublisherFactory
     self.authenticationTokenWallet = authenticationTokenWallet
     self.backgroundEventLogger = backgroundEventLogger
+    self.bannedParamsManager = bannedParamsManager
+    self.blocklistEventsManager = blocklistEventsManager
     self.capiReporter = capiReporter
     self.codelessIndexer = codelessIndexer
     self.crashHandler = crashHandler
@@ -218,6 +225,8 @@ final class CoreKitComponents {
     self.getApplicationActivationNotifier = getApplicationActivationNotifier
     self.graphRequestConnectionFactory = graphRequestConnectionFactory
     self.graphRequestFactory = graphRequestFactory
+    self.iapDedupeProcessor = iapDedupeProcessor
+    self.iapTransactionCache = iapTransactionCache
     self.impressionLoggerFactory = impressionLoggerFactory
     self.infoDictionaryProvider = infoDictionaryProvider
     self.internalURLOpener = internalURLOpener
@@ -225,6 +234,7 @@ final class CoreKitComponents {
     self.logger = logger
     self.loggerFactory = loggerFactory
     self.macCatalystDeterminator = macCatalystDeterminator
+    self.macaRuleMatchingManager = macaRuleMatchingManager
     self.metadataIndexer = metadataIndexer
     self.modelManager = modelManager
     self.notificationCenter = notificationCenter
@@ -232,33 +242,28 @@ final class CoreKitComponents {
     self.paymentObserver = paymentObserver
     self.piggybackManager = piggybackManager
     self.profileSetter = profileSetter
+    self.protectedModeManager = protectedModeManager
+    self.redactedEventsManager = redactedEventsManager
     self.restrictiveDataFilterManager = restrictiveDataFilterManager
     self.rulesFromKeyProvider = rulesFromKeyProvider
+    self.sensitiveParamsManager = sensitiveParamsManager
     self.serverConfigurationProvider = serverConfigurationProvider
     self.sessionDataTaskProvider = sessionDataTaskProvider
     self.settings = settings
     self.skAdNetworkReporter = skAdNetworkReporter
     self.skAdNetworkReporterV2 = skAdNetworkReporterV2
+    self.stdParamEnforcementManager = stdParamEnforcementManager
     self.suggestedEventsIndexer = suggestedEventsIndexer
     self.swizzler = swizzler
     self.timeSpentRecorder = timeSpentRecorder
     self.tokenCache = tokenCache
+    self.transactionObserver = transactionObserver
     self.urlHoster = urlHoster
     self.urlSessionProxyFactory = urlSessionProxyFactory
     self.userDataStore = userDataStore
     self.userIDProvider = userIDProvider
+    self.vvpConfigManager = vvpConfigManager
     self.webViewProvider = webViewProvider
-    self.aemManager = aemManager
-    self.protectedModeManager = protectedModeManager
-    self.bannedParamsManager = bannedParamsManager
-    self.stdParamEnforcementManager = stdParamEnforcementManager
-    self.macaRuleMatchingManager = macaRuleMatchingManager
-    self.blocklistEventsManager = blocklistEventsManager
-    self.redactedEventsManager = redactedEventsManager
-    self.sensitiveParamsManager = sensitiveParamsManager
-    self.transactionObserver = transactionObserver
-    self.iapDedupeProcessor = iapDedupeProcessor
-    self.iapTransactionCache = iapTransactionCache
   }
 
   // MARK: - Default components
@@ -330,12 +335,14 @@ final class CoreKitComponents {
     let accessTokenExpirer: _AccessTokenExpiring = _AccessTokenExpirer(notificationCenter: NotificationCenter.default)
     let accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type = AccessToken.self
     let advertiserIDProvider: _AdvertiserIDProviding = _AppEventsUtility.shared
-    let appEvents: _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
+    let appEvents:
+      _SourceApplicationTracking & _AppEventsConfiguring & _ApplicationLifecycleObserving
       & _ApplicationActivating & _ApplicationStateSetting & EventLogging = AppEvents.shared
     let appEventsConfigurationProvider: _AppEventsConfigurationProviding = _AppEventsConfigurationManager.shared
     let appEventsStateProvider: _AppEventsStateProviding = AppEventsStateFactory()
     let appEventsStateStore: _AppEventsStatePersisting = _AppEventsStateManager.shared
-    let appEventsUtility: _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtility
+    let appEventsUtility:
+      _AppEventDropDetermining & _AppEventParametersExtracting & _AppEventsUtility
       & _LoggingNotifying = _AppEventsUtility.shared
     let authenticationTokenWallet: _AuthenticationTokenProviding.Type = AuthenticationToken.self
     let crashHandler: CrashHandlerProtocol = CrashHandler.shared
@@ -366,6 +373,7 @@ final class CoreKitComponents {
     let stdParamEnforcementManager: MACARuleMatching = StdParamEnforcementManager()
     let bannedParamsManager: MACARuleMatching = BannedParamsManager()
     let macaRuleMatchingManager: MACARuleMatching = MACARuleMatchingManager()
+    let vvpConfigManager: MACARuleMatching = VVPConfigManager()
     let blocklistEventsManager: _EventsProcessing = BlocklistEventsManager()
     let redactedEventsManager: _EventsProcessing = RedactedEventsManager()
     let sensitiveParamsManager: _AppEventsParameterProcessing = SensitiveParamsManager()
@@ -412,6 +420,7 @@ final class CoreKitComponents {
       accessTokenExpirer: accessTokenExpirer,
       accessTokenWallet: accessTokenWallet,
       advertiserIDProvider: advertiserIDProvider,
+      aemManager: _AEMManager.shared,
       aemNetworker: aemNetworker,
       aemReporter: AEMReporter.self,
       appEventParametersExtractor: _AppEventsUtility.shared,
@@ -429,6 +438,8 @@ final class CoreKitComponents {
       atePublisherFactory: atePublisherFactory,
       authenticationTokenWallet: authenticationTokenWallet,
       backgroundEventLogger: backgroundEventLogger,
+      bannedParamsManager: bannedParamsManager,
+      blocklistEventsManager: blocklistEventsManager,
       capiReporter: capiReporter,
       codelessIndexer: _CodelessIndexer.self,
       crashHandler: crashHandler,
@@ -449,6 +460,8 @@ final class CoreKitComponents {
       getApplicationActivationNotifier: getApplicationActivationNotifier,
       graphRequestConnectionFactory: graphRequestConnectionFactory,
       graphRequestFactory: graphRequestFactory,
+      iapDedupeProcessor: IAPDedupeProcessor.shared,
+      iapTransactionCache: IAPTransactionCache.shared,
       impressionLoggerFactory: impressionLoggerFactory,
       infoDictionaryProvider: infoDictionaryProvider,
       internalURLOpener: CoreUIApplication.shared,
@@ -456,6 +469,7 @@ final class CoreKitComponents {
       logger: logger,
       loggerFactory: loggerFactory,
       macCatalystDeterminator: macCatalystDeterminator,
+      macaRuleMatchingManager: macaRuleMatchingManager,
       metadataIndexer: metaIndexer,
       modelManager: _ModelManager.shared,
       notificationCenter: notificationCenter,
@@ -463,33 +477,28 @@ final class CoreKitComponents {
       paymentObserver: paymentObserver,
       piggybackManager: piggybackManager,
       profileSetter: Profile.self,
+      protectedModeManager: protectedModeManager,
+      redactedEventsManager: redactedEventsManager,
       restrictiveDataFilterManager: restrictiveDataFilterManager,
       rulesFromKeyProvider: _ModelManager.shared,
+      sensitiveParamsManager: sensitiveParamsManager,
       serverConfigurationProvider: serverConfigurationProvider,
       sessionDataTaskProvider: URLSession.shared,
       settings: settings,
       skAdNetworkReporter: skAdNetworkReporter,
       skAdNetworkReporterV2: skAdNetworkReporterV2,
+      stdParamEnforcementManager: stdParamEnforcementManager,
       suggestedEventsIndexer: suggestedEventsIndexer,
       swizzler: _Swizzler.self,
       timeSpentRecorder: timeSpentRecorder,
       tokenCache: tokenCache,
+      transactionObserver: IAPTransactionObserver.shared,
       urlHoster: InternalUtility.shared,
       urlSessionProxyFactory: urlSessionProxyFactory,
       userDataStore: userDataStore,
       userIDProvider: AppEvents.shared,
-      webViewProvider: _WebViewFactory(),
-      aemManager: _AEMManager.shared,
-      protectedModeManager: protectedModeManager,
-      bannedParamsManager: bannedParamsManager,
-      stdParamEnforcementManager: stdParamEnforcementManager,
-      macaRuleMatchingManager: macaRuleMatchingManager,
-      blocklistEventsManager: blocklistEventsManager,
-      redactedEventsManager: redactedEventsManager,
-      sensitiveParamsManager: sensitiveParamsManager,
-      transactionObserver: IAPTransactionObserver.shared,
-      iapDedupeProcessor: IAPDedupeProcessor.shared,
-      iapTransactionCache: IAPTransactionCache.shared
+      vvpConfigManager: vvpConfigManager,
+      webViewProvider: _WebViewFactory()
     )
   }()
 }

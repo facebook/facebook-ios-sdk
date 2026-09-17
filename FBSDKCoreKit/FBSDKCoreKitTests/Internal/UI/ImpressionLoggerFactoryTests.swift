@@ -48,20 +48,24 @@ final class ImpressionLoggerFactoryTests: XCTestCase {
   }
 
   func testInitialization() {
-    XCTAssertTrue(
-      factory.graphRequestFactory === graphRequestFactory,
+    XCTAssertIdentical(
+      factory.graphRequestFactory,
+      graphRequestFactory,
       "Should use the provided graph request factory"
     )
-    XCTAssertTrue(
-      factory.eventLogger === eventLogger,
+    XCTAssertIdentical(
+      factory.eventLogger,
+      eventLogger,
       "Should use the provided event logger"
     )
-    XCTAssertTrue(
-      factory.notificationCenter === notificationCenter,
+    XCTAssertIdentical(
+      factory.notificationCenter,
+      notificationCenter,
       "Should use the provided notification center"
     )
-    XCTAssertTrue(
-      factory.accessTokenWallet === accessTokenWallet,
+    XCTAssertIdentical(
+      factory.accessTokenWallet,
+      accessTokenWallet,
       "Should use the provided access token wallet"
     )
   }

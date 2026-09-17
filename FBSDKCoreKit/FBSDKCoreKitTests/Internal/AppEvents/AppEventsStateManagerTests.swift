@@ -18,12 +18,20 @@ final class AppEventsStateManagerTests: XCTestCase {
 
   override func tearDown() {
     super.tearDown()
+    waitForPersistQueue()
     manager.clearPersistedAppEventsStates()
+  }
+
+  /// Drains the serial persist queue so any pending async writes complete before assertions.
+  private func waitForPersistQueue() {
+    let queue = manager.value(forKey: "persistQueue") as! DispatchQueue // swiftlint:disable:this force_cast
+    queue.sync {}
   }
 
   func testPersistingValidStateWithNoOperationalParameters() throws {
     state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
     manager.persistAppEventsData(state)
+    waitForPersistQueue()
 
     let retrievedStates = manager.retrievePersistedAppEventsStates()
     let retrievedState = try XCTUnwrap(retrievedStates.first, "No state has been retrieved")
@@ -54,6 +62,7 @@ final class AppEventsStateManagerTests: XCTestCase {
     let validEvent = SampleAppEvents.validEvent
     state.addEvent(validEvent, isImplicit: true, withOperationalParameters: validOperationalParameters)
     manager.persistAppEventsData(state)
+    waitForPersistQueue()
 
     let retrievedStates = manager.retrievePersistedAppEventsStates()
     let retrievedState = try XCTUnwrap(retrievedStates.first, "No state has been retrieved")
@@ -90,6 +99,7 @@ final class AppEventsStateManagerTests: XCTestCase {
   func testClearStates() {
     state.addEvent(SampleAppEvents.validEvent, isImplicit: true, withOperationalParameters: nil)
     manager.persistAppEventsData(state)
+    waitForPersistQueue()
     manager.clearPersistedAppEventsStates()
     let retrievedStatesAgain = manager.retrievePersistedAppEventsStates()
     XCTAssertEqual(

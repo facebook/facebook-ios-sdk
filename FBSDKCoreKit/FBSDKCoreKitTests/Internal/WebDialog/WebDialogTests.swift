@@ -88,8 +88,9 @@ final class WebDialogTests: XCTestCase, WebDialogDelegate {
       parameters,
       "Should create a dialog with the provided parameters"
     )
-    XCTAssertTrue(
-      dialog.delegate === self,
+    XCTAssertIdentical(
+      dialog.delegate,
+      self,
       "Should create a dialog with the provided delegate"
     )
     XCTAssertTrue(

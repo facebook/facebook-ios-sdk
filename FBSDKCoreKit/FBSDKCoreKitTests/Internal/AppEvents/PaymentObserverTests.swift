@@ -29,8 +29,9 @@ final class PaymentObserverTests: XCTestCase {
       queue,
       "Should use the provided payment queue"
     )
-    XCTAssertTrue(
-      observer.requestorFactory === requestorFactory,
+    XCTAssertIdentical(
+      observer.requestorFactory,
+      requestorFactory,
       "Should use the provided payment product requestor factory"
     )
   }

@@ -957,20 +957,24 @@ final class AppEventsUtilityTests: XCTestCase {
   }
 
   func testCustomDependencies() {
-    XCTAssertTrue(
-      appEventsUtility.appEventsConfigurationProvider === appEventsConfigurationProvider,
+    XCTAssertIdentical(
+      appEventsUtility.appEventsConfigurationProvider,
+      appEventsConfigurationProvider,
       "Should be able to set a custom app events configuration provider"
     )
-    XCTAssertTrue(
-      appEventsUtility.deviceInformationProvider === deviceInformationProvider,
+    XCTAssertIdentical(
+      appEventsUtility.deviceInformationProvider,
+      deviceInformationProvider,
       "Should be able to set a custom device information provider"
     )
-    XCTAssertTrue(
-      appEventsUtility.settings === settings,
+    XCTAssertIdentical(
+      appEventsUtility.settings,
+      settings,
       "Should be able to set custom settings"
     )
-    XCTAssertTrue(
-      appEventsUtility.internalUtility === internalUtility,
+    XCTAssertIdentical(
+      appEventsUtility.internalUtility,
+      internalUtility,
       "Should be able to set custom internal utility"
     )
     XCTAssertIdentical(
@@ -1124,7 +1128,7 @@ final class AppEventsUtilityTests: XCTestCase {
   }
 
   func testSaveCampaignIDs() throws {
-    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")! // swiftlint:disable:this force_unwrapping
+    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")!
     appEventsUtility.saveCampaignIDs(url)
     let campaignIDs = try XCTUnwrap(
       dataStore.capturedValues["com.facebook.sdk.campaignids"] as? String
@@ -1134,7 +1138,7 @@ final class AppEventsUtilityTests: XCTestCase {
   }
 
   func testActivityParametersCampaignIDs() throws {
-    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")! // swiftlint:disable:this force_unwrapping
+    let url = URL(string: "fbtest://test?al_applink_data=%7B%22acs_token%22%3A+%22test%22%2C+%22campaign_ids%22%3A+%22123%22%2C+%22advertiser_id%22%3A+%22test+dogfood+biz+1%22%7D")!
     appEventsUtility.saveCampaignIDs(url)
     let parameters = appEventsUtility.activityParametersDictionary(
       forEvent: "event",

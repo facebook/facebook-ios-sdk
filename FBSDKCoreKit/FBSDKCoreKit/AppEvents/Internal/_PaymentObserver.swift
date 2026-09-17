@@ -17,6 +17,8 @@ import StoreKit
 
  Class to encapsulate implicit logging of purchase events
  */
+
+@available(iOS, deprecated: 18.0)
 @objc(FBSDKPaymentObserver)
 public final class _PaymentObserver: NSObject, _PaymentObserving {
   var isObservingTransactions = false
@@ -51,6 +53,7 @@ public final class _PaymentObserver: NSObject, _PaymentObserving {
   }
 }
 
+@available(iOS, deprecated: 18.0)
 extension _PaymentObserver: SKPaymentTransactionObserver {
 
   public func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {

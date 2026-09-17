@@ -10,6 +10,8 @@
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestMetadata.h>
 
+@protocol FBSDKSettings;
+
 NS_ASSUME_NONNULL_BEGIN
 
 /**
@@ -29,6 +31,19 @@ NS_SWIFT_NAME(GraphRequestQueue)
 
 - (void)configureWithGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
   NS_SWIFT_NAME(configure(graphRequestConnectionFactory:));
+
+/**
+ Configures the queue with an explicit settings dependency. Equivalent to the above, which uses
+ the shared settings.
+
+ Internal method exposed to facilitate transition to Swift.
+ API Subject to change or removal without warning. Do not use.
+
+ @warning INTERNAL - DO NOT USE
+ */
+- (void)configureWithGraphRequestConnectionFactory:(id<FBSDKGraphRequestConnectionFactory>)graphRequestConnectionFactory
+                                          settings:(nullable id<FBSDKSettings>)settings
+  NS_SWIFT_NAME(configure(graphRequestConnectionFactory:settings:));
 
 /**
  @method

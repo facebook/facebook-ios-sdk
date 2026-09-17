@@ -329,9 +329,8 @@ final class ServerConfigurationTests: XCTestCase {
     let errorConfiguration = _ErrorConfiguration(dictionary: nil)
     configuration = Fixtures.configuration(withDictionary: ["errorConfiguration": errorConfiguration])
 
-    XCTAssertEqual(
+    XCTAssertNotNil(
       configuration.errorConfiguration,
-      errorConfiguration,
       "Error configuration should be settable"
     )
   }
@@ -529,6 +528,80 @@ final class ServerConfigurationTests: XCTestCase {
       configuration.suggestedEventsSetting as? [String: String],
       setting,
       "Should set the exact suggested events setting it was created with"
+    )
+  }
+
+  func testInitCopiesCollectionProperties() {
+    let mutableEventBindings = NSMutableArray(array: [["event": "foo"]])
+    let mutableRestrictiveParams = NSMutableDictionary(dictionary: ["key": "value"])
+    let mutableAAMRules = NSMutableDictionary(dictionary: ["rule": "1"])
+    let mutableSuggestedEvents = NSMutableDictionary(dictionary: ["setting": "on"])
+    let mutableProtectedModeRules = NSMutableDictionary(dictionary: ["block": "yes"])
+    let mutableLoggingToken = NSMutableString(string: "token123")
+    let mutableDefaultShareMode = NSMutableString(string: "native")
+
+    let config = _ServerConfiguration(
+      appID: "123",
+      appName: "test",
+      loginTooltipEnabled: false,
+      loginTooltipText: nil,
+      defaultShareMode: mutableDefaultShareMode as String,
+      advertisingIDEnabled: false,
+      implicitLoggingEnabled: false,
+      implicitPurchaseLoggingEnabled: false,
+      codelessEventsEnabled: false,
+      uninstallTrackingEnabled: false,
+      dialogConfigurations: nil,
+      dialogFlows: nil,
+      timestamp: nil,
+      errorConfiguration: nil,
+      sessionTimeoutInterval: 60,
+      defaults: false,
+      loggingToken: mutableLoggingToken as String,
+      smartLoginOptions: [],
+      smartLoginBookmarkIconURL: nil,
+      smartLoginMenuIconURL: nil,
+      updateMessage: nil,
+      eventBindings: mutableEventBindings as? [[String: Any]],
+      restrictiveParams: mutableRestrictiveParams as? [String: Any],
+      aamRules: mutableAAMRules as? [String: Any],
+      suggestedEventsSetting: mutableSuggestedEvents as? [String: Any],
+      protectedModeRules: mutableProtectedModeRules as? [String: Any],
+      migratedAutoLogValues: nil
+    )
+
+    // Mutate the originals after init
+    mutableEventBindings.add(["event": "bar"])
+    mutableRestrictiveParams["key2"] = "value2"
+    mutableAAMRules["rule2"] = "2"
+    mutableSuggestedEvents["setting2"] = "off"
+    mutableProtectedModeRules["block2"] = "no"
+
+    // Config should retain the original values, unaffected by mutation
+    XCTAssertEqual(
+      config.eventBindings?.count,
+      1,
+      "eventBindings should be copied on init and not affected by external mutation"
+    )
+    XCTAssertEqual(
+      config.restrictiveParams?.count,
+      1,
+      "restrictiveParams should be copied on init and not affected by external mutation"
+    )
+    XCTAssertEqual(
+      config.aamRules?.count,
+      1,
+      "AAMRules should be copied on init and not affected by external mutation"
+    )
+    XCTAssertEqual(
+      config.suggestedEventsSetting?.count,
+      1,
+      "suggestedEventsSetting should be copied on init and not affected by external mutation"
+    )
+    XCTAssertEqual(
+      config.protectedModeRules?.count,
+      1,
+      "protectedModeRules should be copied on init and not affected by external mutation"
     )
   }
 

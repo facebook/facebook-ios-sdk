@@ -95,7 +95,7 @@ public final class _BridgeAPI: NSObject,
       pendingRequestCompletionBlock = nil
       let openedURLError: Error
 
-      if request.scheme.hasPrefix(URLScheme.http.rawValue) {
+      if request.scheme.hasPrefix(URLSchemeEnum.http.rawValue) {
         openedURLError = errorFactory.error(
           code: CoreError.errorBrowserUnavailable.rawValue,
           message: "the app switch failed because the browser is unavailable",
@@ -450,7 +450,7 @@ extension _BridgeAPI {
     from fromViewController: UIViewController?,
     handler: @escaping SuccessBlock
   ) {
-    guard url.scheme?.hasPrefix(URLScheme.http.rawValue) == true else {
+    guard url.scheme?.hasPrefix(URLSchemeEnum.http.rawValue) == true else {
       return open(url, sender: sender, handler: handler)
     }
 
@@ -513,6 +513,10 @@ extension _BridgeAPI {
 @available(iOS 13, *)
 extension _BridgeAPI: ASWebAuthenticationPresentationContextProviding {
   public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    UIApplication.shared.keyWindow ?? ASPresentationAnchor()
+    // `UIApplication.keyWindow` is deprecated and returns a key window across all
+    // connected scenes, so resolve the anchor from the active scene instead.
+    let windowScenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+    let scene = windowScenes.first { $0.activationState == .foregroundActive } ?? windowScenes.first
+    return scene?.windows.first { $0.isKeyWindow } ?? scene?.windows.first ?? ASPresentationAnchor()
   }
 }

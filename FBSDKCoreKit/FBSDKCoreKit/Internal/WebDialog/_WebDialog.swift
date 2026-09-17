@@ -223,7 +223,12 @@ public final class _WebDialog: NSObject {
     }
 
     if insets.top == 0 {
-      insets.top = UIApplication.shared.statusBarFrame.size.height
+      // Prefer the dialog's own scene; fall back to any connected window scene
+      // for the case where the view is not in a window yet. The old
+      // `UIApplication.statusBarFrame` fallback is deprecated and scene-unaware.
+      let windowScene = dialogView?.window?.windowScene
+        ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+      insets.top = windowScene?.statusBarManager?.statusBarFrame.size.height ?? 0
     }
 
     applicationFrame?.origin.x += insets.left

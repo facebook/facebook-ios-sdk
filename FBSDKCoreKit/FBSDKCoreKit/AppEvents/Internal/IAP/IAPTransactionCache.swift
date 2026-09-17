@@ -173,42 +173,54 @@ extension IAPTransactionCache: _IAPTransactionCaching {
   }
 
   func contains(transactionID: String?, eventName: AppEvents.Name, productID: String) -> Bool {
-    guard let transactionID else {
-      return false
+    var result = false
+    synchronized(self) {
+      guard let transactionID else {
+        result = false
+        return
+      }
+      let transactionCandidate = IAPCachedTransaction(
+        transactionID: transactionID,
+        productID: productID,
+        eventName: eventName.rawValue,
+        cachedDate: Date()
+      )
+      result = loggedTransactions.contains(transactionCandidate)
     }
-    let transactionCandidate = IAPCachedTransaction(
-      transactionID: transactionID,
-      productID: productID,
-      eventName: eventName.rawValue,
-      cachedDate: Date()
-    )
-    return loggedTransactions.contains(transactionCandidate)
+    return result
   }
 
   func contains(transactionID: String?, productID: String) -> Bool {
-    guard let transactionID else {
-      return false
+    var result = false
+    synchronized(self) {
+      guard let transactionID else {
+        result = false
+        return
+      }
+      result = loggedTransactions.contains { $0.transactionID == transactionID && $0.productID == productID }
     }
-    return loggedTransactions.contains { $0.transactionID == transactionID && $0.productID == productID }
+    return result
   }
 
   func trimIfNeeded(hasLowMemory: Bool = false) {
-    guard let oldest = oldestCachedTransaction, oldest.cachedDate.isOlderThan30Days() else {
-      return
-    }
-    var updatedOldestTransaction: IAPCachedTransaction?
-    let transactions = loggedTransactions
-    for transaction in transactions {
-      if transaction.isTrimmableTransaction,
-         transaction.cachedDate.isOlderThan30Days() || hasLowMemory {
-        loggedTransactions.remove(transaction)
-      } else if transaction.isTrimmableTransaction,
-                transaction.cachedDate < updatedOldestTransaction?.cachedDate ?? Date() {
-        updatedOldestTransaction = transaction
+    synchronized(self) {
+      guard let oldest = oldestCachedTransaction, oldest.cachedDate.isOlderThan30Days() else {
+        return
       }
+      var updatedOldestTransaction: IAPCachedTransaction?
+      let transactions = loggedTransactions
+      for transaction in transactions {
+        if transaction.isTrimmableTransaction,
+           transaction.cachedDate.isOlderThan30Days() || hasLowMemory {
+          loggedTransactions.remove(transaction)
+        } else if transaction.isTrimmableTransaction,
+                  transaction.cachedDate < updatedOldestTransaction?.cachedDate ?? Date() {
+          updatedOldestTransaction = transaction
+        }
+      }
+      oldestCachedTransaction = updatedOldestTransaction
+      persist()
     }
-    oldestCachedTransaction = updatedOldestTransaction
-    persist()
   }
 }
 

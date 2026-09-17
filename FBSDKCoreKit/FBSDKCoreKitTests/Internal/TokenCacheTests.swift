@@ -52,16 +52,19 @@ final class TokenCacheTests: XCTestCase {
   }
 
   func testSettingsDependencies() {
-    XCTAssertTrue(
-      cache.settings === settings,
+    XCTAssertIdentical(
+      cache.settings,
+      settings,
       "Can set a settings for the cache"
     )
-    XCTAssertTrue(
-      cache.keychainStore === keychainStore,
+    XCTAssertIdentical(
+      cache.keychainStore,
+      keychainStore,
       "Can set a keychain store for the cache"
     )
-    XCTAssertTrue(
-      cache.dataStore === store,
+    XCTAssertIdentical(
+      cache.dataStore,
+      store,
       "Can set a store for the cache"
     )
   }

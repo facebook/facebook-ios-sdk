@@ -10,7 +10,7 @@ import Foundation
 
 @objc(FBSDKMACARuleMatchingManager)
 final class MACARuleMatchingManager: NSObject, MACARuleMatching {
-  private var isEnable = false
+  private var isEnabled = false
   private var macaRules = [String]()
 
   private let keys = [
@@ -32,13 +32,13 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   var configuredDependencies: ObjectDependencies?
 
   var defaultDependencies: ObjectDependencies? = .init(
-    serverConfigurationProvider: _ServerConfigurationManager.shared,
     deviceInformationProvider: _AppEventsDeviceInfo.shared,
+    serverConfigurationProvider: _ServerConfigurationManager.shared,
     settings: Settings.shared
   )
 
   func enable() {
-    guard !isEnable,
+    guard !isEnabled,
           let dependencies = try? getDependencies() else {
       return
     }
@@ -47,7 +47,7 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
       .cachedServerConfiguration()
       .protectedModeRules?["maca_rules"] as? [String] {
       macaRules = macaRulesFromServer
-      isEnable = true
+      isEnabled = true
     }
   }
 
@@ -80,49 +80,41 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
 
     switch op {
     case "contains":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return dataValue.contains(ruleStringValue)
     case "i_contains":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return dataValue.lowercased().contains(ruleStringValue.lowercased())
     case "not_contains":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return !dataValue.contains(ruleStringValue)
     case "i_not_contains":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return !dataValue.lowercased().contains(ruleStringValue.lowercased())
     case "starts_with":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return dataValue.starts(with: ruleStringValue)
     case "i_starts_with":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return dataValue.lowercased().starts(with: ruleStringValue.lowercased())
     case "i_str_eq":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return dataValue.lowercased() == ruleStringValue.lowercased()
     case "i_str_neq":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
@@ -136,7 +128,7 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
       guard let dataValue = stringValueOf(dataValue),
             let ruleArrayValue = ruleArrayValue
       else { return false }
-      return ruleArrayValue.contains(where: { $0.compare(dataValue, options: .caseInsensitive) == .orderedSame })
+      return ruleArrayValue.contains { $0.compare(dataValue, options: .caseInsensitive) == .orderedSame }
     case "not_in", "is_not_any":
       guard let dataValue = stringValueOf(dataValue),
             let ruleArrayValue = ruleArrayValue
@@ -146,21 +138,18 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
       guard let dataValue = stringValueOf(dataValue),
             let ruleArrayValue = ruleArrayValue
       else { return false }
-      return !ruleArrayValue.contains(where: { $0.compare(dataValue, options: .caseInsensitive) == .orderedSame })
+      return !ruleArrayValue.contains { $0.compare(dataValue, options: .caseInsensitive) == .orderedSame }
     case "regex_match":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return dataValue.range(of: ruleStringValue, options: .regularExpression, range: nil, locale: nil) != nil
     case "eq", "=", "==":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
       return dataValue == ruleStringValue
     case "neq", "ne", "!=":
-      // swiftlint:disable:next blank_line_after_single_line_guard
       guard let dataValue = stringValueOf(dataValue),
             let ruleStringValue = ruleStringValue
       else { return false }
@@ -259,15 +248,13 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
   }
 
   @objc func processParameters(_ params: NSDictionary?, event: String?) -> NSDictionary? {
-    guard isEnable, let params = params, var res = params.mutableCopy() as? [String: Any]
+    guard isEnabled, let params = params, var res = params.mutableCopy() as? [String: Any]
     else { return params }
 
-    if isEnable {
-      generateInfo(params: &res, event: event)
-      res["cs_maca"] = true
-      res["_audiencePropertyIds"] = getMatchPropertyIDs(params: res)
-      removeGeneratedInfo(params: &res)
-    }
+    generateInfo(params: &res, event: event)
+    res["cs_maca"] = true
+    res["_audiencePropertyIds"] = getMatchPropertyIDs(params: res)
+    removeGeneratedInfo(params: &res)
 
     return res as NSDictionary
   }
@@ -299,8 +286,8 @@ final class MACARuleMatchingManager: NSObject, MACARuleMatching {
 
 extension MACARuleMatchingManager: DependentAsObject {
   struct ObjectDependencies {
-    var serverConfigurationProvider: _ServerConfigurationProviding
     var deviceInformationProvider: _DeviceInformationProviding
+    var serverConfigurationProvider: _ServerConfigurationProviding
     var settings: SettingsProtocol
   }
 }

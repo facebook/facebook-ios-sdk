@@ -9,5 +9,7 @@
 import Social
 
 protocol SocialComposeViewControllerFactoryProtocol {
+  var canMakeSocialComposeViewController: Bool { get }
+
   func makeSocialComposeViewController() -> SLComposeViewController
 }

@@ -14,7 +14,7 @@ final class SKAdNetworkEventTests: XCTestCase {
 
   func testValidCases() {
     var event = _SKAdNetworkEvent(json: ["event_name": "fb_mobile_purchase"])
-    XCTAssertTrue(event?.eventName == "fb_mobile_purchase")
+    XCTAssertEqual(event?.eventName, "fb_mobile_purchase")
     XCTAssertNil(event?.values)
     event = _SKAdNetworkEvent(
       json: [
@@ -31,12 +31,12 @@ final class SKAdNetworkEventTests: XCTestCase {
         ],
       ]
     )
-    XCTAssertTrue(event?.eventName == "fb_mobile_purchase")
+    XCTAssertEqual(event?.eventName, "fb_mobile_purchase")
     let expectedValues: [String: Double] = [
       "USD": 100,
       "JPY": 1000,
     ]
-    XCTAssertTrue(event?.values == expectedValues)
+    XCTAssertEqual(event?.values, expectedValues)
   }
 
   func testInvalidCases() {

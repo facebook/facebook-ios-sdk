@@ -25,6 +25,7 @@ final class AccessTokenExpirerTests: XCTestCase {
   override func setUp() {
     super.setUp()
 
+    AccessToken.current = nil
     expirer = _AccessTokenExpirer(notificationCenter: center)
   }
 
@@ -56,6 +57,121 @@ final class AccessTokenExpirerTests: XCTestCase {
         )
       ),
       "Should check the access token when the application becomes active"
+    )
+  }
+
+  func testTimerFiresForValidToken() {
+    let expectation = expectation(description: "Expiration notification posted")
+
+    let realCenter = NotificationCenter()
+    AccessToken.current = makeToken(expirationDate: Date(timeIntervalSinceNow: 0.1))
+
+    let observer = realCenter.fb_addObserver(
+      forName: .AccessTokenDidChange,
+      object: nil,
+      queue: .main
+    ) { notification in
+      if notification.userInfo?[AccessTokenDidExpireKey] as? Bool == true {
+        expectation.fulfill()
+      }
+    }
+
+    let testExpirer = _AccessTokenExpirer(notificationCenter: realCenter)
+    _ = testExpirer
+
+    waitForExpectations(timeout: 2)
+    realCenter.fb_removeObserver(observer)
+  }
+
+  func testTimerDoesNotFireForExpiredToken() {
+    let notFiredExpectation = expectation(description: "Should not fire")
+    notFiredExpectation.isInverted = true
+
+    let realCenter = NotificationCenter()
+    AccessToken.current = makeToken(expirationDate: .distantPast)
+
+    let observer = realCenter.fb_addObserver(
+      forName: .AccessTokenDidChange,
+      object: nil,
+      queue: .main
+    ) { notification in
+      if notification.userInfo?[AccessTokenDidExpireKey] as? Bool == true {
+        notFiredExpectation.fulfill()
+      }
+    }
+
+    let testExpirer = _AccessTokenExpirer(notificationCenter: realCenter)
+    _ = testExpirer
+
+    waitForExpectations(timeout: 0.5)
+    realCenter.fb_removeObserver(observer)
+  }
+
+  func testTimerDoesNotFireForNilToken() {
+    let notFiredExpectation = expectation(description: "Should not fire")
+    notFiredExpectation.isInverted = true
+
+    let realCenter = NotificationCenter()
+    AccessToken.current = nil
+
+    let observer = realCenter.fb_addObserver(
+      forName: .AccessTokenDidChange,
+      object: nil,
+      queue: .main
+    ) { notification in
+      if notification.userInfo?[AccessTokenDidExpireKey] as? Bool == true {
+        notFiredExpectation.fulfill()
+      }
+    }
+
+    let testExpirer = _AccessTokenExpirer(notificationCenter: realCenter)
+    _ = testExpirer
+
+    waitForExpectations(timeout: 0.5)
+    realCenter.fb_removeObserver(observer)
+  }
+
+  func testTimerResetWhenTokenChanges() {
+    let firstFired = expectation(description: "First timer should not fire")
+    firstFired.isInverted = true
+
+    let realCenter = NotificationCenter()
+    AccessToken.current = makeToken(expirationDate: Date(timeIntervalSinceNow: 0.3))
+
+    let testExpirer = _AccessTokenExpirer(notificationCenter: realCenter)
+
+    let observer = realCenter.fb_addObserver(
+      forName: .AccessTokenDidChange,
+      object: nil,
+      queue: .main
+    ) { notification in
+      if notification.userInfo?[AccessTokenDidExpireKey] as? Bool == true {
+        firstFired.fulfill()
+      }
+    }
+
+    // Clear token — should invalidate the pending timer
+    AccessToken.current = nil
+    testExpirer.checkAccessTokenExpirationDate()
+
+    // Wait past when the original timer would have fired
+    waitForExpectations(timeout: 0.6)
+    realCenter.fb_removeObserver(observer)
+  }
+
+  // MARK: - Helpers
+
+  private func makeToken(expirationDate: Date? = Date(timeIntervalSinceNow: 100)) -> AccessToken {
+    AccessToken(
+      tokenString: "token",
+      permissions: [],
+      declinedPermissions: [],
+      expiredPermissions: [],
+      appID: "appID",
+      userID: "userID",
+      expirationDate: expirationDate,
+      refreshDate: nil,
+      dataAccessExpirationDate: nil
     )
   }
 

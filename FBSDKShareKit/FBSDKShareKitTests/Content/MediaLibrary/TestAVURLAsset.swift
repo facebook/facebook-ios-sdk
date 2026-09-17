@@ -8,7 +8,7 @@
 
 import Photos
 
-final class TestAVURLAsset: AVURLAsset {
+final class TestAVURLAsset: AVURLAsset, @unchecked Sendable {
   var stubbedURL: URL?
 
   override var url: URL {

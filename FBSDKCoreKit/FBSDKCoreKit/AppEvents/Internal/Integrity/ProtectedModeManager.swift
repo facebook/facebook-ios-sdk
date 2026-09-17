@@ -12,6 +12,7 @@ import Foundation
 public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing {
   private var isEnabled = false
   private static let pmKey = AppEvents.ParameterName(rawValue: "pm")
+  private static let pmMetadataKey = AppEvents.ParameterName(rawValue: "pm_metadata")
   let standardParametersDefault: Set<String> = [
     "_currency",
     "_valueToSum",
@@ -128,6 +129,7 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     "aggregate_id",
     "anonymous_id",
     "campaign_ids",
+    "add_to_messaging_customer_base_for_whatsapp",
     "fb_post_attachment",
     "receipt_data",
     "ad_type",
@@ -147,6 +149,10 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     "pm",
     "_audiencePropertyIds",
     "cs_maca",
+    "pm_metadata",
+    "_bannedParams",
+    "vvp",
+    "vvp_md",
   ]
   private var standardParameters: Set<String> = []
 
@@ -187,11 +193,14 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     }
 
     var params = parameters
+    var modified = false
     parameters.keys.forEach { appEventsParameterName in
       if !standardParameters.contains(appEventsParameterName.rawValue) {
         params.removeValue(forKey: appEventsParameterName)
+        modified = true
       }
     }
+    params[ProtectedModeManager.pmMetadataKey] = ["cd": modified]
     params[ProtectedModeManager.pmKey] = true
     return params
   }
@@ -200,8 +209,8 @@ public final class ProtectedModeManager: NSObject, _AppEventsParameterProcessing
     guard let parameters else {
       return false
     }
-    return parameters.keys.contains(ProtectedModeManager.pmKey) &&
-      parameters[ProtectedModeManager.pmKey] as? Bool == true
+    return parameters.keys.contains(ProtectedModeManager.pmKey)
+      && parameters[ProtectedModeManager.pmKey] as? Bool == true
   }
 }
 

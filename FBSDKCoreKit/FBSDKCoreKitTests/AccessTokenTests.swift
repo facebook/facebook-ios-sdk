@@ -65,14 +65,15 @@ final class AccessTokenTests: XCTestCase {
   func testSettingTokenCache() {
     let cache = TestTokenCache(accessToken: nil, authenticationToken: nil)
     AccessToken.tokenCache = cache
-    XCTAssertTrue(AccessToken.tokenCache === cache, "Access token cache should be settable")
+    XCTAssertIdentical(AccessToken.tokenCache, cache, "Access token cache should be settable")
   }
 
   func testRetrievingCurrentToken() {
     AccessToken.current = SampleAccessTokens.validToken
 
-    XCTAssertTrue(
-      tokenCache.accessToken === SampleAccessTokens.validToken,
+    XCTAssertIdentical(
+      tokenCache.accessToken,
+      SampleAccessTokens.validToken,
       "Setting the global access token should invoke the cache"
     )
   }

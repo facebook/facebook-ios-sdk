@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import FacebookCore
 import FacebookShare
 
 struct VerifyFacebookShare {
@@ -14,15 +15,15 @@ struct VerifyFacebookShare {
         _ = Permission.email
 
         // Verifies ObjC symbol
-        Settings.appID = "Foo"
+        Settings.shared.appID = "Foo"
 
         // Additional Sanity Check
-        AppEvents.logEvent(AppEvents.Name("foo"))
+        AppEvents.shared.logEvent(AppEvents.Name("foo"))
     }
 
     func verifyShareSymbols() {
         // Verifies ObjC symbol
-        _ = ShareDialog()
+        _ = ShareDialog(viewController: nil, content: nil, delegate: nil)
 
         // Verifies Swift only symbol
         _ = ShareDialog.Mode.automatic.description
