@@ -650,7 +650,11 @@ open class FBTooltipView: UIView {
   private func layoutSubviewsAndDetermineFrame() -> CGRect {
     // Compute the positioning of the arrow.
     var screenBounds: CGRect = UIScreen.main.bounds
-    let orientation: UIInterfaceOrientation = UIApplication.shared.statusBarOrientation
+    // `UIApplication.statusBarOrientation` is deprecated; read the orientation
+    // from this view's window scene, falling back to any connected scene.
+    let windowScene = window?.windowScene
+      ?? UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+    let orientation: UIInterfaceOrientation = windowScene?.interfaceOrientation ?? .portrait
     if !orientation.isPortrait {
       screenBounds = CGRect(x: 0, y: 0, width: screenBounds.size.height, height: screenBounds.size.width)
     }

@@ -54,15 +54,16 @@ implementation. See `.llms/skills/public-api-design.md` for the full pattern.
 
 | Target | Minimum iOS |
 |--------|-------------|
-| SDK modules (`FBSDKCoreKit`, `FBSDKLoginKit`, etc.) | 13.0 |
-| Hackbook test app (`internal/testing/Hackbook`) | 12.0 |
-| CoffeeShop test app (`internal/testing/CoffeeShop`) | 12.0 |
+| SDK modules (`FBSDKCoreKit`, `FBSDKLoginKit`, etc.) | 15.0 |
+| Hackbook test app (`internal/testing/Hackbook`) | 15.0 |
+| CoffeeShop test app (`internal/testing/CoffeeShop`) | 15.0 |
+
+Everything inherits `15.0` from `xcodegen_project_common.yml` and
+`Configurations/Platform/iOS.xcconfig`; the podspecs and `Package.swift` declare
+the same floor to consumers. Xcode 27 does not accept a deployment target below
+15.0, so do not lower these.
 
 Do NOT use APIs newer than the target's minimum without `@available` checks.
-In Hackbook specifically, avoid iOS 13+ APIs like `UIColor.label`,
-`UIColor.secondaryLabel`, `monospacedSystemFont(ofSize:weight:)`, and iOS 14+
-APIs like `defaultContentConfiguration()` / `contentConfiguration` — use
-`textLabel` / `detailTextLabel` instead.
 
 ## Simulator Destinations
 

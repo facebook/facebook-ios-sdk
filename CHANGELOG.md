@@ -12,6 +12,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.1...HEAD)
 
+### Changed
+- **Breaking**: the minimum supported deployment target is now iOS 15.0 (was iOS 12.0).
+  Xcode 27 does not support deployment targets below iOS 15.0. Apps still targeting
+  iOS 12–14 must raise their deployment target to adopt this version.
+
 ## 18.1.1
 
 ### Changed

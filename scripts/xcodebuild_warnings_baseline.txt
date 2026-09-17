@@ -31,11 +31,12 @@
 3	<DERIVED_DATA>: warning: 'SKProductSubscriptionPeriod' is deprecated: first deprecated in iOS 18.0 - Use Product.SubscriptionPeriod.
 1	<DERIVED_DATA>: warning: 'SKProductsResponse' is deprecated: first deprecated in iOS 18.0 - Get products using Product.products(for:).
 1	<SDK>/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/Developer/Library/Frameworks/StoreKitTest.framework/Headers/SKTestTransaction.h: warning: 'SKPaymentTransactionState' is deprecated: first deprecated in iOS 18.0 - Use PurchaseResult from Product.purchase(confirmIn:options:).
-1	FBSDKCoreKit/FBSDKCoreKit/Internal/Network/GraphRequestPiggybackManager.swift: warning: capture of 'dependencies' with non-Sendable type 'GraphRequestPiggybackManager.ObjectDependencies' in a '@Sendable' closure
+1	<SDK>/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/Developer/Library/Frameworks/StoreKitTest.framework/Headers/SKTestTransaction.h: warning: 'SKPaymentTransactionState' is deprecated: first deprecated in iOS 18.0 - Use PurchaseResult from Product.purchase(confirmIn:options:).
+1	FBSDKCoreKit/FBSDKCoreKit/Internal/Network/GraphRequestPiggybackManager.swift: warning: capture of 'dependencies' with non-Sendable type 'GraphRequestPiggybackManager.ObjectDependencies' in a '@Sendable' closure [#SendableClosureCaptures]
 3	FBSDKCoreKit/FBSDKCoreKitTests/Interfaces/PaymentProductRequestor+Testing.h: warning: 'SKPaymentTransaction' is deprecated: first deprecated in iOS 18.0 - Use PurchaseResult from Product.purchase(confirmIn:options:).
 3	FBSDKCoreKit/FBSDKCoreKitTests/Interfaces/PaymentProductRequestor+Testing.h: warning: 'SKProduct' is deprecated: first deprecated in iOS 18.0 - Use Product.
 1	FBSDKCoreKit/FBSDKCoreKitTests/Interfaces/PaymentProductRequestor+Testing.h: warning: 'SKProductsRequest' is deprecated: first deprecated in iOS 18.0 - Use Product.products(for:).
 1	FBSDKCoreKit/FBSDKCoreKitTests/Interfaces/PaymentProductRequestor+Testing.h: warning: 'SKProductsResponse' is deprecated: first deprecated in iOS 18.0 - Get products using Product.products(for:).
 1	FBSDKLoginKit/FBSDKLoginKit/Internal/DPoPKeyManager.swift: warning: will never be executed
-1	FBSDKShareKit/FBSDKShareKit/UserInterface/MessageDialog.swift: warning: capture of 'dependencies' with non-Sendable type 'MessageDialog.TypeDependencies' in a '@Sendable' closure
-4	FBSDKShareKit/FBSDKShareKit/UserInterface/ShareDialog.swift: warning: capture of 'dependencies' with non-Sendable type 'ShareDialog.TypeDependencies' in a '@Sendable' closure
+1	FBSDKShareKit/FBSDKShareKit/UserInterface/MessageDialog.swift: warning: capture of 'dependencies' with non-Sendable type 'MessageDialog.TypeDependencies' in a '@Sendable' closure [#SendableClosureCaptures]
+4	FBSDKShareKit/FBSDKShareKit/UserInterface/ShareDialog.swift: warning: capture of 'dependencies' with non-Sendable type 'ShareDialog.TypeDependencies' in a '@Sendable' closure [#SendableClosureCaptures]

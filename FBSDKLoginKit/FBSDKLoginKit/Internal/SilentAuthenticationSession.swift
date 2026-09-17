@@ -114,16 +114,12 @@ final class SilentAuthenticationSession: NSObject, ASWebAuthenticationPresentati
   // MARK: - ASWebAuthenticationPresentationContextProviding
 
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    if #available(iOS 15.0, *) {
-      let scene = UIApplication.shared.connectedScenes
-        .compactMap { $0 as? UIWindowScene }
-        .first { $0.activationState == .foregroundActive }
-      if let window = scene?.windows.first(where: { $0.isKeyWindow }) ?? scene?.windows.first {
-        return window
-      }
-    }
-    // Fallback for iOS 13–14
-    return UIApplication.shared.windows.first { $0.isKeyWindow } ?? UIWindow()
+    // The old `UIApplication.windows` fallback is deprecated, and the minimum
+    // deployment target makes the iOS 15 availability check unconditional, so
+    // widen the scene lookup instead of falling back to the app-wide list.
+    let windowScenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+    let scene = windowScenes.first { $0.activationState == .foregroundActive } ?? windowScenes.first
+    return scene?.windows.first { $0.isKeyWindow } ?? scene?.windows.first ?? UIWindow()
   }
 
   // MARK: - Private

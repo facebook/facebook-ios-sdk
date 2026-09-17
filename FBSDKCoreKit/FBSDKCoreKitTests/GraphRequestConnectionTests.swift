@@ -2047,7 +2047,8 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.delegate = self
     connection.urlSession(
       URLSession.shared,
-      task: URLSessionDataTask(),
+      // `URLSessionDataTask()` is deprecated; vend an (unstarted) task instead.
+      task: URLSession.shared.dataTask(with: URL(string: "https://example.com")!),
       didSendBodyData: 0,
       totalBytesSent: 0,
       totalBytesExpectedToSend: 0

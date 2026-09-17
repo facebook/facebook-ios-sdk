@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
   s.author       = 'Facebook'
 
   s.platform     = :ios
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '15.0'
   s.library = 'z'
 
   s.source = {
