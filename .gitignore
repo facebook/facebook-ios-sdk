@@ -99,3 +99,6 @@ internal/scripts/Runner/.swiftpm
 # schemes are shared, not per-user) injects the SDK's schemes into the scheme
 # list of every app that consumes it via SPM (#2515).
 .swiftpm/
+
+# Written by ci/unit_tests.py so build and test steps share one simulator
+.ci_destination_id
