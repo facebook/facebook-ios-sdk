@@ -47,19 +47,43 @@ class StoreKitTestCase: XCTestCase {
     }
   }
 
+  private var transactionUpdatesTask: Task<Void, Never>?
+
   override func setUp() async throws {
     try await super.setUp()
     IAPTransactionCache.shared.reset()
+    startObservingTransactionUpdates()
     if #available(iOS 14.0, *) {
       try setupTestSession()
     }
   }
 
   override func tearDown() {
+    transactionUpdatesTask?.cancel()
+    transactionUpdatesTask = nil
     if #available(iOS 14.0, *) {
       tearDownTestSession()
     }
     super.tearDown()
+  }
+
+  /// StoreKit emits "Making a purchase without listening for transaction updates
+  /// risks missing successful purchases. Create a Task to iterate
+  /// Transaction.updates at launch." on every `Product.purchase()` in this target,
+  /// because nothing here iterated that sequence. Drain it for the lifetime of
+  /// each test so updates have a consumer.
+  ///
+  /// Deliberately does not call `finish()` on what it receives: several tests
+  /// depend on specific transactions staying unfinished, and finishing them here
+  /// would silently change what they are asserting.
+  private func startObservingTransactionUpdates() {
+    guard #available(iOS 15.0, *) else { return }
+
+    transactionUpdatesTask = Task.detached {
+      // Draining is the whole point; cancelling the task in tearDown ends the
+      // iteration, so there is nothing to do per element.
+      for await _ in Transaction.updates {}
+    }
   }
 }
 
