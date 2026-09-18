@@ -8,7 +8,6 @@
 
 import StoreKit
 
-@available(iOS 12.2, *)
 public final class TestPayment: SKPayment {
   public let stubbedProductIdentifier: String
   public let stubbedQuantity: Int
@@ -32,7 +31,6 @@ public final class TestPayment: SKPayment {
     stubbedQuantity
   }
 
-  @available(iOS 12.2, *)
   public override var paymentDiscount: SKPaymentDiscount? {
     stubbedPaymentDiscount
   }

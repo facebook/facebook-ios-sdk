@@ -870,32 +870,28 @@ final class LoginManagerTests: XCTestCase {
       "email,openid,public_profile"
     )
     XCTAssertNotNil(parameters["nonce"])
-    if #available(iOS 14, *) {
-      switch ATTrackingManager.trackingAuthorizationStatus {
-      case .authorized:
-        XCTAssertNil(
-          parameters["tp"],
-          "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
-        )
-      default:
-        let limitedLoginShimMissingParametersErrorMessage =
-          """
-          Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
-          should send Limited Login Shim parameters
-          """
-        XCTAssertEqual(
-          parameters["tp"],
-          "ios_14_do_not_track",
-          limitedLoginShimMissingParametersErrorMessage
-        )
-        XCTAssertEqual(
-          parameters["is_limited_login_shim"],
-          "true",
-          limitedLoginShimMissingParametersErrorMessage
-        )
-      }
-    } else {
-      XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    switch ATTrackingManager.trackingAuthorizationStatus {
+    case .authorized:
+      XCTAssertNil(
+        parameters["tp"],
+        "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
+      )
+    default:
+      let limitedLoginShimMissingParametersErrorMessage =
+        """
+        Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
+        should send Limited Login Shim parameters
+        """
+      XCTAssertEqual(
+        parameters["tp"],
+        "ios_14_do_not_track",
+        limitedLoginShimMissingParametersErrorMessage
+      )
+      XCTAssertEqual(
+        parameters["is_limited_login_shim"],
+        "true",
+        limitedLoginShimMissingParametersErrorMessage
+      )
     }
     let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
@@ -1066,7 +1062,7 @@ final class LoginManagerTests: XCTestCase {
       )
     )
 
-    if #available(iOS 14, *), ATTrackingManager.trackingAuthorizationStatus != .authorized {
+    if ATTrackingManager.trackingAuthorizationStatus != .authorized {
       XCTAssertEqual(
         parameters["dpop_jkt"],
         "stub_thumbprint_43_chars__________________________a",
@@ -1137,32 +1133,28 @@ final class LoginManagerTests: XCTestCase {
       "email,openid,public_profile"
     )
     XCTAssertNotNil(parameters["nonce"])
-    if #available(iOS 14, *) {
-      switch ATTrackingManager.trackingAuthorizationStatus {
-      case .authorized:
-        XCTAssertNil(
-          parameters["tp"],
-          "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
-        )
-      default:
-        let limitedLoginShimMissingParametersErrorMessage =
-          """
-          Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
-          should send Limited Login Shim parameters
-          """
-        XCTAssertEqual(
-          parameters["tp"],
-          "ios_14_do_not_track",
-          limitedLoginShimMissingParametersErrorMessage
-        )
-        XCTAssertEqual(
-          parameters["is_limited_login_shim"],
-          "true",
-          limitedLoginShimMissingParametersErrorMessage
-        )
-      }
-    } else {
-      XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    switch ATTrackingManager.trackingAuthorizationStatus {
+    case .authorized:
+      XCTAssertNil(
+        parameters["tp"],
+        "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
+      )
+    default:
+      let limitedLoginShimMissingParametersErrorMessage =
+        """
+        Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
+        should send Limited Login Shim parameters
+        """
+      XCTAssertEqual(
+        parameters["tp"],
+        "ios_14_do_not_track",
+        limitedLoginShimMissingParametersErrorMessage
+      )
+      XCTAssertEqual(
+        parameters["is_limited_login_shim"],
+        "true",
+        limitedLoginShimMissingParametersErrorMessage
+      )
     }
     let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]
@@ -1203,32 +1195,28 @@ final class LoginManagerTests: XCTestCase {
       "email,openid,public_profile"
     )
     XCTAssertNotNil(parameters["nonce"])
-    if #available(iOS 14, *) {
-      switch ATTrackingManager.trackingAuthorizationStatus {
-      case .authorized:
-        XCTAssertNil(
-          parameters["tp"],
-          "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
-        )
-      default:
-        let limitedLoginShimMissingParametersErrorMessage =
-          """
-          Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
-          should send Limited Login Shim parameters
-          """
-        XCTAssertEqual(
-          parameters["tp"],
-          "ios_14_do_not_track",
-          limitedLoginShimMissingParametersErrorMessage
-        )
-        XCTAssertEqual(
-          parameters["is_limited_login_shim"],
-          "true",
-          limitedLoginShimMissingParametersErrorMessage
-        )
-      }
-    } else {
-      XCTAssertNil(parameters["tp"], "Regular login should not send a tracking parameter")
+    switch ATTrackingManager.trackingAuthorizationStatus {
+    case .authorized:
+      XCTAssertNil(
+        parameters["tp"],
+        "Tracking authorized in iOS 14+ is Regular Login and should not send a tracking parameter"
+      )
+    default:
+      let limitedLoginShimMissingParametersErrorMessage =
+        """
+        Tracking not authorized in iOS 14+ but app expects Regular Login (LoginConfiguration.tracking = .enabled)
+        should send Limited Login Shim parameters
+        """
+      XCTAssertEqual(
+        parameters["tp"],
+        "ios_14_do_not_track",
+        limitedLoginShimMissingParametersErrorMessage
+      )
+      XCTAssertEqual(
+        parameters["is_limited_login_shim"],
+        "true",
+        limitedLoginShimMissingParametersErrorMessage
+      )
     }
     let rawState = try XCTUnwrap(parameters["state"])
     let state = try BasicUtility.object(forJSONString: rawState) as? [String: Any]

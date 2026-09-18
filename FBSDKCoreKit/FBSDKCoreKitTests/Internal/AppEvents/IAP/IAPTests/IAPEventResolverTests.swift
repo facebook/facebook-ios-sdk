@@ -44,7 +44,6 @@ final class IAPEventResolverTests: StoreKitTestCase {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension IAPEventResolverTests {
   func testResolveNewNonConsumablePurchaseEventWithStoreKit2() async {
     guard let products =
@@ -581,7 +580,6 @@ extension IAPEventResolverTests {
 
 // MARK: - Store Kit 1
 
-@available(iOS 12.2, *)
 extension IAPEventResolverTests {
   func testResolveNewNonConsumablePurchaseEventWithStoreKit1() {
     let productID = Self.ProductIdentifiers.nonConsumableProduct1

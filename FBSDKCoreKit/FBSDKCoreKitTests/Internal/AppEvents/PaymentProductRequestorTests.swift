@@ -11,7 +11,6 @@
 import TestTools
 import XCTest
 
-@available(iOS 12.2, *)
 final class PaymentProductRequestorTests: XCTestCase {
 
   var transaction = TestPaymentTransaction(state: .deferred)

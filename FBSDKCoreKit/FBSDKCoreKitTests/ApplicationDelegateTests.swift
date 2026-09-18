@@ -185,36 +185,22 @@ final class ApplicationDelegateTests: XCTestCase {
   func testInitializeSDKLoadsDomainConfiguration() {
     delegate.initializeSDK()
 
-    if #available(iOS 14.5, *) {
-      XCTAssertTrue(
-        domainConfigurationManager.loadDomainConfigurationWasCalled,
-        "Should load the domain configuration on initializing the SDK"
-      )
-      guard let fetchedDomainInfo = domainConfigurationManager.domainConfiguration?.domainInfo,
-            let defaultDomainInfo = _DomainConfiguration.default().domainInfo else {
-        XCTFail("Should not be nil")
-        return
-      }
-      XCTAssertTrue(
-        NSDictionary(dictionary: fetchedDomainInfo).isEqual(to: defaultDomainInfo),
-        "The correct domain configuration should have been loaded"
-      )
-    } else {
-      XCTAssertFalse(
-        domainConfigurationManager.loadDomainConfigurationWasCalled,
-        "Should not load the domain configuration on initializing the SDK unless we have iOS 14.5+"
-      )
-      XCTAssertNil(
-        domainConfigurationManager.domainConfiguration?.domainInfo,
-        "Should not load the domain configuration on initializing the SDK unless we have iOS 14.5+"
-      )
+    XCTAssertTrue(
+      domainConfigurationManager.loadDomainConfigurationWasCalled,
+      "Should load the domain configuration on initializing the SDK"
+    )
+    guard let fetchedDomainInfo = domainConfigurationManager.domainConfiguration?.domainInfo,
+          let defaultDomainInfo = _DomainConfiguration.default().domainInfo else {
+      XCTFail("Should not be nil")
+      return
     }
+    XCTAssertTrue(
+      NSDictionary(dictionary: fetchedDomainInfo).isEqual(to: defaultDomainInfo),
+      "The correct domain configuration should have been loaded"
+    )
   }
 
   func testInitializeSDKDefersSetupUntilAfterFirstFrame() throws {
-    guard #available(iOS 14.5, *) else {
-      throw XCTSkip("Domain configuration gating only runs on iOS 14.5+")
-    }
     var scheduledWork: (() -> Void)?
     delegate.scheduleAfterFirstFrame = { scheduledWork = $0 }
 
@@ -240,9 +226,6 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   func testInitializeSDKArmsEventPersistenceBeforeDeferredSetup() throws {
-    guard #available(iOS 14.5, *) else {
-      throw XCTSkip("SDK setup is only deferred past the first frame on iOS 14.5+")
-    }
     var scheduledWork: (() -> Void)?
     delegate.scheduleAfterFirstFrame = { scheduledWork = $0 }
 
@@ -602,30 +585,19 @@ final class ApplicationDelegateTests: XCTestCase {
   func testDidFinishLaunchingLoadsDomainConfiguration() {
     delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
 
-    if #available(iOS 14.5, *) {
-      XCTAssertTrue(
-        domainConfigurationManager.loadDomainConfigurationWasCalled,
-        "Should load the domain configuration on finishing launching the application"
-      )
-      guard let fetchedDomainInfo = domainConfigurationManager.domainConfiguration?.domainInfo,
-            let defaultDomainInfo = _DomainConfiguration.default().domainInfo else {
-        XCTFail("Should not be nil")
-        return
-      }
-      XCTAssertTrue(
-        NSDictionary(dictionary: fetchedDomainInfo).isEqual(to: defaultDomainInfo),
-        "The correct domain configuration should have been loaded"
-      )
-    } else {
-      XCTAssertFalse(
-        domainConfigurationManager.loadDomainConfigurationWasCalled,
-        "We should not load the domain configuration unless we are on iOS 14.5+"
-      )
-      XCTAssertNil(
-        domainConfigurationManager.domainConfiguration?.domainInfo,
-        "We should not load the domain configuration unless we are on iOS 14.5+"
-      )
+    XCTAssertTrue(
+      domainConfigurationManager.loadDomainConfigurationWasCalled,
+      "Should load the domain configuration on finishing launching the application"
+    )
+    guard let fetchedDomainInfo = domainConfigurationManager.domainConfiguration?.domainInfo,
+          let defaultDomainInfo = _DomainConfiguration.default().domainInfo else {
+      XCTFail("Should not be nil")
+      return
     }
+    XCTAssertTrue(
+      NSDictionary(dictionary: fetchedDomainInfo).isEqual(to: defaultDomainInfo),
+      "The correct domain configuration should have been loaded"
+    )
   }
 
   func testDidFinishLaunchingLoadsServerConfiguration() {

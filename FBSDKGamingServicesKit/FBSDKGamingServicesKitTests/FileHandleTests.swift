@@ -10,7 +10,6 @@
 import Foundation
 import XCTest
 
-@available(iOS 13.4, *)
 final class FileHandleTests: XCTestCase {
   // swiftlint:disable:next implicitly_unwrapped_optional
   var fileHandle: FileHandle!

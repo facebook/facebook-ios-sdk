@@ -40,7 +40,6 @@ final class DefaultCoreKitComponentsTests: XCTestCase {
     )
   }
 
-  @available(iOS 14, *)
   func testAEMNetworker() {
     XCTAssertNotNil(
       components.aemNetworker as? AEMNetworker,

@@ -8,7 +8,6 @@
 
 import StoreKit
 
-@available(iOS 12.2, *)
 public final class TestPaymentTransaction: SKPaymentTransaction, @unchecked Sendable {
   private let stubbedTransactionIdentifier: String?
   private let stubbedTransactionState: SKPaymentTransactionState

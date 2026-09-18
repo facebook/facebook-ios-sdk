@@ -46,7 +46,6 @@ final class IAPTransactionLoggerTests: StoreKitTestCase {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension IAPTransactionLoggerTests {
   private func executeTransactionFor(_ productID: String) async -> (IAPTransaction, Product)? {
     guard let products =
@@ -1229,7 +1228,6 @@ extension IAPTransactionLoggerTests {
 
 // MARK: - Store Kit 1
 
-@available(iOS 12.2, *)
 extension IAPTransactionLoggerTests {
 
   // MARK: - New Subscriptions

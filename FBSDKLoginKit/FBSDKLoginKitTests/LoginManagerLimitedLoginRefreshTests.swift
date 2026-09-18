@@ -37,8 +37,6 @@ final class LoginManagerLimitedLoginRefreshTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    guard #available(iOS 13.0, *) else { return }
-
     // Boot the SDK so Settings.shared and friends don't trip the v9.0 init guard.
     ApplicationDelegate.shared.application(
       UIApplication.shared,

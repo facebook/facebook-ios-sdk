@@ -12,7 +12,6 @@
 import StoreKitTest
 import XCTest
 
-@available(iOS 14.0, *)
 final class IAPTransactionTests: StoreKitTestCase {
 
   @available(iOS 17.0, *)
@@ -37,7 +36,6 @@ final class IAPTransactionTests: StoreKitTestCase {
     XCTAssertEqual(iapTransaction.validationResult, .invalid)
   }
 
-  @available(iOS 15.0, *)
   func testVerificationResult() async throws {
     guard let products =
       try? await Product.products(for: [Self.ProductIdentifiers.nonConsumableProduct1.rawValue]) else {

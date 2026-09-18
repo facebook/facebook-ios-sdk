@@ -12,7 +12,6 @@ import SafariServices
 import TestTools
 import XCTest
 
-@available(iOS 13.0, *)
 final class BridgeAPITests: XCTestCase {
 
   let sampleSource = "com.example"

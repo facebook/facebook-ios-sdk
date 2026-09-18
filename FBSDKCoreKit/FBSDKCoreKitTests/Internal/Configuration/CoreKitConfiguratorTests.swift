@@ -928,7 +928,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  @available(iOS 14.0, *)
   func testConfiguringAEMReporter() {
     XCTAssertNil(
       AEMReporter.networker,
@@ -963,7 +962,6 @@ final class CoreKitConfiguratorTests: XCTestCase {
     )
   }
 
-  @available(iOS 14.0, *)
   func testConfiguringAEMManager() {
     XCTAssertNil(
       _AEMManager.shared.swizzler,

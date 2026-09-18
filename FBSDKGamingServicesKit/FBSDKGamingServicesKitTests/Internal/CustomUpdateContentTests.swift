@@ -9,7 +9,6 @@
 @testable import FBSDKGamingServicesKit
 import XCTest
 
-@available(iOS 13.0, *)
 final class CustomUpdateContentTests: XCTestCase {
 
   var validMessage = "text"

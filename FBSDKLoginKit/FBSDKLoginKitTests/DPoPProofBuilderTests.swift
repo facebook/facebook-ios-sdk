@@ -12,7 +12,6 @@ import CryptoKit
 import Security
 import XCTest
 
-@available(iOS 13.0, *)
 final class DPoPProofBuilderTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional

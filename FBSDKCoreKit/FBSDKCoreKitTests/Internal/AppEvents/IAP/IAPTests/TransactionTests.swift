@@ -12,7 +12,6 @@
 import StoreKitTest
 import XCTest
 
-@available(iOS 15.0, *)
 final class TransactionTests: StoreKitTestCase {
 
   // StoreKit does not promise that `Product.products(for:)` returns products in

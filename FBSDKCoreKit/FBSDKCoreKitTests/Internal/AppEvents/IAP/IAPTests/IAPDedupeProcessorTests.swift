@@ -753,7 +753,6 @@ final class IAPDedupeProcessorTests: StoreKitTestCase {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension IAPDedupeProcessorTests {
   private func executeTransactionFor(_ productID: String) async -> (IAPTransaction, Product)? {
     guard let products =
@@ -1071,7 +1070,6 @@ extension IAPDedupeProcessorTests {
 
 // MARK: - Store Kit 1
 
-@available(iOS 12.2, *)
 extension IAPDedupeProcessorTests {
   func testDedupWihtDuplicatePurchaseEventsStoreKit1() {
     dedupeProcessor.enable()

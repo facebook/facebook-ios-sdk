@@ -27,7 +27,6 @@ final class TestIAPTransactionLogger: IAPTransactionLogging {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension TestIAPTransactionLogger {
   static var newStoreKit2Transactions: [IAPTransaction] = []
   static var restoredStoreKit2Transactions: [IAPTransaction] = []
@@ -63,9 +62,7 @@ extension TestIAPTransactionLogger {
 
 extension TestIAPTransactionLogger {
   static func reset() {
-    if #available(iOS 15.0, *) {
-      resetStoreKit2()
-    }
+    resetStoreKit2()
     resetStoreKit1()
   }
 }

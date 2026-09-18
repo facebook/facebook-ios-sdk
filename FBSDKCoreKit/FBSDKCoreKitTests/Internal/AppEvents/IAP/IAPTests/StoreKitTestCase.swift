@@ -37,7 +37,6 @@ class StoreKitTestCase: XCTestCase {
 
   private var anyTestSession: Any?
 
-  @available(iOS 15.0, *)
   func getIAPTransactionForPurchaseResult(result: Product.PurchaseResult) throws -> IAPTransaction {
     switch result {
     case let .success(verificationResult):
@@ -53,17 +52,13 @@ class StoreKitTestCase: XCTestCase {
     try await super.setUp()
     IAPTransactionCache.shared.reset()
     startObservingTransactionUpdates()
-    if #available(iOS 14.0, *) {
-      try setupTestSession()
-    }
+    try setupTestSession()
   }
 
   override func tearDown() {
     transactionUpdatesTask?.cancel()
     transactionUpdatesTask = nil
-    if #available(iOS 14.0, *) {
-      tearDownTestSession()
-    }
+    tearDownTestSession()
     super.tearDown()
   }
 
@@ -77,8 +72,6 @@ class StoreKitTestCase: XCTestCase {
   /// depend on specific transactions staying unfinished, and finishing them here
   /// would silently change what they are asserting.
   private func startObservingTransactionUpdates() {
-    guard #available(iOS 15.0, *) else { return }
-
     transactionUpdatesTask = Task.detached {
       // Draining is the whole point; cancelling the task in tearDown ends the
       // iteration, so there is nothing to do per element.
@@ -87,7 +80,6 @@ class StoreKitTestCase: XCTestCase {
   }
 }
 
-@available(iOS 14.0, *)
 extension StoreKitTestCase {
   var testSession: SKTestSession {
     anyTestSession as! SKTestSession // swiftlint:disable:this force_cast

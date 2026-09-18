@@ -2060,78 +2060,70 @@ final class AppEventsTests: XCTestCase {
   }
 
   func testFetchingConfigurationIncludingAEM() {
-    if #available(iOS 14.0, *) {
-      appEvents.fetchServerConfiguration(nil)
-      appEventsConfigurationProvider.firstCapturedBlock?()
-      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-      XCTAssertTrue(
-        featureManager.capturedFeaturesContains(.AEM),
-        "Fetching a configuration should check if the AEM feature is enabled"
-      )
-    }
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    XCTAssertTrue(
+      featureManager.capturedFeaturesContains(.AEM),
+      "Fetching a configuration should check if the AEM feature is enabled"
+    )
   }
 
   func testFetchingConfigurationIncludingAEMConversionFiltering() {
-    if #available(iOS 14.0, *) {
-      featureManager.enable(feature: .aemConversionFiltering)
-      appEvents.fetchServerConfiguration(nil)
-      appEventsConfigurationProvider.firstCapturedBlock?()
-      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-      featureManager.completeCheck(
-        forFeature: .AEM,
-        with: true
-      )
-      XCTAssertTrue(
-        TestAEMReporter.setCatalogMatchingEnabledWasCalled,
-        "Should enable or disable the Conversion Filtering"
-      )
-      XCTAssertTrue(
-        TestAEMReporter.capturedConversionFilteringEnabled,
-        "AEM Conversion Filtering should be enabled"
-      )
-    }
+    featureManager.enable(feature: .aemConversionFiltering)
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .AEM,
+      with: true
+    )
+    XCTAssertTrue(
+      TestAEMReporter.setCatalogMatchingEnabledWasCalled,
+      "Should enable or disable the Conversion Filtering"
+    )
+    XCTAssertTrue(
+      TestAEMReporter.capturedConversionFilteringEnabled,
+      "AEM Conversion Filtering should be enabled"
+    )
   }
 
   func testFetchingConfigurationIncludingAEMCatalogMatching() {
-    if #available(iOS 14.0, *) {
-      featureManager.enable(feature: .aemCatalogMatching)
-      appEvents.fetchServerConfiguration(nil)
-      appEventsConfigurationProvider.firstCapturedBlock?()
-      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-      featureManager.completeCheck(
-        forFeature: .AEM,
-        with: true
-      )
-      XCTAssertTrue(
-        TestAEMReporter.setCatalogMatchingEnabledWasCalled,
-        "Should enable or disable the Catalog Matching"
-      )
-      XCTAssertTrue(
-        TestAEMReporter.capturedCatalogMatchingEnabled,
-        "AEM Catalog Matching should be enabled"
-      )
-    }
+    featureManager.enable(feature: .aemCatalogMatching)
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .AEM,
+      with: true
+    )
+    XCTAssertTrue(
+      TestAEMReporter.setCatalogMatchingEnabledWasCalled,
+      "Should enable or disable the Catalog Matching"
+    )
+    XCTAssertTrue(
+      TestAEMReporter.capturedCatalogMatchingEnabled,
+      "AEM Catalog Matching should be enabled"
+    )
   }
 
   func testFetchingConfigurationIncludingAEMAdvertiserRuleMatchInServer() {
-    if #available(iOS 14.0, *) {
-      featureManager.enable(feature: .aemAdvertiserRuleMatchInServer)
-      appEvents.fetchServerConfiguration(nil)
-      appEventsConfigurationProvider.firstCapturedBlock?()
-      serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
-      featureManager.completeCheck(
-        forFeature: .AEM,
-        with: true
-      )
-      XCTAssertTrue(
-        TestAEMReporter.setAdvertiserRuleMatchInServerEnabledWasCalled,
-        "Should enable or disable the AEM Advertiser Rule Match in server"
-      )
-      XCTAssertTrue(
-        TestAEMReporter.capturedAdvertiserRuleMatchInServerEnabled,
-        "AEM Advertiser Rule Match in server should be enabled"
-      )
-    }
+    featureManager.enable(feature: .aemAdvertiserRuleMatchInServer)
+    appEvents.fetchServerConfiguration(nil)
+    appEventsConfigurationProvider.firstCapturedBlock?()
+    serverConfigurationProvider.capturedCompletionBlock?(nil, nil)
+    featureManager.completeCheck(
+      forFeature: .AEM,
+      with: true
+    )
+    XCTAssertTrue(
+      TestAEMReporter.setAdvertiserRuleMatchInServerEnabledWasCalled,
+      "Should enable or disable the AEM Advertiser Rule Match in server"
+    )
+    XCTAssertTrue(
+      TestAEMReporter.capturedAdvertiserRuleMatchInServerEnabled,
+      "AEM Advertiser Rule Match in server should be enabled"
+    )
   }
 
   func testFetchingConfigurationIncludingCloudBridge() {

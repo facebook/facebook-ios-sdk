@@ -38,7 +38,6 @@ final class IAPTransactionObserverTests: StoreKitTestCase {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension IAPTransactionObserverTests {
   func testIAPObservationTime() async {
     IAPTransactionObserver.shared.startObserving()
@@ -299,7 +298,6 @@ extension IAPTransactionObserverTests {
 
 // MARK: - Store Kit 1
 
-@available(iOS 12.2, *)
 extension IAPTransactionObserverTests {
   func testStartObserving() {
     IAPTransactionObserver.shared.startObserving()

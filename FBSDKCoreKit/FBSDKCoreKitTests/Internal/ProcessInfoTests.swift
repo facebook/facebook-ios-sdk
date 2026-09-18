@@ -43,15 +43,11 @@ final class ProcessInfoTests: XCTestCase {
   }
 
   func testIsMacCatalystApp() {
-    if #available(iOS 13, *) {
-      XCTAssertEqual(
-        processInfo.fb_isMacCatalystApp,
-        processInfo.isMacCatalystApp,
-        .isMacCatalystApp
-      )
-    } else {
-      XCTAssertFalse(processInfo.fb_isMacCatalystApp, .isMacCatalystApp)
-    }
+    XCTAssertEqual(
+      processInfo.fb_isMacCatalystApp,
+      processInfo.isMacCatalystApp,
+      .isMacCatalystApp
+    )
   }
 }
 

@@ -8,7 +8,6 @@
 
 import XCTest
 
-@available(iOS 12.2, *)
 extension PaymentProductRequestorTests {
   struct PaymentProductParameters: Codable, Equatable {
     let contentID: String?

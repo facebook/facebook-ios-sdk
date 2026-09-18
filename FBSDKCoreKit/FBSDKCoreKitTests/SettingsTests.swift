@@ -284,25 +284,23 @@ final class SettingsTests: XCTestCase {
     if !_DomainHandler.sharedInstance().isDomainHandlingEnabled() {
       return
     }
-    if #available(iOS 14, *) {
-      let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
-      switch status {
-      case .notDetermined:
-        XCTAssertEqual(settings.advertisingTrackingStatus, .unspecified)
-        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
-      case .restricted:
-        XCTAssertEqual(settings.advertisingTrackingStatus, .disallowed)
-        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
-      case .denied:
-        XCTAssertEqual(settings.advertisingTrackingStatus, .disallowed)
-        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
-      case .authorized:
-        XCTAssertEqual(settings.advertisingTrackingStatus, .allowed)
-        XCTAssertTrue(settings.isAdvertiserTrackingEnabled)
-      @unknown default:
-        XCTAssertEqual(settings.advertisingTrackingStatus, .unspecified)
-        XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
-      }
+    let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
+    switch status {
+    case .notDetermined:
+      XCTAssertEqual(settings.advertisingTrackingStatus, .unspecified)
+      XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
+    case .restricted:
+      XCTAssertEqual(settings.advertisingTrackingStatus, .disallowed)
+      XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
+    case .denied:
+      XCTAssertEqual(settings.advertisingTrackingStatus, .disallowed)
+      XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
+    case .authorized:
+      XCTAssertEqual(settings.advertisingTrackingStatus, .allowed)
+      XCTAssertTrue(settings.isAdvertiserTrackingEnabled)
+    @unknown default:
+      XCTAssertEqual(settings.advertisingTrackingStatus, .unspecified)
+      XCTAssertFalse(settings.isAdvertiserTrackingEnabled)
     }
   }
 

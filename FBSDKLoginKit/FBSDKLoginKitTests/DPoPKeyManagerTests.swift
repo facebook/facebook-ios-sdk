@@ -13,7 +13,6 @@ import Security
 import XCTest
 
 /// In-memory store backed by a transient `SecKey` so tests run without keychain entitlement.
-@available(iOS 13.0, *)
 final class InMemoryDPoPKeyStore: DPoPKeyStoring {
 
   private var key: SecKey?
@@ -38,7 +37,6 @@ final class InMemoryDPoPKeyStore: DPoPKeyStoring {
   func deleteKey() { key = nil }
 }
 
-@available(iOS 13.0, *)
 final class DPoPKeyManagerTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional

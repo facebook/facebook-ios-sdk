@@ -8,7 +8,6 @@
 
 @testable import FBSDKCoreKit
 
-@available(iOS 13.0, *)
 extension BridgeAPITests {
 
   // MARK: - Setting Session Completion Handler

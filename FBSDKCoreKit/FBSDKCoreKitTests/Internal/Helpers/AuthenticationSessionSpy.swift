@@ -10,7 +10,6 @@ import AuthenticationServices
 
 @testable import FBSDKCoreKit
 
-@available(iOS 13.0, *)
 @objcMembers
 final class AuthenticationSessionSpy: NSObject, AuthenticationSessionProtocol {
 

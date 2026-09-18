@@ -14,7 +14,6 @@ import Security
 import TestTools
 import XCTest
 
-@available(iOS 13.0, *)
 final class DirectRefreshSessionTests: XCTestCase {
 
   // swiftlint:disable implicitly_unwrapped_optional

@@ -92,9 +92,6 @@ final class DomainHandlerTests: XCTestCase {
   // MARK: Single Request Tests
 
   func testURLPrefixForFetchingDomainConfig() {
-    if #available(iOS 14.5, *) {} else {
-      return
-    }
     guard let appID = settings.appID else {
       XCTFail("Should have an app id")
       return
@@ -736,24 +733,14 @@ final class DomainHandlerTests: XCTestCase {
       )
     }
     if #available(iOS 17.0, *) {} else {
-      if #available(iOS 14.5, *) {
-        XCTAssertTrue(
-          _DomainHandler.sharedInstance().isDomainHandlingEnabled(),
-          "Domain handling should be enabled for iOS 14.5+"
-        )
-      } else {
-        XCTAssertFalse(
-          _DomainHandler.sharedInstance().isDomainHandlingEnabled(),
-          "Domain handling should not be enabled for < iOS 14.5"
-        )
-      }
+      XCTAssertTrue(
+        _DomainHandler.sharedInstance().isDomainHandlingEnabled(),
+        "Domain handling should be enabled for iOS 14.5+"
+      )
     }
   }
 
   func testSingleRequestsOnEarlyVersions() {
-    if #available(iOS 14.5, *) {} else {
-      return
-    }
     DomainHandlerTests.configureDomainHandlerForTesting(enableForEarlyVersions: true)
     AuthenticationToken.current = nil
 
@@ -807,9 +794,6 @@ final class DomainHandlerTests: XCTestCase {
   }
 
   func testBatchRequestsOnEarlyVersions() {
-    if #available(iOS 14.5, *) {} else {
-      return
-    }
     DomainHandlerTests.configureDomainHandlerForTesting(enableForEarlyVersions: true)
     AuthenticationToken.current = nil
 

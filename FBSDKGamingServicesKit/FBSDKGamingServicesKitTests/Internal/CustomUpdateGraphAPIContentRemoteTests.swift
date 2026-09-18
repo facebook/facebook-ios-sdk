@@ -9,7 +9,6 @@
 @testable import FBSDKGamingServicesKit
 import XCTest
 
-@available(iOS 13.0, *)
 final class CustomUpdateGraphAPIContentRemoteTests: XCTestCase {
   let validContextTokenID = "12345"
 

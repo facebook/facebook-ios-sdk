@@ -9,7 +9,6 @@
 import FBSDKCoreKit_Basics
 import XCTest
 
-@available(iOS 13, *)
 final class FileManagerTests: XCTestCase {
   override func setUp() async throws {
     try await super.setUp()

@@ -43,15 +43,13 @@ final class SKAdNetworkReporterTestsV2: XCTestCase {
   }
 
   func testEnable() {
-    if #available(iOS 14.0, *) {
-      skAdNetworkReporter.isSKAdNetworkReportEnabled = false
-      skAdNetworkReporter.enable()
+    skAdNetworkReporter.isSKAdNetworkReportEnabled = false
+    skAdNetworkReporter.enable()
 
-      XCTAssertTrue(
-        skAdNetworkReporter.isSKAdNetworkReportEnabled,
-        "SKAdNetwork report should be enabled"
-      )
-    }
+    XCTAssertTrue(
+      skAdNetworkReporter.isSKAdNetworkReportEnabled,
+      "SKAdNetwork report should be enabled"
+    )
   }
 
   func testLoadReportData() throws {
@@ -366,31 +364,29 @@ final class SKAdNetworkReporterTestsV2: XCTestCase {
   }
 
   func testFineCVRecord() throws {
-    if #available(iOS 14.0, *) {
-      let configuration = SKAdNetworkConversionConfiguration(
-        json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
-      )! // swiftlint:disable:this force_unwrapping
-      skAdNetworkReporter.configuration = configuration
-      skAdNetworkReporter._recordAndUpdateEvent("fb_test", currency: nil, value: nil)
-      skAdNetworkReporter._recordAndUpdateEvent("fb_mobile_purchase", currency: "USD", value: 100)
-      skAdNetworkReporter._recordAndUpdateEvent("fb_mobile_purchase", currency: "USD", value: 201)
-      skAdNetworkReporter._recordAndUpdateEvent("test", currency: nil, value: nil)
+    let configuration = SKAdNetworkConversionConfiguration(
+      json: SampleSKAdNetworkConversionConfiguration.fineCVconfigurationJson
+    )! // swiftlint:disable:this force_unwrapping
+    skAdNetworkReporter.configuration = configuration
+    skAdNetworkReporter._recordAndUpdateEvent("fb_test", currency: nil, value: nil)
+    skAdNetworkReporter._recordAndUpdateEvent("fb_mobile_purchase", currency: "USD", value: 100)
+    skAdNetworkReporter._recordAndUpdateEvent("fb_mobile_purchase", currency: "USD", value: 201)
+    skAdNetworkReporter._recordAndUpdateEvent("test", currency: nil, value: nil)
 
-      let cache = try XCTUnwrap(userDefaultsSpy.object(forKey: "com.facebook.sdk:FBSDKSKAdNetworkReporter") as? Data)
+    let cache = try XCTUnwrap(userDefaultsSpy.object(forKey: "com.facebook.sdk:FBSDKSKAdNetworkReporter") as? Data)
 
-      let data = try? NSKeyedUnarchiver.unarchivedObject(
-        ofClasses: [NSDictionary.self, NSString.self, NSNumber.self, NSDate.self, NSSet.self],
-        from: cache
-      ) as? [String: Any]
+    let data = try? NSKeyedUnarchiver.unarchivedObject(
+      ofClasses: [NSDictionary.self, NSString.self, NSNumber.self, NSDate.self, NSSet.self],
+      from: cache
+    ) as? [String: Any]
 
-      let recordedEvents = data?["recorded_events"] as? Set<String>
-      let expectedEvents = Set(["fb_test", "fb_mobile_purchase"])
-      XCTAssertEqual(expectedEvents, recordedEvents)
-      let recordedValues = data?["recorded_values"] as? [String: [String: Int]]
+    let recordedEvents = data?["recorded_events"] as? Set<String>
+    let expectedEvents = Set(["fb_test", "fb_mobile_purchase"])
+    XCTAssertEqual(expectedEvents, recordedEvents)
+    let recordedValues = data?["recorded_values"] as? [String: [String: Int]]
 
-      let expectedValues = ["fb_mobile_purchase": ["USD": 301]]
-      XCTAssertEqual(expectedValues, recordedValues)
-    }
+    let expectedValues = ["fb_mobile_purchase": ["USD": 301]]
+    XCTAssertEqual(expectedValues, recordedValues)
   }
 
   func testCoarseCVRecord() throws {

@@ -8,14 +8,12 @@
 
 import SwiftUI
 
-@available(iOS 14.0, *)
 struct ContentView: View {
   var body: some View {
     Text("FBSDK IAP Host App")
   }
 }
 
-@available(iOS 14.0, *)
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()

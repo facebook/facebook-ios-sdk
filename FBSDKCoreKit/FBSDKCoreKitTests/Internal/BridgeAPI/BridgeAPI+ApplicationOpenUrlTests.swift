@@ -10,7 +10,6 @@
 
 // swiftlint:disable:next swiftlint_disable_without_this_or_next
 // swiftlint:disable line_length
-@available(iOS 13.0, *)
 extension BridgeAPITests {
 
   // MARK: - URL Opening

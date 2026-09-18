@@ -12,7 +12,6 @@
 import StoreKitTest
 import XCTest
 
-@available(iOS 15.0, *)
 final class AsyncSequenceTests: StoreKitTestCase {
 
   func testGetValues() async throws {

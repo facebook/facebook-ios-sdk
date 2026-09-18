@@ -12,7 +12,6 @@ import XCTest
 
 // MARK: - Mock
 
-@available(iOS 13.0, *)
 final class MockAuthenticationSession: SilentAuthSessionProviding {
   var startHandler: (() -> Bool)?
   var cancelHandler: (() -> Void)?
@@ -42,7 +41,6 @@ final class MockAuthenticationSession: SilentAuthSessionProviding {
 
 // MARK: - Tests
 
-@available(iOS 13.0, *)
 final class SilentAuthenticationSessionTests: XCTestCase {
 
   private let testURL = URL(string: "https://limited.facebook.com/v18.0/dialog/oauth")!

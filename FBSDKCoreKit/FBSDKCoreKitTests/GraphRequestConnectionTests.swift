@@ -821,19 +821,11 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
       "The connection state should be 'started'"
     )
     XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
-    if #available(iOS 14.5, *) {
-      XCTAssertNotIdentical(
-        connection,
-        piggybackManager.capturedConnection,
-        "A connection used for fetching the domain configuration should not invoke the piggyback manager"
-      )
-    } else {
-      XCTAssertIdentical(
-        connection,
-        piggybackManager.capturedConnection,
-        "Should invoke the piggyback manager"
-      )
-    }
+    XCTAssertNotIdentical(
+      connection,
+      piggybackManager.capturedConnection,
+      "A connection used for fetching the domain configuration should not invoke the piggyback manager"
+    )
     guard let requestsQ = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
       XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
       return
@@ -848,34 +840,17 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     GraphRequestConnection.resetDidFetchDomainConfiguration()
     connection.add(makeSampleRequest()) { _, _, _ in }
     connection.start()
-    if #available(iOS 14.5, *) {
-      XCTAssertEqual(
-        connection.state,
-        .created,
-        "The connection should not have started"
-      )
-      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
-      XCTAssertEqual(
-        GraphRequestQueue.sharedInstance().requestsQueue.count,
-        1,
-        "GraphRequestQueue should have 1 request in it"
-      )
-    } else {
-      XCTAssertEqual(
-        connection.state,
-        .started,
-        "The connection should have started"
-      )
-      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
-      guard let requestsQ = GraphRequestQueue.sharedInstance().requestsQueue as? [GraphRequestMetadata] else {
-        XCTFail("Graph request queue should be backed by an array of GraphRequestMetadata")
-        return
-      }
-      XCTAssertTrue(
-        requestsQ.isEmpty,
-        "GraphRequestQueue should be empty"
-      )
-    }
+    XCTAssertEqual(
+      connection.state,
+      .created,
+      "The connection should not have started"
+    )
+    XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+    XCTAssertEqual(
+      GraphRequestQueue.sharedInstance().requestsQueue.count,
+      1,
+      "GraphRequestQueue should have 1 request in it"
+    )
   }
 
   func testStartingConnectionWithDomainConfiguration() {
@@ -909,33 +884,18 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     GraphRequestQueue.sharedInstance().enqueue(request1) { _, _, _ in }
     GraphRequestQueue.sharedInstance().enqueue(request2) { _, _, _ in }
     GraphRequestQueue.sharedInstance().flush()
-    if #available(iOS 14.5, *) {
-      XCTAssertEqual(
-        connection.state,
-        .created,
-        "The connection should not have started"
-      )
-      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
-      let count = GraphRequestQueue.sharedInstance().requestsQueue.count
-      XCTAssertEqual(
-        count,
-        2,
-        "GraphRequestQueue should still have 2 requests. It has \(count)"
-      )
-    } else {
-      XCTAssertEqual(
-        connection.state,
-        .started,
-        "The connection should have started"
-      )
-      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
-      let count = GraphRequestQueue.sharedInstance().requestsQueue.count
-      XCTAssertEqual(
-        count,
-        0,
-        "GraphRequestQueue should have 0 requests. It has \(count)"
-      )
-    }
+    XCTAssertEqual(
+      connection.state,
+      .created,
+      "The connection should not have started"
+    )
+    XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+    let count = GraphRequestQueue.sharedInstance().requestsQueue.count
+    XCTAssertEqual(
+      count,
+      2,
+      "GraphRequestQueue should still have 2 requests. It has \(count)"
+    )
   }
 
   func testGraphRequestQueueCircularCall2() {
@@ -945,55 +905,30 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     connection.add(request1) { _, _, _ in }
     connection.add(request2) { _, _, _ in }
     var count = GraphRequestQueue.sharedInstance().requestsQueue.count
-    if #available(iOS 14.5, *) {
-      XCTAssertEqual(
-        count,
-        2,
-        "GraphRequestQueue should have 2 requests. It has \(count)"
-      )
-    } else {
-      XCTAssertEqual(
-        count,
-        0,
-        "GraphRequestQueue should have 0 requests. It has \(count)"
-      )
-    }
+    XCTAssertEqual(
+      count,
+      2,
+      "GraphRequestQueue should have 2 requests. It has \(count)"
+    )
     connection.start()
-    if #available(iOS 14.5, *) {
-      XCTAssertEqual(
-        connection.state,
-        .created,
-        "The connection should not have started"
-      )
-    } else {
-      XCTAssertEqual(
-        connection.state,
-        .started,
-        "The connection should have started"
-      )
-    }
+    XCTAssertEqual(
+      connection.state,
+      .created,
+      "The connection should not have started"
+    )
     GraphRequestQueue.sharedInstance().flush()
-    if #available(iOS 14.5, *) {
-      XCTAssertEqual(
-        connection.state,
-        .created,
-        "The connection should still not have started"
-      )
-      XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
-      count = GraphRequestQueue.sharedInstance().requestsQueue.count
-      XCTAssertEqual(
-        count,
-        2,
-        "GraphRequestQueue should still have 2 requests. It has \(count)"
-      )
-    } else {
-      XCTAssertEqual(
-        connection.state,
-        .started,
-        "The connection state should not have changed"
-      )
-      XCTAssertNotNil(session.capturedRequest, "Should start a request for the connection")
-    }
+    XCTAssertEqual(
+      connection.state,
+      .created,
+      "The connection should still not have started"
+    )
+    XCTAssertNil(session.capturedRequest, "Should not start a request for the connection")
+    count = GraphRequestQueue.sharedInstance().requestsQueue.count
+    XCTAssertEqual(
+      count,
+      2,
+      "GraphRequestQueue should still have 2 requests. It has \(count)"
+    )
   }
 
   func testFlushingGraphRequestQueueAfterFetchingDomainConfiguration() {
@@ -1635,29 +1570,16 @@ final class GraphRequestConnectionTests: XCTestCase, GraphRequestConnectionDeleg
     let parameters = ["fields": ""]
     let domainConfigRequest = GraphRequest(graphPath: "\(appID)/server_domain_infos", parameters: parameters, httpMethod: .get)
     connection.add(domainConfigRequest) { _, _, _ in }
-    if #available(iOS 14.5, *) {
-      XCTAssertFalse(
-        connection.shouldPiggyBackRequests(),
-        "Should not be able to piggy back requests onto the domain configuration request"
-      )
-      connection.start()
-      XCTAssertNotIdentical(
-        connection,
-        piggybackManager.capturedConnection,
-        "A connection used to fetch the domain configuration should not invoke the piggyback manager"
-      )
-    } else {
-      XCTAssertTrue(
-        connection.shouldPiggyBackRequests(),
-        "Should be able to piggy back requests"
-      )
-      connection.start()
-      XCTAssertIdentical(
-        connection,
-        piggybackManager.capturedConnection,
-        "Should invoke the piggyback manager"
-      )
-    }
+    XCTAssertFalse(
+      connection.shouldPiggyBackRequests(),
+      "Should not be able to piggy back requests onto the domain configuration request"
+    )
+    connection.start()
+    XCTAssertNotIdentical(
+      connection,
+      piggybackManager.capturedConnection,
+      "A connection used to fetch the domain configuration should not invoke the piggyback manager"
+    )
   }
 
   func testShouldPiggyBackAppActivitiesRequest() {

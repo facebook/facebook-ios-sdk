@@ -8,7 +8,6 @@
 
 import TestTools
 
-@available(iOS 12.2, *)
 final class TestPaymentProductRequestorFactory: _PaymentProductRequestorCreating {
   struct Evidence {
     let requestor: TestPaymentProductRequestor

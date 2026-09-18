@@ -10,7 +10,6 @@
 import TestTools
 import XCTest
 
-@available(iOS 14, *)
 final class AEMManagerTests: XCTestCase {
 
   let swizzler = TestSwizzler.self
