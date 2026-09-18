@@ -9,7 +9,6 @@
 import Foundation
 import StoreKit
 
-@available(iOS 15.0, *)
 extension Transaction {
   static func getNewCandidateTransactions() async -> [VerificationResult<Transaction>] {
     let unfinishedTransactionIDs = await Transaction.unfinished.getValues().map { result in
@@ -35,14 +34,12 @@ extension Transaction {
   }
 }
 
-@available(iOS 15.0, *)
 extension Transaction {
   var isSubscription: Bool {
     productType == .autoRenewable
   }
 }
 
-@available(iOS 15.0, *)
 extension Product.ProductType {
   var iapProductType: IAPProductType {
     switch self {

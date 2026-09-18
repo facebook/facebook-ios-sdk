@@ -26,7 +26,6 @@ struct DefaultAuthenticationTokenClaimsProvider: AuthenticationTokenClaimsProvid
 final class LimitedLoginRefresher {
 
   /// Retained during the async authentication session.
-  @available(iOS 13.0, *)
   private var silentAuthSession: SilentAuthenticationSession? {
     get { _silentAuthSession as? SilentAuthenticationSession }
     set { _silentAuthSession = newValue }

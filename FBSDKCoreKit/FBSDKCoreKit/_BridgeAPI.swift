@@ -508,7 +508,6 @@ extension _BridgeAPI {
 
 // MARK: ASWebAuthenticationPresentationContextProviding Conformance
 
-@available(iOS 13, *)
 extension _BridgeAPI: ASWebAuthenticationPresentationContextProviding {
   public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
     // `UIApplication.keyWindow` is deprecated and returns a key window across all

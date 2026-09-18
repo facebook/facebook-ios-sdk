@@ -22,7 +22,6 @@ enum IAPSubscriptionPeriodUnit: String {
   case unknown = ""
 }
 
-@available(iOS 15.0, *)
 extension Product.SubscriptionPeriod {
   var iapSubscriptionPeriod: IAPSubscriptionPeriod {
     return IAPSubscriptionPeriod(unit: { // swiftlint:disable:this implicit_return

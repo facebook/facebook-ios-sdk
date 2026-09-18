@@ -20,7 +20,6 @@ protocol AuthenticationSessionProtocol {
   func start() -> Bool
   func cancel()
 
-  @available(iOS 13.0, *)
   var presentationContextProvider: ASWebAuthenticationPresentationContextProviding? { get set }
 }
 

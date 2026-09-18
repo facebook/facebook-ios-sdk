@@ -16,7 +16,6 @@ import Security
 /// payload binds the proof to a specific HTTP method, target URL, and access token
 /// (via the `ath` claim). The server uses the proof to verify the caller possesses
 /// the private key matching the `cnf.jkt` claim in the bound id_token.
-@available(iOS 13.0, *)
 enum DPoPProofBuilder {
 
   /// Builds a DPoP proof JWT signed by `privateKey`.

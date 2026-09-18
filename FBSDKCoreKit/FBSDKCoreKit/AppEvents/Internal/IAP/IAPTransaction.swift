@@ -9,7 +9,6 @@
 import Foundation
 import StoreKit
 
-@available(iOS 15.0, *)
 struct IAPTransaction {
   let transaction: Transaction
   let validationResult: IAPValidationResult
@@ -27,7 +26,6 @@ enum IAPProductType: String {
   case nonRenewable = "NonRenewable"
 }
 
-@available(iOS 15.0, *)
 extension VerificationResult<Transaction> {
   var iapTransaction: IAPTransaction {
     switch self {

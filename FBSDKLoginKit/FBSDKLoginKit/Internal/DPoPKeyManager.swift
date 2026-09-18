@@ -15,7 +15,6 @@ import Security
 /// Production uses `KeychainDPoPKeyStore`. Tests inject an in-memory store
 /// because the xctest bundle in this project lacks the keychain entitlement
 /// required by `SecItemAdd`/`SecKeyCreateRandomKey` with `kSecAttrIsPermanent`.
-@available(iOS 13.0, *)
 protocol DPoPKeyStoring {
   func loadKey() -> SecKey?
   func generateKey() throws -> SecKey
@@ -32,7 +31,6 @@ protocol DPoPKeyStoring {
 ///
 /// The public key is exposed as a JWK (RFC 7517) and as a JWK Thumbprint (RFC 7638)
 /// for use as the `dpop_jkt` parameter sent at login time.
-@available(iOS 13.0, *)
 final class DPoPKeyManager {
 
   static let shared = DPoPKeyManager()
@@ -122,7 +120,6 @@ final class DPoPKeyManager {
 
 // MARK: - Keychain-backed store (production)
 
-@available(iOS 13.0, *)
 final class KeychainDPoPKeyStore: DPoPKeyStoring {
 
   private let keyTag = "com.facebook.sdk.dpop.key"

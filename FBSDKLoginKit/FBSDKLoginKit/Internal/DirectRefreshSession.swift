@@ -16,7 +16,6 @@ import Security
 /// Unlike `SilentAuthenticationSession`, this path never opens
 /// `ASWebAuthenticationSession` and never shows the Apple consent modal — the server
 /// authenticates the caller via the DPoP-bound `cnf.jkt` claim in the existing id_token.
-@available(iOS 13.0, *)
 final class DirectRefreshSession {
 
   typealias CompletionHandler = (Result<String, LimitedLoginRefreshError>) -> Void

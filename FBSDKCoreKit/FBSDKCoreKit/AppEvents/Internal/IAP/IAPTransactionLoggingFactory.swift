@@ -10,7 +10,6 @@ import Foundation
 
 final class IAPTransactionLoggingFactory: IAPTransactionLoggingCreating, IAPFailedTransactionLoggingCreating {
 
-  @available(iOS 15.0, *)
   func createIAPFailedTransactionLogging() -> any IAPFailedTransactionLogging {
     return IAPTransactionLogger() // swiftlint:disable:this implicit_return
   }

@@ -19,7 +19,6 @@ enum SilentAuthTimeout {
 typealias SilentAuthCompletionHandler = (URL?, Error?) -> Void
 
 /// Protocol abstracting `ASWebAuthenticationSession` for testability.
-@available(iOS 13.0, *)
 protocol SilentAuthSessionProviding {
   init(
     url: URL,
@@ -33,7 +32,6 @@ protocol SilentAuthSessionProviding {
   var presentationContextProvider: ASWebAuthenticationPresentationContextProviding? { get set }
 }
 
-@available(iOS 13.0, *)
 extension ASWebAuthenticationSession: SilentAuthSessionProviding {}
 
 /// Manages a silent `ASWebAuthenticationSession` for OIDC token refresh with `prompt=none`.
@@ -45,7 +43,6 @@ extension ASWebAuthenticationSession: SilentAuthSessionProviding {}
 /// ## Testability
 /// Accepts a `sessionProvider` factory closure so tests can inject a mock
 /// `SilentAuthSessionProviding` instead of a real `ASWebAuthenticationSession`.
-@available(iOS 13.0, *)
 final class SilentAuthenticationSession: NSObject, ASWebAuthenticationPresentationContextProviding {
 
   typealias CompletionHandler = (Result<URL, LimitedLoginRefreshError>) -> Void

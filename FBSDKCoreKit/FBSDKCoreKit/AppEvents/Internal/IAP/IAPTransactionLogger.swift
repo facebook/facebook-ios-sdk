@@ -294,7 +294,6 @@ extension IAPTransactionLogger {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension IAPTransactionLogger: IAPFailedTransactionLogging {
 
   func logNewTransaction(_ transaction: IAPTransaction) async {

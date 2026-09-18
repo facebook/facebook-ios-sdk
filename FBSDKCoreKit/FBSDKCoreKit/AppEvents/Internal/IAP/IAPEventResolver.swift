@@ -80,7 +80,6 @@ extension IAPEventResolver {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension IAPEventResolver {
   func resolveNewEventFor(iapTransaction: IAPTransaction) async -> IAPEvent? {
     var eventName: AppEvents.Name = .purchased

@@ -8,7 +8,6 @@
 
 import Foundation
 
-@available(iOS 13.0, *)
 extension AsyncSequence {
   func getValues() async rethrows -> [Element] {
     var result: [Element] = []

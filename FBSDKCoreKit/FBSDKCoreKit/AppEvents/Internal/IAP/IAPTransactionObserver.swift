@@ -75,7 +75,6 @@ extension IAPTransactionObserver: _TransactionObserving {
 
 // MARK: - Store Kit 2
 
-@available(iOS 15.0, *)
 extension IAPTransactionObserver {
   private var transactionListenerTask: Task<Void, Error>? {
     anyTransactionListenerTask as? Task<Void, Error>
