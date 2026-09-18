@@ -755,11 +755,7 @@ public final class AEMReporter: NSObject {
     newConfigurations.append(configuration)
     // Sort the configurations via "validFrom"
 
-    if #available(iOS 15.0, *) {
-      newConfigurations.sort(using: KeyPathComparator(\.validFrom))
-    } else {
-      newConfigurations.sort { $0.validFrom < $1.validFrom }
-    }
+    newConfigurations.sort(using: KeyPathComparator(\.validFrom))
     configurations[configuration.mode] = newConfigurations
   }
 

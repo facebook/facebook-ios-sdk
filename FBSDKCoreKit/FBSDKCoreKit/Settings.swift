@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import AdSupport
 import AppTrackingTransparency
 import Foundation
 
@@ -395,10 +394,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     get {
       if _DomainHandler.sharedInstance().isDomainHandlingEnabled() {
         return _advertisingTrackingStatusFromATT
-      } else if #available(iOS 14, *) {
-        return _advertisingTrackingStatus
       } else {
-        return ASIdentifierManager.shared().isAdvertisingTrackingEnabled ? .allowed : .disallowed
+        return _advertisingTrackingStatus
       }
     }
     set {

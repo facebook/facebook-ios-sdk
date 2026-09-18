@@ -125,11 +125,7 @@ extension LoginManager {
   ) -> Void
 
   static var directRefreshPerformer: DirectRefreshPerformer = { idTokenHint, appID, completion in
-    if #available(iOS 13.0, *) {
-      DirectRefreshSession().refresh(idTokenHint: idTokenHint, appID: appID, completion: completion)
-    } else {
-      completion(.failure(.unsupportedPlatform))
-    }
+    DirectRefreshSession().refresh(idTokenHint: idTokenHint, appID: appID, completion: completion)
   }
 
   /// Test seam: extracts the `cnf.jkt` claim from the bound id_token. Production
