@@ -203,13 +203,11 @@ extension IAPEventResolver {
     guard let product else {
       return false
     }
-    if #available(iOS 12.2, *) {
-      if let paymentDiscount = transaction.payment.paymentDiscount {
-        let discounts = product.discounts
-        for discount in discounts where discount.paymentMode == .freeTrial &&
-          paymentDiscount.identifier == discount.identifier {
-          return true
-        }
+    if let paymentDiscount = transaction.payment.paymentDiscount {
+      let discounts = product.discounts
+      for discount in discounts where discount.paymentMode == .freeTrial &&
+        paymentDiscount.identifier == discount.identifier {
+        return true
       }
     }
     if product.introductoryPrice?.paymentMode == .freeTrial,

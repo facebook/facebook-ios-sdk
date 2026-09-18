@@ -65,26 +65,22 @@ private extension CoreKitConfigurator {
   }
 
   func configureAEMReporter() {
-    if #available(iOS 14, *) {
-      AEMReporter.configure(
-        networker: components.aemNetworker,
-        appID: components.settings.appID,
-        reporter: components.skAdNetworkReporter
-      )
-    }
+    AEMReporter.configure(
+      networker: components.aemNetworker,
+      appID: components.settings.appID,
+      reporter: components.skAdNetworkReporter
+    )
   }
 
   func configureAEMManager() {
-    if #available(iOS 14, *) {
-      _AEMManager.shared.configure(
-        swizzler: components.swizzler,
-        reporter: components.aemReporter,
-        eventLogger: components.eventLogger,
-        crashHandler: components.crashHandler,
-        featureChecker: components.featureChecker,
-        appEventsUtility: components.appEventsUtility
-      )
-    }
+    _AEMManager.shared.configure(
+      swizzler: components.swizzler,
+      reporter: components.aemReporter,
+      eventLogger: components.eventLogger,
+      crashHandler: components.crashHandler,
+      featureChecker: components.featureChecker,
+      appEventsUtility: components.appEventsUtility
+    )
   }
 
   func configureAppEvents() {

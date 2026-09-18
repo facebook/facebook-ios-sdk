@@ -217,10 +217,6 @@ public final class AEMReporter: NSObject {
     value: NSNumber?,
     parameters: [String: Any]?
   ) {
-    guard #available(iOS 14.0, *) else {
-      return
-    }
-
     if !isAEMReportEnabled || event.isEmpty {
       return
     }

@@ -150,12 +150,6 @@ public final class ApplicationDelegate: NSObject {
   }
 
   private func initializeAEMAutoSetup() {
-    guard
-      #available(iOS 14.0, *)
-    else {
-      return
-    }
-
     let flag = components.infoDictionaryProvider.fb_object(forInfoDictionaryKey: "FBSDKAemAutoSetupEnabled") as? Bool
     let enabled = flag ?? true
     if !enabled {
@@ -540,10 +534,8 @@ public final class ApplicationDelegate: NSObject {
     applicationObservers.allObjects.forEach { observer in
       observer.applicationDidBecomeActive?(notification?.object as? UIApplication)
     }
-    if #available(iOS 15.0, *) {
-      Task {
-        await IAPTransactionObserver.shared.observeNewTransactions()
-      }
+    Task {
+      await IAPTransactionObserver.shared.observeNewTransactions()
     }
   }
 

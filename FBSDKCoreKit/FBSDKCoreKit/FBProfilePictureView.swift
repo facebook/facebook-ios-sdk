@@ -200,11 +200,9 @@ public final class FBProfilePictureView: UIView {
     // We don't want to reset the user picture in case the login shim solution is being used.
     // The login shim flow doesn't provide a valid access token to fetch the image, it
     // leverages limited login implementation
-    if #available(iOS 14, *) {
-      let trackingAuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
-      if trackingAuthorizationStatus != .authorized {
-        return
-      }
+    let trackingAuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
+    if trackingAuthorizationStatus != .authorized {
+      return
     }
 
     updateImageWithAccessToken()

@@ -143,9 +143,7 @@ public final class _BridgeAPI: NSObject,
       }
     )
 
-    if #available(iOS 13, *) {
-      authenticationSession?.presentationContextProvider = self
-    }
+    authenticationSession?.presentationContextProvider = self
 
     authenticationSessionState = .started
     _ = authenticationSession?.start()

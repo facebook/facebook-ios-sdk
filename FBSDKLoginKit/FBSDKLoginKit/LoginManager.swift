@@ -704,8 +704,6 @@ public final class LoginManager: NSObject {
   static var dpopJktProvider: () -> String? = defaultDPoPJktProvider
 
   static let defaultDPoPJktProvider: () -> String? = {
-    guard #available(iOS 13.0, *) else { return nil }
-
     let manager = DPoPKeyManager.shared
     do {
       _ = try manager.generateKeyPairIfNeeded()

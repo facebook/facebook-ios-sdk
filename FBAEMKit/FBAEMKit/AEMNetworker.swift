@@ -36,8 +36,7 @@ final class AEMNetworker: NSObject, AEMNetworking, URLSessionDataDelegate {
       agentWithSuffix += "/\(userAgentSuffix)"
     }
 
-    if #available(iOS 13.0, *),
-       ProcessInfo.processInfo.isMacCatalystApp {
+    if ProcessInfo.processInfo.isMacCatalystApp {
       return agentWithSuffix + "/macOS"
     }
 

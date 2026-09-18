@@ -385,10 +385,7 @@ final class CoreKitComponents {
       )
     )
 
-    var aemNetworker: AEMNetworking?
-    if #available(iOS 14, *) {
-      aemNetworker = AEMNetworker()
-    }
+    let aemNetworker: AEMNetworking? = AEMNetworker()
 
     var skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
     skAdNetworkReporter = _SKAdNetworkReporter(

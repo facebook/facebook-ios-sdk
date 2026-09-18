@@ -377,10 +377,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
         return
       }
 
-      if #available(iOS 14.0, *) {
-        advertisingTrackingStatus = isNewlyAllowed ? .allowed : .disallowed
-        recordSetAdvertiserTrackingEnabled()
-      }
+      advertisingTrackingStatus = isNewlyAllowed ? .allowed : .disallowed
+      recordSetAdvertiserTrackingEnabled()
     }
   }
 
@@ -417,21 +415,17 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
     // since ATT does not apply on macOS.
     return .allowed
     #else
-    var advertisingTrackingStatus: AdvertisingTrackingStatus = .unspecified
-    if #available(iOS 14.0, *) {
-      let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
-      switch status {
-      case .authorized:
-        advertisingTrackingStatus = .allowed
-      case .denied, .restricted:
-        advertisingTrackingStatus = .disallowed
-      case .notDetermined:
-        advertisingTrackingStatus = .unspecified
-      @unknown default:
-        advertisingTrackingStatus = .unspecified
-      }
+    let status: ATTrackingManager.AuthorizationStatus = ATTrackingManager.trackingAuthorizationStatus
+    switch status {
+    case .authorized:
+      return .allowed
+    case .denied, .restricted:
+      return .disallowed
+    case .notDetermined:
+      return .unspecified
+    @unknown default:
+      return .unspecified
     }
-    return advertisingTrackingStatus
     #endif
   }
 

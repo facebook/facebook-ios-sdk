@@ -63,16 +63,12 @@ extension IAPTransactionObserver: _TransactionObserving {
     if IAPTransactionCache.shared.newCandidatesDate == nil {
       IAPTransactionCache.shared.newCandidatesDate = Date()
     }
-    if #available(iOS 15.0, *) {
-      startObservingStoreKit2()
-    }
+    startObservingStoreKit2()
     startObservingStoreKit1()
   }
 
   func stopObserving() {
-    if #available(iOS 15.0, *) {
-      stopObservingStoreKit2()
-    }
+    stopObservingStoreKit2()
     stopObservingStoreKit1()
   }
 }

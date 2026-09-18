@@ -171,10 +171,8 @@ extension IAPDedupeProcessor {
         manualParams?[AppEvents.ParameterName.logTime] = Int(_AppEventsUtility.shared.unixTimeNow)
       }
     }
-    if #available(iOS 15.0, *) {
-      Task {
-        await IAPTransactionObserver.shared.observeNewTransactions()
-      }
+    Task {
+      await IAPTransactionObserver.shared.observeNewTransactions()
     }
     let event = DedupableEvent(
       eventName: eventName,

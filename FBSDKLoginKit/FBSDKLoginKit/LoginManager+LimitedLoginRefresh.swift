@@ -341,11 +341,6 @@ extension LoginManager {
     existingUserID: String,
     completion: @escaping (Profile?, Error?) -> Void
   ) {
-    guard #available(iOS 13.0, *) else {
-      completion(nil, LimitedLoginRefreshError.unsupportedPlatform)
-      return
-    }
-
     // Reuse the silent-path GateKeeper so the direct path can be rolled out together.
     guard Self.directRefreshIsEnabled() else {
       completion(nil, LimitedLoginRefreshError.featureDisabled)

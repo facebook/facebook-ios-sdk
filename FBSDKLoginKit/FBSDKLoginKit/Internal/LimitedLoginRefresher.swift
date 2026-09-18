@@ -101,8 +101,6 @@ final class LimitedLoginRefresher {
   static var dpopJktProvider: () -> String? = defaultDPoPJktProvider
 
   static let defaultDPoPJktProvider: () -> String? = {
-    guard #available(iOS 13.0, *) else { return nil }
-
     guard RefreshGateKeeperCheck.isSilentRefreshEnabled() else { return nil }
 
     let manager = DPoPKeyManager.shared
@@ -146,12 +144,6 @@ final class LimitedLoginRefresher {
     // GateKeeper check
     guard RefreshGateKeeperCheck.isSilentRefreshEnabled() else {
       completion(.failure(.featureDisabled))
-      return
-    }
-
-    // Platform check
-    guard #available(iOS 13.0, *) else {
-      completion(.failure(.unsupportedPlatform))
       return
     }
 
