@@ -16,6 +16,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **Breaking**: the minimum supported deployment target is now iOS 15.0 (was iOS 12.0).
   Xcode 27 does not support deployment targets below iOS 15.0. Apps still targeting
   iOS 12–14 must raise their deployment target to adopt this version.
+- `FBSDKCoreKit` no longer declares `import AdSupport` in its generated Swift interface.
+  The last Swift use of `ASIdentifierManager` was a pre-ATT fallback that the iOS 15
+  floor made unreachable, and it has been removed. `AdSupport` is still linked by
+  `FBSDKCoreKit` and still used from Objective-C, and no public symbol changed, so
+  this affects only the interface file. Swift code that relies on `ASIdentifierManager`
+  should import `AdSupport` directly rather than depending on it transitively.
 
 ## 18.1.1
 

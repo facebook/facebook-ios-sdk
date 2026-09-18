@@ -13,7 +13,7 @@ final class CoreKitComponents {
   let accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type
   let advertiserIDProvider: _AdvertiserIDProviding
   let aemManager: _AutoSetup
-  let aemNetworker: AEMNetworking?
+  let aemNetworker: AEMNetworking
   let aemReporter: _AEMReporterProtocol.Type
   let appEventParametersExtractor: _AppEventParametersExtracting
   let appEvents:
@@ -103,7 +103,7 @@ final class CoreKitComponents {
     accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type,
     advertiserIDProvider: _AdvertiserIDProviding,
     aemManager: _AutoSetup,
-    aemNetworker: AEMNetworking?,
+    aemNetworker: AEMNetworking,
     aemReporter: _AEMReporterProtocol.Type,
     appEventParametersExtractor: _AppEventParametersExtracting,
     appEvents: EventLogging & _AppEventsConfiguring & _ApplicationActivating & _ApplicationLifecycleObserving & _ApplicationStateSetting & _SourceApplicationTracking, // swiftlint:disable:this line_length
@@ -385,7 +385,7 @@ final class CoreKitComponents {
       )
     )
 
-    let aemNetworker: AEMNetworking? = AEMNetworker()
+    let aemNetworker = AEMNetworker()
 
     var skAdNetworkReporter: (_AppEventsReporter & SKAdNetworkReporting)?
     skAdNetworkReporter = _SKAdNetworkReporter(

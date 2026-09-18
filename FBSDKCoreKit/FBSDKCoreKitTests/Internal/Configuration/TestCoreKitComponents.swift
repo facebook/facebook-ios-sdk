@@ -19,7 +19,7 @@ enum TestCoreKitComponents {
     accessTokenWallet: (_AccessTokenProviding & _TokenStringProviding).Type = TestAccessTokenWallet.self,
     advertiserIDProvider: _AdvertiserIDProviding = TestAdvertiserIDProvider(),
     aemManager: _AutoSetup = TestAEMManager(),
-    aemNetworker: AEMNetworking? = TestAEMNetworker(),
+    aemNetworker: AEMNetworking = TestAEMNetworker(),
     aemReporter: _AEMReporterProtocol.Type = TestAEMReporter.self,
     appEventParametersExtractor: _AppEventParametersExtracting = TestAppEventParametersExtractor(),
     appEvents: _AppEventsConfiguring & _ApplicationActivating & _ApplicationLifecycleObserving & _ApplicationStateSetting & EventLogging & _SourceApplicationTracking = TestAppEvents(),
