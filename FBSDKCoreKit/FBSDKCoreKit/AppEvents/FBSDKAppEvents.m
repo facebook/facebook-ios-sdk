@@ -290,9 +290,7 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 
 -(void)logFailedStoreKit2Purchase:(NSString *)productID
 {
-  if (@available(iOS 15.0, *)) {
-    [[self.failedTransactionLoggingFactory createIAPFailedTransactionLogging] logFailedStoreKit2Purchase:productID];
-  }
+  [[self.failedTransactionLoggingFactory createIAPFailedTransactionLogging] logFailedStoreKit2Purchase:productID];
 }
 
 - (void)logPurchase:(double)purchaseAmount
@@ -955,14 +953,12 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
 
 - (void)appendInstallTimestamp:(nonnull NSMutableDictionary<NSString *, NSString *> *)parameters
 {
-  if (@available(iOS 14.0, *)) {
-    if (self.settings.isATETimeSufficientlyDelayed) {
-      NSDate *ateTimestamp = self.settings.advertiserTrackingEnabledTimestamp;
-      [FBSDKTypeUtility dictionary:parameters setObject:@([self.appEventsUtility convertToUnixTime:ateTimestamp]) forKey:@"install_timestamp"];
-    } else {
-      NSDate *installTimestamp = self.settings.installTimestamp;
-      [FBSDKTypeUtility dictionary:parameters setObject:@([self.appEventsUtility convertToUnixTime:installTimestamp]) forKey:@"install_timestamp"];
-    }
+  if (self.settings.isATETimeSufficientlyDelayed) {
+    NSDate *ateTimestamp = self.settings.advertiserTrackingEnabledTimestamp;
+    [FBSDKTypeUtility dictionary:parameters setObject:@([self.appEventsUtility convertToUnixTime:ateTimestamp]) forKey:@"install_timestamp"];
+  } else {
+    NSDate *installTimestamp = self.settings.installTimestamp;
+    [FBSDKTypeUtility dictionary:parameters setObject:@([self.appEventsUtility convertToUnixTime:installTimestamp]) forKey:@"install_timestamp"];
   }
 }
 
@@ -1075,14 +1071,12 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           [self.sensitiveParamsManager enable];
         }
       }];
-      if (@available(iOS 14.0, *)) {
-        __weak FBSDKAppEvents *weakSelf = self;
-        [self.featureChecker checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
-          if (enabled) {
-            [weakSelf publishATE];
-          }
-        }];
-      }
+      __weak FBSDKAppEvents *weakSelf = self;
+      [self.featureChecker checkFeature:FBSDKFeatureATELogging completionBlock:^(BOOL enabled) {
+        if (enabled) {
+          [weakSelf publishATE];
+        }
+      }];
       [self.featureChecker checkFeature:FBSDKFeatureAppEventsCloudbridge completionBlock:^(BOOL enabled) {
         if (enabled) {
           [self.capiReporter enable];
@@ -1129,16 +1123,14 @@ static BOOL g_hasLoggedManualImplicitLoggingWarning = NO;
           }
         }];
       }
-      if (@available(iOS 14.0, *)) {
-        [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
-          if (AEMEnabled) {
-            [self.aemReporter enable];
-            [self.aemReporter setCatalogMatchingEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogMatching]];
-            [self.aemReporter setConversionFilteringEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMConversionFiltering]];
-            [self.aemReporter setAdvertiserRuleMatchInServerEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMAdvertiserRuleMatchInServer]];
-          }
-        }];
-      }
+      [self.featureChecker checkFeature:FBSDKFeatureAEM completionBlock:^(BOOL AEMEnabled) {
+        if (AEMEnabled) {
+          [self.aemReporter enable];
+          [self.aemReporter setCatalogMatchingEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMCatalogMatching]];
+          [self.aemReporter setConversionFilteringEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMConversionFiltering]];
+          [self.aemReporter setAdvertiserRuleMatchInServerEnabled:[self.featureChecker isEnabled:FBSDKFeatureAEMAdvertiserRuleMatchInServer]];
+        }
+      }];
     #endif
       if (callback) {
         callback();

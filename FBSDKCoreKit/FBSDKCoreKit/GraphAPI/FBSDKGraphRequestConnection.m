@@ -319,40 +319,32 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   FBSDKGraphRequestMetadata *metadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:request
                                                                          completionHandler:completion
                                                                            batchParameters:parameters];
-  if (@available(iOS 14.5, *)) {
-    // Add request if it is for fetching the domain config or we have the domain config
-    if ([FBSDKGraphRequest isForFetchingDomainConfiguration:metadata.request] || [FBSDKGraphRequest isForDomainReport:metadata.request] || [self.class didFetchDomainConfiguration]) {
-      [FBSDKTypeUtility array:self.requests addObject:metadata];
-    } else {
-      [[FBSDKGraphRequestQueue sharedInstance] enqueueRequestMetadata:metadata];
-    }
-  } else {
+  // Add request if it is for fetching the domain config or we have the domain config
+  if ([FBSDKGraphRequest isForFetchingDomainConfiguration:metadata.request] || [FBSDKGraphRequest isForDomainReport:metadata.request] || [self.class didFetchDomainConfiguration]) {
     [FBSDKTypeUtility array:self.requests addObject:metadata];
+  } else {
+    [[FBSDKGraphRequestQueue sharedInstance] enqueueRequestMetadata:metadata];
   }
 }
 
 - (BOOL)shouldPiggyBackRequests
 {
-  if (@available(iOS 14.5, *)) {
-    // We can piggy back on batch requests
-    if (self.requests.count > 1) {
-      return YES;
-    }
-    id<FBSDKGraphRequest> request = self.requests.firstObject.request;
-    // We should not piggy back on the request to fetch the domain config
-    if ([FBSDKGraphRequest isForFetchingDomainConfiguration:request]) {
-      return NO;
-    }
-    // We should not piggy back on requests explicitly listed in the domain config when domain handling is enabled
-    NSString *graphPath = [FBSDKDomainHandler getCleanedGraphPathFromRequest:request];
-    if ([[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled]
-        && [[FBSDKDomainHandler sharedInstance] getATTScopeEndpointForGraphPath:graphPath]) {
-      return NO;
-    }
-    return YES;
-  } else {
+  // We can piggy back on batch requests
+  if (self.requests.count > 1) {
     return YES;
   }
+  id<FBSDKGraphRequest> request = self.requests.firstObject.request;
+  // We should not piggy back on the request to fetch the domain config
+  if ([FBSDKGraphRequest isForFetchingDomainConfiguration:request]) {
+    return NO;
+  }
+  // We should not piggy back on requests explicitly listed in the domain config when domain handling is enabled
+  NSString *graphPath = [FBSDKDomainHandler getCleanedGraphPathFromRequest:request];
+  if ([[FBSDKDomainHandler sharedInstance] isDomainHandlingEnabled]
+      && [[FBSDKDomainHandler sharedInstance] getATTScopeEndpointForGraphPath:graphPath]) {
+    return NO;
+  }
+  return YES;
 }
 
 - (void)cancel
@@ -1328,10 +1320,8 @@ static Class<FBSDKAuthenticationTokenProviding> _authenticationTokenProvider;
   if (self.class.settings.userAgentSuffix) {
     agentWithSuffix = [NSString stringWithFormat:@"%@/%@", agent, self.class.settings.userAgentSuffix];
   }
-  if (@available(iOS 13.0, *)) {
-    if (self.class.macCatalystDeterminator.fb_isMacCatalystApp) {
-      return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
-    }
+  if (self.class.macCatalystDeterminator.fb_isMacCatalystApp) {
+    return [NSString stringWithFormat:@"%@/%@", agentWithSuffix ?: agent, @"macOS"];
   }
 
   return agentWithSuffix ?: agent;

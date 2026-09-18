@@ -150,10 +150,8 @@ static FBSDKAppEventsUtility *_shared;
     return nil;
   }
 
-  if (@available(iOS 14.0, *)) {
-    if (!self.appEventsConfigurationProvider.cachedAppEventsConfiguration.advertiserIDCollectionEnabled) {
-      return nil;
-    }
+  if (!self.appEventsConfigurationProvider.cachedAppEventsConfiguration.advertiserIDCollectionEnabled) {
+    return nil;
   }
 
   // Return cached advertiser ID string if available to avoid expensive IPC on the main thread.
@@ -471,10 +469,8 @@ static FBSDKAppEventsUtility *_shared;
 
 - (BOOL)shouldDropAppEvents
 {
-  if (@available(iOS 14.0, *)) {
-    if ([self.settings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && !self.appEventsConfigurationProvider.cachedAppEventsConfiguration.eventCollectionEnabled) {
-      return YES;
-    }
+  if ([self.settings advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed && !self.appEventsConfigurationProvider.cachedAppEventsConfiguration.eventCollectionEnabled) {
+    return YES;
   }
   return NO;
 }

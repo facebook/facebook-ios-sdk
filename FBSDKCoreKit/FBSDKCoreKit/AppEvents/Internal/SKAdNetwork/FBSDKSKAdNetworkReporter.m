@@ -60,31 +60,27 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 - (void)enable
 {
-  if (@available(iOS 14.0, *)) {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-      [self _loadReportData];
-      self.completionBlocks = [NSMutableArray new];
-      self.serialQueue = dispatch_queue_create(serialQueueLabel, DISPATCH_QUEUE_SERIAL);
-      [self _loadConfigurationWithBlock:^{
-        [self _checkAndUpdateConversionValue];
-        [self _checkAndRevokeTimer];
-      }];
-      self.isSKAdNetworkReportEnabled = YES;
-    });
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    [self _loadReportData];
+    self.completionBlocks = [NSMutableArray new];
+    self.serialQueue = dispatch_queue_create(serialQueueLabel, DISPATCH_QUEUE_SERIAL);
+    [self _loadConfigurationWithBlock:^{
+      [self _checkAndUpdateConversionValue];
+      [self _checkAndRevokeTimer];
+    }];
+    self.isSKAdNetworkReportEnabled = YES;
+  });
 }
 
 - (void)checkAndRevokeTimer
 {
-  if (@available(iOS 14.0, *)) {
-    if (!self.isSKAdNetworkReportEnabled) {
-      return;
-    }
-    [self _loadConfigurationWithBlock:^() {
-      [self _checkAndRevokeTimer];
-    }];
+  if (!self.isSKAdNetworkReportEnabled) {
+    return;
   }
+  [self _loadConfigurationWithBlock:^() {
+    [self _checkAndRevokeTimer];
+  }];
 }
 
 - (void)recordAndUpdateEvent:(NSString *)event
@@ -99,17 +95,15 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
                     currency:(nullable NSString *)currency
                        value:(nullable NSNumber *)value
 {
-  if (@available(iOS 14.0, *)) {
-    if (!self.isSKAdNetworkReportEnabled) {
-      return;
-    }
-    if (!event.length) {
-      return;
-    }
-    [self _loadConfigurationWithBlock:^() {
-      [self _recordAndUpdateEvent:event currency:currency value:value];
-    }];
+  if (!self.isSKAdNetworkReportEnabled) {
+    return;
   }
+  if (!event.length) {
+    return;
+  }
+  [self _loadConfigurationWithBlock:^() {
+    [self _recordAndUpdateEvent:event currency:currency value:value];
+  }];
 }
 
 - (void)_loadConfigurationWithBlock:(FBSDKSKAdNetworkReporterBlock)block
@@ -231,19 +225,17 @@ static char *const serialQueueLabel = "com.facebook.appevents.SKAdNetwork.FBSDKS
 
 - (void)_updateConversionValue:(NSInteger)value
 {
-  if (@available(iOS 14.0, *)) {
-    if ([self shouldCutoff]) {
-      return;
-    }
-    if (@available(iOS 15.4, *)) {
-      [self.conversionValueUpdater updatePostbackConversionValue:value completionHandler:nil];
-    } else {
-      [self.conversionValueUpdater updateConversionValue:value];
-    }
-    self.conversionValue = value + 1;
-    self.timestamp = [NSDate date];
-    [self _saveReportData];
+  if ([self shouldCutoff]) {
+    return;
   }
+  if (@available(iOS 15.4, *)) {
+    [self.conversionValueUpdater updatePostbackConversionValue:value completionHandler:nil];
+  } else {
+    [self.conversionValueUpdater updateConversionValue:value];
+  }
+  self.conversionValue = value + 1;
+  self.timestamp = [NSDate date];
+  [self _saveReportData];
 }
 
 - (BOOL)shouldCutoff

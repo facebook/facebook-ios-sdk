@@ -16,11 +16,7 @@ FB_LINK_CATEGORY_IMPLEMENTATION(NSProcessInfo, MacCatalystDetermining)
 
 - (BOOL)fb_isMacCatalystApp
 {
-  if (@available(iOS 13, *)) {
-    return self.isMacCatalystApp;
-  } else {
-    return NO;
-  }
+  return self.isMacCatalystApp;
 }
 
 @end

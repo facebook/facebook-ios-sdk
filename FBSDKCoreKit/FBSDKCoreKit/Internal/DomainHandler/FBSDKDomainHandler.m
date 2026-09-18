@@ -142,9 +142,7 @@ static NSString *const kVideoURLPrefix = @"graph-video";
   id enableForEarlierVersions = [[domainConfig objectForKey:kDefaultDomainConfigKey] objectForKey:kEnableForEarlierVersionsKey];
   BOOL shouldEnableForEarlierVersions = enableForEarlierVersions ? [enableForEarlierVersions boolValue] : NO;
   BOOL isIOS145Available = NO;
-  if (@available(iOS 14.5, *)) {
-    isIOS145Available = YES;
-  }
+  isIOS145Available = YES;
   return (isIOS145Available && shouldEnableForEarlierVersions);
 }
 
@@ -158,10 +156,8 @@ static NSString *const kVideoURLPrefix = @"graph-video";
                isAdvertiserTrackingEnabled:(BOOL)isATTOptIn
 {
   // Special case: a graph request for fetching the domain config must use ep2. prefix
-  if (@available(iOS 14.5, *)) {
-    if ([FBSDKGraphRequest isForFetchingDomainConfiguration:request]) {
-      return [NSString stringWithFormat:@"%@.", kEndpoint2URLPrefix];
-    }
+  if ([FBSDKGraphRequest isForFetchingDomainConfiguration:request]) {
+    return [NSString stringWithFormat:@"%@.", kEndpoint2URLPrefix];
   }
   // Special case: a graph post to <id>/videos must use graph-video. prefix
   if ([self isGraphVideoRequest:request]) {

@@ -573,21 +573,19 @@ static NSMapTable *_transientObjects;
   }
 
   // Find active key window from UIScene
-  if (@available(iOS 13.0, *)) {
-    NSSet<UIScene *> *scenes = [UIApplication.sharedApplication valueForKey:@"connectedScenes"];
-    for (UIScene *scene in scenes) {
-      id activationState = [scene valueForKeyPath:@"activationState"];
-      BOOL isActive = activationState != nil && [activationState integerValue] == 0;
-      if (isActive) {
-        Class WindowScene = NSClassFromString(@"UIWindowScene");
-        if ([scene isKindOfClass:WindowScene]) {
-          NSArray<UIWindow *> *windows = [scene valueForKeyPath:@"windows"];
-          for (UIWindow *window in windows) {
-            if (window.isKeyWindow) {
-              return window;
-            } else if (window.windowLevel >= topWindow.windowLevel && !window.isHidden) {
-              topWindow = window;
-            }
+  NSSet<UIScene *> *scenes = [UIApplication.sharedApplication valueForKey:@"connectedScenes"];
+  for (UIScene *scene in scenes) {
+    id activationState = [scene valueForKeyPath:@"activationState"];
+    BOOL isActive = activationState != nil && [activationState integerValue] == 0;
+    if (isActive) {
+      Class WindowScene = NSClassFromString(@"UIWindowScene");
+      if ([scene isKindOfClass:WindowScene]) {
+        NSArray<UIWindow *> *windows = [scene valueForKeyPath:@"windows"];
+        for (UIWindow *window in windows) {
+          if (window.isKeyWindow) {
+            return window;
+          } else if (window.windowLevel >= topWindow.windowLevel && !window.isHidden) {
+            topWindow = window;
           }
         }
       }
@@ -622,9 +620,7 @@ static NSMapTable *_transientObjects;
 #if !TARGET_OS_TV
 - (UIInterfaceOrientation)statusBarOrientation
 {
-  if (@available(iOS 13.0, *)) {
-    return [self findWindow].windowScene.interfaceOrientation;
-  }
+  return [self findWindow].windowScene.interfaceOrientation;
 
   return UIInterfaceOrientationUnknown;
 }

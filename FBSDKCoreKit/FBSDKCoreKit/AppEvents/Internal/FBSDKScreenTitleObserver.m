@@ -77,19 +77,17 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
   if (!rootView) {
     return nil;
   }
-  if (@available(iOS 13.0, *)) {
-    NSInteger traversals = 0;
-    NSMutableArray<UIView *> *queue = [NSMutableArray arrayWithObject:rootView];
-    while (queue.count > 0 && traversals < kMaxLargeContentTitleViewTraversals) {
-      UIView *view = queue.firstObject;
-      [queue removeObjectAtIndex:0];
-      traversals++;
-      NSString *title = view.largeContentTitle;
-      if (title.length > 0) {
-        return title;
-      }
-      [queue addObjectsFromArray:view.subviews];
+  NSInteger traversals = 0;
+  NSMutableArray<UIView *> *queue = [NSMutableArray arrayWithObject:rootView];
+  while (queue.count > 0 && traversals < kMaxLargeContentTitleViewTraversals) {
+    UIView *view = queue.firstObject;
+    [queue removeObjectAtIndex:0];
+    traversals++;
+    NSString *title = view.largeContentTitle;
+    if (title.length > 0) {
+      return title;
     }
+    [queue addObjectsFromArray:view.subviews];
   }
   return nil;
 }

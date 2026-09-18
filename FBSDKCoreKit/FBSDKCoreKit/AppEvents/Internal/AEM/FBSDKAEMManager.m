@@ -102,25 +102,23 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
 
 - (void)enableAutoSetup:(BOOL)proxyEnabled
 {
-  if (@available(iOS 14.0, *)) {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-      @try  {
-        if (proxyEnabled) {
-          [self setupWithProxy];
-        } else {
-          [self setup];
-        }
-      } @catch (NSException *exception) {
-        // Disable Auto Setup and log event if exception happens
-        [self.featureChecker disableFeature:FBSDKFeatureAEMAutoSetup];
-        [self.eventLogger logEvent:@"fb_mobile_auto_setup_exception" parameters:nil];
-        fb_dispatch_on_default_thread(^{
-          [self.crashHandler saveException:exception];
-        });
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    @try  {
+      if (proxyEnabled) {
+        [self setupWithProxy];
+      } else {
+        [self setup];
       }
-    });
-  }
+    } @catch (NSException *exception) {
+      // Disable Auto Setup and log event if exception happens
+      [self.featureChecker disableFeature:FBSDKFeatureAEMAutoSetup];
+      [self.eventLogger logEvent:@"fb_mobile_auto_setup_exception" parameters:nil];
+      fb_dispatch_on_default_thread(^{
+        [self.crashHandler saveException:exception];
+      });
+    }
+  });
 }
 
 - (void)setupWithProxy
@@ -156,16 +154,14 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
 
 - (void)setupSceneDelegateProxies
 {
-  if (@available(iOS 13.0, *)) {
-    NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
-    for (UIScene* thisScene in scenes) {
-      Class sceneClass = thisScene.delegate.class;
-      [self setupScene:sceneClass];
-    }
-    NSSet<NSString *> *sceneDelegates = [self getSceneDelegates];
-    for (NSString *sceneDelegate in sceneDelegates) {
-      [self setupScene:NSClassFromString(sceneDelegate)];
-    }
+  NSSet<UIScene *> *scenes = [[UIApplication sharedApplication] connectedScenes];
+  for (UIScene* thisScene in scenes) {
+    Class sceneClass = thisScene.delegate.class;
+    [self setupScene:sceneClass];
+  }
+  NSSet<NSString *> *sceneDelegates = [self getSceneDelegates];
+  for (NSString *sceneDelegate in sceneDelegates) {
+    [self setupScene:NSClassFromString(sceneDelegate)];
   }
 }
 
@@ -197,35 +193,33 @@ static BOOL fbproxy_AppDelegateContinueUserActivity(id self, SEL _cmd, id applic
   if (sceneClass == nil) {
     return;
   }
-  if (@available(iOS 13.0, *)) {
-    [self.swizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
-      [self.aemReporter enable];
-      for(UIOpenURLContext* urlContext in urlContexts) {
-        [FBSDKAppLinkURLCache.shared cacheInboundURL:urlContext.URL];
-        [self.aemReporter handle:urlContext.URL];
-        [self.appEventsUtility saveCampaignIDs:urlContext.URL];
-      }
-      [self logAutoSetupStatus:YES source:@"scenedelegate_dl"];
-    } named:[NSString stringWithFormat:@"AEMSceneDeeplinkAutoSetup_%@", NSStringFromClass(sceneClass)]];
-    
-    [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
-      [FBSDKAppLinkURLCache.shared cacheInboundURL:userActivity.webpageURL];
-      [self.aemReporter enable];
-      [self.aemReporter handle:userActivity.webpageURL];
-      [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
-      [self logAutoSetupStatus:YES source:@"scenedelegate_ul"];
-    } named:[NSString stringWithFormat:@"AEMSceneUniversallinkAutoSetup_%@", NSStringFromClass(sceneClass)]];
-    
-    [self.swizzler swizzleSelector:@selector(scene:willConnectToSession:options:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, UISceneSession *session, UISceneConnectionOptions *options) {
-      [self.aemReporter enable];
-      for(UIOpenURLContext* urlContext in options.URLContexts) {
-        [FBSDKAppLinkURLCache.shared cacheInboundURL:urlContext.URL];
-        [self.aemReporter handle:urlContext.URL];
-        [self.appEventsUtility saveCampaignIDs:urlContext.URL];
-      }
-      [self logAutoSetupStatus:YES source:@"scenedelegate_coldstart"];
-    } named:[NSString stringWithFormat:@"AEMSceneColdStartAutoSetup_%@", NSStringFromClass(sceneClass)]];
-  }
+  [self.swizzler swizzleSelector:@selector(scene:openURLContexts:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSSet<UIOpenURLContext *> *urlContexts) {
+    [self.aemReporter enable];
+    for(UIOpenURLContext* urlContext in urlContexts) {
+      [FBSDKAppLinkURLCache.shared cacheInboundURL:urlContext.URL];
+      [self.aemReporter handle:urlContext.URL];
+      [self.appEventsUtility saveCampaignIDs:urlContext.URL];
+    }
+    [self logAutoSetupStatus:YES source:@"scenedelegate_dl"];
+  } named:[NSString stringWithFormat:@"AEMSceneDeeplinkAutoSetup_%@", NSStringFromClass(sceneClass)]];
+  
+  [self.swizzler swizzleSelector:@selector(scene:continueUserActivity:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, NSUserActivity *userActivity) {
+    [FBSDKAppLinkURLCache.shared cacheInboundURL:userActivity.webpageURL];
+    [self.aemReporter enable];
+    [self.aemReporter handle:userActivity.webpageURL];
+    [self.appEventsUtility saveCampaignIDs:userActivity.webpageURL];
+    [self logAutoSetupStatus:YES source:@"scenedelegate_ul"];
+  } named:[NSString stringWithFormat:@"AEMSceneUniversallinkAutoSetup_%@", NSStringFromClass(sceneClass)]];
+  
+  [self.swizzler swizzleSelector:@selector(scene:willConnectToSession:options:) onClass:sceneClass withBlock:^(id sceneDelegate, SEL cmd, id scene, UISceneSession *session, UISceneConnectionOptions *options) {
+    [self.aemReporter enable];
+    for(UIOpenURLContext* urlContext in options.URLContexts) {
+      [FBSDKAppLinkURLCache.shared cacheInboundURL:urlContext.URL];
+      [self.aemReporter handle:urlContext.URL];
+      [self.appEventsUtility saveCampaignIDs:urlContext.URL];
+    }
+    [self logAutoSetupStatus:YES source:@"scenedelegate_coldstart"];
+  } named:[NSString stringWithFormat:@"AEMSceneColdStartAutoSetup_%@", NSStringFromClass(sceneClass)]];
 }
 
 - (NSSet<NSString *> *)getSceneDelegates

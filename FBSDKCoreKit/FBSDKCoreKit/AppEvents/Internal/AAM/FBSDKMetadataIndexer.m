@@ -153,11 +153,7 @@ static NSString *const FIELD_K_DELIMITER = @",";
   [self.swizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIView.class withBlock:block named:@"metadataIndexingUIView"];
 
   // iOS 12: UITextField implements didMoveToWindow without calling parent implementation
-  if (@available(iOS 12, *)) {
-    [self.swizzler swizzleSelector:@selector(didMoveToWindow) onClass:UITextField.class withBlock:block named:@"metadataIndexingUITextField"];
-  } else {
-    [self.swizzler swizzleSelector:@selector(didMoveToWindow) onClass:UIControl.class withBlock:block named:@"metadataIndexingUIControl"];
-  }
+  [self.swizzler swizzleSelector:@selector(didMoveToWindow) onClass:UITextField.class withBlock:block named:@"metadataIndexingUITextField"];
 }
 
 - (nullable NSArray<UIView *> *)getSiblingViewsOfView:(UIView *)view

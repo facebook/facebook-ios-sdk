@@ -235,15 +235,13 @@ static NSMutableArray<FBSDKPaymentProductRequestor *> *_pendingRequestors;
 {
 #if !TARGET_OS_TV
   // promotional offer starting from iOS 12.2
-  if (@available(iOS 12.2, *)) {
-    SKPaymentDiscount *paymentDiscount = transaction.payment.paymentDiscount;
-    if (paymentDiscount) {
-      NSArray<SKProductDiscount *> *discounts = product.discounts;
-      for (SKProductDiscount *discount in discounts) {
-        if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial
-            && [paymentDiscount.identifier isEqualToString:discount.identifier]) {
-          return YES;
-        }
+  SKPaymentDiscount *paymentDiscount = transaction.payment.paymentDiscount;
+  if (paymentDiscount) {
+    NSArray<SKProductDiscount *> *discounts = product.discounts;
+    for (SKProductDiscount *discount in discounts) {
+      if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial
+          && [paymentDiscount.identifier isEqualToString:discount.identifier]) {
+        return YES;
       }
     }
   }

@@ -110,15 +110,7 @@ static id<FBSDKErrorCreating> _errorFactory;
     [self addSubview:_closeButton];
     [_closeButton addTarget:self action:@selector(_close:) forControlEvents:UIControlEventTouchUpInside];
 
-    UIActivityIndicatorViewStyle style;
-    if (@available(iOS 13.0, *)) {
-      style = UIActivityIndicatorViewStyleLarge;
-    } else {
-      #pragma clang diagnostic push
-      #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-      style = UIActivityIndicatorViewStyleWhiteLarge;
-      #pragma clang diagnostic pop
-    }
+    UIActivityIndicatorViewStyle style = UIActivityIndicatorViewStyleLarge;
     _loadingView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:style];
     _loadingView.color = UIColor.grayColor;
     _loadingView.hidesWhenStopped = YES;
