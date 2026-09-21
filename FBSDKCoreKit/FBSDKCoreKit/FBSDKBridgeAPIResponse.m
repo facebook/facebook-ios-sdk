@@ -43,50 +43,8 @@
                                     sourceApplication:(nullable NSString *)sourceApplication
                                                 error:(NSError *__autoreleasing *)errorRef
 {
-  return [self bridgeAPIResponseWithRequest:request
-                                responseURL:responseURL
-                          sourceApplication:sourceApplication
-                          osVersionComparer:NSProcessInfo.processInfo
-                                      error:errorRef];
-}
-
-+ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-                                          responseURL:(NSURL *)responseURL
-                                    sourceApplication:(NSString *)sourceApplication
-                                    osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
-                                                error:(NSError *__autoreleasing *)errorRef
-{
-  FBSDKBridgeAPIProtocolType protocolType = request.protocolType;
-  NSOperatingSystemVersion iOS13Version = { .majorVersion = 13, .minorVersion = 0, .patchVersion = 0 };
-  if ([comparer fb_isOperatingSystemAtLeastVersion:iOS13Version]) {
-    // SourceApplication is not available in iOS 13.
-    // https://forums.developer.apple.com/thread/119118
-  } else {
-    switch (protocolType) {
-      case FBSDKBridgeAPIProtocolTypeNative: {
-        if (![FBSDKInternalUtility.sharedUtility isFacebookBundleIdentifier:sourceApplication]) {
-          if (errorRef != NULL) {
-            *errorRef = [[NSError alloc] initWithDomain:FBSDKErrorDomain
-                                                   code:FBSDKErrorBridgeAPIResponse
-                                               userInfo:nil];
-          }
-          return nil;
-        }
-        break;
-      }
-      case FBSDKBridgeAPIProtocolTypeWeb: {
-        if (![FBSDKInternalUtility.sharedUtility isSafariBundleIdentifier:sourceApplication]) {
-          if (errorRef != NULL) {
-            *errorRef = [[NSError alloc] initWithDomain:FBSDKErrorDomain
-                                                   code:FBSDKErrorBridgeAPIResponse
-                                               userInfo:nil];
-          }
-          return nil;
-        }
-        break;
-      }
-    }
-  }
+  // `sourceApplication` is unused: iOS stopped supplying it to the bridge callback
+  // in iOS 13, so it cannot be validated. The parameter is kept for API compatibility.
   NSDictionary<NSString *, NSString *> *const queryParameters = [FBSDKBasicUtility dictionaryWithQueryString:responseURL.query];
   id<FBSDKBridgeAPIProtocol> protocol = request.protocol;
   BOOL cancelled = NO;

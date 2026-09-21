@@ -12,12 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKBridgeAPIResponse (Testing)
 
-+ (nullable instancetype)bridgeAPIResponseWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
-                                          responseURL:(NSURL *)responseURL
-                                    sourceApplication:(NSString *)sourceApplication
-                                    osVersionComparer:(id<FBSDKOperatingSystemVersionComparing>)comparer
-                                                error:(NSError *__autoreleasing *)errorRef;
-
 - (instancetype)initWithRequest:(NSObject<FBSDKBridgeAPIRequest> *)request
              responseParameters:(NSDictionary<NSString *, id> *)responseParameters
                       cancelled:(BOOL)cancelled
