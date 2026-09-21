@@ -43,23 +43,21 @@
 
 - (void)testViewDidAppearFallsBackToLargeContentTitle
 {
-  if (@available(iOS 13.0, *)) {
-    [[FBSDKScreenTitleObserver shared] startObserving];
+  [[FBSDKScreenTitleObserver shared] startObserving];
 
-    UIViewController *viewController = [UIViewController new];
-    viewController.title = nil;
-    UIView *labeledView = [UIView new];
-    labeledView.largeContentTitle = @"Large Title";
-    [viewController.view addSubview:labeledView];
+  UIViewController *viewController = [UIViewController new];
+  viewController.title = nil;
+  UIView *labeledView = [UIView new];
+  labeledView.largeContentTitle = @"Large Title";
+  [viewController.view addSubview:labeledView];
 
-    [viewController viewDidAppear:NO];
+  [viewController viewDidAppear:NO];
 
-    XCTAssertEqualObjects(
-      [[FBSDKScreenTitleObserver shared] currentScreenTitle],
-      @"Large Title",
-      "Should fall back to a subview's largeContentTitle when the title is empty"
-    );
-  }
+  XCTAssertEqualObjects(
+    [[FBSDKScreenTitleObserver shared] currentScreenTitle],
+    @"Large Title",
+    "Should fall back to a subview's largeContentTitle when the title is empty"
+  );
 }
 
 @end
