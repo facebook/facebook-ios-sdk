@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(IAPFailedTransactionLoggingCreating)
 @protocol FBSDKIAPFailedTransactionLoggingCreating
 
--(id<FBSDKIAPFailedTransactionLogging>)createIAPFailedTransactionLogging API_AVAILABLE(ios(15));
+-(id<FBSDKIAPFailedTransactionLogging>)createIAPFailedTransactionLogging;
 
 @end
 

@@ -291,9 +291,7 @@ NS_SWIFT_NAME(AppEvents)
  @param productID The product identifier of the product that the user failed to purchase. Can be
  retrieved using `product.id`
  */
-// UNCRUSTIFY_FORMAT_OFF
--(void)logFailedStoreKit2Purchase:(NSString *)productID API_AVAILABLE(ios(15.0));
-// UNCRUSTIFY_FORMAT_ON
+- (void)logFailedStoreKit2Purchase:(NSString *)productID;
 
 /*
  * Push Notifications Logging

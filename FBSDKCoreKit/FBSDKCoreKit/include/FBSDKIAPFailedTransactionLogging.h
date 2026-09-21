@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(IAPFailedTransactionLogging)
 @protocol FBSDKIAPFailedTransactionLogging
 
--(void)logFailedStoreKit2Purchase:(NSString *)productID NS_SWIFT_NAME(logFailedStoreKit2Purchase(productID:)) API_AVAILABLE(ios(15));
+-(void)logFailedStoreKit2Purchase:(NSString *)productID NS_SWIFT_NAME(logFailedStoreKit2Purchase(productID:));
 
 @end
 
