@@ -886,63 +886,6 @@ final class InternalUtilityTests: XCTestCase {
       }
   }
 
-  func testIsFacebookBundleIdentifierWithInvalidIdentifiers() {
-    [
-      "",
-      "foo",
-      "com.foo.bar",
-      "com.facebook",
-    ]
-      .forEach { identifier in
-        XCTAssertFalse(
-          internalUtility.isFacebookBundleIdentifier(identifier),
-          "\(identifier) should not be considered a facebook bundle indentifier"
-        )
-      }
-  }
-
-  func testIsFacebookBundleIdentifierWithValidIdentifiers() {
-    [
-      "com.facebook.",
-      "com.facebook.foo",
-      ".com.facebook.",
-      ".com.facebook.foo",
-    ]
-      .forEach { identifier in
-        XCTAssertTrue(
-          internalUtility.isFacebookBundleIdentifier(identifier),
-          "\(identifier) should be considered a facebook bundle indentifier"
-        )
-      }
-  }
-
-  func testNonSafariBundleIdentifiers() {
-    [
-      "",
-      " ",
-      "com.foo",
-    ]
-      .forEach { identifier in
-        XCTAssertFalse(
-          internalUtility.isSafariBundleIdentifier(identifier),
-          "\(identifier) should not be considered a safari bundle identifier"
-        )
-      }
-  }
-
-  func testSafariBundleIdentifiers() {
-    [
-      "com.apple.mobilesafari",
-      "com.apple.SafariViewService",
-    ]
-      .forEach { identifier in
-        XCTAssertTrue(
-          internalUtility.isSafariBundleIdentifier(identifier),
-          "\(identifier) should be considered a safari bundle identifier"
-        )
-      }
-  }
-
   func testValidatingAppIDWhenUninitialized() {
     internalUtility = InternalUtility()
     settings.appID = "abc" // not actually used

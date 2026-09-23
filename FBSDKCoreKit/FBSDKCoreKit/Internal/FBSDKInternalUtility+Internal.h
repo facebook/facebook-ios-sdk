@@ -67,20 +67,6 @@ NS_SWIFT_NAME(InvalidObjectHandler);
                                 queryParameters:(NSDictionary<NSString *, id> *)queryParameters
                                           error:(NSError *__autoreleasing *)errorRef;
 
-/**
- Tests whether the supplied bundle identifier references a Facebook app.
- @param bundleIdentifier The bundle identifier to test.
- @return YES if the bundle identifier refers to a Facebook app, otherwise NO.
- */
-- (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
-
-/**
- Tests whether the supplied bundle identifier references the Safari app.
- @param bundleIdentifier The bundle identifier to test.
- @return YES if the bundle identifier refers to the Safari app, otherwise NO.
- */
-- (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
-
 /// Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
 - (void)deleteFacebookCookies;
 

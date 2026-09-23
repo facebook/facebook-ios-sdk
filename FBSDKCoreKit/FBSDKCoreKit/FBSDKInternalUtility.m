@@ -260,18 +260,6 @@ static FBSDKInternalUtility *_shared;
   return ([scheme isEqualToString:FBSDKURLSchemeHTTP] || [scheme isEqualToString:FBSDKURLSchemeHTTPS]);
 }
 
-- (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier
-{
-  return ([bundleIdentifier hasPrefix:@"com.facebook."]
-    || [bundleIdentifier hasPrefix:@".com.facebook."]);
-}
-
-- (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier
-{
-  return ([bundleIdentifier isEqualToString:@"com.apple.mobilesafari"]
-    || [bundleIdentifier isEqualToString:@"com.apple.SafariViewService"]);
-}
-
 - (BOOL)object:(id)object isEqualToObject:(id)other
 {
   if (object == other) {
