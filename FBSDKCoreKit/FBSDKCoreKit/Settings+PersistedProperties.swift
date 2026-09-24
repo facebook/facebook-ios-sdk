@@ -72,6 +72,12 @@ extension Settings {
       defaultValue: true
     )
 
+    static let isMetaDataCollectionEnabled = Self(
+      persistenceKey: .isMetaDataCollectionEnabled,
+      backingKeyPath: \._isMetaDataCollectionEnabled,
+      defaultValue: false
+    )
+
     static let isCodelessDebugLogEnabled = Self(
       persistenceKey: .isCodelessDebugLogEnabled,
       backingKeyPath: \._isCodelessDebugLogEnabled,

@@ -11,6 +11,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppLinkURLCache+Testing.h"
+#import "FBSDKCoreKitTests-Swift.h"
 
 @interface FBSDKAppLinkURLCacheTests : XCTestCase
 
@@ -26,6 +27,9 @@
   // An isolated suite keeps the tests from reading or writing the app's standard defaults.
   self.dataStore = [[NSUserDefaults alloc] initWithSuiteName:NSStringFromClass(self.class)];
   FBSDKAppLinkURLCache.shared.dataStore = self.dataStore;
+  // Required: metadata collection is off by default, so without this every write below is
+  // suppressed and these tests pass vacuously.
+  FBSDKAppLinkURLCache.shared.settings = [TestSettingsFactory settingsWithMetaDataCollectionEnabled];
 }
 
 - (void)tearDown

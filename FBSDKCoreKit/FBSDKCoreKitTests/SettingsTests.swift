@@ -1276,6 +1276,200 @@ final class SettingsTests: XCTestCase {
     )
   }
 
+  // MARK: - Meta Data Collection Enabled
+
+  func testMetaDataCollectionEnabledDefaultValue() {
+    XCTAssertFalse(
+      settings.isMetaDataCollectionEnabled,
+      "User journey metadata collection should default to false when there is no plist value given"
+    )
+  }
+
+  func testMetaDataCollectionEnabledFromPlist() {
+    bundle = TestBundle(infoDictionary: ["FBSDKMetaDataCollectionEnabled": true])
+    configureSettings()
+
+    XCTAssertTrue(
+      settings.isMetaDataCollectionEnabled,
+      "A developer should be able to opt in to user journey metadata collection from the plist"
+    )
+  }
+
+  func testMetaDataCollectionEnabledInvalidPlistEntry() {
+    bundle = TestBundle(infoDictionary: ["FBSDKMetaDataCollectionEnabled": Self.emptyString])
+    configureSettings()
+
+    XCTAssertFalse(
+      settings.isMetaDataCollectionEnabled,
+      "User journey metadata collection should default to false when there is an invalid plist value given"
+    )
+  }
+
+  func testSettingMetaDataCollectionEnabled() {
+    settings.isMetaDataCollectionEnabled = false
+
+    XCTAssertNotNil(
+      userDefaultsSpy.capturedValues["FBSDKMetaDataCollectionEnabled"],
+      "Should persist the value of a cachable property when setting it"
+    )
+    XCTAssertFalse(
+      settings.isMetaDataCollectionEnabled,
+      "Should use the explicitly set property"
+    )
+  }
+
+  func testOverridingCachedMetaDataCollectionEnabled() {
+    settings.isMetaDataCollectionEnabled = true
+    XCTAssertTrue(settings.isMetaDataCollectionEnabled)
+
+    bundle = TestBundle(infoDictionary: ["FBSDKMetaDataCollectionEnabled": false])
+    configureSettings()
+
+    XCTAssertTrue(
+      settings.isMetaDataCollectionEnabled,
+      "Should favor cached properties over those set in the plist"
+    )
+  }
+
+  func testSettingMetaDataCollectionEnabledToFalseFromTheDefault() {
+    settings.isMetaDataCollectionEnabled = false
+
+    XCTAssertNotNil(
+      userDefaultsSpy.capturedValues["FBSDKMetaDataCollectionEnabled"],
+      "Should persist an explicit opt-out even though it matches the default"
+    )
+  }
+
+  func testMetaDataCollectionEnabledInternalStorage() {
+    settings.isMetaDataCollectionEnabled = true
+
+    resetLoggingSideEffects()
+
+    XCTAssertTrue(settings.isMetaDataCollectionEnabled, "sanity check")
+    XCTAssertNil(
+      userDefaultsSpy.capturedObjectRetrievalKey,
+      "Should not attempt to access the cache to retrieve objects that have a current value"
+    )
+    XCTAssertNil(
+      testBundle.capturedKeys.last,
+      "Should not attempt to access the plist to retrieve objects that have a current value"
+    )
+  }
+
+  /// The setter's side effects are scoped to `Settings.shared`, since that is the instance the
+  /// process-global collectors read. These two cases therefore drive the shared instance, and
+  /// restore its dependencies and the collectors afterwards.
+  /// Points the process-global collectors at a settings double that permits collection, and
+  /// restores them afterwards. Required for any test that seeds them: collection is off by
+  /// default, so on the real shared settings every seed is suppressed and the assertions that
+  /// follow pass vacuously.
+  private func enableCollectionOnCollectors() {
+    let permissive = TestSettings()
+    permissive.isMetaDataCollectionEnabled = true
+    _ScreenTitleObserver.shared.settings = permissive
+    _AppLinkURLCache.shared.settings = permissive
+    addTeardownBlock {
+      _ScreenTitleObserver.shared.settings = Settings.shared
+      _AppLinkURLCache.shared.settings = Settings.shared
+    }
+  }
+
+  private func withConfiguredSharedSettings(_ body: (Settings) -> Void) {
+    Settings.shared.setDependencies(
+      .init(
+        appEventsConfigurationProvider: appEventsConfigurationProvider,
+        serverConfigurationProvider: serverConfigurationProvider,
+        dataStore: userDefaultsSpy,
+        eventLogger: logger,
+        infoDictionaryProvider: bundle
+      )
+    )
+    defer {
+      Settings.shared._isMetaDataCollectionEnabled = nil
+      Settings.shared.resetDependencies()
+    }
+    body(Settings.shared)
+  }
+
+  func testDisablingMetaDataCollectionDiscardsAlreadyCollectedData() {
+    // Process-wide singletons: isolate the cache's store and restore both afterwards.
+    let suiteName = "SettingsTests.metaDataCollection"
+    let isolatedStore = UserDefaults(suiteName: suiteName)! // swiftlint:disable:this force_unwrapping
+    _AppLinkURLCache.shared.dataStore = isolatedStore
+    enableCollectionOnCollectors()
+    addTeardownBlock {
+      _AppLinkURLCache.shared.reset()
+      isolatedStore.removePersistentDomain(forName: suiteName)
+      _ScreenTitleObserver.shared.setScreenTitle(nil)
+    }
+
+    _ScreenTitleObserver.shared.setScreenTitle("Checkout")
+    _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
+    _AppLinkURLCache.shared.cacheOutboundURL(URL(string: "https://example.com/out"))
+    XCTAssertEqual(
+      isolatedStore.string(forKey: "com.facebook.sdk:inbound_url"),
+      "myapp://in",
+      "sanity check: the seeding above must actually persist, or the assertions below are vacuous"
+    )
+
+    withConfiguredSharedSettings { sharedSettings in
+      sharedSettings.isMetaDataCollectionEnabled = false
+    }
+
+    XCTAssertNil(
+      _ScreenTitleObserver.shared.currentScreenTitle(),
+      "Disabling metadata collection should discard the captured screen title"
+    )
+    XCTAssertNil(
+      isolatedStore.string(forKey: "com.facebook.sdk:inbound_url"),
+      "Disabling metadata collection should erase the persisted inbound URL, not just hide it"
+    )
+    XCTAssertNil(
+      isolatedStore.string(forKey: "com.facebook.sdk:outbound_url"),
+      "Disabling metadata collection should erase the persisted outbound URL, not just hide it"
+    )
+  }
+
+  func testEnablingMetaDataCollectionDoesNotDiscardCollectedData() {
+    enableCollectionOnCollectors()
+    addTeardownBlock {
+      _ScreenTitleObserver.shared.setScreenTitle(nil)
+    }
+    _ScreenTitleObserver.shared.setScreenTitle("Checkout")
+
+    withConfiguredSharedSettings { sharedSettings in
+      sharedSettings.isMetaDataCollectionEnabled = true
+    }
+
+    XCTAssertEqual(
+      _ScreenTitleObserver.shared.currentScreenTitle(),
+      "Checkout",
+      "Enabling metadata collection should leave already captured data alone"
+    )
+  }
+
+  // A throwaway `Settings` still persists the value, it just does not reach across to the
+  // process-global collectors that only `Settings.shared` governs.
+  func testDisablingMetaDataCollectionOnANonSharedInstanceLeavesCollectorsAlone() {
+    enableCollectionOnCollectors()
+    addTeardownBlock {
+      _ScreenTitleObserver.shared.setScreenTitle(nil)
+    }
+    _ScreenTitleObserver.shared.setScreenTitle("Checkout")
+
+    settings.isMetaDataCollectionEnabled = false
+
+    XCTAssertFalse(
+      settings.isMetaDataCollectionEnabled,
+      "The instance should still persist its own value"
+    )
+    XCTAssertEqual(
+      _ScreenTitleObserver.shared.currentScreenTitle(),
+      "Checkout",
+      "A non-shared Settings instance should not clear the process-global collectors"
+    )
+  }
+
   // MARK: - SKAdNetwork Report Enabled
 
   func testFacebookSKAdNetworkReportEnabledFromPlist() {

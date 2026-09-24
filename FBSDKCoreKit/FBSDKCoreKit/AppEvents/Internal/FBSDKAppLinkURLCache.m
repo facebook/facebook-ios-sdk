@@ -8,6 +8,7 @@
 
 #import "FBSDKAppLinkURLCache.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 
 static NSString *const FBSDKAppLinkInboundURLKey = @"com.facebook.sdk:inbound_url";
@@ -16,6 +17,7 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 @interface FBSDKAppLinkURLCache ()
 
 @property (nonatomic) id<FBSDKDataPersisting> dataStore;
+@property (atomic) id<FBSDKSettings> settings;
 
 @end
 
@@ -35,6 +37,7 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 {
   if ((self = [super init])) {
     _dataStore = NSUserDefaults.standardUserDefaults;
+    _settings = FBSDKSettings.sharedSettings;
   }
   return self;
 }
@@ -49,8 +52,12 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
   [self cacheURL:url forKey:FBSDKAppLinkOutboundURLKey];
 }
 
+// Gated here, not at the nine call sites: two are raw-IMP C functions in FBSDKAEMManager.
 - (void)cacheURL:(nullable NSURL *)url forKey:(NSString *)key
 {
+  if (!self.settings.isMetaDataCollectionEnabled) {
+    return;
+  }
   NSString *urlString = url.absoluteString;
   if (urlString.length == 0) {
     return;
@@ -60,8 +67,12 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
   }
 }
 
+// The reads are gated too, so a URL cached before the developer opted out is never surfaced.
 - (nullable NSString *)inboundURL
 {
+  if (!self.settings.isMetaDataCollectionEnabled) {
+    return nil;
+  }
   @synchronized(self) {
     return [self.dataStore fb_stringForKey:FBSDKAppLinkInboundURLKey];
   }
@@ -69,8 +80,20 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 
 - (nullable NSString *)outboundURL
 {
+  if (!self.settings.isMetaDataCollectionEnabled) {
+    return nil;
+  }
   @synchronized(self) {
     return [self.dataStore fb_stringForKey:FBSDKAppLinkOutboundURLKey];
+  }
+}
+
+// Intentionally ungated: this is the opt-out action itself.
+- (void)clearCachedURLs
+{
+  @synchronized(self) {
+    [self.dataStore fb_removeObjectForKey:FBSDKAppLinkInboundURLKey];
+    [self.dataStore fb_removeObjectForKey:FBSDKAppLinkOutboundURLKey];
   }
 }
 
@@ -78,10 +101,10 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 
 - (void)reset
 {
+  [self clearCachedURLs];
   @synchronized(self) {
-    [self.dataStore fb_removeObjectForKey:FBSDKAppLinkInboundURLKey];
-    [self.dataStore fb_removeObjectForKey:FBSDKAppLinkOutboundURLKey];
     self.dataStore = NSUserDefaults.standardUserDefaults;
+    self.settings = FBSDKSettings.sharedSettings;
   }
 }
 

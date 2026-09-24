@@ -8,6 +8,7 @@
 
 #import "FBSDKScreenTitleObserver.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-Swift.h>
 #import <FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.h>
 #import <UIKit/UIKit.h>
 
@@ -20,6 +21,7 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 
 @property (nullable, nonatomic) IMP originalViewDidAppearImplementation;
 @property (nullable, nonatomic, copy) NSString *screenTitle;
+@property (atomic) id<FBSDKSettings> settings;
 
 @end
 
@@ -39,7 +41,15 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 
 - (instancetype)initPrivate
 {
-  return [super init];
+  if ((self = [super init])) {
+    _settings = FBSDKSettings.sharedSettings;
+  }
+  return self;
+}
+
+- (BOOL)isMetaDataCollectionEnabled
+{
+  return self.settings.isMetaDataCollectionEnabled;
 }
 
 // The swizzle mutates the shared UIViewController method table, so it must happen on the main
@@ -48,6 +58,10 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 - (void)startObserving
 {
   fb_dispatch_on_main_thread(^{
+    // Outside dispatch_once so opting out does not burn the token; a later opt-in can install.
+    if (!self.isMetaDataCollectionEnabled) {
+      return;
+    }
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
       self.originalViewDidAppearImplementation =
@@ -60,13 +74,18 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 
 - (void)setScreenTitle:(NSString *)screenTitle
 {
+  // Store nil rather than returning early, so a title captured before the opt-out is erased.
+  NSString *title = self.isMetaDataCollectionEnabled ? screenTitle : nil;
   @synchronized(self) {
-    _screenTitle = [screenTitle copy];
+    _screenTitle = [title copy];
   }
 }
 
 - (NSString *)currentScreenTitle
 {
+  if (!self.isMetaDataCollectionEnabled) {
+    return nil;
+  }
   @synchronized(self) {
     return _screenTitle;
   }

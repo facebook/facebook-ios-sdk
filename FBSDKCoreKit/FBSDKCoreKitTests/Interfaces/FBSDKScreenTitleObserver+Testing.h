@@ -8,17 +8,13 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-@protocol FBSDKDataPersisting;
 @protocol FBSDKSettings;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKAppLinkURLCache (Testing)
+@interface FBSDKScreenTitleObserver (Testing)
 
-@property (nonatomic) id<FBSDKDataPersisting> dataStore;
 @property (atomic) id<FBSDKSettings> settings;
-
-- (void)reset;
 
 @end
 

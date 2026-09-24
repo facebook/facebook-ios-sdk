@@ -63,6 +63,7 @@ public final class ApplicationDelegate: NSObject {
 
    As part of SDK initialization, basic auto logging of app events will occur, this can be
    controlled via the 'FacebookAutoLogAppEventsEnabled' key in your project's Info.plist file.
+   User journey metadata is controlled separately via 'FBSDKMetaDataCollectionEnabled'.
    */
   public func initializeSDK() {
     initializeSDK(launchOptions: [:], completionBlock: nil)
@@ -208,15 +209,38 @@ public final class ApplicationDelegate: NSObject {
     }
   }
 
-  // Screen title and app link URL tracking are not app event auto-logging, so they are
-  // intentionally not gated on `isAutoLogAppEventsEnabled` — only on the UserJourney feature flag.
+  /// Both the server kill switch and the developer opt-out have to allow collection.
+  private var isUserJourneyCollectionEnabled: Bool {
+    components.settings.isMetaDataCollectionEnabled
+      && components.featureChecker.isEnabled(.userJourney)
+  }
+
+  // Not app event auto-logging, so deliberately not gated on `isAutoLogAppEventsEnabled`.
   private func enableUserJourney() {
+    purgeCollectedDataIfOptedOut()
+
+    // Runs even when opted out, so the GateKeeper stays loaded for a later mid-session opt-in.
     components.featureChecker.check(.userJourney) { enabled in
-      if enabled {
-        _ScreenTitleObserver.shared.startObserving()
-        self.setupOutboundURLSwizzle()
-      }
+      guard enabled else { return }
+
+      self.installUserJourneyCollectionIfPermitted()
     }
+  }
+
+  /// Drops app link URLs an earlier launch cached before the developer opted out. Deliberately
+  /// outside the GateKeeper check: the persisted data outlives both the launch and the flag.
+  func purgeCollectedDataIfOptedOut() {
+    guard !components.settings.isMetaDataCollectionEnabled else { return }
+
+    _AppLinkURLCache.shared.clearCachedURLs()
+  }
+
+  /// Idempotent, so a mid-session opt-in can call it again. An app that never opts in is never swizzled.
+  func installUserJourneyCollectionIfPermitted() {
+    guard components.settings.isMetaDataCollectionEnabled else { return }
+
+    _ScreenTitleObserver.shared.startObserving()
+    setupOutboundURLSwizzle()
   }
 
   private func logAppLinkEvent(url: URL, urlType: String) {
@@ -255,10 +279,10 @@ public final class ApplicationDelegate: NSObject {
     let originalIMP = method_getImplementation(method)
     typealias OpenURLIMP = @convention(c) (AnyObject, Selector, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
     typealias OpenURLBlock = @convention(block) (AnyObject, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
-    // Re-check per call, not just at install time: the swizzle cannot be uninstalled.
+    // Re-check per call: the swizzle cannot be uninstalled and the client flag is runtime-mutable.
     let block: OpenURLBlock = { [weak self] receiver, url, options, completion in
       if let self = self,
-         self.components.featureChecker.isEnabled(.userJourney) {
+         self.isUserJourneyCollectionEnabled {
         _AppLinkURLCache.shared.cacheOutboundURL(url as URL)
         self.logAppLinkEvent(url: url as URL, urlType: AppEvents.ParameterValue.outboundURL.rawValue)
       }
@@ -374,8 +398,9 @@ public final class ApplicationDelegate: NSObject {
     annotation: Any?
   ) -> Bool {
     components.appEvents.setSourceApplication(sourceApplication, open: url)
+    // Unguarded: the cache gates itself, which is what also covers the `FBSDKAEMManager` writers.
     _AppLinkURLCache.shared.cacheInboundURL(url)
-    if components.featureChecker.isEnabled(.userJourney) {
+    if isUserJourneyCollectionEnabled {
       logAppLinkEvent(url: url, urlType: AppEvents.ParameterValue.inboundURL.rawValue)
     }
 
@@ -421,6 +446,7 @@ public final class ApplicationDelegate: NSObject {
    of your application delegate. It should be invoked for the proper use of the Facebook SDK.
    As part of SDK initialization, basic auto-logging of app events will occur; this can be
    controlled via the `FacebookAutoLogAppEventsEnabled` key in the project's Info.plist file.
+   User journey metadata is controlled separately via `FBSDKMetaDataCollectionEnabled`.
 
    - Parameters:
      - application: The application as passed to `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`.

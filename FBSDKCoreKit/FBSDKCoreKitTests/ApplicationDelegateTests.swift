@@ -690,6 +690,123 @@ final class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  // MARK: - UserJourney AppLink Logging
+
+  // Restated as wire values; the originals are fileprivate in ApplicationDelegate.swift.
+  private enum AppLinkWire {
+    static let eventName = AppEvents.Name("fb_mobile_applink")
+    static let urlParameter = AppEvents.ParameterName("url")
+    static let urlTypeParameter = AppEvents.ParameterName("url_type")
+    static let inbound = "inbound"
+  }
+
+  func testOpeningURLLogsInboundAppLinkEventWhenCollectionIsAllowed() {
+    settings.isMetaDataCollectionEnabled = true
+    featureChecker.enable(feature: .userJourney)
+
+    delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
+
+    XCTAssertEqual(
+      appEvents.capturedEventName,
+      AppLinkWire.eventName,
+      "Opening an inbound URL should log an fb_mobile_applink event"
+    )
+    XCTAssertEqual(
+      appEvents.capturedParameters?[AppLinkWire.urlTypeParameter] as? String,
+      AppLinkWire.inbound,
+      "The logged AppLink event should be tagged with url_type=inbound"
+    )
+    XCTAssertEqual(
+      appEvents.capturedParameters?[AppLinkWire.urlParameter] as? String,
+      SampleURLs.validApp.absoluteString,
+      "The logged AppLink event should carry the opened URL"
+    )
+  }
+
+  func testOpeningURLDoesNotLogAppLinkEventWhenMetaDataCollectionIsDisabled() {
+    settings.isMetaDataCollectionEnabled = false
+    featureChecker.enable(feature: .userJourney)
+
+    delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
+
+    XCTAssertNil(
+      appEvents.capturedEventName,
+      "Opening a URL should not log an AppLink event when the developer has opted out of metadata collection"
+    )
+  }
+
+  // Guards the AND: the server-side kill switch still has to hold on its own.
+  func testOpeningURLDoesNotLogAppLinkEventWhenUserJourneyFeatureIsDisabled() {
+    settings.isMetaDataCollectionEnabled = true
+    // .userJourney intentionally left disabled on the feature checker.
+
+    delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
+
+    XCTAssertNil(
+      appEvents.capturedEventName,
+      "Opening a URL should not log an AppLink event when the UserJourney feature is disabled"
+    )
+  }
+
+  // MARK: - UserJourney Collection Installation
+
+  // Asserted behaviorally: the installs are one-way and process-wide, so "is it installed" would be order-dependent.
+  private func withIsolatedAppLinkURLCache(_ body: (UserDefaults) -> Void) {
+    let suiteName = "ApplicationDelegateTests.userJourney"
+    let store = UserDefaults(suiteName: suiteName)! // swiftlint:disable:this force_unwrapping
+    _AppLinkURLCache.shared.dataStore = store
+    defer {
+      _AppLinkURLCache.shared.reset()
+      store.removePersistentDomain(forName: suiteName)
+    }
+    body(store)
+  }
+
+  func testLaunchPurgesCachedURLsWhenOptedOut() {
+    withIsolatedAppLinkURLCache { store in
+      store.set("myapp://in", forKey: "com.facebook.sdk:inbound_url")
+      settings.isMetaDataCollectionEnabled = false
+
+      delegate.purgeCollectedDataIfOptedOut()
+
+      XCTAssertNil(
+        store.string(forKey: "com.facebook.sdk:inbound_url"),
+        "Launching while opted out should discard app link URLs cached by an earlier launch"
+      )
+    }
+  }
+
+  func testLaunchKeepsCachedURLsWhenOptedIn() {
+    withIsolatedAppLinkURLCache { store in
+      store.set("myapp://in", forKey: "com.facebook.sdk:inbound_url")
+      settings.isMetaDataCollectionEnabled = true
+
+      delegate.purgeCollectedDataIfOptedOut()
+
+      XCTAssertEqual(
+        store.string(forKey: "com.facebook.sdk:inbound_url"),
+        "myapp://in",
+        "Launching while opted in should leave previously cached URLs alone"
+      )
+    }
+  }
+
+  // The purge has to survive the server feature being off — that check sits downstream of it.
+  func testLaunchPurgesCachedURLsWhenOptedOutEvenWithUserJourneyFeatureDisabled() {
+    withIsolatedAppLinkURLCache { store in
+      store.set("myapp://in", forKey: "com.facebook.sdk:inbound_url")
+      settings.isMetaDataCollectionEnabled = false
+      // .userJourney intentionally left disabled on the feature checker.
+
+      delegate.purgeCollectedDataIfOptedOut()
+
+      XCTAssertNil(
+        store.string(forKey: "com.facebook.sdk:inbound_url"),
+        "Opting out should discard cached URLs regardless of the UserJourney GateKeeper"
+      )
+    }
+  }
+
   // MARK: - Application Observers
 
   func testDefaultsObservers() {

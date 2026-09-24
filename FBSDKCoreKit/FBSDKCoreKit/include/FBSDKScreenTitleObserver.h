@@ -19,6 +19,9 @@ NS_SWIFT_NAME(_ScreenTitleObserver)
 
 @property (nullable, nonatomic, readonly) IMP originalViewDidAppearImplementation;
 
+/// Whether the developer permits user journey metadata collection (`FBSDKMetaDataCollectionEnabled`).
+@property (nonatomic, readonly) BOOL isMetaDataCollectionEnabled;
+
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 

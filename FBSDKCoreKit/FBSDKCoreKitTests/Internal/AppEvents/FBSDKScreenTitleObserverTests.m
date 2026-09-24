@@ -10,16 +10,28 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
+#import "FBSDKCoreKitTests-Swift.h"
+#import "FBSDKScreenTitleObserver+Testing.h"
+
 @interface FBSDKScreenTitleObserverTests : XCTestCase
 @end
 
 @implementation FBSDKScreenTitleObserverTests
+
+- (void)setUp
+{
+  [super setUp];
+  // Required: metadata collection is off by default, so without this the observer stores nil
+  // and the title assertions below pass vacuously.
+  [FBSDKScreenTitleObserver shared].settings = [TestSettingsFactory settingsWithMetaDataCollectionEnabled];
+}
 
 - (void)tearDown
 {
   // The swizzle is installed once for the process lifetime and cannot be reversed, so only the
   // cached title needs clearing to keep later tests from seeing a stale value.
   [[FBSDKScreenTitleObserver shared] setScreenTitle:nil];
+  [FBSDKScreenTitleObserver shared].settings = FBSDKSettings.sharedSettings;
   [super tearDown];
 }
 

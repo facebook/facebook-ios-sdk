@@ -162,6 +162,47 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   var _isAdvertiserIDCollectionEnabled: Bool?
 
   /**
+   Controls collection of user journey metadata: the current screen title and the app link URLs.
+
+   The default value is `false`, so collection is opt-in: an app enables it by setting
+   `FBSDKMetaDataCollectionEnabled` in its Info.plist or assigning this property at runtime.
+   */
+  public var isMetaDataCollectionEnabled: Bool {
+    get { getPersistedBooleanProperty(.isMetaDataCollectionEnabled) }
+    set {
+      setPersistedBooleanProperty(.isMetaDataCollectionEnabled, to: newValue)
+
+      // The collectors are process-global and read `Settings.shared`, so only the shared
+      // instance drives them. Any other instance persists its value and stops there, rather
+      // than reaching across to state it does not own.
+      guard self === Self.shared else { return }
+
+      if newValue {
+        startMetaDataCollection()
+      } else {
+        stopMetaDataCollection()
+      }
+    }
+  }
+
+  /// Installs lazily so an app opting in mid-session gets collection without a relaunch.
+  private func startMetaDataCollection() {
+    // Checked first, so this stays inert and away from `ApplicationDelegate.shared` before setup.
+    guard _FeatureManager.shared.isEnabled(.userJourney) else { return }
+
+    ApplicationDelegate.shared.installUserJourneyCollectionIfPermitted()
+  }
+
+  /// Drops what was already collected: the swizzles are permanent and the app link URLs persist.
+  private func stopMetaDataCollection() {
+    _ScreenTitleObserver.shared.setScreenTitle(nil)
+    _AppLinkURLCache.shared.clearCachedURLs()
+  }
+
+  // swiftlint:disable:next identifier_name discouraged_optional_boolean
+  var _isMetaDataCollectionEnabled: Bool?
+
+  /**
    Controls the SKAdNetwork report.
 
    The default value is `true`.

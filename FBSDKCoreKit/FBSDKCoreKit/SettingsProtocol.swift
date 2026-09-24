@@ -46,6 +46,7 @@ public protocol SettingsProtocol {
   )
   var advertiserIDCollectionEnabled: Bool { get set }
   var isAdvertiserIDCollectionEnabled: Bool { get set }
+  var isMetaDataCollectionEnabled: Bool { get }
   @available(
     *,
     deprecated,

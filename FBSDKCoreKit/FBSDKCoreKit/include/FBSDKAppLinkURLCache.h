@@ -34,6 +34,9 @@ NS_SWIFT_NAME(_AppLinkURLCache)
 @property (nullable, nonatomic, readonly, copy) NSString *inboundURL;
 @property (nullable, nonatomic, readonly, copy) NSString *outboundURL;
 
+/// Drops both cached URLs. Invoked when the developer opts out of Meta data collection.
+- (void)clearCachedURLs;
+
 @end
 
 NS_ASSUME_NONNULL_END

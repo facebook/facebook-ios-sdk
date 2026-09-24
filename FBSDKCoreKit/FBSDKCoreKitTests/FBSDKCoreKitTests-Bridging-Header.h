@@ -85,6 +85,7 @@
 #import "FBSDKPasteboard.h"
 #import "FBSDKPaymentProductRequestor.h"
 #import "FBSDKRestrictiveDataFilterManager+Testing.h"
+#import "FBSDKScreenTitleObserver+Testing.h"
 #import "FBSDKSKAdNetworkConversionConfiguration.h"
 #import "FBSDKSKAdNetworkReporter.h"
 #import "FBSDKSKAdNetworkReporterV2.h"
