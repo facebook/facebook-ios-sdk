@@ -1366,11 +1366,19 @@ final class SettingsTests: XCTestCase {
   private func enableCollectionOnCollectors() {
     let permissive = TestSettings()
     permissive.isMetaDataCollectionEnabled = true
+    // The GateKeeper side needs stubbing too: the real feature manager is unconfigured in this
+    // target and reports every feature disabled.
+    let permissiveFeatures = TestFeatureManager()
+    permissiveFeatures.enable(feature: .userJourney)
     _ScreenTitleObserver.shared.settings = permissive
+    _ScreenTitleObserver.shared.featureChecker = permissiveFeatures
     _AppLinkURLCache.shared.settings = permissive
+    _AppLinkURLCache.shared.featureChecker = permissiveFeatures
     addTeardownBlock {
       _ScreenTitleObserver.shared.settings = Settings.shared
+      _ScreenTitleObserver.shared.featureChecker = _FeatureManager.shared
       _AppLinkURLCache.shared.settings = Settings.shared
+      _AppLinkURLCache.shared.featureChecker = _FeatureManager.shared
     }
   }
 

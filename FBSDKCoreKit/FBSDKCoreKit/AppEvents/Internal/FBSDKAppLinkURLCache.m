@@ -18,6 +18,7 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 
 @property (nonatomic) id<FBSDKDataPersisting> dataStore;
 @property (atomic) id<FBSDKSettings> settings;
+@property (atomic) id<FBSDKFeatureChecking> featureChecker;
 
 @end
 
@@ -38,8 +39,25 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
   if ((self = [super init])) {
     _dataStore = NSUserDefaults.standardUserDefaults;
     _settings = FBSDKSettings.sharedSettings;
+    _featureChecker = FBSDKFeatureManager.shared;
   }
   return self;
+}
+
+// Both controls mean "do not collect", so both gate the write as well as the read: a URL that
+// is never captured cannot be retained on the device, which is a stronger position than
+// capturing it and declining to send it. Checked here rather than at the nine call sites
+// because two of them are raw-IMP C functions in FBSDKAEMManager, which have nowhere to hold a
+// dependency — and reaching those AEM writers is the point, since they install under the AEM
+// feature and the UserJourney GateKeeper could not otherwise touch them.
+//
+// The cost is that a deep link arriving before the GateKeeper fetch lands is dropped and cannot
+// be recovered. That is accepted: `inbound_url` is a supplementary event parameter, not the
+// attribution mechanism, and AEM's own `handle:` and `saveCampaignIDs:` paths are untouched.
+- (BOOL)isCollectionPermitted
+{
+  return self.settings.isMetaDataCollectionEnabled
+  && [self.featureChecker isEnabled:FBSDKFeatureUserJourney];
 }
 
 - (void)cacheInboundURL:(NSURL *)url
@@ -52,10 +70,9 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
   [self cacheURL:url forKey:FBSDKAppLinkOutboundURLKey];
 }
 
-// Gated here, not at the nine call sites: two are raw-IMP C functions in FBSDKAEMManager.
 - (void)cacheURL:(nullable NSURL *)url forKey:(NSString *)key
 {
-  if (!self.settings.isMetaDataCollectionEnabled) {
+  if (!self.isCollectionPermitted) {
     return;
   }
   NSString *urlString = url.absoluteString;
@@ -67,10 +84,11 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
   }
 }
 
-// The reads are gated too, so a URL cached before the developer opted out is never surfaced.
+// Gated as well as the write, so a URL cached before either control was turned off is never
+// surfaced. The write gate alone is not enough: both values persist across launches.
 - (nullable NSString *)inboundURL
 {
-  if (!self.settings.isMetaDataCollectionEnabled) {
+  if (!self.isCollectionPermitted) {
     return nil;
   }
   @synchronized(self) {
@@ -80,7 +98,7 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 
 - (nullable NSString *)outboundURL
 {
-  if (!self.settings.isMetaDataCollectionEnabled) {
+  if (!self.isCollectionPermitted) {
     return nil;
   }
   @synchronized(self) {
@@ -105,6 +123,7 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
   @synchronized(self) {
     self.dataStore = NSUserDefaults.standardUserDefaults;
     self.settings = FBSDKSettings.sharedSettings;
+    self.featureChecker = FBSDKFeatureManager.shared;
   }
 }
 

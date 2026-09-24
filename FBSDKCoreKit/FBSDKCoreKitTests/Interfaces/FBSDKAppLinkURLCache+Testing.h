@@ -10,6 +10,7 @@
 
 @protocol FBSDKDataPersisting;
 @protocol FBSDKSettings;
+@protocol FBSDKFeatureChecking;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) id<FBSDKDataPersisting> dataStore;
 @property (atomic) id<FBSDKSettings> settings;
+@property (atomic) id<FBSDKFeatureChecking> featureChecker;
 
 - (void)reset;
 

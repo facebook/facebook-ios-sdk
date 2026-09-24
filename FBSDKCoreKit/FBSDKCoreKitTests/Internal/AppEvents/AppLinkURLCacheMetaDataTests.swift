@@ -17,6 +17,7 @@ final class AppLinkURLCacheMetaDataTests: XCTestCase {
   // swiftlint:disable implicitly_unwrapped_optional
   var dataStore: UserDefaults!
   var settings: TestSettings!
+  var featureChecker: TestFeatureManager!
   // swiftlint:enable implicitly_unwrapped_optional
 
   private static let suiteName = "AppLinkURLCacheMetaDataTests"
@@ -30,8 +31,13 @@ final class AppLinkURLCacheMetaDataTests: XCTestCase {
     dataStore = UserDefaults(suiteName: Self.suiteName)! // swiftlint:disable:this force_unwrapping
     settings = TestSettings()
     settings.isMetaDataCollectionEnabled = true
+    // The real feature manager is unconfigured here and reports every feature disabled, which
+    // would suppress the writes below and let these tests pass vacuously.
+    featureChecker = TestFeatureManager()
+    featureChecker.enable(feature: .userJourney)
     _AppLinkURLCache.shared.dataStore = dataStore
     _AppLinkURLCache.shared.settings = settings
+    _AppLinkURLCache.shared.featureChecker = featureChecker
   }
 
   override func tearDown() {
@@ -40,8 +46,85 @@ final class AppLinkURLCacheMetaDataTests: XCTestCase {
     dataStore.removePersistentDomain(forName: Self.suiteName)
     dataStore = nil
     settings = nil
+    featureChecker = nil
 
     super.tearDown()
+  }
+
+  /// `TestFeatureManager.disableFeature` only records for crash-shield assertions; `isEnabled`
+  /// reads a separate stub map. Swapping in a fresh instance is what actually reports the
+  /// GateKeeper as off.
+  private func turnOffUserJourneyGateKeeper() {
+    featureChecker = TestFeatureManager()
+    _AppLinkURLCache.shared.featureChecker = featureChecker
+  }
+
+  // MARK: - Server kill switch
+
+  // The GateKeeper has to stop inbound URLs reaching events. Their write paths do not run through
+  // a swizzle gated on `.userJourney` — `application(_:open:sourceApplication:annotation:)` is
+  // public API and FBSDKAEMManager's writers install under `.AEM` — so without gating the reads
+  // here, flipping the GateKeeper off would leave inbound URLs stamped on every event.
+  func testReadingIsSuppressedWhenUserJourneyFeatureIsDisabled() {
+    _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
+    _AppLinkURLCache.shared.cacheOutboundURL(URL(string: "https://example.com/out"))
+
+    turnOffUserJourneyGateKeeper()
+
+    XCTAssertNil(
+      _AppLinkURLCache.shared.inboundURL,
+      "Should not surface an inbound URL while the UserJourney GateKeeper is off"
+    )
+    XCTAssertNil(
+      _AppLinkURLCache.shared.outboundURL,
+      "Should not surface an outbound URL while the UserJourney GateKeeper is off"
+    )
+  }
+
+  // The GateKeeper gates capture, not just transmission: a URL that is never written cannot be
+  // retained on the device while the kill switch is on.
+  func testCachingIsSuppressedWhenUserJourneyFeatureIsDisabled() {
+    turnOffUserJourneyGateKeeper()
+
+    _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
+    _AppLinkURLCache.shared.cacheOutboundURL(URL(string: "https://example.com/out"))
+
+    XCTAssertNil(
+      dataStore.string(forKey: Self.inboundKey),
+      "Should not persist an inbound URL while the UserJourney GateKeeper is off"
+    )
+    XCTAssertNil(
+      dataStore.string(forKey: Self.outboundKey),
+      "Should not persist an outbound URL while the UserJourney GateKeeper is off"
+    )
+  }
+
+  // The accepted cost of gating capture: a deep link arriving before the GateKeeper fetch lands
+  // is dropped for good. `inbound_url` is a supplementary event parameter rather than the
+  // attribution mechanism, and AEM's own campaign-ID paths are untouched by this gate.
+  func testURLDroppedWhileGateKeeperWasOffIsNotRecoveredWhenItTurnsOn() {
+    turnOffUserJourneyGateKeeper()
+    _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
+
+    featureChecker.enable(feature: .userJourney)
+    _AppLinkURLCache.shared.featureChecker = featureChecker
+
+    XCTAssertNil(
+      _AppLinkURLCache.shared.inboundURL,
+      "A URL dropped while the GateKeeper was off should stay gone once it turns on"
+    )
+  }
+
+  // The developer opt-out is the stronger of the two: it stops the write outright.
+  func testCachingIsSuppressedByTheDeveloperOptOutEvenWithTheGateKeeperOn() {
+    settings.isMetaDataCollectionEnabled = false
+
+    _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
+
+    XCTAssertNil(
+      dataStore.string(forKey: Self.inboundKey),
+      "The GateKeeper being on should not override the developer's opt-out"
+    )
   }
 
   func testCachingInboundURLIsSuppressedWhenCollectionIsDisabled() {

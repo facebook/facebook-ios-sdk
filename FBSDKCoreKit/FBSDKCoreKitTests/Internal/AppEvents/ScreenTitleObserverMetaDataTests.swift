@@ -15,23 +15,84 @@ import XCTest
 /// `_ScreenTitleObserver` gating. The swizzle is process-permanent, so these cover capture and read, not install.
 final class ScreenTitleObserverMetaDataTests: XCTestCase {
 
-  // swiftlint:disable:next implicitly_unwrapped_optional
+  // swiftlint:disable implicitly_unwrapped_optional
   var settings: TestSettings!
+  var featureChecker: TestFeatureManager!
+  // swiftlint:enable implicitly_unwrapped_optional
 
   override func setUp() {
     super.setUp()
 
     settings = TestSettings()
     settings.isMetaDataCollectionEnabled = true
+    // The real feature manager is unconfigured in this target and reports every feature
+    // disabled, which would suppress every capture below and let these tests pass vacuously.
+    featureChecker = TestFeatureManager()
+    featureChecker.enable(feature: .userJourney)
     _ScreenTitleObserver.shared.settings = settings
+    _ScreenTitleObserver.shared.featureChecker = featureChecker
   }
 
   override func tearDown() {
     _ScreenTitleObserver.shared.setScreenTitle(nil)
     _ScreenTitleObserver.shared.settings = Settings.shared
+    _ScreenTitleObserver.shared.featureChecker = _FeatureManager.shared
     settings = nil
+    featureChecker = nil
 
     super.tearDown()
+  }
+
+  /// `TestFeatureManager.disableFeature` only records for crash-shield assertions; `isEnabled`
+  /// reads a separate stub map. Swapping in a fresh instance is what actually reports the
+  /// GateKeeper as off.
+  private func turnOffUserJourneyGateKeeper() {
+    featureChecker = TestFeatureManager()
+    _ScreenTitleObserver.shared.featureChecker = featureChecker
+  }
+
+  // MARK: - Server kill switch
+
+  func testCapturingScreenTitleIsSuppressedWhenUserJourneyFeatureIsDisabled() {
+    turnOffUserJourneyGateKeeper()
+
+    _ScreenTitleObserver.shared.setScreenTitle("Checkout")
+
+    XCTAssertNil(
+      _ScreenTitleObserver.shared.currentScreenTitle(),
+      "Should not capture a screen title while the UserJourney GateKeeper is off"
+    )
+  }
+
+  // Unlike the app link URLs, the GateKeeper gates capture here as well as read: a title taken
+  // before the GateKeeper loaded carries no attribution value, so there is nothing to preserve.
+  func testTitleCapturedBeforeTheGateKeeperClosedIsNotSurfacedAfterwards() {
+    _ScreenTitleObserver.shared.setScreenTitle("Checkout")
+
+    turnOffUserJourneyGateKeeper()
+
+    XCTAssertNil(
+      _ScreenTitleObserver.shared.currentScreenTitle(),
+      "Should not surface a screen title captured before the GateKeeper was turned off"
+    )
+  }
+
+  func testCapturingRequiresBothTheClientFlagAndTheGateKeeper() {
+    settings.isMetaDataCollectionEnabled = false
+    featureChecker.enable(feature: .userJourney)
+    _ScreenTitleObserver.shared.setScreenTitle("flag-off")
+    XCTAssertNil(
+      _ScreenTitleObserver.shared.currentScreenTitle(),
+      "The GateKeeper being on should not override the developer's opt-out"
+    )
+
+    settings.isMetaDataCollectionEnabled = true
+    turnOffUserJourneyGateKeeper()
+    _ScreenTitleObserver.shared.setScreenTitle("gk-off")
+    XCTAssertNil(
+      _ScreenTitleObserver.shared.currentScreenTitle(),
+      "The developer opting in should not override the GateKeeper"
+    )
   }
 
   func testCapturingScreenTitleIsSuppressedWhenCollectionIsDisabled() {

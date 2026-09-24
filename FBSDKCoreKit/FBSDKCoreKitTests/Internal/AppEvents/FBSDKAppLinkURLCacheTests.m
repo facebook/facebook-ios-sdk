@@ -16,6 +16,7 @@
 @interface FBSDKAppLinkURLCacheTests : XCTestCase
 
 @property (nonatomic) NSUserDefaults *dataStore;
+@property (nonatomic) TestFeatureManager *featureChecker;
 
 @end
 
@@ -26,10 +27,14 @@
   [super setUp];
   // An isolated suite keeps the tests from reading or writing the app's standard defaults.
   self.dataStore = [[NSUserDefaults alloc] initWithSuiteName:NSStringFromClass(self.class)];
+  self.featureChecker = [TestFeatureManager new];
+  [self.featureChecker enableWithFeature:FBSDKFeatureUserJourney];
   FBSDKAppLinkURLCache.shared.dataStore = self.dataStore;
-  // Required: metadata collection is off by default, so without this every write below is
-  // suppressed and these tests pass vacuously.
+  // Both stubs are required: collection is off by default and the real feature manager is
+  // unconfigured in this target, so without them every write below is silently suppressed
+  // and these tests pass vacuously.
   FBSDKAppLinkURLCache.shared.settings = [TestSettingsFactory settingsWithMetaDataCollectionEnabled];
+  FBSDKAppLinkURLCache.shared.featureChecker = self.featureChecker;
 }
 
 - (void)tearDown
@@ -37,6 +42,7 @@
   [FBSDKAppLinkURLCache.shared reset];
   [self.dataStore removePersistentDomainForName:NSStringFromClass(self.class)];
   self.dataStore = nil;
+  self.featureChecker = nil;
   [super tearDown];
 }
 

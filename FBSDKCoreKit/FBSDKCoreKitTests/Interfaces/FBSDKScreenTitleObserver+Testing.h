@@ -9,12 +9,14 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @protocol FBSDKSettings;
+@protocol FBSDKFeatureChecking;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKScreenTitleObserver (Testing)
 
 @property (atomic) id<FBSDKSettings> settings;
+@property (atomic) id<FBSDKFeatureChecking> featureChecker;
 
 @end
 

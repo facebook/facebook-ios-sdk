@@ -22,6 +22,7 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 @property (nullable, nonatomic) IMP originalViewDidAppearImplementation;
 @property (nullable, nonatomic, copy) NSString *screenTitle;
 @property (atomic) id<FBSDKSettings> settings;
+@property (atomic) id<FBSDKFeatureChecking> featureChecker;
 
 @end
 
@@ -43,13 +44,18 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 {
   if ((self = [super init])) {
     _settings = FBSDKSettings.sharedSettings;
+    _featureChecker = FBSDKFeatureManager.shared;
   }
   return self;
 }
 
-- (BOOL)isMetaDataCollectionEnabled
+// Both controls gate the screen title, at install, at capture and at read. Install gating keeps
+// an app that never opts in from being swizzled at all; capture and read gating are what make a
+// mid-session change take effect, since the swizzle is permanent and cannot be uninstalled.
+- (BOOL)isCollectionPermitted
 {
-  return self.settings.isMetaDataCollectionEnabled;
+  return self.settings.isMetaDataCollectionEnabled
+  && [self.featureChecker isEnabled:FBSDKFeatureUserJourney];
 }
 
 // The swizzle mutates the shared UIViewController method table, so it must happen on the main
@@ -58,8 +64,8 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 - (void)startObserving
 {
   fb_dispatch_on_main_thread(^{
-    // Outside dispatch_once so opting out does not burn the token; a later opt-in can install.
-    if (!self.isMetaDataCollectionEnabled) {
+    // Outside dispatch_once so a gate being off does not burn the token; a later opt-in can install.
+    if (!self.isCollectionPermitted) {
       return;
     }
     static dispatch_once_t onceToken;
@@ -74,8 +80,9 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 
 - (void)setScreenTitle:(NSString *)screenTitle
 {
-  // Store nil rather than returning early, so a title captured before the opt-out is erased.
-  NSString *title = self.isMetaDataCollectionEnabled ? screenTitle : nil;
+  // Store nil rather than returning early, so a title captured before either gate closed is
+  // erased rather than frozen — the swizzle keeps firing once installed.
+  NSString *title = self.isCollectionPermitted ? screenTitle : nil;
   @synchronized(self) {
     _screenTitle = [title copy];
   }
@@ -83,7 +90,7 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 
 - (NSString *)currentScreenTitle
 {
-  if (!self.isMetaDataCollectionEnabled) {
+  if (!self.isCollectionPermitted) {
     return nil;
   }
   @synchronized(self) {

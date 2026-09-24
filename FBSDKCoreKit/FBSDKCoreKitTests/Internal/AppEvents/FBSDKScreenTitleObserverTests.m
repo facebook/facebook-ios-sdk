@@ -21,9 +21,13 @@
 - (void)setUp
 {
   [super setUp];
-  // Required: metadata collection is off by default, so without this the observer stores nil
-  // and the title assertions below pass vacuously.
+  // Both stubs are required: collection is off by default and the real feature manager is
+  // unconfigured in this target, so without them the observer stores nil and the title
+  // assertions below pass vacuously.
   [FBSDKScreenTitleObserver shared].settings = [TestSettingsFactory settingsWithMetaDataCollectionEnabled];
+  TestFeatureManager *featureChecker = [TestFeatureManager new];
+  [featureChecker enableWithFeature:FBSDKFeatureUserJourney];
+  [FBSDKScreenTitleObserver shared].featureChecker = featureChecker;
 }
 
 - (void)tearDown
@@ -32,6 +36,7 @@
   // cached title needs clearing to keep later tests from seeing a stale value.
   [[FBSDKScreenTitleObserver shared] setScreenTitle:nil];
   [FBSDKScreenTitleObserver shared].settings = FBSDKSettings.sharedSettings;
+  [FBSDKScreenTitleObserver shared].featureChecker = FBSDKFeatureManager.shared;
   [super tearDown];
 }
 

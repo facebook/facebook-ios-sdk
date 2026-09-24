@@ -25,8 +25,8 @@ FB_LINK_CATEGORY_IMPLEMENTATION(UIViewController, FBSDKUserJourney)
                            logEntry:@"fb_userJourneyViewDidAppear: original viewDidAppear: IMP is missing; skipping original call"];
   }
 
-  // Clear rather than skip, and before the BFS so a disabled SDK walks no view hierarchy.
-  if (![FBSDKScreenTitleObserver shared].isMetaDataCollectionEnabled) {
+  // Clear rather than skip, and before the BFS so a gated-off SDK walks no view hierarchy.
+  if (![FBSDKScreenTitleObserver shared].isCollectionPermitted) {
     [[FBSDKScreenTitleObserver shared] setScreenTitle:nil];
     return;
   }
