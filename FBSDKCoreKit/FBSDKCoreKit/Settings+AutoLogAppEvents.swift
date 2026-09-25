@@ -12,6 +12,7 @@ extension Settings {
     case ENABLE = "auto_log_app_events_enabled"
   }
 
+  /// Auto logging requires both the client-side flag and the server-side control to be on.
   func checkAutoLogAppEventsEnabled() -> Bool {
     guard let dependencies = try? getDependencies() else {
       return true
@@ -20,14 +21,16 @@ extension Settings {
       .serverConfigurationProvider.cachedServerConfiguration().migratedAutoLogValues else {
       return isAutoLogAppEventsEnabledLocally
     }
-    if let migratedAutoLogEnabled = migratedAutoLogValues[AutoLogAppEventServerFlags.ENABLE.rawValue] as? NSNumber {
-      return migratedAutoLogEnabled.boolValue
+    let isEnabledOnClient = checkClientSideConfiguration(dependencies) ?? true
+    return isEnabledOnClient && checkServerSideConfiguration(migratedAutoLogValues)
+  }
+
+  private func checkServerSideConfiguration(_ migratedAutoLogValues: [String: Any]) -> Bool {
+    if let serverEnabled = migratedAutoLogValues[AutoLogAppEventServerFlags.ENABLE.rawValue] as? NSNumber {
+      return serverEnabled.boolValue
     }
-    if let locallyEnabled = checkClientSideConfiguration(dependencies) {
-      return locallyEnabled
-    }
-    if let migratedDefault = migratedAutoLogValues[AutoLogAppEventServerFlags.DEFAUT.rawValue] as? NSNumber {
-      return migratedDefault.boolValue
+    if let serverDefault = migratedAutoLogValues[AutoLogAppEventServerFlags.DEFAUT.rawValue] as? NSNumber {
+      return serverDefault.boolValue
     }
     return true
   }

@@ -74,7 +74,8 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   /**
    Controls the automatic logging of basic app events such as `activateApp` and `deactivateApp`.
 
-   The default value is `true`.
+   The default value is `true`. Automatic logging only happens when both this client-side value and
+   the corresponding server-side control are enabled; if either is disabled, automatic logging is off.
    */
   public var isAutoLogAppEventsEnabled: Bool {
     get { checkAutoLogAppEventsEnabled() }

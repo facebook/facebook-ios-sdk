@@ -1135,9 +1135,9 @@ final class SettingsTests: XCTestCase {
     // set false in info.plist
     bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": false])
     configureSettings()
-    XCTAssertTrue(
+    XCTAssertFalse(
       settings.isAutoLogAppEventsEnabled,
-      "Should favor the server-side overridden value over others"
+      "Should disable auto logging when the client-side flag is off, even if the server enables it"
     )
   }
 
@@ -1201,6 +1201,73 @@ final class SettingsTests: XCTestCase {
     XCTAssertFalse(
       settings.isAutoLogAppEventsEnabled,
       "Should favor the value in user default over the server-side default value"
+    )
+  }
+
+  func testAutoLogAppEventsEnabledWhenClientAndServerAreBothEnabled() {
+    let migratedAutoLogValues = ["auto_log_app_events_enabled": NSNumber(true)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": true])
+    configureSettings()
+    XCTAssertTrue(
+      settings.isAutoLogAppEventsEnabled,
+      "Should enable auto logging when both the client-side flag and the server-side control are on"
+    )
+  }
+
+  func testAutoLogAppEventsDisabledWhenServerDisablesAndClientEnables() {
+    let migratedAutoLogValues = ["auto_log_app_events_enabled": NSNumber(false)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": true])
+    configureSettings()
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should disable auto logging when the server-side control is off, even if the client enables it"
+    )
+  }
+
+  func testAutoLogAppEventsDisabledWhenServerDisablesAndClientIsUnset() {
+    let migratedAutoLogValues = ["auto_log_app_events_enabled": NSNumber(false)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    configureSettings()
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should disable auto logging when the server-side control is off and the client flag is unset"
+    )
+  }
+
+  func testAutoLogAppEventsDisabledWhenServerDefaultIsOffAndClientEnables() {
+    let migratedAutoLogValues = ["auto_log_app_events_default": NSNumber(false)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    bundle = TestBundle(infoDictionary: ["FacebookAutoLogAppEventsEnabled": true])
+    configureSettings()
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should use the server-side default as the server value when no explicit server value is set"
+    )
+  }
+
+  func testAutoLogAppEventsServerEnabledTakesPrecedenceOverServerDefault() {
+    let migratedAutoLogValues = [
+      "auto_log_app_events_enabled": NSNumber(true),
+      "auto_log_app_events_default": NSNumber(false),
+    ]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    configureSettings()
+    XCTAssertTrue(
+      settings.isAutoLogAppEventsEnabled,
+      "Should prefer the explicit server-side value over the server-side default"
+    )
+  }
+
+  func testAutoLogAppEventsDisabledWhenServerDisablesAndClientEnablesAtRuntime() {
+    let migratedAutoLogValues = ["auto_log_app_events_enabled": NSNumber(false)]
+    serverConfigurationProvider.configs = ["migratedAutoLogValues": migratedAutoLogValues]
+    configureSettings()
+    settings.isAutoLogAppEventsEnabled = true
+    XCTAssertFalse(
+      settings.isAutoLogAppEventsEnabled,
+      "Should disable auto logging when the server-side control is off, even after a runtime opt-in"
     )
   }
 
