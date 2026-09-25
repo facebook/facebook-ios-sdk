@@ -49,7 +49,7 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 // capturing it and declining to send it. Checked here rather than at the nine call sites
 // because two of them are raw-IMP C functions in FBSDKAEMManager, which have nowhere to hold a
 // dependency — and reaching those AEM writers is the point, since they install under the AEM
-// feature and the UserJourney GateKeeper could not otherwise touch them.
+// feature and the MetadataCollection GateKeeper could not otherwise touch them.
 //
 // The cost is that a deep link arriving before the GateKeeper fetch lands is dropped and cannot
 // be recovered. That is accepted: `inbound_url` is a supplementary event parameter, not the
@@ -57,7 +57,7 @@ static NSString *const FBSDKAppLinkOutboundURLKey = @"com.facebook.sdk:outbound_
 - (BOOL)isCollectionPermitted
 {
   return self.settings.isMetaDataCollectionEnabled
-  && [self.featureChecker isEnabled:FBSDKFeatureUserJourney];
+  && [self.featureChecker isEnabled:FBSDKFeatureMetadataCollection];
 }
 
 - (void)cacheInboundURL:(NSURL *)url

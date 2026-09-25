@@ -13,7 +13,7 @@
 #import <UIKit/UIKit.h>
 
 #import "FBSDKSwizzler.h"
-#import "UIViewController+FBSDKUserJourney.h"
+#import "UIViewController+FBSDKMetadataCollection.h"
 
 static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 
@@ -55,7 +55,7 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 - (BOOL)isCollectionPermitted
 {
   return self.settings.isMetaDataCollectionEnabled
-  && [self.featureChecker isEnabled:FBSDKFeatureUserJourney];
+  && [self.featureChecker isEnabled:FBSDKFeatureMetadataCollection];
 }
 
 // The swizzle mutates the shared UIViewController method table, so it must happen on the main
@@ -73,7 +73,7 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
       self.originalViewDidAppearImplementation =
       [FBSDKSwizzler swizzleMethodsOnSameClass:[UIViewController class]
                               originalSelector:@selector(viewDidAppear:)
-                              swizzledSelector:@selector(fb_userJourneyViewDidAppear:)];
+                              swizzledSelector:@selector(fb_metadataCollectionViewDidAppear:)];
     });
   });
 }

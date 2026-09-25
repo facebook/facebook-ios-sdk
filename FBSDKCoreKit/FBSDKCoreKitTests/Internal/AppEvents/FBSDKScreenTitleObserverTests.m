@@ -26,7 +26,7 @@
   // assertions below pass vacuously.
   [FBSDKScreenTitleObserver shared].settings = [TestSettingsFactory settingsWithMetaDataCollectionEnabled];
   TestFeatureManager *featureChecker = [TestFeatureManager new];
-  [featureChecker enableWithFeature:FBSDKFeatureUserJourney];
+  [featureChecker enableWithFeature:FBSDKFeatureMetadataCollection];
   [FBSDKScreenTitleObserver shared].featureChecker = featureChecker;
 }
 

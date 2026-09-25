@@ -1281,7 +1281,7 @@ final class SettingsTests: XCTestCase {
   func testMetaDataCollectionEnabledDefaultValue() {
     XCTAssertFalse(
       settings.isMetaDataCollectionEnabled,
-      "User journey metadata collection should default to false when there is no plist value given"
+      "Metadata collection should default to false when there is no plist value given"
     )
   }
 
@@ -1291,7 +1291,7 @@ final class SettingsTests: XCTestCase {
 
     XCTAssertTrue(
       settings.isMetaDataCollectionEnabled,
-      "A developer should be able to opt in to user journey metadata collection from the plist"
+      "A developer should be able to opt in to metadata collection from the plist"
     )
   }
 
@@ -1301,7 +1301,7 @@ final class SettingsTests: XCTestCase {
 
     XCTAssertFalse(
       settings.isMetaDataCollectionEnabled,
-      "User journey metadata collection should default to false when there is an invalid plist value given"
+      "Metadata collection should default to false when there is an invalid plist value given"
     )
   }
 
@@ -1369,7 +1369,7 @@ final class SettingsTests: XCTestCase {
     // The GateKeeper side needs stubbing too: the real feature manager is unconfigured in this
     // target and reports every feature disabled.
     let permissiveFeatures = TestFeatureManager()
-    permissiveFeatures.enable(feature: .userJourney)
+    permissiveFeatures.enable(feature: .metadataCollection)
     _ScreenTitleObserver.shared.settings = permissive
     _ScreenTitleObserver.shared.featureChecker = permissiveFeatures
     _AppLinkURLCache.shared.settings = permissive

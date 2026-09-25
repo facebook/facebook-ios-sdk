@@ -28,7 +28,7 @@ final class ScreenTitleObserverMetaDataTests: XCTestCase {
     // The real feature manager is unconfigured in this target and reports every feature
     // disabled, which would suppress every capture below and let these tests pass vacuously.
     featureChecker = TestFeatureManager()
-    featureChecker.enable(feature: .userJourney)
+    featureChecker.enable(feature: .metadataCollection)
     _ScreenTitleObserver.shared.settings = settings
     _ScreenTitleObserver.shared.featureChecker = featureChecker
   }
@@ -46,21 +46,21 @@ final class ScreenTitleObserverMetaDataTests: XCTestCase {
   /// `TestFeatureManager.disableFeature` only records for crash-shield assertions; `isEnabled`
   /// reads a separate stub map. Swapping in a fresh instance is what actually reports the
   /// GateKeeper as off.
-  private func turnOffUserJourneyGateKeeper() {
+  private func turnOffMetadataCollectionGateKeeper() {
     featureChecker = TestFeatureManager()
     _ScreenTitleObserver.shared.featureChecker = featureChecker
   }
 
   // MARK: - Server kill switch
 
-  func testCapturingScreenTitleIsSuppressedWhenUserJourneyFeatureIsDisabled() {
-    turnOffUserJourneyGateKeeper()
+  func testCapturingScreenTitleIsSuppressedWhenMetadataCollectionFeatureIsDisabled() {
+    turnOffMetadataCollectionGateKeeper()
 
     _ScreenTitleObserver.shared.setScreenTitle("Checkout")
 
     XCTAssertNil(
       _ScreenTitleObserver.shared.currentScreenTitle(),
-      "Should not capture a screen title while the UserJourney GateKeeper is off"
+      "Should not capture a screen title while the MetadataCollection GateKeeper is off"
     )
   }
 
@@ -69,7 +69,7 @@ final class ScreenTitleObserverMetaDataTests: XCTestCase {
   func testTitleCapturedBeforeTheGateKeeperClosedIsNotSurfacedAfterwards() {
     _ScreenTitleObserver.shared.setScreenTitle("Checkout")
 
-    turnOffUserJourneyGateKeeper()
+    turnOffMetadataCollectionGateKeeper()
 
     XCTAssertNil(
       _ScreenTitleObserver.shared.currentScreenTitle(),
@@ -79,7 +79,7 @@ final class ScreenTitleObserverMetaDataTests: XCTestCase {
 
   func testCapturingRequiresBothTheClientFlagAndTheGateKeeper() {
     settings.isMetaDataCollectionEnabled = false
-    featureChecker.enable(feature: .userJourney)
+    featureChecker.enable(feature: .metadataCollection)
     _ScreenTitleObserver.shared.setScreenTitle("flag-off")
     XCTAssertNil(
       _ScreenTitleObserver.shared.currentScreenTitle(),
@@ -87,7 +87,7 @@ final class ScreenTitleObserverMetaDataTests: XCTestCase {
     )
 
     settings.isMetaDataCollectionEnabled = true
-    turnOffUserJourneyGateKeeper()
+    turnOffMetadataCollectionGateKeeper()
     _ScreenTitleObserver.shared.setScreenTitle("gk-off")
     XCTAssertNil(
       _ScreenTitleObserver.shared.currentScreenTitle(),

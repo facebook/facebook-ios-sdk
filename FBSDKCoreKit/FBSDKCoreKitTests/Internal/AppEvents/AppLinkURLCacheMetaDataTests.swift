@@ -34,7 +34,7 @@ final class AppLinkURLCacheMetaDataTests: XCTestCase {
     // The real feature manager is unconfigured here and reports every feature disabled, which
     // would suppress the writes below and let these tests pass vacuously.
     featureChecker = TestFeatureManager()
-    featureChecker.enable(feature: .userJourney)
+    featureChecker.enable(feature: .metadataCollection)
     _AppLinkURLCache.shared.dataStore = dataStore
     _AppLinkURLCache.shared.settings = settings
     _AppLinkURLCache.shared.featureChecker = featureChecker
@@ -54,7 +54,7 @@ final class AppLinkURLCacheMetaDataTests: XCTestCase {
   /// `TestFeatureManager.disableFeature` only records for crash-shield assertions; `isEnabled`
   /// reads a separate stub map. Swapping in a fresh instance is what actually reports the
   /// GateKeeper as off.
-  private func turnOffUserJourneyGateKeeper() {
+  private func turnOffMetadataCollectionGateKeeper() {
     featureChecker = TestFeatureManager()
     _AppLinkURLCache.shared.featureChecker = featureChecker
   }
@@ -62,40 +62,40 @@ final class AppLinkURLCacheMetaDataTests: XCTestCase {
   // MARK: - Server kill switch
 
   // The GateKeeper has to stop inbound URLs reaching events. Their write paths do not run through
-  // a swizzle gated on `.userJourney` — `application(_:open:sourceApplication:annotation:)` is
+  // a swizzle gated on `.metadataCollection` — `application(_:open:sourceApplication:annotation:)` is
   // public API and FBSDKAEMManager's writers install under `.AEM` — so without gating the reads
   // here, flipping the GateKeeper off would leave inbound URLs stamped on every event.
-  func testReadingIsSuppressedWhenUserJourneyFeatureIsDisabled() {
+  func testReadingIsSuppressedWhenMetadataCollectionFeatureIsDisabled() {
     _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
     _AppLinkURLCache.shared.cacheOutboundURL(URL(string: "https://example.com/out"))
 
-    turnOffUserJourneyGateKeeper()
+    turnOffMetadataCollectionGateKeeper()
 
     XCTAssertNil(
       _AppLinkURLCache.shared.inboundURL,
-      "Should not surface an inbound URL while the UserJourney GateKeeper is off"
+      "Should not surface an inbound URL while the MetadataCollection GateKeeper is off"
     )
     XCTAssertNil(
       _AppLinkURLCache.shared.outboundURL,
-      "Should not surface an outbound URL while the UserJourney GateKeeper is off"
+      "Should not surface an outbound URL while the MetadataCollection GateKeeper is off"
     )
   }
 
   // The GateKeeper gates capture, not just transmission: a URL that is never written cannot be
   // retained on the device while the kill switch is on.
-  func testCachingIsSuppressedWhenUserJourneyFeatureIsDisabled() {
-    turnOffUserJourneyGateKeeper()
+  func testCachingIsSuppressedWhenMetadataCollectionFeatureIsDisabled() {
+    turnOffMetadataCollectionGateKeeper()
 
     _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
     _AppLinkURLCache.shared.cacheOutboundURL(URL(string: "https://example.com/out"))
 
     XCTAssertNil(
       dataStore.string(forKey: Self.inboundKey),
-      "Should not persist an inbound URL while the UserJourney GateKeeper is off"
+      "Should not persist an inbound URL while the MetadataCollection GateKeeper is off"
     )
     XCTAssertNil(
       dataStore.string(forKey: Self.outboundKey),
-      "Should not persist an outbound URL while the UserJourney GateKeeper is off"
+      "Should not persist an outbound URL while the MetadataCollection GateKeeper is off"
     )
   }
 
@@ -103,10 +103,10 @@ final class AppLinkURLCacheMetaDataTests: XCTestCase {
   // is dropped for good. `inbound_url` is a supplementary event parameter rather than the
   // attribution mechanism, and AEM's own campaign-ID paths are untouched by this gate.
   func testURLDroppedWhileGateKeeperWasOffIsNotRecoveredWhenItTurnsOn() {
-    turnOffUserJourneyGateKeeper()
+    turnOffMetadataCollectionGateKeeper()
     _AppLinkURLCache.shared.cacheInboundURL(URL(string: "myapp://in"))
 
-    featureChecker.enable(feature: .userJourney)
+    featureChecker.enable(feature: .metadataCollection)
     _AppLinkURLCache.shared.featureChecker = featureChecker
 
     XCTAssertNil(

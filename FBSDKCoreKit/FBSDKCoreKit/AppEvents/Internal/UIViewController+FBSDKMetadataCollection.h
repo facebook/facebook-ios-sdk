@@ -11,10 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-FB_LINK_CATEGORY_INTERFACE(UIViewController, FBSDKUserJourney)
-@interface UIViewController (FBSDKUserJourney)
+FB_LINK_CATEGORY_INTERFACE(UIViewController, FBSDKMetadataCollection)
+@interface UIViewController (FBSDKMetadataCollection)
 
-- (void)fb_userJourneyViewDidAppear:(BOOL)animated;
+- (void)fb_metadataCollectionViewDidAppear:(BOOL)animated;
 
 @end
 

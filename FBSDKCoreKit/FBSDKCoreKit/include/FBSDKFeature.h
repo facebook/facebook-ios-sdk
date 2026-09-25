@@ -68,8 +68,8 @@ typedef NS_ENUM(NSUInteger, FBSDKFeature) {
   FBSDKFeatureAppEventsCloudbridge = 0x01010900,
   FBSDKFeatureIAPLoggingSK2 = 0x01011000,
   FBSDKFeatureIOSManualImplicitPurchaseDedupe = 0x01011001,
-  /// UserJourney
-  FBSDKFeatureUserJourney = 0x01011100,
+  /// MetadataCollection
+  FBSDKFeatureMetadataCollection = 0x01011100,
   /// Instrument
   FBSDKFeatureInstrument = 0x01020000,
   FBSDKFeatureCrashReport = 0x01020100,

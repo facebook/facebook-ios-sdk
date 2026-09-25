@@ -690,7 +690,7 @@ final class ApplicationDelegateTests: XCTestCase {
     )
   }
 
-  // MARK: - UserJourney AppLink Logging
+  // MARK: - MetadataCollection AppLink Logging
 
   // Restated as wire values; the originals are fileprivate in ApplicationDelegate.swift.
   private enum AppLinkWire {
@@ -702,7 +702,7 @@ final class ApplicationDelegateTests: XCTestCase {
 
   func testOpeningURLLogsInboundAppLinkEventWhenCollectionIsAllowed() {
     settings.isMetaDataCollectionEnabled = true
-    featureChecker.enable(feature: .userJourney)
+    featureChecker.enable(feature: .metadataCollection)
 
     delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
 
@@ -725,7 +725,7 @@ final class ApplicationDelegateTests: XCTestCase {
 
   func testOpeningURLDoesNotLogAppLinkEventWhenMetaDataCollectionIsDisabled() {
     settings.isMetaDataCollectionEnabled = false
-    featureChecker.enable(feature: .userJourney)
+    featureChecker.enable(feature: .metadataCollection)
 
     delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
 
@@ -736,23 +736,23 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   // Guards the AND: the server-side kill switch still has to hold on its own.
-  func testOpeningURLDoesNotLogAppLinkEventWhenUserJourneyFeatureIsDisabled() {
+  func testOpeningURLDoesNotLogAppLinkEventWhenMetadataCollectionFeatureIsDisabled() {
     settings.isMetaDataCollectionEnabled = true
-    // .userJourney intentionally left disabled on the feature checker.
+    // .metadataCollection intentionally left disabled on the feature checker.
 
     delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
 
     XCTAssertNil(
       appEvents.capturedEventName,
-      "Opening a URL should not log an AppLink event when the UserJourney feature is disabled"
+      "Opening a URL should not log an AppLink event when the MetadataCollection feature is disabled"
     )
   }
 
-  // MARK: - UserJourney Collection Installation
+  // MARK: - MetadataCollection Installation
 
   // Asserted behaviorally: the installs are one-way and process-wide, so "is it installed" would be order-dependent.
   private func withIsolatedAppLinkURLCache(_ body: (UserDefaults) -> Void) {
-    let suiteName = "ApplicationDelegateTests.userJourney"
+    let suiteName = "ApplicationDelegateTests.metadataCollection"
     let store = UserDefaults(suiteName: suiteName)! // swiftlint:disable:this force_unwrapping
     _AppLinkURLCache.shared.dataStore = store
     defer {
@@ -792,17 +792,17 @@ final class ApplicationDelegateTests: XCTestCase {
   }
 
   // The purge has to survive the server feature being off — that check sits downstream of it.
-  func testLaunchPurgesCachedURLsWhenOptedOutEvenWithUserJourneyFeatureDisabled() {
+  func testLaunchPurgesCachedURLsWhenOptedOutEvenWithMetadataCollectionFeatureDisabled() {
     withIsolatedAppLinkURLCache { store in
       store.set("myapp://in", forKey: "com.facebook.sdk:inbound_url")
       settings.isMetaDataCollectionEnabled = false
-      // .userJourney intentionally left disabled on the feature checker.
+      // .metadataCollection intentionally left disabled on the feature checker.
 
       delegate.purgeCollectedDataIfOptedOut()
 
       XCTAssertNil(
         store.string(forKey: "com.facebook.sdk:inbound_url"),
-        "Opting out should discard cached URLs regardless of the UserJourney GateKeeper"
+        "Opting out should discard cached URLs regardless of the MetadataCollection GateKeeper"
       )
     }
   }

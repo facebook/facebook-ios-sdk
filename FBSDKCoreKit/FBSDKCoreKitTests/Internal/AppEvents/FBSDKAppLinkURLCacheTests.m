@@ -28,7 +28,7 @@
   // An isolated suite keeps the tests from reading or writing the app's standard defaults.
   self.dataStore = [[NSUserDefaults alloc] initWithSuiteName:NSStringFromClass(self.class)];
   self.featureChecker = [TestFeatureManager new];
-  [self.featureChecker enableWithFeature:FBSDKFeatureUserJourney];
+  [self.featureChecker enableWithFeature:FBSDKFeatureMetadataCollection];
   FBSDKAppLinkURLCache.shared.dataStore = self.dataStore;
   // Both stubs are required: collection is off by default and the real feature manager is
   // unconfigured in this target, so without them every write below is silently suppressed

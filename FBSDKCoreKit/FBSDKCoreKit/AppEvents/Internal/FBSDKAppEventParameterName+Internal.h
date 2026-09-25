@@ -30,7 +30,7 @@ FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameLau
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameURL;
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameURLType;
 
-// MARK: - UserJourney
+// MARK: - MetadataCollection
 
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameScreenTitle;
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameInboundURL;

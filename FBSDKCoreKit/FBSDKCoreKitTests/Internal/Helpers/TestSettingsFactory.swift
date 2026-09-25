@@ -14,7 +14,7 @@ import TestTools
 @objcMembers
 final class TestSettingsFactory: NSObject {
 
-  /// A settings double that permits user journey metadata collection.
+  /// A settings double that permits metadata collection.
   ///
   /// Required rather than convenient: `FBSDKMetaDataCollectionEnabled` defaults to off, so a test
   /// left on the real shared settings has every cache write silently suppressed and its

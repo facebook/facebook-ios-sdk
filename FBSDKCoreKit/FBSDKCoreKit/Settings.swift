@@ -162,7 +162,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   var _isAdvertiserIDCollectionEnabled: Bool?
 
   /**
-   Controls collection of user journey metadata: the current screen title and the app link URLs.
+   Controls metadata collection: the current screen title and the app link URLs.
 
    The default value is `false`, so collection is opt-in: an app enables it by setting
    `FBSDKMetaDataCollectionEnabled` in its Info.plist or assigning this property at runtime.
@@ -188,9 +188,9 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   /// Installs lazily so an app opting in mid-session gets collection without a relaunch.
   private func startMetaDataCollection() {
     // Checked first, so this stays inert and away from `ApplicationDelegate.shared` before setup.
-    guard _FeatureManager.shared.isEnabled(.userJourney) else { return }
+    guard _FeatureManager.shared.isEnabled(.metadataCollection) else { return }
 
-    ApplicationDelegate.shared.installUserJourneyCollectionIfPermitted()
+    ApplicationDelegate.shared.installMetadataCollectionIfPermitted()
   }
 
   /// Drops what was already collected: the swizzles are permanent and the app link URLs persist.

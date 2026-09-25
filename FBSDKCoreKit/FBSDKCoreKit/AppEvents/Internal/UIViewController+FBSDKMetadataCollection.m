@@ -6,15 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "UIViewController+FBSDKUserJourney.h"
+#import "UIViewController+FBSDKMetadataCollection.h"
 
 #import "FBSDKLogger.h"
 #import "FBSDKScreenTitleObserver.h"
 
-FB_LINK_CATEGORY_IMPLEMENTATION(UIViewController, FBSDKUserJourney)
-@implementation UIViewController (FBSDKUserJourney)
+FB_LINK_CATEGORY_IMPLEMENTATION(UIViewController, FBSDKMetadataCollection)
+@implementation UIViewController (FBSDKMetadataCollection)
 
-- (void)fb_userJourneyViewDidAppear:(BOOL)animated
+- (void)fb_metadataCollectionViewDidAppear:(BOOL)animated
 {
   IMP originalImp = [FBSDKScreenTitleObserver shared].originalViewDidAppearImplementation;
   if (originalImp) {
@@ -22,7 +22,7 @@ FB_LINK_CATEGORY_IMPLEMENTATION(UIViewController, FBSDKUserJourney)
     originalFunction(self, @selector(viewDidAppear:), animated);
   } else {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"fb_userJourneyViewDidAppear: original viewDidAppear: IMP is missing; skipping original call"];
+                           logEntry:@"fb_metadataCollectionViewDidAppear: original viewDidAppear: IMP is missing; skipping original call"];
   }
 
   // Clear rather than skip, and before the BFS so a gated-off SDK walks no view hierarchy.

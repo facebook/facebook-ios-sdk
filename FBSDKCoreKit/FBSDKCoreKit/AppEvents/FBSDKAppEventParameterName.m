@@ -80,7 +80,7 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameLaunchSource = @"fb_m
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameURL = @"url";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameURLType = @"url_type";
 
-// MARK: - UserJourney
+// MARK: - MetadataCollection
 
 // Internal
 
