@@ -690,61 +690,18 @@ final class ApplicationDelegateTests: XCTestCase {
     )
   }
 
-  // MARK: - MetadataCollection AppLink Logging
+  // MARK: - MetadataCollection AppLink URLs
 
-  // Restated as wire values; the originals are fileprivate in ApplicationDelegate.swift.
-  private enum AppLinkWire {
-    static let eventName = AppEvents.Name("fb_mobile_applink")
-    static let urlParameter = AppEvents.ParameterName("url")
-    static let urlTypeParameter = AppEvents.ParameterName("url_type")
-    static let inbound = "inbound"
-  }
-
-  func testOpeningURLLogsInboundAppLinkEventWhenCollectionIsAllowed() {
+  // The inbound URL is metadata stamped onto other events as `inbound_url`, not an event of its own.
+  func testOpeningURLDoesNotLogAnEventWhenMetadataCollectionIsAllowed() {
     settings.isMetaDataCollectionEnabled = true
-    featureChecker.enable(feature: .metadataCollection)
-
-    delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
-
-    XCTAssertEqual(
-      appEvents.capturedEventName,
-      AppLinkWire.eventName,
-      "Opening an inbound URL should log an fb_mobile_applink event"
-    )
-    XCTAssertEqual(
-      appEvents.capturedParameters?[AppLinkWire.urlTypeParameter] as? String,
-      AppLinkWire.inbound,
-      "The logged AppLink event should be tagged with url_type=inbound"
-    )
-    XCTAssertEqual(
-      appEvents.capturedParameters?[AppLinkWire.urlParameter] as? String,
-      SampleURLs.validApp.absoluteString,
-      "The logged AppLink event should carry the opened URL"
-    )
-  }
-
-  func testOpeningURLDoesNotLogAppLinkEventWhenMetaDataCollectionIsDisabled() {
-    settings.isMetaDataCollectionEnabled = false
     featureChecker.enable(feature: .metadataCollection)
 
     delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
 
     XCTAssertNil(
       appEvents.capturedEventName,
-      "Opening a URL should not log an AppLink event when the developer has opted out of metadata collection"
-    )
-  }
-
-  // Guards the AND: the server-side kill switch still has to hold on its own.
-  func testOpeningURLDoesNotLogAppLinkEventWhenMetadataCollectionFeatureIsDisabled() {
-    settings.isMetaDataCollectionEnabled = true
-    // .metadataCollection intentionally left disabled on the feature checker.
-
-    delegate.application(UIApplication.shared, open: SampleURLs.validApp, options: [:])
-
-    XCTAssertNil(
-      appEvents.capturedEventName,
-      "Opening a URL should not log an AppLink event when the MetadataCollection feature is disabled"
+      "Opening a URL should not log an event for it, even when metadata collection is allowed"
     )
   }
 

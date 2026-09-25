@@ -73,13 +73,6 @@ FBSDKAppEventParameterName const FBSDKAppEventParameterNameTimeBetweenSessions =
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameSessionID = @"_session_id";
 FBSDKAppEventParameterName const FBSDKAppEventParameterNameLaunchSource = @"fb_mobile_launch_source";
 
-// MARK: - AppLink
-
-// Internal
-
-FBSDKAppEventParameterName const FBSDKAppEventParameterNameURL = @"url";
-FBSDKAppEventParameterName const FBSDKAppEventParameterNameURLType = @"url_type";
-
 // MARK: - MetadataCollection
 
 // Internal

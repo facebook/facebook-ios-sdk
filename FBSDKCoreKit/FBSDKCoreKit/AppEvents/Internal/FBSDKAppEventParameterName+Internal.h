@@ -25,11 +25,6 @@ FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameTim
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameSessionID;
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameLaunchSource;
 
-// MARK: - AppLink
-
-FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameURL;
-FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameURLType;
-
 // MARK: - MetadataCollection
 
 FOUNDATION_EXPORT FBSDKAppEventParameterName const FBSDKAppEventParameterNameScreenTitle;

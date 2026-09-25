@@ -85,9 +85,3 @@ FBSDKAppEventName const FBSDKAppEventNameDeactivatedApp = @"fb_mobile_deactivate
 
 FBSDKAppEventName const FBSDKAppEventNameOptinAEMAutoSetup = @"fb_mobile_aem_auto_setup_opt_in";
 FBSDKAppEventName const FBSDKAppEventNameOptoutAEMAutoSetup = @"fb_mobile_aem_auto_setup_opt_out";
-
-// MARK: - AppLink
-
-// Internal
-
-FBSDKAppEventName const FBSDKAppEventNameAppLink = @"fb_mobile_applink";

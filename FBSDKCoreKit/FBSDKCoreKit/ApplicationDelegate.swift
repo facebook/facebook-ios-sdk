@@ -209,12 +209,6 @@ public final class ApplicationDelegate: NSObject {
     }
   }
 
-  /// Both the server kill switch and the developer opt-out have to allow collection.
-  private var isMetadataCollectionPermitted: Bool {
-    components.settings.isMetaDataCollectionEnabled
-      && components.featureChecker.isEnabled(.metadataCollection)
-  }
-
   // Not app event auto-logging, so deliberately not gated on `isAutoLogAppEventsEnabled`.
   private func enableMetadataCollection() {
     purgeCollectedDataIfOptedOut()
@@ -243,18 +237,8 @@ public final class ApplicationDelegate: NSObject {
     setupOutboundURLSwizzle()
   }
 
-  private func logAppLinkEvent(url: URL, urlType: String) {
-    components.appEvents.logEvent(
-      .appLink,
-      parameters: [
-        .url: url.absoluteString,
-        .urlType: urlType,
-      ]
-    )
-  }
-
   // Install the swizzle at most once — re-running enableMetadataCollection would
-  // otherwise stack blocks and log each outbound open multiple times.
+  // otherwise stack blocks and run each outbound open through the cache multiple times.
   // Only ever read/written on the main thread, which gives it dispatch_once semantics.
   private static var hasInstalledOutboundURLSwizzle = false
 
@@ -279,13 +263,10 @@ public final class ApplicationDelegate: NSObject {
     let originalIMP = method_getImplementation(method)
     typealias OpenURLIMP = @convention(c) (AnyObject, Selector, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
     typealias OpenURLBlock = @convention(block) (AnyObject, NSURL, NSDictionary?, ((Bool) -> Void)?) -> Void
-    // Re-check per call: the swizzle cannot be uninstalled and the client flag is runtime-mutable.
-    let block: OpenURLBlock = { [weak self] receiver, url, options, completion in
-      if let self = self,
-         self.isMetadataCollectionPermitted {
-        _AppLinkURLCache.shared.cacheOutboundURL(url as URL)
-        self.logAppLinkEvent(url: url as URL, urlType: AppEvents.ParameterValue.outboundURL.rawValue)
-      }
+    // The swizzle cannot be uninstalled and the client flag is runtime-mutable, so the cache
+    // re-checks both gates on every call.
+    let block: OpenURLBlock = { receiver, url, options, completion in
+      _AppLinkURLCache.shared.cacheOutboundURL(url as URL)
       unsafeBitCast(originalIMP, to: OpenURLIMP.self)(receiver, selector, url, options, completion)
     }
     method_setImplementation(method, imp_implementationWithBlock(unsafeBitCast(block, to: AnyObject.self)))
@@ -400,9 +381,6 @@ public final class ApplicationDelegate: NSObject {
     components.appEvents.setSourceApplication(sourceApplication, open: url)
     // Unguarded: the cache gates itself, which is what also covers the `FBSDKAEMManager` writers.
     _AppLinkURLCache.shared.cacheInboundURL(url)
-    if isMetadataCollectionPermitted {
-      logAppLinkEvent(url: url, urlType: AppEvents.ParameterValue.inboundURL.rawValue)
-    }
 
     components.featureChecker.check(.AEM) { enabled in
       guard enabled else { return }
@@ -693,7 +671,6 @@ public final class ApplicationDelegate: NSObject {
 fileprivate extension AppEvents.Name {
   static let appLinkInboundEvent = Self("fb_al_inbound")
   static let autoAppLink = Self("fb_auto_applink")
-  static let appLink = Self("fb_mobile_applink")
 }
 
 // swiftformat:disable:next extensionaccesscontrol
@@ -713,8 +690,6 @@ fileprivate extension AppEvents.ParameterName {
   static let isShareLibraryIncluded = Self("share_lib_included")
   static let isTVLibraryIncluded = Self("tv_lib_included")
   static let schemeWarning = Self("SchemeWarning")
-  static let url = Self("url")
-  static let urlType = Self("url_type")
 }
 
 /// Schedules a block of work to run after the first frame is rendered. Injectable so tests can run

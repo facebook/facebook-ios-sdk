@@ -10,6 +10,3 @@
 
 FBSDKAppEventParameterValue FBSDKAppEventParameterValueNo = @"0";
 FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes = @"1";
-
-FBSDKAppEventParameterValue FBSDKAppEventParameterValueInboundURL = @"inbound";
-FBSDKAppEventParameterValue FBSDKAppEventParameterValueOutboundURL = @"outbound";
