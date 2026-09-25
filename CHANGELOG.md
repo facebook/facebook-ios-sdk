@@ -10,9 +10,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v19.0.0...HEAD)
+
+## 19.0.0
+
+### Added
+- Starting on October 12, 2026, Screen Title and AppLink URL will be included with events
+  logged with Facebook SDK. You can disable additional metadata by setting
+  `FBSDKAutoLogMetaDataEnabled` false in your Info.plist or by turning off "Automatically
+  include more app event details" in Events Manager.
 
 ### Changed
+- If the `FacebookAutoLogAppEventsEnabled` flag is set as false, Automatic App Event Logging
+  will be disabled even if it is enabled in Events Manager.
 - **Breaking**: the minimum supported deployment target is now iOS 15.0 (was iOS 12.0).
   Xcode 27 does not support deployment targets below iOS 15.0. Apps still targeting
   iOS 12–14 must raise their deployment target to adopt this version.
@@ -22,6 +32,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `FBSDKCoreKit` and still used from Objective-C, and no public symbol changed, so
   this affects only the interface file. Swift code that relies on `ASIdentifierManager`
   should import `AdSupport` directly rather than depending on it transitively.
+
+[2026-09-24](https://github.com/facebook/facebook-ios-sdk/releases/tag/v19.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.1...v19.0.0)
 
 ## 18.1.1
 
