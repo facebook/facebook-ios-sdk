@@ -19,7 +19,7 @@ NS_SWIFT_NAME(_ScreenTitleObserver)
 
 @property (nullable, nonatomic, readonly) IMP originalViewDidAppearImplementation;
 
-/// Whether both the developer opt-out (`FBSDKMetaDataCollectionEnabled`) and the server-side
+/// Whether both the developer opt-out (`FBSDKAutoLogMetaDataEnabled`) and the server-side
 /// MetadataCollection GateKeeper currently permit collecting the screen title.
 @property (nonatomic, readonly) BOOL isCollectionPermitted;
 

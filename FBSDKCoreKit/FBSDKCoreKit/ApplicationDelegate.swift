@@ -63,7 +63,7 @@ public final class ApplicationDelegate: NSObject {
 
    As part of SDK initialization, basic auto logging of app events will occur, this can be
    controlled via the 'FacebookAutoLogAppEventsEnabled' key in your project's Info.plist file.
-   Metadata collection is controlled separately via 'FBSDKMetaDataCollectionEnabled'.
+   Metadata collection is controlled separately via 'FBSDKAutoLogMetaDataEnabled'.
    */
   public func initializeSDK() {
     initializeSDK(launchOptions: [:], completionBlock: nil)
@@ -446,7 +446,7 @@ public final class ApplicationDelegate: NSObject {
    of your application delegate. It should be invoked for the proper use of the Facebook SDK.
    As part of SDK initialization, basic auto-logging of app events will occur; this can be
    controlled via the `FacebookAutoLogAppEventsEnabled` key in the project's Info.plist file.
-   Metadata collection is controlled separately via `FBSDKMetaDataCollectionEnabled`.
+   Metadata collection is controlled separately via `FBSDKAutoLogMetaDataEnabled`.
 
    - Parameters:
      - application: The application as passed to `UIApplicationDelegate.application(_:didFinishLaunchingWithOptions:)`.

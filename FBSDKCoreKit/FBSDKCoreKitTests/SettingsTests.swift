@@ -1286,7 +1286,7 @@ final class SettingsTests: XCTestCase {
   }
 
   func testMetaDataCollectionEnabledFromPlist() {
-    bundle = TestBundle(infoDictionary: ["FBSDKMetaDataCollectionEnabled": true])
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": true])
     configureSettings()
 
     XCTAssertTrue(
@@ -1296,7 +1296,7 @@ final class SettingsTests: XCTestCase {
   }
 
   func testMetaDataCollectionEnabledInvalidPlistEntry() {
-    bundle = TestBundle(infoDictionary: ["FBSDKMetaDataCollectionEnabled": Self.emptyString])
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": Self.emptyString])
     configureSettings()
 
     XCTAssertFalse(
@@ -1309,7 +1309,7 @@ final class SettingsTests: XCTestCase {
     settings.isMetaDataCollectionEnabled = false
 
     XCTAssertNotNil(
-      userDefaultsSpy.capturedValues["FBSDKMetaDataCollectionEnabled"],
+      userDefaultsSpy.capturedValues["FBSDKAutoLogMetaDataEnabled"],
       "Should persist the value of a cachable property when setting it"
     )
     XCTAssertFalse(
@@ -1322,7 +1322,7 @@ final class SettingsTests: XCTestCase {
     settings.isMetaDataCollectionEnabled = true
     XCTAssertTrue(settings.isMetaDataCollectionEnabled)
 
-    bundle = TestBundle(infoDictionary: ["FBSDKMetaDataCollectionEnabled": false])
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": false])
     configureSettings()
 
     XCTAssertTrue(
@@ -1335,7 +1335,7 @@ final class SettingsTests: XCTestCase {
     settings.isMetaDataCollectionEnabled = false
 
     XCTAssertNotNil(
-      userDefaultsSpy.capturedValues["FBSDKMetaDataCollectionEnabled"],
+      userDefaultsSpy.capturedValues["FBSDKAutoLogMetaDataEnabled"],
       "Should persist an explicit opt-out even though it matches the default"
     )
   }

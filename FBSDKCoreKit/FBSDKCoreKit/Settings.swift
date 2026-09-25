@@ -165,7 +165,7 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
    Controls metadata collection: the current screen title and the app link URLs.
 
    The default value is `false`, so collection is opt-in: an app enables it by setting
-   `FBSDKMetaDataCollectionEnabled` in its Info.plist or assigning this property at runtime.
+   `FBSDKAutoLogMetaDataEnabled` in its Info.plist or assigning this property at runtime.
    */
   public var isMetaDataCollectionEnabled: Bool {
     get { getPersistedBooleanProperty(.isMetaDataCollectionEnabled) }
