@@ -21,9 +21,9 @@
 - (void)setUp
 {
   [super setUp];
-  // Both stubs are required: collection is off by default and the real feature manager is
-  // unconfigured in this target, so without them the observer stores nil and the title
-  // assertions below pass vacuously.
+  // Both stubs are required: the real shared settings depends on persisted state and the real
+  // feature manager is unconfigured in this target, so without them the observer may store nil
+  // and the title assertions below pass vacuously.
   [FBSDKScreenTitleObserver shared].settings = [TestSettingsFactory settingsWithMetaDataCollectionEnabled];
   TestFeatureManager *featureChecker = [TestFeatureManager new];
   [featureChecker enableWithFeature:FBSDKFeatureMetadataCollection];

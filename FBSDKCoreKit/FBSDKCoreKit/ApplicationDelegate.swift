@@ -235,7 +235,7 @@ public final class ApplicationDelegate: NSObject {
     _AppLinkURLCache.shared.clearCachedURLs()
   }
 
-  /// Idempotent, so a mid-session opt-in can call it again. An app that never opts in is never swizzled.
+  /// Idempotent, so a mid-session opt-in can call it again. An app that has opted out is never swizzled.
   func installMetadataCollectionIfPermitted() {
     guard components.settings.isMetaDataCollectionEnabled else { return }
 

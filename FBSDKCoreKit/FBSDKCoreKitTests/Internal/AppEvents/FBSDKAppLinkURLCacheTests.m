@@ -30,9 +30,9 @@
   self.featureChecker = [TestFeatureManager new];
   [self.featureChecker enableWithFeature:FBSDKFeatureMetadataCollection];
   FBSDKAppLinkURLCache.shared.dataStore = self.dataStore;
-  // Both stubs are required: collection is off by default and the real feature manager is
-  // unconfigured in this target, so without them every write below is silently suppressed
-  // and these tests pass vacuously.
+  // Both stubs are required: the real shared settings depends on persisted state and the real
+  // feature manager is unconfigured in this target, so without them every write below may be
+  // silently suppressed and these tests pass vacuously.
   FBSDKAppLinkURLCache.shared.settings = [TestSettingsFactory settingsWithMetaDataCollectionEnabled];
   FBSDKAppLinkURLCache.shared.featureChecker = self.featureChecker;
 }

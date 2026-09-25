@@ -50,7 +50,7 @@ static const NSInteger kMaxLargeContentTitleViewTraversals = 50;
 }
 
 // Both controls gate the screen title, at install, at capture and at read. Install gating keeps
-// an app that never opts in from being swizzled at all; capture and read gating are what make a
+// an app that has opted out from being swizzled at all; capture and read gating are what make a
 // mid-session change take effect, since the swizzle is permanent and cannot be uninstalled.
 - (BOOL)isCollectionPermitted
 {

@@ -1279,19 +1279,19 @@ final class SettingsTests: XCTestCase {
   // MARK: - Meta Data Collection Enabled
 
   func testMetaDataCollectionEnabledDefaultValue() {
-    XCTAssertFalse(
+    XCTAssertTrue(
       settings.isMetaDataCollectionEnabled,
-      "Metadata collection should default to false when there is no plist value given"
+      "Metadata collection should default to true when there is no plist value given"
     )
   }
 
   func testMetaDataCollectionEnabledFromPlist() {
-    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": true])
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": false])
     configureSettings()
 
-    XCTAssertTrue(
+    XCTAssertFalse(
       settings.isMetaDataCollectionEnabled,
-      "A developer should be able to opt in to metadata collection from the plist"
+      "A developer should be able to opt out of metadata collection from the plist"
     )
   }
 
@@ -1299,9 +1299,9 @@ final class SettingsTests: XCTestCase {
     bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": Self.emptyString])
     configureSettings()
 
-    XCTAssertFalse(
+    XCTAssertTrue(
       settings.isMetaDataCollectionEnabled,
-      "Metadata collection should default to false when there is an invalid plist value given"
+      "Metadata collection should default to true when there is an invalid plist value given"
     )
   }
 
@@ -1319,24 +1319,24 @@ final class SettingsTests: XCTestCase {
   }
 
   func testOverridingCachedMetaDataCollectionEnabled() {
-    settings.isMetaDataCollectionEnabled = true
-    XCTAssertTrue(settings.isMetaDataCollectionEnabled)
+    settings.isMetaDataCollectionEnabled = false
+    XCTAssertFalse(settings.isMetaDataCollectionEnabled)
 
-    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": false])
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogMetaDataEnabled": true])
     configureSettings()
 
-    XCTAssertTrue(
+    XCTAssertFalse(
       settings.isMetaDataCollectionEnabled,
       "Should favor cached properties over those set in the plist"
     )
   }
 
-  func testSettingMetaDataCollectionEnabledToFalseFromTheDefault() {
-    settings.isMetaDataCollectionEnabled = false
+  func testSettingMetaDataCollectionEnabledToTrueFromTheDefault() {
+    settings.isMetaDataCollectionEnabled = true
 
     XCTAssertNotNil(
       userDefaultsSpy.capturedValues["FBSDKAutoLogMetaDataEnabled"],
-      "Should persist an explicit opt-out even though it matches the default"
+      "Should persist an explicit opt-in even though it matches the default"
     )
   }
 
@@ -1360,9 +1360,9 @@ final class SettingsTests: XCTestCase {
   /// process-global collectors read. These two cases therefore drive the shared instance, and
   /// restore its dependencies and the collectors afterwards.
   /// Points the process-global collectors at a settings double that permits collection, and
-  /// restores them afterwards. Required for any test that seeds them: collection is off by
-  /// default, so on the real shared settings every seed is suppressed and the assertions that
-  /// follow pass vacuously.
+  /// restores them afterwards. Required for any test that seeds them: the real feature manager
+  /// reports the feature disabled in this target, so on the real dependencies every seed is
+  /// suppressed and the assertions that follow pass vacuously.
   private func enableCollectionOnCollectors() {
     let permissive = TestSettings()
     permissive.isMetaDataCollectionEnabled = true

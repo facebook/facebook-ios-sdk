@@ -16,9 +16,9 @@ final class TestSettingsFactory: NSObject {
 
   /// A settings double that permits metadata collection.
   ///
-  /// Required rather than convenient: `FBSDKAutoLogMetaDataEnabled` defaults to off, so a test
-  /// left on the real shared settings has every cache write silently suppressed and its
-  /// assertions pass vacuously.
+  /// Required rather than convenient: the real shared settings resolves `FBSDKAutoLogMetaDataEnabled`
+  /// from the test host's persisted state, so a test left on it cannot rely on collection being
+  /// permitted, and a silently suppressed cache write would make its assertions pass vacuously.
   static func settingsWithMetaDataCollectionEnabled() -> SettingsProtocol {
     let settings = TestSettings()
     settings.isMetaDataCollectionEnabled = true
