@@ -74,6 +74,9 @@ extension IAPTransactionLogger {
       .currency: event.currency ?? "",
       .implicitlyLoggedPurchase: "1",
     ]
+    if let transactionID = event.transactionID {
+      parameters[.orderID] = transactionID
+    }
     if let productTitle = event.productTitle {
       parameters[.productTitle] = getTruncatedString(productTitle)
     }
