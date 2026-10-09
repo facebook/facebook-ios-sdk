@@ -149,9 +149,8 @@ extension LoginManager {
     fallbackPolicy: RefreshFallbackPolicy,
     completion: @escaping (Profile?, RefreshPath?, Error?) -> Void
   ) {
-    // Ensure BackgroundRefreshManager is initialized so its foreground
-    // notification observer is registered for future auto-refreshes.
-    _ = BackgroundRefreshManager.shared
+    // Make sure future foregrounds auto-refresh too.
+    BackgroundRefreshManager.shared.startAutoRefresh()
 
     // Precondition: AuthenticationToken.current must exist
     guard let existingToken = AuthenticationToken.current else {

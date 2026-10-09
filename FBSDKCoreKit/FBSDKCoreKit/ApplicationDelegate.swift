@@ -38,6 +38,13 @@ public final class ApplicationDelegate: NSObject {
   @nonobjc
   var scheduleAfterFirstFrame: FirstFrameScheduling = ApplicationDelegate.runAfterFirstFrame
 
+  // Resolves the Login kit's observer for authentication sessions restored at launch. CoreKit cannot import
+  // FBSDKLoginKit, so the type is looked up by its Objective-C name. Overridden in tests.
+  @nonobjc
+  var restoredSessionObserverProvider: () -> _RestoredAuthenticationSessionObserving.Type? = {
+    NSClassFromString("FBSDKLimitedLoginRestoredSessionObserver") as? _RestoredAuthenticationSessionObserving.Type
+  }
+
   private static let kitsBitmaskKey = "com.facebook.sdk.kits.bitmask"
 
   /// Gets the singleton instance.
@@ -486,6 +493,9 @@ public final class ApplicationDelegate: NSObject {
 
   private func checkAuthentication() {
     components.authenticationTokenWallet.current = components.authenticationTokenWallet.tokenCache?.authenticationToken
+    if components.authenticationTokenWallet.current != nil {
+      restoredSessionObserverProvider()?.didRestoreAuthenticationSession()
+    }
     _AuthenticationStatusUtility.checkAuthenticationStatus()
   }
 

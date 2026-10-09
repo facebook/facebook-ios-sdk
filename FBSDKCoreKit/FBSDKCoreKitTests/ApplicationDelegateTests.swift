@@ -384,6 +384,57 @@ final class ApplicationDelegateTests: XCTestCase {
     )
   }
 
+  func testDidFinishLaunchingWithCachedAuthenticationTokenNotifiesRestoredSessionObserver() {
+    TestRestoredSessionObserver.reset()
+    delegate.restoredSessionObserverProvider = { TestRestoredSessionObserver.self }
+    TestAuthenticationTokenWallet.tokenCache = TestTokenCache(
+      accessToken: nil,
+      authenticationToken: SampleAuthenticationToken.validToken
+    )
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertEqual(
+      TestRestoredSessionObserver.restoreCount,
+      1,
+      "Should notify the restored-session observer when a cached authentication token is restored"
+    )
+  }
+
+  func testDidFinishLaunchingWithoutCachedAuthenticationTokenDoesNotNotifyRestoredSessionObserver() {
+    TestRestoredSessionObserver.reset()
+    delegate.restoredSessionObserverProvider = { TestRestoredSessionObserver.self }
+    TestAuthenticationTokenWallet.tokenCache = TestTokenCache(
+      accessToken: nil,
+      authenticationToken: nil
+    )
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertEqual(
+      TestRestoredSessionObserver.restoreCount,
+      0,
+      "Should not notify the restored-session observer when there is no cached authentication token"
+    )
+  }
+
+  func testDidFinishLaunchingWithoutRestoredSessionObserverStillRestoresAuthenticationToken() {
+    delegate.restoredSessionObserverProvider = { nil }
+    let expected = SampleAuthenticationToken.validToken
+    TestAuthenticationTokenWallet.tokenCache = TestTokenCache(
+      accessToken: nil,
+      authenticationToken: expected
+    )
+
+    delegate.application(UIApplication.shared, didFinishLaunchingWithOptions: nil)
+
+    XCTAssertEqual(
+      TestAuthenticationTokenWallet.current,
+      expected,
+      "Should restore the authentication token when no restored-session observer is linked"
+    )
+  }
+
   func testDidFinishLaunchingWithAutoLogEnabled() {
     settings.isAutoLogAppEventsEnabled = true
     userDataStore.set(0, forKey: bitmaskKey)
@@ -830,5 +881,17 @@ final class ApplicationDelegateTests: XCTestCase {
       observer.wasWillResignActiveCalled,
       "Should inform observers when the application will resign active status"
     )
+  }
+}
+
+private final class TestRestoredSessionObserver: NSObject, _RestoredAuthenticationSessionObserving {
+  static var restoreCount = 0
+
+  static func reset() {
+    restoreCount = 0
+  }
+
+  static func didRestoreAuthenticationSession() {
+    restoreCount += 1
   }
 }

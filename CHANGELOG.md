@@ -12,6 +12,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v19.0.0...HEAD)
 
+### Fixed
+- Limited Login Refresh: automatic foreground refresh now resumes for a session restored after
+  the app is relaunched, and after logging out and back in during the same app session. The time
+  of the last automatic refresh is now persisted, so `limitedLoginAutoRefreshInterval` also
+  applies across launches.
+
 ## 19.0.0
 
 ### Added

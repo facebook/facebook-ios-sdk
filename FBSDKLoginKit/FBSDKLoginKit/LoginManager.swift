@@ -498,10 +498,9 @@ public final class LoginManager: NSObject {
     dependencies.accessTokenWallet.current = loginResult?.token
     dependencies.profileProvider.current = parameters.profile
 
-    // Initialize BackgroundRefreshManager when a Limited Login session is established.
-    // This ensures the foreground notification observer is registered for auto-refresh.
+    // Start auto-refresh when a Limited Login session is established.
     if hasNewAuthenticationToken, !hasNewOrUpdatedAccessToken {
-      _ = BackgroundRefreshManager.shared
+      BackgroundRefreshManager.shared.startAutoRefresh()
     }
   }
 
