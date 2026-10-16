@@ -12,15 +12,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v19.0.0...HEAD)
 
-### Fixed
-- Limited Login Refresh: automatic foreground refresh now resumes for a session restored after
-  the app is relaunched, and after logging out and back in during the same app session. The time
-  of the last automatic refresh is now persisted, so `limitedLoginAutoRefreshInterval` also
-  applies across launches.
-
 ## 19.0.0
 
 ### Added
+- Added a product improvement control for diagnostic data about the app and the content on screen.
+  Disable it by setting `FBSDKAutoLogProductImprovementEnabled` to false in your Info.plist or
+  `Settings.shared.isAutoLogProductImprovementEnabled` to `false` at runtime. The default is `true`,
+  and runtime changes persist across app launches. This setting is independent of metadata
+  collection and automatic app event logging. This change adds the control only; the SDK does
+  not yet collect or send data for product improvement.
 - Starting on October 12, 2026, Screen Title and AppLink URL will be included with events
   logged with Facebook SDK. You can disable additional metadata by setting
   `FBSDKAutoLogMetaDataEnabled` false in your Info.plist or by turning off "Automatically
@@ -38,6 +38,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `FBSDKCoreKit` and still used from Objective-C, and no public symbol changed, so
   this affects only the interface file. Swift code that relies on `ASIdentifierManager`
   should import `AdSupport` directly rather than depending on it transitively.
+
+### Fixed
+- Limited Login Refresh: automatic foreground refresh now resumes for a session restored after
+  the app is relaunched, and after logging out and back in during the same app session. The time
+  of the last automatic refresh is now persisted, so `limitedLoginAutoRefreshInterval` also
+  applies across launches.
 
 [2026-09-24](https://github.com/facebook/facebook-ios-sdk/releases/tag/v19.0.0) |
 [Full Changelog](https://github.com/facebook/facebook-ios-sdk/compare/v18.1.1...v19.0.0)
