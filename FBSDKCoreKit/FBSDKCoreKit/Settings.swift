@@ -205,6 +205,21 @@ public final class Settings: NSObject, SettingsProtocol, SettingsLogging, _Clien
   var _isMetaDataCollectionEnabled: Bool?
 
   /**
+   Controls the automatic sending of diagnostic data about the app and the content on screen for product improvement.
+
+   The default value is `true`. An app disables it by setting `FBSDKAutoLogProductImprovementEnabled`
+   to `NO` in its Info.plist or by assigning `false` to this property at runtime. The data is sent
+   only when both this setting and the corresponding server-side control are enabled.
+   */
+  public var isAutoLogProductImprovementEnabled: Bool {
+    get { getPersistedBooleanProperty(.isAutoLogProductImprovementEnabled) }
+    set { setPersistedBooleanProperty(.isAutoLogProductImprovementEnabled, to: newValue) }
+  }
+
+  // swiftlint:disable:next identifier_name discouraged_optional_boolean
+  var _isAutoLogProductImprovementEnabled: Bool?
+
+  /**
    Controls the SKAdNetwork report.
 
    The default value is `true`.

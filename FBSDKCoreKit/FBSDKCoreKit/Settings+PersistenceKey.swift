@@ -16,6 +16,7 @@ extension Settings {
     case isAdvertiserIDCollectionEnabled = "FacebookAdvertiserIDCollectionEnabled"
     // `FBSDK` rather than the `Facebook` prefix the other plist keys use, as specified in the ask.
     case isMetaDataCollectionEnabled = "FBSDKAutoLogMetaDataEnabled"
+    case isAutoLogProductImprovementEnabled = "FBSDKAutoLogProductImprovementEnabled"
     case isCodelessDebugLogEnabled = "FacebookCodelessDebugLogEnabled"
     case loggingBehaviors = "FacebookLoggingBehavior"
     case appID = "FacebookAppID"

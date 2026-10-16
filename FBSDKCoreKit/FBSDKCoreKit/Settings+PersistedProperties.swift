@@ -78,6 +78,12 @@ extension Settings {
       defaultValue: true
     )
 
+    static let isAutoLogProductImprovementEnabled = Self(
+      persistenceKey: .isAutoLogProductImprovementEnabled,
+      backingKeyPath: \._isAutoLogProductImprovementEnabled,
+      defaultValue: true
+    )
+
     static let isCodelessDebugLogEnabled = Self(
       persistenceKey: .isCodelessDebugLogEnabled,
       backingKeyPath: \._isCodelessDebugLogEnabled,

@@ -1545,6 +1545,116 @@ final class SettingsTests: XCTestCase {
     )
   }
 
+  // MARK: - Auto Log Product Improvement Enabled
+
+  func testAutoLogProductImprovementEnabledDefaultValue() {
+    XCTAssertTrue(
+      settings.isAutoLogProductImprovementEnabled,
+      "Product improvement should default to true when there is no plist value given"
+    )
+  }
+
+  func testAutoLogProductImprovementEnabledFromPlist() {
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogProductImprovementEnabled": false])
+    configureSettings()
+
+    XCTAssertFalse(
+      settings.isAutoLogProductImprovementEnabled,
+      "A developer should be able to opt out of product improvement from the plist"
+    )
+  }
+
+  func testAutoLogProductImprovementEnabledInvalidPlistEntry() {
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogProductImprovementEnabled": Self.emptyString])
+    configureSettings()
+
+    XCTAssertTrue(
+      settings.isAutoLogProductImprovementEnabled,
+      "Product improvement should default to true when there is an invalid plist value given"
+    )
+  }
+
+  func testAutoLogProductImprovementEnabledFromUserDefaults() {
+    userDefaultsSpy.fb_setObject(false, forKey: "FBSDKAutoLogProductImprovementEnabled")
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogProductImprovementEnabled": true])
+    configureSettings()
+
+    XCTAssertFalse(
+      settings.isAutoLogProductImprovementEnabled,
+      "A persisted value should take precedence over the plist"
+    )
+  }
+
+  func testSettingAutoLogProductImprovementEnabled() {
+    settings.isAutoLogProductImprovementEnabled = false
+
+    XCTAssertEqual(
+      userDefaultsSpy.capturedValues["FBSDKAutoLogProductImprovementEnabled"] as? Bool,
+      false,
+      "Should persist the value of a cachable property when setting it"
+    )
+    XCTAssertFalse(
+      settings.isAutoLogProductImprovementEnabled,
+      "Should use the explicitly set property"
+    )
+  }
+
+  func testOverridingCachedAutoLogProductImprovementEnabled() {
+    settings.isAutoLogProductImprovementEnabled = false
+    XCTAssertFalse(settings.isAutoLogProductImprovementEnabled)
+
+    bundle = TestBundle(infoDictionary: ["FBSDKAutoLogProductImprovementEnabled": true])
+    configureSettings()
+
+    XCTAssertFalse(
+      settings.isAutoLogProductImprovementEnabled,
+      "Should favor cached properties over those set in the plist"
+    )
+  }
+
+  func testSettingAutoLogProductImprovementEnabledToTrueFromTheDefault() {
+    settings.isAutoLogProductImprovementEnabled = true
+
+    XCTAssertEqual(
+      userDefaultsSpy.capturedValues["FBSDKAutoLogProductImprovementEnabled"] as? Bool,
+      true,
+      "Should persist an explicit opt-in even though it matches the default"
+    )
+  }
+
+  func testAutoLogProductImprovementEnabledInternalStorage() {
+    settings.isAutoLogProductImprovementEnabled = true
+
+    resetLoggingSideEffects()
+
+    XCTAssertTrue(settings.isAutoLogProductImprovementEnabled, "sanity check")
+    XCTAssertNil(
+      userDefaultsSpy.capturedObjectRetrievalKey,
+      "Should not attempt to access the cache to retrieve objects that have a current value"
+    )
+    XCTAssertNil(
+      testBundle.capturedKeys.last,
+      "Should not attempt to access the plist to retrieve objects that have a current value"
+    )
+  }
+
+  func testAutoLogProductImprovementEnabledIsIndependentOfMetaDataCollection() {
+    settings.isMetaDataCollectionEnabled = false
+
+    XCTAssertTrue(
+      settings.isAutoLogProductImprovementEnabled,
+      "Opting out of metadata collection should not opt out of product improvement"
+    )
+
+    settings.isMetaDataCollectionEnabled = true
+    settings.isAutoLogProductImprovementEnabled = false
+
+    XCTAssertTrue(
+      settings.isMetaDataCollectionEnabled,
+      "Opting out of product improvement should not opt out of metadata collection"
+    )
+  }
+
   // MARK: - SKAdNetwork Report Enabled
 
   func testFacebookSKAdNetworkReportEnabledFromPlist() {

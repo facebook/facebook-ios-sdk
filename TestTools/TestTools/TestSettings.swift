@@ -16,6 +16,7 @@ public final class TestSettings: NSObject, SettingsProtocol, SettingsLogging {
   public var isAdvertiserIDCollectionEnabled = false
   public var advertiserIDCollectionEnabled = false
   public var isMetaDataCollectionEnabled = false
+  public var isAutoLogProductImprovementEnabled = false
   public var appID: String?
   public var clientToken: String?
   public var sdkVersion = ""
