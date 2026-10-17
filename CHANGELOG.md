@@ -15,16 +15,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## 19.0.0
 
 ### Added
-- Added a product improvement control for diagnostic data about the app and the content on screen.
-  Disable it by setting `FBSDKAutoLogProductImprovementEnabled` to false in your Info.plist or
-  `Settings.shared.isAutoLogProductImprovementEnabled` to `false` at runtime. The default is `true`,
-  and runtime changes persist across app launches. This setting is independent of metadata
-  collection and automatic app event logging. This change adds the control only; the SDK does
-  not yet collect or send data for product improvement.
-- Starting on October 12, 2026, Screen Title and AppLink URL will be included with events
-  logged with Facebook SDK. You can disable additional metadata by setting
-  `FBSDKAutoLogMetaDataEnabled` false in your Info.plist or by turning off "Automatically
-  include more app event details" in Events Manager.
+- Starting on 10/31/2026, Screen Title and AppLink URL will be included with events logged with Facebook SDK. You can disable additional metadata by setting FBSDKAutoLogMetaDataEnabled false in your Info.plist or by turning off "Automatically include more app event details" in Events Manager.
+
+- FB SDK will automatically send sampled information about your app, such as the layout of elements on app screens. This information helps Meta improve ads systems and build new features. It is not used for ads delivery. You can disable the feature by setting the FBSDKAutoLogProductImprovementEnabled false in your Info.plist or by turning off "Automatically send more app information" in Events Manager.
 
 ### Changed
 - If the `FacebookAutoLogAppEventsEnabled` flag is set as false, Automatic App Event Logging
